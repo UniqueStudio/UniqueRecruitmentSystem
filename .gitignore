@@ -12,6 +12,7 @@
 # misc
 .git
 .idea
+.vscode
 .DS_Store
 .env.local
 .env.development.local
