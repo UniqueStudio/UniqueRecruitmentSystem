@@ -9,7 +9,7 @@ const mapStateToProps = ({drawerOpen}: StoreState) => ({
 });
 
 const mapDispatchToProps = (dispatch: Dispatch<actions.ToggleDrawerOpen>) => ({
-    onClick: () => dispatch(actions.toggleDrawerOpen())
+    toggleOpen: () => dispatch(actions.toggleDrawerOpen())
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(AppBar);
