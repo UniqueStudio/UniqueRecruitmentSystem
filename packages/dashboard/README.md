@@ -15,6 +15,10 @@ the other is [Form](https://github.com/UniqueStudio/UniqueRecruitmentForm).
 3. Authority management
 4. ...
 
+## Preview
+
+![Preview image](./src/image/preview.png)
+
 ## Toolchain (possibly will be changed)
 
 1. `TypeScript`

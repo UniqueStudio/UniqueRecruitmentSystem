@@ -11,4 +11,25 @@ export function toggleDrawerOpen(): ToggleDrawerOpen {
     }
 }
 
-export type Action = ToggleDrawerOpen;
+export const ADD_COMMENT = 'ADD_COMMENT';
+export type ADD_COMMENT = typeof ADD_COMMENT;
+
+export interface AddComment {
+    type: ADD_COMMENT;
+    step: string;
+    name: string;
+    commenter: string;
+    comment: object;
+}
+
+export function addComment(step: string, name: string, commenter: string, comment: object): AddComment {
+    return {
+        type: ADD_COMMENT,
+        step,
+        name,
+        commenter,
+        comment
+    }
+}
+
+export type Action = ToggleDrawerOpen | AddComment;
