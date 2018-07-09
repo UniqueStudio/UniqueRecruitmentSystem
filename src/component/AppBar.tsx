@@ -12,6 +12,8 @@ import MenuIcon from '@material-ui/icons/Menu';
 import styles from '../style/style'
 import withRoot from '../style/withRoot';
 
+// import logo from '../image/logo.png';
+
 interface Props extends WithStyles {
     open: boolean;
     toggleOpen: () => void;

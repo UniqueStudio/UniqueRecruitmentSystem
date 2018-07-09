@@ -36,10 +36,10 @@ class Menu extends React.Component<Props> {
             >
                 <div className={classes.toolbar}>
                     <IconButton onClick={toggleOpen}>
-                        <ChevronLeftIcon/>
+                        <ChevronLeftIcon />
                     </IconButton>
                 </div>
-                <Divider/>
+                <Divider />
                 <List>
                     <ListItem button>
                         <ListItemIcon>

@@ -1,15 +1,15 @@
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
-import { StoreState } from '../type';
-import * as actions from '../action';
+import { StoreState } from '../reducer';
+import { toggleDrawerOpen, ToggleDrawerOpen } from '../action';
 import AppBar from '../component/AppBar';
 
-const mapStateToProps = ({drawerOpen}: StoreState) => ({
+const mapStateToProps = ({ drawerOpen }: StoreState) => ({
     open: drawerOpen
 });
 
-const mapDispatchToProps = (dispatch: Dispatch<actions.ToggleDrawerOpen>) => ({
-    toggleOpen: () => dispatch(actions.toggleDrawerOpen())
+const mapDispatchToProps = (dispatch: Dispatch<ToggleDrawerOpen>) => ({
+    toggleOpen: () => dispatch(toggleDrawerOpen())
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(AppBar);
