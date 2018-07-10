@@ -4,7 +4,7 @@
   "description": "the dashboard for recruitment of Unique Studio",
   "author": "@winderica",
   "private": true,
-  "homepage": "https://github.com/UniqueStudio/UniqueRecruitmentDashboard",
+  "homepage": "./",
   "repository": {
     "type": "git",
     "url": "https://github.com/UniqueStudio/UniqueRecruitmentDashboard.git"
@@ -41,7 +41,7 @@
     "@types/react-router-dom": "^4.2.7",
     "@types/react-router-redux": "^5.0.15",
     "@types/redux-devtools": "^3.0.44",
-    "redux-devtools": "^3.4.1",
+    "redux-devtools-extension": "^2.13.5",
     "typescript": "^2.9.2"
   },
   "scripts": {

@@ -1,12 +1,15 @@
 import * as React from "react";
 import {
     Button,
-    Card,
-    CardHeader,
-    Collapse,
+    Checkbox,
+    ExpansionPanel,
+    ExpansionPanelActions,
+    ExpansionPanelDetails,
+    ExpansionPanelSummary,
     IconButton,
     MenuItem,
     TextField,
+    Typography,
     WithStyles,
     withStyles
 } from "@material-ui/core";
@@ -22,25 +25,32 @@ interface Props extends WithStyles {
     grade: string;
     institute: string;
     comments: object;
+    selected: Array<string>;
     submit: (step: string, name: string, commenter: string, comment: object) => void;
+    toggleOn: (info: string) => void;
+    select: (name: string) => void;
+    deselect: (name: string) => void;
 }
 
 class Candidate extends React.Component<Props> {
     state = {
         expanded: false,
         evaluation: "",
-        comment: ""
+        comment: "",
+        checked: false,
     };
-
-    handleExpand = () =>
-        this.setState(state => ({
-            expanded: !this.state.expanded
-        }));
 
     handleChange = (name: string) => (event: React.ChangeEvent) =>
         this.setState({
             [name]: event.target["value"]
         });
+
+    handleCheck = (event: React.ChangeEvent) => {
+        this.setState({
+            checked: event.target['checked']
+        });
+        event.target['checked'] ? this.props.select(this.props.name) : this.props.deselect(this.props.name);
+    };
 
     handleSubmit = () => {
         if (this.state.comment && this.state.evaluation) {
@@ -48,36 +58,37 @@ class Candidate extends React.Component<Props> {
                 comment: this.state.comment,
                 evaluation: this.state.evaluation
             });
-            // force re-render
-            this.setState(state => ({
+            this.setState({
                 evaluation: "",
                 comment: "",
-            }));
+            });
         } else {
-            // TODO
+            this.props.toggleOn('请完整填写评论！');
         }
     };
 
     render() {
-        const { name, grade, institute, comments, classes } = this.props;
+        const { name, grade, institute, comments, selected, classes } = this.props;
         return (
-            <Card className={classes.card} onClick={this.handleExpand}>
-                <CardHeader
-                    action={
-                        <IconButton>
+                <ExpansionPanel className={classes.card}>
+                    <ExpansionPanelSummary>
+                        <Checkbox checked={selected.includes(name)}
+                                  onChange={this.handleCheck}
+                                  onClick={e => e.stopPropagation()}
+                                  color='primary'
+                                  classes={{ root: classes.cornerChecker }}
+                        />
+                        <span>
+                        <Typography variant='title'>{name}</Typography>
+                        <Typography color='textSecondary'>{`${grade} - ${institute}`}</Typography>
+                    </span>
+                        <IconButton className={classes.iconButton}>
                             <MoreVertIcon />
                         </IconButton>
-                    }
-                    title={name}
-                    subheader={`${grade} - ${institute}`}
-                    classes={{ root: classes.cardHeader }}
-                />
-                <Collapse timeout="auto" unmountOnExit in={this.state.expanded}>
-                    <form
-                        className={classes.commentContainer}
-                        onClick={e => e.stopPropagation()}
-                        autoComplete="off"
-                    >
+                        {/* this div is used to get avoid of default style on :last-child */}
+                        <div style={{ position: 'absolute' }} />
+                    </ExpansionPanelSummary>
+                    <ExpansionPanelActions>
                         <TextField
                             id="evaluation"
                             select
@@ -101,12 +112,13 @@ class Candidate extends React.Component<Props> {
                         <Button color="primary" size="small" onClick={this.handleSubmit}>
                             发表评论
                         </Button>
-                    </form>
-                    {Object.entries(comments).map(i => (
-                        <Comment name={i[0]} comment={i[1]} key={i[0]} />
-                    ))}
-                </Collapse>
-            </Card>
+                    </ExpansionPanelActions>
+                    <ExpansionPanelDetails className={classes.cardDetail}>
+                        {Object.entries(comments).map(i => (
+                            <Comment name={i[0]} comment={i[1]} key={i[0]} />
+                        ))}
+                    </ExpansionPanelDetails>
+                </ExpansionPanel>
         );
     }
 }
