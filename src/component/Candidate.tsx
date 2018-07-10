@@ -101,6 +101,7 @@ class Candidate extends React.Component<Props> {
                             className={classes.comment}
                             onChange={this.handleChange("comment")}
                             value={this.state.comment}
+                            // No need to abstracted as classes, I think.
                             style={{ transform: 'translateY(-1px)' }}
                         />
                         <Button color="primary" size="small" onClick={this.handleSubmit}>
