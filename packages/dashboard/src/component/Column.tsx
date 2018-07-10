@@ -51,7 +51,7 @@ class Column extends React.Component<Props> {
     render() {
         const { classes, title, candidates } = this.props;
         return (
-            <Paper className={classes.column + ' ' + classes.halfElevationCard}>
+            <Paper elevation={0} className={classes.column + ' ' + classes.whiteCardWithBorder}>
                 <div className={classes.columnBody}>
                     <Typography variant="headline" className={classes.columnTitle}>
                         {title}
