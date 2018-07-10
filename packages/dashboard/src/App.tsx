@@ -1,11 +1,13 @@
 import * as React from "react";
+import { createStore } from "redux";
+import { Provider } from "react-redux";
+import { composeWithDevTools } from 'redux-devtools-extension';
+
 import { reducer } from "./reducer";
 import Main from "./view/Main";
 import View from "./view/View";
-import { createStore } from "redux";
-import { Provider } from "react-redux";
 
-const store = createStore(reducer);
+const store = createStore(reducer, composeWithDevTools());
 
 class App extends React.Component {
     render() {
