@@ -61,7 +61,12 @@ class Candidate extends React.Component<Props> {
     render() {
         const { name, grade, institute, comments, classes } = this.props;
         return (
-            <Card className={classes.card} onClick={this.handleExpand}>
+            <Card
+                elevation={0}  
+                style={{ backgroundColor: '#f9f9f9', border: '1px solid #f3f3f3', marginBottom: '12px' }}
+                className={classes.card}
+                onClick={this.handleExpand}
+            >
                 <CardHeader
                     action={
                         <IconButton>
@@ -97,6 +102,7 @@ class Candidate extends React.Component<Props> {
                             className={classes.comment}
                             onChange={this.handleChange("comment")}
                             value={this.state.comment}
+                            style={{ transform: 'translateY(-1px)' }}
                         />
                         <Button color="primary" size="small" onClick={this.handleSubmit}>
                             发表评论
