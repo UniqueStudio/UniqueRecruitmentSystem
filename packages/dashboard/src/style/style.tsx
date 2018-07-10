@@ -7,14 +7,9 @@ const drawerWidth = 240;
 
 const styles: StyleRulesCallback = (theme: Theme) => ({
     root: {
-        flexGrow: 1,
-        zIndex: 1,
-        position: "relative",
         display: "flex",
-        minHeight: "100%"
     },
     appBar: {
-        position: 'fixed',
         zIndex: theme.zIndex.drawer + 1,
         transition: theme.transitions.create(["width", "margin"], {
             easing: theme.transitions.easing.sharp,
@@ -37,13 +32,14 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
         display: "none"
     },
     drawerPaper: {
+        position: 'sticky',
+        top: 0,
         whiteSpace: "nowrap",
         width: drawerWidth,
         transition: theme.transitions.create("width", {
             easing: theme.transitions.easing.sharp,
             duration: theme.transitions.duration.enteringScreen
         }),
-        minHeight: '100%'
     },
     drawerPaperClose: {
         overflowX: "hidden",
@@ -64,44 +60,59 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
         ...theme.mixins.toolbar
     },
     content: {
-        float: "left",
         flexGrow: 1,
         backgroundColor: theme.palette.background.default,
-        padding: theme.spacing.unit * 3,
-        paddingLeft: theme.spacing.unit * 9,
-        [theme.breakpoints.up("sm")]: {
-            paddingLeft: theme.spacing.unit * 11
-        }
+        padding: theme.spacing.unit * 2,
+        overflowX: 'auto',
+        height: 'calc(100vh - 64px)',
+        marginTop: '64px'
     },
     columnContainer: {
         display: "flex",
-        minHeight: "calc(100% - 64px)"
+        minHeight: "calc(100% - 64px)",
     },
     column: {
-        width: 300,
-        margin: "0 8px",
-        padding: theme.spacing.unit
+        margin: `0 ${theme.spacing.unit}px`,
+        padding: theme.spacing.unit,
+        paddingBottom: theme.spacing.unit * 4,
+        position: 'relative',
     },
     columnTitle: {
         textAlign: "center",
-        margin: theme.spacing.unit
+        margin: theme.spacing.unit,
+    },
+    columnBody: {
+        height: 'calc(100% - 40px)',
+        marginBottom: theme.spacing.unit,
+        width: 320
+    },
+    columnBottom: {
+        margin: theme.spacing.unit,
+        display: 'flex',
+    },
+    columnButton: {
+        flex: '1',
     },
     card: {
-        cursor: "pointer",
-        margin: theme.spacing.unit
+        margin: theme.spacing.unit,
     },
-    cardHeader: {
-        padding: `${theme.spacing.unit}px ${theme.spacing.unit * 2}px`
+    cornerChecker: {
+        position: 'absolute',
+        top: -theme.spacing.unit * 2,
+        left: -theme.spacing.unit * 2,
+    },
+    iconButton: {
+        marginLeft: 'auto',
     },
     chip: {
         margin: theme.spacing.unit,
     },
-    commentContainer: {
-        padding: theme.spacing.unit,
-        textAlign: 'center'
-    },
     comment: {
-        width: '50%'
+        width: '50%',
+        margin: theme.spacing.unit,
+    },
+    cardDetail: {
+        display: 'block',
     },
     good: {
         background: green.A400,

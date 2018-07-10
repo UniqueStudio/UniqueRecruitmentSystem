@@ -1,8 +1,9 @@
 import * as React from "react";
 import { withStyles, WithStyles } from "@material-ui/core";
 import AppBar from "../container/AppBar";
-import styles from "../style/style";
 import Menu from "../container/Menu";
+import Snackbar from '../container/Snackbar';
+import styles from "../style/style";
 
 class Main extends React.Component<WithStyles> {
     render() {
@@ -12,8 +13,8 @@ class Main extends React.Component<WithStyles> {
                 <AppBar />
                 <Menu />
                 <main className={classes.content}>
-                    <div className={classes.toolbar} />
                     {children}
+                    <Snackbar />
                 </main>
             </div>
         );

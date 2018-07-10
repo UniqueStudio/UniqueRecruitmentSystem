@@ -14,6 +14,8 @@ class View extends React.Component<WithStyles> {
                 <Column title="面试流程" />
                 <Column title="熬测流程" />
                 <Column title="群面流程" />
+                {/*this div with a full-width-space is used to show right margin of the last element*/}
+                <div style={{visibility: 'hidden'}}>　</div>
             </div>
         );
     }
