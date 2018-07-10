@@ -63,8 +63,7 @@ class Candidate extends React.Component<Props> {
         return (
             <Card
                 elevation={0}  
-                style={{ backgroundColor: '#f9f9f9', border: '1px solid #f3f3f3', marginBottom: '12px' }}
-                className={classes.card}
+                className={classes.card + ' ' + classes.greyCardWithBorder}
                 onClick={this.handleExpand}
             >
                 <CardHeader

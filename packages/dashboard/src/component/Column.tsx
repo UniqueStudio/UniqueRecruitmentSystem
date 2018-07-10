@@ -27,7 +27,7 @@ class Column extends React.Component<Props> {
     render() {
         const { classes, title, candidates } = this.props;
         return (
-            <Paper elevation={0} className={classes.column} style={{ border: '1px solid #f1f1f1' }}>
+            <Paper elevation={0} className={classes.column + ' ' + classes.whiteCardWithBorder}>
                 <Typography variant="headline" className={classes.columnTitle}>
                     {title}
                 </Typography>
