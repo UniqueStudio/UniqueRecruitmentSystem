@@ -1,6 +1,7 @@
 import { StyleRulesCallback } from "@material-ui/core/styles/withStyles";
 import { Theme } from "@material-ui/core";
-import { green, yellow, red } from "@material-ui/core/colors";
+import { green, yellow, red, grey } from "@material-ui/core/colors";
+// import { grey900 } from "material-ui/styles/colors";
 
 const drawerWidth = 240;
 
@@ -111,6 +112,14 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
     bad: {
         background: red.A700,
         color: 'white',
+    },
+    greyCardWithBorder: {
+        backgroundColor: grey["50"],
+        border: `1px solid ${grey["200"]}`
+    },
+    whiteCardWithBorder: {
+        backgroundColor: 'white',
+        border: `1px solid ${grey["100"]}`
     }
 });
 
