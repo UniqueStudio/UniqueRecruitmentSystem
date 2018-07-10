@@ -1,28 +1,19 @@
-import { Action, TOGGLE_DRAWER_OPEN, ADD_COMMENT } from "../action";
-import * as candidates from '../candidates.json';
+import { combineReducers } from 'redux';
+import infoHandler from './infoHandler';
+import componentsToggler from './componentsToggler';
 
 export interface StoreState {
-    drawerOpen: boolean;
+    componentsState: {
+        drawerOpen: boolean;
+        snackbar: {
+            on: boolean;
+            info: string;
+        };
+    };
     candidates: object;
 }
 
-const initialState: StoreState = {
-    drawerOpen: false,
-    candidates: candidates
-};
-
-export function reducer(
-    state: StoreState = initialState,
-    action: Action
-): StoreState {
-    switch (action.type) {
-        case TOGGLE_DRAWER_OPEN:
-            return { ...state, drawerOpen: !state.drawerOpen };
-        case ADD_COMMENT:
-            const newState = { ...state };
-            newState.candidates[action.step][action.name].comments[action.commenter] =
-                action.comment;
-            return newState;
-    }
-    return state;
-}
+export const reducer = combineReducers({
+    componentsState: componentsToggler,
+    candidates: infoHandler
+});

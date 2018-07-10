@@ -4,8 +4,8 @@ import { StoreState } from '../reducer';
 import { toggleDrawerOpen, ToggleDrawerOpen } from '../action';
 import AppBar from '../component/AppBar';
 
-const mapStateToProps = ({ drawerOpen }: StoreState) => ({
-    open: drawerOpen
+const mapStateToProps = ({ componentsState }: StoreState) => ({
+    open: componentsState.drawerOpen
 });
 
 const mapDispatchToProps = (dispatch: Dispatch<ToggleDrawerOpen>) => ({
