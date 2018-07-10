@@ -30,7 +30,7 @@ class Column extends React.Component<Props> {
     render() {
         const { classes, title, candidates } = this.props;
         return (
-            <Paper elevation={0} className={classes.column + ' ' + classes.halfEvelationCard}>
+            <Paper elevation={0} className={classes.column + ' ' + classes.halfElevationCard}>
 
                 <div style={{ top: '-30px', position: 'relative', borderRadius: '3px', width: '80px', height: '80px', background: 'linear-gradient(60deg, #ffa726, #fb8c00)', boxShadow: '0 12px 20px -10px rgba(255, 152, 0, 0.28), 0 4px 20px 0px rgba(0, 0, 0, 0.12), 0 7px 8px -5px rgba(255, 152, 0, 0.2)' }}>
                     <span style={{ color: 'white', fontSize: '60px' }}>
