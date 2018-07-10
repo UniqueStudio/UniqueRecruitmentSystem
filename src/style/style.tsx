@@ -121,7 +121,7 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
         backgroundColor: 'white',
         border: `1px solid ${grey["100"]}`
     },
-    halfEvelationCard: {
+    halfElevationCard: {
         borderRadius: '6px',
         boxShadow: '0 1px 4px 0 rgba(0, 0, 0, 0.14)'
     }
