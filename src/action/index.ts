@@ -13,12 +13,25 @@ export const TOGGLE_SNACKBAR_ON = 'TOGGLE_SNACKBAR_ON';
 export type TOGGLE_SNACKBAR_ON = typeof TOGGLE_SNACKBAR_ON;
 export interface ToggleSnackbarOn {
     type: TOGGLE_SNACKBAR_ON;
-    info?: string;
+    color: string;
+    info: string;
 }
-export function toggleSnackbarOn(info?: string): ToggleSnackbarOn {
+export function toggleSnackbarOn(info: string, color: string): ToggleSnackbarOn {
     return {
         type: TOGGLE_SNACKBAR_ON,
+        color,
         info
+    }
+}
+
+export const TOGGLE_SNACKBAR_OFF = 'TOGGLE_SNACKBAR_OFF';
+export type TOGGLE_SNACKBAR_OFF = typeof TOGGLE_SNACKBAR_OFF;
+export interface ToggleSnackbarOff {
+    type: TOGGLE_SNACKBAR_OFF;
+}
+export function toggleSnackbarOff(): ToggleSnackbarOff {
+    return {
+        type: TOGGLE_SNACKBAR_OFF
     }
 }
 
@@ -45,7 +58,7 @@ export const SELECT_CANDIDATE = 'SELECT_CANDIDATE';
 export type SELECT_CANDIDATE = typeof SELECT_CANDIDATE;
 export interface SelectCandidate {
     type: SELECT_CANDIDATE;
-    name: string | Array<string>;
+    name: string | string[];
 }
 export function selectCandidate(name: string | Array<string>): SelectCandidate {
     return {
@@ -58,7 +71,7 @@ export const DESELECT_CANDIDATE = 'DESELECT_CANDIDATE';
 export type DESELECT_CANDIDATE = typeof DESELECT_CANDIDATE;
 export interface DeselectCandidate {
     type: DESELECT_CANDIDATE;
-    name: string | Array<string>;
+    name: string | string[];
 }
 export function deselectCandidate(name: string | Array<string>): DeselectCandidate {
     return {
@@ -71,13 +84,24 @@ export const REMOVE_CANDIDATE = 'REMOVE_CANDIDATE';
 export type REMOVE_CANDIDATE = typeof REMOVE_CANDIDATE;
 export interface RemoveCandidate {
     type: REMOVE_CANDIDATE;
-    name: string | Array<string>;
+    name: string | string[];
     step: string
 }
-export function removeCandidate(step: string, name: string | Array<string>): RemoveCandidate {
+export function removeCandidate(step: string, name: string | string[]): RemoveCandidate {
     return {
         type: REMOVE_CANDIDATE,
         name,
         step,
+    }
+}
+
+export const TOGGLE_LOADING = 'TOGGLE_LOADING';
+export type TOGGLE_LOADING = typeof TOGGLE_LOADING;
+export interface ToggleLoading {
+    type: TOGGLE_LOADING;
+}
+export function toggleLoading(): ToggleLoading {
+    return {
+        type: TOGGLE_LOADING,
     }
 }

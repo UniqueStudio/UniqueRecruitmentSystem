@@ -1,19 +1,23 @@
-import { combineReducers } from 'redux';
-import infoHandler from './infoHandler';
-import componentsToggler from './componentsToggler';
+import data from './data';
+import components from './components';
 
 export interface StoreState {
-    componentsState: {
+    components: {
         drawerOpen: boolean;
         snackbar: {
             on: boolean;
             info: string;
+            color: string;
         };
     };
-    candidates: object;
+    data: {
+        candidates: object;
+        selected: string[];
+        isLoading: boolean;
+    };
 }
 
-export const reducer = combineReducers({
-    componentsState: componentsToggler,
-    candidates: infoHandler
-});
+export const reducer = {
+    components,
+    data
+};

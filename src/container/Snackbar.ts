@@ -1,16 +1,21 @@
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 import { StoreState } from '../reducer';
-import { toggleSnackbarOn, ToggleSnackbarOn } from '../action';
+import { toggleSnackbarOff, ToggleSnackbarOff } from '../action';
 import Snackbar from '../component/Snackbar';
 
-const mapStateToProps = ({ componentsState }: StoreState) => ({
-    on: componentsState.snackbar.on,
-    info: componentsState.snackbar.info
+interface OwnProps {
+    place: string;
+}
+
+const mapStateToProps = ({ components }: StoreState, ownProps: OwnProps) => ({
+    on: components.snackbar.on,
+    info: components.snackbar.info,
+    color: components.snackbar.color,
 });
 
-const mapDispatchToProps = (dispatch: Dispatch<ToggleSnackbarOn>) => ({
-    toggleOn: () => dispatch(toggleSnackbarOn())
+const mapDispatchToProps = (dispatch: Dispatch<ToggleSnackbarOff>) => ({
+    toggleOff: () => dispatch(toggleSnackbarOff())
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Snackbar);

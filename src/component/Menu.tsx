@@ -11,12 +11,16 @@ import {
     WithStyles,
     withStyles
 } from '@material-ui/core';
-import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
-import Dashboard from '@material-ui/icons/Dashboard';
-import DateRange from '@material-ui/icons/DateRange';
+import {
+    Dashboard as DashboardIcon,
+    DateRange as DateRangeIcon,
+    Home as HomeIcon,
+    ChevronLeft as ChevronLeftIcon
+} from '@material-ui/icons';
 
 import withRoot from '../style/withRoot';
 import styles from '../style/style';
+import { Link } from 'react-router-dom';
 
 interface Props extends WithStyles {
     open: boolean;
@@ -41,24 +45,30 @@ class Menu extends React.Component<Props> {
                 </div>
                 <Divider />
                 <List>
-                    <ListItem button>
-                        <ListItemIcon>
-                            <DateRange />
-                        </ListItemIcon>
-                        <ListItemText primary="历年数据" />
-                    </ListItem>
-                    <ListItem button>
-                        <ListItemIcon>
-                            <Dashboard />
-                        </ListItemIcon>
-                        <ListItemText primary="报名审核" />
-                    </ListItem>
-                    <ListItem button>
-                        <ListItemIcon>
-                            <DateRange />
-                        </ListItemIcon>
-                        <ListItemText primary="测试测试" />
-                    </ListItem>
+                    <Link to={`/`} style={{ textDecoration: 'none' }}>
+                        <ListItem button>
+                            <ListItemIcon>
+                                <HomeIcon />
+                            </ListItemIcon>
+                            <ListItemText primary="首页" />
+                        </ListItem>
+                    </Link>
+                    <Link to={`/data`} style={{ textDecoration: 'none' }}>
+                        <ListItem button>
+                            <ListItemIcon>
+                                <DateRangeIcon />
+                            </ListItemIcon>
+                            <ListItemText primary="历年数据" />
+                        </ListItem>
+                    </Link>
+                    <Link to={`/view`} style={{ textDecoration: 'none' }}>
+                        <ListItem button>
+                            <ListItemIcon>
+                                <DashboardIcon />
+                            </ListItemIcon>
+                            <ListItemText primary="报名审核" />
+                        </ListItem>
+                    </Link>
                 </List>
             </Drawer>
         )

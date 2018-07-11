@@ -3,14 +3,14 @@ import { withStyles, WithStyles } from "@material-ui/core";
 import withRoot from "../style/withRoot";
 import styles from "../style/style";
 
-class Data extends React.Component<WithStyles> {
+class Index extends React.Component<WithStyles> {
     render() {
         return (
             <div>
-                data
+                index
             </div>
         );
     }
 }
 
-export default withRoot(withStyles(styles)(Data));
+export default withRoot(withStyles(styles)(Index));
