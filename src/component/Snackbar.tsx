@@ -15,33 +15,45 @@ import withRoot from "../style/withRoot";
 interface Props extends WithStyles {
     on: boolean;
     info: string;
-    toggleOn: () => void;
+    color: string;
+    place: string;
+    toggleOff: () => void;
 }
 
 class Snack extends React.Component<Props> {
 
     handleClose = () => {
-        this.props.toggleOn();
+        this.props.toggleOff();
     };
 
     render() {
-        const { on, info } = this.props;
+        const { on, info, classes, color, place } = this.props;
         return (
             <Snackbar
-                anchorOrigin={{ vertical: 'bottom', horizontal: 'left', }}
+                anchorOrigin={{
+                    vertical: place.indexOf("t") === -1 ? "bottom" : "top",
+                    horizontal:
+                        place.indexOf("l") !== -1
+                            ? "left"
+                            : place.indexOf("c") !== -1 ? "center" : "right"
+                }}
                 open={on}
-                autoHideDuration={3000}
+                autoHideDuration={2000}
                 onClose={this.handleClose}
                 message={<span>{info}</span>}
                 action={[
                     <IconButton
                         key='close'
                         onClick={this.handleClose}
-                        color={'primary'}
                     >
                         <CloseIcon />
                     </IconButton>
                 ]}
+                ContentProps={{
+                    classes: {
+                        root: classes[color],
+                    }
+                }}
             />
         );
     }
