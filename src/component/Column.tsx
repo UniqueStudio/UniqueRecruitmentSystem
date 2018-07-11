@@ -4,6 +4,8 @@ import {
     Divider,
     Paper,
     Typography,
+
+    List,
     WithStyles,
     withStyles
 } from "@material-ui/core";
@@ -57,15 +59,18 @@ class Column extends React.Component<Props> {
                         {title}
                     </Typography>
                     <Divider />
-                    {Object.entries(candidates[titleToStep[title]]).map(i => (
-                        <Candidate step={titleToStep[title]}
-                                   name={i[0]}
-                                   grade={i[1]['grade']}
-                                   institute={i[1]['institute']}
-                                   comments={i[1]['comments']}
-                                   key={i[0]}
-                        />
-                    ))}
+                    <List>
+                        {Object.entries(candidates[titleToStep[title]]).map(i => (
+                            <Candidate
+                                step={titleToStep[title]}
+                                name={i[0]}
+                                grade={i[1]['grade']}
+                                institute={i[1]['institute']}
+                                comments={i[1]['comments']}
+                                key={i[0]}
+                            />
+                        ))}
+                    </List>
                 </div>
                 <Divider />
                 <div className={classes.columnBottom}>

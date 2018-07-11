@@ -1,23 +1,29 @@
 import * as React from "react";
 import {
+    Avatar,
     Button,
-    Checkbox,
-    ExpansionPanel,
-    ExpansionPanelActions,
-    ExpansionPanelDetails,
-    ExpansionPanelSummary,
-    IconButton,
-    MenuItem,
+    Card,
     TextField,
+    CardHeader,
+    CardContent,
+    Chip,
+    MenuList,
+    MenuItem,
+    Popover,
+    ListItem,
+    // Checkbox,
     Typography,
+    ListItemText,
+    ListItemSecondaryAction,
+    IconButton,
     WithStyles,
-    withStyles
+    withStyles,
 } from "@material-ui/core";
-import { MoreVert as MoreVertIcon } from "@material-ui/icons";
-
-import Comment from "./Comment";
+import { Comment } from "@material-ui/icons";
 import styles from "../style/style";
 import withRoot from "../style/withRoot";
+
+const DURATION = 300;
 
 interface Props extends WithStyles {
     step: string;
@@ -38,6 +44,7 @@ class Candidate extends React.Component<Props> {
         evaluation: "",
         comment: "",
         checked: false,
+        anchorEl: null,
     };
 
     handleChange = (name: string) => (event: React.ChangeEvent) =>
@@ -59,68 +66,129 @@ class Candidate extends React.Component<Props> {
                 evaluation: this.state.evaluation
             });
             this.setState({
-                evaluation: "",
-                comment: "",
-            });
+                // Forcely close popover
+                anchorEl: null
+            }, () => {
+                setTimeout(() => {
+                    this.setState({
+                        evaluation: '',
+                        comment: ''
+                    })
+                }, DURATION);
+            })
         } else {
             this.props.toggleOn('请完整填写评论！');
         }
     };
 
+    handleClick = (event: any) => {
+        this.setState({
+            anchorEl: event.currentTarget,
+        });
+    };
+    handleClose = () => {
+        this.setState({
+            anchorEl: null,
+        }, () => {
+            if (this.state.comment) return
+            setTimeout(() => {
+                this.setState({
+                    evaluation: '',
+                    comment: ''
+                })
+            }, DURATION);
+        });
+    };
+    
+    handleEvaluation = (evaluation: string) => {
+        const anchorEl = this.state.anchorEl;
+        this.setState({
+            anchorEl: null
+        }, () => {
+            setTimeout(() => {
+                this.setState({
+                    evaluation,
+                    anchorEl
+                })
+            }, DURATION);
+        });
+    }
+
     render() {
-        const { name, grade, institute, comments, selected, classes } = this.props;
+        const { name, grade, institute, comments, /* selected, */ classes } = this.props;
         return (
-                <ExpansionPanel elevation={0} className={classes.card + ' ' + classes.greyCardWithBorder}>
-                    <ExpansionPanelSummary>
-                        <Checkbox checked={selected.includes(name)}
-                                  onChange={this.handleCheck}
-                                  onClick={e => e.stopPropagation()}
-                                  color='primary'
-                                  classes={{ root: classes.cornerChecker }}
-                        />
-                        <span>
-                        <Typography variant='title'>{name}</Typography>
-                        <Typography color='textSecondary'>{`${grade} - ${institute}`}</Typography>
-                    </span>
-                        <IconButton className={classes.iconButton}>
-                            <MoreVertIcon />
-                        </IconButton>
-                        {/* this div is used to get avoid of default style on :last-child */}
-                        <div style={{ position: 'absolute' }} />
-                    </ExpansionPanelSummary>
-                    <ExpansionPanelActions>
-                        <TextField
-                            id="evaluation"
-                            select
-                            label="评价"
-                            value={this.state.evaluation}
-                            onChange={this.handleChange("evaluation")}
-                        >
-                            {["好", "中", "差"].map(i => (
-                                <MenuItem key={i} value={i}>
-                                    {i}
-                                </MenuItem>
-                            ))}
-                        </TextField>
-                        <TextField
-                            id="comment"
-                            label="输入评论"
-                            className={classes.comment}
-                            onChange={this.handleChange("comment")}
-                            value={this.state.comment}
-                            // No need to abstracted as classes, I think.
-                            style={{ transform: 'translateY(-1px)' }}
-                        />
-                        <Button color="primary" size="small" onClick={this.handleSubmit}>
-                            发表评论
-                        </Button>
-                    </ExpansionPanelActions>
-                    <ExpansionPanelDetails className={classes.cardDetail}>
-                        {Object.entries(comments).map(i => (
-                            <Comment name={i[0]} comment={i[1]} key={i[0]} />
-                        ))}
-                    </ExpansionPanelDetails>
-                </ExpansionPanel>
+            <ListItem className={classes.candidateListItem}>
+                <ListItemText
+                    primary={<>
+                        <Typography style={{ flex: 1 }} variant="title">{name}</Typography>
+                        <Typography variant="subheading" style={{ marginBottom: '8px' }}>{`${grade} - ${institute}`}</Typography>
+                    </>}
+                    secondaryTypographyProps={{ component: 'div' }}
+                    secondary={<>{
+                        Object.entries(comments).map(([name, { comment }], i) =>
+                            <Chip
+                                style={{ margin: '4px', marginLeft: '0' }}
+                                key={name}
+                                label={comment}
+                                avatar={<Avatar>{name}</Avatar>}
+                                onDelete={i === 0 ? () => {} : void 0}
+                            />
+                        )
+                    }</>}
+                />
+                <ListItemSecondaryAction>
+                    <IconButton onClick={this.handleClick}>
+                        <Comment />
+                    </IconButton>
+                    <Popover
+                        open={Boolean(this.state.anchorEl)}
+                        anchorEl={this.state.anchorEl!}
+                        onClose={this.handleClose}
+                        anchorOrigin={{
+                            vertical: 'top',
+                            horizontal: 'right',
+                        }}
+                        transformOrigin={{
+                            vertical: 'top',
+                            horizontal: 'right',
+                        }}
+                    >
+                        {
+                            this.state.evaluation
+                            ? (
+                                <Card>
+                                    <CardHeader
+                                        title={`简要评价 ${name}`}
+                                        subheader="不要超过16个字"
+                                    />
+                                    <CardContent>
+                                        <Typography>你给Ta的等级是"{this.state.evaluation}"</Typography>
+                                        <TextField
+                                            autoFocus
+                                            label="输入评论"
+                                            value={this.state.comment}
+                                            onChange={this.handleChange("comment")}
+                                            onKeyDown={e => e.keyCode === 13 && this.handleSubmit()}
+                                        />
+                                        <Button color="primary" size="small" onClick={this.handleSubmit}>
+                                            发表评论
+                                        </Button>
+                                    </CardContent>
+                                </Card>
+                            ) : (
+                                <MenuList>
+                                    {['不错', '一般', '不行'].map(
+                                        (e) =>
+                                            <MenuItem key={e} onClick={this.handleEvaluation.bind(this, e)}>{e}</MenuItem>
+                                    )}
+                                </MenuList>
+                            )
+                        }
+                    </Popover>
+                    {/* or */}
+                    {/* <Checkbox tabIndex={-1} /> */}
+                </ListItemSecondaryAction>
+            </ListItem>
         );
     }
 }

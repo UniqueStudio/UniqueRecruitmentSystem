@@ -131,6 +131,18 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
     whiteCardWithBorder: {
         backgroundColor: 'white',
         border: `1px solid ${grey["100"]}`
+    },
+    candidateListItem: {
+        borderRadius: '6px',
+        backgroundColor: '#f6f6f6',
+        marginBottom: '12px',
+        '&:hover': {
+            transition: 'background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms, box-shadow 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms',
+            backgroundColor: '#f1f1f1'
+            // background: 'linear-gradient(60deg, #ab47bc, #8e24aa)',
+            // backgroundColor: '#e53935',
+            // boxShadow: '0 12px 20px -10px rgba(156, 39, 176, 0.28), 0 4px 20px 0px rgba(0, 0, 0, 0.12), 0 7px 8px -5px rgba(156, 39, 176, 0.2)'
+        },
     }
 });
 
