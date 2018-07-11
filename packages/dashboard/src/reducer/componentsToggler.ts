@@ -11,10 +11,10 @@ const init = {
 
 type Action = actions.ToggleSnackbarOn | actions.ToggleDrawerOpen;
 
-export default function componentsToggler(
-    state: StoreState['componentsState'] = init,
+export default function components(
+    state: StoreState['components'] = init,
     action: Action
-): StoreState['componentsState'] {
+): StoreState['components'] {
     switch (action.type) {
         case actions.TOGGLE_DRAWER_OPEN:
             return { ...state, drawerOpen: !state.drawerOpen };

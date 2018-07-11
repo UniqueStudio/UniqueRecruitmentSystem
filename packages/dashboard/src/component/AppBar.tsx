@@ -11,6 +11,10 @@ import {
 import MenuIcon from '@material-ui/icons/Menu';
 import styles from '../style/style'
 import withRoot from '../style/withRoot';
+import Select from './Select';
+import { Route } from 'react-router';
+import { ConnectedRouter } from 'react-router-redux';
+import { history } from '../App';
 
 // import logo from '../image/logo.png';
 
@@ -19,28 +23,47 @@ interface Props extends WithStyles {
     toggleOpen: () => void;
 }
 
+class Header extends React.Component<{ title: string }> {
+    render() {
+        const { title, children } = this.props;
+        return (
+            <>
+                <Typography variant="title" color="inherit" noWrap>
+                    {title}
+                </Typography>
+                {children}
+            </>
+        )
+    }
+}
+
 class Bar extends React.Component<Props> {
     render() {
         const { classes, open, toggleOpen } = this.props;
         return (
-            <AppBar
-                position="absolute"
-                className={classnames(classes.appBar, open && classes.appBarShift)}
-            >
-                <Toolbar disableGutters={!open}>
-                    <IconButton
-                        color="inherit"
-                        aria-label="open drawer"
-                        onClick={toggleOpen}
-                        className={classnames(classes.menuButton, open && classes.hide)}
-                    >
-                        <MenuIcon />
-                    </IconButton>
-                    <Typography variant="title" color="inherit" noWrap>
-                        联创团队招新管理系统
-                    </Typography>
-                </Toolbar>
-            </AppBar>
+            <ConnectedRouter history={history}>
+
+                <AppBar
+                    position="absolute"
+                    className={classnames(classes.appBar, open && classes.appBarShift)}
+                >
+                    <Toolbar disableGutters={!open}>
+                        <IconButton
+                            color="inherit"
+                            aria-label="open drawer"
+                            onClick={toggleOpen}
+                            className={classnames(classes.menuButton, open && classes.hide)}
+                        >
+                            <MenuIcon />
+                        </IconButton>
+                        <Route path='/' exact render={(props) => <Header title='联创团队招新管理系统' {...props} />} />
+                        <Route path='/data' render={(props) => <Header title='历年数据展示' {...props} />} />
+                        <Route path='/view'
+                               render={(props) => <Header title='8102年秋季招新' {...props}><Select /></Header>} />
+                    </Toolbar>
+                </AppBar>
+            </ConnectedRouter>
+
         );
     }
 }
