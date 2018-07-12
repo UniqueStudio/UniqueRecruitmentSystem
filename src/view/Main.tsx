@@ -7,7 +7,7 @@ import {
 import AppBar from "../container/AppBar";
 import Menu from "../container/Menu";
 import Snackbar from '../container/Snackbar';
-import styles from "../style/style";
+import styles from "../style/index";
 import withRoot from "../style/withRoot";
 
 class Main extends React.Component<WithStyles> {

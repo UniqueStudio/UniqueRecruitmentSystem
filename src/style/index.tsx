@@ -8,7 +8,7 @@ export const infoColor = "#00acc1";
 
 const drawerWidth = 240;
 
-export const colortToAlpha = (hex: string, alpha: number) => {
+export const colorToAlpha = (hex: string, alpha: number) => {
     const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex) || ['', '', ''];
     const r = parseInt(result[1], 16),
         g = parseInt(result[2], 16),
@@ -16,8 +16,8 @@ export const colortToAlpha = (hex: string, alpha: number) => {
     return `rgba(${r}, ${g}, ${b}, ${alpha})`;
 };
 
-const colorToShadow = (hex: string) => {
-    return `0 12px 20px -10px ${colortToAlpha(hex, 0.28)}, 0 4px 20px 0px rgba(0, 0, 0, 0.12), 0 7px 8px -5px ${colortToAlpha(hex, 0.2)}`
+export const colorToShadow = (hex: string) => {
+    return `0 12px 20px -10px ${colorToAlpha(hex, 0.28)}, 0 4px 20px 0px rgba(0, 0, 0, 0.12), 0 7px 8px -5px ${colorToAlpha(hex, 0.2)}`
 };
 
 const styles: StyleRulesCallback = (theme: Theme) => ({
@@ -77,7 +77,7 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
     },
     content: {
         flexGrow: 1,
-        backgroundColor: colortToAlpha(theme.palette.secondary.light, 0.2),
+        backgroundColor: colorToAlpha(theme.palette.secondary.light, 0.2),
         padding: theme.spacing.unit * 3,
         overflowX: 'auto',
         height: 'calc(100vh - 64px)',
@@ -85,7 +85,7 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
     },
     columnContainer: {
         display: "flex",
-        minHeight: "calc(100% - 64px)",
+        minHeight: "100%",
     },
     column: {
         margin: theme.spacing.unit,
@@ -114,7 +114,8 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
     columnBody: {
         height: 'calc(100% - 40px)',
         marginBottom: theme.spacing.unit,
-        width: 360
+        width: 360,
+        paddingTop: theme.spacing.unit,
     },
     columnBottom: {
         margin: theme.spacing.unit,
@@ -123,20 +124,38 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
     columnButton: {
         flex: '1',
     },
+    modalContainer: {
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
     modal: {
         display: "flex",
         flexDirection: "column",
         position: 'absolute',
-        width: 400,
+        borderRadius: 6,
         backgroundColor: theme.palette.background.paper,
         boxShadow: theme.shadows[5],
-        padding: theme.spacing.unit * 2,
-        top: '50%',
-        left: '50%',
-        transform: 'translate(-50%, -50%)',
+        padding: theme.spacing.unit,
+        outline: 'none',
+        maxWidth: '75%'
+    },
+    modalContent: {
+        display: 'flex',
+        margin: theme.spacing.unit * 2,
     },
     card: {
-        margin: theme.spacing.unit,
+        margin: `0 ${theme.spacing.unit}px`,
+        position: 'relative',
+        //overflow: 'visible',
+    },
+    cardAction: {
+        justifyContent: 'center',
+        alignItems: 'baseline',
+        display: 'flex',
+    },
+    cardDetail: {
+        display: 'block',
     },
     cornerChecker: {
         position: 'absolute',
@@ -146,38 +165,9 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
     iconButton: {
         marginLeft: 'auto',
     },
-    chip: {
-        margin: theme.spacing.unit,
-    },
     comment: {
         width: '50%',
         margin: theme.spacing.unit,
-    },
-    cardAction: {
-        justifyContent: 'center',
-    },
-    cardDetail: {
-        display: 'block',
-    },
-    success: {
-        background: successColor,
-        color: theme.palette.secondary.contrastText,
-        boxShadow: colorToShadow(successColor)
-    },
-    warning: {
-        background: warningColor,
-        color: theme.palette.secondary.contrastText,
-        boxShadow: colorToShadow(warningColor)
-    },
-    danger: {
-        background: dangerColor,
-        color: theme.palette.secondary.contrastText,
-        boxShadow: colorToShadow(dangerColor)
-    },
-    info: {
-        background: infoColor,
-        color: theme.palette.secondary.contrastText,
-        boxShadow: colorToShadow(infoColor)
     },
     select: {
         marginLeft: theme.spacing.unit * 4,
@@ -195,6 +185,43 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
         width: '100%',
         position: 'fixed',
         zIndex: theme.zIndex.drawer + 1
+    },
+    detail: {
+        display: 'flex',
+        flexDirection: 'column',
+        marginRight: theme.spacing.unit * 2,
+        justifyContent: 'space-around',
+    },
+    detailRow: {
+        display: 'flex',
+        width: 400,
+        '& *': {
+            marginLeft: theme.spacing.unit / 2,
+            marginRight: theme.spacing.unit / 2
+        },
+        '& button': {
+            marginLeft: 'auto',
+            marginRight: 'auto'
+        }
+    },
+    comments: {
+        width: 360
+    },
+    template: {
+        margin: theme.spacing.unit * 2,
+        width: 800
+    },
+    templateContent: {
+        minHeight: theme.spacing.unit * 5,
+        margin: theme.spacing.unit
+    },
+    templateChip: {
+        margin: theme.spacing.unit,
+    },
+    templateEnd: {
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between'
     }
 });
 

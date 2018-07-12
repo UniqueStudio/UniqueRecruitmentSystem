@@ -9,9 +9,9 @@ import {
     withStyles
 } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
-import styles from '../style/style'
+import styles from '../style/index'
 import withRoot from '../style/withRoot';
-import Select from './Select';
+import Select from '../container/Select';
 import { Route } from 'react-router';
 import { ConnectedRouter } from 'react-router-redux';
 import { history } from '../App';
@@ -42,7 +42,6 @@ class Bar extends React.Component<Props> {
         const { classes, open, toggleOpen } = this.props;
         return (
             <ConnectedRouter history={history}>
-
                 <AppBar
                     position="absolute"
                     className={classnames(classes.appBar, open && classes.appBarShift)}

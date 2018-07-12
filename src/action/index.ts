@@ -105,3 +105,16 @@ export function toggleLoading(): ToggleLoading {
         type: TOGGLE_LOADING,
     }
 }
+
+export const SET_GROUP = 'SET_GROUP';
+export type SET_GROUP = typeof SET_GROUP;
+export interface SetGroup {
+    type: SET_GROUP;
+    group: string
+}
+export function setGroup(group: string): SetGroup {
+    return {
+        type: SET_GROUP,
+        group
+    }
+}

@@ -9,7 +9,7 @@ import {
     Close as CloseIcon
 } from '@material-ui/icons';
 
-import styles from "../style/style";
+import styles from "../style/snackbar";
 import withRoot from "../style/withRoot";
 
 interface Props extends WithStyles {
