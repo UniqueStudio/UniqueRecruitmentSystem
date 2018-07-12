@@ -1,14 +1,25 @@
 import * as actions from '../action';
 import { StoreState } from './index';
 import * as candidates from '../candidates.json';
+import mergeKV from '../lib/mergeKV';
+
+const selected = mergeKV(['web', 'lab', 'ai', 'game', 'android', 'ios', 'design', 'pm'],
+    [...new Array(8)].map(() => []));
 
 const init = {
-    candidates,
-    selected: [],
+    candidates: candidates['web'],
+    selected: selected['web'],
     isLoading: true,
+    group: 'web'
 };
 
-type Action = actions.AddComment | actions.SelectCandidate | actions.DeselectCandidate | actions.RemoveCandidate | actions.ToggleLoading;
+type Action =
+    actions.AddComment
+    | actions.SelectCandidate
+    | actions.DeselectCandidate
+    | actions.RemoveCandidate
+    | actions.ToggleLoading
+    | actions.SetGroup;
 
 export default function data(
     state: StoreState['data'] = init,
@@ -32,7 +43,9 @@ export default function data(
             newState['candidates'][action.step] = currentStep;
             return newState;
         case actions.TOGGLE_LOADING:
-            return { ...state, isLoading: !state['isLoading'] }
+            return { ...state, isLoading: !state['isLoading'] };
+        case actions.SET_GROUP:
+            return { ...state, group: action.group, candidates: candidates[action.group], selected: selected[action.group] };
     }
     return state;
 }
