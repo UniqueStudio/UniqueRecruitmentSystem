@@ -5,21 +5,21 @@ import {
     WithStyles,
     withStyles
 } from '@material-ui/core';
-import styles from '../style/style'
+import styles from '../style/index'
 import withRoot from '../style/withRoot';
 
 interface Props extends WithStyles {
-    open: boolean;
-    toggleOpen: () => void;
+    setGroup: (group: string) => void;
 }
 
 class Selects extends React.Component<Props> {
     state = {
-        group: ''
+        group: 'web'
     };
 
     handleChange = (event: React.ChangeEvent) => {
         this.setState({ group: event.target['value'] });
+        this.props.setGroup(event.target['value']);
     };
 
     render() {
@@ -30,14 +30,9 @@ class Selects extends React.Component<Props> {
                 onChange={this.handleChange}
                 className={classes.select}
             >
-                <MenuItem value='web'>web</MenuItem>
-                <MenuItem value='lab'>lab</MenuItem>
-                <MenuItem value='ai'>AI</MenuItem>
-                <MenuItem value='game'>game</MenuItem>
-                <MenuItem value='android'>android</MenuItem>
-                <MenuItem value='ios'>iOS</MenuItem>
-                <MenuItem value='design'>design</MenuItem>
-                <MenuItem value='pm'>PM</MenuItem>
+                {['Web', 'Lab', 'AI', 'Game', 'Android', 'iOS', 'Design', 'PM'].map(i =>
+                    <MenuItem value={i.toLowerCase()} key={i.toLowerCase()}>{i}</MenuItem>
+                )}
             </Select>
         );
     }

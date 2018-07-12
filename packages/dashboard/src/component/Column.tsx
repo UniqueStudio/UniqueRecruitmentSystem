@@ -1,14 +1,18 @@
 import * as React from "react";
 import {
     Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle,
-    Divider,
+    Divider, List,
     Paper,
     Typography,
     WithStyles,
     withStyles
 } from "@material-ui/core";
-import styles from "../style/style";
+
 import Candidate from "../container/Candidate";
+import Modal from './Modal';
+import Template from './Template';
+
+import styles from "../style";
 import withRoot from "../style/withRoot";
 
 interface Props extends WithStyles {
@@ -21,67 +25,62 @@ interface Props extends WithStyles {
     toggleOn: (info: string) => void;
 }
 
-const titleToStep = {
-    '报名流程': '0',
-    '笔试流程': '1',
-    '面试流程': '2',
-    '熬测流程': '3',
-    '群面流程': '4',
-};
+const titleToStep = (title: string) => `${['报名流程', '笔试流程', '面试流程', '熬测流程', '群面流程'].indexOf(title)}`;
 
 class Column extends React.Component<Props> {
 
     state = {
-        modalOpen: false,
+        dialog: false,
+        modal: false,
         removeConfirm: false,
     };
 
-    handleSelectAll = () => {
-        const { candidates, title, select } = this.props;
-        select(Object.keys(candidates[titleToStep[title]]));
+    handleSelectAll = (all: string[]) => () => {
+        const { select } = this.props;
+        select(all);
     };
 
-    handleInverse = () => {
-        const { candidates, selected, title, select, deselect } = this.props;
-        const allCandidates = Object.keys(candidates[titleToStep[title]]);
-        const selectedCandidates = selected.filter((i: string) => allCandidates.includes(i));
-        deselect(selectedCandidates);
-        select(allCandidates.filter((i: string) => !selectedCandidates.includes(i)));
+    handleInverse = (all: string[], selected: string[]) => () => {
+        const { select, deselect } = this.props;
+        deselect(selected);
+        select(all.filter((i: string) => !selected.includes(i)));
     };
 
     confirmRemove = () => {
-        this.toggleModalOpen();
+        this.toggleOpen('dialog')();
     };
 
-    handleRemove = () => {
-        this.toggleModalOpen();
-        const { remove, title, candidates, selected, toggleOn } = this.props;
-        const allCandidates = Object.keys(candidates[titleToStep[title]]);
-        const selectedCandidates = selected.filter((i: string) => allCandidates.includes(i));
-        if (selectedCandidates.length === 0) {
+    handleRemove = (selected: string[]) => () => {
+        this.toggleOpen('dialog')();
+        const { remove, title, toggleOn } = this.props;
+        if (selected.length === 0) {
             toggleOn('你没有选中任何人');
             return;
         }
-        remove(titleToStep[title], selectedCandidates);
+        remove(titleToStep(title), selected);
     };
 
-    toggleModalOpen = () => {
+    toggleOpen = (name: string) => () => {
         this.setState({
-            modalOpen: !this.state.modalOpen
+            [name]: !this.state[name]
         });
     };
 
     render() {
-        const { classes, title, candidates } = this.props;
+        const { classes, title, candidates, selected } = this.props;
+        const step = titleToStep(title);
+        const allCandidates = Object.keys(candidates[titleToStep(title)]);
+        const selectedCandidates = selected.filter((i: string) => allCandidates.includes(i));
+
         return (
             <Paper className={classes.column}>
                 <div className={classes.columnHeader}>
                     <Typography variant='title' className={classes.columnTitle}>{title}</Typography>
                 </div>
-                <div className={classes.columnBody}>
-                    <Divider />
-                    {Object.entries(candidates[titleToStep[title]]).map(i => (
-                        <Candidate step={titleToStep[title]}
+                <Divider />
+                <List className={classes.columnBody}>
+                    {candidates[step] && Object.entries(candidates[step]).map(i => (
+                        <Candidate step={step}
                                    name={i[0]}
                                    grade={i[1]['grade']}
                                    institute={i[1]['institute']}
@@ -89,25 +88,26 @@ class Column extends React.Component<Props> {
                                    key={i[0]}
                         />
                     ))}
-                </div>
+                </List>
                 <Divider />
                 <div className={classes.columnBottom}>
                     <Button
                         color='primary'
                         size='small'
                         className={classes.columnButton}
-                        onClick={this.handleSelectAll}
+                        onClick={this.handleSelectAll(allCandidates)}
                     >全选</Button>
                     <Button
                         color='primary'
                         size='small'
                         className={classes.columnButton}
-                        onClick={this.handleInverse}
+                        onClick={this.handleInverse(allCandidates, selectedCandidates)}
                     >反选</Button>
                     <Button
                         color='primary'
                         size='small'
                         className={classes.columnButton}
+                        onClick={this.toggleOpen('modal')}
                     >发送通知</Button>
                     <Button
                         color='primary'
@@ -118,8 +118,8 @@ class Column extends React.Component<Props> {
                     >移除</Button>
                 </div>
                 <Dialog
-                    open={this.state.modalOpen}
-                    onClose={this.toggleModalOpen}
+                    open={this.state.dialog}
+                    onClose={this.toggleOpen('dialog')}
                 >
                     <DialogTitle>提醒</DialogTitle>
                     <DialogContent>
@@ -128,14 +128,17 @@ class Column extends React.Component<Props> {
                         </DialogContentText>
                     </DialogContent>
                     <DialogActions>
-                        <Button onClick={this.toggleModalOpen} color="primary" autoFocus>
+                        <Button onClick={this.toggleOpen('dialog')} color="primary" autoFocus>
                             否
                         </Button>
-                        <Button onClick={this.handleRemove} color="primary">
+                        <Button onClick={this.handleRemove(selectedCandidates)} color="primary">
                             确定移除
                         </Button>
                     </DialogActions>
                 </Dialog>
+                <Modal open={this.state.modal} onClose={this.toggleOpen('modal')} title='发送通知'>
+                    <Template toggleOpen={this.toggleOpen('modal')} selected={selectedCandidates} flow={step}/>
+                </Modal>
             </Paper>
         );
     }

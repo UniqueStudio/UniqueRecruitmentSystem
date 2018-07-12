@@ -14,6 +14,7 @@ export interface StoreState {
         candidates: object;
         selected: string[];
         isLoading: boolean;
+        group: string;
     };
 }
 
