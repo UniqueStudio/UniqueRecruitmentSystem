@@ -13,13 +13,13 @@ import {
 } from '@material-ui/core';
 import {
     Dashboard as DashboardIcon,
-    DateRange as DateRangeIcon,
+    InsertChart as InsertChartIcon,
     Home as HomeIcon,
     ChevronLeft as ChevronLeftIcon
 } from '@material-ui/icons';
 
 import withRoot from '../style/withRoot';
-import styles from '../style/style';
+import styles from '../style/index';
 import { Link } from 'react-router-dom';
 
 interface Props extends WithStyles {
@@ -56,7 +56,7 @@ class Menu extends React.Component<Props> {
                     <Link to={`/data`} style={{ textDecoration: 'none' }}>
                         <ListItem button>
                             <ListItemIcon>
-                                <DateRangeIcon />
+                                <InsertChartIcon />
                             </ListItemIcon>
                             <ListItemText primary="历年数据" />
                         </ListItem>

@@ -6,10 +6,11 @@ const init = {
     snackbar: {
         on: false,
         info: '',
+        color: ''
     },
 };
 
-type Action = actions.ToggleSnackbarOn | actions.ToggleDrawerOpen;
+type Action = actions.ToggleSnackbarOn | actions.ToggleSnackbarOff | actions.ToggleDrawerOpen;
 
 export default function components(
     state: StoreState['components'] = init,
@@ -19,7 +20,9 @@ export default function components(
         case actions.TOGGLE_DRAWER_OPEN:
             return { ...state, drawerOpen: !state.drawerOpen };
         case actions.TOGGLE_SNACKBAR_ON:
-            return { ...state, snackbar: { on: !state.snackbar.on, info: action.info || '' } };
+            return { ...state, snackbar: { on: true, info: action.info, color: action.color } };
+        case actions.TOGGLE_SNACKBAR_OFF:
+            return { ...state, snackbar: { ...state.snackbar, on: false } };
     }
     return state;
 }
