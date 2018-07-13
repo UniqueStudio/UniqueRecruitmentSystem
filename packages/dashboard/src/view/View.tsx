@@ -1,10 +1,14 @@
 import * as React from "react";
-import { withStyles, WithStyles } from "@material-ui/core";
+import { withStyles } from "@material-ui/core";
+
 import withRoot from "../style/withRoot";
 import styles from "../style/index";
 import Column from "../container/Column";
+import { DragDropContext } from 'react-dnd';
+import HTML5Backend from 'react-dnd-html5-backend';
 
-class View extends React.Component<WithStyles> {
+@DragDropContext(HTML5Backend)
+class View extends React.Component<any> {
     render() {
         const { classes } = this.props;
         return (

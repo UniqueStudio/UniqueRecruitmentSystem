@@ -147,6 +147,8 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
     card: {
         margin: `0 ${theme.spacing.unit}px`,
         position: 'relative',
+        zIndex: theme.zIndex.drawer,
+        cursor: 'pointer'
         //overflow: 'visible',
     },
     cardAction: {
@@ -164,6 +166,14 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
     },
     iconButton: {
         marginLeft: 'auto',
+    },
+    leftButton: {
+        transform: 'rotate(90deg)',
+        alignSelf: 'center'
+    },
+    rightButton: {
+        transform: 'rotate(-90deg)',
+        alignSelf: 'center'
     },
     comment: {
         width: '50%',
@@ -206,22 +216,6 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
     },
     comments: {
         width: 360
-    },
-    template: {
-        margin: theme.spacing.unit * 2,
-        width: 800
-    },
-    templateContent: {
-        minHeight: theme.spacing.unit * 5,
-        margin: theme.spacing.unit
-    },
-    templateChip: {
-        margin: theme.spacing.unit,
-    },
-    templateEnd: {
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between'
     }
 });
 

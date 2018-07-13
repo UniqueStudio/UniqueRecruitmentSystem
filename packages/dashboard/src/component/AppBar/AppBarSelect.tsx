@@ -5,8 +5,8 @@ import {
     WithStyles,
     withStyles
 } from '@material-ui/core';
-import styles from '../style/index'
-import withRoot from '../style/withRoot';
+import styles from '../../style/index'
+import withRoot from '../../style/withRoot';
 
 interface Props extends WithStyles {
     setGroup: (group: string) => void;

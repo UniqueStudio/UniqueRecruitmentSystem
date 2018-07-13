@@ -40,15 +40,15 @@ export type ADD_COMMENT = typeof ADD_COMMENT;
 export interface AddComment {
     type: ADD_COMMENT;
     step: string;
-    name: string;
+    uid: string;
     commenter: string;
     comment: object;
 }
-export function addComment(step: string, name: string, commenter: string, comment: object): AddComment {
+export function addComment(step: string, uid: string, commenter: string, comment: object): AddComment {
     return {
         type: ADD_COMMENT,
         step,
-        name,
+        uid,
         commenter,
         comment
     }
@@ -58,12 +58,12 @@ export const SELECT_CANDIDATE = 'SELECT_CANDIDATE';
 export type SELECT_CANDIDATE = typeof SELECT_CANDIDATE;
 export interface SelectCandidate {
     type: SELECT_CANDIDATE;
-    name: string | string[];
+    uid: string | string[];
 }
-export function selectCandidate(name: string | Array<string>): SelectCandidate {
+export function selectCandidate(uid: string | Array<string>): SelectCandidate {
     return {
         type: SELECT_CANDIDATE,
-        name,
+        uid,
     }
 }
 
@@ -71,12 +71,12 @@ export const DESELECT_CANDIDATE = 'DESELECT_CANDIDATE';
 export type DESELECT_CANDIDATE = typeof DESELECT_CANDIDATE;
 export interface DeselectCandidate {
     type: DESELECT_CANDIDATE;
-    name: string | string[];
+    uid: string | string[];
 }
-export function deselectCandidate(name: string | Array<string>): DeselectCandidate {
+export function deselectCandidate(uid: string | Array<string>): DeselectCandidate {
     return {
         type: DESELECT_CANDIDATE,
-        name,
+        uid,
     }
 }
 
@@ -84,14 +84,31 @@ export const REMOVE_CANDIDATE = 'REMOVE_CANDIDATE';
 export type REMOVE_CANDIDATE = typeof REMOVE_CANDIDATE;
 export interface RemoveCandidate {
     type: REMOVE_CANDIDATE;
-    name: string | string[];
+    uid: string | string[];
     step: string
 }
-export function removeCandidate(step: string, name: string | string[]): RemoveCandidate {
+export function removeCandidate(step: string, uid: string | string[]): RemoveCandidate {
     return {
         type: REMOVE_CANDIDATE,
-        name,
+        uid,
         step,
+    }
+}
+
+export const MOVE_CANDIDATE = 'MOVE_CANDIDATE';
+export type MOVE_CANDIDATE = typeof MOVE_CANDIDATE;
+export interface MoveCandidate {
+    type: MOVE_CANDIDATE;
+    from: string;
+    to: string;
+    uid: string;
+}
+export function moveCandidate(from: string, to: string, uid: string): MoveCandidate {
+    return {
+        type: MOVE_CANDIDATE,
+        from,
+        to,
+        uid
     }
 }
 
