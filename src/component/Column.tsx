@@ -1,7 +1,12 @@
 import * as React from "react";
 import {
-    Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle,
-    Divider, List,
+    Button,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogContentText,
+    DialogTitle,
+    Divider,
     Paper,
     Typography,
     WithStyles,
@@ -60,7 +65,7 @@ class Column extends React.Component<Props> {
     CandidateElements = {};
 
     componentWillReceiveProps(nextProps: Props) {
-        if (nextProps.group !== this.props.group) {
+        if (nextProps.group !== this.props.group || nextProps.candidates !== this.props.candidates) {
             this.setState({
                 candidateModalOpen: new Array(this.length),
             });
@@ -138,8 +143,6 @@ class Column extends React.Component<Props> {
                 </div>
                 <Divider />
                 {connectDropTarget(<div className={classes.columnBody}>
-                    <List>
-
                         {candidates[step] && Object.entries(candidates[step]).map((i, j) => (
                             <Candidate step={step}
                                        uid={i[0]}
@@ -152,7 +155,6 @@ class Column extends React.Component<Props> {
                                        direction={this.state.direction}
                             />
                         ))}
-                    </List>
                 </div>)}
                 <Divider />
                 <div className={classes.columnBottom}>
