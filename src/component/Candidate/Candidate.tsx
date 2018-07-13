@@ -3,7 +3,7 @@ import {
     Checkbox,
     IconButton,
     WithStyles,
-    withStyles, ListItemSecondaryAction, ListItemText, ListItem
+    withStyles, Typography, ExpansionPanelSummary, Card
 } from "@material-ui/core";
 import { ExpandMore as ExpandMoreIcon, InfoOutline as InfoIcon } from "@material-ui/icons";
 
@@ -39,7 +39,7 @@ interface Props extends WithStyles {
 
 @DragSource('candidate', {
     beginDrag(props: Props) {
-        return {step: props.step, uid: props.uid};
+        return { step: props.step, uid: props.uid };
     }
 }, ((connect) => {
     return {
@@ -95,55 +95,28 @@ class Candidate extends React.Component<Props> {
         };
         return (
             <>
-                {/*<Card className={classes.card}>*/}
-                {/*<ExpansionPanelSummary style={coloredPanelStyle}>*/}
-                {/*<Checkbox checked={selected.includes(name)}*/}
-                {/*onChange={this.handleCheck}*/}
-                {/*color='primary'*/}
-                {/*classes={{ root: classes.cornerChecker }}*/}
-                {/*/>*/}
-                {/*<span>*/}
-                {/*<Typography variant='title'>{name}</Typography>*/}
-                {/*<Typography color='textSecondary'>{`${grade} - ${institute}`}</Typography>*/}
-                {/*</span>*/}
-                {/*<IconButton className={classes.iconButton} onClick={this.toggleModalOpen/*this.handleMenuOpen*!/>*/}
-                {/*<InfoIcon />*/}
-                {/*</IconButton>*/}
-                {/*{*/}
-                {/*/**/}
-                {/*<Menu*/}
-                {/*anchorEl={this.state.anchorEl}*/}
-                {/*open={Boolean(this.state.anchorEl)}*/}
-                {/*onClose={this.handleMenuClose}*/}
-                {/*>*/}
-                {/*<MenuItem onClick={e => {*/}
-                {/*this.handleMenuClose(e);*/}
-                {/*this.toggleModalOpen(e);*/}
-                {/*}}>详细信息</MenuItem>*/}
-                {/*</Menu>*/}
-
-                {/*/!* this div is used to get avoid of default style on :last-child *!/*/}
-                {/*<div style={{ position: 'absolute' }} />*/}
-                {/*</ExpansionPanelSummary>*/}
-                {/*</Card>*/}
                 {connectDragSource(
-                    <div className={classes.card}>
-                        <ListItem style={coloredPanelStyle}>
-                            <Checkbox
-                                color='primary'
-                                onChange={this.handleCheck}
-                                checked={selected.includes(uid)}
-                                classes={{ root: classes.cornerChecker }}
-                            />
-                            <ListItemText primary={name} secondary={`${grade} - ${institute}`} />
-                            <ListItemSecondaryAction>
+                    <div>
+                        <Card className={classes.card}>
+                            <ExpansionPanelSummary style={coloredPanelStyle}>
+                                <Checkbox
+                                    color='primary'
+                                    onChange={this.handleCheck}
+                                    checked={selected.includes(uid)}
+                                />
+                                <span>
+                                    <Typography variant='title'>{name}</Typography>
+                                    <Typography color='textSecondary'
+                                                variant='caption'>{`${grade} - ${institute}`}</Typography>
+                                </span>
                                 <IconButton className={classes.iconButton}
                                             onClick={this.toggleModalOpen/*this.handleMenuOpen*/}>
                                     <InfoIcon />
                                 </IconButton>
-                            </ListItemSecondaryAction>
-                        </ListItem>
-                    </div>
+                                {/* this div is used to get avoid of default style on :last-child */}
+                                <div style={{ position: 'absolute' }} />
+                            </ExpansionPanelSummary>
+                        </Card></div>
                 )}
                 <Modal open={this.state.modalOpen}
                        onClose={this.toggleModalOpen}
