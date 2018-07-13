@@ -9,12 +9,12 @@ import {
     withStyles
 } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
-import styles from '../style/index'
-import withRoot from '../style/withRoot';
-import Select from '../container/Select';
+import styles from '../../style/index'
+import withRoot from '../../style/withRoot';
+import Select from '../../container/AppBarSelect';
 import { Route } from 'react-router';
 import { ConnectedRouter } from 'react-router-redux';
-import { history } from '../App';
+import { history } from '../../App';
 
 // import logo from '../image/logo.png';
 

@@ -14,10 +14,10 @@ import withRoot from "../../style/withRoot";
 
 interface Props extends WithStyles {
     step: string;
-    name: string;
+    uid: string;
     comments: object;
     snackbarOn: boolean;
-    submit: (step: string, name: string, commenter: string, comment: object) => void;
+    submit: (step: string, uid: string, commenter: string, comment: object) => void;
     toggleOn: (info: string) => void;
 }
 
@@ -38,9 +38,9 @@ class CandidateComments extends React.Component<Props> {
 
     handleSubmit = () => {
         const { comment, evaluation } = this.state;
-        const { submit, step, name, snackbarOn, toggleOn } = this.props;
+        const { submit, step, uid, snackbarOn, toggleOn } = this.props;
         if (comment && evaluation) {
-            submit(step, name, "AA", {
+            submit(step, uid, "AA", {
                 comment,
                 evaluation
             });

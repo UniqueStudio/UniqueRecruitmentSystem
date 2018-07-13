@@ -1,9 +1,10 @@
 import * as React from "react";
 import {
-    Modal, Zoom,
+    Modal,
+    Slide,
     Typography,
     WithStyles,
-    withStyles
+    withStyles,
 } from "@material-ui/core";
 
 import styles from "../style/index";
@@ -11,6 +12,7 @@ import withRoot from "../style/withRoot";
 
 interface Props extends WithStyles {
     open: boolean;
+    direction: 'left' | 'right' | 'up' | 'down';
     title: string;
     onClose: () => void;
 }
@@ -18,14 +20,11 @@ interface Props extends WithStyles {
 class InfoModal extends React.Component<Props> {
 
     render() {
-        const { classes, open, onClose, title, children } = this.props;
+        const { classes, open, onClose, title, children, direction } = this.props;
+        const leaveDirection = direction === 'left' ? 'right' : 'left';
         return (
-            <Modal
-                open={open}
-                onClose={onClose}
-                className={classes.modalContainer}
-            >
-                <Zoom in={open}>
+            <Modal open={open} onClose={onClose} className={classes.modalContainer}>
+                <Slide direction={open ? direction || 'right' : leaveDirection} in={open} mountOnEnter unmountOnExit>
                     <div className={classes.modal}>
                         <div className={classes.columnHeader}>
                             <Typography variant="headline" className={classes.columnTitle}>
@@ -34,7 +33,7 @@ class InfoModal extends React.Component<Props> {
                         </div>
                         {children}
                     </div>
-                </Zoom>
+                </Slide>
             </Modal>
         )
     }

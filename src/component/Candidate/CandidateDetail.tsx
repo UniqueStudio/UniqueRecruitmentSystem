@@ -10,7 +10,11 @@ import styles from "../../style";
 import withRoot from "../../style/withRoot";
 import Modal from '../Modal';
 
-class CandidateDetail extends React.Component<WithStyles> {
+interface Props extends WithStyles {
+    name: string
+}
+
+class CandidateDetail extends React.Component<Props> {
     state = {
         modalOpen: false,
     };
@@ -20,14 +24,14 @@ class CandidateDetail extends React.Component<WithStyles> {
     };
 
     render() {
-        const { classes } = this.props;
+        const { classes, name } = this.props;
         return (
             <>
                 <div className={classes.detail}>
                     <div className={classes.detailRow}>
                         <TextField
                             label="姓名"
-                            defaultValue="四个汉字"
+                            defaultValue={name}
                             margin="normal"
                             InputProps={{
                                 readOnly: true,
