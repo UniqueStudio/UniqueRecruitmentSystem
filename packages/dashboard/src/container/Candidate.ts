@@ -11,10 +11,12 @@ import { StoreState } from '../reducer';
 
 interface OwnProps {
     step: string;
-    name: string;
-    grade: string;
-    institute: string;
-    comments: object;
+    uid: string;
+    info: object;
+    direction: string;
+    modalOpen: boolean;
+    onNext: () => void;
+    onPrev: () => void;
 }
 
 const mapStateToProps = ({ data }: StoreState, ownProps: OwnProps) => ({
