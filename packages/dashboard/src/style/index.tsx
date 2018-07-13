@@ -145,11 +145,10 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
         margin: theme.spacing.unit * 2,
     },
     card: {
-        margin: `0 ${theme.spacing.unit}px`,
+        margin: theme.spacing.unit,
         position: 'relative',
         zIndex: theme.zIndex.drawer,
-        cursor: 'pointer'
-        //overflow: 'visible',
+        cursor: 'pointer',
     },
     cardAction: {
         justifyContent: 'center',
