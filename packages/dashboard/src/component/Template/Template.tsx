@@ -59,11 +59,11 @@ class Template extends React.Component<Props> {
     render() {
         const { classes, deselect, toggleOpen, flowStep, group } = this.props;
         const { activeStep, selected } = this.state;
-        const steps = ['发送对象', '消息模板', '模板参数'];
+        const steps = ['发送对象', '消息模板', '确认发送'];
         const stepContent = [
             <TemplateStepOne selected={selected} deselect={deselect} onDelete={this.handleDelete} />,
-            <TemplateStepTwo />,
-            <TemplateStepThree step={flowStep} group={group}/>,
+            <TemplateStepTwo step={flowStep} group={group} />,
+            <TemplateStepThree/>,
         ];
 
         return (
@@ -88,7 +88,7 @@ class Template extends React.Component<Props> {
                                                 className={classes.templateItem}
                                                 disabled={selected.length === 0}
                                         >
-                                            {activeStep === steps.length - 1 ? '发送' : '下一步'}
+                                            {activeStep === steps.length - 1 ? '发送通知' : '下一步'}
                                         </Button>
                                     </div>
                                 </StepContent>

@@ -7,6 +7,7 @@ import styles from '../../style/comment';
 interface Props extends WithStyles {
     name: string;
     comment: string;
+    remove: () => void;
 }
 
 const evaluationToStyle = {
@@ -22,13 +23,16 @@ class CommentChip extends React.Component<Props> {
     };
 
     handleOpen = (event: React.MouseEvent) => {
-        this.setState({ anchorEl: event.target });
+        this.setState({ anchorEl: event.currentTarget });
     };
 
     handleClose = () => {
         this.setState({ anchorEl: undefined });
     };
 
+    handleDelete = () => {
+        this.props.remove();
+    };
 
     render() {
         const { name, comment, classes } = this.props;
@@ -45,12 +49,10 @@ class CommentChip extends React.Component<Props> {
                     }}
                     onMouseOver={this.handleOpen}
                     onMouseOut={this.handleClose}
+                    onDelete={name === 'AA' ? this.handleDelete : undefined}
                 />
                 <Popover
                     className={classes.popover}
-                    classes={{
-                        paper: classes.paper,
-                    }}
                     open={Boolean(this.state.anchorEl)}
                     anchorEl={this.state.anchorEl}
                     anchorOrigin={{
