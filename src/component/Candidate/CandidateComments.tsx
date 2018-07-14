@@ -18,6 +18,7 @@ interface Props extends WithStyles {
     comments: object;
     snackbarOn: boolean;
     submit: (step: string, uid: string, commenter: string, comment: object) => void;
+    remove: (step: string, uid: string, commenter: string) => void;
     toggleOn: (info: string) => void;
 }
 
@@ -53,6 +54,12 @@ class CandidateComments extends React.Component<Props> {
         }
     };
 
+    handleRemove = () => {
+        const { remove, step, uid } = this.props;
+        remove(step, uid, "AA");
+        this.setState({});
+    };
+
     render() {
         const { comments, classes } = this.props;
         return (
@@ -82,12 +89,12 @@ class CandidateComments extends React.Component<Props> {
                         onChange={this.handleChange("comment")}
                         value={this.state.comment}
                     />
-                    <Button color="primary" size="small" onClick={this.handleSubmit}>
+                    <Button color="primary" size="large" onClick={this.handleSubmit}>
                         发表评论
                     </Button>
                 </div>
                 {Object.entries(comments).map(i => (
-                    <CommentChip name={i[0]} comment={i[1]} key={i[0]} />
+                    <CommentChip name={i[0]} comment={i[1]} key={i[0]} remove={this.handleRemove}/>
                 ))}
             </div>
         );

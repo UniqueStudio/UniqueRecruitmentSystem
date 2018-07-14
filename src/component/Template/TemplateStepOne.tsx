@@ -32,7 +32,7 @@ class Step extends React.Component<Props> {
                     <Typography variant='title' className={classes.templateItem}>你未选中任何人!</Typography>
                     : selected.map(i =>
                         <Chip
-                            key={i.name}
+                            key={i.uid}
                             label={`${i.name} ${i.grade} ${i.institute}`}
                             onDelete={() => onDelete(i.uid)}
                             className={classes.templateItem}

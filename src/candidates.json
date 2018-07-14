@@ -5,6 +5,7 @@
         "name": "WEB",
         "grade": "年级",
         "institute": "按照评价比进行linear-gradient",
+        "abandon": true,
         "comments": {
           "WR": {
             "comment": "太菜了",

@@ -17,6 +17,7 @@ import Candidate from "../container/Candidate";
 import Modal from './Modal';
 import Template from './Template/Template';
 
+import { STEP } from '../constants';
 import styles from "../style";
 import withRoot from "../style/withRoot";
 import { DropTarget } from 'react-dnd';
@@ -36,7 +37,7 @@ interface Props extends WithStyles {
     dropped: boolean;
 }
 
-const titleToStep = (title: string) => `${['报名流程', '笔试流程', '面试流程', '熬测流程', '群面流程'].indexOf(title)}`;
+const titleToStep = (title: string) => `${STEP.indexOf(title)}`;
 
 let moveTo = '';
 
@@ -52,7 +53,7 @@ let moveTo = '';
     }
 })
 class Column extends React.Component<Props> {
-    length = Object.keys(this.props.candidates[titleToStep(this.props.title)]).length;
+    length = Object.keys(this.props.candidates[titleToStep(this.props.title)] || {}).length;
 
     state = {
         dialog: false,
@@ -65,11 +66,9 @@ class Column extends React.Component<Props> {
     CandidateElements = {};
 
     componentWillReceiveProps(nextProps: Props) {
-        if (nextProps.group !== this.props.group || nextProps.candidates !== this.props.candidates) {
-            this.setState({
-                candidateModalOpen: new Array(this.length),
-            });
-        }
+        this.setState({
+            candidateModalOpen: new Array(this.length),
+        });
     }
 
     handleNext = (i: number) => () => {
@@ -91,14 +90,14 @@ class Column extends React.Component<Props> {
     };
 
     handleSelectAll = (all: string[]) => () => {
-        const { select } = this.props;
-        select(all);
+        const { select, candidates, title } = this.props;
+        select(all.filter(i => !candidates[titleToStep(title)][i].abandon));
     };
 
     handleInverse = (all: string[], selected: string[]) => () => {
-        const { select, deselect } = this.props;
-        deselect(selected);
-        select(all.filter((i: string) => !selected.includes(i)));
+        const { select, deselect, candidates, title } = this.props;
+        deselect(selected.filter(i => !candidates[titleToStep(title)][i].abandon));
+        select(all.filter((i: string) => !selected.includes(i) && !candidates[titleToStep(title)][i].abandon));
     };
 
     confirmRemove = () => {
@@ -124,12 +123,12 @@ class Column extends React.Component<Props> {
     render() {
         const { classes, title, candidates, group, selected, deselect, connectDropTarget, dropped, movingItem, move } = this.props;
         const step = titleToStep(title);
-        const allCandidatesUids = Object.keys(candidates[step]);
+        const allCandidatesUids = Object.keys(candidates[step] || {});
         this.length = allCandidatesUids.length;
         const selectedCandidatesUids = selected.filter((i: string) => allCandidatesUids.includes(i));
         const selectedCandidatesInfo = selectedCandidatesUids.map((i: string) => {
             const current = candidates[step][i];
-            return { uid: i, name: current.name, grade: current.grade, institute: current.institute };
+            return { uid: i, ...current };
         });
 
         if (dropped && moveTo === step) {
@@ -143,18 +142,18 @@ class Column extends React.Component<Props> {
                 </div>
                 <Divider />
                 {connectDropTarget(<div className={classes.columnBody}>
-                        {candidates[step] && Object.entries(candidates[step]).map((i, j) => (
-                            <Candidate step={step}
-                                       uid={i[0]}
-                                       info={i[1]}
-                                       key={i[0]}
-                                       ref={c => this.CandidateElements[j] = c}
-                                       onNext={this.handleNext(j)}
-                                       onPrev={this.handlePrev(j)}
-                                       modalOpen={Boolean(this.state.candidateModalOpen[j])}
-                                       direction={this.state.direction}
-                            />
-                        ))}
+                    {candidates[step] && Object.entries(candidates[step]).map((i, j) => (
+                        <Candidate step={step}
+                                   uid={i[0]}
+                                   info={i[1]}
+                                   key={i[0]}
+                                   ref={c => this.CandidateElements[j] = c}
+                                   onNext={this.handleNext(j)}
+                                   onPrev={this.handlePrev(j)}
+                                   modalOpen={Boolean(this.state.candidateModalOpen[j])}
+                                   direction={this.state.direction}
+                        />
+                    ))}
                 </div>)}
                 <Divider />
                 <div className={classes.columnBottom}>

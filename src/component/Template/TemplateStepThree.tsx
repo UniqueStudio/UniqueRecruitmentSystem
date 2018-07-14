@@ -1,62 +1,37 @@
 import * as React from 'react';
 import * as classNames from 'classnames';
 import {
-    TextField,
+    Button, TextField,
+    Typography,
     WithStyles,
     withStyles
 } from '@material-ui/core';
 import styles from '../../style/template'
 import withRoot from '../../style/withRoot';
 
-interface Props extends WithStyles {
-    step: string;
-    group: string
-}
-
-const steps = ['报名流程', '笔试流程', '面试流程', '熬测流程', '群面流程'];
-
-class Step extends React.Component<Props> {
+class Step extends React.Component<WithStyles> {
 
     state = {
-        name: '(默认)',
-        title: '8102年秋招(默认)',
-        group: `${this.props.group}(默认)`,
-        step: `${steps[+this.props.step]}(默认)`,
+        sent: false
     };
 
-    handleChange = (name: string) => (event: React.ChangeEvent) => {
+    sendSMS = () => {
         this.setState({
-            [name]: event.target['value'],
-        });
+            sent: true
+        })
     };
 
     render() {
-        const { classes } = this.props;
+        const {classes} = this.props;
 
         return (
-            <div className={classNames(classes.templateContent, classes.templateItem, classes.templateParams)}>
+            <div className={classNames(classes.templateContent, classes.templateItem)}>
+                <Typography variant='subheading' className={classes.templateItem}>
+                    {this.state.sent ? '我们已向你发送了验证码短信，若没有收到，点击重新获取验证码' : '我们将向你发送验证码短信，点击获取验证码'}
+                </Typography>
+                <Button color='primary' onClick={this.sendSMS}>{this.state.sent ? '重新获取' : '获取验证码'}</Button>
                 <TextField
-                    label="候选人姓名"
-                    onChange={this.handleChange("name")}
-                    value={this.state.name}
-                    className={classes.templateItem}
-                />
-                <TextField
-                    label="招新名称"
-                    onChange={this.handleChange("title")}
-                    value={this.state.title}
-                    className={classes.templateItem}
-                />
-                <TextField
-                    label="组别"
-                    onChange={this.handleChange("group")}
-                    value={this.state.group}
-                    className={classes.templateItem}
-                />
-                <TextField
-                    label="轮次"
-                    onChange={this.handleChange("step")}
-                    value={this.state.step}
+                    label="输入验证码"
                     className={classes.templateItem}
                 />
             </div>

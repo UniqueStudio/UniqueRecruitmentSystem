@@ -15,6 +15,7 @@ export interface StoreState {
         selected: string[];
         isLoading: boolean;
         group: string;
+        loggedIn: boolean;
     };
 }
 

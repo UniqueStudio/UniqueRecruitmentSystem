@@ -2,25 +2,29 @@ import * as actions from '../action';
 import { StoreState } from './index';
 import * as candidates from '../candidates.json';
 import mergeKV from '../lib/mergeKV';
+import { GROUP } from '../constants';
 
-const selected = mergeKV(['web', 'lab', 'ai', 'game', 'android', 'ios', 'design', 'pm'],
+const selected = mergeKV(GROUP.map(i => i.toLowerCase()),
     [...new Array(8)].map(() => []));
 
 const init = {
     candidates: candidates['web'],
     selected: selected['web'],
     isLoading: true,
-    group: 'web'
+    group: 'web',
+    loggedIn: false,
 };
 
 type Action =
     actions.AddComment
+    | actions.RemoveComment
     | actions.SelectCandidate
     | actions.DeselectCandidate
     | actions.RemoveCandidate
     | actions.MoveCandidate
     | actions.ToggleLoading
-    | actions.SetGroup;
+    | actions.SetGroup
+    | actions.Login;
 
 export default function data(
     state: StoreState['data'] = init,
@@ -29,8 +33,10 @@ export default function data(
     const newState = { ...state };
     switch (action.type) {
         case actions.ADD_COMMENT:
-            newState['candidates'][action.step][action.uid].comments[action.commenter] =
-                action.comment;
+            newState['candidates'][action.step][action.uid].comments[action.commenter] = action.comment;
+            return newState;
+        case actions.REMOVE_COMMENT:
+            delete newState['candidates'][action.step][action.uid].comments[action.commenter];
             return newState;
         case actions.SELECT_CANDIDATE:
             newState['selected'] = [...new Set(newState['selected'].concat(action.uid))];
@@ -46,12 +52,15 @@ export default function data(
         case actions.MOVE_CANDIDATE:
             const info = newState['candidates'][action.from][action.uid];
             delete newState['candidates'][action.from][action.uid];
+            if (!newState.candidates[action.to]) {newState.candidates[action.to] = {};}
             newState['candidates'][action.to][action.uid] = info;
             return newState;
         case actions.TOGGLE_LOADING:
             return { ...state, isLoading: !state['isLoading'] };
         case actions.SET_GROUP:
             return { ...state, group: action.group, candidates: candidates[action.group], selected: selected[action.group] };
+        case actions.LOGIN:
+            return { ...state, loggedIn: true };
     }
     return state;
 }

@@ -54,6 +54,23 @@ export function addComment(step: string, uid: string, commenter: string, comment
     }
 }
 
+export const REMOVE_COMMENT = 'REMOVE_COMMENT';
+export type REMOVE_COMMENT = typeof REMOVE_COMMENT;
+export interface RemoveComment {
+    type: REMOVE_COMMENT;
+    step: string;
+    uid: string;
+    commenter: string;
+}
+export function removeComment(step: string, uid: string, commenter: string): RemoveComment {
+    return {
+        type: REMOVE_COMMENT,
+        step,
+        uid,
+        commenter,
+    }
+}
+
 export const SELECT_CANDIDATE = 'SELECT_CANDIDATE';
 export type SELECT_CANDIDATE = typeof SELECT_CANDIDATE;
 export interface SelectCandidate {
@@ -133,5 +150,18 @@ export function setGroup(group: string): SetGroup {
     return {
         type: SET_GROUP,
         group
+    }
+}
+
+export const LOGIN = 'LOGIN';
+export type LOGIN = typeof LOGIN;
+export interface Login {
+    type: LOGIN;
+    username: string;
+}
+export function login(username: string): Login {
+    return {
+        type: LOGIN,
+        username
     }
 }
