@@ -8,7 +8,7 @@ import {
     WithStyles,
     withStyles
 } from '@material-ui/core';
-import MenuIcon from '@material-ui/icons/Menu';
+import { Menu as MenuIcon, Person as PersonIcon } from '@material-ui/icons';
 import styles from '../../style/index'
 import withRoot from '../../style/withRoot';
 import Select from '../../container/AppBarSelect';
@@ -20,6 +20,7 @@ import { history } from '../../App';
 
 interface Props extends WithStyles {
     open: boolean;
+    loggedIn: boolean;
     toggleOpen: () => void;
 }
 
@@ -39,7 +40,7 @@ class Header extends React.Component<{ title: string }> {
 
 class Bar extends React.Component<Props> {
     render() {
-        const { classes, open, toggleOpen } = this.props;
+        const { classes, open, loggedIn, toggleOpen } = this.props;
         return (
             <ConnectedRouter history={history}>
                 <AppBar
@@ -49,7 +50,6 @@ class Bar extends React.Component<Props> {
                     <Toolbar disableGutters={!open}>
                         <IconButton
                             color="inherit"
-                            aria-label="open drawer"
                             onClick={toggleOpen}
                             className={classnames(classes.menuButton, open && classes.hide)}
                         >
@@ -59,6 +59,12 @@ class Bar extends React.Component<Props> {
                         <Route path='/data' render={(props) => <Header title='历年数据展示' {...props} />} />
                         <Route path='/view'
                                render={(props) => <Header title='8102年秋季招新' {...props}><Select /></Header>} />
+                        {loggedIn && <IconButton
+                            color="inherit"
+                            className={classes.personButton}
+                        >
+                            <PersonIcon />
+                        </IconButton>}
                     </Toolbar>
                 </AppBar>
             </ConnectedRouter>

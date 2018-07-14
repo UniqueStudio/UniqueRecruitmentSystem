@@ -34,6 +34,7 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
     content: {
         maxWidth: 400,
         padding: theme.spacing.unit * 2,
+        wordWrap: 'break-word'
     },
     ...colorStyles,
     ...rootColorStyles

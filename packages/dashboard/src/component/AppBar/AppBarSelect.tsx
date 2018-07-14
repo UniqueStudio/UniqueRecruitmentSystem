@@ -7,6 +7,7 @@ import {
 } from '@material-ui/core';
 import styles from '../../style/index'
 import withRoot from '../../style/withRoot';
+import { GROUP } from '../../constants';
 
 interface Props extends WithStyles {
     setGroup: (group: string) => void;
@@ -30,7 +31,7 @@ class Selects extends React.Component<Props> {
                 onChange={this.handleChange}
                 className={classes.select}
             >
-                {['Web', 'Lab', 'AI', 'Game', 'Android', 'iOS', 'Design', 'PM'].map(i =>
+                {GROUP.map(i =>
                     <MenuItem value={i.toLowerCase()} key={i.toLowerCase()}>{i}</MenuItem>
                 )}
             </Select>
