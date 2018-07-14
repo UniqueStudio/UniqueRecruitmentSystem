@@ -4,7 +4,7 @@
   "description": "the dashboard for recruitment of Unique Studio",
   "author": "@winderica",
   "private": true,
-  "homepage": "./",
+  "homepage": ".",
   "repository": {
     "type": "git",
     "url": "https://github.com/UniqueStudio/UniqueRecruitmentDashboard.git"
