@@ -3,7 +3,7 @@ import {
     Checkbox,
     IconButton,
     WithStyles,
-    withStyles, Typography, ExpansionPanelSummary, Card
+    withStyles, Typography, Card, Tooltip
 } from "@material-ui/core";
 import { ExpandMore as ExpandMoreIcon, InfoOutline as InfoIcon } from "@material-ui/icons";
 
@@ -21,6 +21,7 @@ interface Info {
     grade: string;
     institute: string;
     comments: object;
+    abandon: boolean;
 }
 
 interface Props extends WithStyles {
@@ -35,17 +36,23 @@ interface Props extends WithStyles {
     onNext: () => void;
     onPrev: () => void;
     connectDragSource: (content: any) => any;
+    connectDragPreview: (content: any) => any;
 }
 
-@DragSource('candidate', {
+const candidateSource = {
     beginDrag(props: Props) {
         return { step: props.step, uid: props.uid };
     }
-}, ((connect) => {
+};
+
+const collect = ((connect: any, monitor: any) => {
     return {
         connectDragSource: connect.dragSource(),
+        connectDragPreview: connect.dragPreview()
     }
-}))
+});
+
+@DragSource('candidate', candidateSource, collect)
 class Candidate extends React.Component<Props> {
     state = {
         expanded: false,
@@ -83,7 +90,7 @@ class Candidate extends React.Component<Props> {
 
     render() {
         const { step, uid, info, selected, classes, direction, connectDragSource } = this.props;
-        const { name, grade, institute, comments } = info;
+        const { name, grade, institute, comments, abandon } = info;
         const evaluations = Object.values(comments).map(i => i['evaluation']);
         const red = colorToAlpha(dangerColor, 0.1),
             yellow = colorToAlpha(warningColor, 0.1),
@@ -91,33 +98,37 @@ class Candidate extends React.Component<Props> {
         const yellowP = evaluations.filter(i => i === 'so-so').length / evaluations.length * 100,
             greenP = evaluations.filter(i => i === 'good').length / evaluations.length * 100;
         const coloredPanelStyle = {
-            background: evaluations.length === 0 ? 'rgba(0, 0, 0, 0)' : `linear-gradient(to right, ${green}, ${green} ${greenP}%, ${yellow} ${greenP}%, ${yellow} ${greenP + yellowP}%, ${red} ${greenP + yellowP}%, ${red})`
+            background: abandon ? 'rgba(0, 0, 0, 0.1)' : evaluations.length === 0 ? 'rgba(0, 0, 0, 0)' : `linear-gradient(to right, ${green}, ${green} ${greenP}%, ${yellow} ${greenP}%, ${yellow} ${greenP + yellowP}%, ${red} ${greenP + yellowP}%, ${red})`
         };
+        const card = (
+            <div>
+                <Tooltip title={abandon ? '该选手已放弃' : ''}>
+                    <Card className={classes.card} style={coloredPanelStyle}>
+                        <div className={classes.cardContent}>
+                            <Checkbox
+                                color='primary'
+                                onChange={this.handleCheck}
+                                checked={selected.includes(uid)}
+                                disabled={abandon}
+                            />
+                            <span>
+                            <Typography variant='title'>{name}</Typography>
+                            <Typography color='textSecondary' variant='caption'>{`${grade} - ${institute}`}</Typography>
+                        </span>
+                            <IconButton className={classes.iconButton}
+                                        onClick={this.toggleModalOpen/*this.handleMenuOpen*/}>
+                                <InfoIcon />
+                            </IconButton>
+                            {/* this div is used to get avoid of default style on :last-child */}
+                            <div style={{ position: 'absolute' }} />
+                        </div>
+                    </Card>
+                </Tooltip>
+            </div>
+        );
         return (
             <>
-                {connectDragSource(
-                    <div>
-                        <Card className={classes.card}>
-                            <ExpansionPanelSummary style={coloredPanelStyle}>
-                                <Checkbox
-                                    color='primary'
-                                    onChange={this.handleCheck}
-                                    checked={selected.includes(uid)}
-                                />
-                                <span>
-                                    <Typography variant='title'>{name}</Typography>
-                                    <Typography color='textSecondary'
-                                                variant='caption'>{`${grade} - ${institute}`}</Typography>
-                                </span>
-                                <IconButton className={classes.iconButton}
-                                            onClick={this.toggleModalOpen/*this.handleMenuOpen*/}>
-                                    <InfoIcon />
-                                </IconButton>
-                                {/* this div is used to get avoid of default style on :last-child */}
-                                <div style={{ position: 'absolute' }} />
-                            </ExpansionPanelSummary>
-                        </Card></div>
-                )}
+                {abandon ? card : connectDragSource(card)}
                 <Modal open={this.state.modalOpen}
                        onClose={this.toggleModalOpen}
                        direction={direction}

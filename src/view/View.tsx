@@ -7,17 +7,15 @@ import Column from "../container/Column";
 import { DragDropContext } from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
 
+import { STEP } from '../constants';
+
 @DragDropContext(HTML5Backend)
 class View extends React.Component<any> {
     render() {
         const { classes } = this.props;
         return (
             <div className={classes.columnContainer}>
-                <Column title="报名流程" />
-                <Column title="笔试流程" />
-                <Column title="面试流程" />
-                <Column title="熬测流程" />
-                <Column title="群面流程" />
+                {STEP.map(i => <Column title={i} key={i} />)}
                 {/*this div with a full-width-space is used to show right margin of the last element*/}
                 <div style={{visibility: 'hidden'}}>　</div>
             </div>

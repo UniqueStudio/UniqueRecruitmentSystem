@@ -44,6 +44,9 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
         marginLeft: 12,
         marginRight: 36
     },
+    personButton: {
+        marginLeft: 'auto',
+    },
     hide: {
         display: "none"
     },
@@ -150,9 +153,15 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
         zIndex: theme.zIndex.drawer,
         cursor: 'pointer',
     },
+    cardContent: {
+        margin: theme.spacing.unit,
+        display: 'flex',
+        flexGrow: 1,
+        alignItems: 'center'
+    },
     cardAction: {
         justifyContent: 'center',
-        alignItems: 'baseline',
+        alignItems: 'center',
         display: 'flex',
     },
     cardDetail: {
@@ -215,6 +224,14 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
     },
     comments: {
         width: 360
+    },
+    login: {
+        height: 400,
+        width: 400,
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'space-between',
+        alignItems: 'center'
     }
 });
 
