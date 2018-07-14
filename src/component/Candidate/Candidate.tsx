@@ -3,7 +3,7 @@ import {
     Checkbox,
     IconButton,
     WithStyles,
-    withStyles, Typography, Card, Tooltip
+    withStyles, Typography, Card, Popover
 } from "@material-ui/core";
 import { ExpandMore as ExpandMoreIcon, InfoOutline as InfoIcon } from "@material-ui/icons";
 
@@ -14,7 +14,6 @@ import Comments from '../../container/CandidateComments';
 import styles, { warningColor, dangerColor, successColor, colorToAlpha } from "../../style";
 import withRoot from "../../style/withRoot";
 import { DragSource } from 'react-dnd';
-
 
 interface Info {
     name: string;
@@ -45,7 +44,7 @@ const candidateSource = {
     }
 };
 
-const collect = ((connect: any, monitor: any) => {
+const collect = ((connect: any) => {
     return {
         connectDragSource: connect.dragSource(),
         connectDragPreview: connect.dragPreview()
@@ -69,11 +68,11 @@ class Candidate extends React.Component<Props> {
         })
     }
 
-    handleMenuOpen = (event: React.MouseEvent) => {
+    handleOpen = (event: React.MouseEvent) => {
         this.setState({ anchorEl: event.currentTarget });
     };
 
-    handleMenuClose = () => {
+    handleClose = () => {
         this.setState({ anchorEl: undefined });
     };
 
@@ -101,34 +100,51 @@ class Candidate extends React.Component<Props> {
             background: abandon ? 'rgba(0, 0, 0, 0.1)' : evaluations.length === 0 ? 'rgba(0, 0, 0, 0)' : `linear-gradient(to right, ${green}, ${green} ${greenP}%, ${yellow} ${greenP}%, ${yellow} ${greenP + yellowP}%, ${red} ${greenP + yellowP}%, ${red})`
         };
         const card = (
-            <div>
-                <Tooltip title={abandon ? '该选手已放弃' : ''}>
-                    <Card className={classes.card} style={coloredPanelStyle}>
-                        <div className={classes.cardContent}>
-                            <Checkbox
-                                color='primary'
-                                onChange={this.handleCheck}
-                                checked={selected.includes(uid)}
-                                disabled={abandon}
-                            />
-                            <span>
+            <div onMouseOver={this.handleOpen}
+                 onMouseOut={this.handleClose}>
+                <Card className={classes.card} style={coloredPanelStyle}>
+                    <div className={classes.cardContent}>
+                        <Checkbox
+                            color='primary'
+                            onChange={this.handleCheck}
+                            checked={selected.includes(uid)}
+                            disabled={abandon}
+                        />
+                        <span>
                             <Typography variant='title'>{name}</Typography>
                             <Typography color='textSecondary' variant='caption'>{`${grade} - ${institute}`}</Typography>
                         </span>
-                            <IconButton className={classes.iconButton}
-                                        onClick={this.toggleModalOpen/*this.handleMenuOpen*/}>
-                                <InfoIcon />
-                            </IconButton>
-                            {/* this div is used to get avoid of default style on :last-child */}
-                            <div style={{ position: 'absolute' }} />
-                        </div>
-                    </Card>
-                </Tooltip>
+                        <IconButton className={classes.iconButton}
+                                    onClick={this.toggleModalOpen}>
+                            <InfoIcon />
+                        </IconButton>
+                        {/* this div is used to get avoid of default style on :last-child */}
+                        <div style={{ position: 'absolute' }} />
+                    </div>
+                </Card>
             </div>
+        );
+        const popover = (
+            <Popover
+                className={classes.popper}
+                classes={{ paper: classes.popperRoot }}
+                open={Boolean(this.state.anchorEl)}
+                anchorEl={this.state.anchorEl}
+                anchorOrigin={{
+                    vertical: 'bottom',
+                    horizontal: 'center',
+                }}
+                transformOrigin={{
+                    vertical: 'top',
+                    horizontal: 'center',
+                }}
+                onClose={this.handleClose}
+                disableRestoreFocus
+            >该选手已放弃</Popover>
         );
         return (
             <>
-                {abandon ? card : connectDragSource(card)}
+                {abandon ? <>{card}{popover}</> : connectDragSource(card)}
                 <Modal open={this.state.modalOpen}
                        onClose={this.toggleModalOpen}
                        direction={direction}

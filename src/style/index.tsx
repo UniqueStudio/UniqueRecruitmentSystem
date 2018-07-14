@@ -167,6 +167,12 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
     cardDetail: {
         display: 'block',
     },
+    popper: {
+        pointerEvents: 'none'
+    },
+    popperRoot: {
+        padding: theme.spacing.unit,
+    },
     cornerChecker: {
         position: 'absolute',
         top: -theme.spacing.unit * 2,
