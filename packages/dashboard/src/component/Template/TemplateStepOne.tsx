@@ -1,16 +1,14 @@
 import * as React from 'react';
-import * as classNames from 'classnames';
-import {
-    Chip,
-    Typography,
-    WithStyles,
-    withStyles
-} from '@material-ui/core';
+import classNames from 'classnames';
+import Chip from '@material-ui/core/Chip';
+import Typography from '@material-ui/core/Typography';
+import { WithStyles, withStyles } from '@material-ui/core/styles';
+
 import styles from '../../style/template'
 import withRoot from '../../style/withRoot';
 
 interface CandidateInfo {
-    uid: string
+    cid: string
     name: string;
     grade: string;
     institute: string;
@@ -32,9 +30,9 @@ class Step extends React.Component<Props> {
                     <Typography variant='title' className={classes.templateItem}>你未选中任何人!</Typography>
                     : selected.map(i =>
                         <Chip
-                            key={i.uid}
+                            key={i.cid}
                             label={`${i.name} ${i.grade} ${i.institute}`}
-                            onDelete={() => onDelete(i.uid)}
+                            onDelete={() => onDelete(i.cid)}
                             className={classes.templateItem}
                         />
                     )

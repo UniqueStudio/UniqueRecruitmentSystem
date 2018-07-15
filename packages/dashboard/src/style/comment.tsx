@@ -1,6 +1,6 @@
 import { colorToShadow, colorToAlpha, dangerColor, infoColor, successColor, warningColor } from './index';
 import { StyleRulesCallback } from "@material-ui/core/styles/withStyles";
-import { Theme } from "@material-ui/core";
+import { Theme } from "@material-ui/core/styles";
 import mergeKV from '../lib/mergeKV';
 
 const colorStyles = mergeKV(['info', 'success', 'warning', 'danger'],

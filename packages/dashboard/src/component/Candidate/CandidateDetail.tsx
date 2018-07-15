@@ -1,10 +1,7 @@
 import * as React from "react";
-import {
-    Button,
-    TextField,
-    WithStyles,
-    withStyles
-} from "@material-ui/core";
+import Button from '@material-ui/core/Button';
+import TextField from '@material-ui/core/TextField';
+import { WithStyles, withStyles } from '@material-ui/core/styles';
 
 import styles from "../../style";
 import withRoot from "../../style/withRoot";

@@ -1,11 +1,8 @@
 import * as React from "react";
-import {
-    Button,
-    MenuItem,
-    TextField,
-    WithStyles,
-    withStyles,
-} from "@material-ui/core";
+import Button from '@material-ui/core/Button';
+import MenuItem from '@material-ui/core/MenuItem';
+import TextField from '@material-ui/core/TextField';
+import { WithStyles, withStyles } from '@material-ui/core/styles';
 
 import CommentChip from "./CommentChip";
 
@@ -14,11 +11,11 @@ import withRoot from "../../style/withRoot";
 
 interface Props extends WithStyles {
     step: string;
-    uid: string;
+    cid: string;
     comments: object;
     snackbarOn: boolean;
-    submit: (step: string, uid: string, commenter: string, comment: object) => void;
-    remove: (step: string, uid: string, commenter: string) => void;
+    submit: (step: string, cid: string, commenter: string, comment: object) => void;
+    remove: (step: string, cid: string, commenter: string) => void;
     toggleOn: (info: string) => void;
 }
 
@@ -39,9 +36,9 @@ class CandidateComments extends React.Component<Props> {
 
     handleSubmit = () => {
         const { comment, evaluation } = this.state;
-        const { submit, step, uid, snackbarOn, toggleOn } = this.props;
+        const { submit, step, cid, snackbarOn, toggleOn } = this.props;
         if (comment && evaluation) {
-            submit(step, uid, "AA", {
+            submit(step, cid, "AA", {
                 comment,
                 evaluation
             });
@@ -55,8 +52,8 @@ class CandidateComments extends React.Component<Props> {
     };
 
     handleRemove = () => {
-        const { remove, step, uid } = this.props;
-        remove(step, uid, "AA");
+        const { remove, step, cid } = this.props;
+        remove(step, cid, "AA");
         this.setState({});
     };
 
