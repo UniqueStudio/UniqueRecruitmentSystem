@@ -1,14 +1,13 @@
 import * as React from 'react';
-import {
-    WithStyles,
-    withStyles
-} from '@material-ui/core';
+
+import { WithStyles, withStyles } from '@material-ui/core/styles';
+
 import { red, purple, indigo, blue, cyan, green, yellow, orange } from '@material-ui/core/colors';
 import { Doughnut } from 'react-chartjs-2';
 
 import withRoot from '../../style/withRoot';
 import styles from '../../style/chart';
-import { GROUP } from '../../constants';
+import { GROUP } from '../../lib/const';
 
 const getColors = (i: number) => [
     red[i],

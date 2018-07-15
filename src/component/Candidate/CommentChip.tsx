@@ -1,6 +1,9 @@
 import * as React from "react";
-import * as classnames from 'classnames';
-import { Chip, Paper, Popover, WithStyles, withStyles } from "@material-ui/core";
+import classNames from 'classnames';
+import Chip from '@material-ui/core/Chip';
+import Paper from '@material-ui/core/Paper';
+import Popover from '@material-ui/core/Popover';
+import { WithStyles, withStyles } from '@material-ui/core/styles';
 
 import styles from '../../style/comment';
 
@@ -45,7 +48,7 @@ class CommentChip extends React.Component<Props> {
                     label={content}
                     className={classes.chip}
                     classes={{
-                        root: classnames(classes[color], classes[`root-${color}`])
+                        root: classNames(classes[color], classes[`root-${color}`])
                     }}
                     onMouseOver={this.handleOpen}
                     onMouseOut={this.handleClose}
@@ -66,7 +69,7 @@ class CommentChip extends React.Component<Props> {
                     onClose={this.handleClose}
                     disableRestoreFocus
                 >
-                    <Paper className={classnames(classes.content, classes[color])}>{comment["comment"]}</Paper>
+                    <Paper className={classNames(classes.content, classes[color])}>{comment["comment"]}</Paper>
                 </Popover>
             </>
         );

@@ -1,17 +1,15 @@
 import * as React from 'react';
-import * as classNames from 'classnames';
-import {
-    MenuItem,
-    Select,
-    TextField,
-    Typography,
-    WithStyles,
-    withStyles
-} from '@material-ui/core';
+import classNames from 'classnames';
+import MenuItem from '@material-ui/core/MenuItem';
+import Select from '@material-ui/core/Select';
+import TextField from '@material-ui/core/TextField';
+import Typography from '@material-ui/core/Typography';
+import { WithStyles, withStyles } from '@material-ui/core/styles';
+
 import styles from '../../style/template'
 import withRoot from '../../style/withRoot';
 import generateModal from '../../lib/generateModel';
-import { STEP as steps } from '../../constants';
+import { STEP as steps } from '../../lib/const';
 
 
 interface Props extends WithStyles {

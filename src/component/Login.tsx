@@ -1,5 +1,7 @@
 import * as React from "react";
-import { Button, withStyles, WithStyles } from "@material-ui/core";
+import Button from '@material-ui/core/Button';
+import { WithStyles, withStyles } from '@material-ui/core/styles';
+
 import withRoot from "../style/withRoot";
 import styles from "../style";
 import Modal from './Modal';

@@ -1,9 +1,7 @@
 import * as React from 'react';
-import {
-    Paper,
-    WithStyles,
-    withStyles
-} from '@material-ui/core';
+import Paper from '@material-ui/core/Paper';
+import { WithStyles, withStyles } from '@material-ui/core/styles';
+
 
 import withRoot from '../../style/withRoot';
 import styles from '../../style/chart';
