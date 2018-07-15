@@ -1,5 +1,5 @@
 import { StyleRulesCallback } from "@material-ui/core/styles/withStyles";
-import { Theme } from "@material-ui/core";
+import { Theme } from "@material-ui/core/styles";
 
 export const warningColor = "#ff9800";
 export const dangerColor = "#f44336";
@@ -208,7 +208,9 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
     progress: {
         width: '100%',
         position: 'fixed',
-        zIndex: theme.zIndex.drawer + 1
+        zIndex: theme.zIndex.drawer + 1,
+        top: 0,
+        left: 0,
     },
     detail: {
         display: 'flex',

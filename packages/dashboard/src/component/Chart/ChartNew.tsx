@@ -1,10 +1,10 @@
 import * as React from 'react';
-import {
-    Button,
-    IconButton, TextField, Tooltip,
-    WithStyles,
-    withStyles
-} from '@material-ui/core';
+import Button from '@material-ui/core/Button';
+import IconButton from '@material-ui/core/IconButton';
+import TextField from '@material-ui/core/TextField';
+import Tooltip from '@material-ui/core/Tooltip';
+import { WithStyles, withStyles } from '@material-ui/core/styles';
+
 import { Add as AddIcon } from '@material-ui/icons'
 
 import withRoot from '../../style/withRoot';

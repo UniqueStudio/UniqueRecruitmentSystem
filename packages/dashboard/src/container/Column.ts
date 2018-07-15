@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 import { StoreState } from '../reducer';
-import Column from '../component/Column';
+import Column from '../component/Column/Column';
 import {
     selectCandidate,
     SelectCandidate,
@@ -31,6 +31,6 @@ const mapDispatchToProps = (dispatch: DispatchType) => ({
     deselect: (name: Array<string>) => dispatch(deselectCandidate(name)),
     remove: (step: string, name: Array<string>) => dispatch(removeCandidate(step, name)),
     toggleOn: (info: string) => dispatch(toggleSnackbarOn(info, 'info')),
-    move: (from: string, to: string, uid: string) => dispatch(moveCandidate(from, to, uid))
+    move: (from: string, to: string, cid: string) => dispatch(moveCandidate(from, to, cid))
 });
 export default connect(mapStateToProps, mapDispatchToProps)(Column);

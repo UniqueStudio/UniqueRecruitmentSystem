@@ -17,6 +17,7 @@ export interface StoreState {
         group: string;
         loggedIn: boolean;
     };
+    routerReducer: object;
 }
 
 export const reducer = {

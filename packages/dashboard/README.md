@@ -25,7 +25,7 @@ the other is [Form](https://github.com/UniqueStudio/UniqueRecruitmentForm).
 2. `React`
 3. `Redux`
 4. `Material UI`
-5. `Parcel`
+5. `Create-react-app`
 6. ...
 
 ## TODOS

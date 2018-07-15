@@ -1,5 +1,5 @@
 import { StyleRulesCallback } from "@material-ui/core/styles/withStyles";
-import { Theme } from '@material-ui/core';
+import { Theme } from "@material-ui/core/styles";
 
 const styles: StyleRulesCallback = (theme: Theme) => ({
     chart: {

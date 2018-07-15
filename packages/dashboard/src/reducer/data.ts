@@ -1,16 +1,9 @@
 import * as actions from '../action';
 import { StoreState } from './index';
-import * as candidates from '../candidates.json';
-import mergeKV from '../lib/mergeKV';
-import { GROUP } from '../constants';
-
-const selected = mergeKV(GROUP.map(i => i.toLowerCase()),
-    [...new Array(8)].map(() => []));
-
 const init = {
-    candidates: candidates['web'],
-    selected: selected['web'],
-    isLoading: true,
+    candidates: {},
+    selected: [],
+    isLoading: false,
     group: 'web',
     loggedIn: false,
 };
@@ -18,6 +11,7 @@ const init = {
 type Action =
     actions.AddComment
     | actions.RemoveComment
+    | actions.SetCandidates
     | actions.SelectCandidate
     | actions.DeselectCandidate
     | actions.RemoveCandidate
@@ -33,32 +27,36 @@ export default function data(
     const newState = { ...state };
     switch (action.type) {
         case actions.ADD_COMMENT:
-            newState['candidates'][action.step][action.uid].comments[action.commenter] = action.comment;
+            newState['candidates'][action.step][action.cid].comments[action.commenter] = action.comment;
             return newState;
         case actions.REMOVE_COMMENT:
-            delete newState['candidates'][action.step][action.uid].comments[action.commenter];
+            delete newState['candidates'][action.step][action.cid].comments[action.commenter];
             return newState;
+        case actions.SET_CANDIDATES:
+            return { ...state, candidates: action.candidates, isLoading: false };
         case actions.SELECT_CANDIDATE:
-            newState['selected'] = [...new Set(newState['selected'].concat(action.uid))];
+            newState['selected'] = [...new Set(newState['selected'].concat(action.cid))];
             return newState;
         case actions.DESELECT_CANDIDATE:
-            newState['selected'] = newState['selected'].filter((i: string) => !action.uid.includes(i));
+            newState['selected'] = newState['selected'].filter((i: string) => !action.cid.includes(i));
             return newState;
         case actions.REMOVE_CANDIDATE:
             const currentStep = newState['candidates'][action.step];
-            typeof action.uid === 'string' ? delete currentStep[action.uid] : action.uid.map(i => delete currentStep[i]);
+            typeof action.cid === 'string' ? delete currentStep[action.cid] : action.cid.map(i => delete currentStep[i]);
             newState['candidates'][action.step] = currentStep;
             return newState;
         case actions.MOVE_CANDIDATE:
-            const info = newState['candidates'][action.from][action.uid];
-            delete newState['candidates'][action.from][action.uid];
-            if (!newState.candidates[action.to]) {newState.candidates[action.to] = {};}
-            newState['candidates'][action.to][action.uid] = info;
+            const info = newState['candidates'][action.from][action.cid];
+            delete newState['candidates'][action.from][action.cid];
+            if (!newState.candidates[action.to]) {
+                newState.candidates[action.to] = {};
+            }
+            newState['candidates'][action.to][action.cid] = info;
             return newState;
         case actions.TOGGLE_LOADING:
             return { ...state, isLoading: !state['isLoading'] };
         case actions.SET_GROUP:
-            return { ...state, group: action.group, candidates: candidates[action.group], selected: selected[action.group] };
+            return { ...state, group: action.group };
         case actions.LOGIN:
             return { ...state, loggedIn: true };
     }

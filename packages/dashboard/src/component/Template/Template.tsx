@@ -1,15 +1,13 @@
 import * as React from 'react';
-import {
-    Button,
-    Paper,
-    Step,
-    StepContent,
-    StepLabel,
-    Stepper,
-    Typography,
-    WithStyles,
-    withStyles
-} from '@material-ui/core';
+import Button from '@material-ui/core/Button';
+import Paper from '@material-ui/core/Paper';
+import Step from '@material-ui/core/Step';
+import StepContent from '@material-ui/core/StepContent';
+import StepLabel from '@material-ui/core/StepLabel';
+import Stepper from '@material-ui/core/Stepper';
+import Typography from '@material-ui/core/Typography';
+import { WithStyles, withStyles } from '@material-ui/core/styles';
+
 import styles from '../../style/template'
 import withRoot from '../../style/withRoot';
 import TemplateStepOne from './TemplateStepOne';
@@ -17,7 +15,7 @@ import TemplateStepTwo from './TemplateStepTwo';
 import TemplateStepThree from './TemplateStepThree';
 
 interface CandidateInfo {
-    uid: string;
+    cid: string;
     name: string;
     grade: string;
     institute: string;
@@ -28,7 +26,7 @@ interface Props extends WithStyles {
     flowStep: string;
     selected: CandidateInfo[];
     toggleOpen: () => void;
-    deselect: (uid: string) => void;
+    deselect: (cid: string) => void;
 }
 
 class Template extends React.Component<Props> {
@@ -49,11 +47,11 @@ class Template extends React.Component<Props> {
         });
     };
 
-    handleDelete = (uid: string) => {
+    handleDelete = (cid: string) => {
         this.setState({
-            selected: this.state.selected.filter(i => i.uid !== uid)
+            selected: this.state.selected.filter(i => i.cid !== cid)
         });
-        this.props.deselect(uid);
+        this.props.deselect(cid);
     };
 
     render() {
