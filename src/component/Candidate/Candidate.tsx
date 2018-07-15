@@ -1,10 +1,11 @@
 import * as React from "react";
-import {
-    Checkbox,
-    IconButton,
-    WithStyles,
-    withStyles, Typography, Card, Popover
-} from "@material-ui/core";
+import Card from '@material-ui/core/Card';
+import Checkbox from '@material-ui/core/Checkbox';
+import IconButton from '@material-ui/core/IconButton';
+import Popover from '@material-ui/core/Popover';
+import Typography from '@material-ui/core/Typography';
+import { WithStyles, withStyles } from '@material-ui/core/styles';
+
 import { ExpandMore as ExpandMoreIcon, InfoOutline as InfoIcon } from "@material-ui/icons";
 
 import Modal from '../Modal';
@@ -25,13 +26,13 @@ interface Info {
 
 interface Props extends WithStyles {
     step: string;
-    uid: string;
+    cid: string;
     info: Info;
     selected: string[];
     modalOpen: boolean;
     direction: string;
-    select: (uid: string) => void;
-    deselect: (uid: string) => void;
+    select: (cid: string) => void;
+    deselect: (cid: string) => void;
     onNext: () => void;
     onPrev: () => void;
     connectDragSource: (content: any) => any;
@@ -40,7 +41,7 @@ interface Props extends WithStyles {
 
 const candidateSource = {
     beginDrag(props: Props) {
-        return { step: props.step, uid: props.uid };
+        return { step: props.step, cid: props.cid };
     }
 };
 
@@ -84,11 +85,11 @@ class Candidate extends React.Component<Props> {
         this.setState({
             checked: event.target['checked']
         });
-        event.target['checked'] ? this.props.select(this.props.uid) : this.props.deselect(this.props.uid);
+        event.target['checked'] ? this.props.select(this.props.cid) : this.props.deselect(this.props.cid);
     };
 
     render() {
-        const { step, uid, info, selected, classes, direction, connectDragSource } = this.props;
+        const { step, cid, info, selected, classes, direction, connectDragSource } = this.props;
         const { name, grade, institute, comments, abandon } = info;
         const evaluations = Object.values(comments).map(i => i['evaluation']);
         const red = colorToAlpha(dangerColor, 0.1),
@@ -107,7 +108,7 @@ class Candidate extends React.Component<Props> {
                         <Checkbox
                             color='primary'
                             onChange={this.handleCheck}
-                            checked={selected.includes(uid)}
+                            checked={selected.includes(cid)}
                             disabled={abandon}
                         />
                         <span>
@@ -157,7 +158,7 @@ class Candidate extends React.Component<Props> {
                             <ExpandMoreIcon />
                         </IconButton>
                         <Detail name={name} />
-                        <Comments step={step} uid={uid} comments={comments} />
+                        <Comments step={step} cid={cid} comments={comments} />
                         <IconButton className={classes.rightButton} onClick={() => {
                             this.props.onNext();
                         }}>

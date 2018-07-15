@@ -1,16 +1,14 @@
 import * as React from 'react';
-import * as classnames from 'classnames';
-import {
-    Divider,
-    Drawer,
-    IconButton,
-    List,
-    ListItem,
-    ListItemIcon,
-    ListItemText,
-    WithStyles,
-    withStyles
-} from '@material-ui/core';
+import classNames from 'classnames';
+import Divider from '@material-ui/core/Divider';
+import Drawer from '@material-ui/core/Drawer';
+import IconButton from '@material-ui/core/IconButton';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
+import { WithStyles, withStyles } from '@material-ui/core/styles';
+
 import {
     Dashboard as DashboardIcon,
     InsertChart as InsertChartIcon,
@@ -34,7 +32,7 @@ class Menu extends React.Component<Props> {
             <Drawer
                 variant="permanent"
                 classes={{
-                    paper: classnames(classes.drawerPaper, !open && classes.drawerPaperClose),
+                    paper: classNames(classes.drawerPaper, !open && classes.drawerPaperClose),
                 }}
                 open={open}
             >

@@ -1,25 +1,23 @@
 import * as React from "react";
-import {
-    Button,
-    Dialog,
-    DialogActions,
-    DialogContent,
-    DialogContentText,
-    DialogTitle,
-    Divider,
-    Paper,
-    Typography,
-    WithStyles,
-    withStyles
-} from "@material-ui/core";
+import Button from '@material-ui/core/Button';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import Divider from '@material-ui/core/Divider';
+import Paper from '@material-ui/core/Paper';
+import Typography from '@material-ui/core/Typography';
+import { WithStyles, withStyles } from '@material-ui/core/styles';
 
-import Candidate from "../container/Candidate";
-import Modal from './Modal';
-import Template from './Template/Template';
 
-import { STEP } from '../constants';
-import styles from "../style";
-import withRoot from "../style/withRoot";
+import Candidate from "../../container/Candidate";
+import Modal from '../Modal';
+import Template from '../Template/Template';
+
+import { STEP } from '../../lib/const';
+import styles from "../../style/index";
+import withRoot from "../../style/withRoot";
 import { DropTarget } from 'react-dnd';
 
 interface Props extends WithStyles {
@@ -27,10 +25,10 @@ interface Props extends WithStyles {
     candidates: object;
     group: string;
     selected: string[];
-    select: (uid: string[]) => void;
-    deselect: (uid: string[] | string) => void;
-    remove: (step: string, uid: string[]) => void;
-    move: (from: string, to: string, uid: string) => void;
+    select: (cid: string[]) => void;
+    deselect: (cid: string[] | string) => void;
+    remove: (step: string, cid: string[]) => void;
+    move: (from: string, to: string, cid: string) => void;
     toggleOn: (info: string) => void;
     connectDropTarget: (content: any) => any;
     movingItem: object;
@@ -123,16 +121,17 @@ class Column extends React.Component<Props> {
     render() {
         const { classes, title, candidates, group, selected, deselect, connectDropTarget, dropped, movingItem, move } = this.props;
         const step = titleToStep(title);
-        const allCandidatesUids = Object.keys(candidates[step] || {});
-        this.length = allCandidatesUids.length;
-        const selectedCandidatesUids = selected.filter((i: string) => allCandidatesUids.includes(i));
-        const selectedCandidatesInfo = selectedCandidatesUids.map((i: string) => {
+        candidates[step] = candidates[step] || {};
+        const allCandidatesCids = Object.keys(candidates[step]);
+        this.length = allCandidatesCids.length;
+        const selectedCandidatesCids = selected.filter((i: string) => allCandidatesCids.includes(i));
+        const selectedCandidatesInfo = selectedCandidatesCids.map((i: string) => {
             const current = candidates[step][i];
-            return { uid: i, ...current };
+            return { cid: i, ...current };
         });
 
         if (dropped && moveTo === step) {
-            move(movingItem['step'], moveTo, movingItem['uid']);
+            move(movingItem['step'], moveTo, movingItem['cid']);
         }
 
         return (
@@ -144,7 +143,7 @@ class Column extends React.Component<Props> {
                 {connectDropTarget(<div className={classes.columnBody}>
                     {candidates[step] && Object.entries(candidates[step]).map((i, j) => (
                         <Candidate step={step}
-                                   uid={i[0]}
+                                   cid={i[0]}
                                    info={i[1]}
                                    key={i[0]}
                                    ref={c => this.CandidateElements[j] = c}
@@ -161,20 +160,20 @@ class Column extends React.Component<Props> {
                         color='primary'
                         size='small'
                         className={classes.columnButton}
-                        onClick={this.handleSelectAll(allCandidatesUids)}
+                        onClick={this.handleSelectAll(allCandidatesCids)}
                     >全选</Button>
                     <Button
                         color='primary'
                         size='small'
                         className={classes.columnButton}
-                        onClick={this.handleInverse(allCandidatesUids, selectedCandidatesUids)}
+                        onClick={this.handleInverse(allCandidatesCids, selectedCandidatesCids)}
                     >反选</Button>
                     <Button
                         color='primary'
                         size='small'
                         className={classes.columnButton}
                         onClick={this.toggleOpen('modal')}
-                        disabled={selectedCandidatesUids.length === 0}
+                        disabled={selectedCandidatesCids.length === 0}
                     >发送通知</Button>
                     <Button
                         color='primary'
@@ -198,7 +197,7 @@ class Column extends React.Component<Props> {
                         <Button onClick={this.toggleOpen('dialog')} color="primary" autoFocus>
                             否
                         </Button>
-                        <Button onClick={this.handleRemove(selectedCandidatesUids)} color="primary">
+                        <Button onClick={this.handleRemove(selectedCandidatesCids)} color="primary">
                             确定移除
                         </Button>
                     </DialogActions>

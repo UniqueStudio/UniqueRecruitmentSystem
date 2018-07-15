@@ -1,11 +1,8 @@
 import * as React from "react";
-import {
-    Modal,
-    Slide,
-    Typography,
-    WithStyles,
-    withStyles,
-} from "@material-ui/core";
+import Modal from '@material-ui/core/Modal';
+import Slide from '@material-ui/core/Slide';
+import Typography from '@material-ui/core/Typography';
+import { WithStyles, withStyles } from '@material-ui/core/styles';
 
 import styles from "../style/index";
 import withRoot from "../style/withRoot";

@@ -13,7 +13,7 @@ import { StoreState } from '../reducer';
 
 interface OwnProps {
     step: string;
-    uid: string;
+    cid: string;
     comments: object;
 }
 
