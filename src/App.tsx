@@ -1,9 +1,9 @@
 import * as React from "react";
-import { createStore, applyMiddleware, combineReducers } from 'redux';
+import { applyMiddleware, combineReducers, createStore } from 'redux';
 import thunk from 'redux-thunk';
 import { Provider } from 'react-redux';
 import { Route } from 'react-router';
-import { ConnectedRouter, routerReducer, routerMiddleware } from 'react-router-redux';
+import { ConnectedRouter, routerMiddleware, routerReducer } from 'react-router-redux';
 import createHistory from 'history/createBrowserHistory';
 import { composeWithDevTools } from 'redux-devtools-extension';
 import { reducer } from "./reducer";
@@ -15,7 +15,7 @@ import Index from './view/Index';
 
 export const history = createHistory();
 
-const middleware = [routerMiddleware(history), thunk];
+const middleware = [thunk, routerMiddleware(history)];
 
 const store = createStore(combineReducers({
     data: reducer.data,

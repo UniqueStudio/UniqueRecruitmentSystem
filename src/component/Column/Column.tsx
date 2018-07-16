@@ -1,4 +1,6 @@
 import * as React from "react";
+import { Dispatch } from 'redux';
+import { DropTarget } from 'react-dnd';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -10,34 +12,33 @@ import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import { WithStyles, withStyles } from '@material-ui/core/styles';
 
-
-import Candidate from "../../container/Candidate";
+import Candidate from "../../container/Candidate/Candidate";
 import Modal from '../Modal';
-import Template from '../Template/Template';
-
+import Template from '../Template';
 import { STEP } from '../../lib/const';
 import styles from "../../style/index";
 import withRoot from "../../style/withRoot";
-import { DropTarget } from 'react-dnd';
+import { removeCandidate } from '../../action/async';
 
 interface Props extends WithStyles {
     title: string;
     candidates: object;
     group: string;
+    isLoading: boolean;
     selected: string[];
     select: (cid: string[]) => void;
     deselect: (cid: string[] | string) => void;
-    remove: (step: string, cid: string[]) => void;
-    move: (from: string, to: string, cid: string) => void;
+    dispatch: Dispatch<any>;
+    move: (from: number, to: number, cid: string) => void;
     toggleOn: (info: string) => void;
     connectDropTarget: (content: any) => any;
     movingItem: object;
     dropped: boolean;
 }
 
-const titleToStep = (title: string) => `${STEP.indexOf(title)}`;
+const titleToStep = (title: string) => STEP.indexOf(title);
 
-let moveTo = '';
+let moveTo = NaN;
 
 @DropTarget('candidate', {
     drop(props: Props) {
@@ -51,7 +52,7 @@ let moveTo = '';
     }
 })
 class Column extends React.Component<Props> {
-    length = Object.keys(this.props.candidates[titleToStep(this.props.title)] || {}).length;
+    length = Object.keys(this.props.candidates).length;
 
     state = {
         dialog: false,
@@ -88,14 +89,14 @@ class Column extends React.Component<Props> {
     };
 
     handleSelectAll = (all: string[]) => () => {
-        const { select, candidates, title } = this.props;
-        select(all.filter(i => !candidates[titleToStep(title)][i].abandon));
+        const { select, candidates } = this.props;
+        select(all.filter(i => !candidates[i].abandon));
     };
 
     handleInverse = (all: string[], selected: string[]) => () => {
-        const { select, deselect, candidates, title } = this.props;
-        deselect(selected.filter(i => !candidates[titleToStep(title)][i].abandon));
-        select(all.filter((i: string) => !selected.includes(i) && !candidates[titleToStep(title)][i].abandon));
+        const { select, deselect, candidates } = this.props;
+        deselect(selected.filter(i => !candidates[i].abandon));
+        select(all.filter((i: string) => !selected.includes(i) && !candidates[i].abandon));
     };
 
     confirmRemove = () => {
@@ -104,12 +105,12 @@ class Column extends React.Component<Props> {
 
     handleRemove = (selected: string[]) => () => {
         this.toggleOpen('dialog')();
-        const { remove, title, toggleOn } = this.props;
+        const { toggleOn } = this.props;
         if (selected.length === 0) {
             toggleOn('你没有选中任何人');
             return;
         }
-        remove(titleToStep(title), selected);
+        selected.map(i => this.props.dispatch(removeCandidate(i)));
     };
 
     toggleOpen = (name: string) => () => {
@@ -120,17 +121,15 @@ class Column extends React.Component<Props> {
 
     render() {
         const { classes, title, candidates, group, selected, deselect, connectDropTarget, dropped, movingItem, move } = this.props;
-        const step = titleToStep(title);
-        candidates[step] = candidates[step] || {};
-        const allCandidatesCids = Object.keys(candidates[step]);
+        const allCandidatesCids = Object.keys(candidates);
         this.length = allCandidatesCids.length;
         const selectedCandidatesCids = selected.filter((i: string) => allCandidatesCids.includes(i));
         const selectedCandidatesInfo = selectedCandidatesCids.map((i: string) => {
-            const current = candidates[step][i];
+            const current = candidates[i];
             return { cid: i, ...current };
         });
 
-        if (dropped && moveTo === step) {
+        if (dropped && moveTo === titleToStep(title)) {
             move(movingItem['step'], moveTo, movingItem['cid']);
         }
 
@@ -141,8 +140,8 @@ class Column extends React.Component<Props> {
                 </div>
                 <Divider />
                 {connectDropTarget(<div className={classes.columnBody}>
-                    {candidates[step] && Object.entries(candidates[step]).map((i, j) => (
-                        <Candidate step={step}
+                    {candidates && Object.entries(candidates).map((i, j) => (
+                        <Candidate step={titleToStep(title)}
                                    cid={i[0]}
                                    info={i[1]}
                                    key={i[0]}
@@ -206,7 +205,7 @@ class Column extends React.Component<Props> {
                     <Template toggleOpen={this.toggleOpen('modal')}
                               selected={selectedCandidatesInfo}
                               deselect={deselect}
-                              flowStep={step}
+                              flowStep={titleToStep(title)}
                               group={group}
                     />
                 </Modal>
