@@ -1,8 +1,8 @@
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
-import { StoreState } from '../reducer';
-import { toggleSnackbarOff, ToggleSnackbarOff } from '../action';
-import Snackbar from '../component/Snackbar';
+import { StoreState } from '../../reducer';
+import { toggleSnackbarOff, ToggleSnackbarOff } from '../../action';
+import Snackbar from '../../component/Snackbar';
 
 interface OwnProps {
     place: string;

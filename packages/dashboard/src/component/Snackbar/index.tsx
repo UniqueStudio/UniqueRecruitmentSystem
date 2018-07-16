@@ -2,13 +2,10 @@ import * as React from "react";
 import IconButton from '@material-ui/core/IconButton';
 import Snackbar from '@material-ui/core/Snackbar';
 import { WithStyles, withStyles } from '@material-ui/core/styles';
+import CloseIcon from '@material-ui/icons/Close';
 
-import {
-    Close as CloseIcon
-} from '@material-ui/icons';
-
-import styles from "../style/snackbar";
-import withRoot from "../style/withRoot";
+import styles from "../../style/snackbar";
+import withRoot from "../../style/withRoot";
 
 interface Props extends WithStyles {
     on: boolean;

@@ -9,7 +9,7 @@ import { WithStyles, withStyles } from '@material-ui/core/styles';
 import { Menu as MenuIcon, Person as PersonIcon } from '@material-ui/icons';
 import styles from '../../style/index'
 import withRoot from '../../style/withRoot';
-import Select from '../../container/AppBarSelect';
+import Select from '../../container/AppBar/AppBarSelect';
 import { Route } from 'react-router';
 import { ConnectedRouter } from 'react-router-redux';
 import { history } from '../../App';

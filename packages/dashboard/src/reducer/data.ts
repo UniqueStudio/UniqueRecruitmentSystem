@@ -1,7 +1,8 @@
 import * as actions from '../action';
 import { StoreState } from './index';
+
 const init = {
-    candidates: {},
+    candidates: [],
     selected: [],
     isLoading: false,
     group: 'web',
@@ -41,10 +42,10 @@ export default function data(
             newState['selected'] = newState['selected'].filter((i: string) => !action.cid.includes(i));
             return newState;
         case actions.REMOVE_CANDIDATE:
-            const currentStep = newState['candidates'][action.step];
-            typeof action.cid === 'string' ? delete currentStep[action.cid] : action.cid.map(i => delete currentStep[i]);
-            newState['candidates'][action.step] = currentStep;
-            return newState;
+            for (const step of newState.candidates) {
+                typeof action.cid === 'string' ? delete step[action.cid] : action.cid.map(i => delete step[i]);
+            }
+            return { ...newState, isLoading: false };
         case actions.MOVE_CANDIDATE:
             const info = newState['candidates'][action.from][action.cid];
             delete newState['candidates'][action.from][action.cid];
