@@ -7,12 +7,12 @@ import {
     RemoveComment,
     toggleSnackbarOn,
     ToggleSnackbarOn,
-} from '../action';
-import CandidateComments from '../component/Candidate/CandidateComments';
-import { StoreState } from '../reducer';
+} from '../../action';
+import CandidateComments from '../../component/Candidate/CandidateComments';
+import { StoreState } from '../../reducer';
 
 interface OwnProps {
-    step: string;
+    step: number;
     cid: string;
     comments: object;
 }
@@ -24,8 +24,8 @@ const mapStateToProps = ({ components }: StoreState, ownProps: OwnProps) => ({
 type DispatchType = Dispatch<AddComment | RemoveComment | ToggleSnackbarOn>
 
 const mapDispatchToProps = (dispatch: DispatchType) => ({
-    submit: (step: string, name: string, commenter: string, comment: object) => dispatch(addComment(step, name, commenter, comment)),
-    remove: (step: string, name: string, commenter: string) => dispatch(removeComment(step, name, commenter)),
+    submit: (step: number, name: string, commenter: string, comment: object) => dispatch(addComment(step, name, commenter, comment)),
+    remove: (step: number, name: string, commenter: string) => dispatch(removeComment(step, name, commenter)),
     toggleOn: (info: string) => dispatch(toggleSnackbarOn(info, 'warning')),
 });
 

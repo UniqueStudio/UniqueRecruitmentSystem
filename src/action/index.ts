@@ -39,12 +39,13 @@ export const ADD_COMMENT = 'ADD_COMMENT';
 export type ADD_COMMENT = typeof ADD_COMMENT;
 export interface AddComment {
     type: ADD_COMMENT;
-    step: string;
+    step: number;
     cid: string;
     commenter: string;
     comment: object;
 }
-export function addComment(step: string, cid: string, commenter: string, comment: object): AddComment {
+
+export function addComment(step: number, cid: string, commenter: string, comment: object): AddComment {
     return {
         type: ADD_COMMENT,
         step,
@@ -58,11 +59,12 @@ export const REMOVE_COMMENT = 'REMOVE_COMMENT';
 export type REMOVE_COMMENT = typeof REMOVE_COMMENT;
 export interface RemoveComment {
     type: REMOVE_COMMENT;
-    step: string;
+    step: number;
     cid: string;
     commenter: string;
 }
-export function removeComment(step: string, cid: string, commenter: string): RemoveComment {
+
+export function removeComment(step: number, cid: string, commenter: string): RemoveComment {
     return {
         type: REMOVE_COMMENT,
         step,
@@ -75,9 +77,10 @@ export const SET_CANDIDATES = 'SET_CANDIDATES';
 export type SET_CANDIDATES = typeof SET_CANDIDATES;
 export interface SetCandidates {
     type: SET_CANDIDATES;
-    candidates: object;
+    candidates: object[];
 }
-export function setCandidates(candidates: object): SetCandidates {
+
+export function setCandidates(candidates: object[]): SetCandidates {
     return {
         type: SET_CANDIDATES,
         candidates,
@@ -90,7 +93,8 @@ export interface SelectCandidate {
     type: SELECT_CANDIDATE;
     cid: string | string[];
 }
-export function selectCandidate(cid: string | Array<string>): SelectCandidate {
+
+export function selectCandidate(cid: string | string[]): SelectCandidate {
     return {
         type: SELECT_CANDIDATE,
         cid,
@@ -115,13 +119,12 @@ export type REMOVE_CANDIDATE = typeof REMOVE_CANDIDATE;
 export interface RemoveCandidate {
     type: REMOVE_CANDIDATE;
     cid: string | string[];
-    step: string
 }
-export function removeCandidate(step: string, cid: string | string[]): RemoveCandidate {
+
+export function removeCandidate(cid: string | string[]): RemoveCandidate {
     return {
         type: REMOVE_CANDIDATE,
         cid,
-        step,
     }
 }
 
@@ -129,11 +132,12 @@ export const MOVE_CANDIDATE = 'MOVE_CANDIDATE';
 export type MOVE_CANDIDATE = typeof MOVE_CANDIDATE;
 export interface MoveCandidate {
     type: MOVE_CANDIDATE;
-    from: string;
-    to: string;
+    from: number;
+    to: number;
     cid: string;
 }
-export function moveCandidate(from: string, to: string, cid: string): MoveCandidate {
+
+export function moveCandidate(from: number, to: number, cid: string): MoveCandidate {
     return {
         type: MOVE_CANDIDATE,
         from,

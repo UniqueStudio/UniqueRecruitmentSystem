@@ -1,8 +1,8 @@
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
-import { StoreState } from '../reducer';
-import { toggleDrawerOpen, ToggleDrawerOpen } from '../action';
-import AppBar from '../component/AppBar/AppBar';
+import { StoreState } from '../../reducer';
+import { toggleDrawerOpen, ToggleDrawerOpen } from '../../action';
+import AppBar from '../../component/AppBar/AppBar';
 
 const mapStateToProps = ({ components, data }: StoreState) => ({
     open: components.drawerOpen,

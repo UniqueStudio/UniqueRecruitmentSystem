@@ -1,11 +1,8 @@
 import * as React from "react";
-import {
-    withStyles,
-    WithStyles
-} from "@material-ui/core/styles";
-import AppBar from "../container/AppBar";
-import Menu from "../container/Menu";
-import Snackbar from '../container/Snackbar';
+import { withStyles, WithStyles } from "@material-ui/core/styles";
+import AppBar from "../container/AppBar/AppBar";
+import Menu from "../container/Menu/index";
+import Snackbar from '../container/Snackbar/index';
 import styles from "../style/index";
 import withRoot from "../style/withRoot";
 

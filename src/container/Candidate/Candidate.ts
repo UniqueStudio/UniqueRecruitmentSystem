@@ -1,16 +1,11 @@
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
-import {
-    selectCandidate,
-    SelectCandidate,
-    deselectCandidate,
-    DeselectCandidate
-} from '../action';
-import Candidate from '../component/Candidate/Candidate';
-import { StoreState } from '../reducer';
+import { deselectCandidate, DeselectCandidate, selectCandidate, SelectCandidate } from '../../action';
+import Candidate from '../../component/Candidate/Candidate';
+import { StoreState } from '../../reducer';
 
 interface OwnProps {
-    step: string;
+    step: number;
     cid: string;
     info: object;
     direction: string;

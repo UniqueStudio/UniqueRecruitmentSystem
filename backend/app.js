@@ -1,7 +1,9 @@
-const express = require('express');
-const app = express();
+const app = require('express')();
+const server = require('http').Server(app);
+const io = require('socket.io')(server);
 const bodyParser = require('body-parser');
-const candidates = require('./candidates');
+const Database = require('./database');
+const database = new Database;
 
 app.use(bodyParser.json({limit: '1mb'}));
 
@@ -32,40 +34,39 @@ app.put('/user/:uid', (req, res) => {
 
 });
 
-
 // get all candidates
 app.get('/candidates', (req, res) => {
-    res.send(candidates);
+    database.query('candidates', {}).then(data => res.send(data));
 });
 
 // get candidates in certain group
 app.get('/candidates/:group', (req, res) => {
-    res.send(candidates[req.params.group]);
+    database.query('candidates', { group: req.params.group }).then(data => res.send(data));
 });
 
 // move a candidate from step a to step b
 app.put('/candidates/:cid', (req, res) => {
-
+    database.update('candidates', req.params.cid, { step: req.body.to }).then(() => res.send());
 });
 
 // delete a certain candidate
 app.delete('/candidates/:cid', (req, res) => {
-
+    database.delete('candidates', req.params.cid).then(() => res.send());
 });
 
 // comment on a certain candidate
 app.post('/candidates/:cid/comments', (req, res) => {
-
+    database.update('candidates', req.params.cid, { ['comments.' + req.body.uid]: req.body.comment }).then(() => res.send());
 });
 
 // update comment on a certain candidate
 app.put('/candidates/:cid/comments/:uid', (req, res) => {
-
+    database.update('candidates', req.params.cid, { [`comments.${req.params.uid}`]: req.body.comment }).then(() => res.send());
 });
 
 // delete comment on a certain candidate
 app.delete('/candidates/:cid/comments/:uid', (req, res) => {
-
+    database.update('candidates', req.params.cid, { [`comments.${req.params.uid}`]: '' }, true).then(() => res.send());
 });
 
 // send sms
@@ -93,4 +94,10 @@ app.post('/recruitment', (req, res) => {
 
 });
 
-app.listen(5000);
+io.on('connection', socket => {
+    console.log('WebSocket connected');
+    socket.emit('info', 'WebSocket connected');
+    socket.on('dd', data => console.log(data))
+});
+
+server.listen(5000);
