@@ -10,9 +10,9 @@ import { ExpandMore as ExpandMoreIcon, InfoOutline as InfoIcon } from "@material
 
 import Modal from '../Modal';
 import Detail from './CandidateDetail';
-import Comments from '../../container/CandidateComments';
+import Comments from '../../container/Candidate/CandidateComments';
 
-import styles, { warningColor, dangerColor, successColor, colorToAlpha } from "../../style";
+import styles, { colorToAlpha, dangerColor, successColor, warningColor } from "../../style";
 import withRoot from "../../style/withRoot";
 import { DragSource } from 'react-dnd';
 
@@ -25,7 +25,7 @@ interface Info {
 }
 
 interface Props extends WithStyles {
-    step: string;
+    step: number;
     cid: string;
     info: Info;
     selected: string[];

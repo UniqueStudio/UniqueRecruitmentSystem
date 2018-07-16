@@ -10,12 +10,12 @@ import styles from "../../style/index";
 import withRoot from "../../style/withRoot";
 
 interface Props extends WithStyles {
-    step: string;
+    step: number;
     cid: string;
     comments: object;
     snackbarOn: boolean;
-    submit: (step: string, cid: string, commenter: string, comment: object) => void;
-    remove: (step: string, cid: string, commenter: string) => void;
+    submit: (step: number, cid: string, commenter: string, comment: object) => void;
+    remove: (step: number, cid: string, commenter: string) => void;
     toggleOn: (info: string) => void;
 }
 

@@ -4,8 +4,8 @@ import Slide from '@material-ui/core/Slide';
 import Typography from '@material-ui/core/Typography';
 import { WithStyles, withStyles } from '@material-ui/core/styles';
 
-import styles from "../style/index";
-import withRoot from "../style/withRoot";
+import styles from "../../style/index";
+import withRoot from "../../style/withRoot";
 
 interface Props extends WithStyles {
     open: boolean;

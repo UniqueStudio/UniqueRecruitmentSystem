@@ -2,9 +2,9 @@ import * as React from "react";
 import Button from '@material-ui/core/Button';
 import { WithStyles, withStyles } from '@material-ui/core/styles';
 
-import withRoot from "../style/withRoot";
-import styles from "../style";
-import Modal from './Modal';
+import withRoot from "../../style/withRoot";
+import styles from "../../style";
+import Modal from '../Modal';
 
 interface Props extends WithStyles {
     loggedIn: boolean;

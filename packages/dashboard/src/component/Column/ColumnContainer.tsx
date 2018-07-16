@@ -4,12 +4,13 @@ import { Dispatch } from 'redux';
 
 import withRoot from "../../style/withRoot";
 import styles from "../../style/index";
-import Column from "../../container/Column";
+import Column from "../../container/Column/Column";
 
 import { requestCandidate } from '../../action/async';
 import { STEP } from '../../lib/const';
 
 interface Props extends WithStyles {
+    candidates: object;
     isLoading: boolean;
     pathname: string;
     dispatch: Dispatch<any>;
@@ -22,11 +23,11 @@ class Container extends React.Component<Props> {
     }
 
     render() {
-        const { classes, pathname } = this.props;
+        const { classes, pathname, candidates } = this.props;
         const steps = pathname === '/view' ? STEP : STEP.slice(4);
         return (
             <div className={classes.columnContainer}>
-                {steps.map(i => <Column title={i} key={i} />)}
+                {steps.map(i => <Column title={i} key={i} candidates={candidates[STEP.indexOf(i)] || {}} />)}
                 {/*this div with a full-width-space is used to show right margin of the last element*/}
                 <div style={{visibility: 'hidden'}}>　</div>
             </div>

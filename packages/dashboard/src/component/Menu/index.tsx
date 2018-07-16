@@ -8,16 +8,13 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import { WithStyles, withStyles } from '@material-ui/core/styles';
+import DashboardIcon from '@material-ui/icons/Dashboard';
+import InsertChartIcon from '@material-ui/icons/InsertChart';
+import HomeIcon from '@material-ui/icons/Home';
+import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 
-import {
-    Dashboard as DashboardIcon,
-    InsertChart as InsertChartIcon,
-    Home as HomeIcon,
-    ChevronLeft as ChevronLeftIcon
-} from '@material-ui/icons';
-
-import withRoot from '../style/withRoot';
-import styles from '../style/index';
+import withRoot from '../../style/withRoot';
+import styles from '../../style/index';
 import { Link } from 'react-router-dom';
 
 interface Props extends WithStyles {
