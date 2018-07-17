@@ -14,8 +14,8 @@ interface OwnProps {
     onPrev: () => void;
 }
 
-const mapStateToProps = ({ data }: StoreState, ownProps: OwnProps) => ({
-    selected: data['selected'],
+const mapStateToProps = ({ candidates }: StoreState, ownProps: OwnProps) => ({
+    selected: candidates.selected,
 });
 
 type DispatchType = Dispatch<SelectCandidate | DeselectCandidate>

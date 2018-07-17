@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { Dispatch } from 'redux';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 import { WithStyles, withStyles } from '@material-ui/core/styles';
@@ -7,10 +6,9 @@ import { WithStyles, withStyles } from '@material-ui/core/styles';
 import styles from '../../style/index'
 import withRoot from '../../style/withRoot';
 import { GROUP } from '../../lib/const';
-import { requestCandidate } from '../../action/async';
 
 interface Props extends WithStyles {
-    dispatch: Dispatch<any>;
+    changeGroup: (group: string) => void
 }
 
 class Selects extends React.Component<Props> {
@@ -20,7 +18,7 @@ class Selects extends React.Component<Props> {
 
     handleChange = (event: React.ChangeEvent) => {
         this.setState({ group: event.target['value'] });
-        this.props.dispatch(requestCandidate(event.target['value']));
+        this.props.changeGroup(event.target['value']);
     };
 
     render() {

@@ -147,6 +147,13 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
         display: 'flex',
         margin: theme.spacing.unit * 2,
     },
+    modalMain: {
+        display: 'flex',
+        flexDirection: "column",
+        [theme.breakpoints.up('lg')]: {
+            flexDirection: "row",
+        },
+    },
     card: {
         margin: theme.spacing.unit,
         position: 'relative',
