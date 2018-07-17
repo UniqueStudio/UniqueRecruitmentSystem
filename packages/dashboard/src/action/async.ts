@@ -38,10 +38,10 @@ export const removeCandidate = (cid: string) => (dispatch: Dispatch) => {
     dispatch({ type: CANDIDATE.START });
     return fetch(`${URL}/candidates/${cid}`, { method: 'DELETE' })
         .then(resHandler)
-        .then(() => {
-            dispatch({ type: CANDIDATE.SUCCESS });
-            dispatch(actions.removeCandidate(cid));
-        })
+        // .then(() => {
+        //     dispatch({ type: CANDIDATE.SUCCESS });
+        //     dispatch(actions.removeCandidate(cid));
+        // })
         .catch(err => {
             dispatch({ type: CANDIDATE.FAILURE });
             dispatch(actions.toggleSnackbarOn(`ERROR: ${err.message}`, 'danger'))
@@ -56,10 +56,10 @@ export const moveCandidate = (from: number, to: number, cid: string) => (dispatc
         headers: { 'content-type': 'application/json' },
     })
         .then(resHandler)
-        .then(() => {
-            store.dispatch({ type: CANDIDATE.SUCCESS });
-            store.dispatch(actions.moveCandidate(from, to, cid));
-        })
+        // .then(() => {
+        //     store.dispatch({ type: CANDIDATE.SUCCESS });
+        //     store.dispatch(actions.moveCandidate(from, to, cid));
+        // })
         .catch(err => {
             dispatch({ type: CANDIDATE.FAILURE });
             dispatch(actions.toggleSnackbarOn(`ERROR: ${err.message}`, 'danger'))
@@ -71,14 +71,14 @@ export const addComment = (step: number, cid: string, commenter: string, comment
     dispatch({ type: COMMENT.START });
     return fetch(`${URL}/candidates/${cid}/comments`, {
         method: 'POST',
-        body: JSON.stringify({ uid: commenter, comment }),
+        body: JSON.stringify({ uid: commenter, comment, step }),
         headers: { 'content-type': 'application/json' },
     })
         .then(resHandler)
-        .then(() => {
-            dispatch({ type: COMMENT.SUCCESS });
-            dispatch(actions.addComment(step, cid, commenter, comment));
-        })
+        // .then(() => {
+        //     dispatch({ type: COMMENT.SUCCESS });
+        //     dispatch(actions.addComment(step, cid, commenter, comment));
+        // })
         .catch(err => {
             dispatch({ type: COMMENT.FAILURE });
             dispatch(actions.toggleSnackbarOn(`ERROR: ${err.message}`, 'danger'))
@@ -87,12 +87,16 @@ export const addComment = (step: number, cid: string, commenter: string, comment
 
 export const removeComment = (step: number, cid: string, commenter: string) => (dispatch: Dispatch) => {
     dispatch({ type: COMMENT.START });
-    return fetch(`${URL}/candidates/${cid}/comments/${commenter}`, { method: 'DELETE' })
+    return fetch(`${URL}/candidates/${cid}/comments/${commenter}`, {
+        method: 'DELETE',
+        body: JSON.stringify({ step }),
+        headers: { 'content-type': 'application/json' },
+    })
         .then(resHandler)
-        .then(() => {
-            dispatch({ type: COMMENT.SUCCESS });
-            dispatch(actions.removeComment(step, cid, commenter));
-        })
+        // .then(() => {
+        //     dispatch({ type: COMMENT.SUCCESS });
+        //     dispatch(actions.removeComment(step, cid, commenter));
+        // })
         .catch(err => {
             dispatch({ type: COMMENT.FAILURE });
             dispatch(actions.toggleSnackbarOn(`ERROR: ${err.message}`, 'danger'))
@@ -100,11 +104,19 @@ export const removeComment = (step: number, cid: string, commenter: string) => (
 };
 
 export const socket = socketClient('http://localhost:5000');
-socket.on('delete', (cid: string) => {
+socket.on('removeCandidate', (cid: string) => {
     store.dispatch({ type: CANDIDATE.SUCCESS });
     store.dispatch(actions.removeCandidate(cid))
 });
-socket.on('move', (cid: string, from: number, to: number) => {
+socket.on('moveCandidate', (cid: string, from: number, to: number) => {
     store.dispatch({ type: CANDIDATE.SUCCESS });
     store.dispatch(actions.moveCandidate(from, to, cid));
+});
+socket.on('addComment', (step: number, cid: string, commenter: string, comment: object) => {
+    store.dispatch({ type: COMMENT.SUCCESS });
+    store.dispatch(actions.addComment(step, cid, commenter, comment));
+});
+socket.on('removeComment', (step: number, cid: string, commenter: string) => {
+    store.dispatch({ type: COMMENT.SUCCESS });
+    store.dispatch(actions.removeComment(step, cid, commenter));
 });

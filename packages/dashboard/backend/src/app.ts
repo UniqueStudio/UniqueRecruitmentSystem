@@ -59,7 +59,7 @@ app.put('/candidates/:cid', (req, res) => {
     database
         .update('candidates', req.params.cid, { step: req.body.to })
         .then(() => res.send({ info: 'success' }));
-    io.emit('move', req.params.cid, req.body.from, req.body.to);
+    io.emit('moveCandidate', req.params.cid, req.body.from, req.body.to);
 });
 
 // delete a certain candidate
@@ -67,7 +67,7 @@ app.delete('/candidates/:cid', (req, res) => {
     database
         .delete('candidates', req.params.cid)
         .then(() => res.send({ info: 'success' }));
-    io.emit('delete', req.params.cid);
+    io.emit('removeCandidate', req.params.cid);
 });
 
 // comment on a certain candidate
@@ -75,6 +75,7 @@ app.post('/candidates/:cid/comments', (req, res) => {
     database
         .update('candidates', req.params.cid, { ['comments.' + req.body.uid]: req.body.comment })
         .then(() => res.send({ info: 'success' }));
+    io.emit('addComment', req.body.step, req.params.cid, req.body.uid, req.body.comment);
 });
 
 // delete comment on a certain candidate
@@ -82,6 +83,7 @@ app.delete('/candidates/:cid/comments/:uid', (req, res) => {
     database
         .update('candidates', req.params.cid, { [`comments.${req.params.uid}`]: '' }, true)
         .then(() => res.send({ info: 'success' }));
+    io.emit('removeComment', req.body.step, req.params.cid, req.params.uid);
 });
 
 // send sms
