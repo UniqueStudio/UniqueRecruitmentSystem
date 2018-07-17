@@ -1,18 +1,17 @@
 {
   "compilerOptions": {
     "baseUrl": ".",
-    "outDir": "dist",
-    "module": "esnext",
+    "module": "commonjs",
+    "outDir": "build",
     "target": "es6",
-    "lib": ["es2017", "dom"],
+    "lib": [
+      "es2017"
+    ],
     "sourceMap": true,
     "allowJs": true,
-    "jsx": "react",
     "moduleResolution": "node",
-    "rootDir": "src",
     "typeRoots": [
-      "node_modules/@types",
-      "typing"
+      "node_modules/@types"
     ],
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
@@ -25,12 +24,7 @@
     "noUnusedLocals": true,
     "experimentalDecorators": true
   },
-  "exclude": [
-    "node_modules",
-    "build",
-    "scripts",
-    "acceptance-tests",
-    "webpack",
-    "jest"
+  "include": [
+    "src/**/*"
   ]
 }

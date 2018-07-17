@@ -1,12 +1,14 @@
 import * as actions from '../action';
-import { StoreState } from './index';
+import * as asyncActions from '../action/async';
 
 const init = {
     candidates: [],
     selected: [],
-    isLoading: false,
+    isLoading: {
+        comments: false,
+        candidates: false
+    },
     group: 'web',
-    loggedIn: false,
 };
 
 type Action =
@@ -17,14 +19,22 @@ type Action =
     | actions.DeselectCandidate
     | actions.RemoveCandidate
     | actions.MoveCandidate
-    | actions.ToggleLoading
     | actions.SetGroup
-    | actions.Login;
 
-export default function data(
-    state: StoreState['data'] = init,
+export interface Candidates {
+    candidates: object[];
+    selected: string[];
+    isLoading: {
+        comments: boolean;
+        candidates: boolean;
+    };
+    group: string;
+}
+
+export function candidates(
+    state: Candidates = init,
     action: Action
-): StoreState['data'] {
+): Candidates {
     const newState = { ...state };
     switch (action.type) {
         case actions.ADD_COMMENT:
@@ -33,8 +43,13 @@ export default function data(
         case actions.REMOVE_COMMENT:
             delete newState['candidates'][action.step][action.cid].comments[action.commenter];
             return newState;
+        case asyncActions.CANDIDATE.START:
+            return { ...state, isLoading: { ...state.isLoading, candidates: true } };
+        case asyncActions.CANDIDATE.SUCCESS:
+        case asyncActions.CANDIDATE.FAILURE:
+            return { ...state, isLoading: { ...state.isLoading, candidates: false } };
         case actions.SET_CANDIDATES:
-            return { ...state, candidates: action.candidates, isLoading: false };
+            return { ...state, candidates: action.candidates };
         case actions.SELECT_CANDIDATE:
             newState['selected'] = [...new Set(newState['selected'].concat(action.cid))];
             return newState;
@@ -45,7 +60,8 @@ export default function data(
             for (const step of newState.candidates) {
                 typeof action.cid === 'string' ? delete step[action.cid] : action.cid.map(i => delete step[i]);
             }
-            return { ...newState, isLoading: false };
+            newState['selected'] = newState['selected'].filter((i: string) => !action.cid.includes(i));
+            return newState;
         case actions.MOVE_CANDIDATE:
             const info = newState['candidates'][action.from][action.cid];
             delete newState['candidates'][action.from][action.cid];
@@ -54,12 +70,8 @@ export default function data(
             }
             newState['candidates'][action.to][action.cid] = info;
             return newState;
-        case actions.TOGGLE_LOADING:
-            return { ...state, isLoading: !state['isLoading'] };
         case actions.SET_GROUP:
             return { ...state, group: action.group };
-        case actions.LOGIN:
-            return { ...state, loggedIn: true };
     }
     return state;
 }

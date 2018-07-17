@@ -1,13 +1,7 @@
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
-import {
-    addComment,
-    AddComment,
-    removeComment,
-    RemoveComment,
-    toggleSnackbarOn,
-    ToggleSnackbarOn,
-} from '../../action';
+import { toggleSnackbarOn, ToggleSnackbarOn, } from '../../action';
+import { addComment, removeComment } from '../../action/async';
 import CandidateComments from '../../component/Candidate/CandidateComments';
 import { StoreState } from '../../reducer';
 
@@ -21,11 +15,11 @@ const mapStateToProps = ({ components }: StoreState, ownProps: OwnProps) => ({
     snackbarOn: components.snackbar.on
 });
 
-type DispatchType = Dispatch<AddComment | RemoveComment | ToggleSnackbarOn>
+type DispatchType = Dispatch<ToggleSnackbarOn>
 
 const mapDispatchToProps = (dispatch: DispatchType) => ({
-    submit: (step: number, name: string, commenter: string, comment: object) => dispatch(addComment(step, name, commenter, comment)),
-    remove: (step: number, name: string, commenter: string) => dispatch(removeComment(step, name, commenter)),
+    submit: (step: number, cid: string, commenter: string, comment: object) => addComment(step, cid, commenter, comment)(dispatch),
+    remove: (step: number, name: string, commenter: string) => removeComment(step, name, commenter)(dispatch),
     toggleOn: (info: string) => dispatch(toggleSnackbarOn(info, 'warning')),
 });
 

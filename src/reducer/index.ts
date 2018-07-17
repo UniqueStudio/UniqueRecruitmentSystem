@@ -1,26 +1,19 @@
-import data from './data';
-import components from './components';
+import { components, Components } from './components';
+import { candidates, Candidates } from './candidates';
+import { user, User } from './user';
+import { routerReducer, RouterState } from 'react-router-redux';
+import { combineReducers } from 'redux';
 
 export interface StoreState {
-    components: {
-        drawerOpen: boolean;
-        snackbar: {
-            on: boolean;
-            info: string;
-            color: string;
-        };
-    };
-    data: {
-        candidates: object[];
-        selected: string[];
-        isLoading: boolean;
-        group: string;
-        loggedIn: boolean;
-    };
-    routerReducer: object;
+    components: Components;
+    candidates: Candidates;
+    user: User;
+    routerReducer: RouterState;
 }
 
-export const reducer = {
+export const reducers = combineReducers({
     components,
-    data
-};
+    candidates,
+    user,
+    routerReducer
+});

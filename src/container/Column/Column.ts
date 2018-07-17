@@ -4,32 +4,32 @@ import Column from '../../component/Column/Column';
 import {
     deselectCandidate,
     DeselectCandidate,
-    moveCandidate,
-    MoveCandidate,
     selectCandidate,
     SelectCandidate,
     toggleSnackbarOn,
     ToggleSnackbarOn,
 } from '../../action';
 import { Dispatch } from 'redux';
+import { moveCandidate, removeCandidate } from '../../action/async';
 
 interface OwnProps {
     title: string;
     candidates: object;
 }
 
-const mapStateToProps = ({ data }: StoreState, ownProps: OwnProps) => ({
-    selected: data.selected,
-    group: data.group,
-    isLoading: data.isLoading
+const mapStateToProps = ({ candidates }: StoreState, ownProps: OwnProps) => ({
+    selected: candidates.selected,
+    group: candidates.group,
 });
-type DispatchType = Dispatch<SelectCandidate | DeselectCandidate | MoveCandidate | ToggleSnackbarOn>
+
+type DispatchType = Dispatch<SelectCandidate | DeselectCandidate | ToggleSnackbarOn>
 
 const mapDispatchToProps = (dispatch: DispatchType) => ({
     select: (name: string[]) => dispatch(selectCandidate(name)),
     deselect: (name: string[]) => dispatch(deselectCandidate(name)),
     toggleOn: (info: string) => dispatch(toggleSnackbarOn(info, 'info')),
-    move: (from: number, to: number, cid: string) => dispatch(moveCandidate(from, to, cid)),
-    dispatch
+    move: (from: number, to: number, cid: string) => moveCandidate(from, to, cid)(dispatch),
+    remove: (cid: string) => removeCandidate(cid)(dispatch)
 });
+
 export default connect(mapStateToProps, mapDispatchToProps)(Column);

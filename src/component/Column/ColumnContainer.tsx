@@ -1,25 +1,22 @@
 import * as React from "react";
 import { WithStyles, withStyles } from '@material-ui/core/styles';
-import { Dispatch } from 'redux';
 
 import withRoot from "../../style/withRoot";
 import styles from "../../style/index";
 import Column from "../../container/Column/Column";
 
-import { requestCandidate } from '../../action/async';
 import { STEP } from '../../lib/const';
 
 interface Props extends WithStyles {
     candidates: object;
-    isLoading: boolean;
     pathname: string;
-    dispatch: Dispatch<any>;
+    changeGroup: (group: string) => void;
 }
 
 class Container extends React.Component<Props> {
     constructor(props: Props) {
         super(props);
-        this.props.dispatch(requestCandidate('web'));
+        props.changeGroup('web');
     }
 
     render() {
@@ -29,7 +26,7 @@ class Container extends React.Component<Props> {
             <div className={classes.columnContainer}>
                 {steps.map(i => <Column title={i} key={i} candidates={candidates[STEP.indexOf(i)] || {}} />)}
                 {/*this div with a full-width-space is used to show right margin of the last element*/}
-                <div style={{visibility: 'hidden'}}>　</div>
+                <div style={{ visibility: 'hidden' }}>{'　'}</div>
             </div>
         );
     }

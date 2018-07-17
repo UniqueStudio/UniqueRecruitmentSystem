@@ -146,17 +146,6 @@ export function moveCandidate(from: number, to: number, cid: string): MoveCandid
     }
 }
 
-export const TOGGLE_LOADING = 'TOGGLE_LOADING';
-export type TOGGLE_LOADING = typeof TOGGLE_LOADING;
-export interface ToggleLoading {
-    type: TOGGLE_LOADING;
-}
-export function toggleLoading(): ToggleLoading {
-    return {
-        type: TOGGLE_LOADING,
-    }
-}
-
 export const SET_GROUP = 'SET_GROUP';
 export type SET_GROUP = typeof SET_GROUP;
 export interface SetGroup {

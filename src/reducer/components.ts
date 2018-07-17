@@ -1,4 +1,3 @@
-import { StoreState } from './index';
 import * as actions from '../action';
 
 const init = {
@@ -12,10 +11,19 @@ const init = {
 
 type Action = actions.ToggleSnackbarOn | actions.ToggleSnackbarOff | actions.ToggleDrawerOpen;
 
-export default function components(
-    state: StoreState['components'] = init,
+export interface Components {
+    drawerOpen: boolean;
+    snackbar: {
+        on: boolean;
+        info: string;
+        color: string;
+    };
+}
+
+export function components(
+    state: Components = init,
     action: Action
-): StoreState['components'] {
+): Components {
     switch (action.type) {
         case actions.TOGGLE_DRAWER_OPEN:
             return { ...state, drawerOpen: !state.drawerOpen };

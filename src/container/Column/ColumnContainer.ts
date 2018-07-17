@@ -1,11 +1,16 @@
 import { connect } from 'react-redux';
+import { Dispatch } from 'redux';
 import ColumnContainer from '../../component/Column/ColumnContainer';
 import { StoreState } from '../../reducer';
+import { requestCandidate } from '../../action/async';
 
-const mapStateToProps = ({ routerReducer, data }: StoreState) => ({
-    isLoading: data.isLoading,
-    pathname: routerReducer['location']['pathname'],
-    candidates: data.candidates,
+const mapStateToProps = ({ routerReducer, candidates }: StoreState) => ({
+    pathname: (routerReducer.location || { pathname: '' }).pathname,
+    candidates: candidates.candidates,
 });
 
-export default connect(mapStateToProps)(ColumnContainer);
+const mapDispatchToProps = (dispatch: Dispatch) => ({
+    changeGroup: (group: string) => requestCandidate(group)(dispatch)
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(ColumnContainer);
