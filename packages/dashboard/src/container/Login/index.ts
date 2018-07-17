@@ -4,8 +4,8 @@ import { login, Login } from '../../action';
 import LoginComponent from '../../component/Login';
 import { StoreState } from '../../reducer';
 
-const mapStateToProps = ({ data }: StoreState) => ({
-    loggedIn: data.loggedIn
+const mapStateToProps = ({ user }: StoreState) => ({
+    loggedIn: user.loggedIn
 });
 
 const mapDispatchToProps = (dispatch: Dispatch<Login>) => ({

@@ -1,5 +1,4 @@
 import * as React from "react";
-import { Dispatch } from 'redux';
 import { DropTarget } from 'react-dnd';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
@@ -18,17 +17,15 @@ import Template from '../Template';
 import { STEP } from '../../lib/const';
 import styles from "../../style/index";
 import withRoot from "../../style/withRoot";
-import { removeCandidate } from '../../action/async';
 
 interface Props extends WithStyles {
     title: string;
     candidates: object;
     group: string;
-    isLoading: boolean;
     selected: string[];
     select: (cid: string[]) => void;
     deselect: (cid: string[] | string) => void;
-    dispatch: Dispatch<any>;
+    remove: (cid: string) => void;
     move: (from: number, to: number, cid: string) => void;
     toggleOn: (info: string) => void;
     connectDropTarget: (content: any) => any;
@@ -64,11 +61,15 @@ class Column extends React.Component<Props> {
 
     CandidateElements = {};
 
-    componentWillReceiveProps(nextProps: Props) {
-        this.setState({
-            candidateModalOpen: new Array(this.length),
-        });
-    }
+    handleRemove = (selected: string[]) => () => {
+        this.toggleOpen('dialog')();
+        const { toggleOn, remove } = this.props;
+        if (selected.length === 0) {
+            toggleOn('你没有选中任何人');
+            return;
+        }
+        selected.map(i => remove(i));
+    };
 
     handleNext = (i: number) => () => {
         const list: any[] = new Array(this.length);
@@ -103,15 +104,13 @@ class Column extends React.Component<Props> {
         this.toggleOpen('dialog')();
     };
 
-    handleRemove = (selected: string[]) => () => {
-        this.toggleOpen('dialog')();
-        const { toggleOn } = this.props;
-        if (selected.length === 0) {
-            toggleOn('你没有选中任何人');
-            return;
+    componentWillReceiveProps(nextProps: Props) {
+        if (nextProps.group !== this.props.group) {
+            this.setState({
+                candidateModalOpen: new Array(this.length),
+            });
         }
-        selected.map(i => this.props.dispatch(removeCandidate(i)));
-    };
+    }
 
     toggleOpen = (name: string) => () => {
         this.setState({
