@@ -157,8 +157,10 @@ class Candidate extends React.Component<Props> {
                         }}>
                             <ExpandMoreIcon />
                         </IconButton>
-                        <Detail name={name} />
-                        <Comments step={step} cid={cid} comments={comments} />
+                        <div className={classes.modalMain}>
+                            <Detail name={name} />
+                            <Comments step={step} cid={cid} comments={comments} />
+                        </div>
                         <IconButton className={classes.rightButton} onClick={() => {
                             this.props.onNext();
                         }}>

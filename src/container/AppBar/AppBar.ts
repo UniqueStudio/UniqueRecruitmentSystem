@@ -4,10 +4,10 @@ import { StoreState } from '../../reducer';
 import { toggleDrawerOpen, ToggleDrawerOpen } from '../../action';
 import AppBar from '../../component/AppBar/AppBar';
 
-const mapStateToProps = ({ components, data }: StoreState) => ({
+const mapStateToProps = ({ components, user, candidates }: StoreState) => ({
     open: components.drawerOpen,
-    loggedIn: data.loggedIn,
-    loading: data.isLoading,
+    loggedIn: user.loggedIn,
+    loading: Object.values(candidates.isLoading).includes(true),
 });
 
 const mapDispatchToProps = (dispatch: Dispatch<ToggleDrawerOpen>) => ({

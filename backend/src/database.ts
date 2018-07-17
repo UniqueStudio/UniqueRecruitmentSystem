@@ -1,7 +1,9 @@
-const { MongoClient } = require('mongodb');
+import { MongoClient, ObjectId } from 'mongodb';
+import { Candidate } from './type';
+
 const url = 'mongodb://localhost:27017';
-const candidates = require('./candidates');
-const ObjectId = require('mongodb').ObjectId;
+
+// const candidates = require('./candidates');
 
 class Database {
     constructor() {
@@ -17,33 +19,32 @@ class Database {
         return { db: client.db('recruitment'), client };
     }
 
-    async insert(collection, data) {
+    async insert(collection: string, data: object[]) {
         const { db, client } = await this.connect();
         await db.collection(collection).insertMany(data);
-        client.close();
+        await client.close();
     }
 
-    async query(collection, query) {
+    async query(collection: string, query: object) {
         const { db, client } = await this.connect();
         const result = await db.collection(collection).find(query).toArray();
         const resultFormatted = [{}, {}, {}, {}, {}, {}];
-        result.map(i => resultFormatted[i.step][i._id] = i);
-        client.close();
+        result.map((i: Candidate) => resultFormatted[i.step][`${i._id}`] = i);
+        await client.close();
         return resultFormatted;
     }
 
-    async delete(collection, cid) {
+    async delete(collection: string, cid: string) {
         const { db, client } = await this.connect();
-        await db.collection(collection).deleteOne({ '_id': ObjectId(cid) });
-        client.close();
+        await db.collection(collection).deleteOne({ _id: new ObjectId(cid) });
+        await client.close();
     }
 
-    async update(collection, cid, item, isRemove = false) {
+    async update(collection: string, cid: string, item: object, isRemove = false) {
         const { db, client } = await this.connect();
-        await db.collection(collection).updateOne({ '_id': ObjectId(cid) }, isRemove ? { $unset: item } : { $set: item });
-        client.close();
+        await db.collection(collection).updateOne({ _id: new ObjectId(cid) }, { [isRemove ? '$unset' : '$set']: item });
+        await client.close();
     }
 }
 
-module.exports = Database;
-
+export default Database;
