@@ -10,6 +10,8 @@ export interface Candidate {
     mail: string;
     phone: string;
     abandon?: boolean;
+    time1: string;
+    time2: string;
     group: string;
     sex: "Male" | "Female";
     step: string;
@@ -29,6 +31,8 @@ interface Data {
 export interface Recruitment {
     _id: ObjectID;
     title: string; // e.g. 2018A || 2018S (A: AUTUMN, S: SPRING, C: CAMP)
+    begin: string;
+    end: string;
     total: number;
     data: Data[];
 }
