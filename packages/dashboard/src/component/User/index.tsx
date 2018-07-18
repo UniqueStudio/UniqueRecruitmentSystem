@@ -148,7 +148,7 @@ class User extends React.Component<Props> {
                 <div>
                     可能遗漏的事项：
                     决定一面、时间段（在短信模板处增加输入框）
-                    组长查看本组选手选择的报名时间（）
+                    组长查看本组选手选择的面试时间（）
                 </div>
             </div>
         )
