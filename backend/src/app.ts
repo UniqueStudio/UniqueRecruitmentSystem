@@ -31,7 +31,7 @@ app.use((req, res, next) => {
  * cid: candidate id
  */
 
-// login
+// login temp TODO
 app.post('/user', (req, res) => {
     (async () => {
         const user = await database.query('users', { username: req.body.username });
@@ -84,11 +84,18 @@ app.post('/candidates', (req, res) => {
             sex: body.sex,
             step: 0,
             intro: body.intro,
+            comments: {}
             // resume: body.resume
         })
         .then(() => res.send({ info: 'success' }))
 });
 
+// update new info / set interview time
+app.put('/candidates/:cid', (req, res) => {
+    database
+        .update('candidates', req.params.cid, req.body.patch)
+        .then(() => res.send({ info: 'success' }))
+});
 
 // get all candidates
 app.get('/candidates', (req, res) => {
@@ -148,21 +155,31 @@ app.post('/verification', (req, res) => {
 
 // get all history recruitments
 app.get('/recruitment', (req, res) => {
-
+    database
+        .query('recruitments', {})
+        .then(data => res.send(data));
 });
 
 // get a certain recruitment
 app.get('/recruitment/:title', (req, res) => {
-
+    database
+        .query('recruitments', { title: req.params.title })
+        .then(data => res.send(data));
 });
 
 // launch a new recruitment
 app.post('/recruitment', (req, res) => {
-
+    database
+        .insert('recruitments', {
+            title: req.body.title,
+            begin: req.body.begin,
+            end: req.body.end,
+        })
+        .then(() => res.send({ info: 'success' }))
 });
 
 
-io.on('connection', socket => {
+io.on('connection', () => {
     console.log('WebSocket connected');
 });
 
