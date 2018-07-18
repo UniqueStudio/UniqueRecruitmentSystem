@@ -19,6 +19,7 @@ interface OwnProps {
 
 const mapStateToProps = ({ candidates }: StoreState, ownProps: OwnProps) => ({
     selected: candidates.selected,
+    isLoading: candidates.isLoading.comments
 });
 
 type DispatchType = Dispatch<SelectCandidate | DeselectCandidate | ToggleModalOn>
