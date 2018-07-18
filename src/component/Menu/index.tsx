@@ -10,12 +10,13 @@ import ListItemText from '@material-ui/core/ListItemText';
 import { WithStyles, withStyles } from '@material-ui/core/styles';
 import DashboardIcon from '@material-ui/icons/Dashboard';
 import InsertChartIcon from '@material-ui/icons/InsertChart';
+import PersonIcon from '@material-ui/icons/Person';
 import HomeIcon from '@material-ui/icons/Home';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 
 import withRoot from '../../style/withRoot';
 import styles from '../../style/index';
-import { Link } from 'react-router-dom';
+import Anchor from '../Anchor';
 
 interface Props extends WithStyles {
     open: boolean;
@@ -40,30 +41,38 @@ class Menu extends React.Component<Props> {
                 </div>
                 <Divider />
                 <List>
-                    <Link to={`/`} style={{ textDecoration: 'none' }}>
+                    <Anchor to='/'>
                         <ListItem button>
                             <ListItemIcon>
                                 <HomeIcon />
                             </ListItemIcon>
                             <ListItemText primary="首页" />
                         </ListItem>
-                    </Link>
-                    <Link to={`/data`} style={{ textDecoration: 'none' }}>
+                    </Anchor>
+                    <Anchor to='/data'>
                         <ListItem button>
                             <ListItemIcon>
                                 <InsertChartIcon />
                             </ListItemIcon>
                             <ListItemText primary="历年数据" />
                         </ListItem>
-                    </Link>
-                    <Link to={`/view`} style={{ textDecoration: 'none' }}>
+                    </Anchor>
+                    <Anchor to='/view'>
                         <ListItem button>
                             <ListItemIcon>
                                 <DashboardIcon />
                             </ListItemIcon>
                             <ListItemText primary="报名审核" />
                         </ListItem>
-                    </Link>
+                    </Anchor>
+                    <Anchor to='/my'>
+                        <ListItem button>
+                            <ListItemIcon>
+                                <PersonIcon />
+                            </ListItemIcon>
+                            <ListItemText primary="信息管理" />
+                        </ListItem>
+                    </Anchor>
                 </List>
             </Drawer>
         )

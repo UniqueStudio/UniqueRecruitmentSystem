@@ -9,6 +9,8 @@ import styles from '../../style/comment';
 
 interface Props extends WithStyles {
     name: string;
+    uid: string;
+    currentUid: string;
     comment: string;
     remove: () => void;
 }
@@ -38,7 +40,7 @@ class CommentChip extends React.Component<Props> {
     };
 
     render() {
-        const { name, comment, classes } = this.props;
+        const { name, uid, comment, classes, currentUid } = this.props;
         let content = `${name}： ${comment["comment"]}`;
         content = content.length > 15 ? content.slice(0, 15) + '…' : content;
         const color = evaluationToStyle[comment["evaluation"]];
@@ -52,7 +54,7 @@ class CommentChip extends React.Component<Props> {
                     }}
                     onMouseOver={this.handleOpen}
                     onMouseOut={this.handleClose}
-                    onDelete={name === 'AA' ? this.handleDelete : undefined}
+                    onDelete={uid === currentUid ? this.handleDelete : undefined}
                 />
                 <Popover
                     className={classes.popover}

@@ -29,7 +29,7 @@ class Selects extends React.Component<Props> {
                 onChange={this.handleChange}
                 className={classes.select}
             >
-                {[...GROUP].map(i =>
+                {GROUP.map(i =>
                     <MenuItem value={i.toLowerCase()} key={i.toLowerCase()}>{i}</MenuItem>
                 )}
                 <MenuItem value='all' disabled>{'群面(不可用)'/*TODO*/}</MenuItem>

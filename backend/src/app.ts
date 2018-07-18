@@ -3,6 +3,7 @@ import { Server } from 'http';
 import socket from 'socket.io';
 import bodyParser from 'body-parser';
 import Database from './database';
+import { ObjectId } from 'mongodb';
 
 const app = express();
 const server = new Server(app);
@@ -32,13 +33,62 @@ app.use((req, res, next) => {
 
 // login
 app.post('/user', (req, res) => {
+    (async () => {
+        const user = await database.query('users', { username: req.body.username });
+        let uid;
+        if (!user.length) {
+            uid = await database.insert('users', { username: req.body.username });
+        } else {
+            uid = user[0]['_id'];
+        }
+        res.send({ uid });
+    })()
+});
 
+// get user info
+app.get('/user/:uid', (req, res) => {
+    database
+        .query('users', { '_id': new ObjectId(req.params.uid) })
+        .then(data => res.send(data))
 });
 
 // change user info
 app.put('/user/:uid', (req, res) => {
-
+    const body = req.body;
+    database
+        .update('users', req.params.uid, {
+            joinTime: body.joinTime,
+            isCaptain: Boolean(body.isCaptain),
+            isAdmin: Boolean(body.isAdmin),
+            phone: body.phone,
+            mail: body.mail,
+            sex: body.sex,
+            group: body.group,
+        })
+        .then(() => res.send({ info: 'success' }))
 });
+
+// add new candidate
+app.post('/candidates', (req, res) => {
+    const body = req.body;
+    database
+        .insert('candidates', {
+            name: body.name,
+            grade: body.grade,
+            institute: body.institute,
+            major: body.major,
+            score: body.score,
+            mail: body.mail,
+            phone: body.phone,
+            group: body.group,
+            sex: body.sex,
+            step: 0,
+            intro: body.intro,
+            // resume: body.resume
+        })
+        .then(() => res.send({ info: 'success' }))
+});
+
 
 // get all candidates
 app.get('/candidates', (req, res) => {
@@ -55,11 +105,11 @@ app.get('/candidates/:group', (req, res) => {
 });
 
 // move a candidate from step a to step b
-app.put('/candidates/:cid', (req, res) => {
+app.put('/candidates/:cid/step/:step', (req, res) => {
     database
-        .update('candidates', req.params.cid, { step: req.body.to })
-        .then(() => res.send({ info: 'success' }));
-    io.emit('moveCandidate', req.params.cid, req.body.from, req.body.to);
+        .update('candidates', req.params.cid, { step: req.params.step })
+        .then(() => res.send({ info: 'success' }))
+        .then(() => io.emit('moveCandidate', req.params.cid, req.body.from, req.params.step));
 });
 
 // delete a certain candidate

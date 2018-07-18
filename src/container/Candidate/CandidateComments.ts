@@ -11,8 +11,11 @@ interface OwnProps {
     comments: object;
 }
 
-const mapStateToProps = ({ components }: StoreState, ownProps: OwnProps) => ({
-    snackbarOn: components.snackbar.on
+const mapStateToProps = ({ components, candidates, user }: StoreState, ownProps: OwnProps) => ({
+    snackbarOn: components.snackbar.on,
+    isLoading: candidates.isLoading.comments,
+    uid: user.uid,
+    username: user.username
 });
 
 type DispatchType = Dispatch<ToggleSnackbarOn>
