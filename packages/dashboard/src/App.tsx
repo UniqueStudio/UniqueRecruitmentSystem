@@ -12,6 +12,7 @@ import Main from './view/Main';
 import View from './view/View';
 import Data from './view/Data';
 import Index from './view/Index';
+import My from './view/My';
 
 export const history = createHistory();
 
@@ -28,6 +29,7 @@ class App extends React.Component {
                         <Route path='/' exact component={Index} />
                         <Route path='/view' component={View} />
                         <Route path='/data' component={Data} />
+                        <Route path='/my' component={My} />
                     </Main>
                 </ConnectedRouter>
             </Provider>

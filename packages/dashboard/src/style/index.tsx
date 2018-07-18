@@ -215,7 +215,7 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
     progress: {
         width: '100%',
         position: 'fixed',
-        zIndex: theme.zIndex.drawer + 1,
+        zIndex: theme.zIndex.modal + 1,
         top: 0,
         left: 0,
     },
@@ -247,6 +247,25 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
         flexDirection: 'column',
         justifyContent: 'space-between',
         alignItems: 'center'
+    },
+    indexImage: {
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        height: '100%',
+    },
+    userInfoRow: {
+        display: 'flex',
+        alignItems: 'baseline',
+    },
+    userInfo: {
+        marginLeft: theme.spacing.unit,
+        marginRight: theme.spacing.unit,
+        width: 200
+    },
+    userInfoMenu: {
+        width: 200
     }
 });
 

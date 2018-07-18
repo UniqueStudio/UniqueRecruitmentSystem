@@ -5,12 +5,7 @@ import IconButton from '@material-ui/core/IconButton';
 import Popover from '@material-ui/core/Popover';
 import Typography from '@material-ui/core/Typography';
 import { WithStyles, withStyles } from '@material-ui/core/styles';
-
-import { ExpandMore as ExpandMoreIcon, InfoOutline as InfoIcon } from "@material-ui/icons";
-
-import Modal from '../Modal';
-import Detail from './CandidateDetail';
-import Comments from '../../container/Candidate/CandidateComments';
+import InfoIcon from "@material-ui/icons/InfoOutline";
 
 import styles, { colorToAlpha, dangerColor, successColor, warningColor } from "../../style";
 import withRoot from "../../style/withRoot";
@@ -29,12 +24,9 @@ interface Props extends WithStyles {
     cid: string;
     info: Info;
     selected: string[];
-    modalOpen: boolean;
-    direction: string;
     select: (cid: string) => void;
     deselect: (cid: string) => void;
-    onNext: () => void;
-    onPrev: () => void;
+    toggleModalOn: (cid: string) => void;
     connectDragSource: (content: any) => any;
     connectDragPreview: (content: any) => any;
 }
@@ -60,14 +52,7 @@ class Candidate extends React.Component<Props> {
         comment: "",
         checked: false,
         anchorEl: undefined,
-        modalOpen: this.props.modalOpen,
     };
-
-    componentWillReceiveProps(nextProps: Props) {
-        this.setState({
-            modalOpen: nextProps.modalOpen
-        })
-    }
 
     handleOpen = (event: React.MouseEvent) => {
         this.setState({ anchorEl: event.currentTarget });
@@ -75,10 +60,6 @@ class Candidate extends React.Component<Props> {
 
     handleClose = () => {
         this.setState({ anchorEl: undefined });
-    };
-
-    toggleModalOpen = () => {
-        this.setState({ modalOpen: !this.state.modalOpen });
     };
 
     handleCheck = (event: React.ChangeEvent) => {
@@ -89,7 +70,7 @@ class Candidate extends React.Component<Props> {
     };
 
     render() {
-        const { step, cid, info, selected, classes, direction, connectDragSource } = this.props;
+        const { cid, info, selected, classes, connectDragSource, toggleModalOn } = this.props;
         const { name, grade, institute, comments, abandon } = info;
         const evaluations = Object.values(comments).map(i => i['evaluation']);
         const red = colorToAlpha(dangerColor, 0.1),
@@ -116,7 +97,7 @@ class Candidate extends React.Component<Props> {
                             <Typography color='textSecondary' variant='caption'>{`${grade} - ${institute}`}</Typography>
                         </span>
                         <IconButton className={classes.iconButton}
-                                    onClick={this.toggleModalOpen}>
+                                    onClick={() => toggleModalOn(cid)}>
                             <InfoIcon />
                         </IconButton>
                         {/* this div is used to get avoid of default style on :last-child */}
@@ -146,28 +127,6 @@ class Candidate extends React.Component<Props> {
         return (
             <>
                 {abandon ? <>{card}{popover}</> : connectDragSource(card)}
-                <Modal open={this.state.modalOpen}
-                       onClose={this.toggleModalOpen}
-                       direction={direction}
-                       title='详细信息'
-                >
-                    <div className={classes.modalContent}>
-                        <IconButton className={classes.leftButton} onClick={() => {
-                            this.props.onPrev();
-                        }}>
-                            <ExpandMoreIcon />
-                        </IconButton>
-                        <div className={classes.modalMain}>
-                            <Detail name={name} />
-                            <Comments step={step} cid={cid} comments={comments} />
-                        </div>
-                        <IconButton className={classes.rightButton} onClick={() => {
-                            this.props.onNext();
-                        }}>
-                            <ExpandMoreIcon />
-                        </IconButton>
-                    </div>
-                </Modal>
             </>
         );
     }

@@ -1,5 +1,6 @@
 import * as React from "react";
 import Button from '@material-ui/core/Button';
+import TextField from '@material-ui/core/TextField';
 import { WithStyles, withStyles } from '@material-ui/core/styles';
 
 import withRoot from "../../style/withRoot";
@@ -13,11 +14,18 @@ interface Props extends WithStyles {
 
 class Login extends React.Component<Props> {
     state = {
-        modal: true
+        modal: true,
+        name: ''
     };
 
     login = () => {
-        this.props.login('AA');
+        this.props.login(this.state.name);
+    };
+
+    handleChange = (event: React.ChangeEvent) => {
+        this.setState({
+            name: event.target['value'],
+        });
     };
 
     render() {
@@ -25,8 +33,15 @@ class Login extends React.Component<Props> {
         return (
             <Modal open={!this.props.loggedIn} title='登录'>
                 <div className={classes.login}>
+                    <TextField
+                        label="用户名"
+                        value={this.state.name}
+                        onChange={this.handleChange}
+                        margin="normal"
+                    />
                     <div>微信接口</div>
-                    <Button color="primary" size="large" onClick={this.login}>登录</Button>
+                    <Button color="primary" size="large" onClick={this.login}
+                            disabled={this.state.name === ''}>登录</Button>
                 </div>
             </Modal>
         );

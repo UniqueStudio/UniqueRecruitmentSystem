@@ -12,6 +12,8 @@ import withRoot from "../../style/withRoot";
 interface Props extends WithStyles {
     step: number;
     cid: string;
+    uid: string;
+    username: string;
     comments: object;
     snackbarOn: boolean;
     submit: (step: number, cid: string, commenter: string, comment: object) => void;
@@ -36,9 +38,10 @@ class CandidateComments extends React.Component<Props> {
 
     handleSubmit = () => {
         const { comment, evaluation } = this.state;
-        const { submit, step, cid, snackbarOn, toggleOn } = this.props;
+        const { submit, step, cid, uid, snackbarOn, toggleOn, username } = this.props;
         if (comment && evaluation) {
-            submit(step, cid, "AA", {
+            submit(step, cid, uid, {
+                username,
                 comment,
                 evaluation
             });
@@ -52,13 +55,13 @@ class CandidateComments extends React.Component<Props> {
     };
 
     handleRemove = () => {
-        const { remove, step, cid } = this.props;
-        remove(step, cid, "AA");
+        const { remove, step, cid, uid } = this.props;
+        remove(step, cid, uid);
         this.setState({});
     };
 
     render() {
-        const { comments, classes } = this.props;
+        const { comments, classes, uid } = this.props;
         return (
             <div className={classes.comments}>
                 <div className={classes.cardAction}>
@@ -91,7 +94,8 @@ class CandidateComments extends React.Component<Props> {
                     </Button>
                 </div>
                 {Object.entries(comments).map(i => (
-                    <CommentChip name={i[0]} comment={i[1]} key={i[0]} remove={this.handleRemove}/>
+                    <CommentChip name={i[1].username} uid={i[0]} comment={i[1]} key={i[0]} currentUid={uid}
+                                 remove={this.handleRemove} />
                 ))}
             </div>
         );

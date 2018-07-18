@@ -9,8 +9,10 @@ const mapStateToProps = ({ routerReducer, candidates }: StoreState) => ({
     candidates: candidates.candidates,
 });
 
-const mapDispatchToProps = (dispatch: Dispatch) => ({
-    changeGroup: (group: string) => requestCandidate(group)(dispatch)
+type DispatchType = Dispatch;
+
+const mapDispatchToProps = (dispatch: DispatchType) => ({
+    changeGroup: (group: string) => requestCandidate(group)(dispatch),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ColumnContainer);

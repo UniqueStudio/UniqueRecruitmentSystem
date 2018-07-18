@@ -37,6 +37,13 @@ export function candidates(
 ): Candidates {
     const newState = { ...state };
     switch (action.type) {
+        case asyncActions.COMMENT.START:
+            newState.isLoading.comments = true;
+            return newState;
+        case asyncActions.COMMENT.SUCCESS:
+        case asyncActions.COMMENT.FAILURE:
+            newState.isLoading.comments = false;
+            return newState;
         case actions.ADD_COMMENT:
             newState['candidates'][action.step][action.cid].comments[action.commenter] = action.comment;
             return newState;
@@ -44,10 +51,12 @@ export function candidates(
             delete newState['candidates'][action.step][action.cid].comments[action.commenter];
             return newState;
         case asyncActions.CANDIDATE.START:
-            return { ...state, isLoading: { ...state.isLoading, candidates: true } };
+            newState.isLoading.candidates = true;
+            return newState;
         case asyncActions.CANDIDATE.SUCCESS:
         case asyncActions.CANDIDATE.FAILURE:
-            return { ...state, isLoading: { ...state.isLoading, candidates: false } };
+            newState.isLoading.candidates = false;
+            return newState;
         case actions.SET_CANDIDATES:
             return { ...state, candidates: action.candidates };
         case actions.SELECT_CANDIDATE:
@@ -63,7 +72,7 @@ export function candidates(
             newState['selected'] = newState['selected'].filter((i: string) => !action.cid.includes(i));
             return newState;
         case actions.MOVE_CANDIDATE:
-            const info = newState['candidates'][action.from][action.cid];
+            const info = { ...newState['candidates'][action.from][action.cid] };
             delete newState['candidates'][action.from][action.cid];
             if (!newState.candidates[action.to]) {
                 newState.candidates[action.to] = {};
