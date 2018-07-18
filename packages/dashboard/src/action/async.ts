@@ -21,7 +21,7 @@ const resHandler = (res: any) => {
 export const USER = actionTypeCreator('USER');
 export const login = (username: string) => (dispatch: Dispatch) => {
     dispatch({ type: USER.START });
-    return fetch(`/user`, {
+    return fetch(`${URL}/user`, {
         method: 'POST',
         body: JSON.stringify({ username }),
         headers: { 'content-type': 'application/json' },
@@ -39,7 +39,7 @@ export const login = (username: string) => (dispatch: Dispatch) => {
 
 export const requestUser = (uid: string) => (dispatch: Dispatch) => {
     dispatch({ type: USER.START });
-    return fetch(`/user/${uid}`)
+    return fetch(`${URL}/user/${uid}`)
         .then(resHandler)
         .then(res => {
             dispatch(actions.changeUserInfo(res));
@@ -53,7 +53,7 @@ export const requestUser = (uid: string) => (dispatch: Dispatch) => {
 
 export const updateUser = (uid: string, info: object) => (dispatch: Dispatch) => {
     dispatch({ type: USER.START });
-    return fetch(`/user/${uid}`, {
+    return fetch(`${URL}/user/${uid}`, {
         method: 'PUT',
         body: JSON.stringify({ uid, ...info }),
         headers: { 'content-type': 'application/json' },
@@ -73,7 +73,7 @@ export const CANDIDATE = actionTypeCreator('CANDIDATE');
 export const requestCandidate = (group: string) => (dispatch: Dispatch) => {
     dispatch({ type: CANDIDATE.START });
     dispatch(actions.setGroup(group));
-    return fetch(`/candidates/${group}`)
+    return fetch(`${URL}/candidates/${group}`)
         .then(resHandler)
         .then(res => {
             dispatch(actions.setCandidates(res));
@@ -87,7 +87,7 @@ export const requestCandidate = (group: string) => (dispatch: Dispatch) => {
 
 export const removeCandidate = (cid: string) => (dispatch: Dispatch) => {
     dispatch({ type: CANDIDATE.START });
-    return fetch(`$/candidates/${cid}`, { method: 'DELETE' })
+    return fetch(`${URL}/candidates/${cid}`, { method: 'DELETE' })
         .then(resHandler)
         // .then(() => {
         //     dispatch({ type: CANDIDATE.SUCCESS });
@@ -101,7 +101,7 @@ export const removeCandidate = (cid: string) => (dispatch: Dispatch) => {
 
 export const moveCandidate = (from: number, to: number, cid: string) => (dispatch: Dispatch) => {
     dispatch({ type: CANDIDATE.START });
-    return fetch(`/candidates/${cid}/step/${to}`, {
+    return fetch(`${URL}/candidates/${cid}/step/${to}`, {
         method: 'PUT',
         body: JSON.stringify({ from }),
         headers: { 'content-type': 'application/json' },
@@ -120,7 +120,7 @@ export const moveCandidate = (from: number, to: number, cid: string) => (dispatc
 export const COMMENT = actionTypeCreator('COMMENT');
 export const addComment = (step: number, cid: string, commenter: string, comment: object) => (dispatch: Dispatch) => {
     dispatch({ type: COMMENT.START });
-    return fetch(`/candidates/${cid}/comments`, {
+    return fetch(`${URL}/candidates/${cid}/comments`, {
         method: 'POST',
         body: JSON.stringify({ uid: commenter, comment, step }),
         headers: { 'content-type': 'application/json' },
@@ -138,7 +138,7 @@ export const addComment = (step: number, cid: string, commenter: string, comment
 
 export const removeComment = (step: number, cid: string, commenter: string) => (dispatch: Dispatch) => {
     dispatch({ type: COMMENT.START });
-    return fetch(`/candidates/${cid}/comments/${commenter}`, {
+    return fetch(`${URL}/candidates/${cid}/comments/${commenter}`, {
         method: 'DELETE',
         body: JSON.stringify({ step }),
         headers: { 'content-type': 'application/json' },
