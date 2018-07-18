@@ -7,9 +7,15 @@ const init = {
         info: '',
         color: ''
     },
+    modalOn: '',
 };
 
-type Action = actions.ToggleSnackbarOn | actions.ToggleSnackbarOff | actions.ToggleDrawerOpen;
+type Action =
+    actions.ToggleSnackbarOn
+    | actions.ToggleSnackbarOff
+    | actions.ToggleDrawerOpen
+    | actions.ToggleModalOn
+    | actions.ToggleModalOff;
 
 export interface Components {
     drawerOpen: boolean;
@@ -18,6 +24,7 @@ export interface Components {
         info: string;
         color: string;
     };
+    modalOn: string;
 }
 
 export function components(
@@ -31,6 +38,10 @@ export function components(
             return { ...state, snackbar: { on: true, info: action.info, color: action.color } };
         case actions.TOGGLE_SNACKBAR_OFF:
             return { ...state, snackbar: { ...state.snackbar, on: false } };
+        case actions.TOGGLE_MODAL_ON:
+            return { ...state, modalOn: action.cid };
+        case actions.TOGGLE_MODAL_OFF:
+            return { ...state, modalOn: '' };
     }
     return state;
 }

@@ -1,8 +1,10 @@
 export const TOGGLE_DRAWER_OPEN = 'TOGGLE_DRAWER_OPEN';
 export type TOGGLE_DRAWER_OPEN = typeof TOGGLE_DRAWER_OPEN;
+
 export interface ToggleDrawerOpen {
     type: TOGGLE_DRAWER_OPEN;
 }
+
 export function toggleDrawerOpen(): ToggleDrawerOpen {
     return {
         type: TOGGLE_DRAWER_OPEN
@@ -11,11 +13,13 @@ export function toggleDrawerOpen(): ToggleDrawerOpen {
 
 export const TOGGLE_SNACKBAR_ON = 'TOGGLE_SNACKBAR_ON';
 export type TOGGLE_SNACKBAR_ON = typeof TOGGLE_SNACKBAR_ON;
+
 export interface ToggleSnackbarOn {
     type: TOGGLE_SNACKBAR_ON;
     color: string;
     info: string;
 }
+
 export function toggleSnackbarOn(info: string, color: string): ToggleSnackbarOn {
     return {
         type: TOGGLE_SNACKBAR_ON,
@@ -26,17 +30,49 @@ export function toggleSnackbarOn(info: string, color: string): ToggleSnackbarOn 
 
 export const TOGGLE_SNACKBAR_OFF = 'TOGGLE_SNACKBAR_OFF';
 export type TOGGLE_SNACKBAR_OFF = typeof TOGGLE_SNACKBAR_OFF;
+
 export interface ToggleSnackbarOff {
     type: TOGGLE_SNACKBAR_OFF;
 }
+
 export function toggleSnackbarOff(): ToggleSnackbarOff {
     return {
         type: TOGGLE_SNACKBAR_OFF
     }
 }
 
+export type direction = 'left' | 'right' | 'up' | 'down';
+export const TOGGLE_MODAL_ON = 'TOGGLE_MODAL_ON';
+export type TOGGLE_MODAL_ON = typeof TOGGLE_MODAL_ON;
+
+export interface ToggleModalOn {
+    type: TOGGLE_MODAL_ON;
+    cid: string;
+}
+
+export function toggleModalOn(cid: string): ToggleModalOn {
+    return {
+        type: TOGGLE_MODAL_ON,
+        cid
+    }
+}
+
+export const TOGGLE_MODAL_OFF = 'TOGGLE_MODAL_OFF';
+export type TOGGLE_MODAL_OFF = typeof TOGGLE_MODAL_OFF;
+
+export interface ToggleModalOff {
+    type: TOGGLE_MODAL_OFF;
+}
+
+export function toggleModalOff(): ToggleModalOff {
+    return {
+        type: TOGGLE_MODAL_OFF,
+    }
+}
+
 export const ADD_COMMENT = 'ADD_COMMENT';
 export type ADD_COMMENT = typeof ADD_COMMENT;
+
 export interface AddComment {
     type: ADD_COMMENT;
     step: number;
@@ -57,6 +93,7 @@ export function addComment(step: number, cid: string, commenter: string, comment
 
 export const REMOVE_COMMENT = 'REMOVE_COMMENT';
 export type REMOVE_COMMENT = typeof REMOVE_COMMENT;
+
 export interface RemoveComment {
     type: REMOVE_COMMENT;
     step: number;
@@ -75,6 +112,7 @@ export function removeComment(step: number, cid: string, commenter: string): Rem
 
 export const SET_CANDIDATES = 'SET_CANDIDATES';
 export type SET_CANDIDATES = typeof SET_CANDIDATES;
+
 export interface SetCandidates {
     type: SET_CANDIDATES;
     candidates: object[];
@@ -89,6 +127,7 @@ export function setCandidates(candidates: object[]): SetCandidates {
 
 export const SELECT_CANDIDATE = 'SELECT_CANDIDATE';
 export type SELECT_CANDIDATE = typeof SELECT_CANDIDATE;
+
 export interface SelectCandidate {
     type: SELECT_CANDIDATE;
     cid: string | string[];
@@ -103,10 +142,12 @@ export function selectCandidate(cid: string | string[]): SelectCandidate {
 
 export const DESELECT_CANDIDATE = 'DESELECT_CANDIDATE';
 export type DESELECT_CANDIDATE = typeof DESELECT_CANDIDATE;
+
 export interface DeselectCandidate {
     type: DESELECT_CANDIDATE;
     cid: string | string[];
 }
+
 export function deselectCandidate(cid: string | Array<string>): DeselectCandidate {
     return {
         type: DESELECT_CANDIDATE,
@@ -116,6 +157,7 @@ export function deselectCandidate(cid: string | Array<string>): DeselectCandidat
 
 export const REMOVE_CANDIDATE = 'REMOVE_CANDIDATE';
 export type REMOVE_CANDIDATE = typeof REMOVE_CANDIDATE;
+
 export interface RemoveCandidate {
     type: REMOVE_CANDIDATE;
     cid: string | string[];
@@ -130,6 +172,7 @@ export function removeCandidate(cid: string | string[]): RemoveCandidate {
 
 export const MOVE_CANDIDATE = 'MOVE_CANDIDATE';
 export type MOVE_CANDIDATE = typeof MOVE_CANDIDATE;
+
 export interface MoveCandidate {
     type: MOVE_CANDIDATE;
     from: number;
@@ -148,10 +191,12 @@ export function moveCandidate(from: number, to: number, cid: string): MoveCandid
 
 export const SET_GROUP = 'SET_GROUP';
 export type SET_GROUP = typeof SET_GROUP;
+
 export interface SetGroup {
     type: SET_GROUP;
     group: string
 }
+
 export function setGroup(group: string): SetGroup {
     return {
         type: SET_GROUP,
@@ -161,13 +206,61 @@ export function setGroup(group: string): SetGroup {
 
 export const LOGIN = 'LOGIN';
 export type LOGIN = typeof LOGIN;
+
 export interface Login {
     type: LOGIN;
     username: string;
+    uid: string;
 }
-export function login(username: string): Login {
+
+export function login(username: string, uid: string): Login {
     return {
         type: LOGIN,
-        username
+        username,
+        uid
+    }
+}
+
+export const LOGOUT = 'LOGOUT';
+export type LOGOUT = typeof LOGOUT;
+
+export interface Logout {
+    type: LOGOUT;
+}
+
+export function logout(): Logout {
+    return {
+        type: LOGOUT
+    }
+}
+
+export const CHANGE_USER_INFO = 'CHANGE_USER_INFO';
+export type CHANGE_USER_INFO = typeof CHANGE_USER_INFO;
+
+export interface ChangeUserInfo {
+    type: CHANGE_USER_INFO;
+    info: {
+        joinTime?: string; // e.g. 2018A || 2018S (A: AUTUMN, S: SPRING, C: CAMP)
+        isCaptain?: boolean;
+        isAdmin?: boolean;
+        phone?: string;
+        mail?: string;
+        sex?: string;
+        group?: string;
+    }
+}
+
+export function changeUserInfo(info: ChangeUserInfo['info']): ChangeUserInfo {
+    return {
+        type: CHANGE_USER_INFO,
+        info: {
+            joinTime: info.joinTime || '',
+            isCaptain: info.isCaptain || false,
+            isAdmin: info.isAdmin || false,
+            phone: info.phone || '',
+            mail: info.mail || '',
+            sex: info.sex || 'Male',
+            group: info.group || '',
+        }
     }
 }
