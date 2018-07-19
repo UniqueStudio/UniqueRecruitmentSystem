@@ -1,6 +1,7 @@
 import * as React from 'react';
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
+import Paper from '@material-ui/core/Paper';
 import TextField from '@material-ui/core/TextField';
 import Tooltip from '@material-ui/core/Tooltip';
 import { WithStyles, withStyles } from '@material-ui/core/styles';
@@ -9,7 +10,6 @@ import { Add as AddIcon } from '@material-ui/icons'
 
 import withRoot from '../../style/withRoot';
 import styles from '../../style/chart';
-import ChartContainer from './ChartContainer';
 import Modal from '../Modal';
 
 class ChartNew extends React.Component<WithStyles> {
@@ -24,7 +24,7 @@ class ChartNew extends React.Component<WithStyles> {
     render() {
         const { classes } = this.props;
         return (
-            <ChartContainer>
+            <Paper className={classes.chart}>
                 <Tooltip title="发起招新" classes={{tooltip: classes.tooltip}}>
                     <IconButton
                         className={classes.newButton}
@@ -57,7 +57,7 @@ class ChartNew extends React.Component<WithStyles> {
                         <Button color='primary' variant='contained'>确定</Button>
                     </div>
                 </Modal>
-            </ChartContainer>
+            </Paper>
         )
     }
 }

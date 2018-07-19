@@ -1,4 +1,4 @@
-import { MongoClient, ObjectId } from 'mongodb';
+import { MongoClient } from 'mongodb';
 
 const url = require('../config').url;
 
@@ -6,11 +6,13 @@ const url = require('../config').url;
 
 class Database {
     constructor() {
-        this.connect()
-            .then(obj => obj.db.createCollection('candidates')
-                .then(() => obj.db.createCollection('users')
-                    .then(() => obj.db.createCollection('recruitments')
-                        .then(() => obj.client.close))))
+        (async () => {
+            const { db, client } = await this.connect();
+            await db.createCollection('candidates');
+            await db.createCollection('users');
+            await db.createCollection('recruitments');
+            await client.close();
+        })()
     }
 
     async connect() {
@@ -30,10 +32,10 @@ class Database {
         }
     }
 
-    async query(collection: string, query: object) {
+    async query(collection: string, data: object) {
         const { db, client } = await this.connect();
         try {
-            const result = await db.collection(collection).find(query).toArray();
+            const result = await db.collection(collection).find(data).toArray();
             await client.close();
             return result;
         } catch (e) {
@@ -42,10 +44,10 @@ class Database {
         }
     }
 
-    async delete(collection: string, id: string) {
+    async delete(collection: string, data: object) {
         const { db, client } = await this.connect();
         try {
-            await db.collection(collection).deleteOne({ _id: new ObjectId(id) });
+            await db.collection(collection).deleteOne(data);
             await client.close();
         } catch (e) {
             await client.close();
@@ -53,10 +55,10 @@ class Database {
         }
     }
 
-    async update(collection: string, id: string, item: object, isRemove = false) {
+    async update(collection: string, data: object, item: object, isRemove = false) {
         const { db, client } = await this.connect();
         try {
-            await db.collection(collection).updateOne({ _id: new ObjectId(id) }, { [isRemove ? '$unset' : '$set']: item });
+            await db.collection(collection).updateOne(data, { [isRemove ? '$unset' : '$set']: item });
             await client.close();
         } catch (e) {
             await client.close();

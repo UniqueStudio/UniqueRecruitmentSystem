@@ -4,10 +4,10 @@ import { StoreState } from '../../reducer';
 import { logout, Logout, toggleDrawerOpen, ToggleDrawerOpen } from '../../action';
 import AppBar from '../../component/AppBar/AppBar';
 
-const mapStateToProps = ({ components, user, candidates, routerReducer }: StoreState) => ({
+const mapStateToProps = ({ components, user, candidates, recruitments, routerReducer }: StoreState) => ({
     open: components.drawerOpen,
     loggedIn: user.loggedIn,
-    loading: [...Object.values(candidates.isLoading), user.isLoading].includes(true),
+    loading: [...Object.values(candidates.isLoading), user.isLoading, recruitments.isLoading].includes(true),
     path: (routerReducer.location || {})['pathname']
 });
 
