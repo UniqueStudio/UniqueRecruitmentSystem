@@ -239,7 +239,7 @@ app.get('/recruitment', (req, res) => {
 app.get('/recruitment/:title', (req, res) => {
     database
         .query('recruitments', { title: req.params.title })
-        .then(data => res.send({ data: data, type: 'success' }))
+        .then(data => res.send({ data: data[0], type: 'success' }))
         .catch(err => res.send({ message: err.message, type: 'warning' }));
 });
 
