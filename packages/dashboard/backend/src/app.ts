@@ -54,7 +54,7 @@ app.post('/user', (req, res) => {
 app.get('/user/:uid', (req, res) => {
     database
         .query('users', { _id: new ObjectId(req.params.uid) })
-        .then(data => res.send({ data, type: 'success' }))
+        .then(data => res.send({ data: data[0], type: 'success' }))
         .catch(err => res.send({ message: err.message, type: 'warning' }));
 });
 
@@ -99,7 +99,7 @@ app.post('/candidates', (req, res) => {
             .then(() => res.send({ type: 'success' }))
             .catch(err => res.send({ message: err.message, type: 'warning' }));
 
-        const recruitment = await database.query('recruitments', { title: body.title });
+        const recruitment = (await database.query('recruitments', { title: body.title }))[0];
         const data = recruitment['data'].map((i: object) => {
             if (i['group'] === body.group) {
                 i['total'] += 1;
@@ -164,8 +164,8 @@ app.put('/candidates/:cid/step/:to', (req, res) => {
         }
     })();
     (async () => {
-        const candidate = await database.query('candidates', { _id: new ObjectId(req.params.cid) });
-        const recruitment = await database.query('recruitments', { title: candidate['title'] });
+        const candidate = (await database.query('candidates', { _id: new ObjectId(req.params.cid) }))[0];
+        const recruitment = (await database.query('recruitments', { title: candidate['title'] }))[0];
         const data = recruitment['data'].map((i: object) => {
             if (i['group'] === candidate['group']) {
                 i['steps'][to] += 1;
@@ -180,14 +180,14 @@ app.put('/candidates/:cid/step/:to', (req, res) => {
 // delete a certain candidate
 app.delete('/candidates/:cid', (req, res) => {
     (async () => {
-        const candidate = await database.query('candidates', { _id: new ObjectId(req.params.cid) });
+        const candidate = (await database.query('candidates', { _id: new ObjectId(req.params.cid) }))[0];
         database
             .delete('candidates', { _id: new ObjectId(req.params.cid) })
             .then(() => res.send({ type: 'success' }))
             .catch(err => res.send({ message: err.message, type: 'warning' }));
         io.emit('removeCandidate', req.params.cid);
 
-        const recruitment = await database.query('recruitments', { title: candidate['title'] });
+        const recruitment = (await database.query('recruitments', { title: candidate['title'] }))[0];
         const data = recruitment['data'].map((i: object) => {
             if (i['group'] === candidate['group']) {
                 i['total'] -= 1;
