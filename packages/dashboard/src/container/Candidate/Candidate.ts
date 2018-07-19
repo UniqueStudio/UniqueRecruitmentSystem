@@ -3,6 +3,8 @@ import { Dispatch } from 'redux';
 import {
     deselectCandidate,
     DeselectCandidate,
+    inputtingComment,
+    InupttingComment,
     selectCandidate,
     SelectCandidate,
     toggleModalOn,
@@ -22,12 +24,13 @@ const mapStateToProps = ({ candidates }: StoreState, ownProps: OwnProps) => ({
     isLoading: candidates.isLoading.comments
 });
 
-type DispatchType = Dispatch<SelectCandidate | DeselectCandidate | ToggleModalOn>
+type DispatchType = Dispatch<SelectCandidate | DeselectCandidate | ToggleModalOn | InupttingComment>
 
 const mapDispatchToProps = (dispatch: DispatchType) => ({
     select: (name: string) => dispatch(selectCandidate(name)),
     deselect: (name: string) => dispatch(deselectCandidate(name)),
-    toggleModalOn: (cid: string) => dispatch(toggleModalOn(cid))
+    toggleModalOn: (cid: string) => dispatch(toggleModalOn(cid)),
+    changeInputting: (comment: string, evaluation: string) => dispatch(inputtingComment(comment, evaluation))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Candidate);
