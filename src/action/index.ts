@@ -70,6 +70,24 @@ export function toggleModalOff(): ToggleModalOff {
     }
 }
 
+export const INPUTTING_COMMENT = 'INPUTTING_COMMENT';
+export type INPUTTING_COMMENT = typeof INPUTTING_COMMENT;
+
+export interface InupttingComment {
+    type: INPUTTING_COMMENT;
+    comment: string;
+    evaluation: string;
+}
+
+export function inputtingComment(comment: string, evaluation: string): InupttingComment {
+    return {
+        type: INPUTTING_COMMENT,
+        comment,
+        evaluation
+    }
+}
+
+
 export const ADD_COMMENT = 'ADD_COMMENT';
 export type ADD_COMMENT = typeof ADD_COMMENT;
 
@@ -262,5 +280,23 @@ export function changeUserInfo(info: ChangeUserInfo['info']): ChangeUserInfo {
             sex: info.sex || 'Male',
             group: info.group || '',
         }
+    }
+}
+
+
+import { Recruitment } from '../reducer/recruitments';
+
+export const SET_RECRUITMENTS = 'SET_RECRUITMENTS';
+export type SET_RECRUITMENTS = typeof SET_RECRUITMENTS;
+
+export interface SetRecruitments {
+    type: SET_RECRUITMENTS;
+    recruitments: Recruitment[];
+}
+
+export function setRecruitments(recruitments: Recruitment[]): SetRecruitments {
+    return {
+        type: SET_RECRUITMENTS,
+        recruitments,
     }
 }

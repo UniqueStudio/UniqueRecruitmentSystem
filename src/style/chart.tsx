@@ -29,6 +29,15 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
         flexDirection: 'column',
         alignItems: 'center',
         padding: `0 ${theme.spacing.unit * 2}px ${theme.spacing.unit * 2}px`
+    },
+    doughnut: {
+        position: 'absolute',
+    },
+    centerText: {
+        marginLeft: 'auto',
+        marginRight: 'auto',
+        marginTop: 128,
+        userSelect: 'none'
     }
 });
 
