@@ -27,6 +27,9 @@ interface Props extends WithStyles {
     candidates: object;
     group: string;
     selected: string[];
+    movingItem: object;
+    dropped: boolean;
+    modalOn: string;
     select: (cid: string[]) => void;
     deselect: (cid: string[] | string) => void;
     remove: (cid: string) => void;
@@ -35,9 +38,7 @@ interface Props extends WithStyles {
     toggleModalOn: (cid: string) => void;
     toggleModalOff: () => void;
     connectDropTarget: (content: any) => any;
-    movingItem: object;
-    dropped: boolean;
-    modalOn: string;
+    changeInputting: (comment: string, evaluation: string) => void;
 }
 
 const titleToStep = (title: string) => STEP.indexOf(title);
@@ -66,8 +67,17 @@ class Column extends React.Component<Props> {
 
     handleNext = (cid: string) => () => {
         this.props.toggleModalOn(cid);
+        this.props.changeInputting('', '');
         this.setState({
             direction: 'left'
+        });
+    };
+
+    handlePrev = (cid: string) => () => {
+        this.props.toggleModalOn(cid);
+        this.props.changeInputting('', '');
+        this.setState({
+            direction: 'right'
         });
     };
 
@@ -79,12 +89,6 @@ class Column extends React.Component<Props> {
             return;
         }
         selected.map(i => remove(i));
-    };
-    handlePrev = (cid: string) => () => {
-        this.props.toggleModalOn(cid);
-        this.setState({
-            direction: 'right'
-        });
     };
 
     componentWillReceiveProps(nextProps: Props) {
@@ -110,8 +114,6 @@ class Column extends React.Component<Props> {
     confirmRemove = () => {
         this.toggleOpen('dialog')();
     };
-
-
 
     toggleOpen = (name: string) => () => {
         this.setState({

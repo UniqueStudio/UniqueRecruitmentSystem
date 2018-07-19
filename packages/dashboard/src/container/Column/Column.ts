@@ -4,6 +4,8 @@ import Column from '../../component/Column/Column';
 import {
     deselectCandidate,
     DeselectCandidate,
+    inputtingComment,
+    InupttingComment,
     selectCandidate,
     SelectCandidate,
     toggleModalOff,
@@ -28,7 +30,7 @@ const mapStateToProps = ({ candidates, components }: StoreState, ownProps: OwnPr
     modalOn: components.modalOn
 });
 
-type DispatchType = Dispatch<SelectCandidate | DeselectCandidate | ToggleSnackbarOn | ToggleModalOn | ToggleModalOff>
+type DispatchType = Dispatch<SelectCandidate | DeselectCandidate | ToggleSnackbarOn | ToggleModalOn | ToggleModalOff | InupttingComment>
 
 const mapDispatchToProps = (dispatch: DispatchType) => ({
     select: (name: string[]) => dispatch(selectCandidate(name)),
@@ -38,6 +40,7 @@ const mapDispatchToProps = (dispatch: DispatchType) => ({
     remove: (cid: string) => removeCandidate(cid)(dispatch),
     toggleModalOn: (cid: string) => dispatch(toggleModalOn(cid)),
     toggleModalOff: () => dispatch(toggleModalOff()),
+    changeInputting: (comment: string, evaluation: string) => dispatch(inputtingComment(comment, evaluation))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Column);

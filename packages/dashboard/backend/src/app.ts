@@ -53,8 +53,8 @@ app.post('/user', (req, res) => {
 // get user info
 app.get('/user/:uid', (req, res) => {
     database
-        .query('users', { '_id': new ObjectId(req.params.uid) })
-        .then(data => res.send({ ...data, type: 'success' }))
+        .query('users', { _id: new ObjectId(req.params.uid) })
+        .then(data => res.send({ data, type: 'success' }))
         .catch(err => res.send({ message: err.message, type: 'warning' }));
 });
 
@@ -62,7 +62,7 @@ app.get('/user/:uid', (req, res) => {
 app.put('/user/:uid', (req, res) => {
     const body = req.body;
     database
-        .update('users', req.params.uid, {
+        .update('users', { _id: new ObjectId(req.params.uid) }, {
             joinTime: body.joinTime,
             isCaptain: Boolean(body.isCaptain),
             isAdmin: Boolean(body.isAdmin),
@@ -78,30 +78,43 @@ app.put('/user/:uid', (req, res) => {
 // add new candidate
 app.post('/candidates', (req, res) => {
     const body = req.body;
-    database
-        .insert('candidates', {
-            name: body.name,
-            grade: body.grade,
-            institute: body.institute,
-            major: body.major,
-            score: body.score,
-            mail: body.mail,
-            phone: body.phone,
-            group: body.group,
-            sex: body.sex,
-            step: 0,
-            intro: body.intro,
-            comments: {}
-            // resume: body.resume
-        })
-        .then(() => res.send({ type: 'success' }))
-        .catch(err => res.send({ message: err.message, type: 'warning' }));
+    (async () => {
+        database
+            .insert('candidates', {
+                name: body.name,
+                grade: body.grade,
+                institute: body.institute,
+                major: body.major,
+                score: body.score,
+                mail: body.mail,
+                phone: body.phone,
+                group: body.group,
+                sex: body.sex,
+                step: 0,
+                intro: body.intro,
+                title: body.title,
+                comments: {}
+                // resume: body.resume
+            })
+            .then(() => res.send({ type: 'success' }))
+            .catch(err => res.send({ message: err.message, type: 'warning' }));
+
+        const recruitment = await database.query('recruitments', { title: body.title });
+        const data = recruitment['data'].map((i: object) => {
+            if (i['group'] === body.group) {
+                i['total'] += 1;
+                i['steps'][0] += 1;
+            }
+            return i;
+        });
+        await database.update('recruitments', { title: body.title }, { data, total: recruitment['total'] + 1 });
+    })()
 });
 
 // update new info / set interview time
 app.put('/candidates/:cid', (req, res) => {
     database
-        .update('candidates', req.params.cid, req.body.patch)
+        .update('candidates', { _id: new ObjectId(req.params.cid) }, req.body.patch)
         .then(() => res.send({ type: 'success' }))
         .catch(err => res.send({ message: err.message, type: 'warning' }));
 });
@@ -113,7 +126,7 @@ app.get('/candidates', (req, res) => {
         .then(data => {
             const formatted = [{}, {}, {}, {}, {}, {}];
             data.map((i: Candidate) => formatted[i.step][`${i._id}`] = i);
-            res.send({ ...formatted, type: 'success' });
+            res.send({ data: formatted, type: 'success' });
         })
         .catch(err => res.send({ message: err.message, type: 'warning' }));
 });
@@ -125,42 +138,71 @@ app.get('/candidates/:group', (req, res) => {
         .then(data => {
             const formatted = [{}, {}, {}, {}, {}, {}];
             data.map((i: Candidate) => formatted[i.step][`${i._id}`] = i);
-            res.send({ ...formatted, type: 'success' })
+            res.send({ data: formatted, type: 'success' })
         })
         .catch(err => res.send({ message: err.message, type: 'warning' }));
 });
 
 // move a candidate from step a to step b
+let processing: string[] = []; // deal with conflicts
 app.put('/candidates/:cid/step/:to', (req, res) => {
-    database
-        .query('candidates', { '_id': new ObjectId(req.params.cid), step: req.body.from })
-        .then(data => {
-            if (data.length) {
-                database
-                    .update('candidates', req.params.cid, { step: req.params.to })
-                    .then(() => res.send({ type: 'success' }))
-                    .then(() => io.emit('moveCandidate', req.params.cid, req.body.from, req.params.to))
-                    .catch(err => res.send({ message: err.message, type: 'danger' }))
-            } else {
-                res.send({ message: 'candidate has already been moved', type: 'warning' });
+    const cid = req.params.cid;
+    const to = +req.params.to;
+    const from = req.body.from;
+    (async () => {
+        if (!processing.includes(cid)) {
+            processing.push(cid);
+            database.update('candidates', { _id: new ObjectId(cid) }, { step: to })
+                .then(() => res.send({ type: 'success' }))
+                .then(() => {
+                    io.emit('moveCandidate', cid, from, to);
+                    processing = processing.filter(i => i !== cid);
+                })
+                .catch(err => res.send({ message: err.message, type: 'danger' }));
+        } else {
+            res.send({ message: '候选人已被拖动', type: 'warning' });
+        }
+    })();
+    (async () => {
+        const candidate = await database.query('candidates', { _id: new ObjectId(req.params.cid) });
+        const recruitment = await database.query('recruitments', { title: candidate['title'] });
+        const data = recruitment['data'].map((i: object) => {
+            if (i['group'] === candidate['group']) {
+                i['steps'][to] += 1;
+                i['steps'][from] -= 1;
             }
-        })
-        .catch(err => res.send({ message: err.message, type: 'danger' }))
+            return i;
+        });
+        await database.update('recruitments', { title: candidate['title'] }, { data });
+    })()
 });
 
 // delete a certain candidate
 app.delete('/candidates/:cid', (req, res) => {
-    database
-        .delete('candidates', req.params.cid)
-        .then(() => res.send({ type: 'success' }))
-        .catch(err => res.send({ message: err.message, type: 'warning' }));
-    io.emit('removeCandidate', req.params.cid);
+    (async () => {
+        const candidate = await database.query('candidates', { _id: new ObjectId(req.params.cid) });
+        database
+            .delete('candidates', { _id: new ObjectId(req.params.cid) })
+            .then(() => res.send({ type: 'success' }))
+            .catch(err => res.send({ message: err.message, type: 'warning' }));
+        io.emit('removeCandidate', req.params.cid);
+
+        const recruitment = await database.query('recruitments', { title: candidate['title'] });
+        const data = recruitment['data'].map((i: object) => {
+            if (i['group'] === candidate['group']) {
+                i['total'] -= 1;
+                i['steps'][candidate['step']] -= 1;
+            }
+            return i;
+        });
+        await database.update('recruitments', { title: candidate['title'] }, { data, total: recruitment['total'] - 1 });
+    })()
 });
 
 // comment on a certain candidate
 app.post('/candidates/:cid/comments', (req, res) => {
     database
-        .update('candidates', req.params.cid, { ['comments.' + req.body.uid]: req.body.comment })
+        .update('candidates', { _id: new ObjectId(req.params.cid) }, { ['comments.' + req.body.uid]: req.body.comment })
         .then(() => res.send({ type: 'success' }))
         .catch(err => res.send({ message: err.message, type: 'warning' }));
     io.emit('addComment', req.body.step, req.params.cid, req.body.uid, req.body.comment);
@@ -169,7 +211,7 @@ app.post('/candidates/:cid/comments', (req, res) => {
 // delete comment on a certain candidate
 app.delete('/candidates/:cid/comments/:uid', (req, res) => {
     database
-        .update('candidates', req.params.cid, { [`comments.${req.params.uid}`]: '' }, true)
+        .update('candidates', { _id: new ObjectId(req.params.cid) }, { [`comments.${req.params.uid}`]: '' }, true)
         .then(() => res.send({ type: 'success' }))
         .catch(err => res.send({ message: err.message, type: 'warning' }));
     io.emit('removeComment', req.body.step, req.params.cid, req.params.uid);
@@ -189,14 +231,16 @@ app.post('/verification', (req, res) => {
 app.get('/recruitment', (req, res) => {
     database
         .query('recruitments', {})
-        .then(data => res.send({ ...data, type: 'success' }));
+        .then(data => res.send({ data: data, type: 'success' }))
+        .catch(err => res.send({ message: err.message, type: 'warning' }));
 });
 
 // get a certain recruitment
 app.get('/recruitment/:title', (req, res) => {
     database
         .query('recruitments', { title: req.params.title })
-        .then(data => res.send({ ...data, type: 'success' }));
+        .then(data => res.send({ data: data, type: 'success' }))
+        .catch(err => res.send({ message: err.message, type: 'warning' }));
 });
 
 // launch a new recruitment
@@ -208,6 +252,7 @@ app.post('/recruitment', (req, res) => {
             end: req.body.end,
         })
         .then(() => res.send({ type: 'success' }))
+        .catch(err => res.send({ message: err.message, type: 'warning' }));
 });
 
 

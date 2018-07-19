@@ -15,26 +15,36 @@ interface Props extends WithStyles {
     uid: string;
     username: string;
     comments: object;
+    savedComment: {
+        comment: string;
+        evaluation: string;
+    }
     snackbarOn: boolean;
     submit: (step: number, cid: string, commenter: string, comment: object) => void;
     remove: (step: number, cid: string, commenter: string) => void;
     toggleOn: (info: string) => void;
+    changeInputting: (comment: string, evaluation: string) => void;
 }
 
 class CandidateComments extends React.Component<Props> {
     state = {
         expanded: false,
-        evaluation: "",
-        comment: "",
+        evaluation: this.props.savedComment.evaluation,
+        comment: this.props.savedComment.comment,
         checked: false,
         anchorEl: undefined,
         modalOpen: false,
     };
 
-    handleChange = (name: string) => (event: React.ChangeEvent) =>
+    handleChange = (name: string) => (event: React.ChangeEvent) => {
         this.setState({
             [name]: event.target["value"]
         });
+        const comment = name === 'comment' ? event.target["value"] : this.state.comment;
+        const evaluation = name === 'evaluation' ? event.target["value"] : this.state.evaluation;
+        this.props.changeInputting(comment, evaluation);
+    };
+
 
     handleSubmit = () => {
         const { comment, evaluation } = this.state;

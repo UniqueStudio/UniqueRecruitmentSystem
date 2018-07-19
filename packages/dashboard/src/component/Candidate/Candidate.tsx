@@ -29,6 +29,7 @@ interface Props extends WithStyles {
     toggleModalOn: (cid: string) => void;
     connectDragSource: (content: any) => any;
     connectDragPreview: (content: any) => any;
+    changeInputting: (comment: string, evaluation: string) => void;
 }
 
 const candidateSource = {
@@ -47,9 +48,6 @@ const collect = ((connect: any) => {
 @DragSource('candidate', candidateSource, collect)
 class Candidate extends React.Component<Props> {
     state = {
-        expanded: false,
-        evaluation: "",
-        comment: "",
         checked: false,
         anchorEl: undefined,
     };
@@ -70,7 +68,7 @@ class Candidate extends React.Component<Props> {
     };
 
     render() {
-        const { cid, info, selected, classes, connectDragSource, toggleModalOn } = this.props;
+        const { cid, info, selected, classes, connectDragSource, toggleModalOn, changeInputting } = this.props;
         const { name, grade, institute, comments, abandon } = info;
         const evaluations = Object.values(comments).map(i => i['evaluation']);
         const red = colorToAlpha(dangerColor, 0.1),
@@ -97,7 +95,10 @@ class Candidate extends React.Component<Props> {
                             <Typography color='textSecondary' variant='caption'>{`${grade} - ${institute}`}</Typography>
                         </span>
                         <IconButton className={classes.iconButton}
-                                    onClick={() => toggleModalOn(cid)}>
+                                    onClick={() => {
+                                        toggleModalOn(cid);
+                                        changeInputting('', '');
+                                    }}>
                             <InfoIcon />
                         </IconButton>
                         {/* this div is used to get avoid of default style on :last-child */}

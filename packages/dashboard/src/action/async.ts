@@ -46,7 +46,7 @@ export const requestUser = (uid: string) => (dispatch: Dispatch) => {
         .then(resHandler)
         .then(res => {
             if (res.type === 'success') {
-                dispatch(actions.changeUserInfo(res));
+                dispatch(actions.changeUserInfo(res.data));
                 dispatch({ type: USER.SUCCESS });
             } else throw res;
         })
@@ -84,7 +84,7 @@ export const requestCandidate = (group: string) => (dispatch: Dispatch) => {
         .then(resHandler)
         .then(res => {
             if (res.type === 'success') {
-                dispatch(actions.setCandidates(res));
+                dispatch(actions.setCandidates(res.data));
                 dispatch({ type: CANDIDATE.SUCCESS });
             } else throw res;
         })
@@ -106,8 +106,8 @@ export const removeCandidate = (cid: string) => (dispatch: Dispatch) => {
         //     dispatch(actions.removeCandidate(cid));
         // })
         .catch(err => {
+            dispatch(actions.toggleSnackbarOn(`ERROR: ${err.message}`, err.type || 'danger'));
             dispatch({ type: CANDIDATE.FAILURE });
-            dispatch(actions.toggleSnackbarOn(`ERROR: ${err.message}`, err.type || 'danger'))
         });
 };
 
@@ -127,8 +127,8 @@ export const moveCandidate = (from: number, to: number, cid: string) => (dispatc
         //     store.dispatch(actions.moveCandidate(from, to, cid));
         // })
         .catch(err => {
+            dispatch(actions.toggleSnackbarOn(`ERROR: ${err.message}`, err.type || 'danger'));
             dispatch({ type: CANDIDATE.FAILURE });
-            dispatch(actions.toggleSnackbarOn(`ERROR: ${err.message}`, err.type || 'danger'))
         });
 };
 
@@ -149,8 +149,8 @@ export const addComment = (step: number, cid: string, commenter: string, comment
         //     dispatch(actions.addComment(step, cid, commenter, comment));
         // })
         .catch(err => {
+            dispatch(actions.toggleSnackbarOn(`ERROR: ${err.message}`, err.type || 'danger'));
             dispatch({ type: COMMENT.FAILURE });
-            dispatch(actions.toggleSnackbarOn(`ERROR: ${err.message}`, err.type || 'danger'))
         });
 };
 
@@ -171,7 +171,26 @@ export const removeComment = (step: number, cid: string, commenter: string) => (
         // })
         .catch(err => {
             dispatch({ type: COMMENT.FAILURE });
-            dispatch(actions.toggleSnackbarOn(`ERROR: ${err.message}`, err.type || 'danger'))
+            dispatch(actions.toggleSnackbarOn(`ERROR: ${err.message}`, err.type || 'danger'));
+        });
+};
+
+export const RECRUITMENT = actionTypeCreator('RECRUITMENT');
+export const requestRecruitments = () => (dispatch: Dispatch) => {
+    dispatch({ type: RECRUITMENT.START });
+    return fetch(`${URL}/recruitment`)
+        .then(resHandler)
+        .then(res => {
+            if (res.type === 'success') {
+                dispatch(actions.setRecruitments(res.data));
+                dispatch({ type: RECRUITMENT.SUCCESS });
+            } else {
+                throw res;
+            }
+        })
+        .catch(err => {
+            dispatch(actions.toggleSnackbarOn(`ERROR: ${err.message}`, err.type || 'danger'));
+            dispatch({ type: RECRUITMENT.FAILURE });
         });
 };
 

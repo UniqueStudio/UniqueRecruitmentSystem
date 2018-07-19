@@ -14,7 +14,8 @@ export interface Candidate {
     time2: string;
     group: string;
     sex: "Male" | "Female";
-    step: string;
+    title: string; // e.g. 2018A || 2018S (A: AUTUMN, S: SPRING, C: CAMP)
+    step: number;
     intro: string;
     resume: string; // file path
     comments: object;
@@ -31,8 +32,8 @@ interface Data {
 export interface Recruitment {
     _id: ObjectID;
     title: string; // e.g. 2018A || 2018S (A: AUTUMN, S: SPRING, C: CAMP)
-    begin: string;
-    end: string;
+    begin: number;
+    end: number;
     total: number;
     data: Data[];
 }
