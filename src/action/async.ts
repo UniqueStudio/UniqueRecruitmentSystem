@@ -12,10 +12,11 @@ const actionTypeCreator = (action: string) => ({
 });
 
 const resHandler = (res: any) => {
-    if (res.ok) {
+    try {
         return res.json();
+    } catch (e) {
+        throw new Error('Network is not OK');
     }
-    throw new Error('Network is not OK');
 };
 
 export const USER = actionTypeCreator('USER');
@@ -28,11 +29,13 @@ export const login = (username: string) => (dispatch: Dispatch) => {
     })
         .then(resHandler)
         .then(res => {
-            dispatch(actions.login(username, res.uid));
-            dispatch({ type: USER.SUCCESS });
+            if (res.type === 'success') {
+                dispatch(actions.login(username, res.uid));
+                dispatch({ type: USER.SUCCESS });
+            } else throw res;
         })
         .catch(err => {
-            dispatch(actions.toggleSnackbarOn(`ERROR: ${err.message}`, 'danger'));
+            dispatch(actions.toggleSnackbarOn(`ERROR: ${err.message}`, err.type || 'danger'));
             dispatch({ type: USER.FAILURE });
         })
 };
@@ -42,11 +45,13 @@ export const requestUser = (uid: string) => (dispatch: Dispatch) => {
     return fetch(`${URL}/user/${uid}`)
         .then(resHandler)
         .then(res => {
-            dispatch(actions.changeUserInfo(res));
-            dispatch({ type: USER.SUCCESS });
+            if (res.type === 'success') {
+                dispatch(actions.changeUserInfo(res));
+                dispatch({ type: USER.SUCCESS });
+            } else throw res;
         })
         .catch(err => {
-            dispatch(actions.toggleSnackbarOn(`ERROR: ${err.message}`, 'danger'));
+            dispatch(actions.toggleSnackbarOn(`ERROR: ${err.message}`, err.type || 'danger'));
             dispatch({ type: USER.FAILURE });
         })
 };
@@ -59,12 +64,14 @@ export const updateUser = (uid: string, info: object) => (dispatch: Dispatch) =>
         headers: { 'content-type': 'application/json' },
     })
         .then(resHandler)
-        .then(() => {
-            dispatch(actions.changeUserInfo(info));
-            dispatch({ type: USER.SUCCESS });
+        .then(res => {
+            if (res.type === 'success') {
+                dispatch(actions.changeUserInfo(info));
+                dispatch({ type: USER.SUCCESS });
+            } else throw res;
         })
         .catch(err => {
-            dispatch(actions.toggleSnackbarOn(`ERROR: ${err.message}`, 'danger'));
+            dispatch(actions.toggleSnackbarOn(`ERROR: ${err.message}`, err.type || 'danger'));
             dispatch({ type: USER.FAILURE });
         })
 };
@@ -76,11 +83,13 @@ export const requestCandidate = (group: string) => (dispatch: Dispatch) => {
     return fetch(`${URL}/candidates/${group}`)
         .then(resHandler)
         .then(res => {
-            dispatch(actions.setCandidates(res));
-            dispatch({ type: CANDIDATE.SUCCESS });
+            if (res.type === 'success') {
+                dispatch(actions.setCandidates(res));
+                dispatch({ type: CANDIDATE.SUCCESS });
+            } else throw res;
         })
         .catch(err => {
-            dispatch(actions.toggleSnackbarOn(`ERROR: ${err.message}`, 'danger'));
+            dispatch(actions.toggleSnackbarOn(`ERROR: ${err.message}`, err.type || 'danger'));
             dispatch({ type: CANDIDATE.FAILURE });
         })
 };
@@ -89,13 +98,16 @@ export const removeCandidate = (cid: string) => (dispatch: Dispatch) => {
     dispatch({ type: CANDIDATE.START });
     return fetch(`${URL}/candidates/${cid}`, { method: 'DELETE' })
         .then(resHandler)
+        .then(res => {
+            if (res.type !== 'success') throw res;
+        })
         // .then(() => {
         //     dispatch({ type: CANDIDATE.SUCCESS });
         //     dispatch(actions.removeCandidate(cid));
         // })
         .catch(err => {
             dispatch({ type: CANDIDATE.FAILURE });
-            dispatch(actions.toggleSnackbarOn(`ERROR: ${err.message}`, 'danger'))
+            dispatch(actions.toggleSnackbarOn(`ERROR: ${err.message}`, err.type || 'danger'))
         });
 };
 
@@ -107,13 +119,16 @@ export const moveCandidate = (from: number, to: number, cid: string) => (dispatc
         headers: { 'content-type': 'application/json' },
     })
         .then(resHandler)
+        .then(res => {
+            if (res.type !== 'success') throw res;
+        })
         // .then(() => {
         //     store.dispatch({ type: CANDIDATE.SUCCESS });
         //     store.dispatch(actions.moveCandidate(from, to, cid));
         // })
         .catch(err => {
             dispatch({ type: CANDIDATE.FAILURE });
-            dispatch(actions.toggleSnackbarOn(`ERROR: ${err.message}`, 'danger'))
+            dispatch(actions.toggleSnackbarOn(`ERROR: ${err.message}`, err.type || 'danger'))
         });
 };
 
@@ -126,13 +141,16 @@ export const addComment = (step: number, cid: string, commenter: string, comment
         headers: { 'content-type': 'application/json' },
     })
         .then(resHandler)
+        .then(res => {
+            if (res.type !== 'success') throw res;
+        })
         // .then(() => {
         //     dispatch({ type: COMMENT.SUCCESS });
         //     dispatch(actions.addComment(step, cid, commenter, comment));
         // })
         .catch(err => {
             dispatch({ type: COMMENT.FAILURE });
-            dispatch(actions.toggleSnackbarOn(`ERROR: ${err.message}`, 'danger'))
+            dispatch(actions.toggleSnackbarOn(`ERROR: ${err.message}`, err.type || 'danger'))
         });
 };
 
@@ -144,13 +162,16 @@ export const removeComment = (step: number, cid: string, commenter: string) => (
         headers: { 'content-type': 'application/json' },
     })
         .then(resHandler)
+        .then(res => {
+            if (res.type !== 'success') throw res;
+        })
         // .then(() => {
         //     dispatch({ type: COMMENT.SUCCESS });
         //     dispatch(actions.removeComment(step, cid, commenter));
         // })
         .catch(err => {
             dispatch({ type: COMMENT.FAILURE });
-            dispatch(actions.toggleSnackbarOn(`ERROR: ${err.message}`, 'danger'))
+            dispatch(actions.toggleSnackbarOn(`ERROR: ${err.message}`, err.type || 'danger'))
         });
 };
 
