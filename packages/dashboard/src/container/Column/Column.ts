@@ -16,18 +16,20 @@ import {
     ToggleSnackbarOn,
 } from '../../action';
 import { Dispatch } from 'redux';
-import { moveCandidate, removeCandidate } from '../../action/async';
+import { removeCandidate } from '../../action/async';
+import { STEP } from '../../lib/const';
 
 interface OwnProps {
     title: string;
-    candidates: object;
+    dropIndex: number;
 }
 
 const mapStateToProps = ({ candidates, components }: StoreState, ownProps: OwnProps) => ({
     selected: candidates.selected,
     group: candidates.group,
     isLoading: candidates.isLoading.candidates,
-    modalOn: components.modalOn
+    modalOn: components.modalOn,
+    candidates: candidates.candidates[STEP.indexOf(ownProps.title)] || {}
 });
 
 type DispatchType = Dispatch<SelectCandidate | DeselectCandidate | ToggleSnackbarOn | ToggleModalOn | ToggleModalOff | InupttingComment>
@@ -36,7 +38,6 @@ const mapDispatchToProps = (dispatch: DispatchType) => ({
     select: (name: string[]) => dispatch(selectCandidate(name)),
     deselect: (name: string[]) => dispatch(deselectCandidate(name)),
     toggleOn: (info: string) => dispatch(toggleSnackbarOn(info, 'info')),
-    move: (from: number, to: number, cid: string) => moveCandidate(from, to, cid)(dispatch),
     remove: (cid: string) => removeCandidate(cid)(dispatch),
     toggleModalOn: (cid: string) => dispatch(toggleModalOn(cid)),
     toggleModalOff: () => dispatch(toggleModalOff()),

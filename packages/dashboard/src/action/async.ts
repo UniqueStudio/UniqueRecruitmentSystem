@@ -112,6 +112,7 @@ export const removeCandidate = (cid: string) => (dispatch: Dispatch) => {
 };
 
 export const moveCandidate = (from: number, to: number, cid: string) => (dispatch: Dispatch) => {
+    dispatch(actions.moveCandidate(from, to, cid));
     dispatch({ type: CANDIDATE.START });
     return fetch(`${URL}/candidates/${cid}/step/${to}`, {
         method: 'PUT',
@@ -121,12 +122,14 @@ export const moveCandidate = (from: number, to: number, cid: string) => (dispatc
         .then(resHandler)
         .then(res => {
             if (res.type !== 'success') throw res;
+            store.dispatch({ type: COMMENT.SUCCESS });
         })
         // .then(() => {
         //     store.dispatch({ type: CANDIDATE.SUCCESS });
         //     store.dispatch(actions.moveCandidate(from, to, cid));
         // })
         .catch(err => {
+            dispatch(actions.moveCandidate(to, from, cid));
             dispatch(actions.toggleSnackbarOn(`ERROR: ${err.message}`, err.type || 'danger'));
             dispatch({ type: CANDIDATE.FAILURE });
         });
