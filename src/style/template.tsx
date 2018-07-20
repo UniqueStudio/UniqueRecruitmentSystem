@@ -4,7 +4,6 @@ import { Theme } from "@material-ui/core/styles";
 const styles: StyleRulesCallback = (theme: Theme) => ({
     template: {
         margin: theme.spacing.unit * 2,
-        width: 800
     },
     templateContent: {
         minHeight: theme.spacing.unit * 3,
