@@ -168,8 +168,12 @@ app.put('/candidates/:cid/step/:to', (req, res) => {
         const recruitment = (await database.query('recruitments', { title: candidate['title'] }))[0];
         const data = recruitment['data'].map((i: object) => {
             if (i['group'] === candidate['group']) {
+                if (!i['steps'][to]) i['steps'][to] = 0;
+                if (!i['steps'][from]) i['steps'][from] = 0;
                 i['steps'][to] += 1;
                 i['steps'][from] -= 1;
+                if (i['steps'][to] < 0) i['steps'][to] = 0;
+                if (i['steps'][from] < 0) i['steps'][from] = 0;
             }
             return i;
         });
@@ -191,7 +195,9 @@ app.delete('/candidates/:cid', (req, res) => {
         const data = recruitment['data'].map((i: object) => {
             if (i['group'] === candidate['group']) {
                 i['total'] -= 1;
+                if (i['total'] < 0) i['total'] = 0;
                 i['steps'][candidate['step']] -= 1;
+                if (i['steps'][candidate['step']] < 0) i['steps'][candidate['step']] = 0;
             }
             return i;
         });
