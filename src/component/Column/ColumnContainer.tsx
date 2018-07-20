@@ -1,11 +1,7 @@
 import * as React from "react";
-// import IconButton from '@material-ui/core/IconButton';
 import { WithStyles, withStyles } from '@material-ui/core/styles';
-// import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-//
-// import Detail from '../Candidate/CandidateDetail';
-// import Comments from '../../container/Candidate/CandidateComments';
-// import Modal from '../Modal';
+import { DragDropContext, DraggableLocation, Droppable, DroppableProvided, DropResult } from 'react-beautiful-dnd';
+
 import withRoot from "../../style/withRoot";
 import styles from "../../style";
 import Column from "../../container/Column/Column";
@@ -13,7 +9,6 @@ import Column from "../../container/Column/Column";
 import { STEP } from '../../lib/const';
 
 interface Props extends WithStyles {
-    candidates: object;
     pathname: string;
     modalItem: {
         modalOn: boolean;
@@ -25,7 +20,9 @@ interface Props extends WithStyles {
     }
     changeGroup: (group: string) => void;
     closeModal: () => void;
+    move: (from: number, to: number, cid: string) => void;
 }
+
 
 class Container extends React.Component<Props> {
     constructor(props: Props) {
@@ -33,40 +30,59 @@ class Container extends React.Component<Props> {
         props.changeGroup('web');
     }
 
+    state = {
+        steps: this.props.pathname === '/view' ? STEP : STEP.slice(4)
+    };
+
+    onDragEnd = (result: DropResult) => {
+
+        if (!result.destination) return;
+
+        const source: DraggableLocation = result.source;
+        const destination: DraggableLocation = result.destination;
+
+        if (source.droppableId === destination.droppableId && source.index === destination.index) return;
+        if (result.type === 'COLUMN') {
+            const preorder = this.state.steps;
+            const ordered = [...preorder];
+            const [removed] = ordered.splice(source.index, 1);
+            ordered.splice(destination.index, 0, removed);
+            this.setState({
+                steps: ordered,
+            });
+            return;
+        } else if (result.type = 'CANDIDATE') {
+            this.props.move(STEP.indexOf(source.droppableId), STEP.indexOf(destination.droppableId), result.draggableId);
+        }
+    };
+
     render() {
-        const { classes, pathname, candidates/*, modalItem, closeModal*/ } = this.props;
-        //const { modalOn, direction, title, step, cid, comments } = modalItem;
-        const steps = pathname === '/view' ? STEP : STEP.slice(4);
+        const { classes } = this.props;
+
         return (
-            <>
-                <div className={classes.columnContainer}>
-                    {steps.map(i => <Column title={i} key={i} candidates={candidates[STEP.indexOf(i)] || {}} />)}
-                    {/*this div with a full-width-space is used to show right margin of the last element*/}
-                    <div style={{ visibility: 'hidden' }}>{'　'}</div>
-                </div>
-                {/*<Modal open={modalOn}*/}
-                {/*onClose={closeModal}*/}
-                {/*direction={direction}*/}
-                {/*title={title}*/}
-                {/*>*/}
-                {/*<div className={classes.modalContent}>*/}
-                {/*<IconButton className={classes.leftButton} onClick={() => {*/}
-                {/*this.props.onPrev();*/}
-                {/*}}>*/}
-                {/*<ExpandMoreIcon />*/}
-                {/*</IconButton>*/}
-                {/*<div className={classes.modalMain}>*/}
-                {/*<Detail name={name} />*/}
-                {/*<Comments step={step} cid={cid} comments={comments} />*/}
-                {/*</div>*/}
-                {/*<IconButton className={classes.rightButton} onClick={() => {*/}
-                {/*this.props.onNext();*/}
-                {/*}}>*/}
-                {/*<ExpandMoreIcon />*/}
-                {/*</IconButton>*/}
-                {/*</div>*/}
-                {/*</Modal>*/}
-            </>
+            <DragDropContext
+                onDragEnd={this.onDragEnd}
+            >
+                <Droppable
+                    droppableId="board"
+                    type="COLUMN"
+                    direction="horizontal"
+                >
+                    {(provided: DroppableProvided) => (
+                        <div
+                            key={provided.innerRef.toString()}
+                            className={classes.columnContainer}
+                            ref={provided.innerRef}
+                            {...provided.droppableProps}
+                        >
+                            {this.state.steps.map(i => <Column title={i} key={i}
+                                                               dropIndex={this.state.steps.indexOf(i)} />)}
+                            {/*this div with a full-width-space is used to show right margin of the last element*/}
+                            <div style={{ visibility: 'hidden' }}>{'　'}</div>
+                        </div>
+                    )}
+                </Droppable>
+            </DragDropContext>
         );
     }
 }

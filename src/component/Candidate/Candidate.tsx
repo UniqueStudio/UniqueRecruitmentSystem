@@ -6,10 +6,10 @@ import Popover from '@material-ui/core/Popover';
 import Typography from '@material-ui/core/Typography';
 import { WithStyles, withStyles } from '@material-ui/core/styles';
 import InfoIcon from "@material-ui/icons/InfoOutline";
+import { DraggableProvided } from 'react-beautiful-dnd';
 
 import styles, { colorToAlpha, dangerColor, successColor, warningColor } from "../../style";
 import withRoot from "../../style/withRoot";
-import { DragSource } from 'react-dnd';
 
 interface Info {
     name: string;
@@ -20,6 +20,7 @@ interface Info {
 }
 
 interface Props extends WithStyles {
+    provided: DraggableProvided;
     step: number;
     cid: string;
     info: Info;
@@ -27,25 +28,9 @@ interface Props extends WithStyles {
     select: (cid: string) => void;
     deselect: (cid: string) => void;
     toggleModalOn: (cid: string) => void;
-    connectDragSource: (content: any) => any;
-    connectDragPreview: (content: any) => any;
     changeInputting: (comment: string, evaluation: string) => void;
 }
 
-const candidateSource = {
-    beginDrag(props: Props) {
-        return { step: props.step, cid: props.cid };
-    }
-};
-
-const collect = ((connect: any) => {
-    return {
-        connectDragSource: connect.dragSource(),
-        connectDragPreview: connect.dragPreview()
-    }
-});
-
-@DragSource('candidate', candidateSource, collect)
 class Candidate extends React.Component<Props> {
     state = {
         checked: false,
@@ -68,7 +53,7 @@ class Candidate extends React.Component<Props> {
     };
 
     render() {
-        const { cid, info, selected, classes, connectDragSource, toggleModalOn, changeInputting } = this.props;
+        const { cid, info, selected, classes, toggleModalOn, changeInputting, provided } = this.props;
         const { name, grade, institute, comments, abandon } = info;
         const evaluations = Object.values(comments).map(i => i['evaluation']);
         const red = colorToAlpha(dangerColor, 0.1),
@@ -81,7 +66,11 @@ class Candidate extends React.Component<Props> {
         };
         const card = (
             <div onMouseOver={this.handleOpen}
-                 onMouseOut={this.handleClose}>
+                 onMouseOut={this.handleClose}
+                 ref={provided.innerRef}
+                 {...provided.draggableProps}
+                 {...provided.dragHandleProps}
+            >
                 <Card className={classes.card} style={coloredPanelStyle}>
                     <div className={classes.cardContent}>
                         <Checkbox
@@ -127,7 +116,7 @@ class Candidate extends React.Component<Props> {
         );
         return (
             <>
-                {abandon ? <>{card}{popover}</> : connectDragSource(card)}
+                {abandon ? <>{card}{popover}</> : card}
             </>
         );
     }
