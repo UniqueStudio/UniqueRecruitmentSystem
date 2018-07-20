@@ -29,7 +29,11 @@ interface Props extends WithStyles {
     logout: () => void;
 }
 
-class Header extends React.Component<{ title: string }> {
+interface HeaderProps {
+    title: string;
+}
+
+class Header extends React.Component<HeaderProps> {
     render() {
         const { title, children } = this.props;
         return (
@@ -64,7 +68,9 @@ class Bar extends React.Component<Props> {
                     position="absolute"
                     className={classNames(classes.appBar, open && classes.appBarShift)}
                 >
-                    <Toolbar disableGutters={!open}>
+                    <Toolbar disableGutters={!open} classes={{
+                        gutters: classes.appBarGutters
+                    }}>
                         <IconButton
                             color="inherit"
                             onClick={toggleOpen}
@@ -81,7 +87,7 @@ class Bar extends React.Component<Props> {
                             <>
                                 <IconButton
                                     color="inherit"
-                                    className={classes.personButton}
+                                    className={classNames(classes.personButton, open && classes.hide)}
                                     onClick={this.handleClick}
                                 >
                                     <PersonIcon />
