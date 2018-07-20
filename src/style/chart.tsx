@@ -7,7 +7,8 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
         margin: theme.spacing.unit,
         width: 300,
         height: 300,
-        verticalAlign: 'top'
+        verticalAlign: 'top',
+        position: 'relative'
     },
     newButton: {
         alignSelf: 'center',

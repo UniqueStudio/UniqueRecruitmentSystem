@@ -6,7 +6,7 @@ export const dangerColor = "#f44336";
 export const successColor = "#4caf50";
 export const infoColor = "#00acc1";
 
-const drawerWidth = 240;
+const drawerWidth = 200;
 
 export const colorToAlpha = (hex: string, alpha: number) => {
     const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex) || ['', '', ''];
@@ -40,6 +40,9 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
             duration: theme.transitions.duration.enteringScreen
         }),
     },
+    appBarGutters: {
+        paddingRight: 0,
+    },
     menuButton: {
         marginLeft: 12,
         marginRight: 36
@@ -66,7 +69,7 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
             easing: theme.transitions.easing.sharp,
             duration: theme.transitions.duration.leavingScreen
         }),
-        width: theme.spacing.unit * 7,
+        width: 0,
         [theme.breakpoints.up("sm")]: {
             width: theme.spacing.unit * 9
         }
@@ -83,8 +86,12 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
         backgroundColor: colorToAlpha(theme.palette.secondary.light, 0.2),
         padding: theme.spacing.unit * 3,
         overflowX: 'auto',
+        [theme.breakpoints.down("xs")]: {
+            marginTop: theme.spacing.unit * 7,
+            height: 'calc(100vh - 56px)',
+        },
+        marginTop: theme.spacing.unit * 8,
         height: 'calc(100vh - 64px)',
-        marginTop: '64px'
     },
     columnContainer: {
         display: "flex",
@@ -117,6 +124,9 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
     columnBody: {
         height: 'calc(100% - 40px)',
         marginBottom: theme.spacing.unit,
+        [theme.breakpoints.down("xs")]: {
+            width: 300,
+        },
         width: 360,
         paddingTop: theme.spacing.unit,
     },
@@ -141,10 +151,16 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
         boxShadow: theme.shadows[5],
         padding: theme.spacing.unit,
         outline: 'none',
+        [theme.breakpoints.down('sm')]: {
+            maxWidth: '100%'
+        },
         maxWidth: '75%'
     },
     modalContent: {
         display: 'flex',
+        [theme.breakpoints.down('sm')]: {
+            margin: `${theme.spacing.unit}px 0`,
+        },
         margin: theme.spacing.unit * 2,
     },
     modalMain: {
@@ -222,12 +238,17 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
     detail: {
         display: 'flex',
         flexDirection: 'column',
-        marginRight: theme.spacing.unit * 2,
+        [theme.breakpoints.up('md')]: {
+            marginRight: theme.spacing.unit * 2,
+        },
         justifyContent: 'space-around',
     },
     detailRow: {
         display: 'flex',
-        width: 400,
+        [theme.breakpoints.up('md')]: {
+            width: 400,
+        },
+        width: 250,
         '& *': {
             marginLeft: theme.spacing.unit / 2,
             marginRight: theme.spacing.unit / 2
@@ -238,10 +259,16 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
         }
     },
     comments: {
-        width: 360
+        [theme.breakpoints.up('md')]: {
+            width: 360,
+        },
+        width: 250,
     },
     login: {
         height: 400,
+        [theme.breakpoints.down('xs')]: {
+            width: 300,
+        },
         width: 400,
         display: 'flex',
         flexDirection: 'column',
@@ -255,17 +282,15 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
         justifyContent: 'center',
         height: '100%',
     },
-    userInfoRow: {
-        display: 'flex',
-        alignItems: 'baseline',
+    logoImage: {
+        width: '60%',
+        minWidth: 300
     },
-    userInfo: {
-        marginLeft: theme.spacing.unit,
-        marginRight: theme.spacing.unit,
-        width: 200
-    },
-    userInfoMenu: {
-        width: 200
+    welcomeImage: {
+        [theme.breakpoints.down('xs')]: {
+            display: 'none',
+        },
+        width: '100%'
     }
 });
 

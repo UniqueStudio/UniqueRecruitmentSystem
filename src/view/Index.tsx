@@ -12,8 +12,8 @@ class Index extends React.Component<WithStyles> {
         return (
             <>
                 <div className={classes.indexImage}>
-                    <img src={logo} />
-                    <img src={welcome} />
+                    <img src={logo} className={classes.logoImage} />
+                    <img src={welcome} className={classes.welcomeImage} />
                 </div>
                 <Login />
             </>
