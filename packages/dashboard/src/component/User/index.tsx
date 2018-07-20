@@ -130,7 +130,7 @@ class User extends React.Component<Props> {
                 </div>
                 <div className={classes.userInfoRow}>
                     <TextField
-                        label="电话号码"
+                        label="手机号"
                         value={phone}
                         onChange={this.handleChange('phone')}
                         margin="normal"
@@ -145,11 +145,10 @@ class User extends React.Component<Props> {
                     />
                     <Button size='large' onClick={this.submitChange}>修改</Button>
                 </div>
-                <div>
-                    可能遗漏的事项：
-                    决定一面、时间段（在短信模板处增加输入框）
-                    组长查看本组选手选择的面试时间（）
-                </div>
+                <div>可能遗漏的事项：</div>
+                <div>决定一面、群面时间段（在短信模板处增加输入框）</div>
+                <div>组长查看本组选手选择的面试时间（）</div>
+                <div>组长手操本组选手的面试时间（）</div>
             </div>
         )
     }
