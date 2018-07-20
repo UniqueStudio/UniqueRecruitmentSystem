@@ -79,13 +79,15 @@ export function candidates(
             newState.selected = newState.selected.filter((i: string) => !action.cid.includes(i));
             return newState;
         case actions.REMOVE_CANDIDATE:
-            console.log(newState.candidates);
             for (const step of newState.candidates) {
                 typeof action.cid === 'string' ? delete step[action.cid] : action.cid.map(i => delete step[i]);
             }
             newState.selected = newState.selected.filter((i: string) => !action.cid.includes(i));
             return newState;
         case actions.MOVE_CANDIDATE:
+            if (!newState.candidates[action.from][action.cid]) {
+                return newState;
+            }
             const info = { ...newState.candidates[action.from][action.cid] };
             delete newState.candidates[action.from][action.cid];
             if (!newState.candidates[action.to]) {
