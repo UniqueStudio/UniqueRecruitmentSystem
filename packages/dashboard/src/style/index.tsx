@@ -96,6 +96,7 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
     columnContainer: {
         display: "flex",
         minHeight: "100%",
+        width: 'fit-content',
     },
     column: {
         margin: theme.spacing.unit,
@@ -106,6 +107,7 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
         position: "relative",
         display: "flex",
         flexDirection: "column",
+        height: '100%',
     },
     columnHeader: {
         background: theme.palette.primary.light,
@@ -114,7 +116,8 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
         marginLeft: theme.spacing.unit * 5,
         marginRight: theme.spacing.unit * 5,
         marginBottom: theme.spacing.unit,
-        boxShadow: colorToShadow(theme.palette.primary.light)
+        boxShadow: colorToShadow(theme.palette.primary.light),
+        userSelect: 'none'
     },
     columnTitle: {
         color: theme.palette.secondary.contrastText,

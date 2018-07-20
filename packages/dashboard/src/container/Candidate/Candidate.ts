@@ -10,6 +10,7 @@ import {
     toggleModalOn,
     ToggleModalOn
 } from '../../action';
+import { DraggableProvided } from 'react-beautiful-dnd';
 import Candidate from '../../component/Candidate/Candidate';
 import { StoreState } from '../../reducer';
 
@@ -17,6 +18,7 @@ interface OwnProps {
     step: number;
     cid: string;
     info: object;
+    provided: DraggableProvided
 }
 
 const mapStateToProps = ({ candidates }: StoreState, ownProps: OwnProps) => ({
