@@ -75,8 +75,8 @@ class Template extends React.Component<Props> {
                                     {stepContent[j]}
                                     <div>
                                         <Button
-                                                onClick={selected.length ? this.handleBack : toggleOpen}
-                                                className={classes.templateItem}
+                                            onClick={activeStep ? this.handleBack : toggleOpen}
+                                            className={classes.templateItem}
                                         >
                                             {activeStep ? '上一步': '关闭'}
                                         </Button>

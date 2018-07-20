@@ -6,7 +6,7 @@ export const dangerColor = "#f44336";
 export const successColor = "#4caf50";
 export const infoColor = "#00acc1";
 
-const drawerWidth = 240;
+const drawerWidth = 200;
 
 export const colorToAlpha = (hex: string, alpha: number) => {
     const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex) || ['', '', ''];
@@ -39,6 +39,9 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
             easing: theme.transitions.easing.sharp,
             duration: theme.transitions.duration.enteringScreen
         }),
+    },
+    appBarGutters: {
+        paddingRight: 0,
     },
     menuButton: {
         marginLeft: 12,
@@ -83,8 +86,12 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
         backgroundColor: colorToAlpha(theme.palette.secondary.light, 0.2),
         padding: theme.spacing.unit * 3,
         overflowX: 'auto',
+        [theme.breakpoints.down("xs")]: {
+            marginTop: theme.spacing.unit * 7,
+            height: 'calc(100vh - 56px)',
+        },
+        marginTop: theme.spacing.unit * 8,
         height: 'calc(100vh - 64px)',
-        marginTop: '64px'
     },
     columnContainer: {
         display: "flex",
@@ -141,10 +148,16 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
         boxShadow: theme.shadows[5],
         padding: theme.spacing.unit,
         outline: 'none',
+        [theme.breakpoints.down('sm')]: {
+            maxWidth: '100%'
+        },
         maxWidth: '75%'
     },
     modalContent: {
         display: 'flex',
+        [theme.breakpoints.down('sm')]: {
+            margin: `${theme.spacing.unit}px 0`,
+        },
         margin: theme.spacing.unit * 2,
     },
     modalMain: {
@@ -222,12 +235,17 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
     detail: {
         display: 'flex',
         flexDirection: 'column',
-        marginRight: theme.spacing.unit * 2,
+        [theme.breakpoints.up('md')]: {
+            marginRight: theme.spacing.unit * 2,
+        },
         justifyContent: 'space-around',
     },
     detailRow: {
         display: 'flex',
-        width: 400,
+        [theme.breakpoints.up('md')]: {
+            width: 400,
+        },
+        width: 250,
         '& *': {
             marginLeft: theme.spacing.unit / 2,
             marginRight: theme.spacing.unit / 2
@@ -238,7 +256,10 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
         }
     },
     comments: {
-        width: 360
+        [theme.breakpoints.up('md')]: {
+            width: 360,
+        },
+        width: 250,
     },
     login: {
         height: 400,
@@ -254,6 +275,12 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
         alignItems: 'center',
         justifyContent: 'center',
         height: '100%',
+    },
+    logoImage: {
+        width: '60%'
+    },
+    welcomeImage: {
+        width: '100%'
     },
     userInfoRow: {
         display: 'flex',
