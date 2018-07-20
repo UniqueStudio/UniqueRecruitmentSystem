@@ -124,6 +124,9 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
     columnBody: {
         height: 'calc(100% - 40px)',
         marginBottom: theme.spacing.unit,
+        [theme.breakpoints.down("xs")]: {
+            width: 300,
+        },
         width: 360,
         paddingTop: theme.spacing.unit,
     },
@@ -263,6 +266,9 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
     },
     login: {
         height: 400,
+        [theme.breakpoints.down('xs')]: {
+            width: 300,
+        },
         width: 400,
         display: 'flex',
         flexDirection: 'column',
