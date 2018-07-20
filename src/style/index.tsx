@@ -291,18 +291,6 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
             display: 'none',
         },
         width: '100%'
-    },
-    userInfoRow: {
-        display: 'flex',
-        alignItems: 'baseline',
-    },
-    userInfo: {
-        marginLeft: theme.spacing.unit,
-        marginRight: theme.spacing.unit,
-        width: 200
-    },
-    userInfoMenu: {
-        width: 200
     }
 });
 
