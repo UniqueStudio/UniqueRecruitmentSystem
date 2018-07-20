@@ -87,7 +87,7 @@ class Bar extends React.Component<Props> {
                             <>
                                 <IconButton
                                     color="inherit"
-                                    className={classes.personButton}
+                                    className={classNames(classes.personButton, open && classes.hide)}
                                     onClick={this.handleClick}
                                 >
                                     <PersonIcon />

@@ -69,7 +69,7 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
             easing: theme.transitions.easing.sharp,
             duration: theme.transitions.duration.leavingScreen
         }),
-        width: theme.spacing.unit * 7,
+        width: 0,
         [theme.breakpoints.up("sm")]: {
             width: theme.spacing.unit * 9
         }
@@ -283,9 +283,13 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
         height: '100%',
     },
     logoImage: {
-        width: '60%'
+        width: '60%',
+        minWidth: 300
     },
     welcomeImage: {
+        [theme.breakpoints.down('xs')]: {
+            display: 'none',
+        },
         width: '100%'
     },
     userInfoRow: {

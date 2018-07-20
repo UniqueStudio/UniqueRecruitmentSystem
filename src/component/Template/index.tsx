@@ -66,7 +66,7 @@ class Template extends React.Component<Props> {
 
         return (
             <div className={classes.template}>
-                <Stepper activeStep={activeStep} orientation="vertical">
+                <Stepper activeStep={activeStep} classes={{ root: classes.stepper }} orientation="vertical">
                     {steps.map((i, j) => {
                         return (
                             <Step key={j}>
