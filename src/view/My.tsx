@@ -4,7 +4,7 @@ import withRoot from "../style/withRoot";
 import styles from "../style/index";
 import User from '../container/User';
 
-class My extends React.Component<WithStyles> {
+class My extends React.PureComponent<WithStyles> {
     render() {
         return (
             <>

@@ -16,7 +16,7 @@ interface Props extends WithStyles {
     data: Recruitment;
 }
 
-class Chart extends React.Component<Props> {
+class Chart extends React.PureComponent<Props> {
 
     data = this.props.data.data;
 

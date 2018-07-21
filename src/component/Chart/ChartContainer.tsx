@@ -12,7 +12,7 @@ interface Props extends WithStyles {
     fetchData: () => void;
 }
 
-class ChartContainer extends React.Component<Props> {
+class ChartContainer extends React.PureComponent<Props> {
     constructor(props: Props) {
         super(props);
         this.props.fetchData();

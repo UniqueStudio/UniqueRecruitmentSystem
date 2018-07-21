@@ -26,7 +26,7 @@ interface Props extends WithStyles {
     changeInputting: (comment: string, evaluation: string) => void;
 }
 
-class CandidateComments extends React.Component<Props> {
+class CandidateComments extends React.PureComponent<Props> {
     state = {
         expanded: false,
         evaluation: this.props.savedComment.evaluation,

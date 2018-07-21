@@ -9,6 +9,7 @@ import Column from "../../container/Column/Column";
 import { STEP } from '../../lib/const';
 
 interface Props extends WithStyles {
+    group: string;
     pathname: string;
     modalItem: {
         modalOn: boolean;
@@ -24,10 +25,10 @@ interface Props extends WithStyles {
 }
 
 
-class Container extends React.Component<Props> {
+class Container extends React.PureComponent<Props> {
     constructor(props: Props) {
         super(props);
-        props.changeGroup('web');
+        props.changeGroup(props.group);
     }
 
     state = {

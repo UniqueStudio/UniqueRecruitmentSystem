@@ -40,7 +40,7 @@ interface Props extends WithStyles {
 
 const titleToStep = (title: string) => STEP.indexOf(title);
 
-class Column extends React.Component<Props> {
+class Column extends React.PureComponent<Props> {
 
     state = {
         dialog: false,

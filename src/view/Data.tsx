@@ -4,7 +4,7 @@ import withRoot from "../style/withRoot";
 import styles from "../style/index";
 import Chart from '../container/Chart';
 
-class Data extends React.Component<WithStyles> {
+class Data extends React.PureComponent<WithStyles> {
     render() {
         return (
             <>
