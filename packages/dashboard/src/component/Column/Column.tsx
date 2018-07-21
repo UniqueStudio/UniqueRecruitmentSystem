@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Draggable, DraggableProvided, Droppable, DroppableProvided, } from 'react-beautiful-dnd';
+import { Draggable, DraggableProvided, Droppable, DroppableProvided } from 'react-beautiful-dnd';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -18,14 +18,14 @@ import Comments from '../../container/Candidate/CandidateComments';
 import Candidate from "../../container/Candidate/Candidate";
 import Modal from '../Modal';
 import Template from '../Template';
-import { STEP } from '../../lib/const';
+import { Candidate as CType, STEP } from '../../lib/const';
 import styles from "../../style/index";
 import withRoot from "../../style/withRoot";
 
 interface Props extends WithStyles {
     dropIndex: number;
     title: string;
-    candidates: object;
+    candidates: Map<string, CType>;
     group: string;
     selected: string[];
     modalOn: string;
@@ -83,13 +83,13 @@ class Column extends React.Component<Props> {
 
     handleSelectAll = (all: string[]) => () => {
         const { select, candidates } = this.props;
-        select(all.filter(i => !candidates[i].abandon));
+        select(all.filter(i => !candidates.get(i)!.abandon));
     };
 
     handleInverse = (all: string[], selected: string[]) => () => {
         const { select, deselect, candidates } = this.props;
-        deselect(selected.filter(i => !candidates[i].abandon));
-        select(all.filter((i: string) => !selected.includes(i) && !candidates[i].abandon));
+        deselect(selected.filter(i => !(candidates.get(i) as any).abandon));
+        select(all.filter((i: string) => !selected.includes(i) && !candidates.get(i)!.abandon));
     };
 
     confirmRemove = () => {
@@ -104,12 +104,114 @@ class Column extends React.Component<Props> {
 
     render() {
         const { classes, title, candidates, group, selected, deselect, modalOn, toggleModalOff, dropIndex } = this.props;
-        const allCandidatesCids = Object.keys(candidates);
+        const allCandidatesCids = [...candidates.keys()];
         const selectedCandidatesCids = selected.filter((i: string) => allCandidatesCids.includes(i));
         const selectedCandidatesInfo = selectedCandidatesCids.map((i: string) => {
-            const current = candidates[i];
+            const current = candidates.get(i);
             return { cid: i, ...current };
         });
+
+        const ButtonBox = (
+            <div className={classes.columnBottom}>
+                <Button
+                    color='primary'
+                    size='small'
+                    className={classes.columnButton}
+                    onClick={this.handleSelectAll(allCandidatesCids)}
+                >全选</Button>
+                <Button
+                    color='primary'
+                    size='small'
+                    className={classes.columnButton}
+                    onClick={this.handleInverse(allCandidatesCids, selectedCandidatesCids)}
+                >反选</Button>
+                <Button
+                    color='primary'
+                    size='small'
+                    className={classes.columnButton}
+                    onClick={this.toggleOpen('modal')}
+                    disabled={selectedCandidatesCids.length === 0}
+                >发送通知</Button>
+                <Button
+                    color='primary'
+                    size='small'
+                    variant='contained'
+                    className={classes.columnButton}
+                    onClick={this.confirmRemove}
+                >移除</Button>
+            </div>
+        );
+        const DialogBox = (
+            <Dialog
+                open={this.state.dialog}
+                onClose={this.toggleOpen('dialog')}
+            >
+                <DialogTitle>提醒</DialogTitle>
+                <DialogContent>
+                    <DialogContentText>
+                        这将永远移除该候选人，你确定吗？
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={this.toggleOpen('dialog')} color="primary" autoFocus>
+                        否
+                    </Button>
+                    <Button onClick={this.handleRemove(selectedCandidatesCids)} color="primary">
+                        确定移除
+                    </Button>
+                </DialogActions>
+            </Dialog>
+        );
+        const ModalBox = (
+            <Modal open={this.state.modal} onClose={this.toggleOpen('modal')} title='发送通知'>
+                <Template toggleOpen={this.toggleOpen('modal')}
+                          selected={selectedCandidatesInfo}
+                          deselect={deselect}
+                          flowStep={titleToStep(title)}
+                          group={group}
+                />
+            </Modal>
+        );
+        const CandidateBox = (i: [string, CType], j: number) => (
+            <React.Fragment key={i[0]}>
+                <Draggable draggableId={i[0]} index={j} isDragDisabled={i[1].abandon}>
+                    {(dragProvided: DraggableProvided) => (
+                        <Candidate step={titleToStep(title)}
+                                   cid={i[0]}
+                                   info={i[1]}
+                                   provided={dragProvided}
+                        />
+                    )}
+                </Draggable>
+                <Modal open={i[0] === modalOn} onClose={toggleModalOff} direction={this.state.direction} title='详细信息'>
+                    <div className={classes.modalContent}>
+                        <IconButton className={classes.leftButton} onClick={this.handlePrev(allCandidatesCids[j - 1])}>
+                            <ExpandMoreIcon />
+                        </IconButton>
+                        <div className={classes.modalMain}>
+                            <Detail info={i[1]} />
+                            <Comments step={titleToStep(title)} cid={i[0]} comments={i[1].comments} />
+                        </div>
+                        <IconButton className={classes.rightButton} onClick={this.handleNext(allCandidatesCids[j + 1])}>
+                            <ExpandMoreIcon />
+                        </IconButton>
+                    </div>
+                </Modal>
+            </React.Fragment>
+        );
+        const DroppableBox = (
+            <Droppable droppableId={title} type="CANDIDATE">
+                {(dropProvided: DroppableProvided) => (
+                    <div className={classes.columnBody}
+                         ref={dropProvided.innerRef}
+                         {...dropProvided.droppableProps}
+                    >
+                        {[...candidates.entries()].map(CandidateBox)}
+                        {dropProvided.placeholder}
+                    </div>
+                )}
+            </Droppable>
+        );
 
         return (
             <Draggable draggableId={title} index={dropIndex}>
@@ -123,109 +225,11 @@ class Column extends React.Component<Props> {
                                 >{title}</Typography>
                             </div>
                             <Divider />
-                            <Droppable
-                                droppableId={title}
-                                type="CANDIDATE"
-                            >
-                                {(dropProvided: DroppableProvided) => (
-                                    <div className={classes.columnBody}
-                                         ref={dropProvided.innerRef}
-                                         {...dropProvided.droppableProps}
-                                    >
-                                        {candidates && Object.entries(candidates).map((i, j) => (
-                                            <React.Fragment key={i[0]}>
-                                                <Draggable draggableId={i[0]} index={j} isDragDisabled={i[1].abandon}>
-                                                    {(dragProvided: DraggableProvided) => (
-                                                        <Candidate step={titleToStep(title)}
-                                                                   cid={i[0]}
-                                                                   info={i[1]}
-                                                                   provided={dragProvided}
-                                                        />
-                                                    )}
-                                                </Draggable>
-                                                <Modal open={i[0] === modalOn}
-                                                       onClose={toggleModalOff}
-                                                       direction={this.state.direction}
-                                                       title='详细信息'
-                                                >
-                                                    <div className={classes.modalContent}>
-                                                        <IconButton className={classes.leftButton}
-                                                                    onClick={this.handlePrev(allCandidatesCids[j - 1])}>
-                                                            <ExpandMoreIcon />
-                                                        </IconButton>
-                                                        <div className={classes.modalMain}>
-                                                            <Detail info={i[1]} />
-                                                            <Comments step={titleToStep(title)} cid={i[0]}
-                                                                      comments={i[1].comments} />
-                                                        </div>
-                                                        <IconButton className={classes.rightButton}
-                                                                    onClick={this.handleNext(allCandidatesCids[j + 1])}>
-                                                            <ExpandMoreIcon />
-                                                        </IconButton>
-                                                    </div>
-                                                </Modal>
-                                            </React.Fragment>
-                                        ))}
-                                        {dropProvided.placeholder}
-                                    </div>
-                                )}
-                            </Droppable>
+                            {DroppableBox}
                             <Divider />
-                            <div className={classes.columnBottom}>
-                                <Button
-                                    color='primary'
-                                    size='small'
-                                    className={classes.columnButton}
-                                    onClick={this.handleSelectAll(allCandidatesCids)}
-                                >全选</Button>
-                                <Button
-                                    color='primary'
-                                    size='small'
-                                    className={classes.columnButton}
-                                    onClick={this.handleInverse(allCandidatesCids, selectedCandidatesCids)}
-                                >反选</Button>
-                                <Button
-                                    color='primary'
-                                    size='small'
-                                    className={classes.columnButton}
-                                    onClick={this.toggleOpen('modal')}
-                                    disabled={selectedCandidatesCids.length === 0}
-                                >发送通知</Button>
-                                <Button
-                                    color='primary'
-                                    size='small'
-                                    variant='contained'
-                                    className={classes.columnButton}
-                                    onClick={this.confirmRemove}
-                                >移除</Button>
-                            </div>
-                            <Dialog
-                                open={this.state.dialog}
-                                onClose={this.toggleOpen('dialog')}
-                            >
-                                <DialogTitle>提醒</DialogTitle>
-                                <DialogContent>
-                                    <DialogContentText>
-                                        这将永远移除该候选人，你确定吗？
-                                    </DialogContentText>
-                                </DialogContent>
-                                <DialogActions>
-                                    <Button onClick={this.toggleOpen('dialog')} color="primary" autoFocus>
-                                        否
-                                    </Button>
-                                    <Button onClick={this.handleRemove(selectedCandidatesCids)} color="primary">
-                                        确定移除
-                                    </Button>
-                                </DialogActions>
-                            </Dialog>
-                            <Modal open={this.state.modal} onClose={this.toggleOpen('modal')} title='发送通知'>
-                                <Template toggleOpen={this.toggleOpen('modal')}
-                                          selected={selectedCandidatesInfo}
-                                          deselect={deselect}
-                                          flowStep={titleToStep(title)}
-                                          group={group}
-                                />
-                            </Modal>
+                            {ButtonBox}
+                            {DialogBox}
+                            {ModalBox}
                         </Paper>
                     </div>
                 )}
