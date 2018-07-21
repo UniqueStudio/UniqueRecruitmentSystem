@@ -33,7 +33,7 @@ interface HeaderProps {
     title: string;
 }
 
-class Header extends React.Component<HeaderProps> {
+class Header extends React.PureComponent<HeaderProps> {
     render() {
         const { title, children } = this.props;
         return (
@@ -47,7 +47,7 @@ class Header extends React.Component<HeaderProps> {
     }
 }
 
-class Bar extends React.Component<Props> {
+class Bar extends React.PureComponent<Props> {
     state = {
         anchorEl: undefined,
     };

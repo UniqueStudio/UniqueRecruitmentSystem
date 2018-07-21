@@ -9,7 +9,7 @@ interface Props extends WithStyles {
     toggleOpen: () => void
 }
 
-class Content extends React.Component<Props> {
+class Content extends React.PureComponent<Props> {
 
     handleClick = () => {
         const { open, toggleOpen } = this.props;

@@ -14,7 +14,7 @@ interface Props extends WithStyles {
     onClose: () => void;
 }
 
-class InfoModal extends React.Component<Props> {
+class InfoModal extends React.PureComponent<Props> {
 
     render() {
         const { classes, open, onClose, title, children, direction } = this.props;

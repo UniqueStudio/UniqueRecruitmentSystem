@@ -29,7 +29,7 @@ interface Props extends WithStyles {
     deselect: (cid: string) => void;
 }
 
-class Template extends React.Component<Props> {
+class Template extends React.PureComponent<Props> {
     state = {
         selected: this.props.selected,
         activeStep: 0

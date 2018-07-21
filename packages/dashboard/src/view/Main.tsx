@@ -7,7 +7,7 @@ import withRoot from "../style/withRoot";
 
 import Content from "../container/Content";
 
-class Main extends React.Component<WithStyles> {
+class Main extends React.PureComponent<WithStyles> {
 
     render() {
         const { classes, children } = this.props;

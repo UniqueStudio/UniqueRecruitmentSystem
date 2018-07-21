@@ -10,7 +10,7 @@ interface Props extends WithStyles {
     to: string
 }
 
-class Anchor extends React.Component<Props> {
+class Anchor extends React.PureComponent<Props> {
 
     render() {
         const { children, to } = this.props;

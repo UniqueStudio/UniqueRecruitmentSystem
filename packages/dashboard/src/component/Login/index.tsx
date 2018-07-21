@@ -12,7 +12,7 @@ interface Props extends WithStyles {
     login: (username: string) => void;
 }
 
-class Login extends React.Component<Props> {
+class Login extends React.PureComponent<Props> {
     state = {
         modal: true,
         name: ''

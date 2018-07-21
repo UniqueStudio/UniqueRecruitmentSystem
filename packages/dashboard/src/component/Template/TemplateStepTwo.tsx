@@ -22,7 +22,7 @@ const models = {
     accept: generateModal(true, '{{候选人姓名}}', '{{招新名称}}', '{{组别}}', '{{轮次}}'),
 };
 
-class Step extends React.Component<Props> {
+class Step extends React.PureComponent<Props> {
 
     state = {
         model: 'accept',
