@@ -21,7 +21,7 @@ const evaluationToStyle = {
     'bad': "danger"
 };
 
-class CommentChip extends React.Component<Props> {
+class CommentChip extends React.PureComponent<Props> {
 
     state = {
         anchorEl: undefined,

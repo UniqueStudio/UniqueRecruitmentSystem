@@ -4,8 +4,9 @@ import ColumnContainer from '../../component/Column/ColumnContainer';
 import { StoreState } from '../../reducer';
 import { moveCandidate, requestCandidate } from '../../action/async';
 
-const mapStateToProps = ({ routerReducer }: StoreState) => ({
+const mapStateToProps = ({ routerReducer, candidates }: StoreState) => ({
     pathname: (routerReducer.location || { pathname: '' }).pathname,
+    group: candidates.group
 });
 
 type DispatchType = Dispatch;

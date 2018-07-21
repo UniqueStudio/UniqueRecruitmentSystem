@@ -6,7 +6,7 @@ import styles from "../style/index";
 
 import ColumnContainer from '../container/Column/ColumnContainer';
 
-class View extends React.Component<WithStyles> {
+class View extends React.PureComponent<WithStyles> {
     render() {
         return <ColumnContainer />;
     }

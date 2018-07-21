@@ -21,12 +21,22 @@ interface Props extends WithStyles {
     toggleSnackbar: (info: string, color: string) => void;
 }
 
-class User extends React.Component<Props> {
+class User extends React.PureComponent<Props> {
+    submitChange = () => {
+        if (Object.values(this.state.info).includes('')) {
+            this.props.toggleSnackbar('请完整填写信息', 'warning');
+        } else if (this.state.info === this.props.info) {
+            this.props.toggleSnackbar('你没有做任何修改', 'info');
+        } else {
+            this.props.submitInfo(this.props.uid, this.state.info);
+        }
+    };
+
     state = {
-        modalOpen: false,
         name: this.props.username,
         info: this.props.info as any
     };
+
     handleChange = (name: string) => (event: React.ChangeEvent) => {
         if (name === 'name') {
             this.setState({
@@ -41,13 +51,6 @@ class User extends React.Component<Props> {
             });
         }
     };
-    submitChange = () => {
-        if (Object.values(this.state.info).includes('')) {
-            this.props.toggleSnackbar('请完整填写信息', 'warning');
-        } else {
-            this.props.submitInfo(this.props.uid, this.state.info);
-        }
-    };
 
     constructor(props: Props) {
         super(props);
@@ -56,7 +59,9 @@ class User extends React.Component<Props> {
     }
 
     componentWillReceiveProps(nextProps: Props) {
-        this.setState({ info: nextProps.info })
+        if (nextProps.info !== this.props.info) {
+            this.setState({ info: nextProps.info })
+        }
     }
 
     render() {

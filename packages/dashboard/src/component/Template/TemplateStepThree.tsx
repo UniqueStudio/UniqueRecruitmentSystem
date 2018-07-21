@@ -8,7 +8,7 @@ import { WithStyles, withStyles } from '@material-ui/core/styles';
 import styles from '../../style/template'
 import withRoot from '../../style/withRoot';
 
-class Step extends React.Component<WithStyles> {
+class Step extends React.PureComponent<WithStyles> {
 
     state = {
         sent: false

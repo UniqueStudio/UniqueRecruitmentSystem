@@ -1,6 +1,7 @@
 import * as actions from '../action';
 import * as asyncActions from '../action/async';
 import { Candidate } from '../lib/const';
+import mapToObj from '../lib/mapToObj';
 
 const init = {
     candidates: [],
@@ -86,6 +87,7 @@ export function candidates(
                     ? step.delete(action.cid)
                     : action.cid.map(i => step.delete(i)));
             newState.selected = newState.selected.filter((i: string) => !action.cid.includes(i));
+            sessionStorage.setItem('candidates', JSON.stringify(newState.candidates.map(i => mapToObj(i))));
             return newState;
         case actions.MOVE_CANDIDATE:
             if (!newState.candidates[action.from].get(action.cid)) return newState;
@@ -101,6 +103,7 @@ export function candidates(
             } else {
                 newState.candidates[action.to].set(action.cid, info);
             }
+            sessionStorage.setItem('candidates', JSON.stringify(newState.candidates.map(i => mapToObj(i))));
             return newState;
         case actions.SET_GROUP:
             return { ...state, group: action.group };

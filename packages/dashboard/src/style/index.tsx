@@ -232,11 +232,11 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
         }
     },
     progress: {
-        width: '100%',
         position: 'fixed',
         zIndex: theme.zIndex.modal + 1,
-        top: 0,
-        left: 0,
+        bottom: theme.spacing.unit * 2,
+        right: theme.spacing.unit * 2,
+        color: theme.palette.primary.light
     },
     detail: {
         display: 'flex',

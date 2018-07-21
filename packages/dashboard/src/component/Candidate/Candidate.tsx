@@ -31,7 +31,7 @@ interface Props extends WithStyles {
     changeInputting: (comment: string, evaluation: string) => void;
 }
 
-class Candidate extends React.Component<Props> {
+class Candidate extends React.PureComponent<Props> {
     state = {
         checked: false,
         anchorEl: undefined,

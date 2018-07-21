@@ -12,7 +12,7 @@ import withRoot from '../../style/withRoot';
 import styles from '../../style/chart';
 import Modal from '../Modal';
 
-class ChartNew extends React.Component<WithStyles> {
+class ChartNew extends React.PureComponent<WithStyles> {
     state = {
         modalOpen: false
     };

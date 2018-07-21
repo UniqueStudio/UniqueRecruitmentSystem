@@ -15,7 +15,7 @@ interface Props extends WithStyles {
     toggleOff: () => void;
 }
 
-class Snack extends React.Component<Props> {
+class Snack extends React.PureComponent<Props> {
 
     handleClose = () => {
         this.props.toggleOff();

@@ -23,7 +23,7 @@ interface Props extends WithStyles {
     toggleOpen: () => void;
 }
 
-class Menu extends React.Component<Props> {
+class Menu extends React.PureComponent<Props> {
     render() {
         const { classes, open, toggleOpen } = this.props;
         return (
