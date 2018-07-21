@@ -1,6 +1,6 @@
 import express from 'express';
 import { Server } from 'http';
-import socket from 'socket.io';
+import socket, { Socket } from 'socket.io';
 import bodyParser from 'body-parser';
 import Database from './database';
 import { ObjectId } from 'mongodb';
@@ -143,86 +143,6 @@ app.get('/candidates/:group', (req, res) => {
         .catch(err => res.send({ message: err.message, type: 'warning' }));
 });
 
-// move a candidate from step a to step b
-let processing: string[] = []; // deal with conflicts
-app.put('/candidates/:cid/step/:to', (req, res) => {
-    const cid = req.params.cid;
-    const to = +req.params.to;
-    const from = req.body.from;
-    (async () => {
-        if (!processing.includes(cid)) {
-            processing.push(cid);
-            database.update('candidates', { _id: new ObjectId(cid) }, { step: to })
-                .then(() => res.send({ type: 'success' }))
-                .then(() => {
-                    io.emit('moveCandidate', cid, from, to);
-                    processing = processing.filter(i => i !== cid);
-                })
-                .catch(err => res.send({ message: err.message, type: 'danger' }));
-        } else {
-            res.send({ message: '候选人已被拖动', type: 'warning' });
-        }
-    })();
-    (async () => {
-        const candidate = (await database.query('candidates', { _id: new ObjectId(req.params.cid) }))[0];
-        const recruitment = (await database.query('recruitments', { title: candidate['title'] }))[0];
-        const data = recruitment['data'].map((i: object) => {
-            if (i['group'] === candidate['group']) {
-                if (!i['steps'][to]) i['steps'][to] = 0;
-                if (!i['steps'][from]) i['steps'][from] = 0;
-                i['steps'][to] += 1;
-                i['steps'][from] -= 1;
-                if (i['steps'][to] < 0) i['steps'][to] = 0;
-                if (i['steps'][from] < 0) i['steps'][from] = 0;
-            }
-            return i;
-        });
-        await database.update('recruitments', { title: candidate['title'] }, { data });
-    })()
-});
-
-// delete a certain candidate
-app.delete('/candidates/:cid', (req, res) => {
-    (async () => {
-        const candidate = (await database.query('candidates', { _id: new ObjectId(req.params.cid) }))[0];
-        database
-            .delete('candidates', { _id: new ObjectId(req.params.cid) })
-            .then(() => res.send({ type: 'success' }))
-            .catch(err => res.send({ message: err.message, type: 'warning' }));
-        io.emit('removeCandidate', req.params.cid);
-
-        const recruitment = (await database.query('recruitments', { title: candidate['title'] }))[0];
-        const data = recruitment['data'].map((i: object) => {
-            if (i['group'] === candidate['group']) {
-                i['total'] -= 1;
-                if (i['total'] < 0) i['total'] = 0;
-                i['steps'][candidate['step']] -= 1;
-                if (i['steps'][candidate['step']] < 0) i['steps'][candidate['step']] = 0;
-            }
-            return i;
-        });
-        await database.update('recruitments', { title: candidate['title'] }, { data, total: recruitment['total'] - 1 });
-    })()
-});
-
-// comment on a certain candidate
-app.post('/candidates/:cid/comments', (req, res) => {
-    database
-        .update('candidates', { _id: new ObjectId(req.params.cid) }, { ['comments.' + req.body.uid]: req.body.comment })
-        .then(() => res.send({ type: 'success' }))
-        .catch(err => res.send({ message: err.message, type: 'warning' }));
-    io.emit('addComment', req.body.step, req.params.cid, req.body.uid, req.body.comment);
-});
-
-// delete comment on a certain candidate
-app.delete('/candidates/:cid/comments/:uid', (req, res) => {
-    database
-        .update('candidates', { _id: new ObjectId(req.params.cid) }, { [`comments.${req.params.uid}`]: '' }, true)
-        .then(() => res.send({ type: 'success' }))
-        .catch(err => res.send({ message: err.message, type: 'warning' }));
-    io.emit('removeComment', req.body.step, req.params.cid, req.params.uid);
-});
-
 // send sms
 app.post('/sms', (req, res) => {
 
@@ -262,8 +182,86 @@ app.post('/recruitment', (req, res) => {
 });
 
 
-io.on('connection', () => {
+// move a candidate from step a to step b
+let processing: string[] = []; // deal with conflicts
+const onMoveCandidate = (socket: Socket) => (cid: string, from: number, to: number) => {
+    (async () => {
+        if (!processing.includes(cid)) {
+            processing.push(cid);
+            database.update('candidates', { _id: new ObjectId(cid) }, { step: to })
+                .then(() => {
+                    socket.broadcast.emit('moveCandidate', cid, from, to);
+                    socket.emit('moveCandidateSuccess');
+                    processing = processing.filter(i => i !== cid);
+                })
+                .catch(err => socket.emit('moveCandidateError', err.message, 'danger', { cid, from, to }));
+        } else {
+            socket.emit('moveCandidateError', '候选人已被拖动', 'warning', { cid, from, to });
+        }
+    })();
+    (async () => {
+        const candidate = (await database.query('candidates', { _id: new ObjectId(cid) }))[0];
+        const recruitment = (await database.query('recruitments', { title: candidate['title'] }))[0];
+        const data = recruitment['data'].map((i: object) => {
+            if (i['group'] === candidate['group']) {
+                if (!i['steps'][to]) i['steps'][to] = 0;
+                if (!i['steps'][from]) i['steps'][from] = 0;
+                i['steps'][to] += 1;
+                i['steps'][from] -= 1;
+                if (i['steps'][to] < 0) i['steps'][to] = 0;
+                if (i['steps'][from] < 0) i['steps'][from] = 0;
+            }
+            return i;
+        });
+        await database.update('recruitments', { title: candidate['title'] }, { data });
+    })();
+};
+
+// delete a certain candidate
+const onRemoveCandidate = (socket: Socket) => (cid: string) => {
+    (async () => {
+        const candidate = (await database.query('candidates', { _id: new ObjectId(cid) }))[0];
+        database
+            .delete('candidates', { _id: new ObjectId(cid) })
+            .then(() => io.emit('removeCandidate', cid))
+            .catch(err => socket.emit('moveCandidateError', err.message, 'warning'));
+
+        const recruitment = (await database.query('recruitments', { title: candidate['title'] }))[0];
+        const data = recruitment['data'].map((i: object) => {
+            if (i['group'] === candidate['group']) {
+                i['total'] -= 1;
+                if (i['total'] < 0) i['total'] = 0;
+                i['steps'][candidate['step']] -= 1;
+                if (i['steps'][candidate['step']] < 0) i['steps'][candidate['step']] = 0;
+            }
+            return i;
+        });
+        await database.update('recruitments', { title: candidate['title'] }, { data, total: recruitment['total'] - 1 });
+    })()
+};
+
+// comment on a certain candidate
+const onAddComment = (socket: Socket) => (step: number, cid: string, uid: string, comment: object) => {
+    database
+        .update('candidates', { _id: new ObjectId(cid) }, { ['comments.' + uid]: comment })
+        .then(() => io.emit('addComment', step, cid, uid, comment))
+        .catch(err => socket.emit('addCommentError', err.message, 'warning'));
+};
+
+// delete comment on a certain candidate
+const onRemoveComment = (socket: Socket) => (step: number, cid: string, uid: string) => {
+    database
+        .update('candidates', { _id: new ObjectId(cid) }, { [`comments.${uid}`]: '' }, true)
+        .then(() => io.emit('removeComment', step, cid, uid))
+        .catch(err => socket.emit('removeCommentError', err.message, 'warning'));
+};
+
+io.on('connection', (socket) => {
     console.log('WebSocket connected');
+    socket.on('moveCandidate', onMoveCandidate(socket));
+    socket.on('removeCandidate', onRemoveCandidate(socket));
+    socket.on('addComment', onAddComment(socket));
+    socket.on('removeComment', onRemoveComment(socket))
 });
 
 server.listen(5000);
