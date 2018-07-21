@@ -19,7 +19,7 @@ interface Props extends WithStyles {
     onDelete: (name: string) => void;
 }
 
-class Step extends React.Component<Props> {
+class Step extends React.PureComponent<Props> {
 
     render() {
         const { classes, onDelete, selected } = this.props;

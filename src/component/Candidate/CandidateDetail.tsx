@@ -23,7 +23,7 @@ interface Props extends WithStyles {
     }
 }
 
-class CandidateDetail extends React.Component<Props> {
+class CandidateDetail extends React.PureComponent<Props> {
     state = {
         modalOpen: false,
     };

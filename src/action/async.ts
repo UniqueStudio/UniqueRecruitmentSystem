@@ -44,10 +44,17 @@ export const login = (username: string) => (dispatch: Dispatch) => {
 
 export const requestUser = (uid: string) => (dispatch: Dispatch) => {
     dispatch({ type: USER.START });
-    return fetch(`${URL}/user/${uid}`)
+    const user = sessionStorage.getItem('userInfo');
+    if (user) {
+        dispatch(actions.changeUserInfo(JSON.parse(user)));
+        dispatch({ type: USER.SUCCESS });
+        return;
+    }
+    return !user && fetch(`${URL}/user/${uid}`)
         .then(resHandler)
         .then(res => {
             if (res.type === 'success') {
+                sessionStorage.setItem('userInfo', JSON.stringify(res.data));
                 dispatch(actions.changeUserInfo(res.data));
                 dispatch({ type: USER.SUCCESS });
             } else throw res;
@@ -68,6 +75,7 @@ export const updateUser = (uid: string, info: object) => (dispatch: Dispatch) =>
         .then(resHandler)
         .then(res => {
             if (res.type === 'success') {
+                sessionStorage.setItem('userInfo', JSON.stringify(info));
                 dispatch(actions.changeUserInfo(info));
                 dispatch({ type: USER.SUCCESS });
             } else throw res;
@@ -81,11 +89,20 @@ export const updateUser = (uid: string, info: object) => (dispatch: Dispatch) =>
 export const CANDIDATE = actionTypeCreator('CANDIDATE');
 export const requestCandidate = (group: string) => (dispatch: Dispatch) => {
     dispatch({ type: CANDIDATE.START });
+    const candidates = sessionStorage.getItem('candidates');
+    const storedGroup = sessionStorage.getItem('group');
+    if (candidates && storedGroup === group) {
+        dispatch(actions.setCandidates(JSON.parse(candidates)));
+        dispatch({ type: CANDIDATE.SUCCESS });
+        return;
+    }
     dispatch(actions.setGroup(group));
+    sessionStorage.setItem('group', group);
     return fetch(`${URL}/candidates/${group}`)
         .then(resHandler)
         .then(res => {
             if (res.type === 'success') {
+                sessionStorage.setItem('candidates', JSON.stringify(res.data));
                 dispatch(actions.setCandidates(res.data));
                 dispatch({ type: CANDIDATE.SUCCESS });
             } else throw res;
@@ -187,10 +204,17 @@ export const removeComment = (step: number, cid: string, commenter: string) => (
 export const RECRUITMENT = actionTypeCreator('RECRUITMENT');
 export const requestRecruitments = () => (dispatch: Dispatch) => {
     dispatch({ type: RECRUITMENT.START });
+    const recruitments = sessionStorage.getItem('historyRecruitments');
+    if (recruitments) {
+        dispatch(actions.setRecruitments(JSON.parse(recruitments)));
+        dispatch({ type: RECRUITMENT.SUCCESS });
+        return;
+    }
     return fetch(`${URL}/recruitment`)
         .then(resHandler)
         .then(res => {
             if (res.type === 'success') {
+                sessionStorage.setItem('historyRecruitments', JSON.stringify(res.data));
                 dispatch(actions.setRecruitments(res.data));
                 dispatch({ type: RECRUITMENT.SUCCESS });
             } else {

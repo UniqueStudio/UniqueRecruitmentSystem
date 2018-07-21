@@ -8,12 +8,13 @@ import withRoot from '../../style/withRoot';
 import { GROUP } from '../../lib/const';
 
 interface Props extends WithStyles {
-    changeGroup: (group: string) => void
+    group: string;
+    changeGroup: (group: string) => void;
 }
 
-class Selects extends React.Component<Props> {
+class Selects extends React.PureComponent<Props> {
     state = {
-        group: 'web'
+        group: this.props.group
     };
 
     handleChange = (event: React.ChangeEvent) => {

@@ -6,7 +6,7 @@ import Login from '../container/Login/index';
 import logo from '../image/logo.png';
 import welcome from '../image/welcome.png';
 
-class Index extends React.Component<WithStyles> {
+class Index extends React.PureComponent<WithStyles> {
     render() {
         const { classes } = this.props;
         return (
