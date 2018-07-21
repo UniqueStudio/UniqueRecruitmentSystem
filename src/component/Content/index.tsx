@@ -3,9 +3,11 @@ import { withStyles, WithStyles } from "@material-ui/core/styles";
 import Snackbar from '../../container/Snackbar/index';
 import styles from "../../style";
 import withRoot from "../../style/withRoot";
+import Progress from '../Progress';
 
 interface Props extends WithStyles {
     open: boolean;
+    loading: boolean;
     toggleOpen: () => void
 }
 
@@ -17,11 +19,12 @@ class Content extends React.PureComponent<Props> {
     };
 
     render() {
-        const { classes, children } = this.props;
+        const { classes, children, loading } = this.props;
         return (
             <main className={classes.content} onClick={this.handleClick}>
                 {children}
                 <Snackbar place='bl' />
+                {loading && <Progress />}
             </main>
         );
     }

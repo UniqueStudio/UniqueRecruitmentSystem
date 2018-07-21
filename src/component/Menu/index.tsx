@@ -42,7 +42,7 @@ class Menu extends React.PureComponent<Props> {
                 <Divider />
                 <List>
                     <Anchor to='/'>
-                        <ListItem button>
+                        <ListItem button onClick={open ? toggleOpen : undefined}>
                             <ListItemIcon>
                                 <HomeIcon />
                             </ListItemIcon>
@@ -50,7 +50,7 @@ class Menu extends React.PureComponent<Props> {
                         </ListItem>
                     </Anchor>
                     <Anchor to='/data'>
-                        <ListItem button>
+                        <ListItem button onClick={open ? toggleOpen : undefined}>
                             <ListItemIcon>
                                 <InsertChartIcon />
                             </ListItemIcon>
@@ -58,7 +58,7 @@ class Menu extends React.PureComponent<Props> {
                         </ListItem>
                     </Anchor>
                     <Anchor to='/view'>
-                        <ListItem button>
+                        <ListItem button onClick={open ? toggleOpen : undefined}>
                             <ListItemIcon>
                                 <DashboardIcon />
                             </ListItemIcon>
@@ -66,7 +66,7 @@ class Menu extends React.PureComponent<Props> {
                         </ListItem>
                     </Anchor>
                     <Anchor to='/my'>
-                        <ListItem button>
+                        <ListItem button onClick={open ? toggleOpen : undefined}>
                             <ListItemIcon>
                                 <PersonIcon />
                             </ListItemIcon>
