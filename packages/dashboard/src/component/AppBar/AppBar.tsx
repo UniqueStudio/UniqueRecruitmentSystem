@@ -16,15 +16,11 @@ import Anchor from '../Anchor';
 import { Redirect, Route } from 'react-router';
 import { ConnectedRouter } from 'react-router-redux';
 import { history } from '../../App';
-import Progress from '../Progress';
-
-// import logo from '../image/logo.png';
 
 interface Props extends WithStyles {
     open: boolean;
     path: string;
     loggedIn: boolean;
-    loading: boolean;
     toggleOpen: () => void;
     logout: () => void;
 }
@@ -61,7 +57,7 @@ class Bar extends React.PureComponent<Props> {
     };
 
     render() {
-        const { classes, open, loading, loggedIn, toggleOpen, logout, path } = this.props;
+        const { classes, open, loggedIn, toggleOpen, logout, path } = this.props;
         return (
             <ConnectedRouter history={history}>
                 <AppBar
@@ -105,7 +101,6 @@ class Bar extends React.PureComponent<Props> {
                                 </Menu>
                             </> : path !== '/' && <Redirect to='/' />}
                     </Toolbar>
-                    {loading && <Progress />}
                 </AppBar>
             </ConnectedRouter>
         );

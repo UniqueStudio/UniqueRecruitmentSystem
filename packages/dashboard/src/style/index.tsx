@@ -89,6 +89,8 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
         [theme.breakpoints.down("xs")]: {
             marginTop: theme.spacing.unit * 7,
             height: 'calc(100vh - 56px)',
+            paddingLeft: 0,
+            paddingRight: 0,
         },
         marginTop: theme.spacing.unit * 8,
         height: 'calc(100vh - 64px)',
@@ -154,16 +156,22 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
         boxShadow: theme.shadows[5],
         padding: theme.spacing.unit,
         outline: 'none',
-        [theme.breakpoints.down('sm')]: {
-            maxWidth: '100%'
+        [theme.breakpoints.down('xs')]: {
+            maxWidth: '100%',
         },
+        maxHeight: '90%',
         maxWidth: '75%'
     },
     modalContent: {
         display: 'flex',
         [theme.breakpoints.down('sm')]: {
             margin: `${theme.spacing.unit}px 0`,
+            '& button': {
+                width: 'auto',
+                height: 'auto'
+            }
         },
+        overflowY: 'auto',
         margin: theme.spacing.unit * 2,
     },
     modalMain: {
@@ -189,6 +197,13 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
         justifyContent: 'center',
         alignItems: 'center',
         display: 'flex',
+        [theme.breakpoints.down('sm')]: {
+            margin: `${theme.spacing.unit}px 0`,
+            '& button': {
+                padding: theme.spacing.unit,
+                minWidth: 80
+            }
+        },
     },
     cardDetail: {
         display: 'block',
@@ -236,7 +251,7 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
         zIndex: theme.zIndex.modal + 1,
         bottom: theme.spacing.unit * 2,
         right: theme.spacing.unit * 2,
-        color: theme.palette.primary.light
+        color: theme.palette.primary.dark
     },
     detail: {
         display: 'flex',
@@ -244,6 +259,7 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
         [theme.breakpoints.up('md')]: {
             marginRight: theme.spacing.unit * 2,
         },
+        minHeight: 300,
         justifyContent: 'space-around',
     },
     detailRow: {
