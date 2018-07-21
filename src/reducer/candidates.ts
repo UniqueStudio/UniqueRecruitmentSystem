@@ -1,5 +1,6 @@
 import * as actions from '../action';
 import * as asyncActions from '../action/async';
+import { Candidate } from '../lib/const';
 
 const init = {
     candidates: [],
@@ -27,7 +28,7 @@ type Action =
     | actions.InupttingComment;
 
 export interface Candidates {
-    candidates: object[];
+    candidates: Map<string, Candidate>[];
     selected: string[];
     isLoading: {
         comments: boolean;
@@ -54,14 +55,14 @@ export function candidates(
             newState.isLoading.comments = false;
             return newState;
         case actions.ADD_COMMENT:
-            newState.candidates[action.step][action.cid].comments[action.commenter] = action.comment;
+            newState.candidates[action.step].get(action.cid)!.comments[action.commenter] = action.comment;
             newState.inputtingComment = {
                 comment: '',
                 evaluation: '',
             };
             return newState;
         case actions.REMOVE_COMMENT:
-            delete newState.candidates[action.step][action.cid].comments[action.commenter];
+            delete newState.candidates[action.step].get(action.cid)!.comments[action.commenter];
             return newState;
         case asyncActions.CANDIDATE.START:
             newState.isLoading.candidates = true;
@@ -71,7 +72,8 @@ export function candidates(
             newState.isLoading.candidates = false;
             return newState;
         case actions.SET_CANDIDATES:
-            return { ...state, candidates: action.candidates };
+            const candidatesToMap = action.candidates.map(i => new Map(Object.entries(i)));
+            return { ...state, candidates: candidatesToMap };
         case actions.SELECT_CANDIDATE:
             newState.selected = [...new Set(newState.selected.concat(action.cid))];
             return newState;
@@ -79,21 +81,26 @@ export function candidates(
             newState.selected = newState.selected.filter((i: string) => !action.cid.includes(i));
             return newState;
         case actions.REMOVE_CANDIDATE:
-            for (const step of newState.candidates) {
-                typeof action.cid === 'string' ? delete step[action.cid] : action.cid.map(i => delete step[i]);
-            }
+            newState.candidates.map(step =>
+                typeof action.cid === 'string'
+                    ? step.delete(action.cid)
+                    : action.cid.map(i => step.delete(i)));
             newState.selected = newState.selected.filter((i: string) => !action.cid.includes(i));
             return newState;
         case actions.MOVE_CANDIDATE:
-            if (!newState.candidates[action.from][action.cid]) {
-                return newState;
-            }
-            const info = { ...newState.candidates[action.from][action.cid] };
-            delete newState.candidates[action.from][action.cid];
+            if (!newState.candidates[action.from].get(action.cid)) return newState;
+            const info = { ...newState.candidates[action.from].get(action.cid) } as Candidate;
+            newState.candidates[action.from].delete(action.cid);
             if (!newState.candidates[action.to]) {
-                newState.candidates[action.to] = {};
+                newState.candidates[action.to] = new Map<string, Candidate>();
             }
-            newState.candidates[action.to][action.cid] = info;
+            if (action.position !== undefined) {
+                const entries = [...newState.candidates[action.to].entries()];
+                entries.splice(action.position, 0, [action.cid, info]);
+                newState.candidates[action.to] = new Map<string, Candidate>(entries);
+            } else {
+                newState.candidates[action.to].set(action.cid, info);
+            }
             return newState;
         case actions.SET_GROUP:
             return { ...state, group: action.group };
