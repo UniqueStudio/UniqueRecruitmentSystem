@@ -20,7 +20,7 @@ interface Props extends WithStyles {
     }
     changeGroup: (group: string) => void;
     closeModal: () => void;
-    move: (from: number, to: number, cid: string) => void;
+    move: (from: number, to: number, cid: string, position: number) => void;
 }
 
 
@@ -52,7 +52,7 @@ class Container extends React.Component<Props> {
             });
             return;
         } else if (result.type = 'CANDIDATE') {
-            this.props.move(STEP.indexOf(source.droppableId), STEP.indexOf(destination.droppableId), result.draggableId);
+            this.props.move(STEP.indexOf(source.droppableId), STEP.indexOf(destination.droppableId), result.draggableId, destination.index);
         }
     };
 

@@ -196,14 +196,16 @@ export interface MoveCandidate {
     from: number;
     to: number;
     cid: string;
+    position?: number;
 }
 
-export function moveCandidate(from: number, to: number, cid: string): MoveCandidate {
+export function moveCandidate(from: number, to: number, cid: string, position?: number): MoveCandidate {
     return {
         type: MOVE_CANDIDATE,
         from,
         to,
-        cid
+        cid,
+        position,
     }
 }
 

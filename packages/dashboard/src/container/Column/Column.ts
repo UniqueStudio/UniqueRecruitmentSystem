@@ -29,7 +29,7 @@ const mapStateToProps = ({ candidates, components }: StoreState, ownProps: OwnPr
     group: candidates.group,
     isLoading: candidates.isLoading.candidates,
     modalOn: components.modalOn,
-    candidates: candidates.candidates[STEP.indexOf(ownProps.title)] || {}
+    candidates: candidates.candidates[STEP.indexOf(ownProps.title)] || new Map<string, object>()
 });
 
 type DispatchType = Dispatch<SelectCandidate | DeselectCandidate | ToggleSnackbarOn | ToggleModalOn | ToggleModalOff | InupttingComment>
