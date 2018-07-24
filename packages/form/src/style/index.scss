@@ -1,0 +1,639 @@
+@import url('https://fonts.lug.ustc.edu.cn/css?family=Roboto');
+
+$spacing: 8px;
+$primary: #3FA9F5;
+$primaryLightLittle: #7AC3F8;
+$primaryLightLittleMore: #93CEFA;
+$primaryLight: #C5E5FC;
+$primaryLighter: #E5F1FD;
+$primaryLightest: #EBF0F4;
+$secondary: #F57E82;
+$secondaryLight: #F58086;
+$secondaryLighter: #FAF1F2;
+$chineseFont: 'Hiragino Sans GB W3';
+
+@font-face {
+  font-family: $chineseFont;
+  src: url(../asset/font/Hiragino.otf);
+}
+
+* {
+  box-sizing: border-box;
+  font-family: $chineseFont;
+}
+
+::-webkit-scrollbar {
+  width: 3px;
+  height: 3px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: $primary;
+}
+
+html {
+  @media screen and (min-width: 800px) {
+    font-size: 16px;
+  }
+  @media screen and (min-width: 375px) and (max-width: 800px) {
+    font-size: 14px;
+  }
+  @media screen and (min-width: 360px) and (max-width: 375px) {
+    font-size: 13.5px;
+  }
+  @media screen and (min-width: 320px) and (max-width: 360px) {
+    font-size: 12px;
+  }
+}
+
+body {
+  margin: 0;
+}
+
+.main {
+  display: flex;
+  justify-content: flex-end;
+  flex-direction: column;
+}
+
+.background {
+  flex: 1;
+  background: {
+    size: contain;
+    repeat: repeat-y;
+    position: bottom;
+  }
+;
+  margin-bottom: $spacing * 2;
+}
+
+#bgLeft {
+  background-image: url(../asset/img/bgLeft.png);
+  margin-left: $spacing * 4;
+}
+
+#bgRight {
+  background-image: url(../asset/img/bgRight.png);
+  margin-right: $spacing * 3;
+}
+
+.logo {
+  position: absolute;
+  user-select: none;
+  top: $spacing * 3;
+  left: $spacing * 5;
+  width: 20%;
+}
+
+.container {
+  display: flex;
+  min-height: 100vh;
+}
+
+.center {
+  @media screen and (max-width: 1440px) {
+    flex: 4;
+  }
+  @media screen and (max-width: 1024px) {
+    flex: 6;
+  }
+  flex: 3;
+  flex-direction: column;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: {
+    top: $spacing * 3;
+    bottom: $spacing * 2;
+  }
+  @media screen and (max-width: 1440px) {
+    margin: {
+      top: $spacing * 2;
+      bottom: $spacing;
+    }
+  }
+}
+
+.header {
+  @media screen and (max-width: 1024px) {
+    width: 80%;
+  }
+  width: 70%;
+  user-select: none;
+}
+
+.title {
+  font: {
+    family: 'Roboto', $chineseFont;
+    size: 3.3rem;
+  }
+  @media screen and (max-width: 800px) {
+    font-size: 2.5rem;
+  }
+  @media screen and (max-width: 640px) {
+    font-size: 2rem;
+  }
+  margin: -$spacing * 2 0 0;
+  color: $secondaryLight;
+}
+
+.formContainer {
+  background: {
+    image: url(../asset/img/form.png);
+    size: contain;
+    repeat: no-repeat;
+  }
+  position: relative;
+  flex: 0 1 27vw;
+  @media screen and (max-width: 1024px) {
+    padding: $spacing * 5 $spacing * 3;
+    flex: 0 1 33vw;
+  }
+  @media screen and (max-width: 1200px) and (min-width: 1025px) {
+    padding: $spacing * 6 $spacing * 5;
+    flex: 0 1 30vw;
+  }
+  @media screen and (max-width: 1280px) and (min-width: 1201px) {
+    padding: $spacing * 6 $spacing * 5;
+    width: 90%;
+    flex: 0 1 27vw;
+  }
+  @media screen and (max-width: 1440px) and (min-width: 1281px) {
+    padding: $spacing * 5 $spacing * 5;
+    width: 90%;
+    flex: 0 1 26.6vw;
+  }
+  @media screen and (max-width: 1600px) and (min-width: 1441px) {
+    padding: $spacing * 5 $spacing * 5;
+  }
+  width: 100%;
+  padding: $spacing * 7 $spacing * 5;
+}
+
+.form {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.formRow {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.input {
+  display: flex;
+}
+
+.border {
+  border: {
+    radius: 12px;
+    color: $primaryLight;
+    width: 3px;
+    style: solid;
+  }
+  @media screen and (max-width: 1600px) {
+    border-radius: 10px;
+  }
+  @media screen and (max-width: 1440px) {
+    border-radius: 8px;
+  }
+}
+
+.label {
+  @extend .border;
+  border-width: 0;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+  background: $primary;
+  color: white;
+}
+
+.fontSize {
+  font-size: 1.2rem;
+  @media screen and (max-width: 1600px) {
+    font-size: 1rem;
+  }
+  @media screen and (max-width: 1440px) {
+    font-size: 0.9rem;
+  }
+  @media screen and (max-width: 1280px) {
+    font-size: 0.8rem;
+  }
+  @media screen and (max-width: 1024px) {
+    font-size: 0.75rem;
+  }
+}
+
+.labelName {
+  @media screen and (max-width: 1600px) {
+    margin: 15px 19px;
+  }
+  @media screen and (max-width: 1440px) {
+    margin: 12px 16px;
+  }
+  @media screen and (max-width: 1120px) {
+    margin: 9px 13px;
+  }
+  @media screen and (max-width: 1024px) {
+    margin: 8px 12px;
+  }
+  margin: 16px 20px;
+  @extend .fontSize;
+  font-weight: bold;
+}
+
+@mixin getInputWidth($type) {
+  @if $type == 'lg' {
+    width: 185px;
+    @media screen and (max-width: 1600px) {
+      width: 170px;
+    }
+    @media screen and (max-width: 1440px) {
+      width: 160px;
+    }
+    @media screen and (max-width: 1280px) {
+      width: 150px;
+    }
+    @media screen and (max-width: 1024px) {
+      width: 140px;
+    }
+  }
+  @if $type == 'ml' {
+    width: 145px;
+    @media screen and (max-width: 1600px) {
+      width: 130px;
+    }
+    @media screen and (max-width: 1440px) {
+      width: 120px;
+    }
+    @media screen and (max-width: 1280px) {
+      width: 105px;
+    }
+    @media screen and (max-width: 1024px) {
+      width: 85px;
+    }
+  }
+  @if $type == 'md' {
+    width: 110px;
+    @media screen and (max-width: 1600px) {
+      width: 94px;
+    }
+    @media screen and (max-width: 1440px) {
+      width: 74px;
+    }
+    @media screen and (max-width: 1280px) {
+      width: 64px;
+    }
+    @media screen and (max-width: 1024px) {
+      width: 54px;
+    }
+  }
+  @if $type == 'sm' {
+    width: 95px;
+    @media screen and (max-width: 1600px) {
+      width: 75px;
+    }
+    @media screen and (max-width: 1440px) {
+      width: 55px;
+    }
+    @media screen and (max-width: 1280px) {
+      width: 45px;
+    }
+    @media screen and (max-width: 1024px) {
+      width: 40px;
+    }
+  }
+}
+
+.inputContent {
+  @extend .border;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  border-left-width: 0;
+  height: 100%;
+  outline: none;
+  @extend .fontSize;
+  padding-left: $spacing;
+  @media screen and (max-width: 1024px) {
+    padding-left: $spacing / 2;
+  }
+}
+
+.lg {
+  @include getInputWidth('lg')
+}
+
+.ml {
+  @include getInputWidth('ml')
+}
+
+.md {
+  @include getInputWidth('md')
+}
+
+.sm {
+  @include getInputWidth('sm')
+}
+
+.xs {
+  @include getInputWidth('xs')
+}
+
+.button {
+  @extend .border;
+  border-width: 0;
+  outline: none;
+  cursor: pointer;
+}
+
+.buttonName {
+  @extend .labelName;
+  @extend .fontSize;
+}
+
+.text_primary {
+  color: $primary;
+}
+
+.text_white {
+  color: white;
+}
+
+.background_white {
+  background: none;
+  border-width: 3px;
+  &:hover {
+    background: $primaryLight;
+  }
+}
+
+.background_primary {
+  background: $primary;
+  border: 0;
+}
+
+.background_primaryLightLittleMore {
+  background: $primaryLightLittleMore;
+  border: 0;
+}
+
+.background_primaryLight {
+  @extend .background_white;
+  background: $primaryLight;
+}
+
+.background_primaryLighter {
+  background: $primaryLighter;
+  border: 0;
+  &:hover {
+    background: $primaryLight;
+  }
+}
+
+.background_secondary {
+  background: $secondary;
+  width: 100%;
+  border: 0;
+}
+
+.formColumn {
+  display: inline-block;
+  width: 50%;
+}
+
+.formColumn:first-child {
+  @media screen and (max-width: 1280px) {
+    padding-right: $spacing;
+  }
+  padding-right: $spacing * 2;
+}
+
+.formColumn:last-child {
+  @media screen and (max-width: 1280px) {
+    padding-left: $spacing;
+  }
+  padding-left: $spacing * 2;
+}
+
+.rowItem:first-child {
+  margin-bottom: $spacing * 4;
+}
+
+.submit {
+  position: absolute;
+  bottom: $spacing;
+  right: -$spacing * 24;
+  @media screen and (max-width: 1280px) {
+    right: -$spacing * 18;
+  }
+  @media screen and (max-width: 1024px) {
+    right: -$spacing * 12;
+  }
+  button {
+    border-radius: 8px;
+    div {
+      font-size: 1.5rem;
+      margin: $spacing $spacing * 4;
+      @media screen and (max-width: 1280px) {
+        margin: $spacing $spacing * 2;
+        font-size: 1.2rem;
+      }
+      @media screen and (max-width: 1024px) {
+        right: $spacing * 4;
+        font-size: 1rem;
+      }
+    }
+  }
+}
+
+.disabled {
+  cursor: auto;
+}
+
+.choose {
+  width: 35%;
+}
+
+.selects {
+  width: 60%
+}
+
+.selectContainer {
+  position: relative;
+  &:hover .selectMenu {
+    display: block;
+  }
+  &:hover .selectArrow {
+    transform: rotate(180deg);
+  }
+  &:hover .select {
+    border-bottom: 0;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+}
+
+.select {
+  outline: none;
+  @media screen and (max-width: 1600px) {
+    padding: 15px 54px 15px 19px;
+  }
+  @media screen and (max-width: 1440px) {
+    padding: 12px 48px 12px 16px;
+  }
+  @media screen and (max-width: 1120px) {
+    padding: 9px 42px 9px 13px;
+  }
+  @media screen and (max-width: 1024px) {
+    padding: 7px 36px 7px 11px;
+  }
+  padding: 16px 56px 16px 20px;
+  @extend .fontSize;
+  font-weight: bold;
+  color: $primary;
+  @extend .border;
+  cursor: pointer;
+  appearance: none;
+  position: relative;
+}
+
+.selectArrow {
+  position: absolute;
+  @media screen and (max-width: 1600px) {
+    zoom: 90%;
+  }
+  @media screen and (max-width: 1440px) {
+    zoom: 80%;
+  }
+  @media screen and (max-width: 1120px) {
+    zoom: 70%;
+  }
+  @media screen and (max-width: 1024px) {
+    zoom: 60%;
+  }
+  cursor: pointer;
+  top: calc(50% - 15px);
+  right: 20px;
+  height: 30px;
+  width: 30px;
+  pointer-events: none;
+  transition: transform 0.2s;
+}
+
+.up {
+  transition: transform 0.2s;
+}
+
+.selectMenu {
+  position: absolute;
+  display: none;
+  width: 100%;
+  cursor: pointer;
+  background: white;
+  @extend .border;
+  border-top: 0;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+  max-height: 256px;
+  overflow-y: auto;
+  div {
+    text-align: center;
+    color: $primary;
+    @media screen and (max-width: 1600px) {
+      padding: 15px 19px;
+    }
+    @media screen and (max-width: 1440px) {
+      padding: 12px 16px;
+    }
+    @media screen and (max-width: 1120px) {
+      padding: 9px 13px;
+    }
+    @media screen and (max-width: 1024px) {
+      padding: 8px 12px;
+    }
+    padding: 16px 20px;
+    @extend .fontSize;
+    &:hover {
+      background: #C5E5FC;
+    }
+  }
+}
+
+.selectValue {
+  position: absolute;
+}
+
+.hidden {
+  visibility: hidden;
+}
+
+.textArea {
+  resize: none;
+  outline: none;
+  height: 100%;
+  border: 0;
+  @extend .fontSize;
+  flex: 1;
+  background: none;
+  padding: $spacing * 3;
+}
+
+.textAreaLabel {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  margin-top: $spacing * 2;
+  margin-left: -3px;
+}
+
+.textAreaContainer {
+  height: 100%;
+  @extend .border;
+  display: flex;
+  align-items: flex-start;
+  overflow-x: visible;
+}
+
+.timeContainer {
+  @extend .formContainer;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  height: 100%;
+}
+
+.timeHeader {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: -$spacing * 6;
+}
+
+.subtitle {
+  margin: 0;
+  color: $primary;
+  font-size: 2.5rem;
+  font-weight: bold;
+}
+
+.description {
+  margin: 0;
+  color: $primaryLightLittle;
+  font-size: 1.4rem;
+  font-weight: bold;
+}
+
+.timeContent {
+  display: flex;
+  justify-content: space-around;
+}
+
+.timeSubmit {
+  button {
+    display: block;
+    margin-top: $spacing * 2;
+  }
+  margin-right: -$spacing * 5;
+}
