@@ -24,6 +24,10 @@ interface Props extends WithStyles {
 }
 
 class Menu extends React.PureComponent<Props> {
+    setStyle = (e: any) => {
+
+    };
+
     render() {
         const { classes, open, toggleOpen } = this.props;
         return (
@@ -31,9 +35,9 @@ class Menu extends React.PureComponent<Props> {
                 variant="permanent"
                 classes={{
                     paper: classNames(classes.drawerPaper, !open && classes.drawerPaperClose),
-                    docked: classes.drawerPaperDocked
                 }}
                 open={open}
+                innerRef={this.setStyle}
             >
                 <div className={classes.toolbar}>
                     <IconButton onClick={toggleOpen}>
