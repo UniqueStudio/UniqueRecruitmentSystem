@@ -20,6 +20,9 @@ export const colorToShadow = (hex: string) => {
     return `0 12px 20px -10px ${colorToAlpha(hex, 0.28)}, 0 4px 20px 0px rgba(0, 0, 0, 0.12), 0 7px 8px -5px ${colorToAlpha(hex, 0.2)}`
 };
 
+// @ts-ignore
+// @ts-ignore
+// @ts-ignore
 const styles: StyleRulesCallback = (theme: Theme) => ({
     root: {
         display: "flex",
@@ -56,6 +59,7 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
     drawerPaper: {
         position: 'sticky',
         top: 0,
+        flex: 'none',
         whiteSpace: "nowrap",
         width: drawerWidth,
         transition: theme.transitions.create("width", {
@@ -96,7 +100,7 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
     },
     columnContainer: {
         display: "flex",
-        minHeight: "100%",
+        maxHeight: "100%",
         width: 'fit-content',
     },
     column: {
@@ -133,6 +137,7 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
         },
         width: 360,
         paddingTop: theme.spacing.unit,
+        overflowY: 'auto'
     },
     columnBottom: {
         margin: theme.spacing.unit,
@@ -206,6 +211,9 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
     },
     cardDetail: {
         display: 'block',
+    },
+    cardTitle: {
+        userSelect: 'none'
     },
     popper: {
         pointerEvents: 'none'
