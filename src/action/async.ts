@@ -33,7 +33,6 @@ export const login = (username: string) => (dispatch: Dispatch) => {
         .then(res => {
             if (res.type === 'success') {
                 dispatch(actions.login(username, res.uid));
-                sessionStorage.setItem('username', username);
                 sessionStorage.setItem('uid', res.uid);
                 dispatch({ type: USER.SUCCESS });
             } else throw res;
@@ -47,12 +46,12 @@ export const login = (username: string) => (dispatch: Dispatch) => {
 export const requestUser = (uid: string) => (dispatch: Dispatch) => {
     dispatch({ type: USER.START });
     const user = sessionStorage.getItem('userInfo');
-    if (user) {
+    if (user && uid === sessionStorage.getItem('uid')) {
         dispatch(actions.changeUserInfo(JSON.parse(user)));
         dispatch({ type: USER.SUCCESS });
         return;
     }
-    return !user && fetch(`${URL}/user/${uid}`)
+    return fetch(`${URL}/user/${uid}`)
         .then(resHandler)
         .then(res => {
             if (res.type === 'success') {
@@ -78,7 +77,6 @@ export const updateUser = (uid: string, info: object) => (dispatch: Dispatch) =>
         .then(res => {
             if (res.type === 'success') {
                 sessionStorage.setItem('userInfo', JSON.stringify(info));
-                sessionStorage.setItem('username', JSON.stringify(info['username']));
                 dispatch(actions.changeUserInfo(info));
                 dispatch({ type: USER.SUCCESS });
             } else throw res;
