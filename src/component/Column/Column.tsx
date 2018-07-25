@@ -25,6 +25,7 @@ import withRoot from "../../style/withRoot";
 interface Props extends WithStyles {
     dropIndex: number;
     title: string;
+    isDragging: boolean;
     candidates: Map<string, CType>;
     group: string;
     selected: string[];
@@ -79,6 +80,10 @@ class Column extends React.PureComponent<Props> {
         if (nextProps.group !== this.props.group) {
             this.props.toggleModalOff();
         }
+    }
+
+    shouldComponentUpdate() {
+        return !this.props.isDragging;
     }
 
     handleSelectAll = (all: string[]) => () => {

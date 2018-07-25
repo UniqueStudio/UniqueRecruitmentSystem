@@ -22,6 +22,7 @@ import { STEP } from '../../lib/const';
 interface OwnProps {
     title: string;
     dropIndex: number;
+    isDragging: boolean;
 }
 
 const mapStateToProps = ({ candidates, components }: StoreState, ownProps: OwnProps) => ({
