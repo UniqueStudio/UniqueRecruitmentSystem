@@ -33,6 +33,8 @@ export const login = (username: string) => (dispatch: Dispatch) => {
         .then(res => {
             if (res.type === 'success') {
                 dispatch(actions.login(username, res.uid));
+                sessionStorage.setItem('username', username);
+                sessionStorage.setItem('uid', res.uid);
                 dispatch({ type: USER.SUCCESS });
             } else throw res;
         })
