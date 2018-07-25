@@ -2,9 +2,9 @@ import * as actions from '../action';
 import * as asyncActions from '../action/async'
 
 const init = {
-    loggedIn: false,
-    username: '',
-    uid: '',
+    loggedIn: !!sessionStorage.getItem('username'),
+    username: sessionStorage.getItem('username') || '',
+    uid: sessionStorage.getItem('uid') || '',
     isLoading: false,
     info: {}
 };
