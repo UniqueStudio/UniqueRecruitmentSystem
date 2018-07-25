@@ -61,9 +61,11 @@ export function candidates(
                 comment: '',
                 evaluation: '',
             };
+            sessionStorage.setItem('candidates', JSON.stringify(newState.candidates.map(i => mapToObj(i))));
             return newState;
         case actions.REMOVE_COMMENT:
             delete newState.candidates[action.step].get(action.cid)!.comments[action.commenter];
+            sessionStorage.setItem('candidates', JSON.stringify(newState.candidates.map(i => mapToObj(i))));
             return newState;
         case asyncActions.CANDIDATE.START:
             newState.isLoading.candidates = true;

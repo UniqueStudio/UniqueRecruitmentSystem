@@ -13,6 +13,7 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
     },
     userInfo: {
         padding: theme.spacing.unit,
+        paddingLeft: 0,
         [theme.breakpoints.down('sm')]: {
             width: '50%',
         },
