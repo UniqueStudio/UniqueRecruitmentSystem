@@ -58,10 +58,6 @@ class Container extends React.PureComponent<Props> {
         }
     };
 
-    shouldComponentUpdate() {
-        return !flag;
-    }
-
     render() {
         const { classes } = this.props;
 
@@ -83,7 +79,8 @@ class Container extends React.PureComponent<Props> {
                             {...provided.droppableProps}
                         >
                             {this.state.steps.map(i => <Column title={i} key={i}
-                                                               dropIndex={this.state.steps.indexOf(i)} />)}
+                                                               dropIndex={this.state.steps.indexOf(i)}
+                                                               isDragging={flag} />)}
                             {/*this div with a full-width-space is used to show right margin of the last element*/}
                             <div style={{ visibility: 'hidden' }}>{'　'}</div>
                         </div>
