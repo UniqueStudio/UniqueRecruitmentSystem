@@ -78,6 +78,7 @@ export const updateUser = (uid: string, info: object) => (dispatch: Dispatch) =>
         .then(res => {
             if (res.type === 'success') {
                 sessionStorage.setItem('userInfo', JSON.stringify(info));
+                sessionStorage.setItem('username', JSON.stringify(info['username']));
                 dispatch(actions.changeUserInfo(info));
                 dispatch({ type: USER.SUCCESS });
             } else throw res;

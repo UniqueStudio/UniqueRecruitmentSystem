@@ -40,7 +40,11 @@ class User extends React.PureComponent<Props> {
     handleChange = (name: string) => (event: React.ChangeEvent) => {
         if (name === 'name') {
             this.setState({
-                name: event.target['value']
+                name: event.target['value'],
+                info: {
+                    ...this.state.info,
+                    username: name
+                }
             })
         } else {
             this.setState({

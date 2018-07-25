@@ -34,7 +34,7 @@ export function user(state: User = init, action: Action): User {
         case actions.LOGOUT:
             return { ...state, loggedIn: false };
         case actions.CHANGE_USER_INFO: {
-            return { ...state, info: action.info };
+            return { ...state, info: action.info, username: action.info['username'] };
         }
     }
     return state;
