@@ -89,8 +89,7 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
         [theme.breakpoints.down("xs")]: {
             marginTop: theme.spacing.unit * 7,
             height: 'calc(100vh - 56px)',
-            paddingLeft: 0,
-            paddingRight: 0,
+            padding: `${theme.spacing.unit * 3}px ${theme.spacing.unit * 2}px`,
         },
         marginTop: theme.spacing.unit * 8,
         height: 'calc(100vh - 64px)',
