@@ -83,7 +83,7 @@ class Candidate extends React.PureComponent<Props> {
                             checked={selected.includes(cid)}
                             disabled={abandon}
                         />
-                        <span>
+                        <span className={classes.cardTitle}>
                             <Typography variant='title'>{name}</Typography>
                             <Typography color='textSecondary' variant='caption'>{`${grade} - ${institute}`}</Typography>
                         </span>

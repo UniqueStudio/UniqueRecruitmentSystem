@@ -24,7 +24,6 @@ interface Props extends WithStyles {
     move: (from: number, to: number, cid: string, position: number) => void;
 }
 
-
 class Container extends React.PureComponent<Props> {
     constructor(props: Props) {
         super(props);
@@ -32,11 +31,20 @@ class Container extends React.PureComponent<Props> {
     }
 
     state = {
-        steps: this.props.pathname === '/view' ? STEP : STEP.slice(4)
+        steps: this.props.pathname === '/view' ? STEP : STEP.slice(4),
+        flag: false
+    };
+
+    onDragStart = () => {
+        this.setState({
+            flag: true
+        })
     };
 
     onDragEnd = (result: DropResult) => {
-
+        this.setState({
+            flag: false
+        });
         if (!result.destination) return;
 
         const source: DraggableLocation = result.source;
@@ -62,6 +70,7 @@ class Container extends React.PureComponent<Props> {
 
         return (
             <DragDropContext
+                onDragStart={this.onDragStart}
                 onDragEnd={this.onDragEnd}
             >
                 <Droppable
@@ -77,7 +86,8 @@ class Container extends React.PureComponent<Props> {
                             {...provided.droppableProps}
                         >
                             {this.state.steps.map(i => <Column title={i} key={i}
-                                                               dropIndex={this.state.steps.indexOf(i)} />)}
+                                                               dropIndex={this.state.steps.indexOf(i)}
+                                                               isDragging={this.state.flag} />)}
                             {/*this div with a full-width-space is used to show right margin of the last element*/}
                             <div style={{ visibility: 'hidden' }}>{'　'}</div>
                         </div>
