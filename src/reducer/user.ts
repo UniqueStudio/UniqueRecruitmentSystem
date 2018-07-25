@@ -3,8 +3,8 @@ import * as asyncActions from '../action/async'
 
 const init = {
     loggedIn: !!sessionStorage.getItem('username'),
-    username: '',
-    uid: '',
+    username: sessionStorage.getItem('username') || '',
+    uid: sessionStorage.getItem('uid') || '',
     isLoading: false,
     info: {}
 };
