@@ -20,6 +20,7 @@ class Login extends React.PureComponent<Props> {
 
     login = () => {
         this.props.login(this.state.name);
+        sessionStorage.setItem('username', this.state.name);
     };
 
     handleChange = (event: React.ChangeEvent) => {
