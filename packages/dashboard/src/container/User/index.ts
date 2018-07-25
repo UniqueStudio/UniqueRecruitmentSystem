@@ -6,7 +6,6 @@ import { toggleSnackbarOn, ToggleSnackbarOn } from '../../action';
 import { requestUser, updateUser } from '../../action/async';
 
 const mapStateToProps = ({ user }: StoreState) => ({
-    username: user.username,
     uid: user.uid,
     info: user.info,
     isLoading: user.isLoading

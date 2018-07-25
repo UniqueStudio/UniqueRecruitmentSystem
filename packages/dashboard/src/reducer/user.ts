@@ -1,9 +1,11 @@
 import * as actions from '../action';
 import * as asyncActions from '../action/async'
 
+const userInfo = sessionStorage.getItem('userInfo');
+
 const init = {
-    loggedIn: !!sessionStorage.getItem('username'),
-    username: sessionStorage.getItem('username') || '',
+    loggedIn: !!sessionStorage.getItem('uid'),
+    username: userInfo ? JSON.parse(userInfo).username : '',
     uid: sessionStorage.getItem('uid') || '',
     isLoading: false,
     info: {}
@@ -32,9 +34,12 @@ export function user(state: User = init, action: Action): User {
         case actions.LOGIN:
             return { ...state, loggedIn: true, username: action.username, uid: action.uid };
         case actions.LOGOUT:
+            sessionStorage.removeItem('username');
+            sessionStorage.removeItem('uid');
+            sessionStorage.removeItem('userInfo');
             return { ...state, loggedIn: false };
         case actions.CHANGE_USER_INFO: {
-            return { ...state, info: action.info, username: action.info['username'] };
+            return { ...state, info: action.info, username: action.info['username'] || state.username };
         }
     }
     return state;

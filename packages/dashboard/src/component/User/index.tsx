@@ -13,7 +13,6 @@ import withRoot from "../../style/withRoot";
 import { GROUP } from '../../lib/const';
 
 interface Props extends WithStyles {
-    username: string;
     uid: string;
     info: object;
     fetchInfo: (uid: string) => void;
@@ -33,27 +32,16 @@ class User extends React.PureComponent<Props> {
     };
 
     state = {
-        name: this.props.username,
         info: this.props.info as any
     };
 
     handleChange = (name: string) => (event: React.ChangeEvent) => {
-        if (name === 'name') {
-            this.setState({
-                name: event.target['value'],
-                info: {
-                    ...this.state.info,
-                    username: name
-                }
-            })
-        } else {
-            this.setState({
-                info: {
-                    ...this.state.info,
-                    [name]: event.target['value']
-                },
-            });
-        }
+        this.setState({
+            info: {
+                ...this.state.info,
+                [name]: event.target['value']
+            },
+        });
     };
 
     constructor(props: Props) {
@@ -70,13 +58,13 @@ class User extends React.PureComponent<Props> {
 
     render() {
         const { classes } = this.props;
-        const { sex, group, isAdmin, isCaptain, phone, mail, joinTime } = this.state.info;
+        const { username, sex, group, isAdmin, isCaptain, phone, mail, joinTime } = this.state.info;
         return sex !== undefined && (
             <Paper className={classes.container}>
                 <TextField
                     label="姓名"
-                    value={this.state.name}
-                    onChange={this.handleChange('name')}
+                    value={username}
+                    onChange={this.handleChange('username')}
                     margin="normal"
                     className={classes.userInfo}
                 />
