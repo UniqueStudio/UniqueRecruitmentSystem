@@ -74,6 +74,9 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
             width: theme.spacing.unit * 9
         }
     },
+    drawerPaperDocked: {
+        flex: 'none'
+    },
     toolbar: {
         display: "flex",
         alignItems: "center",
