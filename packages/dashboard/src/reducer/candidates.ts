@@ -92,7 +92,7 @@ export function candidates(
             sessionStorage.setItem('candidates', JSON.stringify(newState.candidates.map(i => mapToObj(i))));
             return newState;
         case actions.MOVE_CANDIDATE:
-            if (!newState.candidates[action.from].get(action.cid)) return newState;
+            if (!newState.candidates[action.from] || !newState.candidates[action.from].get(action.cid)) return newState;
             const info = { ...newState.candidates[action.from].get(action.cid) } as Candidate;
             newState.candidates[action.from].delete(action.cid);
             if (!newState.candidates[action.to]) {
