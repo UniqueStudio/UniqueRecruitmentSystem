@@ -100,7 +100,7 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
     },
     columnContainer: {
         display: "flex",
-        minHeight: "100%",
+        maxHeight: "100%",
         width: 'fit-content',
     },
     column: {
@@ -137,6 +137,7 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
         },
         width: 360,
         paddingTop: theme.spacing.unit,
+        overflowY: 'auto'
     },
     columnBottom: {
         margin: theme.spacing.unit,

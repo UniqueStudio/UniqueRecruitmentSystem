@@ -24,6 +24,7 @@ interface Props extends WithStyles {
     move: (from: number, to: number, cid: string, position: number) => void;
 }
 
+let flag = false;
 
 class Container extends React.PureComponent<Props> {
     constructor(props: Props) {
@@ -36,7 +37,7 @@ class Container extends React.PureComponent<Props> {
     };
 
     onDragEnd = (result: DropResult) => {
-
+        flag = false;
         if (!result.destination) return;
 
         const source: DraggableLocation = result.source;
@@ -57,11 +58,16 @@ class Container extends React.PureComponent<Props> {
         }
     };
 
+    shouldComponentUpdate() {
+        return !flag;
+    }
+
     render() {
         const { classes } = this.props;
 
         return (
             <DragDropContext
+                onDragStart={() => flag = true}
                 onDragEnd={this.onDragEnd}
             >
                 <Droppable
