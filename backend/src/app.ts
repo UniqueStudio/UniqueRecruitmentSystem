@@ -63,6 +63,7 @@ app.put('/user/:uid', (req, res) => {
     const body = req.body;
     database
         .update('users', { _id: new ObjectId(req.params.uid) }, {
+            username: body.username,
             joinTime: body.joinTime,
             isCaptain: Boolean(body.isCaptain),
             isAdmin: Boolean(body.isAdmin),

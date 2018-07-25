@@ -71,10 +71,14 @@ class Candidate extends React.PureComponent<Props> {
                  {...provided.draggableProps}
                  {...provided.dragHandleProps}
             >
-                <Card className={classes.card} style={coloredPanelStyle}>
+                <Card className={classes.card} style={coloredPanelStyle} onClick={() => {
+                    toggleModalOn(cid);
+                    changeInputting('', '');
+                }}>
                     <div className={classes.cardContent}>
                         <Checkbox
                             color='primary'
+                            onClick={e => e.stopPropagation()}
                             onChange={this.handleCheck}
                             checked={selected.includes(cid)}
                             disabled={abandon}

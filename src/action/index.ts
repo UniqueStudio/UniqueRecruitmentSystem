@@ -267,6 +267,7 @@ export interface ChangeUserInfo {
         mail?: string;
         sex?: string;
         group?: string;
+        username?: string;
     }
 }
 
@@ -274,6 +275,7 @@ export function changeUserInfo(info: ChangeUserInfo['info']): ChangeUserInfo {
     return {
         type: CHANGE_USER_INFO,
         info: {
+            username: info.username,
             joinTime: info.joinTime || '',
             isCaptain: info.isCaptain || false,
             isAdmin: info.isAdmin || false,
