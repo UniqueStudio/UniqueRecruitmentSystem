@@ -1,7 +1,11 @@
 import * as React from 'react';
 import Button from '../Button';
 
-class Choose extends React.Component {
+interface Props {
+    onChange: (e: React.ChangeEvent) => void;
+}
+
+class Choose extends React.Component<Props> {
     state = {
         choose: 0,
     };
@@ -9,7 +13,9 @@ class Choose extends React.Component {
     handleClick = (i: number) => {
         this.setState({
             choose: i
-        })
+        });
+        const e = {target: {value: ['男', '女'][i - 1]}} as any;
+        this.props.onChange(e as React.ChangeEvent);
     };
 
     public render() {

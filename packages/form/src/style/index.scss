@@ -127,6 +127,18 @@ body {
     family: 'Roboto', $chineseFont;
     size: 3.3rem;
   }
+  @media screen and (max-width: 1600px) {
+    font-size: 3.1rem;
+  }
+  @media screen and (max-width: 1440px) {
+    font-size: 2.9rem;
+  }
+  @media screen and (max-width: 1280px) {
+    font-size: 2.7rem;
+  }
+  @media screen and (max-width: 1024px) {
+    font-size: 2.6rem;
+  }
   @media screen and (max-width: 800px) {
     font-size: 2.5rem;
   }
@@ -362,12 +374,22 @@ body {
   color: white;
 }
 
+
+.text_secondary {
+  color: $secondary;
+}
+
 .background_white {
   background: none;
   border-width: 3px;
   &:hover {
     background: $primaryLight;
   }
+}
+
+.background_pureWhite {
+  background: white;
+  border-width: 0;
 }
 
 .background_primary {
@@ -609,20 +631,51 @@ body {
   flex-direction: column;
   align-items: center;
   margin-top: -$spacing * 6;
+  @media screen and (max-width: 1600px) {
+    margin-top: -$spacing * 4;
+  }
 }
 
 .subtitle {
   margin: 0;
   color: $primary;
-  font-size: 2.5rem;
   font-weight: bold;
+  font-size: 2.5rem;
+  @media screen and (max-width: 1600px) {
+    font-size: 2.25rem;
+  }
+  @media screen and (max-width: 1440px) {
+    font-size: 2rem;
+  }
+  @media screen and (max-width: 1280px) {
+    font-size: 1.75rem;
+  }
+  @media screen and (max-width: 1024px) {
+    font-size: 1.5rem;
+  }
+}
+
+.descriptionFontSize {
+  font-size: 1.4rem;
+  @media screen and (max-width: 1600px) {
+    font-size: 1.3rem;
+  }
+  @media screen and (max-width: 1440px) {
+    font-size: 1.2rem;
+  }
+  @media screen and (max-width: 1280px) {
+    font-size: 1.1rem;
+  }
+  @media screen and (max-width: 1024px) {
+    font-size: 1rem;
+  }
 }
 
 .description {
   margin: 0;
   color: $primaryLightLittle;
-  font-size: 1.4rem;
   font-weight: bold;
+  @extend .descriptionFontSize
 }
 
 .timeContent {
@@ -635,5 +688,97 @@ body {
     display: block;
     margin-top: $spacing * 2;
   }
+  @media screen and (max-width: 1280px) {
+    margin-right: -$spacing * 2;
+  }
   margin-right: -$spacing * 5;
+}
+
+.layer {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+}
+
+.none {
+  display: none;
+}
+
+.layerPrimary {
+  background: $primaryLightest;
+}
+
+.layerSecondary {
+  background: $secondaryLighter;
+}
+
+.modal {
+  position: absolute;
+  padding: $spacing * 4;
+  width: 250%;
+  right: 0;
+  @extend .border;
+  border-width: 0;
+}
+
+.modal_abandon {
+  bottom: 140px;
+}
+
+.modal_submit {
+  bottom: 70px;
+}
+
+.modalButtons {
+  display: flex;
+  justify-content: space-around;
+  button div {
+    margin: $spacing $spacing * 2;
+    @media screen and (max-width: 1024px) {
+      margin: $spacing $spacing;
+    }
+    @extend .descriptionFontSize
+  }
+}
+
+.prompt {
+  color: white;
+  @extend .descriptionFontSize;
+  font-weight: 100;
+  margin: 0;
+}
+
+.decided {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.decidedTitle {
+  color: $primary;
+  font-size: 3.5rem;
+  @media screen and (max-width: 1600px) {
+    font-size: 3.3rem;
+  }
+  @media screen and (max-width: 1440px) {
+    font-size: 3.1rem;
+  }
+  @media screen and (max-width: 1280px) {
+    font-size: 2.9rem;
+  }
+  @media screen and (max-width: 1024px) {
+    font-size: 2.7rem;
+  }
+  font-weight: bold;
+}
+
+.decidedDescription {
+  color: $primaryLightLittle;
+  font-weight: bold;
+  @extend .descriptionFontSize;
 }

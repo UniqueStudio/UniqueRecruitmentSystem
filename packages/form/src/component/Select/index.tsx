@@ -4,6 +4,7 @@ import classNames from 'classnames';
 interface Props {
     selections: string[];
     name: string;
+    onChange: (e: React.ChangeEvent) => void;
 }
 
 class Select extends React.Component<Props> {
@@ -15,7 +16,9 @@ class Select extends React.Component<Props> {
     handleChange = (event: React.MouseEvent) => {
         this.setState({
             value: event.target['innerHTML']
-        })
+        });
+        const e = {target: {value: event.target['innerHTML']}} as any;
+        this.props.onChange(e as React.ChangeEvent);
     };
 
     handleClick = () => {

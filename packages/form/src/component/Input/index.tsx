@@ -5,12 +5,10 @@ interface Props {
     name: string;
     size: string;
     for: string;
+    onChange: (name: string) => (e: React.ChangeEvent) => void;
 }
 
 class Input extends React.Component<Props> {
-    handleChange = () => {
-        console.log('aaa')
-    };
 
     public render() {
         return (
@@ -18,7 +16,7 @@ class Input extends React.Component<Props> {
                 <label htmlFor={this.props.for} className='label'>
                     <div className='labelName'>{this.props.name}</div>
                 </label>
-                <input id={this.props.for} name={this.props.for} className={classNames('inputContent', this.props.size)} onChange={this.handleChange} />
+                <input id={this.props.for} name={this.props.for} className={classNames('inputContent', this.props.size)} onChange={this.props.onChange(this.props.for)} />
             </div>
         );
     }

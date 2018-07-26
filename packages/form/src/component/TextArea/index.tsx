@@ -1,7 +1,11 @@
 import * as React from 'react';
 import Button from '../Button';
 
-class TextArea extends React.Component {
+interface Props {
+    onChange: (e: React.ChangeEvent) => void;
+}
+
+class TextArea extends React.Component<Props> {
     public render() {
         return (
             <div className='textAreaContainer'>
@@ -10,7 +14,7 @@ class TextArea extends React.Component {
                         textColor='white'
                         className='textAreaLabel disabled'
                 />
-                <textarea className='textArea' />
+                <textarea className='textArea' onChange={this.props.onChange} />
             </div>
         );
     }

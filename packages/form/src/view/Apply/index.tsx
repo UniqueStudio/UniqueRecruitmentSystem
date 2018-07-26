@@ -1,7 +1,7 @@
 import * as React from 'react';
 import logo from '../../asset/img/logo.png';
 import header from '../../asset/img/header.png';
-import Form from '../../component/Form';
+import Form from '../../container/Form';
 import Time from '../../component/Time';
 
 class Container extends React.Component {
@@ -13,7 +13,7 @@ class Container extends React.Component {
                 <div className='center'>
                     <img src={header} className='header' />
                     <h1 className='title'>Unique Studio - 秋季招新</h1>
-                        {<Time /> || <Form />}
+                        {<Form /> || <Time /> || <Form />}
                 </div>
                 <div className='background' id='bgRight' />
             </div>
