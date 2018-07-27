@@ -105,7 +105,10 @@ app.post('/candidates', (req, res) => {
                 if (i['group'] === body.group) {
                     if (!i['total']) i['total'] = 0;
                     i['total'] += 1;
-                    if (!i['steps'][0]) i['steps'][0] = 0;
+                    if (!i['steps']) {
+                        i['steps'] = [];
+                        i['steps'][0] = 0;
+                    }
                     i['steps'][0] += 1;
                 }
                 return i;
