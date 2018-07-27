@@ -6,11 +6,7 @@ import Select from '../Select';
 import { GRADES, GROUPS, SCORES } from '../../const';
 import TextArea from '../TextArea';
 
-interface Props {
-    setInfo: (prop: object) => void;
-}
-
-class Form extends React.Component<Props> {
+class Form extends React.Component {
     state = {
         name: '',
         mail: '',
@@ -22,12 +18,12 @@ class Form extends React.Component<Props> {
         score: '',
         phone: '',
         code: '',
-        resume: '',
-        introduction: ''
+        //resume: '',
+        intro: ''
     };
 
     checkMail = (mail: string) => {
-        const re = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
+        const re = /^(([^<>()\[\].,;:\s@"]+(\.[^<>()\[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/i;
         return re.test(mail);
     };
 
@@ -37,19 +33,36 @@ class Form extends React.Component<Props> {
     };
 
     handleClick = () => {
-        if (Object.values(this.state).includes('')) {
+        const info = { ...this.state };
+        if (Object.values(info).includes('')) {
             console.log('empty');
             return;
         }
-        if (!this.checkMail(this.state.mail)) {
+        if (!this.checkMail(info.mail)) {
             console.log('mail');
             return;
         }
-        if (!this.checkPhone(this.state.phone)) {
+        if (!this.checkPhone(info.phone)) {
             console.log('phone');
             return;
         }
-        this.props.setInfo(this.state);
+        info.grade = info.grade.replace('前', '');
+        info.group = info.group.toLowerCase();
+        info['title'] = '2018A';
+        fetch(`http://39.108.175.151:5000/candidates`, {
+            method: 'POST',
+            body: JSON.stringify(info),
+            headers: { 'content-type': 'application/json' },
+        })
+            .then(res => res.json())
+            .then(res => {
+                if (res.type === 'success') {
+                    console.log('success');
+                } else throw res;
+            })
+            .catch(err => {
+                console.log('error');
+            })
     };
 
     handleChange = (name: string) => (e: React.ChangeEvent) => {
@@ -88,7 +101,7 @@ class Form extends React.Component<Props> {
                             </div>
                         </div>
                         <div className='formColumn'>
-                            <TextArea onChange={this.handleChange('introduction')} />
+                            <TextArea onChange={this.handleChange('intro')} />
                         </div>
                     </div>
                 </div>

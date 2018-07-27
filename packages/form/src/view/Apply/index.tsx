@@ -1,7 +1,7 @@
 import * as React from 'react';
 import logo from '../../asset/img/logo.png';
 import header from '../../asset/img/header.png';
-import Form from '../../container/Form';
+import Form from '../../component/Form';
 import Time from '../../component/Time';
 
 class Container extends React.Component {

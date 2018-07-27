@@ -14,7 +14,7 @@ class Choose extends React.Component<Props> {
         this.setState({
             choose: i
         });
-        const e = {target: {value: ['男', '女'][i - 1]}} as any;
+        const e = {target: {value: ["Male", "Female"][i - 1]}} as any;
         this.props.onChange(e as React.ChangeEvent);
     };
 
