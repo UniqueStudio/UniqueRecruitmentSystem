@@ -103,7 +103,9 @@ app.post('/candidates', (req, res) => {
             }
             const data = recruitment['data'].map((i: object) => {
                 if (i['group'] === body.group) {
-                    if (!i['total']) i['total'] = 0;
+                    if (i['total'] === undefined) {
+                        i['total'] = 0;
+                    }
                     i['total'] += 1;
                     if (!i['steps']) {
                         i['steps'] = [];

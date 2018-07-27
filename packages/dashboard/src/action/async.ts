@@ -77,6 +77,7 @@ export const updateUser = (uid: string, info: object) => (dispatch: Dispatch) =>
         .then(res => {
             if (res.type === 'success') {
                 sessionStorage.setItem('userInfo', JSON.stringify(info));
+                dispatch(actions.toggleSnackbarOn('已成功修改信息！', 'info'));
                 dispatch(actions.changeUserInfo(info));
                 dispatch({ type: USER.SUCCESS });
             } else throw res;

@@ -57,7 +57,7 @@ class CandidateDetail extends React.PureComponent<Props> {
                         />
                         <TextField
                             label="性别"
-                            defaultValue={sex}
+                            defaultValue={sex === 'Male' ? '男' : '女'}
                             margin="normal"
                             InputProps={{
                                 readOnly: true,
@@ -129,7 +129,12 @@ class CandidateDetail extends React.PureComponent<Props> {
                 </div>
                 <Modal open={this.state.modalOpen} onClose={this.toggleModalOpen} title='自我介绍'>
                     <div className={classes.modalContent}>
-                        {intro}
+                        {intro.split('\n').filter(i => i).map((i, j) => (
+                            <React.Fragment key={j}>
+                                {i}
+                                <br />
+                            </React.Fragment>
+                        ))}
                     </div>
                 </Modal>
             </>

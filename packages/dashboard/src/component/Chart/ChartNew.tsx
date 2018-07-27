@@ -51,6 +51,7 @@ class ChartNew extends React.PureComponent<Props> {
             return;
         }
         this.props.launchRecruitment({ title: info['title'], start: info['startTime'], end: info['endTime'] });
+        this.setState({ modalOpen: false });
     };
 
     render() {
