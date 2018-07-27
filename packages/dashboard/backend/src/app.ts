@@ -103,7 +103,12 @@ app.post('/candidates', (req, res) => {
             }
             const data = recruitment['data'].map((i: object) => {
                 if (i['group'] === body.group) {
+                    if (!i['total']) i['total'] = 0;
                     i['total'] += 1;
+                    if (!i['steps']) {
+                        i['steps'] = [];
+                        i['steps'][0] = 0;
+                    }
                     i['steps'][0] += 1;
                 }
                 return i;
@@ -175,12 +180,14 @@ app.get('/recruitment/:title', (req, res) => {
 });
 
 // launch a new recruitment
+const groups = ["web", "lab", "ai", "game", "android", "ios", "design", "pm"];
 app.post('/recruitment', (req, res) => {
     database
         .insert('recruitments', {
             title: req.body.title,
             begin: req.body.begin,
             end: req.body.end,
+            data: groups.map(i => ({ group: i }))
         })
         .then(() => res.send({ type: 'success' }))
         .catch(err => res.send({ message: err.message, type: 'warning' }));
