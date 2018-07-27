@@ -77,6 +77,7 @@ export const updateUser = (uid: string, info: object) => (dispatch: Dispatch) =>
         .then(res => {
             if (res.type === 'success') {
                 sessionStorage.setItem('userInfo', JSON.stringify(info));
+                dispatch(actions.toggleSnackbarOn('已成功修改信息！', 'info'));
                 dispatch(actions.changeUserInfo(info));
                 dispatch({ type: USER.SUCCESS });
             } else throw res;
@@ -293,4 +294,9 @@ socket.on('removeComment', (step: number, cid: string, commenter: string) => {
 socket.on('removeCommentError', (message: string, color: string) => {
     store.dispatch(actions.toggleSnackbarOn(`ERROR: ${message}`, color || 'danger'));
     store.dispatch({ type: COMMENT.FAILURE });
+});
+socket.on('addCandidate', (candidate: object) => {
+    store.dispatch({ type: CANDIDATE.START });
+    store.dispatch(actions.addCandidate(candidate));
+    store.dispatch({ type: CANDIDATE.SUCCESS });
 });
