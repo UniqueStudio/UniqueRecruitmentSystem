@@ -99,7 +99,7 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
     },
     columnContainer: {
         display: "flex",
-        maxHeight: "100%",
+        height: "100%",
         width: 'fit-content',
     },
     column: {
