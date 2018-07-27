@@ -228,6 +228,29 @@ export const requestRecruitments = () => (dispatch: Dispatch) => {
         });
 };
 
+export const launchRecruitment = (info: object) => (dispatch: Dispatch) => {
+    dispatch({ type: RECRUITMENT.START });
+    return fetch(`${URL}/recruitment`, {
+        method: 'POST',
+        body: JSON.stringify(info),
+        headers: { 'content-type': 'application/json' },
+    })
+        .then(resHandler)
+        .then(res => {
+            if (res.type === 'success') {
+                console.log(store.getState());
+                dispatch(actions.toggleSnackbarOn('已成功发起招新！', 'info'));
+                dispatch({ type: RECRUITMENT.SUCCESS });
+            } else {
+                throw res;
+            }
+        })
+        .catch(err => {
+            dispatch(actions.toggleSnackbarOn(`ERROR: ${err.message}`, err.type || 'danger'));
+            dispatch({ type: RECRUITMENT.FAILURE });
+        });
+};
+
 socket.on('removeCandidate', (cid: string) => {
     store.dispatch({ type: CANDIDATE.START });
     store.dispatch(actions.removeCandidate(cid));
