@@ -108,7 +108,7 @@ app.post('/candidates', (req, res) => {
                     }
                     i['total'] += 1;
                     if (!i['steps']) {
-                        i['steps'] = [];
+                        i['steps'] = [0, 0, 0, 0, 0, 0];
                         i['steps'][0] = 0;
                     }
                     i['steps'][0] += 1;
