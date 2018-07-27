@@ -9,15 +9,15 @@ import Content from "../container/Content";
 
 class Main extends React.PureComponent<WithStyles> {
     componentDidMount() {
-        window.addEventListener('wheel', this.handleScroll, { passive: true })
+        window.addEventListener('wheel', this.handleScroll as any, { passive: true })
     }
 
     componentWillUnmount() {
-        window.removeEventListener('wheel', this.handleScroll)
+        window.removeEventListener('wheel', this.handleScroll as any)
     }
 
-    handleScroll(event: any) {
-
+    handleScroll(event: React.WheelEvent) {
+        document.getElementById('main')!.scrollLeft += event.deltaY / 2;
     }
 
     render() {

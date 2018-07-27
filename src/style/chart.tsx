@@ -39,6 +39,14 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
         marginRight: 'auto',
         marginTop: 128,
         userSelect: 'none'
+    },
+    select: {
+        width: 100,
+        margin: theme.spacing.unit
+    },
+    picker: {
+        width: '100%',
+        margin: theme.spacing.unit
     }
 });
 

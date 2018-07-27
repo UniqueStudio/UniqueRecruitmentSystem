@@ -21,7 +21,7 @@ class Content extends React.PureComponent<Props> {
     render() {
         const { classes, children, loading } = this.props;
         return (
-            <main className={classes.content} onClick={this.handleClick}>
+            <main className={classes.content} onClick={this.handleClick} id="main">
                 {children}
                 <Snackbar place='bl' />
                 {loading && <Progress />}

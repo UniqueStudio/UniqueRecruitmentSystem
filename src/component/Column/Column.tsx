@@ -41,7 +41,7 @@ interface Props extends WithStyles {
 
 const titleToStep = (title: string) => STEP.indexOf(title);
 
-class Column extends React.PureComponent<Props> {
+class Column extends React.Component<Props> {
 
     state = {
         dialog: false,
@@ -49,6 +49,18 @@ class Column extends React.PureComponent<Props> {
         removeConfirm: false,
         direction: 'left'
     };
+
+    columnBody = null;
+
+    componentWillReceiveProps(nextProps: Props) {
+        if (nextProps.group !== this.props.group) {
+            this.props.toggleModalOff();
+        }
+    }
+
+    shouldComponentUpdate() {
+        return !this.props.isDragging;
+    }
 
     handleNext = (cid: string) => () => {
         this.props.toggleModalOn(cid);
@@ -75,16 +87,6 @@ class Column extends React.PureComponent<Props> {
         }
         selected.map(i => remove(i));
     };
-
-    componentWillReceiveProps(nextProps: Props) {
-        if (nextProps.group !== this.props.group) {
-            this.props.toggleModalOff();
-        }
-    }
-
-    shouldComponentUpdate() {
-        return !this.props.isDragging;
-    }
 
     handleSelectAll = (all: string[]) => () => {
         const { select, candidates } = this.props;
@@ -208,7 +210,12 @@ class Column extends React.PureComponent<Props> {
             <Droppable droppableId={title} type="CANDIDATE">
                 {(dropProvided: DroppableProvided) => (
                     <div className={classes.columnBody}
-                         ref={dropProvided.innerRef}
+                         ref={element => {
+                             dropProvided.innerRef(element);
+                             if (element) {
+                                 element.addEventListener('wheel', event => event.stopPropagation())
+                             }
+                         }}
                          {...dropProvided.droppableProps}
                     >
                         {[...candidates.entries()].map(CandidateBox)}

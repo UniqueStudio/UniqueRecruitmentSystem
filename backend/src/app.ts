@@ -79,9 +79,9 @@ app.put('/user/:uid', (req, res) => {
 // add new candidate
 app.post('/candidates', (req, res) => {
     const body = req.body;
-    (async () => {
-        database
-            .insert('candidates', {
+    try {
+        (async () => {
+            await database.insert('candidates', {
                 name: body.name,
                 grade: body.grade,
                 institute: body.institute,
@@ -96,20 +96,24 @@ app.post('/candidates', (req, res) => {
                 title: body.title,
                 comments: {}
                 // resume: body.resume
-            })
-            .then(() => res.send({ type: 'success' }))
-            .catch(err => res.send({ message: err.message, type: 'warning' }));
-
-        const recruitment = (await database.query('recruitments', { title: body.title }))[0];
-        const data = recruitment['data'].map((i: object) => {
-            if (i['group'] === body.group) {
-                i['total'] += 1;
-                i['steps'][0] += 1;
+            });
+            const recruitment = (await database.query('recruitments', { title: body.title }))[0];
+            if (!recruitment) {
+                throw new Error('当前招新不存在!')
             }
-            return i;
-        });
-        await database.update('recruitments', { title: body.title }, { data, total: recruitment['total'] + 1 });
-    })()
+            const data = recruitment['data'].map((i: object) => {
+                if (i['group'] === body.group) {
+                    i['total'] += 1;
+                    i['steps'][0] += 1;
+                }
+                return i;
+            });
+            await database.update('recruitments', { title: body.title }, { data, total: recruitment['total'] + 1 });
+            res.send({ type: 'success' })
+        })()
+    } catch (err) {
+        res.send({ message: err.message, type: 'warning' })
+    }
 });
 
 // update new info / set interview time

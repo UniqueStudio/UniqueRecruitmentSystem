@@ -10,6 +10,8 @@ import { Recruitment } from '../../reducer/recruitments';
 interface Props extends WithStyles {
     data: Recruitment[];
     fetchData: () => void;
+    toggleSnackbarOn: (info: string) => void;
+    launchRecruitment: (info: object) => void;
 }
 
 class ChartContainer extends React.PureComponent<Props> {
@@ -19,11 +21,11 @@ class ChartContainer extends React.PureComponent<Props> {
     }
 
     render() {
-        const { data } = this.props;
-        return data.length !== 0 && (
+        const { data, toggleSnackbarOn, launchRecruitment } = this.props;
+        return (
             <>
-                {data.map(i => <Chart data={i} key={i['_id']} />)}
-                <ChartNew />
+                {data.filter(i => i.data).map(i => <Chart data={i} key={i['_id']} />)}
+                <ChartNew toggleSnackbarOn={toggleSnackbarOn} launchRecruitment={launchRecruitment} />
             </>
         )
     }
