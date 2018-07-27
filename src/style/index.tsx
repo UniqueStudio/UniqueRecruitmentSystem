@@ -139,7 +139,7 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
         overflowY: 'auto'
     },
     columnBottom: {
-        margin: theme.spacing.unit,
+        padding: theme.spacing.unit,
         display: 'flex',
     },
     columnButton: {
