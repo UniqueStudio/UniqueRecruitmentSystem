@@ -115,7 +115,10 @@ app.post('/candidates', (req, res) => {
                 }
                 return i;
             });
-            await database.update('recruitments', { title: body.title }, { data, total: recruitment['total'] + 1 });
+            await database.update('recruitments', { title: body.title }, {
+                data,
+                total: recruitment['total'] ? recruitment['total'] + 1 : 1
+            });
             res.send({ type: 'success' })
         })()
     } catch (err) {
