@@ -143,6 +143,22 @@ export function setCandidates(candidates: object[]): SetCandidates {
     }
 }
 
+export const ADD_CANDIDATE = 'ADD_CANDIDATE';
+export type ADD_CANDIDATE = typeof ADD_CANDIDATE;
+
+export interface AddCandidate {
+    type: ADD_CANDIDATE;
+    candidate: object;
+}
+
+export function addCandidate(candidate: object): AddCandidate {
+    return {
+        type: ADD_CANDIDATE,
+        candidate,
+    }
+}
+
+
 export const SELECT_CANDIDATE = 'SELECT_CANDIDATE';
 export type SELECT_CANDIDATE = typeof SELECT_CANDIDATE;
 

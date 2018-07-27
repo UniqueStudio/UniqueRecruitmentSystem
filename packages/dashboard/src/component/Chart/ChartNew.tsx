@@ -23,7 +23,7 @@ class ChartNew extends React.PureComponent<Props> {
         modalOpen: false,
         year: '',
         type: '',
-        start: new Date().toISOString().slice(0, 10),
+        begin: new Date().toISOString().slice(0, 10),
         end: new Date().toISOString().slice(0, 10)
     };
 
@@ -44,13 +44,14 @@ class ChartNew extends React.PureComponent<Props> {
             return;
         }
         info['title'] = info.year + info.type;
-        info['startTime'] = +new Date(info.start);
+        info['beginTime'] = +new Date(info.begin);
         info['endTime'] = +new Date(info.end);
         if (info['startTime'] >= info['endTime']) {
             this.props.toggleSnackbarOn('结束时间必须大于开始时间！');
             return;
         }
-        this.props.launchRecruitment({ title: info['title'], start: info['startTime'], end: info['endTime'] });
+        this.props.launchRecruitment({ title: info['title'], begin: info['beginTime'], end: info['endTime'] });
+        this.setState({ modalOpen: false });
     };
 
     render() {
@@ -104,12 +105,12 @@ class ChartNew extends React.PureComponent<Props> {
                         <TextField
                             label="开始时间"
                             type="date"
-                            defaultValue={this.state.start}
+                            defaultValue={this.state.begin}
                             InputLabelProps={{
                                 shrink: true,
                             }}
                             className={classes.picker}
-                            onChange={this.handleChange('start')}
+                            onChange={this.handleChange('begin')}
                         />
                         <TextField
                             label="结束时间"

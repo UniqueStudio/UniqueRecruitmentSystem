@@ -20,7 +20,7 @@ class Chart extends React.PureComponent<Props> {
 
     data = this.props.data.data;
 
-    totalData = this.data.map(i => i.total);
+    totalData = this.data.map(i => i.total || 0);
 
     flowData = [{}, ...this.data].reduce((i, j) => ({ ...i, [j['group']]: j['steps'] }));
 
