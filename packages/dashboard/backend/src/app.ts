@@ -101,7 +101,7 @@ app.post('/candidates', (req, res) => {
             if (!checkPhone(body.phone)) {
                 throw new Error('手机号码格式不正确!')
             }
-            await database.insert('candidates', {
+            const cid = await database.insert('candidates', {
                 name: body.name,
                 grade: body.grade,
                 institute: body.institute,
@@ -133,19 +133,19 @@ app.post('/candidates', (req, res) => {
                 total: recruitment['total'] ? recruitment['total'] + 1 : 1
             });
             res.send({ type: 'success' });
-            const candidateResult = await database.query('candidates', { name: body.name, phone: body.phone });
+            const candidateResult = await database.query('candidates', { _id: new ObjectId(cid) });
             io.emit('addCandidate', candidateResult[0]);
-            io.emit('updateRecruitment', recruitment);
+            io.emit('updateRecruitment');
         })()
     } catch (err) {
         res.send({ message: err.message, type: 'warning' })
     }
 });
 
-// update new info / set interview time
-app.put('/candidates/:phone', (req, res) => {
+// set interview time
+app.put('/candidates/:cid', (req, res) => {
     database
-        .update('candidates', { name: req.body.name, phone: req.params.phone }, req.body.patch)
+        .update('candidates', { _id: new ObjectId(req.params.cid) }, req.body.patch)
         .then(() => res.send({ type: 'success' }))
         .catch(err => res.send({ message: err.message, type: 'warning' }));
 });
@@ -211,7 +211,10 @@ app.post('/recruitment', (req, res) => {
             data: groups.map(i => ({ group: i, total: 0, steps: [0, 0, 0, 0, 0, 0] })),
             total: 0,
         })
-        .then(() => res.send({ type: 'success' }))
+        .then(() => {
+            res.send({ type: 'success' });
+            io.emit('updateRecruitment');
+        })
         .catch(err => res.send({ message: err.message, type: 'warning' }));
 });
 
@@ -248,6 +251,7 @@ const onMoveCandidate = (socket: Socket) => (cid: string, from: number, to: numb
             return i;
         });
         await database.update('recruitments', { title: candidate['title'] }, { data });
+        io.emit('updateRecruitment');
     })();
 };
 
@@ -271,6 +275,7 @@ const onRemoveCandidate = (socket: Socket) => (cid: string) => {
             return i;
         });
         await database.update('recruitments', { title: candidate['title'] }, { data, total: recruitment['total'] - 1 });
+        io.emit('updateRecruitment');
     })()
 };
 

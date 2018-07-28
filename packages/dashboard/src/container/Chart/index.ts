@@ -6,7 +6,8 @@ import { launchRecruitment, requestRecruitments } from '../../action/async';
 import { ToggleSnackbarOn, toggleSnackbarOn } from '../../action';
 
 const mapStateToProps = ({ recruitments }: StoreState) => ({
-    data: recruitments.recruitments
+    data: recruitments.recruitments,
+    isLoading: recruitments.isLoading
 });
 
 type DispatchType = Dispatch<ToggleSnackbarOn>;
