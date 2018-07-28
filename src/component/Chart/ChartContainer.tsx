@@ -24,7 +24,7 @@ class ChartContainer extends React.PureComponent<Props> {
         const { data, toggleSnackbarOn, launchRecruitment } = this.props;
         return (
             <>
-                {data.filter(i => i.data).map(i => <Chart data={i} key={i['_id']} />)}
+                {data.map(i => <Chart data={i} key={i['_id']} />)}
                 <ChartNew toggleSnackbarOn={toggleSnackbarOn} launchRecruitment={launchRecruitment} />
             </>
         )

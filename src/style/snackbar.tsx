@@ -10,7 +10,10 @@ const colorStyles = mergeKV(['info', 'success', 'warning', 'danger'],
     })));
 
 const styles: StyleRulesCallback = () => ({
-    ...colorStyles
+    ...colorStyles,
+    iconButton: {
+        fill: 'white'
+    }
 });
 
 export default styles;

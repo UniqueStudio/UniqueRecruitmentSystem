@@ -348,3 +348,18 @@ export function setRecruitments(recruitments: Recruitment[]): SetRecruitments {
         recruitments,
     }
 }
+
+export const UPDATE_RECRUITMENT = 'UPDATE_RECRUITMENT';
+export type UPDATE_RECRUITMENT = typeof UPDATE_RECRUITMENT;
+
+export interface UpdateRecruitment {
+    type: UPDATE_RECRUITMENT;
+    recruitment: Recruitment;
+}
+
+export function updateRecruitment(recruitment: Recruitment): UpdateRecruitment {
+    return {
+        type: UPDATE_RECRUITMENT,
+        recruitment,
+    }
+}
