@@ -99,7 +99,6 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
     },
     columnContainer: {
         display: "flex",
-        height: "100%",
         width: 'fit-content',
     },
     column: {
@@ -111,7 +110,7 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
         position: "relative",
         display: "flex",
         flexDirection: "column",
-        height: '100%',
+        height: '100%'
     },
     columnHeader: {
         background: theme.palette.primary.light,
@@ -135,8 +134,7 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
             width: 300,
         },
         width: 360,
-        paddingTop: theme.spacing.unit,
-        overflowY: 'auto'
+        paddingTop: theme.spacing.unit
     },
     columnBottom: {
         padding: theme.spacing.unit,
@@ -318,6 +316,23 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
             display: 'none',
         },
         width: '100%'
+    },
+    fab: {
+        position: 'fixed',
+        left: theme.spacing.unit * 10,
+        bottom: theme.spacing.unit * 5,
+        zIndex: theme.zIndex.snackbar,
+    },
+    fabButtonsContainer: {
+        position: 'fixed',
+        left: theme.spacing.unit * 18,
+        bottom: theme.spacing.unit * 8,
+        display: 'flex',
+        flexDirection: 'column',
+        zIndex: theme.zIndex.snackbar,
+    },
+    fabButton: {
+        margin: theme.spacing.unit,
     }
 });
 

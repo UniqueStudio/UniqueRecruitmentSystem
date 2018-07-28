@@ -70,6 +70,34 @@ export function toggleModalOff(): ToggleModalOff {
     }
 }
 
+export const TOGGLE_FAB_ON = 'TOGGLE_FAB_ON';
+export type TOGGLE_FAB_ON = typeof TOGGLE_FAB_ON;
+
+export interface ToggleFabOn {
+    type: TOGGLE_FAB_ON;
+    step: number
+}
+
+export function toggleFabOn(step: number): ToggleFabOn {
+    return {
+        type: TOGGLE_FAB_ON,
+        step
+    }
+}
+
+export const TOGGLE_FAB_OFF = 'TOGGLE_FAB_OFF';
+export type TOGGLE_FAB_OFF = typeof TOGGLE_FAB_OFF;
+
+export interface ToggleFabOff {
+    type: TOGGLE_FAB_OFF;
+}
+
+export function toggleFabOff(): ToggleFabOff {
+    return {
+        type: TOGGLE_FAB_OFF,
+    }
+}
+
 export const INPUTTING_COMMENT = 'INPUTTING_COMMENT';
 export type INPUTTING_COMMENT = typeof INPUTTING_COMMENT;
 

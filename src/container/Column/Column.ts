@@ -8,6 +8,8 @@ import {
     InupttingComment,
     selectCandidate,
     SelectCandidate,
+    toggleFabOff,
+    ToggleFabOff,
     toggleModalOff,
     ToggleModalOff,
     toggleModalOn,
@@ -30,10 +32,18 @@ const mapStateToProps = ({ candidates, components }: StoreState, ownProps: OwnPr
     group: candidates.group,
     isLoading: candidates.isLoading.candidates,
     modalOn: components.modalOn,
-    candidates: candidates.candidates[STEP.indexOf(ownProps.title)] || new Map<string, object>()
+    candidates: candidates.candidates[STEP.indexOf(ownProps.title)] || new Map<string, object>(),
+    fabOn: components.fabOn
 });
 
-type DispatchType = Dispatch<SelectCandidate | DeselectCandidate | ToggleSnackbarOn | ToggleModalOn | ToggleModalOff | InupttingComment>
+type DispatchType =
+    Dispatch<SelectCandidate
+        | DeselectCandidate
+        | ToggleSnackbarOn
+        | ToggleModalOn
+        | ToggleModalOff
+        | InupttingComment
+        | ToggleFabOff>
 
 const mapDispatchToProps = (dispatch: DispatchType) => ({
     select: (name: string[]) => dispatch(selectCandidate(name)),
@@ -42,7 +52,8 @@ const mapDispatchToProps = (dispatch: DispatchType) => ({
     remove: (cid: string) => removeCandidate(cid)(dispatch),
     toggleModalOn: (cid: string) => dispatch(toggleModalOn(cid)),
     toggleModalOff: () => dispatch(toggleModalOff()),
-    changeInputting: (comment: string, evaluation: string) => dispatch(inputtingComment(comment, evaluation))
+    changeInputting: (comment: string, evaluation: string) => dispatch(inputtingComment(comment, evaluation)),
+    toggleFabOff: () => dispatch(toggleFabOff())
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Column);
