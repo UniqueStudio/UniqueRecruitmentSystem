@@ -14,6 +14,7 @@ import styles from '../../style/chart';
 import Modal from '../Modal';
 
 interface Props extends WithStyles {
+    disabled: boolean;
     toggleSnackbarOn: (info: string) => void;
     launchRecruitment: (info: object) => void;
 }
@@ -55,17 +56,20 @@ class ChartNew extends React.PureComponent<Props> {
     };
 
     render() {
-        const { classes } = this.props;
+        const { classes, disabled } = this.props;
         return (
-            <Paper className={classes.chart}>
-                <Tooltip title="发起招新" classes={{ tooltip: classes.tooltip }}>
-                    <IconButton
-                        className={classes.newButton}
-                        classes={{ root: classes.newButtonRoot }}
-                        onClick={this.toggleModalOpen}
-                    >
-                        <AddIcon color='primary' className={classes.newIcon} />
-                    </IconButton>
+            <>
+                <Tooltip title={disabled ? "只有组长能发起招新" : "发起招新"} classes={{ tooltip: classes.tooltip }}>
+                    <Paper className={classes.chart}>
+                        <IconButton
+                            className={classes.newButton}
+                            classes={{ root: classes.newButtonRoot }}
+                            onClick={this.toggleModalOpen}
+                            disabled={disabled}
+                        >
+                            <AddIcon color='primary' className={classes.newIcon} />
+                        </IconButton>
+                    </Paper>
                 </Tooltip>
                 <Modal title="发起招新"
                        open={this.state.modalOpen}
@@ -125,7 +129,7 @@ class ChartNew extends React.PureComponent<Props> {
                         <Button color='primary' variant='contained' onClick={this.launchRecruitment}>确定</Button>
                     </div>
                 </Modal>
-            </Paper>
+            </>
         )
     }
 }

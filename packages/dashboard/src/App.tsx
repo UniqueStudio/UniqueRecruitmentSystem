@@ -7,12 +7,15 @@ import { ConnectedRouter, routerMiddleware } from 'react-router-redux';
 import createHistory from 'history/createBrowserHistory';
 import { composeWithDevTools } from 'redux-devtools-extension';
 import { reducers } from "./reducer";
+import log from './lib/console';
 
 import Main from './view/Main';
 import View from './view/View';
 import Data from './view/Data';
 import Index from './view/Index';
 import My from './view/My';
+
+log();
 
 export const history = createHistory();
 

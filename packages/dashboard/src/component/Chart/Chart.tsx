@@ -1,4 +1,5 @@
 import * as React from 'react';
+import classNames from 'classnames';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import { WithStyles, withStyles } from '@material-ui/core/styles';
@@ -17,6 +18,7 @@ interface Props extends WithStyles {
     totalData: number[];
     flowData: object;
     title: string;
+    end: number;
 }
 
 class Chart extends React.PureComponent<Props> {
@@ -77,9 +79,9 @@ class Chart extends React.PureComponent<Props> {
                 }
             }
         };
-        const { classes } = this.props;
+        const { classes, end } = this.props;
         return (
-            <Paper className={classes.chart}>
+            <Paper className={classNames(classes.chart, { [classes.expired]: +new Date() > end })}>
                 <div className={classes.doughnut}>
                     <Doughnut
                         data={dataSet}
