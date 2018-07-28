@@ -72,19 +72,32 @@ app.get('/user/:uid', (req, res) => {
 // change user info
 app.put('/user/:uid', (req, res) => {
     const body = req.body;
-    database
-        .update('users', { _id: new ObjectId(req.params.uid) }, {
-            username: body.username,
-            joinTime: body.joinTime,
-            isCaptain: Boolean(body.isCaptain),
-            isAdmin: Boolean(body.isAdmin),
-            phone: body.phone,
-            mail: body.mail,
-            sex: body.sex,
-            group: body.group,
-        })
-        .then(() => res.send({ type: 'success' }))
-        .catch(err => res.send({ message: err.message, type: 'warning' }));
+    try {
+        (async () => {
+            if (Object.values(body).includes('')) {
+                throw new Error('请完整填写信息!')
+            }
+            if (!checkMail(body.mail)) {
+                throw new Error('邮箱格式不正确!')
+            }
+            if (!checkPhone(body.phone)) {
+                throw new Error('手机号码格式不正确!')
+            }
+            await database.update('users', { _id: new ObjectId(req.params.uid) }, {
+                username: body.username,
+                joinTime: body.joinTime,
+                isCaptain: Boolean(body.isCaptain),
+                isAdmin: Boolean(body.isAdmin),
+                phone: body.phone,
+                mail: body.mail,
+                sex: body.sex,
+                group: body.group,
+            });
+            res.send({ type: 'success' });
+        })()
+    } catch (err) {
+        res.send({ message: err.message, type: 'warning' });
+    }
 });
 
 // add new candidate
