@@ -9,7 +9,9 @@ import { Recruitment } from '../../reducer/recruitments';
 
 interface Props extends WithStyles {
     data: Recruitment[];
-    fetchData: () => void;
+    uid: string;
+    canLaunch: boolean;
+    fetchData: (uid: string) => void;
     toggleSnackbarOn: (info: string) => void;
     launchRecruitment: (info: object) => void;
 }
@@ -17,20 +19,15 @@ interface Props extends WithStyles {
 class ChartContainer extends React.PureComponent<Props> {
     constructor(props: Props) {
         super(props);
-        this.props.fetchData();
+        this.props.fetchData(props.uid);
     }
 
     render() {
-        const { data, toggleSnackbarOn, launchRecruitment } = this.props;
+        const { data, toggleSnackbarOn, launchRecruitment, canLaunch } = this.props;
         const compare = (i: Recruitment, j: Recruitment) => {
-            if (i === j) {
-                return 0;
-            }
-            if (i.title.slice(0, 4) > j.title.slice(0, 4)
-                || (i.title.slice(0, 4) === j.title.slice(0, 4) && i.title[4] < j.title[4])
-            ) {
-                return 1;
-            }
+            if (i === j) return 0;
+            if (i.title.slice(0, 4) > j.title.slice(0, 4)) return 1;
+            if ((i.title.slice(0, 4) === j.title.slice(0, 4) && i.title[4] < j.title[4])) return 1;
             return -1;
         };
         return (
@@ -40,9 +37,12 @@ class ChartContainer extends React.PureComponent<Props> {
                     const totalData = data.map(i => i.total || 0);
                     const flowData = [{}, ...data].reduce((i, j) => ({ ...i, [j['group']]: j['steps'] }));
                     const title = `${i.title.slice(0, 4) + { 'S': '春招', 'C': '夏令营', 'A': '秋招' }[i.title[4]]}各组报名人数`;
-                    return <Chart data={data} totalData={totalData} flowData={flowData} title={title} key={i['_id']} />
+                    const endTime = i.end;
+                    return <Chart data={data} totalData={totalData} flowData={flowData} title={title} end={endTime}
+                                  key={i['_id']} />
                 })}
-                <ChartNew toggleSnackbarOn={toggleSnackbarOn} launchRecruitment={launchRecruitment} />
+                <ChartNew toggleSnackbarOn={toggleSnackbarOn} launchRecruitment={launchRecruitment}
+                          disabled={!canLaunch} />
             </>
         )
     }
