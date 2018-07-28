@@ -119,7 +119,9 @@ app.post('/candidates', (req, res) => {
                 data,
                 total: recruitment['total'] ? recruitment['total'] + 1 : 1
             });
-            res.send({ type: 'success' })
+            res.send({ type: 'success' });
+            const result = await database.query('candidates', { name: body.name, phone: body.phone });
+            io.emit('addCandidate', result[0]);
         })()
     } catch (err) {
         res.send({ message: err.message, type: 'warning' })
@@ -127,9 +129,9 @@ app.post('/candidates', (req, res) => {
 });
 
 // update new info / set interview time
-app.put('/candidates/:cid', (req, res) => {
+app.put('/candidates/:phone', (req, res) => {
     database
-        .update('candidates', { _id: new ObjectId(req.params.cid) }, req.body.patch)
+        .update('candidates', { name: req.body.name, phone: req.params.phone }, req.body.patch)
         .then(() => res.send({ type: 'success' }))
         .catch(err => res.send({ message: err.message, type: 'warning' }));
 });
@@ -192,7 +194,8 @@ app.post('/recruitment', (req, res) => {
             title: req.body.title,
             begin: req.body.begin,
             end: req.body.end,
-            data: groups.map(i => ({ group: i }))
+            data: groups.map(i => ({ group: i, total: 0, steps: [0, 0, 0, 0, 0, 0] })),
+            total: 0,
         })
         .then(() => res.send({ type: 'success' }))
         .catch(err => res.send({ message: err.message, type: 'warning' }));

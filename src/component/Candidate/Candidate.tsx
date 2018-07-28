@@ -68,6 +68,7 @@ class Candidate extends React.PureComponent<Props> {
             <div onMouseOver={this.handleOpen}
                  onMouseOut={this.handleClose}
                  ref={provided.innerRef}
+                 className={classes.cardContainer}
                  {...provided.draggableProps}
                  {...provided.dragHandleProps}
             >

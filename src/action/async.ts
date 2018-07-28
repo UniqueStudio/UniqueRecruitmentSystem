@@ -295,3 +295,8 @@ socket.on('removeCommentError', (message: string, color: string) => {
     store.dispatch(actions.toggleSnackbarOn(`ERROR: ${message}`, color || 'danger'));
     store.dispatch({ type: COMMENT.FAILURE });
 });
+socket.on('addCandidate', (candidate: object) => {
+    store.dispatch({ type: CANDIDATE.START });
+    store.dispatch(actions.addCandidate(candidate));
+    store.dispatch({ type: CANDIDATE.SUCCESS });
+});
