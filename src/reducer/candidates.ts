@@ -80,6 +80,7 @@ export function candidates(
             return { ...state, candidates: candidatesToMap };
         case actions.ADD_CANDIDATE:
             if (newState.group === action.candidate['group']) {
+                if (!newState.candidates[action.candidate['step']]) newState.candidates[action.candidate['step']] = new Map<string, Candidate>();
                 newState.candidates[action.candidate['step']].set(action.candidate['_id'], action.candidate as Candidate);
                 sessionStorage.setItem('candidates', JSON.stringify(newState.candidates.map(i => mapToObj(i))));
             }

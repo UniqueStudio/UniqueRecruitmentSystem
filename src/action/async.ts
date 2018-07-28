@@ -4,7 +4,6 @@ import socketClient from 'socket.io-client';
 import { store } from '../App';
 import * as actions from './index';
 import { URL } from '../lib/const';
-import { Recruitment } from '../reducer/recruitments';
 
 export const socket = socketClient(URL);
 
@@ -205,15 +204,17 @@ export const removeComment = (step: number, cid: string, commenter: string) => (
     //     });
 };
 
+let shouldUpdateRecruitment = false;
 export const RECRUITMENT = actionTypeCreator('RECRUITMENT');
 export const requestRecruitments = () => (dispatch: Dispatch) => {
     dispatch({ type: RECRUITMENT.START });
     const recruitments = sessionStorage.getItem('historyRecruitments');
-    if (recruitments) {
+    if (recruitments && !shouldUpdateRecruitment) {
         dispatch(actions.setRecruitments(JSON.parse(recruitments)));
         dispatch({ type: RECRUITMENT.SUCCESS });
         return;
     }
+    shouldUpdateRecruitment = false;
     return fetch(`${URL}/recruitment`)
         .then(resHandler)
         .then(res => {
@@ -305,8 +306,6 @@ socket.on('addCandidate', (candidate: object) => {
     store.dispatch(actions.toggleSnackbarOn(`${candidate['group']}组多了一名报名选手！`, 'info'));
     store.dispatch({ type: CANDIDATE.SUCCESS });
 });
-socket.on('updateRecruitment', (recruitment: Recruitment) => {
-    store.dispatch({ type: RECRUITMENT.START });
-    store.dispatch(actions.updateRecruitment(recruitment));
-    store.dispatch({ type: RECRUITMENT.SUCCESS });
+socket.on('updateRecruitment', () => {
+    shouldUpdateRecruitment = true;
 });

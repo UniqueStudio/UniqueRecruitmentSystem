@@ -10,7 +10,7 @@ type Action =
     actions.SetRecruitments
     | actions.UpdateRecruitment;
 
-interface Data {
+export interface Data {
     group: "web" | "lab" | "ai" | "game" | "android" | "ios" | "design" | "pm";
     total: number;
     steps: number[];
@@ -38,17 +38,6 @@ export function recruitments(state: Recruitments = init, action: Action): Recrui
             return { ...state, isLoading: false };
         case actions.SET_RECRUITMENTS:
             return { ...state, recruitments: action.recruitments };
-        case actions.UPDATE_RECRUITMENT:
-            if (!state.recruitments.map(i => i.title).includes(action.recruitment.title)) {
-                return { ...state, recruitments: [...state.recruitments, action.recruitment] }
-            }
-            const updated = state.recruitments.map(i => {
-                if (i.title === action.recruitment.title) {
-                    return action.recruitment
-                }
-                return i;
-            });
-            return { ...state, recruitments: updated }
     }
     return state;
 }

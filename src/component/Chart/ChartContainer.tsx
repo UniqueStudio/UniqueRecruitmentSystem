@@ -22,9 +22,26 @@ class ChartContainer extends React.PureComponent<Props> {
 
     render() {
         const { data, toggleSnackbarOn, launchRecruitment } = this.props;
+        const compare = (i: Recruitment, j: Recruitment) => {
+            if (i === j) {
+                return 0;
+            }
+            if (i.title.slice(0, 4) > j.title.slice(0, 4)
+                || (i.title.slice(0, 4) === j.title.slice(0, 4) && i.title[4] < j.title[4])
+            ) {
+                return 1;
+            }
+            return -1;
+        };
         return (
             <>
-                {data.map(i => <Chart data={i} key={i['_id']} />)}
+                {data.sort(compare).map(i => {
+                    const data = i.data;
+                    const totalData = data.map(i => i.total || 0);
+                    const flowData = [{}, ...data].reduce((i, j) => ({ ...i, [j['group']]: j['steps'] }));
+                    const title = `${i.title.slice(0, 4) + { 'S': '春招', 'C': '夏令营', 'A': '秋招' }[i.title[4]]}各组报名人数`;
+                    return <Chart data={data} totalData={totalData} flowData={flowData} title={title} key={i['_id']} />
+                })}
                 <ChartNew toggleSnackbarOn={toggleSnackbarOn} launchRecruitment={launchRecruitment} />
             </>
         )
