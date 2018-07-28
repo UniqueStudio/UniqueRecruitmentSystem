@@ -11,6 +11,17 @@ const server = new Server(app);
 const io = socket(server);
 const database = new Database();
 
+const checkMail = (mail: string) => {
+    const re = /^(([^<>()\[\].,;:\s@"]+(\.[^<>()\[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/i;
+    return re.test(mail);
+};
+
+const checkPhone = (phone: string) => {
+    const re = /^((13[0-9])|(14[57])|(15[0-3,5-9])|166|(17[035678])|(18[0-9])|(19[89]))\d{8}$/i;
+    return re.test(phone);
+};
+
+
 app.use(bodyParser.json({
     limit: '1mb'
 }));
@@ -81,7 +92,16 @@ app.post('/candidates', (req, res) => {
     const body = req.body;
     try {
         (async () => {
-            await database.insert('candidates', {
+            if (Object.values(body).includes('')) {
+                throw new Error('请完整填写表单!')
+            }
+            if (!checkMail(body.mail)) {
+                throw new Error('邮箱格式不正确!')
+            }
+            if (!checkPhone(body.phone)) {
+                throw new Error('手机号码格式不正确!')
+            }
+            const cid = await database.insert('candidates', {
                 name: body.name,
                 grade: body.grade,
                 institute: body.institute,
@@ -98,19 +118,12 @@ app.post('/candidates', (req, res) => {
                 // resume: body.resume
             });
             const recruitment = (await database.query('recruitments', { title: body.title }))[0];
-            if (!recruitment) {
-                throw new Error('当前招新不存在!')
-            }
+            if (!recruitment) throw new Error('当前招新不存在!');
             const data = recruitment['data'].map((i: object) => {
                 if (i['group'] === body.group) {
-                    if (i['total'] === undefined) {
-                        i['total'] = 0;
-                    }
+                    if (i['total'] === undefined) i['total'] = 0;
                     i['total'] += 1;
-                    if (!i['steps']) {
-                        i['steps'] = [0, 0, 0, 0, 0, 0];
-                        i['steps'][0] = 0;
-                    }
+                    if (!i['steps']) i['steps'] = [0, 0, 0, 0, 0, 0];
                     i['steps'][0] += 1;
                 }
                 return i;
@@ -120,18 +133,19 @@ app.post('/candidates', (req, res) => {
                 total: recruitment['total'] ? recruitment['total'] + 1 : 1
             });
             res.send({ type: 'success' });
-            const result = await database.query('candidates', { name: body.name, phone: body.phone });
-            io.emit('addCandidate', result[0]);
+            const candidateResult = await database.query('candidates', { _id: new ObjectId(cid) });
+            io.emit('addCandidate', candidateResult[0]);
+            io.emit('updateRecruitment');
         })()
     } catch (err) {
         res.send({ message: err.message, type: 'warning' })
     }
 });
 
-// update new info / set interview time
-app.put('/candidates/:phone', (req, res) => {
+// set interview time
+app.put('/candidates/:cid', (req, res) => {
     database
-        .update('candidates', { name: req.body.name, phone: req.params.phone }, req.body.patch)
+        .update('candidates', { _id: new ObjectId(req.params.cid) }, req.body.patch)
         .then(() => res.send({ type: 'success' }))
         .catch(err => res.send({ message: err.message, type: 'warning' }));
 });
@@ -197,7 +211,10 @@ app.post('/recruitment', (req, res) => {
             data: groups.map(i => ({ group: i, total: 0, steps: [0, 0, 0, 0, 0, 0] })),
             total: 0,
         })
-        .then(() => res.send({ type: 'success' }))
+        .then(() => {
+            res.send({ type: 'success' });
+            io.emit('updateRecruitment');
+        })
         .catch(err => res.send({ message: err.message, type: 'warning' }));
 });
 
@@ -234,6 +251,7 @@ const onMoveCandidate = (socket: Socket) => (cid: string, from: number, to: numb
             return i;
         });
         await database.update('recruitments', { title: candidate['title'] }, { data });
+        io.emit('updateRecruitment');
     })();
 };
 
@@ -257,6 +275,7 @@ const onRemoveCandidate = (socket: Socket) => (cid: string) => {
             return i;
         });
         await database.update('recruitments', { title: candidate['title'] }, { data, total: recruitment['total'] - 1 });
+        io.emit('updateRecruitment');
     })()
 };
 

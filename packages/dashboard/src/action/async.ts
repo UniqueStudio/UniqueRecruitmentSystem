@@ -33,6 +33,7 @@ export const login = (username: string) => (dispatch: Dispatch) => {
         .then(res => {
             if (res.type === 'success') {
                 dispatch(actions.login(username, res.uid));
+                dispatch(actions.toggleSnackbarOn('已成功登录！', 'success'));
                 sessionStorage.setItem('uid', res.uid);
                 dispatch({ type: USER.SUCCESS });
             } else throw res;
@@ -77,7 +78,7 @@ export const updateUser = (uid: string, info: object) => (dispatch: Dispatch) =>
         .then(res => {
             if (res.type === 'success') {
                 sessionStorage.setItem('userInfo', JSON.stringify(info));
-                dispatch(actions.toggleSnackbarOn('已成功修改信息！', 'info'));
+                dispatch(actions.toggleSnackbarOn('已成功修改信息！', 'success'));
                 dispatch(actions.changeUserInfo(info));
                 dispatch({ type: USER.SUCCESS });
             } else throw res;
@@ -203,15 +204,17 @@ export const removeComment = (step: number, cid: string, commenter: string) => (
     //     });
 };
 
+let shouldUpdateRecruitment = false;
 export const RECRUITMENT = actionTypeCreator('RECRUITMENT');
 export const requestRecruitments = () => (dispatch: Dispatch) => {
     dispatch({ type: RECRUITMENT.START });
     const recruitments = sessionStorage.getItem('historyRecruitments');
-    if (recruitments) {
+    if (recruitments && !shouldUpdateRecruitment) {
         dispatch(actions.setRecruitments(JSON.parse(recruitments)));
         dispatch({ type: RECRUITMENT.SUCCESS });
         return;
     }
+    shouldUpdateRecruitment = false;
     return fetch(`${URL}/recruitment`)
         .then(resHandler)
         .then(res => {
@@ -240,7 +243,7 @@ export const launchRecruitment = (info: object) => (dispatch: Dispatch) => {
         .then(res => {
             if (res.type === 'success') {
                 console.log(store.getState());
-                dispatch(actions.toggleSnackbarOn('已成功发起招新！', 'info'));
+                dispatch(actions.toggleSnackbarOn('已成功发起招新！', 'success'));
                 dispatch({ type: RECRUITMENT.SUCCESS });
             } else {
                 throw res;
@@ -302,4 +305,7 @@ socket.on('addCandidate', (candidate: object) => {
     store.dispatch(actions.addCandidate(candidate));
     store.dispatch(actions.toggleSnackbarOn(`${candidate['group']}组多了一名报名选手！`, 'info'));
     store.dispatch({ type: CANDIDATE.SUCCESS });
+});
+socket.on('updateRecruitment', () => {
+    shouldUpdateRecruitment = true;
 });
