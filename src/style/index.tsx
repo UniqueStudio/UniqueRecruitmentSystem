@@ -255,9 +255,9 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
     progress: {
         position: 'fixed',
         zIndex: theme.zIndex.modal + 1,
-        bottom: theme.spacing.unit * 2,
-        right: theme.spacing.unit * 2,
-        color: theme.palette.primary.dark
+        top: 0,
+        left: 0,
+        width: '100%',
     },
     detail: {
         display: 'flex',
@@ -308,7 +308,7 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
         height: '100%',
     },
     logoImage: {
-        width: '60%',
+        width: '50%',
         minWidth: 300
     },
     welcomeImage: {
@@ -319,14 +319,22 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
     },
     fab: {
         position: 'fixed',
-        left: theme.spacing.unit * 10,
+        right: theme.spacing.unit * 5,
         bottom: theme.spacing.unit * 5,
+        [theme.breakpoints.down('xs')]: {
+            right: theme.spacing.unit * 2,
+            bottom: theme.spacing.unit * 2,
+        },
         zIndex: theme.zIndex.snackbar,
     },
     fabButtonsContainer: {
         position: 'fixed',
-        left: theme.spacing.unit * 18,
+        right: theme.spacing.unit * 15,
         bottom: theme.spacing.unit * 8,
+        [theme.breakpoints.down('xs')]: {
+            right: theme.spacing.unit,
+            bottom: theme.spacing.unit * 9,
+        },
         display: 'flex',
         flexDirection: 'column',
         zIndex: theme.zIndex.snackbar,
