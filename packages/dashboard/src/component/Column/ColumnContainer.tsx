@@ -32,7 +32,7 @@ class Container extends React.PureComponent<Props> {
 
     state = {
         steps: this.props.pathname === '/view' ? STEP : STEP.slice(4),
-        flag: false
+        flag: false,
     };
 
     onDragStart = () => {
@@ -69,31 +69,34 @@ class Container extends React.PureComponent<Props> {
         const { classes } = this.props;
 
         return (
-            <DragDropContext
-                onDragStart={this.onDragStart}
-                onDragEnd={this.onDragEnd}
-            >
-                <Droppable
-                    droppableId="board"
-                    type="COLUMN"
-                    direction="horizontal"
+            <>
+                <DragDropContext
+                    onDragStart={this.onDragStart}
+                    onDragEnd={this.onDragEnd}
                 >
-                    {(provided: DroppableProvided) => (
-                        <div
-                            key={provided.innerRef.toString()}
-                            className={classes.columnContainer}
-                            ref={provided.innerRef}
-                            {...provided.droppableProps}
-                        >
-                            {this.state.steps.map(i => <Column title={i} key={i}
-                                                               dropIndex={this.state.steps.indexOf(i)}
-                                                               isDragging={this.state.flag} />)}
-                            {/*this div with a full-width-space is used to show right margin of the last element*/}
-                            <div style={{ visibility: 'hidden' }}>{'　'}</div>
-                        </div>
-                    )}
-                </Droppable>
-            </DragDropContext>
+                    <Droppable
+                        droppableId="board"
+                        type="COLUMN"
+                        direction="horizontal"
+                    >
+                        {(provided: DroppableProvided) => (
+                            <div
+                                key={provided.innerRef.toString()}
+                                className={classes.columnContainer}
+                                ref={provided.innerRef}
+                                {...provided.droppableProps}
+                            >
+                                {this.state.steps.map(i => <Column title={i} key={i}
+                                                                   dropIndex={this.state.steps.indexOf(i)}
+                                                                   isDragging={this.state.flag} />)}
+                                {/*this div with a full-width-space is used to show right margin of the last element*/}
+                                <div style={{ visibility: 'hidden' }}>{'　'}</div>
+                            </div>
+                        )}
+                    </Droppable>
+                </DragDropContext>
+
+            </>
         );
     }
 }

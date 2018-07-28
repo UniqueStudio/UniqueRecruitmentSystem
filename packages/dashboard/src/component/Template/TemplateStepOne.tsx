@@ -23,7 +23,6 @@ class Step extends React.PureComponent<Props> {
 
     render() {
         const { classes, onDelete, selected } = this.props;
-
         return (
             <div className={classNames(classes.templateContent, classes.templateItem)}>
                 {selected.length === 0 ?

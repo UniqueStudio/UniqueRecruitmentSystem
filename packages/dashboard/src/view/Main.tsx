@@ -8,18 +8,6 @@ import withRoot from "../style/withRoot";
 import Content from "../container/Content";
 
 class Main extends React.PureComponent<WithStyles> {
-    componentDidMount() {
-        window.addEventListener('wheel', this.handleScroll as any, { passive: true })
-    }
-
-    componentWillUnmount() {
-        window.removeEventListener('wheel', this.handleScroll as any)
-    }
-
-    handleScroll(event: React.WheelEvent) {
-        document.getElementById('main')!.scrollLeft += event.deltaY / 2;
-    }
-
     render() {
         const { classes, children } = this.props;
         return (

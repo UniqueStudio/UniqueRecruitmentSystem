@@ -21,6 +21,7 @@ interface Info {
 
 interface Props extends WithStyles {
     provided: DraggableProvided;
+    fabOn: number;
     step: number;
     cid: string;
     info: Info;
@@ -29,6 +30,7 @@ interface Props extends WithStyles {
     deselect: (cid: string) => void;
     toggleModalOn: (cid: string) => void;
     changeInputting: (comment: string, evaluation: string) => void;
+    toggleFabOn: (step: number) => void;
 }
 
 class Candidate extends React.PureComponent<Props> {
@@ -46,14 +48,20 @@ class Candidate extends React.PureComponent<Props> {
     };
 
     handleCheck = (event: React.ChangeEvent) => {
+        const { cid, toggleFabOn, step, select, deselect } = this.props;
         this.setState({
             checked: event.target['checked']
         });
-        event.target['checked'] ? this.props.select(this.props.cid) : this.props.deselect(this.props.cid);
+        if (event.target['checked']) {
+            select(cid);
+            toggleFabOn(step);
+        } else {
+            deselect(cid);
+        }
     };
 
     render() {
-        const { cid, info, selected, classes, toggleModalOn, changeInputting, provided } = this.props;
+        const { cid, info, selected, classes, toggleModalOn, changeInputting, provided, fabOn, step } = this.props;
         const { name, grade, institute, comments, abandon } = info;
         const evaluations = Object.values(comments).map(i => i['evaluation']);
         const red = colorToAlpha(dangerColor, 0.1),
@@ -82,7 +90,7 @@ class Candidate extends React.PureComponent<Props> {
                             onClick={e => e.stopPropagation()}
                             onChange={this.handleCheck}
                             checked={selected.includes(cid)}
-                            disabled={abandon}
+                            disabled={abandon || (selected.length !== 0 && fabOn !== step)}
                         />
                         <span className={classes.cardTitle}>
                             <Typography variant='title'>{name}</Typography>

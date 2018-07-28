@@ -255,6 +255,7 @@ export const launchRecruitment = (info: object) => (dispatch: Dispatch) => {
 socket.on('removeCandidate', (cid: string) => {
     store.dispatch({ type: CANDIDATE.START });
     store.dispatch(actions.removeCandidate(cid));
+    store.dispatch(actions.toggleSnackbarOn('有候选人被移除了！', 'info'));
     store.dispatch({ type: CANDIDATE.SUCCESS });
 });
 socket.on('removeCandidateError', (message: string, color: string) => {
@@ -265,6 +266,7 @@ socket.on('removeCandidateError', (message: string, color: string) => {
 socket.on('moveCandidate', (cid: string, from: number, to: number) => {
     store.dispatch({ type: CANDIDATE.START });
     store.dispatch(actions.moveCandidate(from, to, cid));
+    store.dispatch(actions.toggleSnackbarOn('有候选人被移动了！', 'info'));
     store.dispatch({ type: CANDIDATE.SUCCESS });
 });
 socket.on('moveCandidateSuccess', () => {
@@ -298,5 +300,6 @@ socket.on('removeCommentError', (message: string, color: string) => {
 socket.on('addCandidate', (candidate: object) => {
     store.dispatch({ type: CANDIDATE.START });
     store.dispatch(actions.addCandidate(candidate));
+    store.dispatch(actions.toggleSnackbarOn(`${candidate['group']}组多了一名报名选手！`, 'info'));
     store.dispatch({ type: CANDIDATE.SUCCESS });
 });
