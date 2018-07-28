@@ -21,6 +21,7 @@ type Action =
     actions.AddComment
     | actions.RemoveComment
     | actions.SetCandidates
+    | actions.AddCandidate
     | actions.SelectCandidate
     | actions.DeselectCandidate
     | actions.RemoveCandidate
@@ -77,6 +78,9 @@ export function candidates(
         case actions.SET_CANDIDATES:
             const candidatesToMap = action.candidates.map(i => new Map(Object.entries(i)));
             return { ...state, candidates: candidatesToMap };
+        case actions.ADD_CANDIDATE:
+            newState.candidates[action.candidate['step']].set(action.candidate['_id'], action.candidate as Candidate);
+            return newState;
         case actions.SELECT_CANDIDATE:
             newState.selected = [...new Set(newState.selected.concat(action.cid))];
             return newState;

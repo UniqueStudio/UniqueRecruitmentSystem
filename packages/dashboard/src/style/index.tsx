@@ -184,8 +184,10 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
             flexDirection: "row",
         },
     },
+    cardContainer: {
+        padding: `${theme.spacing.unit / 2}px ${theme.spacing.unit}px`
+    },
     card: {
-        margin: theme.spacing.unit,
         position: 'relative',
         zIndex: theme.zIndex.drawer,
         cursor: 'pointer',
