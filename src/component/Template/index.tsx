@@ -35,6 +35,12 @@ class Template extends React.PureComponent<Props> {
         activeStep: 0
     };
 
+    componentWillReceiveProps(nextProps: Props) {
+        this.setState({
+            selected: nextProps.selected
+        })
+    }
+
     handleNext = () => {
         this.setState({
             activeStep: this.state.activeStep + 1,

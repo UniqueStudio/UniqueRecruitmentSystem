@@ -8,6 +8,7 @@ const init = {
         color: ''
     },
     modalOn: '',
+    fabOn: -1,
 };
 
 type Action =
@@ -15,7 +16,9 @@ type Action =
     | actions.ToggleSnackbarOff
     | actions.ToggleDrawerOpen
     | actions.ToggleModalOn
-    | actions.ToggleModalOff;
+    | actions.ToggleModalOff
+    | actions.ToggleFabOn
+    | actions.ToggleFabOff;
 
 export interface Components {
     drawerOpen: boolean;
@@ -25,6 +28,7 @@ export interface Components {
         color: string;
     };
     modalOn: string;
+    fabOn: number;
 }
 
 export function components(
@@ -42,6 +46,10 @@ export function components(
             return { ...state, modalOn: action.cid };
         case actions.TOGGLE_MODAL_OFF:
             return { ...state, modalOn: '' };
+        case actions.TOGGLE_FAB_ON:
+            return { ...state, fabOn: action.step };
+        case actions.TOGGLE_FAB_OFF:
+            return { ...state, fabOn: -1 };
     }
     return state;
 }

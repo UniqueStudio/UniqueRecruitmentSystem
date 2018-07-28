@@ -7,6 +7,8 @@ import {
     InupttingComment,
     selectCandidate,
     SelectCandidate,
+    toggleFabOn,
+    ToggleFabOn,
     toggleModalOn,
     ToggleModalOn
 } from '../../action';
@@ -21,18 +23,20 @@ interface OwnProps {
     provided: DraggableProvided
 }
 
-const mapStateToProps = ({ candidates }: StoreState, ownProps: OwnProps) => ({
+const mapStateToProps = ({ candidates, components }: StoreState, ownProps: OwnProps) => ({
     selected: candidates.selected,
-    isLoading: candidates.isLoading.comments
+    isLoading: candidates.isLoading.comments,
+    fabOn: components.fabOn
 });
 
-type DispatchType = Dispatch<SelectCandidate | DeselectCandidate | ToggleModalOn | InupttingComment>
+type DispatchType = Dispatch<SelectCandidate | DeselectCandidate | ToggleModalOn | InupttingComment | ToggleFabOn>
 
 const mapDispatchToProps = (dispatch: DispatchType) => ({
     select: (name: string) => dispatch(selectCandidate(name)),
     deselect: (name: string) => dispatch(deselectCandidate(name)),
     toggleModalOn: (cid: string) => dispatch(toggleModalOn(cid)),
-    changeInputting: (comment: string, evaluation: string) => dispatch(inputtingComment(comment, evaluation))
+    changeInputting: (comment: string, evaluation: string) => dispatch(inputtingComment(comment, evaluation)),
+    toggleFabOn: (step: number) => dispatch(toggleFabOn(step))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Candidate);
