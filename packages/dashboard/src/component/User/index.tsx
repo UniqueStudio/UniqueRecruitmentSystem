@@ -21,14 +21,27 @@ interface Props extends WithStyles {
 }
 
 class User extends React.PureComponent<Props> {
+    state = {
+        info: this.props.info as any
+    };
+
+    constructor(props: Props) {
+        super(props);
+        const { fetchInfo, uid } = this.props;
+        uid.length && fetchInfo(uid);
+    }
+
+    componentWillReceiveProps(nextProps: Props) {
+        if (nextProps.info !== this.props.info) {
+            this.setState({ info: nextProps.info })
+        }
+    }
+
     checkMail = (mail: string) => {
         const re = /^(([^<>()\[\].,;:\s@"]+(\.[^<>()\[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/i;
         return re.test(mail);
     };
 
-    state = {
-        info: this.props.info as any
-    };
     checkPhone = (phone: string) => {
         const re = /^((13[0-9])|(14[57])|(15[0-3,5-9])|166|(17[035678])|(18[0-9])|(19[89]))\d{8}$/i;
         return re.test(phone);
@@ -54,11 +67,6 @@ class User extends React.PureComponent<Props> {
         this.props.submitInfo(this.props.uid, this.state.info);
     };
 
-    constructor(props: Props) {
-        super(props);
-        const { fetchInfo, uid } = this.props;
-        uid.length && fetchInfo(uid);
-    }
 
     handleChange = (name: string) => (event: React.ChangeEvent) => {
         this.setState({
@@ -68,12 +76,6 @@ class User extends React.PureComponent<Props> {
             },
         });
     };
-
-    componentWillReceiveProps(nextProps: Props) {
-        if (nextProps.info !== this.props.info) {
-            this.setState({ info: nextProps.info })
-        }
-    }
 
 
     render() {

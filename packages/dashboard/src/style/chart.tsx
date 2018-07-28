@@ -1,5 +1,6 @@
 import { StyleRulesCallback } from "@material-ui/core/styles/withStyles";
 import { Theme } from "@material-ui/core/styles";
+import { colorToAlpha } from './index';
 
 const styles: StyleRulesCallback = (theme: Theme) => ({
     chart: {
@@ -9,6 +10,9 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
         height: 300,
         verticalAlign: 'top',
         position: 'relative'
+    },
+    expired: {
+        background: colorToAlpha(theme.palette.secondary.light, 0.4),
     },
     newButton: {
         alignSelf: 'center',

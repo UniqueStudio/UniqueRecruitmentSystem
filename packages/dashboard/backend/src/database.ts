@@ -28,7 +28,7 @@ class Database {
             return result.insertedId;
         } catch (e) {
             await client.close();
-            throw e;
+            return e;
         }
     }
 
@@ -40,7 +40,7 @@ class Database {
             return result;
         } catch (e) {
             await client.close();
-            throw e;
+            return e;
         }
     }
 
@@ -51,18 +51,21 @@ class Database {
             await client.close();
         } catch (e) {
             await client.close();
-            throw e;
+            return e;
         }
     }
 
     async update(collection: string, data: object, item: object, isRemove = false) {
         const { db, client } = await this.connect();
         try {
+            if (Object.values(item).includes(undefined)) {
+                return new Error('include undefined value')
+            }
             await db.collection(collection).updateOne(data, { [isRemove ? '$unset' : '$set']: item });
             await client.close();
         } catch (e) {
             await client.close();
-            throw e;
+            return e;
         }
     }
 }
