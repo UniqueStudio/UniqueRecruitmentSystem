@@ -2,6 +2,7 @@ import * as React from 'react';
 import classNames from 'classnames';
 import Button from '../Button';
 import Modal from '../Modal';
+import Submitted from '../Submitted';
 
 class Time extends React.Component {
 
@@ -82,15 +83,10 @@ class Time extends React.Component {
                     </>}
                     {
                         this.state.confirmed !== '' &&
-                        <div className='decided'>
-                            <div className='decidedTitle'>你的决定已提交✓</div>
-                            <div className='decidedDescription'>
-                                {this.state.confirmed === 'abandon'
-                                    ? '我们非常抱歉，同时感到非常惋惜，希望下次招新能够与你相遇，再见！'
-                                    : '你已成功提交面试时间，请等待我们的短信通知！'
-                                }
-                                </div>
-                        </div>
+                        <Submitted title='你的决定已提交' description={this.state.confirmed === 'abandon'
+                            ? '我们非常抱歉，同时感到非常惋惜，希望下次招新能够与你相遇，再见！'
+                            : '你已成功提交面试时间，请等待我们的短信通知！'
+                        } />
                     }
                 </div>
                 <div

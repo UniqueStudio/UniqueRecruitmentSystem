@@ -157,18 +157,19 @@ body {
   }
   position: relative;
   flex: 0 1 27vw;
-  @media screen and (max-width: 1024px) {
+  width: 100%;
+  padding: $spacing * 7 $spacing * 5;
+  @media screen and (max-width: 900px) {
     padding: $spacing * 5 $spacing * 3;
     flex: 0 1 33vw;
   }
-  @media screen and (max-width: 1200px) and (min-width: 1025px) {
+  @media screen and (max-width: 1024px) and (min-width: 901px) {
+    padding: $spacing * 7 $spacing * 5;
+    flex: 0 1 33vw;
+  }
+  @media screen and (max-width: 1280px) and (min-width: 1025px) {
     padding: $spacing * 6 $spacing * 5;
     flex: 0 1 30vw;
-  }
-  @media screen and (max-width: 1280px) and (min-width: 1201px) {
-    padding: $spacing * 6 $spacing * 5;
-    width: 90%;
-    flex: 0 1 27vw;
   }
   @media screen and (max-width: 1440px) and (min-width: 1281px) {
     padding: $spacing * 5 $spacing * 5;
@@ -178,8 +179,6 @@ body {
   @media screen and (max-width: 1600px) and (min-width: 1441px) {
     padding: $spacing * 5 $spacing * 5;
   }
-  width: 100%;
-  padding: $spacing * 7 $spacing * 5;
 }
 
 .form {
@@ -279,12 +278,15 @@ body {
       width: 130px;
     }
     @media screen and (max-width: 1440px) {
-      width: 120px;
+      width: 115px;
     }
     @media screen and (max-width: 1280px) {
       width: 105px;
     }
     @media screen and (max-width: 1024px) {
+      width: 95px;
+    }
+    @media screen and (max-width: 900px) {
       width: 85px;
     }
   }
@@ -300,6 +302,9 @@ body {
       width: 64px;
     }
     @media screen and (max-width: 1024px) {
+      width: 60px;
+    }
+    @media screen and (max-width: 900px) {
       width: 54px;
     }
   }
@@ -427,14 +432,14 @@ body {
 }
 
 .formColumn:first-child {
-  @media screen and (max-width: 1280px) {
+  @media screen and (max-width: 1120px) {
     padding-right: $spacing;
   }
   padding-right: $spacing * 2;
 }
 
 .formColumn:last-child {
-  @media screen and (max-width: 1280px) {
+  @media screen and (max-width: 1120px) {
     padding-left: $spacing;
   }
   padding-left: $spacing * 2;
@@ -442,6 +447,9 @@ body {
 
 .rowItem:first-child {
   margin-bottom: $spacing * 4;
+  @media screen and (max-width: 1440px) {
+    margin-bottom: $spacing * 3;
+  }
 }
 
 .submit {
@@ -781,4 +789,56 @@ body {
   color: $primaryLightLittle;
   font-weight: bold;
   @extend .descriptionFontSize;
+}
+
+.done {
+  height: 3.5rem;
+  @media screen and (max-width: 1600px) {
+    height: 3.3rem;
+  }
+  @media screen and (max-width: 1440px) {
+    height: 3.1rem;
+  }
+  @media screen and (max-width: 1280px) {
+    height: 2.9rem;
+  }
+  @media screen and (max-width: 1024px) {
+    height: 2.7rem;
+  }
+  fill: $primary;
+  vertical-align: text-top;
+}
+
+.snackBar {
+  position: fixed;
+  left: $spacing * 3;
+  bottom: $spacing * 2;
+  padding: $spacing * 2 $spacing * 4;
+  margin-bottom: -70px;
+  background: $secondary;
+  border-radius: 6px;
+  color: white;
+  @extend .descriptionFontSize;
+  font-weight: bold;
+  box-shadow: 0 0 5px $secondaryLight;
+  animation: {
+    duration: 3s;
+    name: pop;
+  };
+}
+
+@keyframes pop {
+  10% {
+    margin-bottom: 0;
+  }
+  90% {
+    margin-bottom: 0;
+  }
+  100% {
+    margin-bottom: -70px;
+  }
+}
+
+.fullHeight {
+  height: 100%;
 }
