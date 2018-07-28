@@ -21,19 +21,44 @@ interface Props extends WithStyles {
 }
 
 class User extends React.PureComponent<Props> {
-    submitChange = () => {
-        if (Object.values(this.state.info).includes('')) {
-            this.props.toggleSnackbar('请完整填写信息', 'warning');
-        } else if (this.state.info === this.props.info) {
-            this.props.toggleSnackbar('你没有做任何修改', 'info');
-        } else {
-            this.props.submitInfo(this.props.uid, this.state.info);
-        }
+    checkMail = (mail: string) => {
+        const re = /^(([^<>()\[\].,;:\s@"]+(\.[^<>()\[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/i;
+        return re.test(mail);
     };
 
     state = {
         info: this.props.info as any
     };
+    checkPhone = (phone: string) => {
+        const re = /^((13[0-9])|(14[57])|(15[0-3,5-9])|166|(17[035678])|(18[0-9])|(19[89]))\d{8}$/i;
+        return re.test(phone);
+    };
+    submitChange = () => {
+        const { info } = this.state;
+        if (Object.values(info).includes('')) {
+            this.props.toggleSnackbar('请完整填写信息', 'warning');
+            return;
+        }
+        if (info === this.props.info) {
+            this.props.toggleSnackbar('你没有做任何修改', 'info');
+            return;
+        }
+        if (!this.checkMail(info.mail)) {
+            this.props.toggleSnackbar('邮箱格式不正确', 'warning');
+            return;
+        }
+        if (!this.checkPhone(info.phone)) {
+            this.props.toggleSnackbar('手机号码格式不正确', 'warning');
+            return;
+        }
+        this.props.submitInfo(this.props.uid, this.state.info);
+    };
+
+    constructor(props: Props) {
+        super(props);
+        const { fetchInfo, uid } = this.props;
+        uid.length && fetchInfo(uid);
+    }
 
     handleChange = (name: string) => (event: React.ChangeEvent) => {
         this.setState({
@@ -44,17 +69,12 @@ class User extends React.PureComponent<Props> {
         });
     };
 
-    constructor(props: Props) {
-        super(props);
-        const { fetchInfo, uid } = this.props;
-        uid.length && fetchInfo(uid);
-    }
-
     componentWillReceiveProps(nextProps: Props) {
         if (nextProps.info !== this.props.info) {
             this.setState({ info: nextProps.info })
         }
     }
+
 
     render() {
         const { classes } = this.props;
