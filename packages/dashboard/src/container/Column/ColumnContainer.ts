@@ -6,7 +6,7 @@ import { moveCandidate, requestCandidate } from '../../action/async';
 
 const mapStateToProps = ({ routerReducer, candidates }: StoreState) => ({
     pathname: (routerReducer.location || { pathname: '' }).pathname,
-    group: candidates.group
+    group: candidates.group,
 });
 
 type DispatchType = Dispatch;

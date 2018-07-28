@@ -79,7 +79,10 @@ export function candidates(
             const candidatesToMap = action.candidates.map(i => new Map(Object.entries(i)));
             return { ...state, candidates: candidatesToMap };
         case actions.ADD_CANDIDATE:
-            newState.candidates[action.candidate['step']].set(action.candidate['_id'], action.candidate as Candidate);
+            if (newState.group === action.candidate['group']) {
+                newState.candidates[action.candidate['step']].set(action.candidate['_id'], action.candidate as Candidate);
+                sessionStorage.setItem('candidates', JSON.stringify(newState.candidates.map(i => mapToObj(i))));
+            }
             return newState;
         case actions.SELECT_CANDIDATE:
             newState.selected = [...new Set(newState.selected.concat(action.cid))];

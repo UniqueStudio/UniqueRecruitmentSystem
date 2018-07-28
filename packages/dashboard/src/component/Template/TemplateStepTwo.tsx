@@ -9,8 +9,6 @@ import { WithStyles, withStyles } from '@material-ui/core/styles';
 import styles from '../../style/template'
 import withRoot from '../../style/withRoot';
 import generateModal from '../../lib/generateModel';
-import { STEP as steps } from '../../lib/const';
-
 
 interface Props extends WithStyles {
     step: string;
@@ -29,7 +27,7 @@ class Step extends React.PureComponent<Props> {
         name: '(默认)',
         title: '8102年秋招(默认)',
         group: `${this.props.group}(默认)`,
-        step: `${steps[+this.props.step]}(默认)`,
+        step: `${this.props.step}(默认)`,
     };
 
     handleAccept = (event: React.ChangeEvent) => {
