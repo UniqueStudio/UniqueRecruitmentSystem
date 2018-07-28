@@ -41,7 +41,7 @@ class Snack extends React.PureComponent<Props> {
                         key='close'
                         onClick={this.handleClose}
                     >
-                        <CloseIcon />
+                        <CloseIcon className={classes.iconButton} />
                     </IconButton>
                 ]}
                 ContentProps={{

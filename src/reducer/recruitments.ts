@@ -6,9 +6,11 @@ const init = {
     isLoading: false,
 };
 
-type Action = actions.SetRecruitments;
+type Action =
+    actions.SetRecruitments
+    | actions.UpdateRecruitment;
 
-interface Data {
+export interface Data {
     group: "web" | "lab" | "ai" | "game" | "android" | "ios" | "design" | "pm";
     total: number;
     steps: number[];
@@ -35,7 +37,7 @@ export function recruitments(state: Recruitments = init, action: Action): Recrui
         case asyncActions.RECRUITMENT.SUCCESS:
             return { ...state, isLoading: false };
         case actions.SET_RECRUITMENTS:
-            return { ...state, recruitments: action.recruitments }
+            return { ...state, recruitments: action.recruitments };
     }
     return state;
 }
