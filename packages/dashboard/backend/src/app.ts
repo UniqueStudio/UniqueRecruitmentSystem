@@ -214,6 +214,7 @@ app.post('/sms', (req, res) => {
             body.candidates.map((i: string) => {
                 if (body.date) {
                     const link = `http://cvs.hustunique.com/form/${formId}/${i}`;
+                    console.log(link);
                     sendSMS('content' + link);
                 } else {
                     sendSMS('content');
