@@ -234,7 +234,7 @@ app.post('/verification', (req, res) => {
 
 app.get('/form/:formId', (req, res) => {
     const formId = req.params.formId;
-    const type = formId.slice(-1);
+    const type = +formId.slice(-1);
     try {
         (async () => {
             if (type === 1) { // interview 1
@@ -248,7 +248,7 @@ app.get('/form/:formId', (req, res) => {
                 const recruitment = (await database.query('recruitments', { _id: new ObjectId(recruitmentId) }))[0];
                 res.send({ type: 'success', time: recruitment.time2 });
             } else {
-                throw new Error('表单不存在！');
+                res.send({ message: '表单不存在！', type: 'warning' });
             }
         })()
     } catch (err) {
