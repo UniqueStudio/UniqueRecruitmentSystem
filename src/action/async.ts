@@ -204,6 +204,28 @@ export const removeComment = (step: number, cid: string, commenter: string) => (
     //     });
 };
 
+export const sendSMS = (content: object) => (dispatch: Dispatch) => {
+    dispatch({ type: CANDIDATE.START });
+    return fetch(`${URL}/sms`, {
+        method: 'POST',
+        body: JSON.stringify(content),
+        headers: { 'content-type': 'application/json' },
+    })
+        .then(resHandler)
+        .then(res => {
+            if (res.type === 'success') {
+                dispatch(actions.toggleSnackbarOn('已成功发送短信', 'success'));
+                dispatch({ type: CANDIDATE.SUCCESS });
+            } else {
+                throw res;
+            }
+        })
+        .catch(err => {
+            dispatch(actions.toggleSnackbarOn(`ERROR: ${err.message}`, err.type || 'danger'));
+            dispatch({ type: CANDIDATE.FAILURE });
+        });
+};
+
 let shouldUpdateRecruitment = false;
 export const RECRUITMENT = actionTypeCreator('RECRUITMENT');
 export const requestRecruitments = () => (dispatch: Dispatch) => {
@@ -242,7 +264,6 @@ export const launchRecruitment = (info: object) => (dispatch: Dispatch) => {
         .then(resHandler)
         .then(res => {
             if (res.type === 'success') {
-                console.log(store.getState());
                 dispatch(actions.toggleSnackbarOn('已成功发起招新！', 'success'));
                 dispatch({ type: RECRUITMENT.SUCCESS });
             } else {

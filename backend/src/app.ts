@@ -10,6 +10,7 @@ const app = express();
 const server = new Server(app);
 const io = socket(server);
 const database = new Database();
+const groups = ["web", "lab", "ai", "game", "android", "ios", "design", "pm"];
 
 const checkMail = (mail: string) => {
     const re = /^(([^<>()\[\].,;:\s@"]+(\.[^<>()\[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/i;
@@ -187,13 +188,72 @@ app.get('/candidates/:group', (req, res) => {
         .catch(err => res.send({ message: err.message, type: 'warning' }));
 });
 
+/* TODO */
+const verifyCode = (code: string) => true;
+const sendSMS = (content: string) => {
+};
 // send sms
 app.post('/sms', (req, res) => {
-
+    const body = req.body;
+    (async () => {
+        const recruitment = (await database.query('recruitments', { title: body.title }))[0];
+        let formId = '';
+        if (body.date) {
+            if (body.step === '笔试流程') {
+                formId = `${recruitment['_id']}${groups.indexOf(body.group)}1`;
+                await database.update('recruitments',
+                    { title: body.title },
+                    { time1: { ...recruitment.time1, [body.group]: body.date } }
+                );
+            } else if (body.step === '熬测流程') {
+                formId = `${recruitment['_id']}2`;
+                await database.update('recruitments', { title: body.title }, { time2: body.date });
+            }
+        }
+        if (verifyCode(body.code)) {
+            body.candidates.map((i: string) => {
+                if (body.date) {
+                    const link = `http://cvs.hustunique.com/form/${formId}/${i}`;
+                    console.log(link);
+                    sendSMS('content' + link);
+                } else {
+                    sendSMS('content');
+                }
+            });
+            res.send({ type: 'success' });
+        } else {
+            res.send({ message: '验证码不正确', type: 'warning' })
+        }
+    })()
 });
 
 // request for verification code
 app.post('/verification', (req, res) => {
+
+});
+
+app.get('/form/:formId', (req, res) => {
+    const formId = req.params.formId;
+    const type = formId.slice(-1);
+    try {
+        (async () => {
+            if (type === 1) { // interview 1
+                const groupId = +formId.slice(-2, -1);
+                const group = groups[groupId];
+                const recruitmentId = formId.slice(0, -2);
+                const recruitment = (await database.query('recruitments', { _id: new ObjectId(recruitmentId) }))[0];
+                res.send({ type: 'success', time: recruitment.time1[group] });
+            } else if (type === 2) { // interview 2
+                const recruitmentId = formId.slice(0, -1);
+                const recruitment = (await database.query('recruitments', { _id: new ObjectId(recruitmentId) }))[0];
+                res.send({ type: 'success', time: recruitment.time2 });
+            } else {
+                throw new Error('表单不存在！');
+            }
+        })()
+    } catch (err) {
+        res.send({ message: err.message, type: 'warning' });
+    }
 
 });
 
@@ -214,7 +274,6 @@ app.get('/recruitment/:title', (req, res) => {
 });
 
 // launch a new recruitment
-const groups = ["web", "lab", "ai", "game", "android", "ios", "design", "pm"];
 app.post('/recruitment', (req, res) => {
     database
         .insert('recruitments', {
