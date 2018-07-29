@@ -48,7 +48,7 @@ type DispatchType =
 const mapDispatchToProps = (dispatch: DispatchType) => ({
     select: (name: string[]) => dispatch(selectCandidate(name)),
     deselect: (name: string[]) => dispatch(deselectCandidate(name)),
-    toggleOn: (info: string) => dispatch(toggleSnackbarOn(info, 'info')),
+    toggleOn: (info: string, color: string = 'info') => dispatch(toggleSnackbarOn(info, color)),
     remove: (cid: string) => removeCandidate(cid)(dispatch),
     toggleModalOn: (cid: string) => dispatch(toggleModalOn(cid)),
     toggleModalOff: () => dispatch(toggleModalOff()),

@@ -189,7 +189,14 @@ app.get('/candidates/:group', (req, res) => {
 
 // send sms
 app.post('/sms', (req, res) => {
+    console.log(req.body);
+    if (req.body.date) {
 
+    }
+    req.body.candidates.map(() => {
+        // send message
+    });
+    res.send({ type: 'success' });
 });
 
 // request for verification code
