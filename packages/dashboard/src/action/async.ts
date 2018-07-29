@@ -214,6 +214,7 @@ export const sendSMS = (content: object) => (dispatch: Dispatch) => {
         .then(resHandler)
         .then(res => {
             if (res.type === 'success') {
+                dispatch(actions.toggleSnackbarOn('已成功发送短信', 'success'));
                 dispatch({ type: CANDIDATE.SUCCESS });
             } else {
                 throw res;
