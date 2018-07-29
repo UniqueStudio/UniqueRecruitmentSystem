@@ -26,7 +26,7 @@ interface Props extends WithStyles {
     select: (cid: string[]) => void;
     deselect: (cid: string[] | string) => void;
     remove: (cid: string) => void;
-    toggleOn: (info: string) => void;
+    toggleOn: (info: string, color?: string) => void;
     toggleModalOn: (cid: string) => void;
     toggleModalOff: () => void;
     changeInputting: (comment: string, evaluation: string) => void;
@@ -219,7 +219,6 @@ class Column extends React.Component<Props> {
                                     toggleOpen={this.toggleOpen('modal')}
                                     selected={selectedCandidatesInfo}
                                     deselect={deselect}
-                                    step={title}
                                     group={group} />
                             </Paper>
                         </div>

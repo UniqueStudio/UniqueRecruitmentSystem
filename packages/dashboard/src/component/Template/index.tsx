@@ -14,7 +14,7 @@ import TemplateStepOne from './TemplateStepOne';
 import TemplateStepTwo from './TemplateStepTwo';
 import TemplateStepThree from './TemplateStepThree';
 
-interface CandidateInfo {
+export interface CandidateInfo {
     cid: string;
     name: string;
     grade: string;
@@ -23,16 +23,28 @@ interface CandidateInfo {
 
 interface Props extends WithStyles {
     group: string;
-    flowStep: string;
+    toggleSnackbar: (info: string, color?: string) => void;
     selected: CandidateInfo[];
     toggleOpen: () => void;
     deselect: (cid: string) => void;
+    sendSMS: (content: object) => void;
 }
 
 class Template extends React.PureComponent<Props> {
+    defaultDate = {
+        date: new Date().toISOString().slice(0, 10),
+        morning: false,
+        afternoon: false,
+        evening: false
+    };
+
     state = {
         selected: this.props.selected,
-        activeStep: 0
+        activeStep: 0,
+        model: 'accept',
+        step: '{{xx流程}}',
+        date: [{ ...this.defaultDate }],
+        code: ''
     };
 
     componentWillReceiveProps(nextProps: Props) {
@@ -42,8 +54,23 @@ class Template extends React.PureComponent<Props> {
     }
 
     handleNext = () => {
+        const { activeStep, step, date, model } = this.state;
+        const { toggleSnackbar } = this.props;
+        if (activeStep === 1) {
+            if (step === '{{xx流程}}') {
+                toggleSnackbar('请选择流程！');
+                return;
+            } else if ((step === '笔试流程' || step === '熬测流程') && model === 'accept') {
+                for (const i of date) {
+                    if (!(i.afternoon || i.morning || i.evening)) {
+                        toggleSnackbar('请选择时间段！');
+                        return;
+                    }
+                }
+            }
+        }
         this.setState({
-            activeStep: this.state.activeStep + 1,
+            activeStep: activeStep + 1,
         });
     };
 
@@ -60,14 +87,77 @@ class Template extends React.PureComponent<Props> {
         this.props.deselect(cid);
     };
 
+    handleChange = (name: string) => (event: React.ChangeEvent) => {
+        this.setState({
+            [name]: event.target['value'],
+        });
+    };
+
+    changeDate = (id: number) => (event: React.ChangeEvent) => {
+        const copiedDate = [...this.state.date];
+        copiedDate[id]['date'] = event.target['value'];
+        this.setState({
+            date: copiedDate
+        })
+    };
+
+    setTime = (id: number) => (event: React.ChangeEvent) => {
+        const time = event.target['value'];
+        const copiedDate = [...this.state.date];
+        copiedDate[id][time] = !copiedDate[id][time];
+        this.setState({
+            date: copiedDate
+        })
+    };
+
+    addDate = () => {
+        this.setState({
+            date: [...this.state.date, { ...this.defaultDate }]
+        })
+    };
+
+    deleteDate = (id: number) => () => {
+        const copiedDate = [...this.state.date];
+        copiedDate.splice(id, 1);
+        this.setState({
+            date: copiedDate
+        })
+    };
+
+    sendSMS = () => {
+        const { selected, model, step, date, code } = this.state;
+        const { toggleSnackbar } = this.props;
+        if (code === '') {
+            toggleSnackbar('未填写验证码！');
+            return;
+        }
+        const content = { candidates: selected.map(i => i.cid), model, step, code };
+        if (step === '笔试流程' || step === '熬测流程') {
+            content['date'] = date;
+        }
+        this.props.sendSMS(content);
+        this.handleNext();
+    };
+
     render() {
-        const { classes, deselect, toggleOpen, flowStep, group } = this.props;
+        const { classes, deselect, toggleOpen, group } = this.props;
         const { activeStep, selected } = this.state;
         const steps = ['发送对象', '消息模板', '确认发送'];
         const stepContent = [
             <TemplateStepOne selected={selected} deselect={deselect} onDelete={this.handleDelete} />,
-            <TemplateStepTwo step={flowStep} group={group} />,
-            <TemplateStepThree/>,
+            <TemplateStepTwo
+                step={this.state.step}
+                model={this.state.model}
+                date={this.state.date}
+                group={group}
+                fns={{
+                    handleChange: this.handleChange,
+                    changeDate: this.changeDate,
+                    setTime: this.setTime,
+                    addDate: this.addDate,
+                    deleteDate: this.deleteDate
+                }} />,
+            <TemplateStepThree onChange={this.handleChange} />,
         ];
 
         return (
@@ -84,11 +174,11 @@ class Template extends React.PureComponent<Props> {
                                             onClick={activeStep ? this.handleBack : toggleOpen}
                                             className={classes.templateItem}
                                         >
-                                            {activeStep ? '上一步': '关闭'}
+                                            {activeStep ? '上一步' : '关闭'}
                                         </Button>
                                         <Button variant="contained"
                                                 color="primary"
-                                                onClick={this.handleNext}
+                                                onClick={activeStep === steps.length - 1 ? this.sendSMS : this.handleNext}
                                                 className={classes.templateItem}
                                                 disabled={selected.length === 0}
                                         >
