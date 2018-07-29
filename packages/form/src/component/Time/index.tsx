@@ -4,7 +4,18 @@ import Button from '../Button';
 import Modal from '../Modal';
 import Submitted from '../Submitted';
 
-class Time extends React.Component {
+interface Time {
+    date: string;
+    morning: boolean;
+    afternoon: boolean;
+    evening: boolean;
+}
+
+interface Props {
+    time: Time[]
+}
+
+class Time extends React.Component<Props> {
 
     state = {
         modal: '',
@@ -44,29 +55,33 @@ class Time extends React.Component {
     };
 
     public render() {
-        return (
+        const { time } = this.props;
+        return time.length !== 0 && (
             <>
                 <div className='timeContainer'>
                     <div className='timeHeader'>
                         <h2 className='subtitle'>面试时间选择</h2>
-                        <h3 className={classNames('description', { 'none': this.state.confirmed })}>请选择以下你有空的全部时间段，一旦确定无法更改。</h3>
+                        <h3 className={classNames('description', { 'none': this.state.confirmed })}>
+                            请选择以下你有空的<em className='emphasize'>全部</em>时间段，一旦确定无法更改。
+                        </h3>
                     </div>
                     {this.state.confirmed === '' && <>
-                        {['9月13日', '9月14日', '9月15日'].map((i, j) =>
+                        {time.map((i, j) =>
                             <div key={j} className='timeContent'>
-                                <Button name={i}
+                                <Button name={`${i.date.split('-')[1]}月${i.date.split('-')[2]}日`}
                                         bgColor='primary'
                                         textColor='white'
                                         className='disabled'
                                 />
-                                {['上午', '下午', '晚上'].map((k, l) =>
-                                    <Button name={k}
-                                            key={l}
-                                            bgColor={this.state.clicked.includes(j * 3 + l) ? 'primaryLight' : 'white'}
-                                            textColor='primary'
-                                            onClick={this.handleSelect(j * 3 + l)}
+                                {['上午', '下午', '晚上'].map((k, l) => {
+                                    const disabled = !i[['morning', 'afternoon', 'evening'][l]];
+                                    return <Button name={k} key={l}
+                                                   bgColor={disabled ? 'primary' : this.state.clicked.includes(j * 3 + l) ? 'primaryLight' : 'white'}
+                                                   textColor={disabled ? 'white' : 'primary'}
+                                                   onClick={disabled ? undefined : this.handleSelect(j * 3 + l)}
+                                                   className={classNames({ disabled: disabled })}
                                     />
-                                )}
+                                })}
                             </div>
                         )}
                         <div className={classNames('submit', 'timeSubmit')}>

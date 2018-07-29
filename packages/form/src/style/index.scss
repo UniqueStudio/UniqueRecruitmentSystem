@@ -164,7 +164,7 @@ body {
     flex: 0 1 33vw;
   }
   @media screen and (max-width: 1024px) and (min-width: 901px) {
-    padding: $spacing * 7 $spacing * 5;
+    padding: $spacing * 5 $spacing * 5;
     flex: 0 1 33vw;
   }
   @media screen and (max-width: 1280px) and (min-width: 1025px) {
@@ -399,7 +399,10 @@ body {
 
 .background_primary {
   background: $primary;
-  border: 0;
+  border: {
+    width: 3px;
+    color: $primary;
+  }
 }
 
 .background_primaryLightLittleMore {
@@ -684,6 +687,10 @@ body {
   color: $primaryLightLittle;
   font-weight: bold;
   @extend .descriptionFontSize
+}
+
+.emphasize {
+  color: $secondaryLight;
 }
 
 .timeContent {
