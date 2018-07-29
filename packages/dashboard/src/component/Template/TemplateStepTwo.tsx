@@ -1,5 +1,11 @@
 import * as React from 'react';
 import classNames from 'classnames';
+import Button from '@material-ui/core/Button';
+import Checkbox from '@material-ui/core/Checkbox';
+import FormControl from '@material-ui/core/FormControl';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import FormGroup from '@material-ui/core/FormGroup';
+import FormLabel from '@material-ui/core/FormLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 import TextField from '@material-ui/core/TextField';
@@ -9,80 +15,150 @@ import { WithStyles, withStyles } from '@material-ui/core/styles';
 import styles from '../../style/template'
 import withRoot from '../../style/withRoot';
 import generateModal from '../../lib/generateModel';
+import { STEP } from '../../lib/const';
 
-interface Props extends WithStyles {
-    step: string;
-    group: string
+interface Date {
+    date: string;
+    morning: boolean;
+    afternoon: boolean;
+    evening: boolean;
 }
 
-const models = {
-    reject: generateModal(false, '{{候选人姓名}}', '{{招新名称}}', '{{组别}}', '{{轮次}}'),
-    accept: generateModal(true, '{{候选人姓名}}', '{{招新名称}}', '{{组别}}', '{{轮次}}'),
-};
+export interface MainInfo extends WithStyles {
+    model: string;
+    step: string;
+    date: Date[];
+}
+
+interface Props extends MainInfo {
+    group: string;
+    fns: {
+        handleChange: (name: string) => (event: React.ChangeEvent) => void;
+        changeDate: (id: number) => (event: React.ChangeEvent) => void;
+        setTime: (id: number) => (event: React.ChangeEvent) => void;
+        addDate: () => void;
+        deleteDate: (id: number) => () => void;
+    };
+}
 
 class Step extends React.PureComponent<Props> {
 
-    state = {
-        model: 'accept',
-        name: '(默认)',
-        title: '8102年秋招(默认)',
-        group: `${this.props.group}(默认)`,
-        step: `${this.props.step}(默认)`,
-    };
-
-    handleAccept = (event: React.ChangeEvent) => {
-        this.setState({ model: event.target['value'] });
-    };
-
-    handleChange = (name: string) => (event: React.ChangeEvent) => {
-        this.setState({
-            [name]: event.target['value'],
-        });
-    };
-
     render() {
-        const { classes } = this.props;
-
+        const { classes, group, model, step, date, fns } = this.props;
+        const { handleChange, changeDate, setTime, addDate, deleteDate } = fns;
         return (
             <>
                 <div className={classNames(classes.templateContent, classes.templateItem)}>
                     <Select
-                        value={this.state.model}
-                        onChange={this.handleAccept}
+                        value={model}
+                        onChange={handleChange('model')}
                     >
                         <MenuItem value='accept'>通过</MenuItem>
                         <MenuItem value='reject'>被刷</MenuItem>
                     </Select>
                     <Typography variant='subheading' className={classes.templateItem}>
-                        {models[this.state.model]}
+                        {generateModal(model === 'accept', '{{候选人姓名}}', '{{招新名称}}', '{{组别}}', step)}
                     </Typography>
                 </div>
                 <div className={classNames(classes.templateContent, classes.templateItem, classes.templateParams)}>
                     <TextField
                         label="候选人姓名"
-                        onChange={this.handleChange("name")}
-                        value={this.state.name}
+                        defaultValue='(默认)'
                         className={classes.templateItem}
+                        InputProps={{
+                            readOnly: true,
+                        } as any}
                     />
                     <TextField
                         label="招新名称"
-                        onChange={this.handleChange("title")}
-                        value={this.state.title}
+                        defaultValue='(默认)'
                         className={classes.templateItem}
+                        InputProps={{
+                            readOnly: true,
+                        } as any}
                     />
                     <TextField
                         label="组别"
-                        onChange={this.handleChange("group")}
-                        value={this.state.group}
+                        defaultValue={`${group}(默认)`}
                         className={classes.templateItem}
+                        InputProps={{
+                            readOnly: true,
+                        } as any}
                     />
                     <TextField
+                        select
                         label="轮次"
-                        onChange={this.handleChange("step")}
-                        value={this.state.step}
                         className={classes.templateItem}
-                    />
+                        value={step}
+                        onChange={handleChange("step")}
+                        margin="normal"
+                    >
+                        {STEP.map((i, j) => (
+                            <MenuItem key={j} value={i}>
+                                {i}
+                            </MenuItem>
+                        ))}
+                    </TextField>
                 </div>
+                {(step === '笔试流程' || step === '熬测流程') && model === 'accept' &&
+                <div
+                    className={classNames(classes.templateContent, classes.templateItem, classes.templateParams, classes.templateColumn)}>
+                    {date.map((i, j) => (
+                        <div key={j} className={classes.dateSelect}>
+                            <TextField
+                                label="日期"
+                                type="date"
+                                defaultValue={date[j].date}
+                                InputLabelProps={{
+                                    shrink: true,
+                                }}
+                                className={classes.templateItem}
+                                onChange={changeDate(j)}
+                            />
+                            <FormControl component="fieldset">
+                                <FormLabel component="legend">{date[j].date}</FormLabel>
+                                <FormGroup classes={{
+                                    root: classes.formGroup
+                                }}>
+                                    <FormControlLabel
+                                        control={
+                                            <Checkbox
+                                                checked={date[j].morning}
+                                                onChange={setTime(j)}
+                                                value="morning"
+                                            />
+                                        }
+                                        label="上午" />
+                                    <FormControlLabel
+                                        control={
+                                            <Checkbox
+                                                checked={date[j].afternoon}
+                                                onChange={setTime(j)}
+                                                value="afternoon"
+                                            />
+                                        }
+                                        label="下午" />
+                                    <FormControlLabel
+                                        control={
+                                            <Checkbox
+                                                checked={date[j].evening}
+                                                onChange={setTime(j)}
+                                                value="evening"
+                                            />
+                                        }
+                                        label="晚上" />
+                                </FormGroup>
+                            </FormControl>
+                            <Button
+                                color='primary'
+                                variant='contained'
+                                onClick={j === date.length - 1 ? addDate : deleteDate(j)}
+                            >{
+                                j === date.length - 1 ? '增加' : '删除'
+                            }</Button>
+                        </div>
+                    ))}
+                </div>}
             </>
         );
     }

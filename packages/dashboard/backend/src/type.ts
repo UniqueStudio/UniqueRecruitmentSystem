@@ -35,6 +35,11 @@ export interface Recruitment {
     begin: number;
     end: number;
     total: number;
+    time2: object[];
+    time1: {
+        web: object[];
+        // etc
+    }
     data: Data[];
 }
 

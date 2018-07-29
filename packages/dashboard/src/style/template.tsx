@@ -7,6 +7,7 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
             margin: theme.spacing.unit
         },
         margin: theme.spacing.unit * 2,
+        overflowY: 'auto'
     },
     stepper: {
         [theme.breakpoints.down("xs")]: {
@@ -25,10 +26,20 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
         },
         margin: theme.spacing.unit,
     },
+    templateColumn: {
+        flexDirection: 'column'
+    },
     templateEnd: {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between'
+    },
+    formGroup: {
+        flexDirection: 'row'
+    },
+    dateSelect: {
+        display: 'flex',
+        alignItems: 'center'
     }
 });
 
