@@ -5,7 +5,6 @@ import Step from '@material-ui/core/Step';
 import StepContent from '@material-ui/core/StepContent';
 import StepLabel from '@material-ui/core/StepLabel';
 import Stepper from '@material-ui/core/Stepper';
-import Typography from '@material-ui/core/Typography';
 import { WithStyles, withStyles } from '@material-ui/core/styles';
 
 import styles from '../../style/template'
@@ -126,15 +125,25 @@ class Template extends React.PureComponent<Props> {
 
     sendSMS = () => {
         const { selected, model, step, date, code } = this.state;
-        const { toggleSnackbar } = this.props;
+        const { toggleSnackbar, group } = this.props;
         if (code === '') {
             toggleSnackbar('未填写验证码！');
             return;
         }
-        const content = { candidates: selected.map(i => i.cid), model, step, code };
-        if (step === '笔试流程' || step === '熬测流程') {
+        const content = {
+            candidates: selected.map(i => i.cid),
+            model,
+            step,
+            code,
+            group: group.toLowerCase(),
+            title: '2018A'
+        };
+        if ((step === '笔试流程' || step === '熬测流程') && model === 'accept') {
             content['date'] = date;
         }
+        this.setState({
+            code: ''
+        });
         this.props.sendSMS(content);
         this.handleNext();
     };
@@ -192,7 +201,7 @@ class Template extends React.PureComponent<Props> {
                 </Stepper>
                 {activeStep === steps.length && (
                     <Paper square elevation={0} className={classes.templateEnd}>
-                        <Typography variant='title'>已成功发送短信!</Typography>
+                        <Button onClick={this.handleBack} className={classes.templateItem}>上一步</Button>
                         <Button variant="contained" color="primary" onClick={toggleOpen}
                                 className={classes.templateItem}>关闭</Button>
                     </Paper>
