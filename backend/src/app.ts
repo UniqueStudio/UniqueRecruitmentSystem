@@ -216,12 +216,14 @@ app.get('/candidates/:cid/resume', (req, res) => {
         .query('candidates', { _id: new ObjectId(req.params.cid) })
         .then(data => {
             if (!data[0].resume) {
-                res.send({ data: '简历不存在！', type: 'warning' });
+                res.status(404).send({ message: '简历不存在！', type: 'warning' });
             } else {
-                res.sendFile(data[0].resume);
+                res.set({
+                    'Content-Disposition': `attachment; filename="${data[0].resume.replace(/^\/www\/resumes\/\w+\/\w+\//, '')}"`,
+                }).sendFile(data[0].resume);
             }
         })
-        .catch(err => res.send({ message: err.message, type: 'warning' }));
+        .catch(err => res.status(500).send({ message: err.message, type: 'warning' }));
 });
 
 /* TODO */
