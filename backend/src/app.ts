@@ -7,7 +7,18 @@ import Database from './database';
 import { ObjectId } from 'mongodb';
 import { Candidate } from './type';
 
-const upload = multer({ dest: './resumes/' });
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        console.log(req);
+        cb(null, `/www/resumes/`)
+    },
+    filename: function (req, file, cb) {
+        console.log(req);
+        cb(null, file.fieldname + '-' + Date.now())
+    }
+});
+
+const upload = multer({ storage: storage });
 const app = express();
 const server = new Server(app);
 const io = socket(server);
@@ -150,7 +161,7 @@ app.post('/candidates', upload.single('resume'), (req, res) => {
     //             data,
     //             total: recruitment['total'] ? recruitment['total'] + 1 : 1
     //         });
-    //         res.send({ type: 'success' });
+    res.send({ type: 'success' });
     //         const candidateResult = await database.query('candidates', { _id: new ObjectId(cid) });
     //         io.emit('addCandidate', candidateResult[0]);
     //         io.emit('updateRecruitment');
