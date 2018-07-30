@@ -8,31 +8,24 @@ import Database from './database';
 import { ObjectId } from 'mongodb';
 import { Candidate } from './type';
 
-const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        const candidateInfo = req['body'];
-        const parentDir = `/www/resumes/${candidateInfo.title}`;
-        const childDir = `${parentDir}/${candidateInfo.group}`;
-        if (!fs.existsSync(parentDir)) {
-            fs.mkdirSync(parentDir);
-        }
-        if (!fs.existsSync(childDir)) {
-            fs.mkdirSync(childDir);
-        }
-        cb(null, `${childDir}/`)
-    },
-    filename: function (req, file, cb) {
-        const candidateInfo = req['body'];
-        cb(null, `${candidateInfo.name} - ${file.originalname}`)
-    }
-});
-
-const upload = multer({ storage: storage, limits: { fileSize: 104857600 } });
 const app = express();
 const server = new Server(app);
 const io = socket(server);
 const database = new Database();
 const groups = ["web", "lab", "ai", "game", "android", "ios", "design", "pm"];
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        const candidateInfo = req['body'];
+        const parentDir = `/www/resumes/${candidateInfo.title}`;
+        const childDir = `${parentDir}/${candidateInfo.group}`;
+        if (!fs.existsSync(parentDir)) fs.mkdirSync(parentDir);
+        if (!fs.existsSync(childDir)) fs.mkdirSync(childDir);
+        cb(null, `${childDir}/`);
+    },
+    filename: (req, file, cb) => cb(null, `${req['body'].name} - ${file.originalname}`)
+});
+const upload = multer({ storage: storage, limits: { fileSize: 104857600 } });
+
 
 const checkMail = (mail: string) => {
     const re = /^(([^<>()\[\].,;:\s@"]+(\.[^<>()\[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/i;
@@ -43,7 +36,6 @@ const checkPhone = (phone: string) => {
     const re = /^((13[0-9])|(14[57])|(15[0-3,5-9])|166|(17[035678])|(18[0-9])|(19[89]))\d{8}$/i;
     return re.test(phone);
 };
-
 
 app.use(bodyParser.json({
     limit: '1mb'
@@ -68,8 +60,8 @@ app.use((req, res, next) => {
 
 // login temp TODO
 app.post('/user', (req, res) => {
-    try {
-        (async () => {
+    (async () => {
+        try {
             const user = await database.query('users', { username: req.body.username });
             let uid;
             if (!user.length) {
@@ -78,10 +70,10 @@ app.post('/user', (req, res) => {
                 uid = user[0]['_id'];
             }
             res.send({ uid, type: 'success' });
-        })()
-    } catch (err) {
-        res.send({ message: err.message, type: 'warning' });
-    }
+        } catch (err) {
+            res.send({ message: err.message, type: 'warning' });
+        }
+    })()
 });
 
 // get user info
@@ -95,16 +87,19 @@ app.get('/user/:uid', (req, res) => {
 // change user info
 app.put('/user/:uid', (req, res) => {
     const body = req.body;
-    try {
-        (async () => {
+    (async () => {
+        try {
             if (Object.values(body).includes('')) {
-                throw new Error('请完整填写信息!')
+                res.send({ message: '请完整填写信息!', type: 'warning' });
+                return;
             }
             if (!checkMail(body.mail)) {
-                throw new Error('邮箱格式不正确!')
+                res.send({ message: '邮箱格式不正确!', type: 'warning' });
+                return;
             }
             if (!checkPhone(body.phone)) {
-                throw new Error('手机号码格式不正确!')
+                res.send({ message: '手机号码格式不正确!', type: 'warning' });
+                return;
             }
             await database.update('users', { _id: new ObjectId(req.params.uid) }, {
                 username: body.username,
@@ -117,25 +112,29 @@ app.put('/user/:uid', (req, res) => {
                 group: body.group,
             });
             res.send({ type: 'success' });
-        })()
-    } catch (err) {
-        res.send({ message: err.message, type: 'warning' });
-    }
+        } catch (err) {
+            res.send({ message: err.message, type: 'danger' });
+        }
+    })()
+
 });
 
 // add new candidate
 app.post('/candidates', upload.single('resume'), (req, res) => {
     const body = req.body;
-    try {
-        (async () => {
+    (async () => {
+        try {
             if (Object.values(body).includes('')) {
-                throw new Error('请完整填写表单!')
+                res.send({ message: '请完整填写表单!', type: 'warning' });
+                return;
             }
             if (!checkMail(body.mail)) {
-                throw new Error('邮箱格式不正确!')
+                res.send({ message: '邮箱格式不正确!', type: 'warning' });
+                return;
             }
             if (!checkPhone(body.phone)) {
-                throw new Error('手机号码格式不正确!')
+                res.send({ message: '手机号码格式不正确!', type: 'warning' });
+                return;
             }
             const cid = await database.insert('candidates', {
                 name: body.name,
@@ -154,7 +153,10 @@ app.post('/candidates', upload.single('resume'), (req, res) => {
                 resume: `/www/resumes/${body.title}/${body.group}/${body.name} - ${req.file.originalname}`
             });
             const recruitment = (await database.query('recruitments', { title: body.title }))[0];
-            if (!recruitment) throw new Error('当前招新不存在!');
+            if (!recruitment) {
+                res.send({ message: '当前招新不存在!', type: 'warning' });
+                return;
+            }
             const data = recruitment['data'].map((i: object) => {
                 if (i['group'] === body.group) {
                     if (i['total'] === undefined) i['total'] = 0;
@@ -168,14 +170,14 @@ app.post('/candidates', upload.single('resume'), (req, res) => {
                 data,
                 total: recruitment['total'] ? recruitment['total'] + 1 : 1
             });
-    res.send({ type: 'success' });
+            res.send({ type: 'success' });
             const candidateResult = await database.query('candidates', { _id: new ObjectId(cid) });
             io.emit('addCandidate', candidateResult[0]);
             io.emit('updateRecruitment');
-        })()
-    } catch (err) {
-        res.send({ message: err.message, type: 'warning' })
-    }
+        } catch (err) {
+            res.send({ message: err.message, type: 'danger' })
+        }
+    })()
 });
 
 // set interview time
@@ -183,7 +185,7 @@ app.put('/candidates/:cid', (req, res) => {
     database
         .update('candidates', { _id: new ObjectId(req.params.cid) }, req.body.patch)
         .then(() => res.send({ type: 'success' }))
-        .catch(err => res.send({ message: err.message, type: 'warning' }));
+        .catch(err => res.send({ message: err.message, type: 'danger' }));
 });
 
 // get all candidates
@@ -195,7 +197,7 @@ app.get('/candidates', (req, res) => {
             data.map((i: Candidate) => formatted[i.step][`${i._id}`] = { ...i, resume: '' }); // hide resume path
             res.send({ data: formatted, type: 'success' });
         })
-        .catch(err => res.send({ message: err.message, type: 'warning' }));
+        .catch(err => res.send({ message: err.message, type: 'danger' }));
 });
 
 // get candidates in certain group
@@ -207,7 +209,7 @@ app.get('/candidates/:group', (req, res) => {
             data.map((i: Candidate) => formatted[i.step][`${i._id}`] = i);
             res.send({ data: formatted, type: 'success' })
         })
-        .catch(err => res.send({ message: err.message, type: 'warning' }));
+        .catch(err => res.send({ message: err.message, type: 'danger' }));
 });
 
 // get resume of a candidate
@@ -225,7 +227,7 @@ app.get('/candidates/:cid/resume', (req, res) => {
                 }).sendFile(data[0].resume);
             }
         })
-        .catch(err => res.status(500).send({ message: err.message, type: 'warning' }));
+        .catch(err => res.status(500).send({ message: err.message, type: 'danger' }));
 });
 
 /* TODO */
@@ -236,33 +238,37 @@ const sendSMS = (content: string) => {
 app.post('/sms', (req, res) => {
     const body = req.body;
     (async () => {
-        const recruitment = (await database.query('recruitments', { title: body.title }))[0];
-        let formId = '';
-        if (body.date) {
-            if (body.step === '笔试流程') {
-                formId = `${recruitment['_id']}${groups.indexOf(body.group)}1`;
-                await database.update('recruitments',
-                    { title: body.title },
-                    { time1: { ...recruitment.time1, [body.group]: body.date } }
-                );
-            } else if (body.step === '熬测流程') {
-                formId = `${recruitment['_id']}2`;
-                await database.update('recruitments', { title: body.title }, { time2: body.date });
-            }
-        }
-        if (verifyCode(body.code)) {
-            body.candidates.map((i: string) => {
-                if (body.date) {
-                    const link = `http://cvs.hustunique.com/form/${formId}/${i}`;
-                    console.log(link);
-                    sendSMS('content' + link);
-                } else {
-                    sendSMS('content');
+        try {
+            const recruitment = (await database.query('recruitments', { title: body.title }))[0];
+            let formId = '';
+            if (body.date) {
+                if (body.step === '笔试流程') {
+                    formId = `${recruitment['_id']}${groups.indexOf(body.group)}1`;
+                    await database.update('recruitments',
+                        { title: body.title },
+                        { time1: { ...recruitment.time1, [body.group]: body.date } }
+                    );
+                } else if (body.step === '熬测流程') {
+                    formId = `${recruitment['_id']}2`;
+                    await database.update('recruitments', { title: body.title }, { time2: body.date });
                 }
-            });
-            res.send({ type: 'success' });
-        } else {
-            res.send({ message: '验证码不正确', type: 'warning' })
+            }
+            if (verifyCode(body.code)) {
+                body.candidates.map((i: string) => {
+                    if (body.date) {
+                        const link = `http://cvs.hustunique.com/form/${formId}/${i}`;
+                        console.log(link);
+                        sendSMS('content' + link);
+                    } else {
+                        sendSMS('content');
+                    }
+                });
+                res.send({ type: 'success' });
+            } else {
+                res.send({ message: '验证码不正确', type: 'warning' })
+            }
+        } catch (err) {
+            res.send({ message: err.message, type: 'danger' })
         }
     })()
 });
@@ -275,8 +281,8 @@ app.post('/verification', (req, res) => {
 app.get('/form/:formId', (req, res) => {
     const formId = req.params.formId;
     const type = +formId.slice(-1);
-    try {
-        (async () => {
+    (async () => {
+        try {
             if (type === 1) { // interview 1
                 const groupId = +formId.slice(-2, -1);
                 const group = groups[groupId];
@@ -290,11 +296,10 @@ app.get('/form/:formId', (req, res) => {
             } else {
                 res.send({ message: '表单不存在！', type: 'warning' });
             }
-        })()
-    } catch (err) {
-        res.send({ message: err.message, type: 'warning' });
-    }
-
+        } catch (err) {
+            res.send({ message: err.message, type: 'danger' });
+        }
+    })()
 });
 
 // get all history recruitments
@@ -302,7 +307,7 @@ app.get('/recruitment', (req, res) => {
     database
         .query('recruitments', {})
         .then(data => res.send({ data: data, type: 'success' }))
-        .catch(err => res.send({ message: err.message, type: 'warning' }));
+        .catch(err => res.send({ message: err.message, type: 'danger' }));
 });
 
 // get a certain recruitment
@@ -310,7 +315,7 @@ app.get('/recruitment/:title', (req, res) => {
     database
         .query('recruitments', { title: req.params.title })
         .then(data => res.send({ data: data[0], type: 'success' }))
-        .catch(err => res.send({ message: err.message, type: 'warning' }));
+        .catch(err => res.send({ message: err.message, type: 'danger' }));
 });
 
 // launch a new recruitment
@@ -327,7 +332,7 @@ app.post('/recruitment', (req, res) => {
             res.send({ type: 'success' });
             io.emit('updateRecruitment');
         })
-        .catch(err => res.send({ message: err.message, type: 'warning' }));
+        .catch(err => res.send({ message: err.message, type: 'danger' }));
 });
 
 
@@ -335,17 +340,21 @@ app.post('/recruitment', (req, res) => {
 let processing: string[] = []; // deal with conflicts
 const onMoveCandidate = (socket: Socket) => (cid: string, from: number, to: number) => {
     (async () => {
-        if (!processing.includes(cid)) {
-            processing.push(cid);
-            database.update('candidates', { _id: new ObjectId(cid) }, { step: to })
-                .then(() => {
-                    socket.broadcast.emit('moveCandidate', cid, from, to);
-                    socket.emit('moveCandidateSuccess');
-                    processing = processing.filter(i => i !== cid);
-                })
-                .catch(err => socket.emit('moveCandidateError', err.message, 'danger', { cid, from, to }));
-        } else {
-            socket.emit('moveCandidateError', '候选人已被拖动', 'warning', { cid, from, to });
+        try {
+            if (!processing.includes(cid)) {
+                processing.push(cid);
+                database.update('candidates', { _id: new ObjectId(cid) }, { step: to })
+                    .then(() => {
+                        socket.broadcast.emit('moveCandidate', cid, from, to);
+                        socket.emit('moveCandidateSuccess');
+                        processing = processing.filter(i => i !== cid);
+                    })
+                    .catch(err => socket.emit('moveCandidateError', err.message, 'danger', { cid, from, to }));
+            } else {
+                socket.emit('moveCandidateError', '候选人已被拖动', 'warning', { cid, from, to });
+            }
+        } catch (err) {
+            socket.emit('moveCandidateError', err.message, 'danger');
         }
     })();
     (async () => {
@@ -396,7 +405,7 @@ const onAddComment = (socket: Socket) => (step: number, cid: string, uid: string
     database
         .update('candidates', { _id: new ObjectId(cid) }, { ['comments.' + uid]: comment })
         .then(() => io.emit('addComment', step, cid, uid, comment))
-        .catch(err => socket.emit('addCommentError', err.message, 'warning'));
+        .catch(err => socket.emit('addCommentError', err.message, 'danger'));
 };
 
 // delete comment on a certain candidate
@@ -404,7 +413,7 @@ const onRemoveComment = (socket: Socket) => (step: number, cid: string, uid: str
     database
         .update('candidates', { _id: new ObjectId(cid) }, { [`comments.${uid}`]: '' }, true)
         .then(() => io.emit('removeComment', step, cid, uid))
-        .catch(err => socket.emit('removeCommentError', err.message, 'warning'));
+        .catch(err => socket.emit('removeCommentError', err.message, 'danger'));
 };
 
 io.on('connection', (socket) => {
