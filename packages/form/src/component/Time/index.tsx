@@ -3,24 +3,55 @@ import classNames from 'classnames';
 import Button from '../Button';
 import Modal from '../Modal';
 import Submitted from '../Submitted';
+import SnackBar from '../SnackBar';
 
-interface Time {
+interface Date {
     date: string;
     morning: boolean;
     afternoon: boolean;
     evening: boolean;
 }
 
-interface Props {
-    time: Time[]
-}
+class Time extends React.Component {
 
-class Time extends React.Component<Props> {
+    constructor(props: {}) {
+        super(props);
+        const params = window.location.pathname.split('/').splice(1);
+        const cid = params[1];
+        const formId = params[0];
+        fetch(`http://39.108.175.151:5000/form/${formId}`)
+            .then(res => {
+                try {
+                    return res.json();
+                } catch (err) {
+                    throw new Error()
+                }
+            })
+            .then(res => {
+                if (res.type === 'success') {
+                    this.setState({
+                        time: res.time,
+                        step: formId[formId.length - 1],
+                        cid: cid
+                    })
+                } else throw res;
+            })
+            .catch(() => this.setState({
+                snackBarOn: true,
+                content: '获取表单出了问题，请尝试重新加载'
+            }));
+    }
+
 
     state = {
         modal: '',
         clicked: [] as number[],
-        confirmed: ''
+        confirmed: '',
+        content: '',
+        snackBarOn: false,
+        cid: '',
+        step: '',
+        time: [] as Date[]
     };
 
     handleClick = (action: string) => () => {
@@ -42,20 +73,54 @@ class Time extends React.Component<Props> {
     };
 
     handleConfirm = () => (type: string) => {
-        this.setState({
-            modal: '',
-            confirmed: type
-        })
+        const time = this.state.time.map(i => ({ date: i.date }));
+        this.state.clicked.map(i => {
+            const int = Math.floor(i / 3);
+            const res = i - int * 3;
+            time[int][['morning', 'afternoon', 'evening'][res]] = true;
+        });
+        fetch(`http://39.108.175.151:5000/candidates/${this.state.cid}`, {
+                method: 'PUT',
+                headers: { 'content-type': 'application/json' },
+                body: JSON.stringify({
+                    patch: this.state.modal === 'abandon'
+                        ? { abandon: true }
+                        : this.state.step === '1'
+                            ? { time1: time }
+                            : { time2: time }
+                })
+            }
+        )
+            .then(res => res.json())
+            .then(res => {
+                if (res.type === 'success') {
+                    this.setState({
+                        modal: '',
+                        confirmed: type
+                    })
+                } else throw res;
+            })
+            .catch(() => this.setState({
+                snackBarOn: true,
+                content: '提交出现了问题，请尝试重新提交'
+            }));
     };
 
     handleDeny = () => {
         this.setState({
             modal: ''
+        });
+    };
+
+    handleClose = () => {
+        this.setState({
+            snackBarOn: false,
+            content: ''
         })
     };
 
     public render() {
-        const { time } = this.props;
+        const { time } = this.state;
         return time.length !== 0 && (
             <>
                 <div className='timeContainer'>
@@ -78,7 +143,7 @@ class Time extends React.Component<Props> {
                                     return <Button name={k} key={l}
                                                    bgColor={disabled ? 'primary' : this.state.clicked.includes(j * 3 + l) ? 'primaryLight' : 'white'}
                                                    textColor={disabled ? 'white' : 'primary'}
-                                                   onClick={disabled ? undefined : this.handleSelect(j * 3 + l)}
+                                                   onClick={(disabled || this.state.modal) ? undefined : this.handleSelect(j * 3 + l)}
                                                    className={classNames({ disabled: disabled })}
                                     />
                                 })}
@@ -93,7 +158,9 @@ class Time extends React.Component<Props> {
                                     onClick={this.handleClick('abandon')}
                             />
                             <Button name='提交' bgColor='secondary' textColor='white'
-                                    onClick={this.handleClick('submit')} />
+                                    onClick={this.state.clicked.length ? this.handleClick('submit') : undefined}
+                                    className={classNames({ 'disabled': this.state.clicked.length === 0 })}
+                            />
                         </div>
                     </>}
                     {
@@ -106,6 +173,7 @@ class Time extends React.Component<Props> {
                 </div>
                 <div
                     className={classNames('layer', { none: this.state.modal === '' }, this.state.modal === 'submit' ? 'layerSecondary' : 'layerPrimary')} />
+                {this.state.snackBarOn && <SnackBar content={this.state.content} onClose={this.handleClose} />}
             </>
         );
     }

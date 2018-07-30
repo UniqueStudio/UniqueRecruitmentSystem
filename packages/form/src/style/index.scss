@@ -379,7 +379,6 @@ body {
   color: white;
 }
 
-
 .text_secondary {
   color: $secondary;
 }
@@ -560,6 +559,22 @@ body {
   transition: transform 0.2s;
 }
 
+.contentPadding {
+  @media screen and (max-width: 1600px) {
+    padding: 15px 19px;
+  }
+  @media screen and (max-width: 1440px) {
+    padding: 12px 16px;
+  }
+  @media screen and (max-width: 1120px) {
+    padding: 9px 13px;
+  }
+  @media screen and (max-width: 1024px) {
+    padding: 8px 12px;
+  }
+  padding: 16px 20px;
+}
+
 .selectMenu {
   position: absolute;
   display: none;
@@ -575,19 +590,7 @@ body {
   div {
     text-align: center;
     color: $primary;
-    @media screen and (max-width: 1600px) {
-      padding: 15px 19px;
-    }
-    @media screen and (max-width: 1440px) {
-      padding: 12px 16px;
-    }
-    @media screen and (max-width: 1120px) {
-      padding: 9px 13px;
-    }
-    @media screen and (max-width: 1024px) {
-      padding: 8px 12px;
-    }
-    padding: 16px 20px;
+    @extend .contentPadding;
     @extend .fontSize;
     &:hover {
       background: #C5E5FC;
@@ -831,7 +834,8 @@ body {
   animation: {
     duration: 3s;
     name: pop;
-  };
+  }
+;
 }
 
 @keyframes pop {
@@ -848,4 +852,9 @@ body {
 
 .fullHeight {
   height: 100%;
+}
+
+.fileButton {
+  font-weight: bold;
+  display: block;
 }

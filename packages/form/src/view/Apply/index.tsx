@@ -5,19 +5,6 @@ import Form from '../../component/Form';
 import Time from '../../component/Time';
 
 class Container extends React.Component {
-    constructor(props: {}) {
-        super(props);
-        // test form
-        fetch('http://39.108.175.151:5000/form/5b5b1e1eb95a8219c85dd86e01')
-            .then(res => res.json())
-            .then(res => this.setState({
-                time: res.time
-            }));
-    }
-
-    state = {
-        time: []
-    };
 
     public render() {
         const params = window.location.pathname.split('/').splice(1);
@@ -31,7 +18,7 @@ class Container extends React.Component {
                 <div className='center'>
                     <img src={header} className='header' />
                     <h1 className='title'>Unique Studio - 秋季招新</h1>
-                        {params.length === 2 ? <Time time={this.state.time}/> : <Form />}
+                        {params.length === 2 ? <Time /> : <Form />}
                 </div>
                 <div className='background' id='bgRight' />
             </div>
