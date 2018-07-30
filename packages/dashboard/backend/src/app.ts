@@ -27,7 +27,7 @@ const storage = multer.diskStorage({
     }
 });
 
-const upload = multer({ storage: storage, limits: { fileSize: 10485760 } });
+const upload = multer({ storage: storage, limits: { fileSize: 104857600 } });
 const app = express();
 const server = new Server(app);
 const io = socket(server);
@@ -215,7 +215,11 @@ app.get('/candidates/:cid/resume', (req, res) => {
     database
         .query('candidates', { _id: new ObjectId(req.params.cid) })
         .then(data => {
-            res.send({ data: data[0].resume, type: 'success' });
+            if (!data[0].resume) {
+                res.send({ data: '简历不存在！', type: 'warning' });
+            } else {
+                res.sendFile(data[0].resume);
+            }
         })
         .catch(err => res.send({ message: err.message, type: 'warning' }));
 });

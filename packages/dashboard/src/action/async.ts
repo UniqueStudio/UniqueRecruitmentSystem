@@ -119,10 +119,13 @@ export const requestCandidate = (group: string) => (dispatch: Dispatch) => {
 export const requestResume = (cid: string) => (dispatch: Dispatch) => {
     dispatch({ type: CANDIDATE.START });
     return fetch(`${URL}/candidates/${cid}/resume`)
-        .then(resHandler)
+        .then(res => {
+            console.log(res);
+            return res.json();
+        })
         .then(res => {
             if (res.type === 'success') {
-                console.log(actions.setCandidates(res.data));
+                console.log(res.data);
                 dispatch({ type: CANDIDATE.SUCCESS });
             } else throw res;
         })
