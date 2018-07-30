@@ -9,15 +9,16 @@ import { Candidate } from './type';
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-        console.log(req['body']);
-        cb(null, `/www/resumes/`)
+        const candidateInfo = req['body'];
+        cb(null, `/www/resumes/${candidateInfo.title}/${candidateInfo.group}`)
     },
     filename: function (req, file, cb) {
-        cb(null, file.fieldname + '-' + Date.now())
+        const candidateInfo = req['body'];
+        cb(null, `${candidateInfo.name} - ${file.originalname}`)
     }
 });
 
-const upload = multer({ storage: storage });
+const upload = multer({ storage: storage, limits: { fileSize: 10485760 } });
 const app = express();
 const server = new Server(app);
 const io = socket(server);
@@ -115,59 +116,57 @@ app.put('/user/:uid', (req, res) => {
 
 // add new candidate
 app.post('/candidates', upload.single('resume'), (req, res) => {
-    //const body = req.body;
-    console.log(req.body);
-    console.log(req.file);
-    // try {
-    //     (async () => {
-    //         if (Object.values(body).includes('')) {
-    //             throw new Error('请完整填写表单!')
-    //         }
-    //         if (!checkMail(body.mail)) {
-    //             throw new Error('邮箱格式不正确!')
-    //         }
-    //         if (!checkPhone(body.phone)) {
-    //             throw new Error('手机号码格式不正确!')
-    //         }
-    //         const cid = await database.insert('candidates', {
-    //             name: body.name,
-    //             grade: body.grade,
-    //             institute: body.institute,
-    //             major: body.major,
-    //             score: body.score,
-    //             mail: body.mail,
-    //             phone: body.phone,
-    //             group: body.group,
-    //             sex: body.sex,
-    //             step: 0,
-    //             intro: body.intro,
-    //             title: body.title,
-    //             comments: {}
-    //             // resume: body.resume
-    //         });
-    //         const recruitment = (await database.query('recruitments', { title: body.title }))[0];
-    //         if (!recruitment) throw new Error('当前招新不存在!');
-    //         const data = recruitment['data'].map((i: object) => {
-    //             if (i['group'] === body.group) {
-    //                 if (i['total'] === undefined) i['total'] = 0;
-    //                 i['total'] += 1;
-    //                 if (!i['steps']) i['steps'] = [0, 0, 0, 0, 0, 0];
-    //                 i['steps'][0] += 1;
-    //             }
-    //             return i;
-    //         });
-    //         await database.update('recruitments', { title: body.title }, {
-    //             data,
-    //             total: recruitment['total'] ? recruitment['total'] + 1 : 1
-    //         });
+    const body = req.body;
+    try {
+        (async () => {
+            if (Object.values(body).includes('')) {
+                throw new Error('请完整填写表单!')
+            }
+            if (!checkMail(body.mail)) {
+                throw new Error('邮箱格式不正确!')
+            }
+            if (!checkPhone(body.phone)) {
+                throw new Error('手机号码格式不正确!')
+            }
+            const cid = await database.insert('candidates', {
+                name: body.name,
+                grade: body.grade,
+                institute: body.institute,
+                major: body.major,
+                score: body.score,
+                mail: body.mail,
+                phone: body.phone,
+                group: body.group,
+                sex: body.sex,
+                step: 0,
+                intro: body.intro,
+                title: body.title,
+                comments: {}
+                // resume: body.resume
+            });
+            const recruitment = (await database.query('recruitments', { title: body.title }))[0];
+            if (!recruitment) throw new Error('当前招新不存在!');
+            const data = recruitment['data'].map((i: object) => {
+                if (i['group'] === body.group) {
+                    if (i['total'] === undefined) i['total'] = 0;
+                    i['total'] += 1;
+                    if (!i['steps']) i['steps'] = [0, 0, 0, 0, 0, 0];
+                    i['steps'][0] += 1;
+                }
+                return i;
+            });
+            await database.update('recruitments', { title: body.title }, {
+                data,
+                total: recruitment['total'] ? recruitment['total'] + 1 : 1
+            });
     res.send({ type: 'success' });
-    //         const candidateResult = await database.query('candidates', { _id: new ObjectId(cid) });
-    //         io.emit('addCandidate', candidateResult[0]);
-    //         io.emit('updateRecruitment');
-    //     })()
-    // } catch (err) {
-    //     res.send({ message: err.message, type: 'warning' })
-    // }
+            const candidateResult = await database.query('candidates', { _id: new ObjectId(cid) });
+            io.emit('addCandidate', candidateResult[0]);
+            io.emit('updateRecruitment');
+        })()
+    } catch (err) {
+        res.send({ message: err.message, type: 'warning' })
+    }
 });
 
 // set interview time
