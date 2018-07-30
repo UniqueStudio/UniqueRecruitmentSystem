@@ -1,5 +1,6 @@
 import express from 'express';
 import multer from 'multer';
+import fs from 'fs';
 import { Server } from 'http';
 import socket, { Socket } from 'socket.io';
 import bodyParser from 'body-parser';
@@ -10,7 +11,11 @@ import { Candidate } from './type';
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
         const candidateInfo = req['body'];
-        cb(null, `/www/resumes/${candidateInfo.title}/${candidateInfo.group}`)
+        const dir = `/www/resumes/${candidateInfo.title}/${candidateInfo.group}`;
+        if (!fs.existsSync(dir)) {
+            fs.mkdirSync(dir);
+        }
+        cb(null, dir)
     },
     filename: function (req, file, cb) {
         const candidateInfo = req['body'];
