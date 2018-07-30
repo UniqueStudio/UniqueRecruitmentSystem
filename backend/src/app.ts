@@ -11,11 +11,15 @@ import { Candidate } from './type';
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
         const candidateInfo = req['body'];
-        const dir = `/www/resumes/${candidateInfo.title}/${candidateInfo.group}`;
-        if (!fs.existsSync(dir)) {
-            fs.mkdirSync(dir);
+        const parentDir = `/www/resumes/${candidateInfo.title}`;
+        const childDir = `${parentDir}/${candidateInfo.group}`;
+        if (!fs.existsSync(parentDir)) {
+            fs.mkdirSync(parentDir);
         }
-        cb(null, dir)
+        if (!fs.existsSync(childDir)) {
+            fs.mkdirSync(childDir);
+        }
+        cb(null, `${childDir}/`)
     },
     filename: function (req, file, cb) {
         const candidateInfo = req['body'];
