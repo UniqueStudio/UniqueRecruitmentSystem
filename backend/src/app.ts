@@ -221,6 +221,7 @@ app.get('/candidates/:cid/resume', (req, res) => {
                 const filename = Buffer.from(data[0].resume.replace(/^\/www\/resumes\/\w+\/\w+\//, '')).toString('base64');
                 res.set({
                     'Content-Disposition': `attachment; filename="${filename}"`,
+                    'Access-Control-Expose-Headers': 'Content-Disposition',
                 }).sendFile(data[0].resume);
             }
         })
