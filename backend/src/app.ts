@@ -9,11 +9,10 @@ import { Candidate } from './type';
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-        console.log(req);
+        console.log(req['body']);
         cb(null, `/www/resumes/`)
     },
     filename: function (req, file, cb) {
-        console.log(req);
         cb(null, file.fieldname + '-' + Date.now())
     }
 });
