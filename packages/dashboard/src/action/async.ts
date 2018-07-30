@@ -121,8 +121,8 @@ export const requestResume = (cid: string) => (dispatch: Dispatch) => {
     try {
         (async () => {
             const res = await fetch(`${URL}/candidates/${cid}/resume`);
-            if (res.status !== 200) {
-                throw await res.json();
+            if (!res.ok) {
+                throw new Error('Network response was not ok.');
             }
             let filename = 'resume';
             const blob = await res.blob();
@@ -130,7 +130,10 @@ export const requestResume = (cid: string) => (dispatch: Dispatch) => {
             if (disposition && disposition.indexOf('attachment') !== -1) {
                 const filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
                 const matches = filenameRegex.exec(disposition);
-                if (matches != null && matches[1]) filename = matches[1].replace(/['"]/g, '');
+                if (matches != null && matches[1]) {
+                    filename = matches[1].replace(/['"]/g, '');
+                    filename = Buffer.from(filename, 'base64').toString()
+                }
             }
             const url = window.URL.createObjectURL(new Blob([blob]));
 
