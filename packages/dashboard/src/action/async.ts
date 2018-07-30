@@ -7,6 +7,12 @@ import { URL } from '../lib/const';
 
 export const socket = socketClient(URL);
 
+interface actionType {
+    START: string;
+    SUCCESS: string;
+    FAILURE: string;
+}
+
 const actionTypeCreator = (action: string) => ({
     START: `${action}_START`,
     SUCCESS: `${action}_SUCCESS`,
@@ -19,6 +25,16 @@ const resHandler = (res: any) => {
     } catch (e) {
         throw new Error('Network is not OK');
     }
+};
+
+interface CustomError {
+    message: string;
+    type: string;
+}
+
+const errHandler = (err: CustomError, dispatch: Dispatch, type: actionType) => {
+    dispatch(actions.toggleSnackbarOn(`ERROR: ${err.message}`, err.type || 'danger'));
+    dispatch({ type: type.FAILURE });
 };
 
 export const USER = actionTypeCreator('USER');
@@ -38,10 +54,7 @@ export const login = (username: string) => (dispatch: Dispatch) => {
                 dispatch({ type: USER.SUCCESS });
             } else throw res;
         })
-        .catch(err => {
-            dispatch(actions.toggleSnackbarOn(`ERROR: ${err.message}`, err.type || 'danger'));
-            dispatch({ type: USER.FAILURE });
-        })
+        .catch(err => errHandler(err, dispatch, USER))
 };
 
 export const requestUser = (uid: string) => (dispatch: Dispatch) => {
@@ -61,10 +74,7 @@ export const requestUser = (uid: string) => (dispatch: Dispatch) => {
                 dispatch({ type: USER.SUCCESS });
             } else throw res;
         })
-        .catch(err => {
-            dispatch(actions.toggleSnackbarOn(`ERROR: ${err.message}`, err.type || 'danger'));
-            dispatch({ type: USER.FAILURE });
-        })
+        .catch(err => errHandler(err, dispatch, USER))
 };
 
 export const updateUser = (uid: string, info: object) => (dispatch: Dispatch) => {
@@ -83,10 +93,7 @@ export const updateUser = (uid: string, info: object) => (dispatch: Dispatch) =>
                 dispatch({ type: USER.SUCCESS });
             } else throw res;
         })
-        .catch(err => {
-            dispatch(actions.toggleSnackbarOn(`ERROR: ${err.message}`, err.type || 'danger'));
-            dispatch({ type: USER.FAILURE });
-        })
+        .catch(err => errHandler(err, dispatch, USER))
 };
 
 export const CANDIDATE = actionTypeCreator('CANDIDATE');
@@ -110,19 +117,18 @@ export const requestCandidate = (group: string) => (dispatch: Dispatch) => {
                 dispatch({ type: CANDIDATE.SUCCESS });
             } else throw res;
         })
-        .catch(err => {
-            dispatch(actions.toggleSnackbarOn(`ERROR: ${err.message}`, err.type || 'danger'));
-            dispatch({ type: CANDIDATE.FAILURE });
-        })
+        .catch(err => errHandler(err, dispatch, CANDIDATE))
 };
 
 export const requestResume = (cid: string) => (dispatch: Dispatch) => {
     dispatch({ type: CANDIDATE.START });
-    try {
-        (async () => {
+    (async () => {
+        try {
             const res = await fetch(`${URL}/candidates/${cid}/resume`);
             if (!res.ok) {
-                throw new Error('Network response was not ok.');
+                const err = await res.json();
+                errHandler(err, dispatch, CANDIDATE);
+                return;
             }
             let filename = 'resume';
             const blob = await res.blob();
@@ -145,11 +151,10 @@ export const requestResume = (cid: string) => (dispatch: Dispatch) => {
             document.body.removeChild(a);
             window.URL.revokeObjectURL(url);
             dispatch({ type: CANDIDATE.SUCCESS });
-        })()
-    } catch (err) {
-        dispatch(actions.toggleSnackbarOn(`ERROR: ${err.message}`, err.type || 'danger'));
-        dispatch({ type: CANDIDATE.FAILURE });
-    }
+        } catch (err) {
+            errHandler(err, dispatch, CANDIDATE)
+        }
+    })()
 };
 
 export const removeCandidate = (cid: string) => (dispatch: Dispatch) => {
@@ -256,10 +261,7 @@ export const sendSMS = (content: object) => (dispatch: Dispatch) => {
                 throw res;
             }
         })
-        .catch(err => {
-            dispatch(actions.toggleSnackbarOn(`ERROR: ${err.message}`, err.type || 'danger'));
-            dispatch({ type: CANDIDATE.FAILURE });
-        });
+        .catch(err => errHandler(err, dispatch, CANDIDATE))
 };
 
 let shouldUpdateRecruitment = false;
@@ -284,10 +286,8 @@ export const requestRecruitments = () => (dispatch: Dispatch) => {
                 throw res;
             }
         })
-        .catch(err => {
-            dispatch(actions.toggleSnackbarOn(`ERROR: ${err.message}`, err.type || 'danger'));
-            dispatch({ type: RECRUITMENT.FAILURE });
-        });
+        .catch(err => errHandler(err, dispatch, RECRUITMENT))
+
 };
 
 export const launchRecruitment = (info: object) => (dispatch: Dispatch) => {
@@ -306,10 +306,8 @@ export const launchRecruitment = (info: object) => (dispatch: Dispatch) => {
                 throw res;
             }
         })
-        .catch(err => {
-            dispatch(actions.toggleSnackbarOn(`ERROR: ${err.message}`, err.type || 'danger'));
-            dispatch({ type: RECRUITMENT.FAILURE });
-        });
+        .catch(err => errHandler(err, dispatch, RECRUITMENT))
+
 };
 
 socket.on('removeCandidate', (cid: string) => {
