@@ -19,8 +19,8 @@ interface Props extends WithStyles {
         group: string;
         sex: "Male" | "Female";
         intro: string;
-        resume: string; // file path
-    }
+    },
+    downloadResume: () => void;
 }
 
 class CandidateDetail extends React.PureComponent<Props> {
@@ -33,8 +33,8 @@ class CandidateDetail extends React.PureComponent<Props> {
     };
 
     render() {
-        const { classes, info } = this.props;
-        const { name, group, sex, grade, institute, intro, mail, major, phone, /*resume,*/ score } = info;
+        const { classes, info, downloadResume } = this.props;
+        const { name, group, sex, grade, institute, intro, mail, major, phone, score } = info;
         return (
             <>
                 <div className={classes.detail}>
@@ -122,7 +122,7 @@ class CandidateDetail extends React.PureComponent<Props> {
                         <Button size="large" color='primary' onClick={this.toggleModalOpen}>
                             自我介绍
                         </Button>
-                        <Button size="large" color='primary'>
+                        <Button size="large" color='primary' onClick={downloadResume}>
                             简历下载
                         </Button>
                     </div>

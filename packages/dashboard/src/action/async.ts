@@ -116,6 +116,22 @@ export const requestCandidate = (group: string) => (dispatch: Dispatch) => {
         })
 };
 
+export const requestResume = (cid: string) => (dispatch: Dispatch) => {
+    dispatch({ type: CANDIDATE.START });
+    return fetch(`${URL}/candidates/${cid}/resume`)
+        .then(resHandler)
+        .then(res => {
+            if (res.type === 'success') {
+                console.log(actions.setCandidates(res.data));
+                dispatch({ type: CANDIDATE.SUCCESS });
+            } else throw res;
+        })
+        .catch(err => {
+            dispatch(actions.toggleSnackbarOn(`ERROR: ${err.message}`, err.type || 'danger'));
+            dispatch({ type: CANDIDATE.FAILURE });
+        })
+};
+
 export const removeCandidate = (cid: string) => (dispatch: Dispatch) => {
     dispatch({ type: CANDIDATE.START });
     socket.emit('removeCandidate', cid);

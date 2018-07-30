@@ -31,6 +31,7 @@ interface Props extends WithStyles {
     toggleModalOff: () => void;
     changeInputting: (comment: string, evaluation: string) => void;
     toggleFabOff: () => void;
+    downloadResume: (cid: string) => void;
 }
 
 const titleToStep = (title: string) => STEP.indexOf(title);
@@ -117,7 +118,7 @@ class Column extends React.Component<Props> {
     }
 
     render() {
-        const { classes, title, candidates, group, selected, deselect, modalOn, toggleModalOff, dropIndex, toggleFabOff, fabOn } = this.props;
+        const { classes, title, candidates, group, selected, deselect, modalOn, toggleModalOff, dropIndex, toggleFabOff, fabOn, downloadResume } = this.props;
         const allCandidatesCids = [...candidates.keys()];
         const selectedCandidatesCids = selected.filter((i: string) => allCandidatesCids.includes(i));
         const selectedCandidatesInfo = selectedCandidatesCids.map((i: string) => {
@@ -181,6 +182,7 @@ class Column extends React.Component<Props> {
                 direction={this.state.direction}
                 handlePrev={this.handlePrev(allCandidatesCids[j - 1])}
                 handleNext={this.handleNext(allCandidatesCids[j + 1])}
+                downloadResume={downloadResume}
             />
         );
         const DroppableBox = (

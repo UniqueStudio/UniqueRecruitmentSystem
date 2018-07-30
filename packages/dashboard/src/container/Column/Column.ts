@@ -18,7 +18,7 @@ import {
     ToggleSnackbarOn,
 } from '../../action';
 import { Dispatch } from 'redux';
-import { removeCandidate } from '../../action/async';
+import { removeCandidate, requestResume } from '../../action/async';
 import { STEP } from '../../lib/const';
 
 interface OwnProps {
@@ -53,7 +53,8 @@ const mapDispatchToProps = (dispatch: DispatchType) => ({
     toggleModalOn: (cid: string) => dispatch(toggleModalOn(cid)),
     toggleModalOff: () => dispatch(toggleModalOff()),
     changeInputting: (comment: string, evaluation: string) => dispatch(inputtingComment(comment, evaluation)),
-    toggleFabOff: () => dispatch(toggleFabOff())
+    toggleFabOff: () => dispatch(toggleFabOff()),
+    downloadResume: (cid: string) => requestResume(cid)(dispatch)
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Column);

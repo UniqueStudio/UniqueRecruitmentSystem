@@ -20,13 +20,14 @@ interface Props extends WithStyles {
     toggleModalOff: () => void;
     handlePrev: () => void;
     handleNext: () => void;
+    downloadResume: (cid: string) => void;
 }
 
 
 class ColumnCandidate extends React.PureComponent<Props> {
 
     render() {
-        const { i, j, classes, toggleModalOff, step, modalOn, direction, handleNext, handlePrev } = this.props;
+        const { i, j, classes, toggleModalOff, step, modalOn, direction, handleNext, handlePrev, downloadResume } = this.props;
         return (
             <>
                 <Draggable draggableId={i[0]} index={j} isDragDisabled={i[1].abandon}>
@@ -44,7 +45,7 @@ class ColumnCandidate extends React.PureComponent<Props> {
                             <ExpandMoreIcon />
                         </IconButton>
                         <div className={classes.modalMain}>
-                            <Detail info={i[1]} />
+                            <Detail info={i[1]} downloadResume={() => downloadResume(i[0])} />
                             <Comments step={step} cid={i[0]} comments={i[1].comments} />
                         </div>
                         <IconButton className={classes.rightButton} onClick={handleNext}>
