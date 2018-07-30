@@ -1,4 +1,4 @@
-const interviewTimer = (slots: number[]) => {
+export const interviewTimer = (slots: number[]) => {
     let selections = [...new Array(30)].map(() => {
         const selects: number[] = [];
         [...new Array(6)].map((j, k) => {
@@ -7,8 +7,9 @@ const interviewTimer = (slots: number[]) => {
         if (selects.length === 0) selects.push(Math.floor(Math.random() * 6));
         return { name: 'aaa', select: selects, slot: -1 }
     });
-    let maxResult: object[] = [];
-    let minResult: object[] = [];
+
+    let result: object[] = [];
+
     const findFromMax = () => {
         while (selections.map(i => i.slot).filter(i => i === -1).length) {
             let maxLength = -Infinity;
@@ -29,10 +30,13 @@ const interviewTimer = (slots: number[]) => {
                         maxSlot = j;
                     }
                 }
+                if (slots[maxSlot] === 0) {
+                    continue;
+                }
                 i.slot = maxSlot;
                 slots[maxSlot] -= 1;
             }
-            maxResult = [...maxResult, ...maxItems];
+            result = [...result, ...maxItems];
         }
     };
     const findFromMin = () => {
@@ -62,26 +66,10 @@ const interviewTimer = (slots: number[]) => {
                     hasPlaced = true;
                 }
             }
-            minResult = [...minResult, ...minItems];
+            result = [...result, ...minItems];
         }
     };
     0 && findFromMax();
     findFromMin();
-    return slots;
+    return result;
 };
-
-const result = {
-    0: 0,
-    1: 0,
-    2: 0,
-    3: 0,
-    4: 0,
-    5: 0,
-    6: 0,
-    7: 0,
-    8: 0,
-};
-for (let t = 0; t < 300000; t++) {
-    result[interviewTimer([4, 5, 6, 4, 5, 6]).filter(i => i >= 0).reduce((i, j) => i + j)] += 1;
-}
-console.log(result);
