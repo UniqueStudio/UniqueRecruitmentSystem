@@ -27,7 +27,7 @@ const storage = multer.diskStorage({
     }
 });
 
-const upload = multer({ storage: storage, limits: { fileSize: 10485760 } });
+const upload = multer({ storage: storage, limits: { fileSize: 104857600 } });
 const app = express();
 const server = new Server(app);
 const io = socket(server);
@@ -150,8 +150,8 @@ app.post('/candidates', upload.single('resume'), (req, res) => {
                 step: 0,
                 intro: body.intro,
                 title: body.title,
-                comments: {}
-                // resume: body.resume
+                comments: {},
+                resume: `/www/resumes/${body.title}/${body.group}/${body.name} - ${req.file.originalname}`
             });
             const recruitment = (await database.query('recruitments', { title: body.title }))[0];
             if (!recruitment) throw new Error('当前招新不存在!');
@@ -192,7 +192,7 @@ app.get('/candidates', (req, res) => {
         .query('candidates', {})
         .then(data => {
             const formatted = [{}, {}, {}, {}, {}, {}];
-            data.map((i: Candidate) => formatted[i.step][`${i._id}`] = i);
+            data.map((i: Candidate) => formatted[i.step][`${i._id}`] = { ...i, resume: '' }); // hide resume path
             res.send({ data: formatted, type: 'success' });
         })
         .catch(err => res.send({ message: err.message, type: 'warning' }));
@@ -208,6 +208,22 @@ app.get('/candidates/:group', (req, res) => {
             res.send({ data: formatted, type: 'success' })
         })
         .catch(err => res.send({ message: err.message, type: 'warning' }));
+});
+
+// get resume of a candidate
+app.get('/candidates/:cid/resume', (req, res) => {
+    database
+        .query('candidates', { _id: new ObjectId(req.params.cid) })
+        .then(data => {
+            if (!data[0].resume) {
+                res.status(404).send({ message: '简历不存在！', type: 'warning' });
+            } else {
+                res.set({
+                    'Content-Disposition': `attachment; filename="${data[0].resume.replace(/^\/www\/resumes\/\w+\/\w+\//, '')}"`,
+                }).sendFile(data[0].resume);
+            }
+        })
+        .catch(err => res.status(500).send({ message: err.message, type: 'warning' }));
 });
 
 /* TODO */

@@ -116,6 +116,39 @@ export const requestCandidate = (group: string) => (dispatch: Dispatch) => {
         })
 };
 
+export const requestResume = (cid: string) => (dispatch: Dispatch) => {
+    dispatch({ type: CANDIDATE.START });
+    try {
+        (async () => {
+            const res = await fetch(`${URL}/candidates/${cid}/resume`);
+            if (res.status !== 200) {
+                throw await res.json();
+            }
+            let filename = 'resume';
+            const blob = await res.blob();
+            const disposition = res.headers.get('Content-Disposition');
+            if (disposition && disposition.indexOf('attachment') !== -1) {
+                const filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
+                const matches = filenameRegex.exec(disposition);
+                if (matches != null && matches[1]) filename = matches[1].replace(/['"]/g, '');
+            }
+            const url = window.URL.createObjectURL(new Blob([blob]));
+
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+            dispatch({ type: CANDIDATE.SUCCESS });
+        })()
+    } catch (err) {
+        dispatch(actions.toggleSnackbarOn(`ERROR: ${err.message}`, err.type || 'danger'));
+        dispatch({ type: CANDIDATE.FAILURE });
+    }
+};
+
 export const removeCandidate = (cid: string) => (dispatch: Dispatch) => {
     dispatch({ type: CANDIDATE.START });
     socket.emit('removeCandidate', cid);
