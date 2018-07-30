@@ -218,8 +218,9 @@ app.get('/candidates/:cid/resume', (req, res) => {
             if (!data[0].resume) {
                 res.status(404).send({ message: '简历不存在！', type: 'warning' });
             } else {
+                const filename = Buffer.from(data[0].resume.replace(/^\/www\/resumes\/\w+\/\w+\//, '')).toString('base64');
                 res.set({
-                    'Content-Disposition': `attachment; filename="${data[0].resume.replace(/^\/www\/resumes\/\w+\/\w+\//, '')}"`,
+                    'Content-Disposition': `attachment; filename="${filename}"`,
                 }).sendFile(data[0].resume);
             }
         })
