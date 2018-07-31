@@ -40,6 +40,9 @@ const verifyJWT = (token?: string) => {
     if (!token) {
         throw new Error('No token provided');
     }
+    if (token.indexOf('Bearer ') === 0) {
+        token = token.replace('Bearer ', '');
+    }
     jwt.verify(token, secret, (err) => {
         if (err) {
             throw err;
