@@ -19,7 +19,7 @@ class Time extends React.Component {
         const params = window.location.pathname.split('/').splice(1);
         const cid = params[1];
         const formId = params[0];
-        fetch(`http://39.108.175.151:5000/form/${formId}`)
+        fetch(`http://39.108.175.151:5000/form/${formId}/${cid}`)
             .then(res => {
                 try {
                     return res.json();
@@ -29,6 +29,7 @@ class Time extends React.Component {
             })
             .then(res => {
                 if (res.type === 'success') {
+                    sessionStorage.setItem('token', res.token);
                     this.setState({
                         time: res.time,
                         step: formId[formId.length - 1],
@@ -79,9 +80,20 @@ class Time extends React.Component {
             const res = i - int * 3;
             time[int][['morning', 'afternoon', 'evening'][res]] = true;
         });
+        const token = sessionStorage.getItem('token');
+        if (!token) {
+            this.setState({
+                snackBarOn: true,
+                content: 'token不存在'
+            });
+            return;
+        }
         fetch(`http://39.108.175.151:5000/candidates/${this.state.cid}`, {
                 method: 'PUT',
-                headers: { 'content-type': 'application/json' },
+                headers: {
+                    'content-type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
                 body: JSON.stringify({
                     patch: this.state.modal === 'abandon'
                         ? { abandon: true }

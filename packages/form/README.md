@@ -25,15 +25,4 @@ the other is [Dashboard](https://github.com/UniqueStudio/UniqueRecruitmentDashbo
 
 ## TODOS
 
-1. Interface
-
-    1. Recruitment form
-    2. Return receipt form
-
-2. Logic
-
-    1. server should generate different form by `formID` and `userId` in url
-    2. send verification code by SMS and verify it
-    3. change candidate info by multiple applies
-    4. select time
-    5. post data to server
+1. security
