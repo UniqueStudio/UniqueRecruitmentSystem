@@ -14,7 +14,7 @@ import { Data } from '../../reducer/recruitments';
 const getColors = (i: number) => [red[i], purple[i], indigo[i], blue[i], cyan[i], green[i], yellow[i], orange[i]];
 
 interface Props extends WithStyles {
-    data: Data;
+    data: Data[];
     totalData: number[];
     flowData: object;
     title: string;

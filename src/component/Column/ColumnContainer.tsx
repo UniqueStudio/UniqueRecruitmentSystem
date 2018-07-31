@@ -11,16 +11,7 @@ import { STEP } from '../../lib/const';
 interface Props extends WithStyles {
     group: string;
     pathname: string;
-    modalItem: {
-        modalOn: boolean;
-        title: string;
-        step: number;
-        cid: string;
-        comments: object[];
-        direction: string;
-    }
     changeGroup: (group: string) => void;
-    closeModal: () => void;
     move: (from: number, to: number, cid: string, position: number) => void;
 }
 
