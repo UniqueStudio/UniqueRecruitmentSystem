@@ -205,10 +205,15 @@ app.post('/candidates', upload.single('resume'), (req, res) => {
 
 // set interview time
 app.put('/candidates/:cid', (req, res) => {
-    database
-        .update('candidates', { _id: new ObjectId(req.params.cid) }, req.body.patch)
-        .then(() => res.send({ type: 'success' }))
-        .catch(err => res.send({ message: err.message, type: 'danger' }));
+    (async () => {
+        try {
+            verifyJWT(req.get('Authorization'));
+            await database.update('candidates', { _id: new ObjectId(req.params.cid) }, req.body.patch);
+            res.send({ type: 'success' });
+        } catch (err) {
+            res.send({ message: err.message, type: 'danger' })
+        }
+    })();
 });
 
 // get all candidates
@@ -311,9 +316,13 @@ app.post('/verification', (req, res) => {
 
 });
 
-app.get('/form/:formId', (req, res) => {
+app.get('/form/:formId/:cid', (req, res) => {
     const formId = req.params.formId;
     const type = +formId.slice(-1);
+    const cid = req.params.cid;
+    const token = jwt.sign({ cid }, secret, {
+        expiresIn: 86400
+    });
     (async () => {
         try {
             if (type === 1) { // interview 1
@@ -321,11 +330,11 @@ app.get('/form/:formId', (req, res) => {
                 const group = groups[groupId];
                 const recruitmentId = formId.slice(0, -2);
                 const recruitment = (await database.query('recruitments', { _id: new ObjectId(recruitmentId) }))[0];
-                res.send({ type: 'success', time: recruitment.time1[group] });
+                res.send({ type: 'success', time: recruitment.time1[group], token });
             } else if (type === 2) { // interview 2
                 const recruitmentId = formId.slice(0, -1);
                 const recruitment = (await database.query('recruitments', { _id: new ObjectId(recruitmentId) }))[0];
-                res.send({ type: 'success', time: recruitment.time2 });
+                res.send({ type: 'success', time: recruitment.time2, token });
             } else {
                 res.send({ message: '表单不存在！', type: 'warning' });
             }
