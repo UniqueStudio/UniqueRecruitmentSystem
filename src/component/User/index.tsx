@@ -10,11 +10,11 @@ import { WithStyles, withStyles } from '@material-ui/core/styles';
 
 import styles from "../../style/user";
 import withRoot from "../../style/withRoot";
-import { GROUP } from '../../lib/const';
+import { GROUP, User as UserType } from '../../lib/const';
 
 interface Props extends WithStyles {
     uid: string;
-    info: object;
+    info: UserType;
     fetchInfo: (uid: string) => void;
     submitInfo: (uid: string, info: object) => void;
     toggleSnackbar: (info: string, color: string) => void;
@@ -22,7 +22,7 @@ interface Props extends WithStyles {
 
 class User extends React.PureComponent<Props> {
     state = {
-        info: this.props.info as any
+        info: this.props.info
     };
 
     constructor(props: Props) {
