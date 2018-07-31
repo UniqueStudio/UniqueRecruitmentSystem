@@ -384,93 +384,97 @@ app.post('/recruitment', (req, res) => {
 
 // move a candidate from step a to step b
 let processing: string[] = []; // deal with conflicts
-const onMoveCandidate = (socket: Socket) => (cid: string, from: number, to: number) => {
+const onMoveCandidate = (socket: Socket) => (cid: string, from: number, to: number, token: string) => {
     (async () => {
         try {
+            verifyJWT(token);
             if (!processing.includes(cid)) {
                 processing.push(cid);
-                database.update('candidates', { _id: new ObjectId(cid) }, { step: to })
-                    .then(() => {
-                        socket.broadcast.emit('moveCandidate', cid, from, to);
-                        socket.emit('moveCandidateSuccess');
-                        processing = processing.filter(i => i !== cid);
-                    })
-                    .catch(err => socket.emit('moveCandidateError', err.message, 'danger', { cid, from, to }));
+                await database.update('candidates', { _id: new ObjectId(cid) }, { step: to });
+                socket.broadcast.emit('moveCandidate', cid, from, to);
+                socket.emit('moveCandidateSuccess');
+                processing = processing.filter(i => i !== cid);
             } else {
                 socket.emit('moveCandidateError', '候选人已被拖动', 'warning', { cid, from, to });
+                return;
             }
+            const candidate = (await database.query('candidates', { _id: new ObjectId(cid) }))[0];
+            const recruitment = (await database.query('recruitments', { title: candidate['title'] }))[0];
+            const data = recruitment['data'].map((i: object) => {
+                if (i['group'] === candidate['group']) {
+                    if (!i['steps'][to]) i['steps'][to] = 0;
+                    if (!i['steps'][from]) i['steps'][from] = 0;
+                    i['steps'][to] += 1;
+                    i['steps'][from] -= 1;
+                    if (i['steps'][to] < 0) i['steps'][to] = 0;
+                    if (i['steps'][from] < 0) i['steps'][from] = 0;
+                }
+                return i;
+            });
+            await database.update('recruitments', { title: candidate['title'] }, { data });
+            io.emit('updateRecruitment');
         } catch (err) {
-            socket.emit('moveCandidateError', err.message, 'danger');
+            socket.emit('moveCandidateError', err.message, 'danger', { cid, from, to });
         }
-    })();
-    (async () => {
-        const candidate = (await database.query('candidates', { _id: new ObjectId(cid) }))[0];
-        const recruitment = (await database.query('recruitments', { title: candidate['title'] }))[0];
-        const data = recruitment['data'].map((i: object) => {
-            if (i['group'] === candidate['group']) {
-                if (!i['steps'][to]) i['steps'][to] = 0;
-                if (!i['steps'][from]) i['steps'][from] = 0;
-                i['steps'][to] += 1;
-                i['steps'][from] -= 1;
-                if (i['steps'][to] < 0) i['steps'][to] = 0;
-                if (i['steps'][from] < 0) i['steps'][from] = 0;
-            }
-            return i;
-        });
-        await database.update('recruitments', { title: candidate['title'] }, { data });
-        io.emit('updateRecruitment');
     })();
 };
 
 // delete a certain candidate
-const onRemoveCandidate = (socket: Socket) => (cid: string) => {
+const onRemoveCandidate = (socket: Socket) => (cid: string, token: string) => {
     (async () => {
-        const candidate = (await database.query('candidates', { _id: new ObjectId(cid) }))[0];
-        database
-            .delete('candidates', { _id: new ObjectId(cid) })
-            .then(() => io.emit('removeCandidate', cid))
-            .catch(err => socket.emit('moveCandidateError', err.message, 'warning'));
-
-        const recruitment = (await database.query('recruitments', { title: candidate['title'] }))[0];
-        const data = recruitment['data'].map((i: object) => {
-            if (i['group'] === candidate['group']) {
-                i['total'] -= 1;
-                if (i['total'] < 0) i['total'] = 0;
-                i['steps'][candidate['step']] -= 1;
-                if (i['steps'][candidate['step']] < 0) i['steps'][candidate['step']] = 0;
-            }
-            return i;
-        });
-        await database.update('recruitments', { title: candidate['title'] }, { data, total: recruitment['total'] - 1 });
-        io.emit('updateRecruitment');
-    })()
+        try {
+            verifyJWT(token);
+            const candidate = (await database.query('candidates', { _id: new ObjectId(cid) }))[0];
+            await database.delete('candidates', { _id: new ObjectId(cid) });
+            io.emit('removeCandidate', cid);
+            const recruitment = (await database.query('recruitments', { title: candidate['title'] }))[0];
+            const data = recruitment['data'].map((i: object) => {
+                if (i['group'] === candidate['group']) {
+                    i['total'] -= 1;
+                    if (i['total'] < 0) i['total'] = 0;
+                    i['steps'][candidate['step']] -= 1;
+                    if (i['steps'][candidate['step']] < 0) i['steps'][candidate['step']] = 0;
+                }
+                return i;
+            });
+            await database.update('recruitments', { title: candidate['title'] }, {
+                data,
+                total: recruitment['total'] - 1
+            });
+            io.emit('updateRecruitment');
+        } catch (err) {
+            socket.emit('removeCandidateError', err.message, 'danger');
+        }
+    })();
 };
 
 // comment on a certain candidate
-const onAddComment = (socket: Socket) => (step: number, cid: string, uid: string, comment: object) => {
-    database
-        .update('candidates', { _id: new ObjectId(cid) }, { ['comments.' + uid]: comment })
-        .then(() => io.emit('addComment', step, cid, uid, comment))
-        .catch(err => socket.emit('addCommentError', err.message, 'danger'));
+const onAddComment = (socket: Socket) => (step: number, cid: string, uid: string, comment: object, token: string) => {
+    (async () => {
+        try {
+            verifyJWT(token);
+            await database.update('candidates', { _id: new ObjectId(cid) }, { ['comments.' + uid]: comment });
+            io.emit('addComment', step, cid, uid, comment);
+        } catch (err) {
+            socket.emit('addCommentError', err.message, 'danger');
+        }
+    })();
 };
 
 // delete comment on a certain candidate
-const onRemoveComment = (socket: Socket) => (step: number, cid: string, uid: string) => {
-    database
-        .update('candidates', { _id: new ObjectId(cid) }, { [`comments.${uid}`]: '' }, true)
-        .then(() => io.emit('removeComment', step, cid, uid))
-        .catch(err => socket.emit('removeCommentError', err.message, 'danger'));
+const onRemoveComment = (socket: Socket) => (step: number, cid: string, uid: string, token: string) => {
+    (async () => {
+        try {
+            verifyJWT(token);
+            await database.update('candidates', { _id: new ObjectId(cid) }, { [`comments.${uid}`]: '' }, true);
+            io.emit('removeComment', step, cid, uid);
+        } catch (err) {
+            socket.emit('removeCommentError', err.message, 'danger');
+        }
+    })();
 };
 
-io.use((socket, next) => {
-    if (socket.handshake.query && socket.handshake.query.token) {
-        jwt.verify(socket.handshake.query.token, secret, (err: Error) => {
-            if (err) return next(new Error('Authentication error'));
-        });
-    } else {
-        next(new Error('Authentication error'));
-    }
-}).on('connection', (socket) => {
+io.on('connection', (socket) => {
     console.log('WebSocket connected');
     socket.on('moveCandidate', onMoveCandidate(socket));
     socket.on('removeCandidate', onRemoveCandidate(socket));
