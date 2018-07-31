@@ -33,12 +33,12 @@ class ChartContainer extends React.PureComponent<Props> {
         return (
             <>
                 {data.sort(compare).map(i => {
-                    const data = i.data;
-                    const totalData = data.map(i => i.total || 0);
-                    const flowData = [{}, ...data].reduce((i, j) => ({ ...i, [j['group']]: j['steps'] }));
+                    const chartData = i.data;
+                    const totalData = chartData.map(i => i.total || 0);
+                    const flowData = [{}, ...chartData].reduce((i, j) => ({ ...i, [j['group']]: j['steps'] }));
                     const title = `${i.title.slice(0, 4) + { 'S': '春招', 'C': '夏令营', 'A': '秋招' }[i.title[4]]}各组报名人数`;
                     const endTime = i.end;
-                    return <Chart data={data} totalData={totalData} flowData={flowData} title={title} end={endTime}
+                    return <Chart data={chartData} totalData={totalData} flowData={flowData} title={title} end={endTime}
                                   key={i['_id']} />
                 })}
                 <ChartNew toggleSnackbarOn={toggleSnackbarOn} launchRecruitment={launchRecruitment}

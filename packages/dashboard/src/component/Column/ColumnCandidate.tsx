@@ -16,7 +16,7 @@ interface Props extends WithStyles {
     j: number,
     step: number;
     modalOn: string;
-    direction: string;
+    direction: "left" | "right" | "up" | "down";
     toggleModalOff: () => void;
     handlePrev: () => void;
     handleNext: () => void;

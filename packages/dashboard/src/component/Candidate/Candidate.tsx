@@ -5,7 +5,7 @@ import IconButton from '@material-ui/core/IconButton';
 import Popover from '@material-ui/core/Popover';
 import Typography from '@material-ui/core/Typography';
 import { WithStyles, withStyles } from '@material-ui/core/styles';
-import InfoIcon from "@material-ui/icons/InfoOutline";
+import InfoIcon from "@material-ui/icons/InfoOutlined";
 import { DraggableProvided } from 'react-beautiful-dnd';
 
 import styles, { colorToAlpha, dangerColor, successColor, warningColor } from "../../style";
@@ -16,7 +16,7 @@ interface Info {
     grade: string;
     institute: string;
     comments: object;
-    abandon: boolean;
+    abandon?: boolean;
 }
 
 interface Props extends WithStyles {

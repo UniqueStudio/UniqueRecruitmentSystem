@@ -149,11 +149,11 @@ class Template extends React.PureComponent<Props> {
     };
 
     render() {
-        const { classes, deselect, toggleOpen, group } = this.props;
+        const { classes, toggleOpen, group } = this.props;
         const { activeStep, selected } = this.state;
         const steps = ['发送对象', '消息模板', '确认发送'];
         const stepContent = [
-            <TemplateStepOne selected={selected} deselect={deselect} onDelete={this.handleDelete} />,
+            <TemplateStepOne selected={selected} onDelete={this.handleDelete} />,
             <TemplateStepTwo
                 step={this.state.step}
                 model={this.state.model}
