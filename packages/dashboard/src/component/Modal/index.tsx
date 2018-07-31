@@ -9,9 +9,9 @@ import withRoot from "../../style/withRoot";
 
 interface Props extends WithStyles {
     open: boolean;
-    direction: 'left' | 'right' | 'up' | 'down';
+    direction?: 'left' | 'right' | 'up' | 'down';
     title: string;
-    onClose: () => void;
+    onClose?: () => void;
 }
 
 class InfoModal extends React.PureComponent<Props> {

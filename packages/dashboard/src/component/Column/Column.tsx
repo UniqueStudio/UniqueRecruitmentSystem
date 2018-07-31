@@ -42,7 +42,7 @@ class Column extends React.Component<Props> {
         dialog: false,
         modal: false,
         removeConfirm: false,
-        direction: 'left',
+        direction: 'left' as "left" | "right" | "up" | "down",
         buttons: false
     };
 

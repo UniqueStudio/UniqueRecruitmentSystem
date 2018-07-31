@@ -8,7 +8,6 @@ import withRoot from "../../style/withRoot";
 interface Props extends WithStyles {
     open: boolean;
     toggleOpen: () => void;
-    onClick: () => void;
     selected: any[],
     deselect: (cid: string[] | string) => void;
     group: string;
