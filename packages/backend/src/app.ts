@@ -1,4 +1,5 @@
 import express from 'express';
+import jwt from 'jsonwebtoken';
 import multer from 'multer';
 import fs from 'fs';
 import { Server } from 'http';
@@ -6,7 +7,7 @@ import socket, { Socket } from 'socket.io';
 import bodyParser from 'body-parser';
 import Database from './database';
 import { ObjectId } from 'mongodb';
-import { GROUPS as groups, Candidate } from './consts';
+import { GROUPS as groups, Candidate, secret } from './consts';
 
 const app = express();
 const server = new Server(app);
@@ -25,7 +26,6 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage: storage, limits: { fileSize: 104857600 } });
 
-
 const checkMail = (mail: string) => {
     const re = /^(([^<>()\[\].,;:\s@"]+(\.[^<>()\[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/i;
     return re.test(mail);
@@ -34,6 +34,17 @@ const checkMail = (mail: string) => {
 const checkPhone = (phone: string) => {
     const re = /^((13[0-9])|(14[57])|(15[0-3,5-9])|166|(17[035678])|(18[0-9])|(19[89]))\d{8}$/i;
     return re.test(phone);
+};
+
+const verifyJWT = (token?: string) => {
+    if (!token) {
+        throw new Error('No token provided');
+    }
+    jwt.verify(token, secret, (err) => {
+        if (err) {
+            throw err;
+        }
+    })
 };
 
 app.use(bodyParser.json({
@@ -68,7 +79,10 @@ app.post('/user', (req, res) => {
             } else {
                 uid = user[0]['_id'];
             }
-            res.send({ uid, type: 'success' });
+            const token = jwt.sign({ uid }, secret, {
+                expiresIn: 86400
+            });
+            res.send({ uid, token, type: 'success' });
         } catch (err) {
             res.send({ message: err.message, type: 'warning' });
         }
@@ -77,10 +91,16 @@ app.post('/user', (req, res) => {
 
 // get user info
 app.get('/user/:uid', (req, res) => {
-    database
-        .query('users', { _id: new ObjectId(req.params.uid) })
-        .then(data => res.send({ data: data[0], type: 'success' }))
-        .catch(err => res.send({ message: err.message, type: 'warning' }));
+    (async () => {
+        try {
+            verifyJWT(req.get('Authorization'));
+            const userInfo = await database.query('users', { _id: new ObjectId(req.params.uid) });
+            res.send({ data: userInfo[0], type: 'success' });
+        } catch (err) {
+            res.send({ message: err.message, type: 'danger' });
+        }
+    })()
+
 });
 
 // change user info
@@ -88,6 +108,7 @@ app.put('/user/:uid', (req, res) => {
     const body = req.body;
     (async () => {
         try {
+            verifyJWT(req.get('Authorization'));
             if (Object.values(body).includes('')) {
                 res.send({ message: '请完整填写信息!', type: 'warning' });
                 return;
@@ -189,33 +210,40 @@ app.put('/candidates/:cid', (req, res) => {
 
 // get all candidates
 app.get('/candidates', (req, res) => {
-    database
-        .query('candidates', {})
-        .then(data => {
+    (async () => {
+        try {
+            verifyJWT(req.get('Authorization'));
+            const data = await database.query('candidates', {});
             const formatted = [{}, {}, {}, {}, {}, {}];
             data.map((i: Candidate) => formatted[i.step][`${i._id}`] = { ...i, resume: '' }); // hide resume path
             res.send({ data: formatted, type: 'success' });
-        })
-        .catch(err => res.send({ message: err.message, type: 'danger' }));
+        } catch (err) {
+            res.send({ message: err.message, type: 'danger' })
+        }
+    })();
 });
 
 // get candidates in certain group
 app.get('/candidates/:group', (req, res) => {
-    database
-        .query('candidates', { group: req.params.group })
-        .then(data => {
+    (async () => {
+        try {
+            verifyJWT(req.get('Authorization'));
+            const data = await database.query('candidates', { group: req.params.group });
             const formatted = [{}, {}, {}, {}, {}, {}];
-            data.map((i: Candidate) => formatted[i.step][`${i._id}`] = i);
-            res.send({ data: formatted, type: 'success' })
-        })
-        .catch(err => res.send({ message: err.message, type: 'danger' }));
+            data.map((i: Candidate) => formatted[i.step][`${i._id}`] = { ...i, resume: '' }); // hide resume path
+            res.send({ data: formatted, type: 'success' });
+        } catch (err) {
+            res.send({ message: err.message, type: 'danger' })
+        }
+    })();
 });
 
 // get resume of a candidate
 app.get('/candidates/:cid/resume', (req, res) => {
-    database
-        .query('candidates', { _id: new ObjectId(req.params.cid) })
-        .then(data => {
+    (async () => {
+        try {
+            verifyJWT(req.get('Authorization'));
+            const data = await database.query('candidates', { _id: new ObjectId(req.params.cid) });
             if (!data[0].resume) {
                 res.status(404).send({ message: '简历不存在！', type: 'warning' });
             } else {
@@ -225,8 +253,10 @@ app.get('/candidates/:cid/resume', (req, res) => {
                     'Access-Control-Expose-Headers': 'Content-Disposition',
                 }).sendFile(data[0].resume);
             }
-        })
-        .catch(err => res.status(500).send({ message: err.message, type: 'danger' }));
+        } catch (err) {
+            res.status(500).send({ message: err.message, type: 'danger' })
+        }
+    })();
 });
 
 /* TODO */
@@ -238,6 +268,7 @@ app.post('/sms', (req, res) => {
     const body = req.body;
     (async () => {
         try {
+            verifyJWT(req.get('Authorization'));
             const recruitment = (await database.query('recruitments', { title: body.title }))[0];
             let formId = '';
             if (body.date) {
@@ -303,35 +334,48 @@ app.get('/form/:formId', (req, res) => {
 
 // get all history recruitments
 app.get('/recruitment', (req, res) => {
-    database
-        .query('recruitments', {})
-        .then(data => res.send({ data: data, type: 'success' }))
-        .catch(err => res.send({ message: err.message, type: 'danger' }));
+    (async () => {
+        try {
+            verifyJWT(req.get('Authorization'));
+            const data = await database.query('recruitments', {});
+            res.send({ data: data, type: 'success' });
+        } catch (err) {
+            res.send({ message: err.message, type: 'danger' });
+        }
+    })();
 });
 
 // get a certain recruitment
 app.get('/recruitment/:title', (req, res) => {
-    database
-        .query('recruitments', { title: req.params.title })
-        .then(data => res.send({ data: data[0], type: 'success' }))
-        .catch(err => res.send({ message: err.message, type: 'danger' }));
+    (async () => {
+        try {
+            verifyJWT(req.get('Authorization'));
+            const data = await database.query('recruitments', { title: req.params.title });
+            res.send({ data: data[0], type: 'success' });
+        } catch (err) {
+            res.send({ message: err.message, type: 'danger' });
+        }
+    })();
 });
 
 // launch a new recruitment
 app.post('/recruitment', (req, res) => {
-    database
-        .insert('recruitments', {
-            title: req.body.title,
-            begin: req.body.begin,
-            end: req.body.end,
-            data: groups.map(i => ({ group: i, total: 0, steps: [0, 0, 0, 0, 0, 0] })),
-            total: 0,
-        })
-        .then(() => {
+    (async () => {
+        try {
+            verifyJWT(req.get('Authorization'));
+            await database.insert('recruitments', {
+                title: req.body.title,
+                begin: req.body.begin,
+                end: req.body.end,
+                data: groups.map(i => ({ group: i, total: 0, steps: [0, 0, 0, 0, 0, 0] })),
+                total: 0,
+            });
             res.send({ type: 'success' });
             io.emit('updateRecruitment');
-        })
-        .catch(err => res.send({ message: err.message, type: 'danger' }));
+        } catch (err) {
+            res.send({ message: err.message, type: 'danger' })
+        }
+    })();
 });
 
 
@@ -415,7 +459,15 @@ const onRemoveComment = (socket: Socket) => (step: number, cid: string, uid: str
         .catch(err => socket.emit('removeCommentError', err.message, 'danger'));
 };
 
-io.on('connection', (socket) => {
+io.use((socket, next) => {
+    if (socket.handshake.query && socket.handshake.query.token) {
+        jwt.verify(socket.handshake.query.token, secret, (err: Error) => {
+            if (err) return next(new Error('Authentication error'));
+        });
+    } else {
+        next(new Error('Authentication error'));
+    }
+}).on('connection', (socket) => {
     console.log('WebSocket connected');
     socket.on('moveCandidate', onMoveCandidate(socket));
     socket.on('removeCandidate', onRemoveCandidate(socket));

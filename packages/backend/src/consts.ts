@@ -1,6 +1,7 @@
 import { ObjectID } from 'mongodb';
 
 export const GROUPS = ["web", "lab", "ai", "game", "android", "ios", "design", "pm"];
+export const secret = 'Uniq';
 
 export interface Candidate {
     _id: ObjectID;
