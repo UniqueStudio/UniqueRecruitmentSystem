@@ -1,11 +1,11 @@
 import { Dispatch } from 'redux';
-import socketClient from 'socket.io-client';
+import io from 'socket.io-client';
 
 import { store } from '../App';
 import * as actions from './index';
 import { URL } from '../lib/const';
 
-export const socket = socketClient(URL);
+const socket = io(URL);
 
 interface actionType {
     START: string;
@@ -19,7 +19,7 @@ const actionTypeCreator = (action: string) => ({
     FAILURE: `${action}_FAILURE`,
 });
 
-const resHandler = (res: any) => {
+const resHandler = (res: Response) => {
     try {
         return res.json();
     } catch (e) {
@@ -51,6 +51,7 @@ export const login = (username: string) => (dispatch: Dispatch) => {
                 dispatch(actions.login(username, res.uid));
                 dispatch(actions.toggleSnackbarOn('已成功登录！', 'success'));
                 sessionStorage.setItem('uid', res.uid);
+                sessionStorage.setItem('token', res.token);
                 dispatch({ type: USER.SUCCESS });
             } else throw res;
         })
@@ -65,7 +66,16 @@ export const requestUser = (uid: string) => (dispatch: Dispatch) => {
         dispatch({ type: USER.SUCCESS });
         return;
     }
-    return fetch(`${URL}/user/${uid}`)
+    const token = sessionStorage.getItem('token');
+    if (!token) {
+        errHandler({ message: 'token不存在', type: 'danger' }, dispatch, USER);
+        return;
+    }
+    return fetch(`${URL}/user/${uid}`, {
+        headers: {
+            'Authorization': `Bearer ${token}`
+        }
+    })
         .then(resHandler)
         .then(res => {
             if (res.type === 'success') {
@@ -79,10 +89,18 @@ export const requestUser = (uid: string) => (dispatch: Dispatch) => {
 
 export const updateUser = (uid: string, info: object) => (dispatch: Dispatch) => {
     dispatch({ type: USER.START });
+    const token = sessionStorage.getItem('token');
+    if (!token) {
+        errHandler({ message: 'token不存在', type: 'danger' }, dispatch, USER);
+        return;
+    }
     return fetch(`${URL}/user/${uid}`, {
         method: 'PUT',
         body: JSON.stringify({ uid, ...info }),
-        headers: { 'content-type': 'application/json' },
+        headers: {
+            'content-type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        },
     })
         .then(resHandler)
         .then(res => {
@@ -106,9 +124,18 @@ export const requestCandidate = (group: string) => (dispatch: Dispatch) => {
         dispatch({ type: CANDIDATE.SUCCESS });
         return;
     }
+    const token = sessionStorage.getItem('token');
+    if (!token) {
+        errHandler({ message: 'token不存在', type: 'danger' }, dispatch, CANDIDATE);
+        return;
+    }
     dispatch(actions.setGroup(group));
     sessionStorage.setItem('group', group);
-    return fetch(`${URL}/candidates/${group}`)
+    return fetch(`${URL}/candidates/${group}`, {
+        headers: {
+            'Authorization': `Bearer ${token}`
+        },
+    })
         .then(resHandler)
         .then(res => {
             if (res.type === 'success') {
@@ -122,9 +149,18 @@ export const requestCandidate = (group: string) => (dispatch: Dispatch) => {
 
 export const requestResume = (cid: string) => (dispatch: Dispatch) => {
     dispatch({ type: CANDIDATE.START });
+    const token = sessionStorage.getItem('token');
+    if (!token) {
+        errHandler({ message: 'token不存在', type: 'danger' }, dispatch, CANDIDATE);
+        return;
+    }
     (async () => {
         try {
-            const res = await fetch(`${URL}/candidates/${cid}/resume`);
+            const res = await fetch(`${URL}/candidates/${cid}/resume`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                },
+            });
             if (!res.ok) {
                 const err = await res.json();
                 errHandler(err, dispatch, CANDIDATE);
@@ -159,7 +195,12 @@ export const requestResume = (cid: string) => (dispatch: Dispatch) => {
 
 export const removeCandidate = (cid: string) => (dispatch: Dispatch) => {
     dispatch({ type: CANDIDATE.START });
-    socket.emit('removeCandidate', cid);
+    const token = sessionStorage.getItem('token');
+    if (!token) {
+        errHandler({ message: 'token不存在', type: 'danger' }, dispatch, CANDIDATE);
+        return;
+    }
+    socket.emit('removeCandidate', cid, token);
     // return fetch(`${URL}/candidates/${cid}`, { method: 'DELETE' })
     //     .then(resHandler)
     //     .then(res => {
@@ -176,9 +217,14 @@ export const removeCandidate = (cid: string) => (dispatch: Dispatch) => {
 };
 
 export const moveCandidate = (from: number, to: number, cid: string, position?: number) => (dispatch: Dispatch) => {
+    const token = sessionStorage.getItem('token');
+    if (!token) {
+        errHandler({ message: 'token不存在', type: 'danger' }, dispatch, CANDIDATE);
+        return;
+    }
     dispatch(actions.moveCandidate(from, to, cid, position));
     dispatch({ type: CANDIDATE.START });
-    socket.emit('moveCandidate', cid, from, to);
+    socket.emit('moveCandidate', cid, from, to, token);
     // return fetch(`${URL}/candidates/${cid}/step/${to}`, {
     //     method: 'PUT',
     //     body: JSON.stringify({ from }),
@@ -203,7 +249,12 @@ export const moveCandidate = (from: number, to: number, cid: string, position?: 
 export const COMMENT = actionTypeCreator('COMMENT');
 export const addComment = (step: number, cid: string, commenter: string, comment: object) => (dispatch: Dispatch) => {
     dispatch({ type: COMMENT.START });
-    socket.emit('addComment', step, cid, commenter, comment);
+    const token = sessionStorage.getItem('token');
+    if (!token) {
+        errHandler({ message: 'token不存在', type: 'danger' }, dispatch, COMMENT);
+        return;
+    }
+    socket.emit('addComment', step, cid, commenter, comment, token);
     // return fetch(`${URL}/candidates/${cid}/comments`, {
     //     method: 'POST',
     //     body: JSON.stringify({ uid: commenter, comment, step }),
@@ -225,7 +276,12 @@ export const addComment = (step: number, cid: string, commenter: string, comment
 
 export const removeComment = (step: number, cid: string, commenter: string) => (dispatch: Dispatch) => {
     dispatch({ type: COMMENT.START });
-    socket.emit('removeComment', step, cid, commenter);
+    const token = sessionStorage.getItem('token');
+    if (!token) {
+        errHandler({ message: 'token不存在', type: 'danger' }, dispatch, COMMENT);
+        return;
+    }
+    socket.emit('removeComment', step, cid, commenter, token);
     // return fetch(`${URL}/candidates/${cid}/comments/${commenter}`, {
     //     method: 'DELETE',
     //     body: JSON.stringify({ step }),
@@ -247,10 +303,18 @@ export const removeComment = (step: number, cid: string, commenter: string) => (
 
 export const sendSMS = (content: object) => (dispatch: Dispatch) => {
     dispatch({ type: CANDIDATE.START });
+    const token = sessionStorage.getItem('token');
+    if (!token) {
+        errHandler({ message: 'token不存在', type: 'danger' }, dispatch, CANDIDATE);
+        return;
+    }
     return fetch(`${URL}/sms`, {
         method: 'POST',
         body: JSON.stringify(content),
-        headers: { 'content-type': 'application/json' },
+        headers: {
+            'content-type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        },
     })
         .then(resHandler)
         .then(res => {
@@ -274,8 +338,17 @@ export const requestRecruitments = () => (dispatch: Dispatch) => {
         dispatch({ type: RECRUITMENT.SUCCESS });
         return;
     }
+    const token = sessionStorage.getItem('token');
+    if (!token) {
+        errHandler({ message: 'token不存在', type: 'danger' }, dispatch, RECRUITMENT);
+        return;
+    }
     shouldUpdateRecruitment = false;
-    return fetch(`${URL}/recruitment`)
+    return fetch(`${URL}/recruitment`, {
+        headers: {
+            'Authorization': `Bearer ${token}`
+        },
+    })
         .then(resHandler)
         .then(res => {
             if (res.type === 'success') {
@@ -292,10 +365,18 @@ export const requestRecruitments = () => (dispatch: Dispatch) => {
 
 export const launchRecruitment = (info: object) => (dispatch: Dispatch) => {
     dispatch({ type: RECRUITMENT.START });
+    const token = sessionStorage.getItem('token');
+    if (!token) {
+        errHandler({ message: 'token不存在', type: 'danger' }, dispatch, RECRUITMENT);
+        return;
+    }
     return fetch(`${URL}/recruitment`, {
         method: 'POST',
         body: JSON.stringify(info),
-        headers: { 'content-type': 'application/json' },
+        headers: {
+            'content-type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        },
     })
         .then(resHandler)
         .then(res => {

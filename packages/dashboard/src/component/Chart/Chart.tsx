@@ -31,7 +31,7 @@ class Chart extends React.PureComponent<Props> {
     };
     setData = (e: any) => {
         // magic function to reset legend
-        if (e.length) e['0']._chart.data.datasets['0']._meta[e['0']._chart.id].data.map((i: any) => i.hidden = false);
+        if (e.length) e['0']._chart.data.datasets['0']._meta[e['0']._chart.id].data.map((i: object) => i['hidden'] = false);
         if (!this.state.clicked && e.length) {
             const i = e['0']._index;
             this.setState({
@@ -85,7 +85,7 @@ class Chart extends React.PureComponent<Props> {
                 <div className={classes.doughnut}>
                     <Doughnut
                         data={dataSet}
-                        onElementsClick={(e) => this.setData(e)}
+                        onElementsClick={this.setData}
                         options={options} width={300} height={300}
                     />
                 </div>

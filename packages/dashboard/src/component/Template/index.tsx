@@ -12,18 +12,12 @@ import withRoot from '../../style/withRoot';
 import TemplateStepOne from './TemplateStepOne';
 import TemplateStepTwo from './TemplateStepTwo';
 import TemplateStepThree from './TemplateStepThree';
-
-export interface CandidateInfo {
-    cid: string;
-    name: string;
-    grade: string;
-    institute: string;
-}
+import { Candidate } from '../../lib/const';
 
 interface Props extends WithStyles {
     group: string;
     toggleSnackbar: (info: string, color?: string) => void;
-    selected: CandidateInfo[];
+    selected: Candidate[];
     toggleOpen: () => void;
     deselect: (cid: string) => void;
     sendSMS: (content: object) => void;
