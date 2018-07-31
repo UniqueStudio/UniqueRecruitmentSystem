@@ -3,6 +3,7 @@ export const STEP = ['报名流程', '笔试流程', '面试流程', '熬测流�
 export const URL = 'http://39.108.175.151:5000';
 
 export interface Candidate {
+    cid: string;
     name: string;
     grade: string;
     institute: string;
@@ -20,4 +21,16 @@ export interface Candidate {
     intro: string;
     resume: string; // file path
     comments: object;
+}
+
+export interface User {
+    uid: string;
+    username: string;
+    joinTime: string; // e.g. 2018A || 2018S (A: AUTUMN, S: SPRING, C: CAMP)
+    isCaptain: boolean;
+    isAdmin: boolean;
+    phone: string;
+    mail: string;
+    sex: "Male" | "Female";
+    group: string;
 }

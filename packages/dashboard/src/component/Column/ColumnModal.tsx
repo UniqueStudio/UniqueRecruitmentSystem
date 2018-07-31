@@ -4,11 +4,12 @@ import Modal from '../Modal';
 import Template from '../../container/Template';
 import styles from "../../style/index";
 import withRoot from "../../style/withRoot";
+import { Candidate } from '../../lib/const';
 
 interface Props extends WithStyles {
     open: boolean;
     toggleOpen: () => void;
-    selected: any[],
+    selected: Candidate[],
     deselect: (cid: string[] | string) => void;
     group: string;
 }

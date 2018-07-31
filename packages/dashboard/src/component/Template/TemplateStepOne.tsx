@@ -3,19 +3,13 @@ import classNames from 'classnames';
 import Chip from '@material-ui/core/Chip';
 import Typography from '@material-ui/core/Typography';
 import { WithStyles, withStyles } from '@material-ui/core/styles';
+import { Candidate } from '../../lib/const';
 
 import styles from '../../style/template'
 import withRoot from '../../style/withRoot';
 
-interface CandidateInfo {
-    cid: string
-    name: string;
-    grade: string;
-    institute: string;
-}
-
 interface Props extends WithStyles {
-    selected: CandidateInfo[];
+    selected: Candidate[];
     onDelete: (name: string) => void;
 }
 
