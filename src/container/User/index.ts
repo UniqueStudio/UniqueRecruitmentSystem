@@ -4,10 +4,11 @@ import Users from '../../component/User';
 import { StoreState } from '../../reducer';
 import { toggleSnackbarOn, ToggleSnackbarOn } from '../../action';
 import { requestUser, updateUser } from '../../action/async';
+import { User } from '../../lib/const';
 
 const mapStateToProps = ({ user }: StoreState) => ({
     uid: user.uid,
-    info: user.info,
+    info: user.info as User,
     isLoading: user.isLoading
 });
 

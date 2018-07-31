@@ -90,7 +90,7 @@ class Column extends React.Component<Props> {
 
     handleInverse = (all: string[], selected: string[]) => () => {
         const { select, deselect, candidates } = this.props;
-        deselect(selected.filter(i => !(candidates.get(i) as any).abandon));
+        deselect(selected.filter(i => !candidates.get(i)!.abandon));
         select(all.filter((i: string) => !selected.includes(i) && !candidates.get(i)!.abandon));
     };
 
@@ -121,10 +121,7 @@ class Column extends React.Component<Props> {
         const { classes, title, candidates, group, selected, deselect, modalOn, toggleModalOff, dropIndex, toggleFabOff, fabOn, downloadResume } = this.props;
         const allCandidatesCids = [...candidates.keys()];
         const selectedCandidatesCids = selected.filter((i: string) => allCandidatesCids.includes(i));
-        const selectedCandidatesInfo = selectedCandidatesCids.map((i: string) => {
-            const current = candidates.get(i);
-            return { cid: i, ...current };
-        });
+        const selectedCandidatesInfo = selectedCandidatesCids.map((i: string) => candidates.get(i) as CType);
 
         const ButtonBox = (
             <div className={classes.fabButtonsContainer}>

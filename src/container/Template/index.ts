@@ -1,12 +1,13 @@
 import { connect } from 'react-redux';
-import Template, { CandidateInfo } from '../../component/Template';
+import Template from '../../component/Template';
 import { toggleSnackbarOn, ToggleSnackbarOn, } from '../../action';
 import { Dispatch } from 'redux';
 import { sendSMS } from '../../action/async';
+import { Candidate } from '../../lib/const';
 
 interface OwnProps {
     group: string;
-    selected: CandidateInfo[];
+    selected: Candidate[];
     toggleOpen: () => void;
     deselect: (cid: string) => void;
 }
