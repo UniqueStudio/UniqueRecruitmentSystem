@@ -403,7 +403,7 @@ const css = `
     font-size: 100px;
     padding: 0 60px 60px;
 `;
-export default () => setTimeout(
+const logger = () => setTimeout(
     console.log.bind(
         console,
         "%cUnique Studio",
@@ -413,3 +413,5 @@ export default () => setTimeout(
         '\n@Faraway https://github.com/farawaaay',
     )
 );
+
+export { logger };

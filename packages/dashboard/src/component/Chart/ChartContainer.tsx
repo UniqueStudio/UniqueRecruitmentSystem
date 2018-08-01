@@ -1,5 +1,5 @@
-import * as React from 'react';
-import { WithStyles, withStyles } from '@material-ui/core/styles';
+import React, { PureComponent } from "react";
+import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 
 import Chart from './Chart';
 import ChartNew from './ChartNew';
@@ -16,7 +16,7 @@ interface Props extends WithStyles {
     launchRecruitment: (info: object) => void;
 }
 
-class ChartContainer extends React.PureComponent<Props> {
+class ChartContainer extends PureComponent<Props> {
     constructor(props: Props) {
         super(props);
         this.props.fetchData(props.uid);

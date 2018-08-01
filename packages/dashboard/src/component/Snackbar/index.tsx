@@ -1,7 +1,7 @@
-import * as React from "react";
+import React, { PureComponent } from "react";
 import IconButton from '@material-ui/core/IconButton';
 import Snackbar from '@material-ui/core/Snackbar';
-import { WithStyles, withStyles } from '@material-ui/core/styles';
+import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 import CloseIcon from '@material-ui/icons/Close';
 
 import styles from "../../style/snackbar";
@@ -15,7 +15,7 @@ interface Props extends WithStyles {
     toggleOff: () => void;
 }
 
-class Snack extends React.PureComponent<Props> {
+class Snack extends PureComponent<Props> {
 
     handleClose = () => {
         this.props.toggleOff();

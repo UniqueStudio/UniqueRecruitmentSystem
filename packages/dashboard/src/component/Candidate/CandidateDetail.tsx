@@ -1,7 +1,7 @@
-import * as React from "react";
+import React, { PureComponent } from "react";
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
-import { WithStyles, withStyles } from '@material-ui/core/styles';
+import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 
 import styles from "../../style";
 import withRoot from "../../style/withRoot";
@@ -23,7 +23,7 @@ interface Props extends WithStyles {
     downloadResume: () => void;
 }
 
-class CandidateDetail extends React.PureComponent<Props> {
+class CandidateDetail extends PureComponent<Props> {
     state = {
         modalOpen: false,
     };
@@ -35,6 +35,8 @@ class CandidateDetail extends React.PureComponent<Props> {
     render() {
         const { classes, info, downloadResume } = this.props;
         const { name, group, sex, grade, institute, intro, mail, major, phone, score } = info;
+        const inputProps = { readOnly: true } as any;
+        /* see https://github.com/mui-org/material-ui/issues/8047 */
         return (
             <>
                 <div className={classes.detail}>
@@ -43,25 +45,19 @@ class CandidateDetail extends React.PureComponent<Props> {
                             label="姓名"
                             defaultValue={name}
                             margin="normal"
-                            InputProps={{
-                                readOnly: true,
-                            } as any /* see https://github.com/mui-org/material-ui/issues/8047 */}
+                            InputProps={inputProps}
                         />
                         <TextField
                             label="组别"
                             defaultValue={group}
                             margin="normal"
-                            InputProps={{
-                                readOnly: true,
-                            } as any}
+                            InputProps={inputProps}
                         />
                         <TextField
                             label="性别"
                             defaultValue={sex === 'Male' ? '男' : '女'}
                             margin="normal"
-                            InputProps={{
-                                readOnly: true,
-                            } as any}
+                            InputProps={inputProps}
                         />
                     </div>
                     <div className={classes.detailRow}>
@@ -69,17 +65,13 @@ class CandidateDetail extends React.PureComponent<Props> {
                             label="学院"
                             defaultValue={institute}
                             margin="normal"
-                            InputProps={{
-                                readOnly: true,
-                            } as any}
+                            InputProps={inputProps}
                         />
                         <TextField
                             label="专业"
                             defaultValue={major}
                             margin="normal"
-                            InputProps={{
-                                readOnly: true,
-                            } as any}
+                            InputProps={inputProps}
                         />
                     </div>
                     <div className={classes.detailRow}>
@@ -87,17 +79,13 @@ class CandidateDetail extends React.PureComponent<Props> {
                             label="年级"
                             defaultValue={grade}
                             margin="normal"
-                            InputProps={{
-                                readOnly: true,
-                            } as any}
+                            InputProps={inputProps}
                         />
                         <TextField
                             label="加权"
                             defaultValue={score}
                             margin="normal"
-                            InputProps={{
-                                readOnly: true,
-                            } as any}
+                            InputProps={inputProps}
                         />
                     </div>
                     <div className={classes.detailRow}>
@@ -105,17 +93,13 @@ class CandidateDetail extends React.PureComponent<Props> {
                             label="邮箱"
                             defaultValue={mail}
                             margin="normal"
-                            InputProps={{
-                                readOnly: true,
-                            } as any}
+                            InputProps={inputProps}
                         />
                         <TextField
                             label="电话号码"
                             defaultValue={phone}
                             margin="normal"
-                            InputProps={{
-                                readOnly: true,
-                            } as any}
+                            InputProps={inputProps}
                         />
                     </div>
                     <div className={classes.detailRow}>

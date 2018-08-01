@@ -1,11 +1,11 @@
-import * as React from "react";
+import React, { Component } from "react";
 import { Draggable, DraggableProvided, Droppable, DroppableProvided } from 'react-beautiful-dnd';
 import Button from '@material-ui/core/Button';
 import Divider from '@material-ui/core/Divider';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import Zoom from '@material-ui/core/Zoom';
-import { WithStyles, withStyles } from '@material-ui/core/styles';
+import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 import AddIcon from '@material-ui/icons/Add';
 import { Candidate as CType, STEP } from '../../lib/const';
 import styles from "../../style/index";
@@ -36,7 +36,7 @@ interface Props extends WithStyles {
 
 const titleToStep = (title: string) => STEP.indexOf(title);
 
-class Column extends React.Component<Props> {
+class Column extends Component<Props> {
 
     state = {
         dialog: false,

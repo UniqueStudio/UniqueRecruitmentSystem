@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { PureComponent } from "react";
 import Button from '@material-ui/core/Button';
 import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel';
@@ -6,7 +6,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Paper from "@material-ui/core/Paper";
 import Select from "@material-ui/core/Select";
 import TextField from '@material-ui/core/TextField';
-import { WithStyles, withStyles } from '@material-ui/core/styles';
+import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 
 import styles from "../../style/user";
 import withRoot from "../../style/withRoot";
@@ -20,7 +20,7 @@ interface Props extends WithStyles {
     toggleSnackbar: (info: string, color: string) => void;
 }
 
-class User extends React.PureComponent<Props> {
+class User extends PureComponent<Props> {
     state = {
         info: this.props.info
     };
