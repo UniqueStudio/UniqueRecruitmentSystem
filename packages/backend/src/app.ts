@@ -50,6 +50,9 @@ const verifyJWT = (token?: string) => {
     })
 };
 
+const getQRCodeURL = 'https://open.work.weixin.qq.com/wwopen/sso/qrConnect?appid=ww6879e683e04c1e57&agentid=1000011&redirect_uri=https%3A%2F%2Fopen.hustunique.com%2Fauth&state=api';
+
+
 app.use(bodyParser.json({
     limit: '1mb'
 }));
@@ -71,7 +74,20 @@ app.use((req, res, next) => {
  * cid: candidate id
  */
 
-// login temp TODO
+app.get('/user', (req, res) => {
+    (async () => {
+        try {
+            const response = await fetch(getQRCodeURL);
+            const html = await response.text();
+            const key = html.match(/key: "\w+/)![0].replace('key: "', '');
+            res.send({ key, type: 'success' })
+        } catch (err) {
+            res.send({ message: err.message, type: 'warning' });
+        }
+    })()
+});
+
+// login
 app.post('/user', (req, res) => {
     (async () => {
         try {
