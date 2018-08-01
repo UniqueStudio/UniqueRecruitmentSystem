@@ -1,8 +1,8 @@
-import * as React from "react";
+import React, { PureComponent } from "react";
 import Button from '@material-ui/core/Button';
 import MenuItem from '@material-ui/core/MenuItem';
 import TextField from '@material-ui/core/TextField';
-import { WithStyles, withStyles } from '@material-ui/core/styles';
+import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 
 import CommentChip from "./CommentChip";
 
@@ -26,7 +26,7 @@ interface Props extends WithStyles {
     changeInputting: (comment: string, evaluation: string) => void;
 }
 
-class CandidateComments extends React.PureComponent<Props> {
+class CandidateComments extends PureComponent<Props> {
     state = {
         expanded: false,
         evaluation: this.props.savedComment.evaluation,

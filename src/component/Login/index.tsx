@@ -1,7 +1,7 @@
-import * as React from "react";
+import React, { PureComponent } from "react";
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
-import { WithStyles, withStyles } from '@material-ui/core/styles';
+import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 
 import withRoot from "../../style/withRoot";
 import styles from "../../style";
@@ -12,7 +12,7 @@ interface Props extends WithStyles {
     login: (username: string) => void;
 }
 
-class Login extends React.PureComponent<Props> {
+class Login extends PureComponent<Props> {
     state = {
         modal: true,
         name: ''

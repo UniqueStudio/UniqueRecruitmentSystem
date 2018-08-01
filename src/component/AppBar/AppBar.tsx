@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { PureComponent } from "react";
 import classNames from 'classnames';
 import AppBar from '@material-ui/core/AppBar';
 import IconButton from '@material-ui/core/IconButton';
@@ -6,9 +6,10 @@ import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
-import { WithStyles, withStyles } from '@material-ui/core/styles';
+import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 
-import { Menu as MenuIcon, Person as PersonIcon } from '@material-ui/icons';
+import MenuIcon from '@material-ui/icons/Menu';
+import PersonIcon from '@material-ui/icons/Person';
 import styles from '../../style/index'
 import withRoot from '../../style/withRoot';
 import Select from '../../container/AppBar/AppBarSelect';
@@ -29,7 +30,7 @@ interface HeaderProps {
     title: string;
 }
 
-class Header extends React.PureComponent<HeaderProps> {
+class Header extends PureComponent<HeaderProps> {
     render() {
         const { title, children } = this.props;
         return (
@@ -43,7 +44,7 @@ class Header extends React.PureComponent<HeaderProps> {
     }
 }
 
-class Bar extends React.PureComponent<Props> {
+class Bar extends PureComponent<Props> {
     state = {
         anchorEl: undefined,
     };

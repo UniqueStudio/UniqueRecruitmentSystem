@@ -1,8 +1,8 @@
-import * as React from "react";
-import Modal from '@material-ui/core/Modal';
+import React, { PureComponent } from "react";
+import Modal from '@material-ui/core/Modal/Modal';
 import Slide from '@material-ui/core/Slide';
 import Typography from '@material-ui/core/Typography';
-import { WithStyles, withStyles } from '@material-ui/core/styles';
+import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 
 import styles from "../../style/index";
 import withRoot from "../../style/withRoot";
@@ -14,7 +14,7 @@ interface Props extends WithStyles {
     onClose?: () => void;
 }
 
-class InfoModal extends React.PureComponent<Props> {
+class InfoModal extends PureComponent<Props> {
 
     render() {
         const { classes, open, onClose, title, children, direction } = this.props;

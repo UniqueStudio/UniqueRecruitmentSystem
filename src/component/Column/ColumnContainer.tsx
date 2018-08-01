@@ -1,5 +1,5 @@
-import * as React from "react";
-import { WithStyles, withStyles } from '@material-ui/core/styles';
+import React, { PureComponent } from "react";
+import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 import { DragDropContext, DraggableLocation, Droppable, DroppableProvided, DropResult } from 'react-beautiful-dnd';
 
 import withRoot from "../../style/withRoot";
@@ -15,7 +15,7 @@ interface Props extends WithStyles {
     move: (from: number, to: number, cid: string, position: number) => void;
 }
 
-class Container extends React.PureComponent<Props> {
+class Container extends PureComponent<Props> {
     constructor(props: Props) {
         super(props);
         props.changeGroup(props.group);

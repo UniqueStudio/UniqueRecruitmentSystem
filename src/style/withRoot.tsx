@@ -1,5 +1,6 @@
-import * as React from 'react';
-import { createMuiTheme, MuiThemeProvider } from '@material-ui/core/styles';
+import React, { ComponentType } from 'react';
+import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider';
+import createMuiTheme from '@material-ui/core/styles/createMuiTheme';
 import blue from '@material-ui/core/colors/blue';
 import grey from '@material-ui/core/colors/grey';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -13,7 +14,7 @@ const theme = createMuiTheme({
     },
 });
 
-function withRoot<T>(Component: React.ComponentType<T>) {
+function withRoot<T>(Component: ComponentType<T>) {
     function WithRoot(props: T) {
         // MuiThemeProvider makes the theme available down the React tree
         // thanks to React context.

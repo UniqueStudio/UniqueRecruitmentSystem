@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { PureComponent } from "react";
 import classNames from 'classnames';
 import Divider from '@material-ui/core/Divider';
 import Drawer from '@material-ui/core/Drawer';
@@ -7,7 +7,7 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import { WithStyles, withStyles } from '@material-ui/core/styles';
+import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 import DashboardIcon from '@material-ui/icons/Dashboard';
 import InsertChartIcon from '@material-ui/icons/InsertChart';
 import PersonIcon from '@material-ui/icons/Person';
@@ -23,7 +23,7 @@ interface Props extends WithStyles {
     toggleOpen: () => void;
 }
 
-class Menu extends React.PureComponent<Props> {
+class Menu extends PureComponent<Props> {
 
     render() {
         const { classes, open, toggleOpen } = this.props;

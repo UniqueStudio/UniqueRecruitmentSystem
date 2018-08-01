@@ -1,5 +1,5 @@
-import * as React from 'react';
-import { WithStyles, withStyles } from '@material-ui/core/styles';
+import React, { PureComponent } from "react";
+import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 
 import styles from '../../style/index'
 import withRoot from '../../style/withRoot';
@@ -10,7 +10,7 @@ interface Props extends WithStyles {
     to: string
 }
 
-class Anchor extends React.PureComponent<Props> {
+class Anchor extends PureComponent<Props> {
 
     render() {
         const { children, to } = this.props;
