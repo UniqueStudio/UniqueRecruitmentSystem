@@ -1,9 +1,9 @@
-import * as React from 'react';
+import React, { PureComponent } from "react";
 import classNames from 'classnames';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
-import { WithStyles, withStyles } from '@material-ui/core/styles';
+import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 
 import styles from '../../style/template'
 import withRoot from '../../style/withRoot';
@@ -12,7 +12,7 @@ interface Props extends WithStyles {
     onChange: (name: string) => (event: React.ChangeEvent) => void
 }
 
-class Step extends React.PureComponent<Props> {
+class Step extends PureComponent<Props> {
 
     state = {
         sent: false

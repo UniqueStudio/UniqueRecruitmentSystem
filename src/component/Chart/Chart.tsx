@@ -1,9 +1,16 @@
-import * as React from 'react';
+import React, { PureComponent } from "react";
 import classNames from 'classnames';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
-import { WithStyles, withStyles } from '@material-ui/core/styles';
-import { blue, cyan, green, indigo, orange, purple, red, yellow } from '@material-ui/core/colors';
+import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
+import blue from '@material-ui/core/colors/blue';
+import cyan from '@material-ui/core/colors/cyan';
+import green from '@material-ui/core/colors/green';
+import indigo from '@material-ui/core/colors/indigo';
+import orange from '@material-ui/core/colors/orange';
+import purple from '@material-ui/core/colors/purple';
+import red from '@material-ui/core/colors/red';
+import yellow from '@material-ui/core/colors/yellow';
 import { Doughnut } from 'react-chartjs-2';
 
 import withRoot from '../../style/withRoot';
@@ -21,7 +28,7 @@ interface Props extends WithStyles {
     end: number;
 }
 
-class Chart extends React.PureComponent<Props> {
+class Chart extends PureComponent<Props> {
 
     state = {
         labels: GROUP,

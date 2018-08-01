@@ -1,7 +1,7 @@
-import * as React from "react";
+import React, { PureComponent } from "react";
 import { Draggable, DraggableProvided } from 'react-beautiful-dnd';
 import IconButton from '@material-ui/core/IconButton';
-import { WithStyles, withStyles } from '@material-ui/core/styles';
+import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import Detail from '../Candidate/CandidateDetail';
 import Comments from '../../container/Candidate/CandidateComments';
@@ -24,7 +24,7 @@ interface Props extends WithStyles {
 }
 
 
-class ColumnCandidate extends React.PureComponent<Props> {
+class ColumnCandidate extends PureComponent<Props> {
 
     render() {
         const { i, j, classes, toggleModalOff, step, modalOn, direction, handleNext, handlePrev, downloadResume } = this.props;

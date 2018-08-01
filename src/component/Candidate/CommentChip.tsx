@@ -1,9 +1,9 @@
-import * as React from "react";
+import React, { PureComponent } from "react";
 import classNames from 'classnames';
 import Chip from '@material-ui/core/Chip';
 import Paper from '@material-ui/core/Paper';
 import Popover from '@material-ui/core/Popover';
-import { WithStyles, withStyles } from '@material-ui/core/styles';
+import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 
 import styles from '../../style/comment';
 
@@ -21,7 +21,7 @@ const evaluationToStyle = {
     'bad': "danger"
 };
 
-class CommentChip extends React.PureComponent<Props> {
+class CommentChip extends PureComponent<Props> {
 
     state = {
         anchorEl: undefined,
