@@ -94,15 +94,15 @@ app.get('/user/:key/status', (req, res) => {
             const scanResponse = await fetch(`${scanningURL}${req.params.key}`);
             const scanResult = await scanResponse.text();
             const status = JSON.parse(scanResult.match(/{.+}/)![0]).status;
-            if (status === 'QRCODE_SCAN_SUCC') {
+            //if (status === 'QRCODE_SCAN_SUCC') {
                 const loginResponse = await fetch(`${scanningURL}${req.params.key}&lastStatus=${status}`);
                 const loginResult = await loginResponse.text();
                 const auth_code = JSON.parse(loginResult.match(/{.+}/)![0]).auth_code;
                 res.send({ code: auth_code, type: 'success' })
-            } else {
-                res.send({ message: '登录超时，请重新登录', type: 'info' });
-                return;
-            }
+            //} else {
+            //    res.send({ message: '登录超时，请重新登录', type: 'info' });
+            //    return;
+            //}
         } catch (err) {
             res.send({ message: err.message, type: 'warning' });
         }
