@@ -96,6 +96,7 @@ app.get('/user/:key/status', (req, res) => {
             const status = JSON.parse(scanResult.match(/{.+}/)![0]).status;
             const loginResponse = await fetch(`${scanningURL}${req.params.key}&lastStatus=${status}`);
             const loginResult = await loginResponse.text();
+            console.log(loginResult);
             const auth_code = JSON.parse(loginResult.match(/{.+}/)![0]).auth_code;
             res.send({ code: auth_code, type: 'success' })
         } catch (err) {
