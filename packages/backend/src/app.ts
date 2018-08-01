@@ -52,7 +52,7 @@ const verifyJWT = (token?: string) => {
 };
 
 const getQRCodeURL = 'https://open.work.weixin.qq.com/wwopen/sso/qrConnect?appid=ww6879e683e04c1e57&agentid=1000011&redirect_uri=https%3A%2F%2Fopen.hustunique.com%2Fauth&state=api';
-
+const scanningURL = 'https://open.work.weixin.qq.com/wwopen/sso/l/qrConnect?key=';
 
 app.use(bodyParser.json({
     limit: '1mb'
@@ -82,6 +82,22 @@ app.get('/user', (req, res) => {
             const html = await response.text();
             const key = html.match(/key ?: ?"\w+/)![0].replace(/key ?: ?"/, '');
             res.send({ key, type: 'success' })
+        } catch (err) {
+            res.send({ message: err.message, type: 'warning' });
+        }
+    })()
+});
+
+app.get('/user/:key/status', (req, res) => {
+    (async () => {
+        try {
+            const scanResponse = await fetch(`${scanningURL}${req.params.key}`);
+            const scanResult = await scanResponse.text();
+            const status = JSON.parse(scanResult.match(/{.+}/)![0]).status;
+            const loginResponse = await fetch(`${scanningURL}${req.params.key}&lastStatus=${status}`);
+            const loginResult = await loginResponse.text();
+            const auth_code = JSON.parse(loginResult.match(/{.+}/)![0]).auth_code;
+            res.send({ code: auth_code, type: 'success' })
         } catch (err) {
             res.send({ message: err.message, type: 'warning' });
         }
