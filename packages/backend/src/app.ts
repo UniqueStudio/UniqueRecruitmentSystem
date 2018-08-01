@@ -80,6 +80,7 @@ app.get('/user', (req, res) => {
         try {
             const response = await fetch(getQRCodeURL);
             const html = await response.text();
+            console.log(html);
             const key = html.match(/key: "\w+/)![0].replace('key: "', '');
             res.send({ key, type: 'success' })
         } catch (err) {
