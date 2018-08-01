@@ -1,10 +1,10 @@
-import * as React from "react";
+import React, { PureComponent } from "react";
 import Card from '@material-ui/core/Card';
 import Checkbox from '@material-ui/core/Checkbox';
 import IconButton from '@material-ui/core/IconButton';
 import Popover from '@material-ui/core/Popover';
 import Typography from '@material-ui/core/Typography';
-import { WithStyles, withStyles } from '@material-ui/core/styles';
+import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 import InfoIcon from "@material-ui/icons/InfoOutlined";
 import { DraggableProvided } from 'react-beautiful-dnd';
 
@@ -33,7 +33,7 @@ interface Props extends WithStyles {
     toggleFabOn: (step: number) => void;
 }
 
-class Candidate extends React.PureComponent<Props> {
+class Candidate extends PureComponent<Props> {
     state = {
         checked: false,
         anchorEl: undefined,

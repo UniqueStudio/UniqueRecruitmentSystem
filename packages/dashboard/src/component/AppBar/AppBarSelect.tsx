@@ -1,7 +1,7 @@
-import * as React from 'react';
+import React, { PureComponent } from "react";
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
-import { WithStyles, withStyles } from '@material-ui/core/styles';
+import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 
 import styles from '../../style/index'
 import withRoot from '../../style/withRoot';
@@ -12,7 +12,7 @@ interface Props extends WithStyles {
     changeGroup: (group: string) => void;
 }
 
-class Selects extends React.PureComponent<Props> {
+class Selects extends PureComponent<Props> {
     state = {
         group: this.props.group
     };

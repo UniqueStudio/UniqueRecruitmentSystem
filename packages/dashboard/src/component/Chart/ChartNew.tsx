@@ -1,13 +1,13 @@
-import * as React from 'react';
+import React, { PureComponent } from "react";
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import MenuItem from '@material-ui/core/MenuItem';
 import Paper from '@material-ui/core/Paper';
 import TextField from '@material-ui/core/TextField';
 import Tooltip from '@material-ui/core/Tooltip';
-import { WithStyles, withStyles } from '@material-ui/core/styles';
+import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 
-import { Add as AddIcon } from '@material-ui/icons'
+import AddIcon from '@material-ui/icons/Add';
 
 import withRoot from '../../style/withRoot';
 import styles from '../../style/chart';
@@ -19,7 +19,7 @@ interface Props extends WithStyles {
     launchRecruitment: (info: object) => void;
 }
 
-class ChartNew extends React.PureComponent<Props> {
+class ChartNew extends PureComponent<Props> {
     state = {
         modalOpen: false,
         year: '',

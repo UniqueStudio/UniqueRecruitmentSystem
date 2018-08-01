@@ -1,11 +1,11 @@
-import * as React from 'react';
+import React, { PureComponent } from "react";
 import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
 import Step from '@material-ui/core/Step';
 import StepContent from '@material-ui/core/StepContent';
 import StepLabel from '@material-ui/core/StepLabel';
 import Stepper from '@material-ui/core/Stepper';
-import { WithStyles, withStyles } from '@material-ui/core/styles';
+import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 
 import styles from '../../style/template'
 import withRoot from '../../style/withRoot';
@@ -23,7 +23,7 @@ interface Props extends WithStyles {
     sendSMS: (content: object) => void;
 }
 
-class Template extends React.PureComponent<Props> {
+class Template extends PureComponent<Props> {
     defaultDate = {
         date: new Date().toISOString().slice(0, 10),
         morning: false,

@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { PureComponent } from "react";
 import classNames from 'classnames';
 import Button from '@material-ui/core/Button';
 import Checkbox from '@material-ui/core/Checkbox';
@@ -10,7 +10,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
-import { WithStyles, withStyles } from '@material-ui/core/styles';
+import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 
 import styles from '../../style/template'
 import withRoot from '../../style/withRoot';
@@ -41,11 +41,13 @@ interface Props extends MainInfo {
     };
 }
 
-class Step extends React.PureComponent<Props> {
+class Step extends PureComponent<Props> {
 
     render() {
         const { classes, group, model, step, date, fns } = this.props;
         const { handleChange, changeDate, setTime, addDate, deleteDate } = fns;
+        const inputProps = { readOnly: true } as any;
+        /* see https://github.com/mui-org/material-ui/issues/8047 */
         return (
             <>
                 <div className={classNames(classes.templateContent, classes.templateItem)}>
@@ -65,25 +67,19 @@ class Step extends React.PureComponent<Props> {
                         label="候选人姓名"
                         defaultValue='(默认)'
                         className={classes.templateItem}
-                        InputProps={{
-                            readOnly: true,
-                        } as any}
+                        InputProps={inputProps}
                     />
                     <TextField
                         label="招新名称"
                         defaultValue='(默认)'
                         className={classes.templateItem}
-                        InputProps={{
-                            readOnly: true,
-                        } as any}
+                        InputProps={inputProps}
                     />
                     <TextField
                         label="组别"
                         defaultValue={`${group}(默认)`}
                         className={classes.templateItem}
-                        InputProps={{
-                            readOnly: true,
-                        } as any}
+                        InputProps={inputProps}
                     />
                     <TextField
                         select

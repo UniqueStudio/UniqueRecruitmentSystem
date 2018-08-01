@@ -1,8 +1,8 @@
-import * as React from 'react';
+import React, { PureComponent } from "react";
 import classNames from 'classnames';
 import Chip from '@material-ui/core/Chip';
 import Typography from '@material-ui/core/Typography';
-import { WithStyles, withStyles } from '@material-ui/core/styles';
+import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 import { Candidate } from '../../lib/const';
 
 import styles from '../../style/template'
@@ -13,7 +13,7 @@ interface Props extends WithStyles {
     onDelete: (name: string) => void;
 }
 
-class Step extends React.PureComponent<Props> {
+class Step extends PureComponent<Props> {
 
     render() {
         const { classes, onDelete, selected } = this.props;
