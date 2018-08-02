@@ -5,18 +5,21 @@ interface Props {
     name: string;
     size: string;
     for: string;
+    className?: string;
     onChange: (name: string) => (e: React.ChangeEvent) => void;
 }
 
 class Input extends React.Component<Props> {
 
     public render() {
+        const { className, for: htmlFor, size, name, onChange } = this.props;
+
         return (
-            <div className='input'>
-                <label htmlFor={this.props.for} className='label'>
-                    <div className='labelName'>{this.props.name}</div>
+            <div className={classNames('input', className)}>
+                <label htmlFor={htmlFor} className='label'>
+                    <div className='labelName'>{name}</div>
                 </label>
-                <input id={this.props.for} name={this.props.for} className={classNames('inputContent', this.props.size)} onChange={this.props.onChange(this.props.for)} />
+                <input id={htmlFor} name={htmlFor} className={classNames('inputContent', size)} onChange={onChange(htmlFor)} />
             </div>
         );
     }

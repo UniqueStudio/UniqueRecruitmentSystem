@@ -9,7 +9,12 @@ import TextArea from '../TextArea';
 import Submitted from '../Submitted';
 import SnackBar from '../SnackBar';
 
-class Form extends React.Component {
+interface Props {
+    isMobile: boolean;
+    submit: () => void;
+}
+
+class Form extends React.Component<Props> {
     state = {
         info: {
             name: '',
@@ -78,7 +83,8 @@ class Form extends React.Component {
                     localStorage.setItem('info', JSON.stringify(info));
                     this.setState({
                         submitted: true
-                    })
+                    });
+                    this.props.submit()
                 } else throw result;
             })()
         } catch (err) {
@@ -107,9 +113,11 @@ class Form extends React.Component {
     };
 
     public render() {
-        return (
+        const { submitted, content, snackBarOn } = this.state;
+        const { isMobile } = this.props;
+        const PCInterface = (
             <div className='formContainer'>
-                {!this.state.submitted &&
+                {!submitted &&
                 <>
                     <div className='form'>
                         <div className='formRow'>
@@ -162,11 +170,64 @@ class Form extends React.Component {
                     </div>
                 </>
                 }
-                {this.state.submitted &&
-                <Submitted title='已成功提交报名表单' description='请等待我们的短信通知，有任何问题可以在招新群联系我们' className='fullHeight' />}
-                {this.state.snackBarOn && <SnackBar content={this.state.content} onClose={this.handleClose} />}
+                {submitted &&
+                <Submitted title='已成功提交报名表单' description='请等待我们的短信通知，有问题可在招新群联系我们' className='fullHeight' />}
+                {snackBarOn && <SnackBar content={content} onClose={this.handleClose} />}
             </div>
         );
+
+        const MobileInterface = (
+            <div className='formContainer'>
+                {!submitted &&
+                <>
+                    <div className='titleContainer'>
+                        <h1 className='title'>Unique Studio</h1>
+                        <h1 className='title'>秋季招新</h1>
+                    </div>
+                    <div className='form'>
+                        <Input for='name' size='md' name='姓名' onChange={this.handleChange} className='mobile_sm' />
+                        <div className='formRow choose'>
+                            <Choose onChange={this.handleChange('sex')} />
+                        </div>
+                        <Input for='mail' size='lg' name='邮箱' onChange={this.handleChange} />
+                        <Input for='institute' size='md' name='学院' onChange={this.handleChange} />
+                        <Input for='major' size='md' name='专业' onChange={this.handleChange} />
+                        <Select selections={GRADES} name='所属年级' onChange={this.handleChange('grade')} />
+                        <Select selections={GROUPS} name='组别选择' onChange={this.handleChange('group')} />
+                        <Select selections={SCORES} name='加权选择' onChange={this.handleChange('score')} />
+                        <Input for='phone' size='ml' name='手机号' onChange={this.handleChange} />
+                        <Button name='接受验证码' bgColor='primaryLighter' textColor='primary' />
+                        <Input for='code' size='sm' name='验证码' onChange={this.handleChange} className='mobile_sm' />
+                        <div className='formColumn'>
+                            <TextArea onChange={this.handleChange('intro')} />
+                        </div>
+                        <input id='resume' name='resume' type='file' className='none'
+                               onChange={this.handleFile} />
+                        <label htmlFor='resume'>
+                            <span className={classNames(
+                                'background_primaryLighter',
+                                'text_primary',
+                                'fontSize',
+                                'button',
+                                'contentPadding',
+                                'fileButton'
+                            )}>
+                                上传简历/作品集
+                            </span>
+                        </label>
+                        <div className='submit'>
+                            <Button name='提交' bgColor='secondary' textColor='white' onClick={this.handleClick} />
+                        </div>
+                    </div>
+                </>
+                }
+                {submitted &&
+                <Submitted title='报名成功' description='请等待我们的短信通知，有问题可在招新群联系我们' className='fullHeight' />}
+                {snackBarOn && <SnackBar content={content} onClose={this.handleClose} />}
+            </div>
+        );
+
+        return !isMobile ? PCInterface : MobileInterface;
     }
 }
 

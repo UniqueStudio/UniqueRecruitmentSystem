@@ -41,7 +41,7 @@ html {
   @media screen and (min-width: 360px) and (max-width: 375px) {
     font-size: 13.5px;
   }
-  @media screen and (min-width: 320px) and (max-width: 360px) {
+  @media screen and (max-width: 360px) {
     font-size: 12px;
   }
 }
@@ -54,6 +54,9 @@ body {
   display: flex;
   justify-content: flex-end;
   flex-direction: column;
+  @media screen and (min-width: 501px) {
+    min-width: 800px;
+  }
 }
 
 .background {
@@ -63,8 +66,10 @@ body {
     repeat: repeat-y;
     position: bottom;
   }
-;
   margin-bottom: $spacing * 2;
+  @media screen and (max-width: 500px) {
+    display: none;
+  }
 }
 
 #bgLeft {
@@ -78,16 +83,26 @@ body {
 }
 
 .logo {
-  position: absolute;
   user-select: none;
-  top: $spacing * 3;
-  left: $spacing * 5;
-  width: 20%;
+  @media screen and (min-width: 501px) {
+    position: absolute;
+    top: $spacing * 3;
+    left: $spacing * 5;
+    width: 20%;
+  }
+  @media screen and (max-width: 500px) {
+    width: 50%;
+    margin-top: $spacing * 4;
+  }
 }
 
 .container {
   display: flex;
   min-height: 100vh;
+  @media screen and (max-width: 500px) {
+    flex-direction: column;
+    align-items: center;
+  }
 }
 
 .center {
@@ -122,6 +137,54 @@ body {
   user-select: none;
 }
 
+.borderTop {
+  width: 90%;
+  user-select: none;
+}
+
+.borderTopSubmitted {
+  margin-top: $spacing * 4;
+}
+
+.borderVertical {
+  background: {
+    image: linear-gradient($primaryLightLittle 50%, rgba(0, 0, 0, 0) 0%);
+    position: left;
+    size: 2px 14.1px;
+    repeat: repeat-y;
+  }
+  width: 2.5px;
+}
+
+.borderLeft {
+  margin-left: -1px;
+}
+
+.borderRight {
+  margin-right: -1px;
+  margin-top: -4px;
+}
+
+.borderBottom {
+  @extend .borderTop;
+  transform: rotate(180deg);
+}
+
+.fakeBorderContainer {
+  width: 90%;
+  display: flex;
+  justify-content: space-between;
+}
+
+.content {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: $spacing * 2 0;
+}
+
 .title {
   font: {
     family: 'Roboto', $chineseFont;
@@ -145,8 +208,17 @@ body {
   @media screen and (max-width: 640px) {
     font-size: 2rem;
   }
+  @media screen and (max-width: 500px) {
+    margin: $spacing 0 0;
+  }
   margin: -$spacing * 2 0 0;
   color: $secondaryLight;
+}
+
+.titleContainer {
+  margin-top: $spacing;
+  margin-bottom: $spacing * 3;
+  text-align: center;
 }
 
 .formContainer {
@@ -156,10 +228,19 @@ body {
     repeat: no-repeat;
   }
   position: relative;
+  @media screen and (max-width: 500px) {
+    width: 95%;
+    background: none;
+    padding: 0;
+  }
   flex: 0 1 27vw;
   width: 100%;
   padding: $spacing * 7 $spacing * 5;
-  @media screen and (max-width: 900px) {
+  @media screen and (max-width: 800px) and (min-width: 501px) {
+    padding: $spacing * 5 $spacing * 3;
+    flex: 0 1 260px;
+  }
+  @media screen and (max-width: 900px) and (min-width: 801px) {
     padding: $spacing * 5 $spacing * 3;
     flex: 0 1 33vw;
   }
@@ -186,6 +267,12 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  @media screen and (max-width: 500px) {
+    align-items: center;
+    & > * {
+      margin: $spacing * 3 0;
+    }
+  }
 }
 
 .formRow {
@@ -196,6 +283,9 @@ body {
 
 .input {
   display: flex;
+  @media screen and (max-width: 500px) {
+    width: 90%;
+  }
 }
 
 .border {
@@ -210,6 +300,12 @@ body {
   }
   @media screen and (max-width: 1440px) {
     border-radius: 8px;
+  }
+  @media screen and (max-width: 500px) {
+    border: {
+      radius: 12px;
+      width: 2px;
+    }
   }
 }
 
@@ -236,6 +332,9 @@ body {
   @media screen and (max-width: 1024px) {
     font-size: 0.75rem;
   }
+  @media screen and (max-width: 500px) {
+    font-size: 1.2rem;
+  }
 }
 
 .labelName {
@@ -251,9 +350,22 @@ body {
   @media screen and (max-width: 1024px) {
     margin: 8px 12px;
   }
+  @media screen and (max-width: 500px) {
+    margin: 16px 20px;
+    font-weight: normal;
+  }
+  @media screen and (max-width: 400px) {
+    margin: 12px 16px;
+    font-weight: normal;
+  }
+  @media screen and (max-width: 320px) {
+    margin: 8px 12px;
+    font-weight: normal;
+  }
   margin: 16px 20px;
   @extend .fontSize;
   font-weight: bold;
+  user-select: none;
 }
 
 @mixin getInputWidth($type) {
@@ -330,10 +442,14 @@ body {
   border-top-left-radius: 0;
   border-bottom-left-radius: 0;
   border-left-width: 0;
-  height: 100%;
+  height: auto;
   outline: none;
   @extend .fontSize;
   padding-left: $spacing;
+  @media screen and (max-width: 500px) {
+    flex-grow: 1;
+    width: auto;
+  }
   @media screen and (max-width: 1024px) {
     padding-left: $spacing / 2;
   }
@@ -357,6 +473,10 @@ body {
 
 .xs {
   @include getInputWidth('xs')
+}
+
+.mobile_sm {
+  width: 70%;
 }
 
 .button {
@@ -386,10 +506,20 @@ body {
 .background_white {
   background: none;
   border-width: 3px;
+  @media screen and (max-width: 500px) {
+    border-width: 2px;
+  }
   &:hover {
     background: $primaryLight;
   }
 }
+
+.background_grey {
+  background: #ddd;
+  border: {
+    width: 3px;
+    color: #ddd;
+  }}
 
 .background_pureWhite {
   background: white;
@@ -431,6 +561,9 @@ body {
 .formColumn {
   display: inline-block;
   width: 50%;
+  @media screen and (max-width: 500px) {
+    width: 90%;
+  }
 }
 
 .formColumn:first-child {
@@ -464,8 +597,17 @@ body {
   @media screen and (max-width: 1024px) {
     right: -$spacing * 12;
   }
+  @media screen and (max-width: 500px) {
+    position: static;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
   button {
     border-radius: 8px;
+    @media screen and (max-width: 500px) {
+      width: auto;
+    }
     div {
       font-size: 1.5rem;
       margin: $spacing $spacing * 4;
@@ -477,6 +619,10 @@ body {
         right: $spacing * 4;
         font-size: 1rem;
       }
+      @media screen and (max-width: 500px) {
+        margin: $spacing $spacing * 4;
+        font-size: 1.5rem;
+      }
     }
   }
 }
@@ -487,6 +633,12 @@ body {
 
 .choose {
   width: 35%;
+  @media screen and (max-width: 500px) {
+    width: 80%;
+  }
+  @media screen and (max-width: 400px) {
+    width: 90%;
+  }
 }
 
 .selects {
@@ -524,11 +676,16 @@ body {
   }
   padding: 16px 56px 16px 20px;
   @extend .fontSize;
+  @media screen and (max-width: 500px) {
+    font-weight: normal;
+    padding: 16px 56px 16px 20px;
+  }
   font-weight: bold;
   color: $primary;
   @extend .border;
   cursor: pointer;
   appearance: none;
+  user-select: none;
   position: relative;
 }
 
@@ -545,6 +702,9 @@ body {
   }
   @media screen and (max-width: 1024px) {
     zoom: 60%;
+  }
+  @media screen and (max-width: 500px) {
+    zoom: 90%;
   }
   cursor: pointer;
   top: calc(50% - 15px);
@@ -572,6 +732,9 @@ body {
   @media screen and (max-width: 1024px) {
     padding: 8px 12px;
   }
+  @media screen and (max-width: 500px) {
+    padding: 16px 20px;
+  }
   padding: 16px 20px;
 }
 
@@ -581,17 +744,22 @@ body {
   width: 100%;
   cursor: pointer;
   background: white;
+  z-index: 1;
   @extend .border;
   border-top: 0;
   border-top-left-radius: 0;
   border-top-right-radius: 0;
   max-height: 200px;
+  @media screen and (max-width: 500px) {
+    max-height: 300px;
+  }
   overflow-y: auto;
   div {
     text-align: center;
     color: $primary;
     @extend .contentPadding;
     @extend .fontSize;
+    user-select: none;
     &:hover {
       background: #C5E5FC;
     }
@@ -610,22 +778,40 @@ body {
   resize: none;
   outline: none;
   height: 100%;
+  width: 100%;
   border: 0;
   @extend .fontSize;
   flex: 1;
   background: none;
   padding: $spacing * 3;
+  @media screen and (max-width: 500px) {
+    padding: $spacing * 2;
+  }
 }
 
 .textAreaLabel {
   border-top-left-radius: 0;
-  border-bottom-left-radius: 0;
-  margin-top: $spacing * 2;
-  margin-left: -3px;
+  @media screen and (min-width: 501px) {
+    border-bottom-left-radius: 0;
+    margin-top: $spacing * 2;
+    margin-left: -3px;
+  }
+  @media screen and (max-width: 500px) {
+    border-top-right-radius: 0;
+    margin-top: -2px;
+    & > div {
+      margin: $spacing;
+    }
+  }
 }
 
 .textAreaContainer {
   height: 100%;
+  @media screen and (max-width: 500px) {
+    height: 200px;
+    flex-direction: column;
+    align-items: center;
+  }
   @extend .border;
   display: flex;
   align-items: flex-start;
@@ -634,6 +820,9 @@ body {
 
 .timeContainer {
   @extend .formContainer;
+}
+
+.time {
   display: flex;
   flex-direction: column;
   justify-content: space-around;
@@ -647,6 +836,10 @@ body {
   margin-top: -$spacing * 6;
   @media screen and (max-width: 1600px) {
     margin-top: -$spacing * 4;
+  }
+  @media screen and (max-width: 500px) {
+    margin-top: 0;
+    margin-bottom: $spacing;
   }
 }
 
@@ -667,6 +860,11 @@ body {
   @media screen and (max-width: 1024px) {
     font-size: 1.5rem;
   }
+  @media screen and (max-width: 500px) {
+    font-size: 2rem;
+    font-weight: normal;
+    margin-bottom: $spacing;
+  }
 }
 
 .descriptionFontSize {
@@ -683,12 +881,18 @@ body {
   @media screen and (max-width: 1024px) {
     font-size: 1rem;
   }
+  @media screen and (max-width: 500px) {
+    font-size: 1.3rem;
+  }
 }
 
 .description {
   margin: 0;
   color: $primaryLightLittle;
   font-weight: bold;
+  @media screen and (max-width: 500px) {
+    font-weight: normal;
+  }
   @extend .descriptionFontSize
 }
 
@@ -699,6 +903,21 @@ body {
 .timeContent {
   display: flex;
   justify-content: space-around;
+  @media screen and (max-width: 500px) {
+    flex-direction: column;
+    align-items: center;
+    & > * {
+      margin: $spacing * 3 0;
+    }
+  }
+}
+
+.timeButtons {
+  @media screen and (max-width: 500px) {
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+  }
 }
 
 .timeSubmit {
@@ -706,8 +925,16 @@ body {
     display: block;
     margin-top: $spacing * 2;
   }
+  & > button {
+    @media screen and (max-width: 500px) {
+      margin: $spacing * 3 0;
+    }
+  }
   @media screen and (max-width: 1280px) {
     margin-right: -$spacing * 2;
+  }
+  @media screen and (max-width: 500px) {
+    margin-right: 0;
   }
   margin-right: -$spacing * 5;
 }
@@ -740,19 +967,37 @@ body {
   right: 0;
   @extend .border;
   border-width: 0;
+  @media screen and (max-width: 500px) {
+    width: 100%;
+  }
 }
 
 .modal_abandon {
   bottom: 140px;
+  @media screen and (max-width: 500px) {
+    bottom: 190px;
+  }
 }
 
 .modal_submit {
   bottom: 70px;
+  @media screen and (max-width: 500px) {
+    bottom: 120px;
+  }
 }
 
 .modalButtons {
   display: flex;
+  @media screen and (max-width: 360px) {
+    flex-direction: column;
+    align-items: center;
+  }
   justify-content: space-around;
+  button {
+    @media screen and (max-width: 360px) {
+      margin: $spacing * 2 0;
+    }
+  }
   button div {
     margin: $spacing $spacing * 2;
     @media screen and (max-width: 1024px) {
@@ -792,12 +1037,23 @@ body {
   @media screen and (max-width: 1024px) {
     font-size: 2.7rem;
   }
+  @media screen and (max-width: 500px) {
+    font-weight: normal;
+  }
+  @media screen and (max-width: 320px) {
+    font-size: 2.4rem;
+  }
   font-weight: bold;
 }
 
 .decidedDescription {
   color: $primaryLightLittle;
   font-weight: bold;
+  @media screen and (max-width: 500px) {
+    font-weight: normal;
+    margin-top: $spacing * 2;
+    font-size: 0.9rem;
+  }
   @extend .descriptionFontSize;
 }
 
@@ -828,6 +1084,7 @@ body {
   background: $secondary;
   border-radius: 6px;
   color: white;
+  z-index: 1;
   @extend .descriptionFontSize;
   font-weight: bold;
   box-shadow: 0 0 5px $secondaryLight;
@@ -835,7 +1092,6 @@ body {
     duration: 3s;
     name: pop;
   }
-;
 }
 
 @keyframes pop {
@@ -850,11 +1106,22 @@ body {
   }
 }
 
+
 .fullHeight {
   height: 100%;
+  @media screen and (max-width: 500px) {
+    min-height: 250px;
+  }
 }
 
 .fileButton {
+  @media screen and (max-width: 500px) {
+    font-weight: normal;
+  }
   font-weight: bold;
   display: block;
+}
+
+.submittedContainer {
+  margin-top: $spacing * 3;
 }
