@@ -21,9 +21,9 @@ class Step extends PureComponent<Props> {
             <div className={classNames(classes.templateContent, classes.templateItem)}>
                 {selected.length === 0 ?
                     <Typography variant='title' className={classes.templateItem}>你未选中任何人!</Typography>
-                    : selected.map(i =>
+                    : selected.map((i, j) =>
                         <Chip
-                            key={i.cid}
+                            key={j}
                             label={`${i.name} ${i.grade} ${i.institute}`}
                             onDelete={() => onDelete(i.cid)}
                             className={classes.templateItem}

@@ -30,6 +30,6 @@ the other is [Form](https://github.com/UniqueStudio/UniqueRecruitmentForm).
 
 ## TODOS
 
-1. WeChat authorization and login
-2. SMS
-3. security
+1. SMS
+2. Separate last interview
+3. Instant message(?)

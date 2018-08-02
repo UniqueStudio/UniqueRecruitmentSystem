@@ -166,32 +166,30 @@ class Template extends PureComponent<Props> {
         return (
             <div className={classes.template}>
                 <Stepper activeStep={activeStep} classes={{ root: classes.stepper }} orientation="vertical">
-                    {steps.map((i, j) => {
-                        return (
-                            <Step key={j}>
-                                <StepLabel>{i}</StepLabel>
-                                <StepContent>
-                                    {stepContent[j]}
-                                    <div>
-                                        <Button
-                                            onClick={activeStep ? this.handleBack : toggleOpen}
+                    {steps.map((i, j) => (
+                        <Step key={j}>
+                            <StepLabel>{i}</StepLabel>
+                            <StepContent>
+                                {stepContent[j]}
+                                <div>
+                                    <Button
+                                        onClick={activeStep ? this.handleBack : toggleOpen}
+                                        className={classes.templateItem}
+                                    >
+                                        {activeStep ? '上一步' : '关闭'}
+                                    </Button>
+                                    <Button variant="contained"
+                                            color="primary"
+                                            onClick={activeStep === steps.length - 1 ? this.sendSMS : this.handleNext}
                                             className={classes.templateItem}
-                                        >
-                                            {activeStep ? '上一步' : '关闭'}
-                                        </Button>
-                                        <Button variant="contained"
-                                                color="primary"
-                                                onClick={activeStep === steps.length - 1 ? this.sendSMS : this.handleNext}
-                                                className={classes.templateItem}
-                                                disabled={selected.length === 0}
-                                        >
-                                            {activeStep === steps.length - 1 ? '发送通知' : '下一步'}
-                                        </Button>
-                                    </div>
-                                </StepContent>
-                            </Step>
-                        );
-                    })}
+                                            disabled={selected.length === 0}
+                                    >
+                                        {activeStep === steps.length - 1 ? '发送通知' : '下一步'}
+                                    </Button>
+                                </div>
+                            </StepContent>
+                        </Step>
+                    ))}
                 </Stepper>
                 {activeStep === steps.length && (
                     <Paper square elevation={0} className={classes.templateEnd}>
