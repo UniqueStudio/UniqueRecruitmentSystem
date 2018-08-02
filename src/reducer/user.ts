@@ -8,13 +8,15 @@ const init = {
     username: userInfo ? JSON.parse(userInfo).username : '',
     uid: sessionStorage.getItem('uid') || '',
     isLoading: false,
-    info: {}
+    info: {},
+    key: '',
 };
 
 type Action =
     actions.Login
     | actions.Logout
-    | actions.ChangeUserInfo;
+    | actions.ChangeUserInfo
+    | actions.SetKey;
 
 export interface User {
     loggedIn: boolean;
@@ -22,6 +24,7 @@ export interface User {
     uid: string;
     isLoading: boolean;
     info: object;
+    key: string;
 }
 
 export function user(state: User = init, action: Action): User {
@@ -40,6 +43,9 @@ export function user(state: User = init, action: Action): User {
             return { ...state, loggedIn: false };
         case actions.CHANGE_USER_INFO: {
             return { ...state, info: action.info, username: action.info['username'] || state.username };
+        }
+        case actions.SET_KEY: {
+            return { ...state, key: action.key }
         }
     }
     return state;
