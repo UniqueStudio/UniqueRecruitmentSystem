@@ -106,6 +106,7 @@ app.get('/user/:key/status', (req, res) => {
                 const accessTokenResult = await accessTokenResponse.json();
                 console.log(accessTokenResult);
                 const accessToken = JSON.parse(accessTokenResult).access_token;
+                console.log(accessToken);
                 const userIDResponse = await fetch(userIDURL(accessToken, auth_code));
                 const userIDResult = await userIDResponse.json();
                 console.log(userIDResult);
@@ -119,6 +120,7 @@ app.get('/user/:key/status', (req, res) => {
                 return;
             }
         } catch (err) {
+            console.log(err);
             res.send({ message: err.message, type: 'warning' });
         }
     })()
