@@ -38,6 +38,39 @@ const errHandler = (err: CustomError, dispatch: Dispatch, type: actionType) => {
 };
 
 export const USER = actionTypeCreator('USER');
+
+export const getQRCode = () => (dispatch: Dispatch) => {
+    dispatch({ type: USER.START });
+    (async () => {
+        try {
+            const initResponse = await fetch(`${URL}/user`);
+            const initResult = await resHandler(initResponse);
+            if (initResult.type === 'success') {
+                const { key } = initResult;
+                dispatch(actions.setKey(key));
+                dispatch(actions.toggleSnackbarOn('请尽快用企业微信扫描二维码！', 'info'));
+                dispatch({ type: USER.SUCCESS });
+                const loginResponse = await fetch(`${URL}/user/${key}/status`);
+                const loginResult = await resHandler(loginResponse);
+                if (loginResult.type === 'success') {
+                    const { code } = loginResult;
+                    dispatch(actions.toggleSnackbarOn('登录成功！', 'info'));
+                    console.log(code);
+                } else {
+                    errHandler(loginResult, dispatch, USER);
+                    return;
+                }
+            } else {
+                errHandler(initResult, dispatch, USER);
+                return;
+            }
+        } catch (err) {
+            dispatch(actions.setKey(''));
+            dispatch(actions.toggleSnackbarOn('二维码已过期！', 'warning'));
+        }
+    })();
+};
+
 export const login = (username: string) => (dispatch: Dispatch) => {
     dispatch({ type: USER.START });
     return fetch(`${URL}/user`, {

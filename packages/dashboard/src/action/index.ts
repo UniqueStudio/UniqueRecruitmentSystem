@@ -268,6 +268,21 @@ export function setGroup(group: string): SetGroup {
     }
 }
 
+export const SET_KEY = 'SET_KEY';
+export type SET_KEY = typeof SET_KEY;
+
+export interface SetKey {
+    type: SET_KEY;
+    key: string
+}
+
+export function setKey(key: string): SetKey {
+    return {
+        type: SET_KEY,
+        key
+    }
+}
+
 export const LOGIN = 'LOGIN';
 export type LOGIN = typeof LOGIN;
 
