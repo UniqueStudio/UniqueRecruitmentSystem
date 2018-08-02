@@ -108,11 +108,20 @@ app.get('/user/:key/status', (req, res) => {
                     const accessToken = accessTokenResult.access_token;
                     const userIDResponse = await fetch(userIDURL(accessToken, auth_code));
                     const userIDResult = await userIDResponse.json();
-                    const uid = userIDResult.UserId;
-                    const userInfoResponse = await fetch(userInfoURL(accessToken, uid));
+                    const userID = userIDResult.UserId;
+                    const userInfoResponse = await fetch(userInfoURL(accessToken, userID));
                     const userInfoResult = await userInfoResponse.json();
-                    console.log(userInfoResult);
-                    res.send({ code: auth_code, type: 'success' })
+                    const user = await database.query('users', { username: userInfoResult.name, phone: userInfoResult.mobile });
+                    let uid;
+                    if (!user.length) {
+                        uid = await database.insert('users', { username: userInfoResult.name, phone: userInfoResult.mobile });
+                    } else {
+                        uid = user[0]['_id'];
+                    }
+                    const token = jwt.sign({ uid }, secret, {
+                        expiresIn: 86400
+                    });
+                    res.send({ uid, token, username: userInfoResult.name, type: 'success' });
                 } else {
                     res.send({ message: '登录失败', type: 'info' });
                     return;
@@ -122,31 +131,31 @@ app.get('/user/:key/status', (req, res) => {
                 return;
             }
         } catch (err) {
-            res.send({ message: err.message, type: 'warning' });
+            res.send({ message: err.message, type: 'danger' });
         }
     })()
 });
 
 // login
-app.post('/user', (req, res) => {
-    (async () => {
-        try {
-            const user = await database.query('users', { username: req.body.username });
-            let uid;
-            if (!user.length) {
-                uid = await database.insert('users', { username: req.body.username });
-            } else {
-                uid = user[0]['_id'];
-            }
-            const token = jwt.sign({ uid }, secret, {
-                expiresIn: 86400
-            });
-            res.send({ uid, token, type: 'success' });
-        } catch (err) {
-            res.send({ message: err.message, type: 'warning' });
-        }
-    })()
-});
+// app.post('/user', (req, res) => {
+//     (async () => {
+//         try {
+//             const user = await database.query('users', { username: req.body.username });
+//             let uid;
+//             if (!user.length) {
+//                 uid = await database.insert('users', { username: req.body.username });
+//             } else {
+//                 uid = user[0]['_id'];
+//             }
+//             const token = jwt.sign({ uid }, secret, {
+//                 expiresIn: 86400
+//             });
+//             res.send({ uid, token, type: 'success' });
+//         } catch (err) {
+//             res.send({ message: err.message, type: 'warning' });
+//         }
+//     })()
+// });
 
 // get user info
 app.get('/user/:uid', (req, res) => {
