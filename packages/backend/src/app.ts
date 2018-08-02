@@ -100,27 +100,28 @@ app.get('/user/:key/status', (req, res) => {
             if (status === 'QRCODE_SCAN_ING') {
                 const loginResponse = await fetch(`${scanningURL}${req.params.key}&lastStatus=${status}`);
                 const loginResult = await loginResponse.text();
-                console.log(loginResult);
-                const auth_code = JSON.parse(loginResult.match(/{.+}/)![0]).auth_code;
-                const accessTokenResponse = await fetch(accessTokenURL);
-                const accessTokenResult = await accessTokenResponse.json();
-                console.log(accessTokenResult);
-                const accessToken = JSON.parse(accessTokenResult).access_token;
-                console.log(accessToken);
-                const userIDResponse = await fetch(userIDURL(accessToken, auth_code));
-                const userIDResult = await userIDResponse.json();
-                console.log(userIDResult);
-                const uid = JSON.parse(userIDResult).UserId;
-                const userInfoResponse = await fetch(userInfoURL(accessToken, uid));
-                const userInfoResult = await userInfoResponse.json();
-                console.log(userInfoResult);
-                res.send({ code: auth_code, type: 'success' })
+                const loginObj = JSON.parse(loginResult.match(/{.+}/)![0]);
+                if (loginObj.status === 'QRCODE_SCAN_SUCC') {
+                    const auth_code = loginObj.auth_code;
+                    const accessTokenResponse = await fetch(accessTokenURL);
+                    const accessTokenResult = await accessTokenResponse.json();
+                    const accessToken = accessTokenResult.access_token;
+                    const userIDResponse = await fetch(userIDURL(accessToken, auth_code));
+                    const userIDResult = await userIDResponse.json();
+                    const uid = userIDResult.UserId;
+                    const userInfoResponse = await fetch(userInfoURL(accessToken, uid));
+                    const userInfoResult = await userInfoResponse.json();
+                    console.log(userInfoResult);
+                    res.send({ code: auth_code, type: 'success' })
+                } else {
+                    res.send({ message: '登录失败', type: 'info' });
+                    return;
+                }
             } else {
                 res.send({ message: '登录超时，请重新登录', type: 'info' });
                 return;
             }
         } catch (err) {
-            console.log(err);
             res.send({ message: err.message, type: 'warning' });
         }
     })()
