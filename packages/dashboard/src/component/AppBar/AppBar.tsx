@@ -10,7 +10,7 @@ import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 
 import MenuIcon from '@material-ui/icons/Menu';
 import PersonIcon from '@material-ui/icons/Person';
-import styles from '../../style/index'
+import styles from '../../style/appBar'
 import withRoot from '../../style/withRoot';
 import Select from '../../container/AppBar/AppBarSelect';
 import Anchor from '../Anchor';

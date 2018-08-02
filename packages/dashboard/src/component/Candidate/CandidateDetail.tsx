@@ -3,7 +3,7 @@ import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 
-import styles from "../../style";
+import styles from "../../style/candidate";
 import withRoot from "../../style/withRoot";
 import Modal from '../Modal';
 
@@ -112,7 +112,7 @@ class CandidateDetail extends PureComponent<Props> {
                     </div>
                 </div>
                 <Modal open={this.state.modalOpen} onClose={this.toggleModalOpen} title='自我介绍'>
-                    <div className={classes.modalContent}>
+                    <div className={classes.introContent}>
                         {intro.split('\n').filter(i => i).map((i, j) => (
                             <React.Fragment key={j}>
                                 {i}

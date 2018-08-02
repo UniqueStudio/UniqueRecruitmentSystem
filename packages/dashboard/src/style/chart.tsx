@@ -12,7 +12,7 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
         position: 'relative'
     },
     expired: {
-        background: colorToAlpha(theme.palette.secondary.light, 0.4),
+        background: colorToAlpha(theme.palette.secondary.light, 0.1),
     },
     newButton: {
         alignSelf: 'center',

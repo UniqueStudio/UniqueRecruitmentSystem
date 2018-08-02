@@ -6,7 +6,7 @@ import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 
 import CommentChip from "./CommentChip";
 
-import styles from "../../style/index";
+import styles from "../../style/candidate";
 import withRoot from "../../style/withRoot";
 
 interface Props extends WithStyles {
