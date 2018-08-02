@@ -2,7 +2,6 @@ import React, { PureComponent } from "react";
 import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 import Modal from '../Modal';
 import Template from '../../container/Template';
-import styles from "../../style/index";
 import withRoot from "../../style/withRoot";
 import { Candidate } from '../../lib/const';
 
@@ -40,4 +39,4 @@ class ColumnModal extends PureComponent<Props> {
     }
 }
 
-export default withRoot(withStyles(styles)(ColumnModal));
+export default withRoot(withStyles({})(ColumnModal));

@@ -3,7 +3,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 
-import styles from '../../style/index'
+import styles from '../../style/appBar'
 import withRoot from '../../style/withRoot';
 import { GROUP } from '../../lib/const';
 

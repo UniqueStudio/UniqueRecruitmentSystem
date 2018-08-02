@@ -7,12 +7,13 @@ import { StoreState } from '../../reducer';
 const mapStateToProps = ({ user }: StoreState) => ({
     loggedIn: user.loggedIn,
     isLoading: user.isLoading,
-    weChatKey: user.key
+    weChatKey: user.key,
+    buttonAble: user.qRCodeGettable
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
     login: (username: string) => login(username)(dispatch),
-    getQRCode: () => getQRCode()(dispatch)
+    getQRCode: () => getQRCode()(dispatch),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(LoginComponent);

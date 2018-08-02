@@ -10,13 +10,15 @@ const init = {
     isLoading: false,
     info: {},
     key: '',
+    qRCodeGettable: true
 };
 
 type Action =
     actions.Login
     | actions.Logout
     | actions.ChangeUserInfo
-    | actions.SetKey;
+    | actions.SetKey
+    | actions.SetGettable;
 
 export interface User {
     loggedIn: boolean;
@@ -25,6 +27,7 @@ export interface User {
     isLoading: boolean;
     info: object;
     key: string;
+    qRCodeGettable: boolean;
 }
 
 export function user(state: User = init, action: Action): User {
@@ -46,6 +49,9 @@ export function user(state: User = init, action: Action): User {
         }
         case actions.SET_KEY: {
             return { ...state, key: action.key }
+        }
+        case actions.SET_GETTABLE: {
+            return { ...state, qRCodeGettable: action.able }
         }
     }
     return state;
