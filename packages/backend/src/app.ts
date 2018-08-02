@@ -51,7 +51,7 @@ const verifyJWT = (token?: string) => {
     })
 };
 
-const getQRCodeURL = 'https://open.work.weixin.qq.com/wwopen/sso/qrConnect?appid=ww6879e683e04c1e57&agentid=1000014&redirect_uri=https%3A%2F%2Fopen.hustunique.com%2Fauth&state=api';
+const getQRCodeURL = 'https://open.work.weixin.qq.com/wwopen/sso/qrConnect?appid=ww6879e683e04c1e57&agentid=1000011&redirect_uri=https%3A%2F%2Fopen.hustunique.com%2Fauth&state=api';
 const scanningURL = 'https://open.work.weixin.qq.com/wwopen/sso/l/qrConnect?key=';
 const accessTokenURL = 'https://qyapi.weixin.qq.com/cgi-bin/gettoken?corpid=ww6879e683e04c1e57&corpsecret=aZm2TSKTl-qGFRDtcyXHrR4HUUU_eRIyxMCqLyyO184';
 const userIDURL = (accessToken: string, code: string) => `https://qyapi.weixin.qq.com/cgi-bin/user/getuserinfo?access_token=${accessToken}&code=${code}`;
