@@ -8,7 +8,7 @@ import Comments from '../../container/Candidate/CandidateComments';
 import Candidate from "../../container/Candidate/Candidate";
 import Modal from '../Modal';
 import { Candidate as CType } from '../../lib/const';
-import styles from "../../style/index";
+import styles from "../../style/column";
 import withRoot from "../../style/withRoot";
 
 interface Props extends WithStyles {
@@ -40,11 +40,11 @@ class ColumnCandidate extends PureComponent<Props> {
                     )}
                 </Draggable>
                 <Modal open={i[0] === modalOn} onClose={toggleModalOff} direction={direction} title='详细信息'>
-                    <div className={classes.modalContent}>
+                    <div className={classes.detailContent}>
                         <IconButton className={classes.leftButton} onClick={handlePrev}>
                             <ExpandMoreIcon />
                         </IconButton>
-                        <div className={classes.modalMain}>
+                        <div className={classes.detailMain}>
                             <Detail info={i[1]} downloadResume={() => downloadResume(i[0])} />
                             <Comments step={step} cid={i[0]} comments={i[1].comments} />
                         </div>

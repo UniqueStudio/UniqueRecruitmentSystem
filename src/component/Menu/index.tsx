@@ -15,7 +15,7 @@ import HomeIcon from '@material-ui/icons/Home';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 
 import withRoot from '../../style/withRoot';
-import styles from '../../style/index';
+import styles from '../../style/menu';
 import Anchor from '../Anchor';
 
 interface Props extends WithStyles {

@@ -1,7 +1,7 @@
 import React, { PureComponent } from "react";
 import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 import withRoot from "../style/withRoot";
-import styles from "../style/index";
+import styles from "../style/welcome";
 import Login from '../container/Login/index';
 import logo from '../image/logo.png';
 import welcome from '../image/welcome.png';

@@ -41,6 +41,7 @@ export const USER = actionTypeCreator('USER');
 
 export const getQRCode = () => (dispatch: Dispatch) => {
     dispatch({ type: USER.START });
+    dispatch(actions.setGettable(false));
     (async () => {
         try {
             const initResponse = await fetch(`${URL}/user`);
@@ -53,20 +54,28 @@ export const getQRCode = () => (dispatch: Dispatch) => {
                 const loginResponse = await fetch(`${URL}/user/${key}/status`);
                 const loginResult = await resHandler(loginResponse);
                 if (loginResult.type === 'success') {
-                    const { code } = loginResult;
-                    dispatch(actions.toggleSnackbarOn('登录成功！', 'info'));
-                    console.log(code);
+                    const { uid, token, username } = loginResult;
+                    dispatch(actions.login(username, uid));
+                    dispatch(actions.toggleSnackbarOn('已成功登录！', 'success'));
+                    sessionStorage.setItem('uid', uid);
+                    sessionStorage.setItem('token', token);
+                    dispatch({ type: USER.SUCCESS });
                 } else {
+                    dispatch(actions.setKey(''));
+                    dispatch(actions.setGettable(true));
                     errHandler(loginResult, dispatch, USER);
                     return;
                 }
             } else {
+                dispatch(actions.setKey(''));
+                dispatch(actions.setGettable(true));
                 errHandler(initResult, dispatch, USER);
                 return;
             }
         } catch (err) {
             dispatch(actions.setKey(''));
-            dispatch(actions.toggleSnackbarOn('二维码已过期！', 'warning'));
+            dispatch(actions.setGettable(true));
+            errHandler(err, dispatch, USER);
         }
     })();
 };

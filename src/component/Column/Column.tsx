@@ -8,7 +8,7 @@ import Zoom from '@material-ui/core/Zoom';
 import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 import AddIcon from '@material-ui/icons/Add';
 import { Candidate as CType, STEP } from '../../lib/const';
-import styles from "../../style/index";
+import styles from "../../style/column";
 import withRoot from "../../style/withRoot";
 import ColumnDialog from './ColumnDialog';
 import ColumnModal from './ColumnModal';
@@ -46,7 +46,6 @@ class Column extends Component<Props> {
         buttons: false
     };
 
-    columnBody = null;
     toggleButtons = () => {
         this.setState({
             buttons: !this.state.buttons

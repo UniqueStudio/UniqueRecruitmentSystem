@@ -4,7 +4,7 @@ import Button from '@material-ui/core/Button';
 import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 
 import withRoot from "../../style/withRoot";
-import styles from "../../style";
+import styles from "../../style/login";
 import Modal from '../Modal';
 import { QR_CODE_URL } from '../../lib/const';
 
@@ -13,6 +13,7 @@ interface Props extends WithStyles {
     login: (username: string) => void;
     getQRCode: () => void;
     weChatKey: string;
+    buttonAble: boolean;
 }
 
 class Login extends PureComponent<Props> {
@@ -39,9 +40,9 @@ class Login extends PureComponent<Props> {
     };
 
     render() {
-        const { classes } = this.props;
+        const { classes, loggedIn, buttonAble } = this.props;
         return (
-            <Modal open={true} title='登录'>
+            <Modal open={!loggedIn} title='登录'>
                 <div className={classes.login}>
                     {/*<TextField*/}
                     {/*label="用户名"*/}
@@ -50,7 +51,7 @@ class Login extends PureComponent<Props> {
                     {/*margin="normal"*/}
                     {/*/>*/}
                     <img src={this.state.src} />
-                    <Button color="primary" size="large" onClick={this.login}>获取二维码</Button>
+                    <Button color="primary" size="large" onClick={this.login} disabled={!buttonAble}>获取二维码</Button>
                 </div>
             </Modal>
         );
