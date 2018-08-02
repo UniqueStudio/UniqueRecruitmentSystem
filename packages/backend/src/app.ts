@@ -53,7 +53,7 @@ const verifyJWT = (token?: string) => {
 
 const getQRCodeURL = 'https://open.work.weixin.qq.com/wwopen/sso/qrConnect?appid=ww6879e683e04c1e57&agentid=1000011&redirect_uri=https%3A%2F%2Fopen.hustunique.com%2Fauth&state=api';
 const scanningURL = 'https://open.work.weixin.qq.com/wwopen/sso/l/qrConnect?key=';
-const accessTokenURL = 'https://qyapi.weixin.qq.com/cgi-bin/gettoken?corpid=ww6879e683e04c1e57&corpsecret=aZm2TSKTl-qGFRDtcyXHrR4HUUU_eRIyxMCqLyyO184';
+const accessTokenURL = 'https://qyapi.weixin.qq.com/cgi-bin/gettoken?corpid=ww6879e683e04c1e57&corpsecret=eLaMPIwkvX6zpKH-ghotTA8rfKq-071D9-fi35ecGe8';
 const userIDURL = (accessToken: string, code: string) => `https://qyapi.weixin.qq.com/cgi-bin/user/getuserinfo?access_token=${accessToken}&code=${code}`;
 const userInfoURL = (accessToken: string, uid: string) => `https://qyapi.weixin.qq.com/cgi-bin/user/get?access_token=${accessToken}&userid=${uid}`;
 
@@ -97,24 +97,24 @@ app.get('/user/:key/status', (req, res) => {
             const scanResponse = await fetch(`${scanningURL}${req.params.key}`);
             const scanResult = await scanResponse.text();
             const status = JSON.parse(scanResult.match(/{.+}/)![0]).status;
-            //if (status === 'QRCODE_SCAN_SUCC') {
-            const loginResponse = await fetch(`${scanningURL}${req.params.key}&lastStatus=${status}`);
-            const loginResult = await loginResponse.text();
-            const auth_code = JSON.parse(loginResult.match(/{.+}/)![0]).auth_code;
-            const accessTokenResponse = await fetch(accessTokenURL);
-            const accessTokenResult = await accessTokenResponse.json();
-            const accessToken = JSON.parse(accessTokenResult).access_token;
-            const userIDResponse = await fetch(userIDURL(accessToken, auth_code));
-            const userIDResult = await userIDResponse.json();
-            const uid = JSON.parse(userIDResult).UserId;
-            const userInfoResponse = await fetch(userInfoURL(accessToken, uid));
-            const userInfoResult = await userInfoResponse.json();
-            console.log(userInfoResult);
-            res.send({ code: auth_code, type: 'success' })
-            //} else {
-            //    res.send({ message: '登录超时，请重新登录', type: 'info' });
-            //    return;
-            //}
+            if (status === 'QRCODE_SCAN_ING') {
+                const loginResponse = await fetch(`${scanningURL}${req.params.key}&lastStatus=${status}`);
+                const loginResult = await loginResponse.text();
+                const auth_code = JSON.parse(loginResult.match(/{.+}/)![0]).auth_code;
+                const accessTokenResponse = await fetch(accessTokenURL);
+                const accessTokenResult = await accessTokenResponse.json();
+                const accessToken = JSON.parse(accessTokenResult).access_token;
+                const userIDResponse = await fetch(userIDURL(accessToken, auth_code));
+                const userIDResult = await userIDResponse.json();
+                const uid = JSON.parse(userIDResult).UserId;
+                const userInfoResponse = await fetch(userInfoURL(accessToken, uid));
+                const userInfoResult = await userInfoResponse.json();
+                console.log(userInfoResult);
+                res.send({ code: auth_code, type: 'success' })
+            } else {
+                res.send({ message: '登录超时，请重新登录', type: 'info' });
+                return;
+            }
         } catch (err) {
             res.send({ message: err.message, type: 'warning' });
         }
