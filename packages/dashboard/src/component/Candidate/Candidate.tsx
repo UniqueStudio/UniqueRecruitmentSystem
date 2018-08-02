@@ -8,7 +8,8 @@ import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 import InfoIcon from "@material-ui/icons/InfoOutlined";
 import { DraggableProvided } from 'react-beautiful-dnd';
 
-import styles, { colorToAlpha, dangerColor, successColor, warningColor } from "../../style";
+import styles from "../../style/candidate";
+import { colorToAlpha, dangerColor, successColor, warningColor } from '../../style';
 import withRoot from "../../style/withRoot";
 
 interface Info {

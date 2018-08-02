@@ -1,6 +1,7 @@
 import React, { PureComponent } from "react";
 import classNames from 'classnames';
 import Paper from '@material-ui/core/Paper';
+import Tooltip from '@material-ui/core/Tooltip';
 import Typography from '@material-ui/core/Typography';
 import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 import blue from '@material-ui/core/colors/blue';
@@ -87,20 +88,20 @@ class Chart extends PureComponent<Props> {
             }
         };
         const { classes, end } = this.props;
-        return (
-            <Paper className={classNames(classes.chart, { [classes.expired]: +new Date() > end })}>
-                <div className={classes.doughnut}>
-                    <Doughnut
-                        data={dataSet}
-                        onElementsClick={this.setData}
-                        options={options} width={300} height={300}
-                    />
-                </div>
-                <Typography variant='body1' className={classes.centerText}>{
-                    `总计：${this.state.data.reduce((i, j) => i + j)}人`
-                }</Typography>
-            </Paper>
-        )
+        const expired = +new Date() > end;
+        const ChartBox = <Paper className={classNames(classes.chart, { [classes.expired]: expired })}>
+            <div className={classes.doughnut}>
+                <Doughnut
+                    data={dataSet}
+                    onElementsClick={this.setData}
+                    options={options} width={300} height={300}
+                />
+            </div>
+            <Typography variant='body1' className={classes.centerText}>{
+                `总计：${this.state.data.reduce((i, j) => i + j)}人`
+            }</Typography>
+        </Paper>;
+        return expired ? <Tooltip title="该招新已过期" classes={{ tooltip: classes.tooltip }}>{ChartBox}</Tooltip> : ChartBox
     }
 }
 

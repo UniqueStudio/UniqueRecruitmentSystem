@@ -3,7 +3,7 @@ import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 import { DragDropContext, DraggableLocation, Droppable, DroppableProvided, DropResult } from 'react-beautiful-dnd';
 
 import withRoot from "../../style/withRoot";
-import styles from "../../style";
+import styles from "../../style/column";
 import Column from "../../container/Column/Column";
 
 import { STEP } from '../../lib/const';

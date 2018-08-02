@@ -1,7 +1,6 @@
 import React, { PureComponent } from "react";
 import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 
-import styles from '../../style/index'
 import withRoot from '../../style/withRoot';
 
 import { Link } from 'react-router-dom';
@@ -25,4 +24,4 @@ class Anchor extends PureComponent<Props> {
     }
 }
 
-export default withRoot(withStyles(styles)(Anchor));
+export default withRoot(withStyles({})(Anchor));

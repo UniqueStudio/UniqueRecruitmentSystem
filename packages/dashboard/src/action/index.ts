@@ -283,6 +283,22 @@ export function setKey(key: string): SetKey {
     }
 }
 
+export const SET_GETTABLE = 'SET_GETTABLE';
+export type SET_GETTABLE = typeof SET_GETTABLE;
+
+export interface SetGettable {
+    type: SET_GETTABLE;
+    able: boolean
+}
+
+export function setGettable(able: boolean): SetGettable {
+    return {
+        type: SET_GETTABLE,
+        able
+    }
+}
+
+
 export const LOGIN = 'LOGIN';
 export type LOGIN = typeof LOGIN;
 
