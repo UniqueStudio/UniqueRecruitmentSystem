@@ -539,9 +539,9 @@ app.get('/recruitment/:title', (req, res) => {
 app.post('/recruitment', (req, res) => {
     (async () => {
         try {
-            const { title, begin, end, userCode } = req.body;
+            const { title, begin, end, code } = req.body;
             const decoded = verifyJWT(req.get('Authorization'));
-            const code = await getAsync(`userCode:${decoded['uid']}`);
+            const userCode = await getAsync(`userCode:${decoded['uid']}`);
             if (userCode === code) {
                 await database.insert('recruitments', {
                     title, begin, end,
