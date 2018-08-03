@@ -373,6 +373,8 @@ app.post('/sms', (req, res) => {
                     await database.update('recruitments', { title: body.title }, { time2: body.date });
                 }
             }
+            console.log(body.code);
+            console.log(redisClient.get(`userCode:${decoded['uid']}`));
             if (body.code === redisClient.get(`userCode:${decoded['uid']}`)) {
                 body.candidates.map((i: string) => {
                     if (body.date) {
