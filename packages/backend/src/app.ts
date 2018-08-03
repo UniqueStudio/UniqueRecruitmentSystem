@@ -424,6 +424,7 @@ app.get('/verification/user', (req, res) => {
                 })
             });
             const result = await response.json();
+            console.log(result);
             if (result.code !== 200) {
                 res.send({ message: '发送短信失败！', type: 'danger' });
                 return;
