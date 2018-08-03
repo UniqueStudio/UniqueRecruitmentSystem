@@ -1,4 +1,5 @@
 import express from 'express';
+import { promisify } from 'util';
 import redis from 'redis';
 import fetch from 'node-fetch';
 import jwt from 'jsonwebtoken';
@@ -39,6 +40,7 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage: storage, limits: { fileSize: 104857600 } });
 const redisClient = redis.createClient();
+const getAsync = promisify(redisClient.get).bind(redisClient);
 redisClient.on("error", err => {
     console.log("Redis Error: " + err);
 });
@@ -237,7 +239,8 @@ app.post('/candidates', upload.single('resume'), (req, res) => {
                 res.send({ message: '手机号码格式不正确!', type: 'warning' });
                 return;
             }
-            if (redisClient.get(`candidateCode:${body.phone}`) !== body.code) {
+            const code = await getAsync(`candidateCode:${body.phone}`);
+            if (code !== body.code) {
                 res.send({ message: '验证码不正确!', type: 'warning' });
                 return;
             }
@@ -373,9 +376,8 @@ app.post('/sms', (req, res) => {
                     await database.update('recruitments', { title: body.title }, { time2: body.date });
                 }
             }
-            console.log(body.code);
-            console.log(redisClient.get(`userCode:${decoded['uid']}`));
-            if (body.code === redisClient.get(`userCode:${decoded['uid']}`)) {
+            const code = await getAsync(`userCode:${decoded['uid']}`);
+            if (body.code === code) {
                 body.candidates.map((i: string) => {
                     if (body.date) {
                         const link = `http://cvs.hustunique.com/form/${formId}/${i}`;
@@ -424,13 +426,13 @@ app.get('/verification/user', (req, res) => {
                 })
             });
             const result = await response.json();
-            console.log(result);
             if (result.code !== 200) {
                 res.send({ message: '发送短信失败！', type: 'danger' });
                 return;
             }
-            redisClient.set(`userCode:${uid}`, code, 'EX', 600);
-            res.send({ type: 'success' });
+            redisClient.set(`userCode:${uid}`, code, 'EX', 600, () => {
+                res.send({ type: 'success' });
+            });
         } catch (err) {
             res.send({ message: err.message, type: 'danger' });
         }
@@ -470,8 +472,9 @@ app.get('/verification/candidate/:phone', (req, res) => {
                 res.send({ message: '发送短信失败！', type: 'danger' });
                 return;
             }
-            redisClient.set(`candidateCode:${phone}`, code, 'EX', 600);
-            res.send({ type: 'success' });
+            redisClient.set(`candidateCode:${phone}`, code, 'EX', 600, () => {
+                res.send({ type: 'success' });
+            });
         } catch (err) {
             res.send({ message: err.message, type: 'danger' });
         }
