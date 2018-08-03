@@ -539,16 +539,21 @@ app.get('/recruitment/:title', (req, res) => {
 app.post('/recruitment', (req, res) => {
     (async () => {
         try {
-            verifyJWT(req.get('Authorization'));
-            await database.insert('recruitments', {
-                title: req.body.title,
-                begin: req.body.begin,
-                end: req.body.end,
-                data: groups.map(i => ({ group: i, total: 0, steps: [0, 0, 0, 0, 0, 0] })),
-                total: 0,
-            });
-            res.send({ type: 'success' });
-            io.emit('updateRecruitment');
+            const { title, begin, end, userCode } = req.body;
+            const decoded = verifyJWT(req.get('Authorization'));
+            const code = await getAsync(`userCode:${decoded['uid']}`);
+            if (userCode === code) {
+                await database.insert('recruitments', {
+                    title, begin, end,
+                    data: groups.map(i => ({ group: i, total: 0, steps: [0, 0, 0, 0, 0, 0] })),
+                    total: 0,
+                });
+                res.send({ type: 'success' });
+                io.emit('updateRecruitment');
+            } else {
+                res.send({ message: '验证码错误', type: 'warning' });
+                return;
+            }
         } catch (err) {
             res.send({ message: err.message, type: 'danger' })
         }
