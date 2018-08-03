@@ -237,7 +237,7 @@ app.post('/candidates', upload.single('resume'), (req, res) => {
                 res.send({ message: '手机号码格式不正确!', type: 'warning' });
                 return;
             }
-            if (redisClient.get(`candidatePhone:${body.phone}`) !== body.code) {
+            if (redisClient.get(`candidateCode:${body.phone}`) !== body.code) {
                 res.send({ message: '验证码不正确!', type: 'warning' });
                 return;
             }
@@ -350,7 +350,6 @@ app.get('/candidates/:cid/resume', (req, res) => {
 });
 
 /* TODO */
-const verifyCode = (code: string) => true;
 const sendSMS = (content: string) => {
 };
 
@@ -359,7 +358,7 @@ app.post('/sms', (req, res) => {
     const body = req.body;
     (async () => {
         try {
-            verifyJWT(req.get('Authorization'));
+            const decoded = verifyJWT(req.get('Authorization'));
             const recruitment = (await database.query('recruitments', { title: body.title }))[0];
             let formId = '';
             if (body.date) {
@@ -374,7 +373,7 @@ app.post('/sms', (req, res) => {
                     await database.update('recruitments', { title: body.title }, { time2: body.date });
                 }
             }
-            if (verifyCode(body.code)) {
+            if (body.code === redisClient.get(`userCode:${decoded['uid']}`)) {
                 body.candidates.map((i: string) => {
                     if (body.date) {
                         const link = `http://cvs.hustunique.com/form/${formId}/${i}`;
@@ -408,7 +407,7 @@ app.get('/verification/user', (req, res) => {
             }
             let code = '';
             for (let i = 0; i < 4; i++) {
-                code += ~~Math.random() * 9; // '~~' (double NOT bitwise) operator is faster than Math.floor() in JavaScript
+                code += ~~(Math.random() * 9); // '~~' (double NOT bitwise) operator is faster than Math.floor() in JavaScript
             }
             const response = await fetch(smsSendURL, {
                 method: 'POST',
@@ -449,7 +448,7 @@ app.get('/verification/candidate/:phone', (req, res) => {
             }
             let code = '';
             for (let i = 0; i < 4; i++) {
-                code += ~~Math.random() * 9; // '~~' (double NOT bitwise) operator is faster than Math.floor() in JavaScript
+                code += ~~(Math.random() * 9); // '~~' (double NOT bitwise) operator is faster than Math.floor() in JavaScript
             }
             const response = await fetch(smsSendURL, {
                 method: 'POST',
@@ -468,7 +467,7 @@ app.get('/verification/candidate/:phone', (req, res) => {
                 res.send({ message: '发送短信失败！', type: 'danger' });
                 return;
             }
-            redisClient.set(`candidatePhone:${phone}`, code, 'EX', 600);
+            redisClient.set(`candidateCode:${phone}`, code, 'EX', 600);
             res.send({ type: 'success' });
         } catch (err) {
             res.send({ message: err.message, type: 'danger' });
