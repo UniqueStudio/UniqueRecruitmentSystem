@@ -2,6 +2,13 @@ import { ObjectID } from 'mongodb';
 
 export const GROUPS = ["web", "lab", "ai", "game", "android", "ios", "design", "pm"];
 export const secret = 'Uniq';
+export const getQRCodeURL = 'https://open.work.weixin.qq.com/wwopen/sso/qrConnect?appid=ww6879e683e04c1e57&agentid=1000011&redirect_uri=https%3A%2F%2Fopen.hustunique.com%2Fauth&state=api';
+export const scanningURL = 'https://open.work.weixin.qq.com/wwopen/sso/l/qrConnect?key=';
+export const accessTokenURL = 'https://qyapi.weixin.qq.com/cgi-bin/gettoken?corpid=ww6879e683e04c1e57&corpsecret=eLaMPIwkvX6zpKH-ghotTA8rfKq-071D9-fi35ecGe8';
+export const userIDURL = (accessToken: string, code: string) => `https://qyapi.weixin.qq.com/cgi-bin/user/getuserinfo?access_token=${accessToken}&code=${code}`;
+export const userInfoURL = (accessToken: string, uid: string) => `https://qyapi.weixin.qq.com/cgi-bin/user/get?access_token=${accessToken}&userid=${uid}`;
+export const smsSendURL = `https://open.hustunique.com/weixin/sms`;
+export const token = `fG1NrQwAmu9gJv24QwbuBnFu7LheL0cl17luvGby4K34wNy5-pldpK3_v8XGvLUari9_YK0LLuNajOmsW8VWQQ`;
 
 export interface Candidate {
     _id: ObjectID;

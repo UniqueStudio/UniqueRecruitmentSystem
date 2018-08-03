@@ -1,4 +1,5 @@
 import express from 'express';
+import redis from 'redis';
 import fetch from 'node-fetch';
 import jwt from 'jsonwebtoken';
 import multer from 'multer';
@@ -8,7 +9,18 @@ import socket, { Socket } from 'socket.io';
 import bodyParser from 'body-parser';
 import Database from './database';
 import { ObjectId } from 'mongodb';
-import { GROUPS as groups, Candidate, secret } from './consts';
+import {
+    GROUPS as groups,
+    Candidate,
+    secret,
+    userInfoURL,
+    accessTokenURL,
+    scanningURL,
+    token,
+    getQRCodeURL,
+    smsSendURL,
+    userIDURL
+} from './consts';
 
 const app = express();
 const server = new Server(app);
@@ -26,6 +38,10 @@ const storage = multer.diskStorage({
     filename: (req, file, cb) => cb(null, `${req['body'].name} - ${file.originalname}`)
 });
 const upload = multer({ storage: storage, limits: { fileSize: 104857600 } });
+const redisClient = redis.createClient();
+redisClient.on("error", err => {
+    console.log("Redis Error: " + err);
+});
 
 const checkMail = (mail: string) => {
     const re = /^(([^<>()\[\].,;:\s@"]+(\.[^<>()\[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/i;
@@ -44,18 +60,9 @@ const verifyJWT = (token?: string) => {
     if (token.indexOf('Bearer ') === 0) {
         token = token.replace('Bearer ', '');
     }
-    jwt.verify(token, secret, (err) => {
-        if (err) {
-            throw err;
-        }
-    })
+    return jwt.verify(token, secret) as object;
 };
 
-const getQRCodeURL = 'https://open.work.weixin.qq.com/wwopen/sso/qrConnect?appid=ww6879e683e04c1e57&agentid=1000011&redirect_uri=https%3A%2F%2Fopen.hustunique.com%2Fauth&state=api';
-const scanningURL = 'https://open.work.weixin.qq.com/wwopen/sso/l/qrConnect?key=';
-const accessTokenURL = 'https://qyapi.weixin.qq.com/cgi-bin/gettoken?corpid=ww6879e683e04c1e57&corpsecret=eLaMPIwkvX6zpKH-ghotTA8rfKq-071D9-fi35ecGe8';
-const userIDURL = (accessToken: string, code: string) => `https://qyapi.weixin.qq.com/cgi-bin/user/getuserinfo?access_token=${accessToken}&code=${code}`;
-const userInfoURL = (accessToken: string, uid: string) => `https://qyapi.weixin.qq.com/cgi-bin/user/get?access_token=${accessToken}&userid=${uid}`;
 
 app.use(bodyParser.json({
     limit: '1mb'
@@ -67,7 +74,7 @@ app.use(bodyParser.urlencoded({
 
 app.use((req, res, next) => {
     res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Methods", "*");
+    res.header("Access-Control-Allow-Methods", "POST, OPTIONS, GET, PUT, DELETE");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
     console.log('requested ' + req.url);
     next();
@@ -111,10 +118,16 @@ app.get('/user/:key/status', (req, res) => {
                     const userID = userIDResult.UserId;
                     const userInfoResponse = await fetch(userInfoURL(accessToken, userID));
                     const userInfoResult = await userInfoResponse.json();
-                    const user = await database.query('users', { username: userInfoResult.name, phone: userInfoResult.mobile });
+                    const user = await database.query('users', {
+                        username: userInfoResult.name,
+                        phone: userInfoResult.mobile
+                    });
                     let uid;
                     if (!user.length) {
-                        uid = await database.insert('users', { username: userInfoResult.name, phone: userInfoResult.mobile });
+                        uid = await database.insert('users', {
+                            username: userInfoResult.name,
+                            phone: userInfoResult.mobile
+                        });
                     } else {
                         uid = user[0]['_id'];
                     }
@@ -222,6 +235,10 @@ app.post('/candidates', upload.single('resume'), (req, res) => {
             }
             if (!checkPhone(body.phone)) {
                 res.send({ message: '手机号码格式不正确!', type: 'warning' });
+                return;
+            }
+            if (redisClient.get(`candidatePhone:${body.phone}`) !== body.code) {
+                res.send({ message: '验证码不正确!', type: 'warning' });
                 return;
             }
             const cid = await database.insert('candidates', {
@@ -336,7 +353,8 @@ app.get('/candidates/:cid/resume', (req, res) => {
 const verifyCode = (code: string) => true;
 const sendSMS = (content: string) => {
 };
-// send sms
+
+// send notification sms
 app.post('/sms', (req, res) => {
     const body = req.body;
     (async () => {
@@ -377,8 +395,85 @@ app.post('/sms', (req, res) => {
 });
 
 // request for verification code
-app.post('/verification', (req, res) => {
+app.get('/verification/user', (req, res) => {
+    (async () => {
+        try {
+            const decoded = verifyJWT(req.get('Authorization'));
+            const uid = decoded['uid'];
+            const user = await database.query('users', { _id: new ObjectId(uid) });
+            const phone = user[0].phone;
+            if (!phone) {
+                res.send({ message: '你未填写手机号码！', type: 'warning' });
+                return;
+            }
+            let code = '';
+            for (let i = 0; i < 4; i++) {
+                code += ~~Math.random() * 9; // '~~' (double NOT bitwise) operator is faster than Math.floor() in JavaScript
+            }
+            const response = await fetch(smsSendURL, {
+                method: 'POST',
+                headers: {
+                    'Token': token,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    phone: phone,
+                    template: 96385,
+                    param_list: ["发起招新业务/发送通知业务", code]
+                })
+            });
+            const result = await response.json();
+            if (result.code !== 200) {
+                res.send({ message: '发送短信失败！', type: 'danger' });
+                return;
+            }
+            redisClient.set(`userCode:${uid}`, code, 'EX', 600);
+            res.send({ type: 'success' });
+        } catch (err) {
+            res.send({ message: err.message, type: 'danger' });
+        }
+    })();
+});
 
+app.get('/verification/candidate/:phone', (req, res) => {
+    (async () => {
+        try {
+            const phone = req.params.phone;
+            if (!phone) {
+                res.send({ message: '你未填写手机号码！', type: 'warning' });
+                return;
+            }
+            if (!checkPhone(phone)) {
+                res.send({ message: '手机号码格式不正确!', type: 'warning' });
+                return;
+            }
+            let code = '';
+            for (let i = 0; i < 4; i++) {
+                code += ~~Math.random() * 9; // '~~' (double NOT bitwise) operator is faster than Math.floor() in JavaScript
+            }
+            const response = await fetch(smsSendURL, {
+                method: 'POST',
+                headers: {
+                    'Token': token,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    phone: phone,
+                    template: 96385,
+                    param_list: ["发起招新业务/发送通知业务", code]
+                })
+            });
+            const result = await response.json();
+            if (result.code !== 200) {
+                res.send({ message: '发送短信失败！', type: 'danger' });
+                return;
+            }
+            redisClient.set(`candidatePhone:${phone}`, code, 'EX', 600);
+            res.send({ type: 'success' });
+        } catch (err) {
+            res.send({ message: err.message, type: 'danger' });
+        }
+    })();
 });
 
 app.get('/form/:formId/:cid', (req, res) => {
