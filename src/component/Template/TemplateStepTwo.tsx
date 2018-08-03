@@ -14,7 +14,7 @@ import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 
 import styles from '../../style/template'
 import withRoot from '../../style/withRoot';
-import generateModal from '../../lib/generateModel';
+import generateModel from '../../lib/generateModel';
 import { STEP } from '../../lib/const';
 
 interface Date {
@@ -25,7 +25,7 @@ interface Date {
 }
 
 export interface MainInfo extends WithStyles {
-    model: string;
+    type: string;
     step: string;
     date: Date[];
 }
@@ -44,7 +44,7 @@ interface Props extends MainInfo {
 class Step extends PureComponent<Props> {
 
     render() {
-        const { classes, group, model, step, date, fns } = this.props;
+        const { classes, group, type, step, date, fns } = this.props;
         const { handleChange, changeDate, setTime, addDate, deleteDate } = fns;
         const inputProps = { readOnly: true } as any;
         /* see https://github.com/mui-org/material-ui/issues/8047 */
@@ -52,14 +52,14 @@ class Step extends PureComponent<Props> {
             <>
                 <div className={classNames(classes.templateContent, classes.templateItem)}>
                     <Select
-                        value={model}
-                        onChange={handleChange('model')}
+                        value={type}
+                        onChange={handleChange('type')}
                     >
                         <MenuItem value='accept'>通过</MenuItem>
                         <MenuItem value='reject'>被刷</MenuItem>
                     </Select>
                     <Typography variant='subheading' className={classes.templateItem}>
-                        {generateModal(model === 'accept', '{{候选人姓名}}', '{{招新名称}}', '{{组别}}', step)}
+                        {generateModel(type === 'accept', '{{候选人姓名}}', '{{招新名称}}', '{{组别}}', step)}
                     </Typography>
                 </div>
                 <div className={classNames(classes.templateContent, classes.templateItem, classes.templateParams)}>
@@ -96,7 +96,7 @@ class Step extends PureComponent<Props> {
                         ))}
                     </TextField>
                 </div>
-                {(step === '笔试流程' || step === '熬测流程') && model === 'accept' &&
+                {(step === '笔试流程' || step === '熬测流程') && type === 'accept' &&
                 <div
                     className={classNames(classes.templateContent, classes.templateItem, classes.templateParams, classes.templateColumn)}>
                     {date.map((i, j) => (

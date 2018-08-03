@@ -4,6 +4,7 @@ import * as asyncActions from '../action/async'
 const init = {
     recruitments: [],
     isLoading: false,
+    status: ''
 };
 
 type Action =
@@ -27,15 +28,17 @@ export interface Recruitment {
 export interface Recruitments {
     recruitments: Recruitment[];
     isLoading: boolean;
+    status: string;
 }
 
 export function recruitments(state: Recruitments = init, action: Action): Recruitments {
     switch (action.type) {
         case asyncActions.RECRUITMENT.START:
-            return { ...state, isLoading: true };
+            return { ...state, isLoading: true, status: 'start' };
         case asyncActions.RECRUITMENT.FAILURE:
+            return { ...state, isLoading: false, status: 'failure' };
         case asyncActions.RECRUITMENT.SUCCESS:
-            return { ...state, isLoading: false };
+            return { ...state, isLoading: false, status: 'success' };
         case actions.SET_RECRUITMENTS:
             return { ...state, recruitments: action.recruitments };
     }

@@ -49,7 +49,10 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
         margin: theme.spacing.unit
     },
     picker: {
-        width: '100%',
+        width: 200,
+        [theme.breakpoints.down("xs")]: {
+            width: 150,
+        },
         margin: theme.spacing.unit
     }
 });
