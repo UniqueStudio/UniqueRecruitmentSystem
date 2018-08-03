@@ -7,9 +7,9 @@ import Container from './view/Apply';
 class App extends React.Component {
     public render() {
         return (
-                <div className='main'>
-                    <Container />
-                </div>
+            <div className='main'>
+                <Container />
+            </div>
         );
     }
 }
