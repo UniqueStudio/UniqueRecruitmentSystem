@@ -33,7 +33,7 @@ class Snack extends PureComponent<Props> {
                             : place.indexOf("c") !== -1 ? "center" : "right"
                 }}
                 open={on}
-                autoHideDuration={2000}
+                autoHideDuration={4000}
                 onClose={this.handleClose}
                 message={<span>{info}</span>}
                 action={[

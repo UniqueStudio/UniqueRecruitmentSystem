@@ -10,6 +10,7 @@ import { Recruitment } from '../../reducer/recruitments';
 interface Props extends WithStyles {
     data: Recruitment[];
     uid: string;
+    status: string;
     canLaunch: boolean;
     fetchData: (uid: string) => void;
     toggleSnackbarOn: (info: string) => void;
@@ -23,7 +24,7 @@ class ChartContainer extends PureComponent<Props> {
     }
 
     render() {
-        const { data, toggleSnackbarOn, launchRecruitment, canLaunch } = this.props;
+        const { data, toggleSnackbarOn, launchRecruitment, canLaunch, status } = this.props;
         const compare = (i: Recruitment, j: Recruitment) => {
             if (i === j) return 0;
             if (i.title.slice(0, 4) > j.title.slice(0, 4)) return 1;
@@ -42,7 +43,7 @@ class ChartContainer extends PureComponent<Props> {
                                   key={i['_id']} />
                 })}
                 <ChartNew toggleSnackbarOn={toggleSnackbarOn} launchRecruitment={launchRecruitment}
-                          disabled={!canLaunch} />
+                          disabled={!canLaunch} status={status} />
             </>
         )
     }

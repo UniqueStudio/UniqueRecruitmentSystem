@@ -9,7 +9,8 @@ const mapStateToProps = ({ recruitments, user }: StoreState) => ({
     data: recruitments.recruitments,
     isLoading: recruitments.isLoading,
     canLaunch: user.info['isCaptain'] || user.info['isAdmin'],
-    uid: user.uid
+    uid: user.uid,
+    status: recruitments.status
 });
 
 type DispatchType = Dispatch<ToggleSnackbarOn>;

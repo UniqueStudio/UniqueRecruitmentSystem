@@ -343,32 +343,6 @@ export const removeComment = (step: number, cid: string, commenter: string) => (
     //     });
 };
 
-export const sendSMS = (content: object) => (dispatch: Dispatch) => {
-    dispatch({ type: CANDIDATE.START });
-    const token = sessionStorage.getItem('token');
-    if (!token) {
-        errHandler({ message: 'token不存在', type: 'danger' }, dispatch, CANDIDATE);
-        return;
-    }
-    return fetch(`${URL}/sms`, {
-        method: 'POST',
-        body: JSON.stringify(content),
-        headers: {
-            'content-type': 'application/json',
-            'Authorization': `Bearer ${token}`
-        },
-    })
-        .then(resHandler)
-        .then(res => {
-            if (res.type === 'success') {
-                dispatch(actions.toggleSnackbarOn('已成功发送短信', 'success'));
-                dispatch({ type: CANDIDATE.SUCCESS });
-            } else {
-                throw res;
-            }
-        })
-        .catch(err => errHandler(err, dispatch, CANDIDATE))
-};
 
 let shouldUpdateRecruitment = false;
 export const RECRUITMENT = actionTypeCreator('RECRUITMENT');
@@ -402,7 +376,6 @@ export const requestRecruitments = () => (dispatch: Dispatch) => {
             }
         })
         .catch(err => errHandler(err, dispatch, RECRUITMENT))
-
 };
 
 export const launchRecruitment = (info: object) => (dispatch: Dispatch) => {
@@ -430,7 +403,58 @@ export const launchRecruitment = (info: object) => (dispatch: Dispatch) => {
             }
         })
         .catch(err => errHandler(err, dispatch, RECRUITMENT))
+};
 
+export const SMS = actionTypeCreator('SMS');
+export const sendSMS = (content: object) => (dispatch: Dispatch) => {
+    dispatch({ type: SMS.START });
+    const token = sessionStorage.getItem('token');
+    if (!token) {
+        errHandler({ message: 'token不存在', type: 'danger' }, dispatch, SMS);
+        return;
+    }
+    return fetch(`${URL}/sms`, {
+        method: 'POST',
+        body: JSON.stringify(content),
+        headers: {
+            'content-type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        },
+    })
+        .then(resHandler)
+        .then(res => {
+            if (res.type === 'success') {
+                dispatch(actions.toggleSnackbarOn('已成功发送短信', 'success'));
+                dispatch({ type: SMS.SUCCESS });
+            } else {
+                throw res;
+            }
+        })
+        .catch(err => errHandler(err, dispatch, SMS))
+};
+
+export const getVerifyCode = () => (dispatch: Dispatch) => {
+    dispatch({ type: SMS.START });
+    const token = sessionStorage.getItem('token');
+    if (!token) {
+        errHandler({ message: 'token不存在', type: 'danger' }, dispatch, SMS);
+        return;
+    }
+    return fetch(`${URL}/verification/user`, {
+        headers: {
+            'Authorization': `Bearer ${token}`
+        },
+    })
+        .then(resHandler)
+        .then(res => {
+            if (res.type === 'success') {
+                dispatch(actions.toggleSnackbarOn('验证码已发送！', 'success'));
+                dispatch({ type: SMS.SUCCESS });
+            } else {
+                throw res;
+            }
+        })
+        .catch(err => errHandler(err, dispatch, SMS))
 };
 
 socket.on('removeCandidate', (cid: string) => {
