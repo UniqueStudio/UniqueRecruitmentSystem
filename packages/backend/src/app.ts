@@ -225,48 +225,54 @@ app.put('/user/:uid', (req, res) => {
 // add new candidate
 app.post('/candidates', upload.single('resume'), (req, res) => {
     const body = req.body;
+    const { name, grade, institute, major, score, mail, phone, group, sex, intro, title } = body;
     (async () => {
         try {
+            let candidateResult = await database.query('candidates', { name, phone });
             if (Object.values(body).includes('')) {
                 res.send({ message: '请完整填写表单!', type: 'warning' });
                 return;
             }
-            if (!checkMail(body.mail)) {
+            if (candidateResult.length !== 0) {
+                res.send({ message: '不能重复报名!', type: 'warning' });
+                return;
+            }
+            if (!checkMail(mail)) {
                 res.send({ message: '邮箱格式不正确!', type: 'warning' });
                 return;
             }
-            if (!checkPhone(body.phone)) {
+            if (!checkPhone(phone)) {
                 res.send({ message: '手机号码格式不正确!', type: 'warning' });
                 return;
             }
-            const code = await getAsync(`candidateCode:${body.phone}`);
+            const code = await getAsync(`candidateCode:${phone}`);
             if (code !== body.code) {
                 res.send({ message: '验证码不正确!', type: 'warning' });
                 return;
             }
             const cid = await database.insert('candidates', {
-                name: body.name,
-                grade: body.grade,
-                institute: body.institute,
-                major: body.major,
-                score: body.score,
-                mail: body.mail,
-                phone: body.phone,
-                group: body.group,
-                sex: body.sex,
+                name,
+                grade,
+                institute,
+                major,
+                score,
+                mail,
+                phone,
+                group,
+                sex,
                 step: 0,
-                intro: body.intro,
-                title: body.title,
+                intro,
+                title,
                 comments: {},
-                resume: `/www/resumes/${body.title}/${body.group}/${body.name} - ${req.file.originalname}`
+                resume: `/www/resumes/${title}/${group}/${name} - ${req.file.originalname}`
             });
-            const recruitment = (await database.query('recruitments', { title: body.title }))[0];
+            const recruitment = (await database.query('recruitments', { title }))[0];
             if (!recruitment) {
                 res.send({ message: '当前招新不存在!', type: 'warning' });
                 return;
             }
             const data = recruitment['data'].map((i: object) => {
-                if (i['group'] === body.group) {
+                if (i['group'] === group) {
                     if (i['total'] === undefined) i['total'] = 0;
                     i['total'] += 1;
                     if (!i['steps']) i['steps'] = [0, 0, 0, 0, 0, 0];
@@ -274,14 +280,15 @@ app.post('/candidates', upload.single('resume'), (req, res) => {
                 }
                 return i;
             });
-            await database.update('recruitments', { title: body.title }, {
+            await database.update('recruitments', { title }, {
                 data,
                 total: recruitment['total'] ? recruitment['total'] + 1 : 1
             });
             res.send({ type: 'success' });
-            const candidateResult = await database.query('candidates', { _id: new ObjectId(cid) });
+            candidateResult = await database.query('candidates', { _id: new ObjectId(cid) });
             io.emit('addCandidate', candidateResult[0]);
             io.emit('updateRecruitment');
+            redisClient.set(`candidateCode:${phone}`, '')
         } catch (err) {
             res.send({ message: err.message, type: 'danger' })
         }
@@ -293,6 +300,11 @@ app.put('/candidates/:cid', (req, res) => {
     (async () => {
         try {
             verifyJWT(req.get('Authorization'));
+            const candidateResult = await database.query('candidates', { _id: new ObjectId(req.params.cid), ...req.body.patch });
+            if (candidateResult.length !== 0) {
+                res.send({ message: '不能重复提交!', type: 'warning' });
+                return;
+            }
             await database.update('candidates', { _id: new ObjectId(req.params.cid) }, req.body.patch);
             res.send({ type: 'success' });
         } catch (err) {
@@ -388,6 +400,7 @@ app.post('/sms', (req, res) => {
                     }
                 });
                 res.send({ type: 'success' });
+                redisClient.set(`userCode:${decoded['uid']}`, '')
             } else {
                 res.send({ message: '验证码不正确', type: 'warning' })
             }
@@ -550,6 +563,7 @@ app.post('/recruitment', (req, res) => {
                 });
                 res.send({ type: 'success' });
                 io.emit('updateRecruitment');
+                redisClient.set(`userCode:${decoded['uid']}`, '')
             } else {
                 res.send({ message: '验证码错误', type: 'warning' });
                 return;
