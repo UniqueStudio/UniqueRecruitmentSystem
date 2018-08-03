@@ -11,11 +11,12 @@ import styles from '../../style/template'
 import withRoot from '../../style/withRoot';
 import TemplateStepOne from './TemplateStepOne';
 import TemplateStepTwo from './TemplateStepTwo';
-import TemplateStepThree from './TemplateStepThree';
+import Verify from '../../container/Verify';
 import { Candidate } from '../../lib/const';
 
 interface Props extends WithStyles {
     group: string;
+    status: string;
     toggleSnackbar: (info: string, color?: string) => void;
     selected: Candidate[];
     toggleOpen: () => void;
@@ -37,14 +38,15 @@ class Template extends PureComponent<Props> {
         model: 'accept',
         step: '{{xx流程}}',
         date: [{ ...this.defaultDate }],
-        code: ''
+        code: '',
+        sent: false
     };
-
-    componentWillReceiveProps(nextProps: Props) {
+    handleBack = () => {
         this.setState({
-            selected: nextProps.selected
-        })
-    }
+            activeStep: this.state.activeStep - 1,
+            sent: false
+        });
+    };
 
     handleNext = () => {
         const { activeStep, step, date, model } = this.state;
@@ -66,10 +68,28 @@ class Template extends PureComponent<Props> {
             activeStep: activeStep + 1,
         });
     };
-
-    handleBack = () => {
+    sendSMS = () => {
+        const { selected, model, step, date, code } = this.state;
+        const { toggleSnackbar, group } = this.props;
+        if (code === '') {
+            toggleSnackbar('未填写验证码！');
+            return;
+        }
+        const content = {
+            candidates: selected.map(i => i.cid),
+            model,
+            step,
+            code,
+            group: group.toLowerCase(),
+            title: '2018A'
+        };
+        if ((step === '笔试流程' || step === '熬测流程') && model === 'accept') {
+            content['date'] = date;
+        }
+        this.props.sendSMS(content);
         this.setState({
-            activeStep: this.state.activeStep - 1,
+            code: '',
+            sent: true
         });
     };
 
@@ -117,30 +137,17 @@ class Template extends PureComponent<Props> {
         })
     };
 
-    sendSMS = () => {
-        const { selected, model, step, date, code } = this.state;
-        const { toggleSnackbar, group } = this.props;
-        if (code === '') {
-            toggleSnackbar('未填写验证码！');
-            return;
+    componentWillReceiveProps(nextProps: Props) {
+        if (this.props.selected.length !== nextProps.selected.length
+            || !this.props.selected.every((value, index) => value === nextProps.selected[index])) {
+            this.setState({
+                selected: nextProps.selected
+            })
         }
-        const content = {
-            candidates: selected.map(i => i.cid),
-            model,
-            step,
-            code,
-            group: group.toLowerCase(),
-            title: '2018A'
-        };
-        if ((step === '笔试流程' || step === '熬测流程') && model === 'accept') {
-            content['date'] = date;
+        if (nextProps.status === 'success' && this.state.sent) {
+            this.handleNext();
         }
-        this.setState({
-            code: ''
-        });
-        this.props.sendSMS(content);
-        this.handleNext();
-    };
+    }
 
     render() {
         const { classes, toggleOpen, group } = this.props;
@@ -160,7 +167,7 @@ class Template extends PureComponent<Props> {
                     addDate: this.addDate,
                     deleteDate: this.deleteDate
                 }} />,
-            <TemplateStepThree onChange={this.handleChange} />,
+            <Verify onChange={this.handleChange('code')} />,
         ];
 
         return (

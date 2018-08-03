@@ -12,9 +12,11 @@ import AddIcon from '@material-ui/icons/Add';
 import withRoot from '../../style/withRoot';
 import styles from '../../style/chart';
 import Modal from '../Modal';
+import Verify from '../../container/Verify';
 
 interface Props extends WithStyles {
     disabled: boolean;
+    status: string;
     toggleSnackbarOn: (info: string) => void;
     launchRecruitment: (info: object) => void;
 }
@@ -25,7 +27,32 @@ class ChartNew extends PureComponent<Props> {
         year: '',
         type: '',
         begin: new Date().toISOString().slice(0, 10),
-        end: new Date().toISOString().slice(0, 10)
+        end: new Date().toISOString().slice(0, 10),
+        code: '',
+        launched: false
+    };
+    launchRecruitment = () => {
+        const info = { ...this.state };
+        if (!info.year || !info.type || !info.code) {
+            this.props.toggleSnackbarOn('请完整填写信息！');
+            return;
+        }
+        info['title'] = info.year + info.type;
+        info['beginTime'] = +new Date(info.begin);
+        info['endTime'] = +new Date(info.end);
+        if (info['beginTime'] >= info['endTime']) {
+            this.props.toggleSnackbarOn('结束时间必须大于开始时间！');
+            return;
+        }
+        this.props.launchRecruitment({
+            title: info['title'],
+            begin: info['beginTime'],
+            end: info['endTime'],
+            code: info.code
+        });
+        this.setState({
+            launched: true
+        })
     };
 
     toggleModalOpen = () => {
@@ -38,28 +65,21 @@ class ChartNew extends PureComponent<Props> {
         })
     };
 
-    launchRecruitment = () => {
-        const info = { ...this.state };
-        if (!info.year || !info.type) {
-            this.props.toggleSnackbarOn('请完整填写信息！');
-            return;
+    componentWillReceiveProps(nextProps: Props) {
+        if (nextProps.status === 'success' && this.state.launched) {
+            this.setState({
+                modalOpen: false,
+                code: '',
+                launched: false
+            });
         }
-        info['title'] = info.year + info.type;
-        info['beginTime'] = +new Date(info.begin);
-        info['endTime'] = +new Date(info.end);
-        if (info['beginTime'] >= info['endTime']) {
-            this.props.toggleSnackbarOn('结束时间必须大于开始时间！');
-            return;
-        }
-        this.props.launchRecruitment({ title: info['title'], begin: info['beginTime'], end: info['endTime'] });
-        this.setState({ modalOpen: false });
-    };
+    }
 
     render() {
         const { classes, disabled } = this.props;
         return (
             <>
-                <Tooltip title={disabled ? "只有组长能发起招新" : "发起招新"} classes={{ tooltip: classes.tooltip }}>
+                <Tooltip title={disabled ? "只有组长能发起招新" : "发起招新"} classes={{ tooltip: classes.tooltip }} placement='top'>
                     <Paper className={classes.chart}>
                         <IconButton
                             className={classes.newButton}
@@ -92,6 +112,18 @@ class ChartNew extends PureComponent<Props> {
                                 ))}
                             </TextField>
                             <TextField
+                                label="开始时间"
+                                type="date"
+                                defaultValue={this.state.begin}
+                                InputLabelProps={{
+                                    shrink: true,
+                                }}
+                                className={classes.picker}
+                                onChange={this.handleChange('begin')}
+                            />
+                        </span>
+                        <span>
+                            <TextField
                                 select
                                 label="选择类型"
                                 className={classes.select}
@@ -105,27 +137,18 @@ class ChartNew extends PureComponent<Props> {
                                     </MenuItem>
                                 ))}
                             </TextField>
+                            <TextField
+                                label="结束时间"
+                                type="date"
+                                defaultValue={this.state.end}
+                                InputLabelProps={{
+                                    shrink: true,
+                                }}
+                                className={classes.picker}
+                                onChange={this.handleChange('end')}
+                            />
                         </span>
-                        <TextField
-                            label="开始时间"
-                            type="date"
-                            defaultValue={this.state.begin}
-                            InputLabelProps={{
-                                shrink: true,
-                            }}
-                            className={classes.picker}
-                            onChange={this.handleChange('begin')}
-                        />
-                        <TextField
-                            label="结束时间"
-                            type="date"
-                            defaultValue={this.state.end}
-                            InputLabelProps={{
-                                shrink: true,
-                            }}
-                            className={classes.picker}
-                            onChange={this.handleChange('end')}
-                        />
+                        <Verify onChange={this.handleChange('code')} />
                         <Button color='primary' variant='contained' onClick={this.launchRecruitment}>确定</Button>
                     </div>
                 </Modal>
