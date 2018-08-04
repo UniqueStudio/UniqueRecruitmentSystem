@@ -7,7 +7,7 @@ import { Server } from 'http';
 import socket from 'socket.io';
 import bodyParser from 'body-parser';
 import Index from './db/index';
-import { scanHandler, loginHandler, infoGetter, infoChanger } from './utils/user';
+import { scanHandler, loginHandler, infoGetter, infoChanger, messenger } from './utils/user';
 import {
     candidateAdder, candidateSetter, candidateGetterAll, candidateGetterGroup, resumeGetter, formGetter,
     onMoveCandidate,
@@ -147,7 +147,9 @@ io.on('connection', (socket) => {
     // comment on a certain candidate
     socket.on('addComment', onAddComment(socket));
     // delete comment on a certain candidate
-    socket.on('removeComment', onRemoveComment(socket))
+    socket.on('removeComment', onRemoveComment(socket));
+    // instant messenger
+    socket.on('sendMessage', messenger(socket));
 });
 
 server.listen(5000);
