@@ -32,7 +32,8 @@ export const scanHandler = (req: Request, res: Response) => {
                     if (!user.length) {
                         uid = await database.insert('users', {
                             username: userInfoResult.name,
-                            phone: userInfoResult.mobile
+                            phone: userInfoResult.mobile,
+                            avatar: userInfoResult.avatar,
                         });
                     } else {
                         uid = user[0]['_id'];
@@ -40,7 +41,7 @@ export const scanHandler = (req: Request, res: Response) => {
                     const token = jwt.sign({ uid }, secret, {
                         expiresIn: 86400
                     });
-                    res.send({ uid, token, info: userInfoResult, type: 'success' });
+                    res.send({ uid, token, type: 'success' });
                 } else {
                     res.send({ message: '登录失败', type: 'info' });
                     return;
