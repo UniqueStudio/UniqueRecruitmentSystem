@@ -19,7 +19,11 @@ export const candidateGetterGroup = (req: Request, res: Response) => {
                     res.send({ data: formatted, type: 'info', message: '没有正在进行的招新' });
                     return;
                 }
-                data = await database.query('candidates', { title: pendingRecruitments[0].title, group });
+                if (group === 'interview') {
+                    data = await database.query('candidates', { title: pendingRecruitments[0].title, step: { $gt: 4 } });
+                } else {
+                    data = await database.query('candidates', { title: pendingRecruitments[0].title, group });
+                }
             }
             data.map((i: Candidate) => formatted[i.step][`${i._id}`] = { ...i, resume: '' }); // hide resume path
             res.send({ data: formatted, type: 'success' });
