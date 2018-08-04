@@ -16,22 +16,10 @@ interface Props extends WithStyles {
 }
 
 class Container extends PureComponent<Props> {
-    constructor(props: Props) {
-        super(props);
-        props.changeGroup(props.group);
-    }
-
     state = {
-        steps: this.props.pathname === '/view' ? STEP : STEP.slice(4),
+        steps: this.props.pathname === '/group' ? STEP.slice(4) : STEP,
         flag: false,
     };
-
-    onDragStart = () => {
-        this.setState({
-            flag: true
-        })
-    };
-
     onDragEnd = (result: DropResult) => {
         this.setState({
             flag: false
@@ -43,8 +31,8 @@ class Container extends PureComponent<Props> {
 
         if (source.droppableId === destination.droppableId && source.index === destination.index) return;
         if (result.type === 'COLUMN') {
-            const preorder = this.state.steps;
-            const ordered = [...preorder];
+            const preOrder = this.state.steps;
+            const ordered = [...preOrder];
             const [removed] = ordered.splice(source.index, 1);
             ordered.splice(destination.index, 0, removed);
             this.setState({
@@ -55,6 +43,18 @@ class Container extends PureComponent<Props> {
             this.props.move(STEP.indexOf(source.droppableId), STEP.indexOf(destination.droppableId), result.draggableId, destination.index);
         }
     };
+
+    onDragStart = () => {
+        this.setState({
+            flag: true
+        })
+    };
+
+    constructor(props: Props) {
+        super(props);
+        const { pathname, changeGroup, group } = props;
+        pathname === '/group' ? changeGroup('interview') : changeGroup(group === 'interview' ? 'web' : group);
+    }
 
     render() {
         const { classes } = this.props;
@@ -86,7 +86,6 @@ class Container extends PureComponent<Props> {
                         )}
                     </Droppable>
                 </DragDropContext>
-
             </>
         );
     }

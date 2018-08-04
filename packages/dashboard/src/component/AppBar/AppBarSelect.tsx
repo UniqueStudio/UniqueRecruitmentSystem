@@ -17,6 +17,14 @@ class Selects extends PureComponent<Props> {
         group: this.props.group
     };
 
+    componentWillReceiveProps(nextProps: Props) {
+        if (nextProps.group !== this.props.group) {
+            this.setState({
+                group: nextProps.group
+            })
+        }
+    }
+
     handleChange = (event: React.ChangeEvent) => {
         this.setState({ group: event.target['value'] });
         this.props.changeGroup(event.target['value']);
@@ -33,7 +41,6 @@ class Selects extends PureComponent<Props> {
                 {GROUP.map(i =>
                     <MenuItem value={i.toLowerCase()} key={i.toLowerCase()}>{i}</MenuItem>
                 )}
-                <MenuItem value='all' disabled>{'群面(咕咕咕)'/*TODO*/}</MenuItem>
             </Select>
         );
     }

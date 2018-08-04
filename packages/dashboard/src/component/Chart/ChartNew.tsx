@@ -77,6 +77,7 @@ class ChartNew extends PureComponent<Props> {
 
     render() {
         const { classes, disabled } = this.props;
+        const { code } = this.state;
         return (
             <>
                 <Tooltip title={disabled ? "只有组长能发起招新" : "发起招新"} classes={{ tooltip: classes.tooltip }} placement='top'>
@@ -148,7 +149,7 @@ class ChartNew extends PureComponent<Props> {
                                 onChange={this.handleChange('end')}
                             />
                         </span>
-                        <Verify onChange={this.handleChange('code')} />
+                        <Verify onChange={this.handleChange('code')} code={code} />
                         <Button color='primary' variant='contained' onClick={this.launchRecruitment}>确定</Button>
                     </div>
                 </Modal>

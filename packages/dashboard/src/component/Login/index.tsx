@@ -10,7 +10,7 @@ import { QR_CODE_URL } from '../../lib/const';
 
 interface Props extends WithStyles {
     loggedIn: boolean;
-    login: (username: string) => void;
+    //login: (username: string) => void;
     getQRCode: () => void;
     weChatKey: string;
     buttonAble: boolean;
