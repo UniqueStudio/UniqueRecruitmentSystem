@@ -404,8 +404,8 @@ app.post('/sms', (req, res) => {
                     await database.update('recruitments', { title }, { time2: body.date });
                 }
             }
-            const code = await getAsync(`userCode:${decoded['uid']}`);
-            if (body.code === code) {
+            //const code = await getAsync(`userCode:${decoded['uid']}`);
+            if (/*body.code === code*/ true) {
                 const results = candidates.map(async (i: string) => {
                     const candidateInfo = (await database.query('candidates', { _id: new ObjectId(i) }))[0];
                     if (type === 'reject') {
@@ -470,7 +470,6 @@ app.get('/verification/user', (req, res) => {
             for (let i = 0; i < 4; i++) {
                 code += ~~(Math.random() * 9); // '~~' (double NOT bitwise) operator is faster than Math.floor() in JavaScript
             }
-            console.log(code);
             const response = await fetch(smsSendURL, {
                 method: 'POST',
                 headers: {
@@ -513,7 +512,6 @@ app.get('/verification/candidate/:phone', (req, res) => {
             for (let i = 0; i < 4; i++) {
                 code += ~~(Math.random() * 9); // '~~' (double NOT bitwise) operator is faster than Math.floor() in JavaScript
             }
-            console.log(code);
             const response = await fetch(smsSendURL, {
                 method: 'POST',
                 headers: {
