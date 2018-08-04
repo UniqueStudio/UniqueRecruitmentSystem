@@ -250,6 +250,19 @@ app.post('/candidates', upload.single('resume'), (req, res) => {
                 res.send({ message: '验证码不正确!', type: 'warning' });
                 return;
             }
+            const recruitment = (await database.query('recruitments', { title }))[0];
+            if (!recruitment) {
+                res.send({ message: '当前招新不存在!', type: 'warning' });
+                return;
+            }
+            if (+new Date() < recruitment.begin) {
+                res.send({ message: '当前招新未开始!', type: 'warning' });
+                return;
+            }
+            if (+new Date() > recruitment.end) {
+                res.send({ message: '当前招新已结束!', type: 'warning' });
+                return;
+            }
             const cid = await database.insert('candidates', {
                 name,
                 grade,
@@ -266,11 +279,7 @@ app.post('/candidates', upload.single('resume'), (req, res) => {
                 comments: {},
                 resume: `/www/resumes/${title}/${group}/${name} - ${req.file.originalname}`
             });
-            const recruitment = (await database.query('recruitments', { title }))[0];
-            if (!recruitment) {
-                res.send({ message: '当前招新不存在!', type: 'warning' });
-                return;
-            }
+
             const data = recruitment['data'].map((i: object) => {
                 if (i['group'] === group) {
                     if (i['total'] === undefined) i['total'] = 0;
@@ -404,10 +413,9 @@ app.post('/sms', (req, res) => {
                     }
                     let model = generateModel(candidateInfo['name'], step, type, group);
                     if (body.date) {
-                        const link = `http://cvs.hustunique.com/form/${formId}/${i}`;
-                        console.log(link);
-                        model += link;
+                        model += `http://cvs.hustunique.com/form/${formId}/${i}`;
                     }
+                    console.log(model);
                     const response = await fetch(smsSendURL, {
                         method: 'POST',
                         headers: {
@@ -462,6 +470,7 @@ app.get('/verification/user', (req, res) => {
             for (let i = 0; i < 4; i++) {
                 code += ~~(Math.random() * 9); // '~~' (double NOT bitwise) operator is faster than Math.floor() in JavaScript
             }
+            console.log(code);
             const response = await fetch(smsSendURL, {
                 method: 'POST',
                 headers: {
@@ -504,6 +513,7 @@ app.get('/verification/candidate/:phone', (req, res) => {
             for (let i = 0; i < 4; i++) {
                 code += ~~(Math.random() * 9); // '~~' (double NOT bitwise) operator is faster than Math.floor() in JavaScript
             }
+            console.log(code);
             const response = await fetch(smsSendURL, {
                 method: 'POST',
                 headers: {
@@ -513,7 +523,7 @@ app.get('/verification/candidate/:phone', (req, res) => {
                 body: JSON.stringify({
                     phone: phone,
                     template: 96385,
-                    param_list: ["发起招新业务/发送通知业务", code]
+                    param_list: ["本次报名表单", code]
                 })
             });
             const result = await response.json();
