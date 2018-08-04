@@ -288,7 +288,7 @@ app.post('/candidates', upload.single('resume'), (req, res) => {
             candidateResult = await database.query('candidates', { _id: new ObjectId(cid) });
             io.emit('addCandidate', candidateResult[0]);
             io.emit('updateRecruitment');
-            redisClient.set(`candidateCode:${phone}`, '')
+            redisClient.del(`candidateCode:${phone}`);
         } catch (err) {
             res.send({ message: err.message, type: 'danger' })
         }
@@ -365,42 +365,73 @@ app.get('/candidates/:cid/resume', (req, res) => {
 });
 
 /* TODO */
-const sendSMS = (content: string) => {
-};
 
+const generateModel = (name: string, step: string, type: string, group: string) => {
+    if (step === '通过' && type === 'accept') {
+        return `[联创团队]${name}你好，你在2018年秋季招新中已成功加入${group}组！`
+    }
+    return type === 'accept' ?
+        `[联创团队]${name}你好，你通过了2018年秋季招新${group}组${step}审核${step === '笔试流程' || step === '熬测流程' ? '，请进入以下链接选择面试时间' : ''}`
+        : `[联创团队]${name}你好，你没有通过2018年秋季招新${group}组${step}审核`
+};
 // send notification sms
 app.post('/sms', (req, res) => {
     const body = req.body;
+    const { step, type, group, title, candidates } = body;
     (async () => {
         try {
             const decoded = verifyJWT(req.get('Authorization'));
-            const recruitment = (await database.query('recruitments', { title: body.title }))[0];
+            const recruitment = (await database.query('recruitments', { title }))[0];
             let formId = '';
             if (body.date) {
-                if (body.step === '笔试流程') {
-                    formId = `${recruitment['_id']}${groups.indexOf(body.group)}1`;
+                if (step === '笔试流程') {
+                    formId = `${recruitment['_id']}${groups.indexOf(group)}1`;
                     await database.update('recruitments',
-                        { title: body.title },
-                        { time1: { ...recruitment.time1, [body.group]: body.date } }
+                        { title },
+                        { time1: { ...recruitment.time1, [group]: body.date } }
                     );
-                } else if (body.step === '熬测流程') {
+                } else if (step === '熬测流程') {
                     formId = `${recruitment['_id']}2`;
-                    await database.update('recruitments', { title: body.title }, { time2: body.date });
+                    await database.update('recruitments', { title }, { time2: body.date });
                 }
             }
             const code = await getAsync(`userCode:${decoded['uid']}`);
             if (body.code === code) {
-                body.candidates.map((i: string) => {
+                const results = candidates.map(async (i: string) => {
+                    const candidateInfo = (await database.query('candidates', { _id: new ObjectId(i) }))[0];
+                    if (type === 'reject') {
+                        await database.update('candidates', { _id: new ObjectId(i) }, { rejected: true })
+                    }
+                    let model = generateModel(candidateInfo['name'], step, type, group);
                     if (body.date) {
                         const link = `http://cvs.hustunique.com/form/${formId}/${i}`;
                         console.log(link);
-                        sendSMS('content' + link);
-                    } else {
-                        sendSMS('content');
+                        model += link;
+                    }
+                    const response = await fetch(smsSendURL, {
+                        method: 'POST',
+                        headers: {
+                            'Token': token,
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            phone: candidateInfo['phone'],
+                            template: 96387,
+                            param_list: [`${model}（请无视以下内容：`, '', '', '']
+                        })
+                    });
+                    const result = await response.json();
+                    if (result.code !== 200) {
+                        return candidateInfo['name'];
                     }
                 });
-                res.send({ type: 'success' });
-                redisClient.set(`userCode:${decoded['uid']}`, '')
+                Promise.all(results).then(failed => {
+                    const failedNames = failed.filter(i => i);
+                    failedNames.length === 0
+                        ? res.send({ type: 'success' })
+                        : res.send({ type: 'info', message: `未能成功发送短信的有：${failedNames}` })
+                });
+                redisClient.del(`userCode:${decoded['uid']}`);
             } else {
                 res.send({ message: '验证码不正确', type: 'warning' })
             }
@@ -408,6 +439,11 @@ app.post('/sms', (req, res) => {
             res.send({ message: err.message, type: 'danger' })
         }
     })()
+});
+
+// send sms after all interview time has been arranged
+app.post('/sms/interview', (req, res) => {
+
 });
 
 // request for verification code
@@ -563,7 +599,7 @@ app.post('/recruitment', (req, res) => {
                 });
                 res.send({ type: 'success' });
                 io.emit('updateRecruitment');
-                redisClient.set(`userCode:${decoded['uid']}`, '')
+                redisClient.del(`userCode:${decoded['uid']}`);
             } else {
                 res.send({ message: '验证码错误', type: 'warning' });
                 return;
