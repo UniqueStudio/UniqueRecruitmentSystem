@@ -15,6 +15,7 @@ interface Props extends WithStyles {
     i: [string, CType],
     j: number,
     step: number;
+    disabled: boolean;
     modalOn: string;
     direction: "left" | "right" | "up" | "down";
     toggleModalOff: () => void;
@@ -27,10 +28,10 @@ interface Props extends WithStyles {
 class ColumnCandidate extends PureComponent<Props> {
 
     render() {
-        const { i, j, classes, toggleModalOff, step, modalOn, direction, handleNext, handlePrev, downloadResume } = this.props;
+        const { i, j, classes, toggleModalOff, step, modalOn, disabled, direction, handleNext, handlePrev, downloadResume } = this.props;
         return (
             <>
-                <Draggable draggableId={i[0]} index={j} isDragDisabled={i[1].abandon}>
+                <Draggable draggableId={i[0]} index={j} isDragDisabled={disabled}>
                     {(dragProvided: DraggableProvided) => (
                         <Candidate step={step}
                                    cid={i[0]}

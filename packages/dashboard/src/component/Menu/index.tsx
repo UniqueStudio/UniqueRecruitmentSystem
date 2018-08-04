@@ -9,9 +9,10 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 import DashboardIcon from '@material-ui/icons/Dashboard';
-import InsertChartIcon from '@material-ui/icons/InsertChart';
+import PieChartIcon from '@material-ui/icons/PieChart';
 import PersonIcon from '@material-ui/icons/Person';
 import HomeIcon from '@material-ui/icons/Home';
+import GroupWorkIcon from '@material-ui/icons/GroupWork';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 
 import withRoot from '../../style/withRoot';
@@ -53,7 +54,7 @@ class Menu extends PureComponent<Props> {
                     <Anchor to='/data'>
                         <ListItem button onClick={open ? toggleOpen : undefined}>
                             <ListItemIcon>
-                                <InsertChartIcon />
+                                <PieChartIcon />
                             </ListItemIcon>
                             <ListItemText primary="历年数据" />
                         </ListItem>
@@ -64,6 +65,14 @@ class Menu extends PureComponent<Props> {
                                 <DashboardIcon />
                             </ListItemIcon>
                             <ListItemText primary="报名审核" />
+                        </ListItem>
+                    </Anchor>
+                    <Anchor to='/group'>
+                        <ListItem button onClick={open ? toggleOpen : undefined}>
+                            <ListItemIcon>
+                                <GroupWorkIcon />
+                            </ListItemIcon>
+                            <ListItemText primary="群面" />
                         </ListItem>
                     </Anchor>
                     <Anchor to='/my'>

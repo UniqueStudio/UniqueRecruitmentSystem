@@ -8,6 +8,7 @@ import styles from '../../style/template'
 import withRoot from '../../style/withRoot';
 
 interface Props extends WithStyles {
+    code: string;
     onChange: (event: React.ChangeEvent) => void;
     getVerifyCode: () => void;
 }
@@ -46,7 +47,7 @@ class Index extends PureComponent<Props> {
     }
 
     render() {
-        const { classes, onChange } = this.props;
+        const { classes, onChange, code } = this.props;
 
         return (
             <div className={classNames(classes.templateContent, classes.templateItem)}>
@@ -56,6 +57,7 @@ class Index extends PureComponent<Props> {
                     label="输入验证码"
                     className={classes.templateItem}
                     onChange={onChange}
+                    value={code}
                 />
             </div>
         );

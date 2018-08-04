@@ -11,21 +11,14 @@ import { DraggableProvided } from 'react-beautiful-dnd';
 import styles from "../../style/candidate";
 import { colorToAlpha, dangerColor, successColor, warningColor } from '../../style';
 import withRoot from "../../style/withRoot";
-
-interface Info {
-    name: string;
-    grade: string;
-    institute: string;
-    comments: object;
-    abandon?: boolean;
-}
+import { Candidate as CType } from '../../lib/const';
 
 interface Props extends WithStyles {
     provided: DraggableProvided;
     fabOn: number;
     step: number;
     cid: string;
-    info: Info;
+    info: CType;
     selected: string[];
     select: (cid: string) => void;
     deselect: (cid: string) => void;
@@ -63,7 +56,7 @@ class Candidate extends PureComponent<Props> {
 
     render() {
         const { cid, info, selected, classes, toggleModalOn, changeInputting, provided, fabOn, step } = this.props;
-        const { name, grade, institute, comments, abandon } = info;
+        const { name, grade, institute, comments, abandon, rejected } = info;
         const evaluations = Object.values(comments).map(i => i['evaluation']);
         const red = colorToAlpha(dangerColor, 0.1),
             yellow = colorToAlpha(warningColor, 0.1),
@@ -91,7 +84,7 @@ class Candidate extends PureComponent<Props> {
                             onClick={e => e.stopPropagation()}
                             onChange={this.handleCheck}
                             checked={selected.includes(cid)}
-                            disabled={abandon || (selected.length !== 0 && fabOn !== step)}
+                            disabled={abandon || rejected || (selected.length !== 0 && fabOn !== step)}
                         />
                         <span className={classes.cardTitle}>
                             <Typography variant='title'>{name}</Typography>
@@ -126,11 +119,11 @@ class Candidate extends PureComponent<Props> {
                 }}
                 onClose={this.handleClose}
                 disableRestoreFocus
-            >该选手已放弃</Popover>
+            >{abandon ? '该选手已放弃' : rejected ? '该选手已被淘汰' : ''}</Popover>
         );
         return (
             <>
-                {abandon ? <>{card}{popover}</> : card}
+                {abandon || rejected ? <>{card}{popover}</> : card}
             </>
         );
     }

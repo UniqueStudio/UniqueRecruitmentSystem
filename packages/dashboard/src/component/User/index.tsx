@@ -89,6 +89,7 @@ class User extends PureComponent<Props> {
                     onChange={this.handleChange('username')}
                     margin="normal"
                     className={classes.userInfo}
+                    InputProps={{ readOnly: true } as any}
                 />
                 <FormControl className={classes.userInfo}>
                     <InputLabel>性别</InputLabel>
@@ -118,8 +119,8 @@ class User extends PureComponent<Props> {
                         {(() => {
                             const year = new Date().getFullYear();
                             return [year - 3, year - 2, year - 1, year].map(i =>
-                                [{ a: '春招', b: 'S' }, { a: '夏令营', b: 'C' }, { a: '秋招', b: 'A' }].map(j =>
-                                    <MenuItem value={i + j.b}>{i + j.a}</MenuItem>
+                                [['春招', 'S'], ['夏令营', 'C'], ['秋招', 'A']].map(j =>
+                                    <MenuItem value={i + j[1]}>{i + j[0]}</MenuItem>
                                 ))
                         })()}
                     </Select>

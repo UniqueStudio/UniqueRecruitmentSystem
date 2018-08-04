@@ -79,6 +79,7 @@ class Bar extends PureComponent<Props> {
                         <Route path='/data' render={(props) => <Header title='历年数据展示' {...props} />} />
                         <Route path='/view'
                                render={(props) => <Header title='8102年秋季招新' {...props}><Select /></Header>} />
+                        <Route path='/group' render={(props) => <Header title='8102秋招・群面' {...props} />} />
                         <Route path='/my' render={(props) => <Header title='个人信息管理' {...props} />} />
                         {loggedIn ?
                             <>

@@ -25,7 +25,7 @@ class Step extends PureComponent<Props> {
                         <Chip
                             key={j}
                             label={`${i.name} ${i.grade} ${i.institute}`}
-                            onDelete={() => onDelete(i.cid)}
+                            onDelete={() => onDelete(i._id)}
                             className={classes.templateItem}
                         />
                     )
