@@ -1,32 +1,26 @@
 import express from 'express';
 import { promisify } from 'util';
 import redis from 'redis';
-import fetch from 'node-fetch';
-import jwt from 'jsonwebtoken';
 import multer from 'multer';
 import fs from 'fs';
 import { Server } from 'http';
-import socket, { Socket } from 'socket.io';
+import socket from 'socket.io';
 import bodyParser from 'body-parser';
-import Database from './database';
-import { ObjectId } from 'mongodb';
+import Index from './db/index';
+import { scanHandler, loginHandler, infoGetter, infoChanger } from './utils/user';
 import {
-    GROUPS as groups,
-    Candidate,
-    secret,
-    userInfoURL,
-    accessTokenURL,
-    scanningURL,
-    token,
-    getQRCodeURL,
-    smsSendURL,
-    userIDURL
-} from './consts';
+    candidateAdder, candidateSetter, candidateGetterAll, candidateGetterGroup, resumeGetter, formGetter,
+    onMoveCandidate,
+    onRemoveCandidate,
+    onAddComment, onRemoveComment
+} from './utils/candidate';
+import { interviewSender, sender, userCodeSender, candidateCodeSender } from './utils/sms';
+import { recruitmentGetterAll, recruitmentGetterOne, recruitmetnLauncher } from './utils/recruitment';
 
 const app = express();
 const server = new Server(app);
-const io = socket(server);
-const database = new Database();
+export const io = socket(server);
+export const database = new Index();
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
         const candidateInfo = req['body'];
@@ -38,33 +32,12 @@ const storage = multer.diskStorage({
     },
     filename: (req, file, cb) => cb(null, `${req['body'].name} - ${file.originalname}`)
 });
-const upload = multer({ storage: storage, limits: { fileSize: 104857600 } });
-const redisClient = redis.createClient();
-const getAsync = promisify(redisClient.get).bind(redisClient);
+const upload = multer({ storage: storage, limits: { fileSize: 104857600 } });  // 100MB
+export const redisClient = redis.createClient();
+export const getAsync = promisify(redisClient.get).bind(redisClient);
 redisClient.on("error", err => {
     console.log("Redis Error: " + err);
 });
-
-const checkMail = (mail: string) => {
-    const re = /^(([^<>()\[\].,;:\s@"]+(\.[^<>()\[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/i;
-    return re.test(mail);
-};
-
-const checkPhone = (phone: string) => {
-    const re = /^((13[0-9])|(14[57])|(15[0-3,5-9])|166|(17[035678])|(18[0-9])|(19[89]))\d{8}$/i;
-    return re.test(phone);
-};
-
-const verifyJWT = (token?: string) => {
-    if (!token) {
-        throw new Error('No token provided');
-    }
-    if (token.indexOf('Bearer ') === 0) {
-        token = token.replace('Bearer ', '');
-    }
-    return jwt.verify(token, secret) as object;
-};
-
 
 app.use(bodyParser.json({
     limit: '1mb'
@@ -87,70 +60,6 @@ app.use((req, res, next) => {
  * cid: candidate id
  */
 
-app.get('/user', (req, res) => {
-    (async () => {
-        try {
-            const response = await fetch(getQRCodeURL);
-            const html = await response.text();
-            const key = html.match(/key ?: ?"\w+/)![0].replace(/key ?: ?"/, '');
-            res.send({ key, type: 'success' })
-        } catch (err) {
-            res.send({ message: err.message, type: 'warning' });
-        }
-    })()
-});
-
-app.get('/user/:key/status', (req, res) => {
-    (async () => {
-        try {
-            const scanResponse = await fetch(`${scanningURL}${req.params.key}`);
-            const scanResult = await scanResponse.text();
-            const status = JSON.parse(scanResult.match(/{.+}/)![0]).status;
-            if (status === 'QRCODE_SCAN_ING') {
-                const loginResponse = await fetch(`${scanningURL}${req.params.key}&lastStatus=${status}`);
-                const loginResult = await loginResponse.text();
-                const loginObj = JSON.parse(loginResult.match(/{.+}/)![0]);
-                if (loginObj.status === 'QRCODE_SCAN_SUCC') {
-                    const auth_code = loginObj.auth_code;
-                    const accessTokenResponse = await fetch(accessTokenURL);
-                    const accessTokenResult = await accessTokenResponse.json();
-                    const accessToken = accessTokenResult.access_token;
-                    const userIDResponse = await fetch(userIDURL(accessToken, auth_code));
-                    const userIDResult = await userIDResponse.json();
-                    const userID = userIDResult.UserId;
-                    const userInfoResponse = await fetch(userInfoURL(accessToken, userID));
-                    const userInfoResult = await userInfoResponse.json();
-                    const user = await database.query('users', {
-                        username: userInfoResult.name,
-                        phone: userInfoResult.mobile
-                    });
-                    let uid;
-                    if (!user.length) {
-                        uid = await database.insert('users', {
-                            username: userInfoResult.name,
-                            phone: userInfoResult.mobile
-                        });
-                    } else {
-                        uid = user[0]['_id'];
-                    }
-                    const token = jwt.sign({ uid }, secret, {
-                        expiresIn: 86400
-                    });
-                    res.send({ uid, token, username: userInfoResult.name, type: 'success' });
-                } else {
-                    res.send({ message: '登录失败', type: 'info' });
-                    return;
-                }
-            } else {
-                res.send({ message: '登录超时，请重新登录', type: 'info' });
-                return;
-            }
-        } catch (err) {
-            res.send({ message: err.message, type: 'danger' });
-        }
-    })()
-});
-
 // login
 // app.post('/user', (req, res) => {
 //     (async () => {
@@ -172,550 +81,72 @@ app.get('/user/:key/status', (req, res) => {
 //     })()
 // });
 
-// get user info
-app.get('/user/:uid', (req, res) => {
-    (async () => {
-        try {
-            verifyJWT(req.get('Authorization'));
-            const userInfo = await database.query('users', { _id: new ObjectId(req.params.uid) });
-            res.send({ data: userInfo[0], type: 'success' });
-        } catch (err) {
-            res.send({ message: err.message, type: 'danger' });
-        }
-    })()
+// login: get QR code
+app.get('/user', loginHandler);
 
-});
+// login: scan QR code
+app.get('/user/:key/status', scanHandler);
+
+// get user info
+app.get('/user/:uid', infoGetter);
 
 // change user info
-app.put('/user/:uid', (req, res) => {
-    const body = req.body;
-    (async () => {
-        try {
-            verifyJWT(req.get('Authorization'));
-            if (Object.values(body).includes('')) {
-                res.send({ message: '请完整填写信息!', type: 'warning' });
-                return;
-            }
-            if (!checkMail(body.mail)) {
-                res.send({ message: '邮箱格式不正确!', type: 'warning' });
-                return;
-            }
-            if (!checkPhone(body.phone)) {
-                res.send({ message: '手机号码格式不正确!', type: 'warning' });
-                return;
-            }
-            await database.update('users', { _id: new ObjectId(req.params.uid) }, {
-                username: body.username,
-                joinTime: body.joinTime,
-                isCaptain: Boolean(body.isCaptain),
-                isAdmin: Boolean(body.isAdmin),
-                phone: body.phone,
-                mail: body.mail,
-                sex: body.sex,
-                group: body.group,
-            });
-            res.send({ type: 'success' });
-        } catch (err) {
-            res.send({ message: err.message, type: 'danger' });
-        }
-    })()
-
-});
+app.put('/user/:uid', infoChanger);
 
 // add new candidate
-app.post('/candidates', upload.single('resume'), (req, res) => {
-    const body = req.body;
-    const { name, grade, institute, major, score, mail, phone, group, sex, intro, title } = body;
-    (async () => {
-        try {
-            let candidateResult = await database.query('candidates', { name, phone });
-            if (Object.values(body).includes('')) {
-                res.send({ message: '请完整填写表单!', type: 'warning' });
-                return;
-            }
-            if (candidateResult.length !== 0) {
-                res.send({ message: '不能重复报名!', type: 'warning' });
-                return;
-            }
-            if (!checkMail(mail)) {
-                res.send({ message: '邮箱格式不正确!', type: 'warning' });
-                return;
-            }
-            if (!checkPhone(phone)) {
-                res.send({ message: '手机号码格式不正确!', type: 'warning' });
-                return;
-            }
-            const code = await getAsync(`candidateCode:${phone}`);
-            if (code !== body.code) {
-                res.send({ message: '验证码不正确!', type: 'warning' });
-                return;
-            }
-            const recruitment = (await database.query('recruitments', { title }))[0];
-            if (!recruitment) {
-                res.send({ message: '当前招新不存在!', type: 'warning' });
-                return;
-            }
-            if (+new Date() < recruitment.begin) {
-                res.send({ message: '当前招新未开始!', type: 'warning' });
-                return;
-            }
-            if (+new Date() > recruitment.end) {
-                res.send({ message: '当前招新已结束!', type: 'warning' });
-                return;
-            }
-            const cid = await database.insert('candidates', {
-                name,
-                grade,
-                institute,
-                major,
-                score,
-                mail,
-                phone,
-                group,
-                sex,
-                step: 0,
-                intro,
-                title,
-                comments: {},
-                resume: `/www/resumes/${title}/${group}/${name} - ${req.file.originalname}`
-            });
-
-            const data = recruitment['data'].map((i: object) => {
-                if (i['group'] === group) {
-                    if (i['total'] === undefined) i['total'] = 0;
-                    i['total'] += 1;
-                    if (!i['steps']) i['steps'] = [0, 0, 0, 0, 0, 0];
-                    i['steps'][0] += 1;
-                }
-                return i;
-            });
-            await database.update('recruitments', { title }, {
-                data,
-                total: recruitment['total'] ? recruitment['total'] + 1 : 1
-            });
-            res.send({ type: 'success' });
-            candidateResult = await database.query('candidates', { _id: new ObjectId(cid) });
-            io.emit('addCandidate', candidateResult[0]);
-            io.emit('updateRecruitment');
-            redisClient.del(`candidateCode:${phone}`);
-        } catch (err) {
-            res.send({ message: err.message, type: 'danger' })
-        }
-    })()
-});
+app.post('/candidates', upload.single('resume'), candidateAdder);
 
 // set interview time
-app.put('/candidates/:cid', (req, res) => {
-    (async () => {
-        try {
-            verifyJWT(req.get('Authorization'));
-            const candidateResult = await database.query('candidates', { _id: new ObjectId(req.params.cid), ...req.body.patch });
-            if (candidateResult.length !== 0) {
-                res.send({ message: '不能重复提交!', type: 'warning' });
-                return;
-            }
-            await database.update('candidates', { _id: new ObjectId(req.params.cid) }, req.body.patch);
-            res.send({ type: 'success' });
-        } catch (err) {
-            res.send({ message: err.message, type: 'danger' })
-        }
-    })();
-});
+app.put('/candidates/:cid', candidateSetter);
 
-// get all candidates
-app.get('/candidates', (req, res) => {
-    (async () => {
-        try {
-            verifyJWT(req.get('Authorization'));
-            const data = await database.query('candidates', {});
-            const formatted = [{}, {}, {}, {}, {}, {}];
-            data.map((i: Candidate) => formatted[i.step][`${i._id}`] = { ...i, resume: '' }); // hide resume path
-            res.send({ data: formatted, type: 'success' });
-        } catch (err) {
-            res.send({ message: err.message, type: 'danger' })
-        }
-    })();
-});
+// get all candidates in the latest recruitment
+app.get('/candidates', candidateGetterAll);
 
-// get candidates in certain group
-app.get('/candidates/:group', (req, res) => {
-    (async () => {
-        try {
-            verifyJWT(req.get('Authorization'));
-            const data = await database.query('candidates', { group: req.params.group });
-            const formatted = [{}, {}, {}, {}, {}, {}];
-            data.map((i: Candidate) => formatted[i.step][`${i._id}`] = { ...i, resume: '' }); // hide resume path
-            res.send({ data: formatted, type: 'success' });
-        } catch (err) {
-            res.send({ message: err.message, type: 'danger' })
-        }
-    })();
-});
+// get candidates in certain group in the latest recruitment
+app.get('/candidates/:group', candidateGetterGroup);
+
+// get all candidates in a certain recruitment
+app.get('/candidates/recruitment/:title', candidateGetterAll);
+
+// get candidates in a certain group in a certain recruitment
+app.get('/candidates/:group/recruitment/:title', candidateGetterGroup);
 
 // get resume of a candidate
-app.get('/candidates/:cid/resume', (req, res) => {
-    (async () => {
-        try {
-            verifyJWT(req.get('Authorization'));
-            const data = await database.query('candidates', { _id: new ObjectId(req.params.cid) });
-            if (!data[0].resume) {
-                res.status(404).send({ message: '简历不存在！', type: 'warning' });
-            } else {
-                const filename = Buffer.from(data[0].resume.replace(/^\/www\/resumes\/\w+\/\w+\//, '')).toString('base64');
-                res.set({
-                    'Content-Disposition': `attachment; filename="${filename}"`,
-                    'Access-Control-Expose-Headers': 'Content-Disposition',
-                }).sendFile(data[0].resume);
-            }
-        } catch (err) {
-            res.status(500).send({ message: err.message, type: 'danger' })
-        }
-    })();
-});
+app.get('/candidates/:cid/resume', resumeGetter);
 
 /* TODO */
-
-const generateModel = (name: string, step: string, type: string, group: string) => {
-    if (step === '通过' && type === 'accept') {
-        return `[联创团队]${name}你好，你在2018年秋季招新中已成功加入${group}组！`
-    }
-    return type === 'accept' ?
-        `[联创团队]${name}你好，你通过了2018年秋季招新${group}组${step}审核${step === '笔试流程' || step === '熬测流程' ? '，请进入以下链接选择面试时间' : ''}`
-        : `[联创团队]${name}你好，你没有通过2018年秋季招新${group}组${step}审核`
-};
 // send notification sms
-app.post('/sms', (req, res) => {
-    const body = req.body;
-    const { step, type, group, title, candidates } = body;
-    (async () => {
-        try {
-            const decoded = verifyJWT(req.get('Authorization'));
-            const recruitment = (await database.query('recruitments', { title }))[0];
-            let formId = '';
-            if (body.date) {
-                if (step === '笔试流程') {
-                    formId = `${recruitment['_id']}${groups.indexOf(group)}1`;
-                    await database.update('recruitments',
-                        { title },
-                        { time1: { ...recruitment.time1, [group]: body.date } }
-                    );
-                } else if (step === '熬测流程') {
-                    formId = `${recruitment['_id']}2`;
-                    await database.update('recruitments', { title }, { time2: body.date });
-                }
-            }
-            //const code = await getAsync(`userCode:${decoded['uid']}`);
-            if (/*body.code === code*/ true) {
-                const results = candidates.map(async (i: string) => {
-                    const candidateInfo = (await database.query('candidates', { _id: new ObjectId(i) }))[0];
-                    if (type === 'reject') {
-                        await database.update('candidates', { _id: new ObjectId(i) }, { rejected: true })
-                    }
-                    let model = generateModel(candidateInfo['name'], step, type, group);
-                    if (body.date) {
-                        model += `http://cvs.hustunique.com/form/${formId}/${i}`;
-                    }
-                    console.log(model);
-                    const response = await fetch(smsSendURL, {
-                        method: 'POST',
-                        headers: {
-                            'Token': token,
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({
-                            phone: candidateInfo['phone'],
-                            template: 96387,
-                            param_list: [`${model}（请无视以下内容：`, '', '', '']
-                        })
-                    });
-                    const result = await response.json();
-                    if (result.code !== 200) {
-                        return candidateInfo['name'];
-                    }
-                });
-                Promise.all(results).then(failed => {
-                    const failedNames = failed.filter(i => i);
-                    failedNames.length === 0
-                        ? res.send({ type: 'success' })
-                        : res.send({ type: 'info', message: `未能成功发送短信的有：${failedNames}` })
-                });
-                redisClient.del(`userCode:${decoded['uid']}`);
-            } else {
-                res.send({ message: '验证码不正确', type: 'warning' })
-            }
-        } catch (err) {
-            res.send({ message: err.message, type: 'danger' })
-        }
-    })()
-});
+app.post('/sms', sender);
 
 // send sms after all interview time has been arranged
-app.post('/sms/interview', (req, res) => {
-
-});
+app.post('/sms/interview', interviewSender);
 
 // request for verification code
-app.get('/verification/user', (req, res) => {
-    (async () => {
-        try {
-            const decoded = verifyJWT(req.get('Authorization'));
-            const uid = decoded['uid'];
-            const user = await database.query('users', { _id: new ObjectId(uid) });
-            const phone = user[0].phone;
-            if (!phone) {
-                res.send({ message: '你未填写手机号码！', type: 'warning' });
-                return;
-            }
-            let code = '';
-            for (let i = 0; i < 4; i++) {
-                code += ~~(Math.random() * 9); // '~~' (double NOT bitwise) operator is faster than Math.floor() in JavaScript
-            }
-            const response = await fetch(smsSendURL, {
-                method: 'POST',
-                headers: {
-                    'Token': token,
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    phone: phone,
-                    template: 96385,
-                    param_list: ["发起招新业务/发送通知业务", code]
-                })
-            });
-            const result = await response.json();
-            if (result.code !== 200) {
-                res.send({ message: '发送短信失败！', type: 'danger' });
-                return;
-            }
-            redisClient.set(`userCode:${uid}`, code, 'EX', 600, () => {
-                res.send({ type: 'success' });
-            });
-        } catch (err) {
-            res.send({ message: err.message, type: 'danger' });
-        }
-    })();
-});
+app.get('/verification/user', userCodeSender);
 
-app.get('/verification/candidate/:phone', (req, res) => {
-    (async () => {
-        try {
-            const phone = req.params.phone;
-            if (!phone) {
-                res.send({ message: '你未填写手机号码！', type: 'warning' });
-                return;
-            }
-            if (!checkPhone(phone)) {
-                res.send({ message: '手机号码格式不正确!', type: 'warning' });
-                return;
-            }
-            let code = '';
-            for (let i = 0; i < 4; i++) {
-                code += ~~(Math.random() * 9); // '~~' (double NOT bitwise) operator is faster than Math.floor() in JavaScript
-            }
-            const response = await fetch(smsSendURL, {
-                method: 'POST',
-                headers: {
-                    'Token': token,
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    phone: phone,
-                    template: 96385,
-                    param_list: ["本次报名表单", code]
-                })
-            });
-            const result = await response.json();
-            if (result.code !== 200) {
-                res.send({ message: '发送短信失败！', type: 'danger' });
-                return;
-            }
-            redisClient.set(`candidateCode:${phone}`, code, 'EX', 600, () => {
-                res.send({ type: 'success' });
-            });
-        } catch (err) {
-            res.send({ message: err.message, type: 'danger' });
-        }
-    })();
-});
+app.get('/verification/candidate/:phone', candidateCodeSender);
 
-app.get('/form/:formId/:cid', (req, res) => {
-    const formId = req.params.formId;
-    const type = +formId.slice(-1);
-    const cid = req.params.cid;
-    const token = jwt.sign({ cid }, secret, {
-        expiresIn: 86400
-    });
-    (async () => {
-        try {
-            if (type === 1) { // interview 1
-                const groupId = +formId.slice(-2, -1);
-                const group = groups[groupId];
-                const recruitmentId = formId.slice(0, -2);
-                const recruitment = (await database.query('recruitments', { _id: new ObjectId(recruitmentId) }))[0];
-                res.send({ type: 'success', time: recruitment.time1[group], token });
-            } else if (type === 2) { // interview 2
-                const recruitmentId = formId.slice(0, -1);
-                const recruitment = (await database.query('recruitments', { _id: new ObjectId(recruitmentId) }))[0];
-                res.send({ type: 'success', time: recruitment.time2, token });
-            } else {
-                res.send({ message: '表单不存在！', type: 'warning' });
-            }
-        } catch (err) {
-            res.send({ message: err.message, type: 'danger' });
-        }
-    })()
-});
+// generate form
+app.get('/form/:formId/:cid', formGetter);
 
 // get all history recruitments
-app.get('/recruitment', (req, res) => {
-    (async () => {
-        try {
-            verifyJWT(req.get('Authorization'));
-            const data = await database.query('recruitments', {});
-            res.send({ data: data, type: 'success' });
-        } catch (err) {
-            res.send({ message: err.message, type: 'danger' });
-        }
-    })();
-});
+app.get('/recruitment', recruitmentGetterAll);
 
 // get a certain recruitment
-app.get('/recruitment/:title', (req, res) => {
-    (async () => {
-        try {
-            verifyJWT(req.get('Authorization'));
-            const data = await database.query('recruitments', { title: req.params.title });
-            res.send({ data: data[0], type: 'success' });
-        } catch (err) {
-            res.send({ message: err.message, type: 'danger' });
-        }
-    })();
-});
+app.get('/recruitment/:title', recruitmentGetterOne);
 
 // launch a new recruitment
-app.post('/recruitment', (req, res) => {
-    (async () => {
-        try {
-            const { title, begin, end, code } = req.body;
-            const decoded = verifyJWT(req.get('Authorization'));
-            const userCode = await getAsync(`userCode:${decoded['uid']}`);
-            if (userCode === code) {
-                await database.insert('recruitments', {
-                    title, begin, end,
-                    data: groups.map(i => ({ group: i, total: 0, steps: [0, 0, 0, 0, 0, 0] })),
-                    total: 0,
-                });
-                res.send({ type: 'success' });
-                io.emit('updateRecruitment');
-                redisClient.del(`userCode:${decoded['uid']}`);
-            } else {
-                res.send({ message: '验证码错误', type: 'warning' });
-                return;
-            }
-        } catch (err) {
-            res.send({ message: err.message, type: 'danger' })
-        }
-    })();
-});
-
-
-// move a candidate from step a to step b
-let processing: string[] = []; // deal with conflicts
-const onMoveCandidate = (socket: Socket) => (cid: string, from: number, to: number, token: string) => {
-    (async () => {
-        try {
-            verifyJWT(token);
-            if (!processing.includes(cid)) {
-                processing.push(cid);
-                await database.update('candidates', { _id: new ObjectId(cid) }, { step: to });
-                socket.broadcast.emit('moveCandidate', cid, from, to);
-                socket.emit('moveCandidateSuccess');
-                processing = processing.filter(i => i !== cid);
-            } else {
-                socket.emit('moveCandidateError', '候选人已被拖动', 'warning', { cid, from, to });
-                return;
-            }
-            const candidate = (await database.query('candidates', { _id: new ObjectId(cid) }))[0];
-            const recruitment = (await database.query('recruitments', { title: candidate['title'] }))[0];
-            const data = recruitment['data'].map((i: object) => {
-                if (i['group'] === candidate['group']) {
-                    if (!i['steps'][to]) i['steps'][to] = 0;
-                    if (!i['steps'][from]) i['steps'][from] = 0;
-                    i['steps'][to] += 1;
-                    i['steps'][from] -= 1;
-                    if (i['steps'][to] < 0) i['steps'][to] = 0;
-                    if (i['steps'][from] < 0) i['steps'][from] = 0;
-                }
-                return i;
-            });
-            await database.update('recruitments', { title: candidate['title'] }, { data });
-            io.emit('updateRecruitment');
-        } catch (err) {
-            socket.emit('moveCandidateError', err.message, 'danger', { cid, from, to });
-        }
-    })();
-};
-
-// delete a certain candidate
-const onRemoveCandidate = (socket: Socket) => (cid: string, token: string) => {
-    (async () => {
-        try {
-            verifyJWT(token);
-            const candidate = (await database.query('candidates', { _id: new ObjectId(cid) }))[0];
-            await database.delete('candidates', { _id: new ObjectId(cid) });
-            io.emit('removeCandidate', cid);
-            const recruitment = (await database.query('recruitments', { title: candidate['title'] }))[0];
-            const data = recruitment['data'].map((i: object) => {
-                if (i['group'] === candidate['group']) {
-                    i['total'] -= 1;
-                    if (i['total'] < 0) i['total'] = 0;
-                    i['steps'][candidate['step']] -= 1;
-                    if (i['steps'][candidate['step']] < 0) i['steps'][candidate['step']] = 0;
-                }
-                return i;
-            });
-            await database.update('recruitments', { title: candidate['title'] }, {
-                data,
-                total: recruitment['total'] - 1
-            });
-            io.emit('updateRecruitment');
-        } catch (err) {
-            socket.emit('removeCandidateError', err.message, 'danger');
-        }
-    })();
-};
-
-// comment on a certain candidate
-const onAddComment = (socket: Socket) => (step: number, cid: string, uid: string, comment: object, token: string) => {
-    (async () => {
-        try {
-            verifyJWT(token);
-            await database.update('candidates', { _id: new ObjectId(cid) }, { ['comments.' + uid]: comment });
-            io.emit('addComment', step, cid, uid, comment);
-        } catch (err) {
-            socket.emit('addCommentError', err.message, 'danger');
-        }
-    })();
-};
-
-// delete comment on a certain candidate
-const onRemoveComment = (socket: Socket) => (step: number, cid: string, uid: string, token: string) => {
-    (async () => {
-        try {
-            verifyJWT(token);
-            await database.update('candidates', { _id: new ObjectId(cid) }, { [`comments.${uid}`]: '' }, true);
-            io.emit('removeComment', step, cid, uid);
-        } catch (err) {
-            socket.emit('removeCommentError', err.message, 'danger');
-        }
-    })();
-};
+app.post('/recruitment', recruitmetnLauncher);
 
 io.on('connection', (socket) => {
     console.log('WebSocket connected');
+    // move a candidate from step a to step b
     socket.on('moveCandidate', onMoveCandidate(socket));
+    // delete a certain candidate
     socket.on('removeCandidate', onRemoveCandidate(socket));
+    // comment on a certain candidate
     socket.on('addComment', onAddComment(socket));
+    // delete comment on a certain candidate
     socket.on('removeComment', onRemoveComment(socket))
 });
 

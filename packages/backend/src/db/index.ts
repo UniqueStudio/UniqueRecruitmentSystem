@@ -2,7 +2,7 @@ import { MongoClient } from 'mongodb';
 
 const url = "mongodb://localhost:27017/recruitment";
 
-class Database {
+class Index {
     constructor() {
         (async () => {
             const { db, client } = await this.connect();
@@ -68,4 +68,4 @@ class Database {
     }
 }
 
-export default Database;
+export default Index;
