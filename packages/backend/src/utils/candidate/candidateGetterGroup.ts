@@ -20,7 +20,7 @@ export const candidateGetterGroup = (req: Request, res: Response) => {
                     return;
                 }
                 if (group === 'interview') {
-                    data = await database.query('candidates', { title: pendingRecruitments[0].title, step: { $gt: 4 } });
+                    data = await database.query('candidates', { title: pendingRecruitments[0].title, step: { $gt: 3 } });
                 } else {
                     data = await database.query('candidates', { title: pendingRecruitments[0].title, group });
                 }
