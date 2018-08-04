@@ -35,7 +35,7 @@ class Template extends PureComponent<Props> {
     state = {
         selected: this.props.selected,
         activeStep: 0,
-        model: 'accept',
+        type: 'accept',
         step: '{{xx流程}}',
         date: [{ ...this.defaultDate }],
         code: '',
@@ -49,13 +49,13 @@ class Template extends PureComponent<Props> {
     };
 
     handleNext = () => {
-        const { activeStep, step, date, model } = this.state;
+        const { activeStep, step, date, type } = this.state;
         const { toggleSnackbar } = this.props;
         if (activeStep === 1) {
             if (step === '{{xx流程}}') {
                 toggleSnackbar('请选择流程！');
                 return;
-            } else if ((step === '笔试流程' || step === '熬测流程') && model === 'accept') {
+            } else if ((step === '笔试流程' || step === '熬测流程') && type === 'accept') {
                 for (const i of date) {
                     if (!(i.afternoon || i.morning || i.evening)) {
                         toggleSnackbar('请选择时间段！');
@@ -69,7 +69,7 @@ class Template extends PureComponent<Props> {
         });
     };
     sendSMS = () => {
-        const { selected, model, step, date, code } = this.state;
+        const { selected, type, step, date, code } = this.state;
         const { toggleSnackbar, group } = this.props;
         if (code === '') {
             toggleSnackbar('未填写验证码！');
@@ -77,13 +77,13 @@ class Template extends PureComponent<Props> {
         }
         const content = {
             candidates: selected.map(i => i.cid),
-            model,
+            type,
             step,
             code,
             group: group.toLowerCase(),
             title: '2018A'
         };
-        if ((step === '笔试流程' || step === '熬测流程') && model === 'accept') {
+        if ((step === '笔试流程' || step === '熬测流程') && type === 'accept') {
             content['date'] = date;
         }
         this.props.sendSMS(content);
@@ -151,14 +151,14 @@ class Template extends PureComponent<Props> {
 
     render() {
         const { classes, toggleOpen, group } = this.props;
-        const { activeStep, selected } = this.state;
+        const { activeStep, selected, step, type, date } = this.state;
         const steps = ['发送对象', '消息模板', '确认发送'];
         const stepContent = [
             <TemplateStepOne selected={selected} onDelete={this.handleDelete} />,
             <TemplateStepTwo
-                step={this.state.step}
-                model={this.state.model}
-                date={this.state.date}
+                step={step}
+                type={type}
+                date={date}
                 group={group}
                 fns={{
                     handleChange: this.handleChange,
