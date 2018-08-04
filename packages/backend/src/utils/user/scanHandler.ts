@@ -40,7 +40,7 @@ export const scanHandler = (req: Request, res: Response) => {
                     const token = jwt.sign({ uid }, secret, {
                         expiresIn: 86400
                     });
-                    res.send({ uid, token, username: userInfoResult.name, type: 'success' });
+                    res.send({ uid, token, info: userInfoResult, type: 'success' });
                 } else {
                     res.send({ message: '登录失败', type: 'info' });
                     return;
