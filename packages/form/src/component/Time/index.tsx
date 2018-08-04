@@ -88,7 +88,7 @@ class Time extends React.Component<Props> {
             } else {
                 this.setState({
                     snackBarOn: true,
-                    content: '提交出现了问题，请尝试重新提交'
+                    content: result.message
                 })
             }
         } catch (err) {
