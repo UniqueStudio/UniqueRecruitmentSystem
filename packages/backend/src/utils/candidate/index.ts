@@ -7,7 +7,7 @@ import { formGetter } from './formGetter';
 import { onMoveCandidate } from './candidateMover';
 import { onRemoveCandidate } from './candidateRemover';
 import { onAddComment } from './commentAdder';
-import { onRemoveComment } from 'src/utils/candidate/commentRemover';
+import { onRemoveComment } from './commentRemover';
 
 export {
     candidateAdder,
