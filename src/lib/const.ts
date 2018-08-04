@@ -4,7 +4,7 @@ export const URL = 'http://39.108.175.151:5000';
 export const QR_CODE_URL = 'https://open.work.weixin.qq.com/wwopen/sso/qrImg?key=';
 
 export interface Candidate {
-    cid: string;
+    _id: string;
     name: string;
     grade: string;
     institute: string;
@@ -22,6 +22,7 @@ export interface Candidate {
     intro: string;
     resume: string; // file path
     comments: object;
+    rejected: boolean;
 }
 
 export interface User {

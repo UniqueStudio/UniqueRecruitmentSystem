@@ -11,6 +11,7 @@ import { reducers } from "./reducer";
 import Main from './view/Main';
 import View from './view/View';
 import Data from './view/Data';
+import Group from './view/Group';
 import Index from './view/Index';
 import My from './view/My';
 
@@ -33,6 +34,7 @@ class App extends PureComponent {
                         <Route path='/' exact component={Index} />
                         <Route path='/view' component={View} />
                         <Route path='/data' component={Data} />
+                        <Route path='/group' component={Group} />
                         <Route path='/my' component={My} />
                     </Main>
                 </ConnectedRouter>

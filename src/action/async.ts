@@ -54,12 +54,13 @@ export const getQRCode = () => (dispatch: Dispatch) => {
                 const loginResponse = await fetch(`${URL}/user/${key}/status`);
                 const loginResult = await resHandler(loginResponse);
                 if (loginResult.type === 'success') {
-                    const { uid, token, username } = loginResult;
-                    dispatch(actions.login(username, uid));
+                    const { uid, token } = loginResult;
+                    dispatch(actions.login(uid));
                     dispatch(actions.toggleSnackbarOn('已成功登录！', 'success'));
                     sessionStorage.setItem('uid', uid);
                     sessionStorage.setItem('token', token);
                     dispatch({ type: USER.SUCCESS });
+                    requestUser(uid)(dispatch);
                 } else {
                     dispatch(actions.setKey(''));
                     dispatch(actions.setGettable(true));
@@ -80,25 +81,25 @@ export const getQRCode = () => (dispatch: Dispatch) => {
     })();
 };
 
-export const login = (username: string) => (dispatch: Dispatch) => {
-    dispatch({ type: USER.START });
-    return fetch(`${URL}/user`, {
-        method: 'POST',
-        body: JSON.stringify({ username }),
-        headers: { 'content-type': 'application/json' },
-    })
-        .then(resHandler)
-        .then(res => {
-            if (res.type === 'success') {
-                dispatch(actions.login(username, res.uid));
-                dispatch(actions.toggleSnackbarOn('已成功登录！', 'success'));
-                sessionStorage.setItem('uid', res.uid);
-                sessionStorage.setItem('token', res.token);
-                dispatch({ type: USER.SUCCESS });
-            } else throw res;
-        })
-        .catch(err => errHandler(err, dispatch, USER))
-};
+// export const login = (username: string) => (dispatch: Dispatch) => {
+//     dispatch({ type: USER.START });
+//     return fetch(`${URL}/user`, {
+//         method: 'POST',
+//         body: JSON.stringify({ username }),
+//         headers: { 'content-type': 'application/json' },
+//     })
+//         .then(resHandler)
+//         .then(res => {
+//             if (res.type === 'success') {
+//                 dispatch(actions.login(username, res.uid));
+//                 dispatch(actions.toggleSnackbarOn('已成功登录！', 'success'));
+//                 sessionStorage.setItem('uid', res.uid);
+//                 sessionStorage.setItem('token', res.token);
+//                 dispatch({ type: USER.SUCCESS });
+//             } else throw res;
+//         })
+//         .catch(err => errHandler(err, dispatch, USER))
+// };
 
 export const requestUser = (uid: string) => (dispatch: Dispatch) => {
     dispatch({ type: USER.START });
@@ -132,6 +133,7 @@ export const requestUser = (uid: string) => (dispatch: Dispatch) => {
 export const updateUser = (uid: string, info: object) => (dispatch: Dispatch) => {
     dispatch({ type: USER.START });
     const token = sessionStorage.getItem('token');
+    const formerInfo = sessionStorage.getItem('userInfo') || {};
     if (!token) {
         errHandler({ message: 'token不存在', type: 'danger' }, dispatch, USER);
         return;
@@ -147,7 +149,7 @@ export const updateUser = (uid: string, info: object) => (dispatch: Dispatch) =>
         .then(resHandler)
         .then(res => {
             if (res.type === 'success') {
-                sessionStorage.setItem('userInfo', JSON.stringify(info));
+                sessionStorage.setItem('userInfo', JSON.stringify({ ...formerInfo, ...info }));
                 dispatch(actions.toggleSnackbarOn('已成功修改信息！', 'success'));
                 dispatch(actions.changeUserInfo(info));
                 dispatch({ type: USER.SUCCESS });
@@ -457,6 +459,24 @@ export const getVerifyCode = () => (dispatch: Dispatch) => {
         .catch(err => errHandler(err, dispatch, SMS))
 };
 
+export const sendMessage = (message: string) => (dispatch: Dispatch) => {
+    const state = store.getState();
+    const name = state.user.info.username;
+    const avatar = state.user.info.avatar;
+    const time = +new Date();
+    dispatch(actions.addMessage(name, avatar, time, message, true));
+    socket.emit('sendMessage', name, avatar, time, message);
+};
+
+export const sendImage = (image: string) => (dispatch: Dispatch) => {
+    const state = store.getState();
+    const name = state.user.info.username;
+    const avatar = state.user.info.avatar;
+    const time = +new Date();
+    dispatch(actions.addImage(name, avatar, time, image, true));
+    socket.emit('sendImage', name, avatar, time, image);
+};
+
 socket.on('removeCandidate', (cid: string) => {
     store.dispatch({ type: CANDIDATE.START });
     store.dispatch(actions.removeCandidate(cid));
@@ -508,6 +528,19 @@ socket.on('addCandidate', (candidate: object) => {
     store.dispatch(actions.toggleSnackbarOn(`${candidate['group']}组多了一名报名选手！`, 'info'));
     store.dispatch({ type: CANDIDATE.SUCCESS });
 });
+
 socket.on('updateRecruitment', () => {
     shouldUpdateRecruitment = true;
+});
+
+socket.on('receiveMessage', (name: string, avatar: string, time: number, message: string) => {
+    store.dispatch({ type: USER.START });
+    store.dispatch(actions.addMessage(name, avatar, time, message, false));
+    store.dispatch({ type: USER.SUCCESS });
+});
+
+socket.on('receiveMessage', (name: string, avatar: string, time: number, image: string) => {
+    store.dispatch({ type: USER.START });
+    store.dispatch(actions.addImage(name, avatar, time, image, false));
+    store.dispatch({ type: USER.SUCCESS });
 });

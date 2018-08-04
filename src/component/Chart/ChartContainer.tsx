@@ -6,13 +6,13 @@ import ChartNew from './ChartNew';
 import withRoot from '../../style/withRoot';
 import styles from '../../style/chart';
 import { Recruitment } from '../../reducer/recruitments';
+import titleConventor from '../../lib/titleConventor';
 
 interface Props extends WithStyles {
     data: Recruitment[];
-    uid: string;
     status: string;
     canLaunch: boolean;
-    fetchData: (uid: string) => void;
+    fetchData: () => void;
     toggleSnackbarOn: (info: string) => void;
     launchRecruitment: (info: object) => void;
 }
@@ -20,7 +20,7 @@ interface Props extends WithStyles {
 class ChartContainer extends PureComponent<Props> {
     constructor(props: Props) {
         super(props);
-        this.props.fetchData(props.uid);
+        props.fetchData();
     }
 
     render() {
@@ -37,7 +37,7 @@ class ChartContainer extends PureComponent<Props> {
                     const chartData = i.data;
                     const totalData = chartData.map(i => i.total || 0);
                     const flowData = [{}, ...chartData].reduce((i, j) => ({ ...i, [j['group']]: j['steps'] }));
-                    const title = `${i.title.slice(0, 4) + { 'S': '春招', 'C': '夏令营', 'A': '秋招' }[i.title[4]]}各组报名人数`;
+                    const title = `${titleConventor(i.title)}各组报名人数`;
                     const endTime = i.end;
                     return <Chart data={chartData} totalData={totalData} flowData={flowData} title={title} end={endTime}
                                   key={i['_id']} />

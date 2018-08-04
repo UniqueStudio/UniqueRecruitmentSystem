@@ -6,20 +6,10 @@ import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 import styles from "../../style/candidate";
 import withRoot from "../../style/withRoot";
 import Modal from '../Modal';
+import { Candidate } from '../../lib/const';
 
 interface Props extends WithStyles {
-    info: {
-        name: string;
-        grade: string;
-        institute: string;
-        major: string;
-        score: "10%" | "25%" | "50%" | "100%";
-        mail: string;
-        phone: string;
-        group: string;
-        sex: "Male" | "Female";
-        intro: string;
-    },
+    info: Candidate,
     downloadResume: () => void;
 }
 
@@ -34,7 +24,7 @@ class CandidateDetail extends PureComponent<Props> {
 
     render() {
         const { classes, info, downloadResume } = this.props;
-        const { name, group, sex, grade, institute, intro, mail, major, phone, score } = info;
+        const { name, group, sex, grade, institute, intro, mail, major, phone, score, time1, time2, abandon } = info;
         const inputProps = { readOnly: true } as any;
         /* see https://github.com/mui-org/material-ui/issues/8047 */
         return (
@@ -98,6 +88,20 @@ class CandidateDetail extends PureComponent<Props> {
                         <TextField
                             label="电话号码"
                             defaultValue={phone}
+                            margin="normal"
+                            InputProps={inputProps}
+                        />
+                    </div>
+                    <div className={classes.detailRow}>
+                        <TextField
+                            label="组面时间"
+                            defaultValue={abandon ? '已放弃' : time1 ? '已决定' : '未决定'}
+                            margin="normal"
+                            InputProps={inputProps}
+                        />
+                        <TextField
+                            label="群面时间"
+                            defaultValue={abandon ? '已放弃' : time2 ? '已决定' : '未决定'}
                             margin="normal"
                             InputProps={inputProps}
                         />

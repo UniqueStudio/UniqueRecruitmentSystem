@@ -40,7 +40,8 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
             width: 300,
         },
         width: 360,
-        paddingTop: theme.spacing.unit
+        paddingTop: theme.spacing.unit,
+        overflowY: 'auto'
     },
     fab: {
         position: 'fixed',
