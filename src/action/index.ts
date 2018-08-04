@@ -304,14 +304,12 @@ export type LOGIN = typeof LOGIN;
 
 export interface Login {
     type: LOGIN;
-    username: string;
     uid: string;
 }
 
-export function login(username: string, uid: string): Login {
+export function login(uid: string): Login {
     return {
         type: LOGIN,
-        username,
         uid
     }
 }
@@ -343,6 +341,7 @@ export interface ChangeUserInfo {
         sex?: string;
         group?: string;
         username?: string;
+        avatar?: string;
     }
 }
 
@@ -358,6 +357,7 @@ export function changeUserInfo(info: ChangeUserInfo['info']): ChangeUserInfo {
             mail: info.mail || '',
             sex: info.sex || 'Male',
             group: info.group || '',
+            avatar: info.avatar || '',
         }
     }
 }
@@ -392,5 +392,51 @@ export function updateRecruitment(recruitment: Recruitment): UpdateRecruitment {
     return {
         type: UPDATE_RECRUITMENT,
         recruitment,
+    }
+}
+
+export const ADD_MESSAGE = 'ADD_MESSAGE';
+export type ADD_MESSAGE = typeof ADD_MESSAGE;
+
+export interface AddMessage {
+    type: ADD_MESSAGE;
+    name: string;
+    avatar: string;
+    time: number;
+    message: string;
+    isSelf: boolean;
+}
+
+export function addMessage(name: string, avatar: string, time: number, message: string, isSelf: boolean): AddMessage {
+    return {
+        type: ADD_MESSAGE,
+        name,
+        avatar,
+        time,
+        message,
+        isSelf
+    }
+}
+
+export const ADD_IMAGE = 'ADD_IMAGE';
+export type ADD_IMAGE = typeof ADD_IMAGE;
+
+export interface AddImage {
+    type: ADD_IMAGE;
+    name: string;
+    avatar: string;
+    time: number;
+    image: string;
+    isSelf: boolean;
+}
+
+export function addImage(name: string, avatar: string, time: number, image: string, isSelf: boolean): AddImage {
+    return {
+        type: ADD_IMAGE,
+        name,
+        avatar,
+        time,
+        image,
+        isSelf
     }
 }

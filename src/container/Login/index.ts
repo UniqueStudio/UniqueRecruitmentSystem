@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
-import { getQRCode, login } from '../../action/async';
+import { getQRCode } from '../../action/async';
 import LoginComponent from '../../component/Login';
 import { StoreState } from '../../reducer';
 
@@ -12,7 +12,7 @@ const mapStateToProps = ({ user }: StoreState) => ({
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
-    login: (username: string) => login(username)(dispatch),
+    // login: (username: string) => login(username)(dispatch),
     getQRCode: () => getQRCode()(dispatch),
 });
 

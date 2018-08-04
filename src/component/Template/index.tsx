@@ -76,7 +76,7 @@ class Template extends PureComponent<Props> {
             return;
         }
         const content = {
-            candidates: selected.map(i => i.cid),
+            candidates: selected.map(i => i._id),
             type,
             step,
             code,
@@ -95,7 +95,7 @@ class Template extends PureComponent<Props> {
 
     handleDelete = (cid: string) => {
         this.setState({
-            selected: this.state.selected.filter(i => i.cid !== cid)
+            selected: this.state.selected.filter(i => i._id !== cid)
         });
         this.props.deselect(cid);
     };
@@ -151,7 +151,7 @@ class Template extends PureComponent<Props> {
 
     render() {
         const { classes, toggleOpen, group } = this.props;
-        const { activeStep, selected, step, type, date } = this.state;
+        const { activeStep, selected, step, type, date, code } = this.state;
         const steps = ['发送对象', '消息模板', '确认发送'];
         const stepContent = [
             <TemplateStepOne selected={selected} onDelete={this.handleDelete} />,
@@ -167,7 +167,7 @@ class Template extends PureComponent<Props> {
                     addDate: this.addDate,
                     deleteDate: this.deleteDate
                 }} />,
-            <Verify onChange={this.handleChange('code')} />,
+            <Verify onChange={this.handleChange('code')} code={code} />,
         ];
 
         return (

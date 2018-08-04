@@ -172,6 +172,7 @@ class Column extends Component<Props> {
                 i={i}
                 j={j}
                 key={j}
+                disabled={i[1].abandon || i[1].rejected || selectedCandidatesCids.includes(i[0])}
                 toggleModalOff={toggleModalOff}
                 modalOn={modalOn}
                 step={titleToStep(title)}
