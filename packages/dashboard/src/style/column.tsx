@@ -41,7 +41,6 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
         },
         width: 360,
         paddingTop: theme.spacing.unit,
-        overflowY: 'auto'
     },
     fab: {
         position: 'fixed',
@@ -51,7 +50,7 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
             right: theme.spacing.unit * 2,
             bottom: theme.spacing.unit * 2,
         },
-        zIndex: theme.zIndex.snackbar,
+        zIndex: theme.zIndex.snackbar * 4,
     },
     fabButtonsContainer: {
         position: 'fixed',
@@ -63,7 +62,7 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
         },
         display: 'flex',
         flexDirection: 'column',
-        zIndex: theme.zIndex.snackbar,
+        zIndex: theme.zIndex.snackbar * 4,
     },
     fabButton: {
         margin: theme.spacing.unit,

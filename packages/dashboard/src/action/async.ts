@@ -465,7 +465,7 @@ export const sendMessage = (message: string) => (dispatch: Dispatch) => {
     const avatar = state.user.info.avatar;
     const time = +new Date();
     dispatch(actions.addMessage(name, avatar, time, message, true));
-    socket.emit('sendMessage', name, avatar, time, message);
+    socket.emit('sendMessage', name, avatar, time, message, false);
 };
 
 export const sendImage = (image: string) => (dispatch: Dispatch) => {
@@ -474,7 +474,7 @@ export const sendImage = (image: string) => (dispatch: Dispatch) => {
     const avatar = state.user.info.avatar;
     const time = +new Date();
     dispatch(actions.addImage(name, avatar, time, image, true));
-    socket.emit('sendImage', name, avatar, time, image);
+    socket.emit('sendMessage', name, avatar, time, image, true);
 };
 
 socket.on('removeCandidate', (cid: string) => {
@@ -539,7 +539,7 @@ socket.on('receiveMessage', (name: string, avatar: string, time: number, message
     store.dispatch({ type: USER.SUCCESS });
 });
 
-socket.on('receiveMessage', (name: string, avatar: string, time: number, image: string) => {
+socket.on('receiveImage', (name: string, avatar: string, time: number, image: string) => {
     store.dispatch({ type: USER.START });
     store.dispatch(actions.addImage(name, avatar, time, image, false));
     store.dispatch({ type: USER.SUCCESS });
