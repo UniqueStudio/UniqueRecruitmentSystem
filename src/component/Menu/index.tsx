@@ -11,6 +11,7 @@ import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 import DashboardIcon from '@material-ui/icons/Dashboard';
 import PieChartIcon from '@material-ui/icons/PieChart';
 import PersonIcon from '@material-ui/icons/Person';
+import PeopleIcon from '@material-ui/icons/People';
 import HomeIcon from '@material-ui/icons/Home';
 import GroupWorkIcon from '@material-ui/icons/GroupWork';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
@@ -59,7 +60,7 @@ class Menu extends PureComponent<Props> {
                             <ListItemText primary="历年数据" />
                         </ListItem>
                     </Anchor>
-                    <Anchor to='/view'>
+                    <Anchor to='/commonInterview'>
                         <ListItem button onClick={open ? toggleOpen : undefined}>
                             <ListItemIcon>
                                 <DashboardIcon />
@@ -67,20 +68,28 @@ class Menu extends PureComponent<Props> {
                             <ListItemText primary="报名审核" />
                         </ListItem>
                     </Anchor>
-                    <Anchor to='/group'>
+                    <Anchor to='/finalInterview'>
                         <ListItem button onClick={open ? toggleOpen : undefined}>
                             <ListItemIcon>
                                 <GroupWorkIcon />
                             </ListItemIcon>
-                            <ListItemText primary="群面" />
+                            <ListItemText primary="群面审核" />
                         </ListItem>
                     </Anchor>
-                    <Anchor to='/my'>
+                    <Anchor to='/myInfo'>
                         <ListItem button onClick={open ? toggleOpen : undefined}>
                             <ListItemIcon>
                                 <PersonIcon />
                             </ListItemIcon>
-                            <ListItemText primary="信息管理" />
+                            <ListItemText primary="个人信息" />
+                        </ListItem>
+                    </Anchor>
+                    <Anchor to='/myGroup'>
+                        <ListItem button onClick={open ? toggleOpen : undefined}>
+                            <ListItemIcon>
+                                <PeopleIcon />
+                            </ListItemIcon>
+                            <ListItemText primary="组员信息" />
                         </ListItem>
                     </Anchor>
                 </List>

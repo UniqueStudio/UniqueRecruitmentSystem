@@ -9,11 +9,12 @@ import { composeWithDevTools } from 'redux-devtools-extension';
 import { reducers } from "./reducer";
 
 import Main from './view/Main';
-import View from './view/View';
+import CommonInterview from './view/CommonInterview';
 import Data from './view/Data';
-import Group from './view/Group';
+import FinalInterview from './view/FinalInterview';
 import Index from './view/Index';
-import My from './view/My';
+import MyInfo from './view/MyInfo';
+import MyGroup from './view/MyGroup';
 
 export const history = createHistory();
 
@@ -32,10 +33,11 @@ class App extends PureComponent {
                 <ConnectedRouter history={history}>
                     <Main>
                         <Route path='/' exact component={Index} />
-                        <Route path='/view' component={View} />
                         <Route path='/data' component={Data} />
-                        <Route path='/group' component={Group} />
-                        <Route path='/my' component={My} />
+                        <Route path='/commonInterview' component={CommonInterview} />
+                        <Route path='/finalInterview' component={FinalInterview} />
+                        <Route path='/myInfo' component={MyInfo} />
+                        <Route path='/myGroup' component={MyGroup} />
                     </Main>
                 </ConnectedRouter>
             </Provider>

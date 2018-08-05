@@ -17,7 +17,7 @@ interface Props extends WithStyles {
 
 class Container extends PureComponent<Props> {
     state = {
-        steps: this.props.pathname === '/group' ? STEP.slice(4) : STEP,
+        steps: this.props.pathname === '/finalInterview' ? STEP.slice(4) : STEP,
         flag: false,
     };
     onDragEnd = (result: DropResult) => {
@@ -53,7 +53,7 @@ class Container extends PureComponent<Props> {
     constructor(props: Props) {
         super(props);
         const { pathname, changeGroup, group } = props;
-        pathname === '/group' ? changeGroup('interview') : changeGroup(group === 'interview' ? 'web' : group);
+        pathname === '/finalInterview' ? changeGroup('interview') : changeGroup(group === 'interview' ? 'web' : group);
     }
 
     render() {

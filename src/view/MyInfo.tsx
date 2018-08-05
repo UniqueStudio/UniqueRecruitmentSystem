@@ -3,10 +3,10 @@ import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 import withRoot from "../style/withRoot";
 import User from '../container/User';
 
-class My extends PureComponent<WithStyles> {
+class MyInfo extends PureComponent<WithStyles> {
     render() {
         return <User />;
     }
 }
 
-export default withRoot(withStyles({})(My));
+export default withRoot(withStyles({})(MyInfo));
