@@ -77,10 +77,11 @@ class Bar extends PureComponent<Props> {
                         </IconButton>
                         <Route path='/' exact render={(props) => <Header title='联创团队招新管理系统' {...props} />} />
                         <Route path='/data' render={(props) => <Header title='历年数据展示' {...props} />} />
-                        <Route path='/view'
+                        <Route path='/commonInterview'
                                render={(props) => <Header title='8102年秋季招新' {...props}><Select /></Header>} />
-                        <Route path='/group' render={(props) => <Header title='8102秋招・群面' {...props} />} />
-                        <Route path='/my' render={(props) => <Header title='个人信息管理' {...props} />} />
+                        <Route path='/finalInterview' render={(props) => <Header title='8102秋招・群面' {...props} />} />
+                        <Route path='/myInfo' render={(props) => <Header title='个人信息管理' {...props} />} />
+                        <Route path='/myGroup' render={(props) => <Header title='组员信息管理' {...props} />} />
                         {loggedIn ?
                             <>
                                 <IconButton
@@ -95,7 +96,8 @@ class Bar extends PureComponent<Props> {
                                     open={Boolean(this.state.anchorEl)}
                                     onClose={this.handleClose}
                                 >
-                                    <Anchor to='/my'><MenuItem onClick={this.handleClose}>个人信息</MenuItem></Anchor>
+                                    <Anchor to='/myInfo'><MenuItem onClick={this.handleClose}>个人信息</MenuItem></Anchor>
+                                    <Anchor to='/myGroup'><MenuItem onClick={this.handleClose}>组员信息</MenuItem></Anchor>
                                     <MenuItem onClick={() => {
                                         this.handleClose();
                                         logout();
