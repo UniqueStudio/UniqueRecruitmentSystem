@@ -32,6 +32,22 @@ export interface User {
     messages: object[];
 }
 
+const insert = (item: object, arr: object[]) => {
+    const length = arr.length;
+    if (length === 0) {
+        return [item];
+    }
+    for (let i = length - 1; i >= 0; i--) {
+        if (arr[i]['time'] > item['time']) {
+            arr[i + 1] = arr[i]
+        } else {
+            arr[i + 1] = item;
+            break;
+        }
+    }
+    return arr;
+};
+
 export function user(state: User = init, action: Action): User {
     switch (action.type) {
         case asyncActions.USER.START:
@@ -54,26 +70,26 @@ export function user(state: User = init, action: Action): User {
         case actions.ADD_MESSAGE:
             return {
                 ...state,
-                messages: [...state.messages, {
+                messages: insert({
                     avatar: action.avatar,
                     name: action.name,
                     message: action.message,
                     time: action.time,
                     isSelf: action.isSelf,
                     type: 'text'
-                }]
+                }, [...state.messages])
             };
         case actions.ADD_IMAGE:
             return {
                 ...state,
-                messages: [...state.messages, {
+                messages: insert({
                     avatar: action.avatar,
                     name: action.name,
                     message: action.image,
                     time: action.time,
                     isSelf: action.isSelf,
                     type: 'image'
-                }]
+                }, [...state.messages])
             }
     }
     return state;
