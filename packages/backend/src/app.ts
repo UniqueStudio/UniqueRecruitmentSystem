@@ -7,15 +7,15 @@ import { Server } from 'http';
 import socket from 'socket.io';
 import bodyParser from 'body-parser';
 import Index from './db/index';
-import { scanHandler, loginHandler, infoGetter, infoChanger, messenger, groupGetter } from './utils/user';
+import { handleScan, handleLogin, getInfo, changeInfo, messenger, getGroup } from './utils/user';
 import {
-    candidateAdder, candidateSetter, candidateGetterAll, candidateGetterGroup, resumeGetter, formGetter,
+    addCandidate, setCandidate, getAllCandidates, getGroupCandidates, getResume, getForm,
     onMoveCandidate,
     onRemoveCandidate,
-    onAddComment, onRemoveComment
+    onAddComment, onRemoveComment, getStepCandidates
 } from './utils/candidate';
-import { interviewSender, sender, userCodeSender, candidateCodeSender } from './utils/sms';
-import { recruitmentGetterAll, recruitmentGetterOne, recruitmetnLauncher } from './utils/recruitment';
+import { sendInterview, sendCommon, sendUserCode, sendCandidateCode } from './utils/sms';
+import { getAllRecruitments, getOneRecruitment, recruitmetnLauncher } from './utils/recruitment';
 
 const app = express();
 const server = new Server(app);
@@ -82,61 +82,67 @@ app.use((req, res, next) => {
 // });
 
 // login: get QR code
-app.get('/user', loginHandler);
+app.get('/user', handleLogin);
 
 // login: scan QR code
-app.get('/user/:key/status', scanHandler);
+app.get('/user/:key/status', handleScan);
 
 // get user info
-app.get('/user/:uid', infoGetter);
+app.get('/user/:uid', getInfo);
 
 // change user info
-app.put('/user/:uid', infoChanger);
+app.put('/user/:uid', changeInfo);
 
 // get users in a group
-app.get('/user/group/:group', groupGetter);
+app.get('/user/group/:group', getGroup);
 
 // add new candidate
-app.post('/candidates', upload.single('resume'), candidateAdder);
+app.post('/candidates', upload.single('resume'), addCandidate);
 
 // set interview time
-app.put('/candidates/:cid', candidateSetter);
+app.put('/candidates/:cid', setCandidate);
 
 // get all candidates in the latest recruitment
-app.get('/candidates', candidateGetterAll);
+app.get('/candidates', getAllCandidates);
 
-// get candidates in certain group in the latest recruitment
-app.get('/candidates/:group', candidateGetterGroup);
+// get candidates in a certain group in the latest recruitment
+app.get('/candidates/group/:group', getGroupCandidates);
+
+// get candidates in a certain step in the latest recruitment
+app.get('/candidates/step/:step', getStepCandidates);
 
 // get all candidates in a certain recruitment
-app.get('/candidates/recruitment/:title', candidateGetterAll);
+app.get('/candidates/recruitment/:title', getAllCandidates);
 
 // get candidates in a certain group in a certain recruitment
-app.get('/candidates/:group/recruitment/:title', candidateGetterGroup);
+app.get('/candidates/group/:group/recruitment/:title', getGroupCandidates);
+
+// get candidates in a certain step in a certain recruitment
+app.get('/candidates/step/:step/recruitment/:title', getStepCandidates);
 
 // get resume of a candidate
-app.get('/candidates/:cid/resume', resumeGetter);
+app.get('/candidates/:cid/resume', getResume);
 
 /* TODO */
 // send notification sms
-app.post('/sms', sender);
+app.post('/sms', sendCommon);
 
 // send sms after all interview time has been arranged
-app.post('/sms/interview', interviewSender);
+app.post('/sms/interview', sendInterview);
 
 // request for verification code
-app.get('/verification/user', userCodeSender);
+app.get('/verification/user', sendUserCode);
 
-app.get('/verification/candidate/:phone', candidateCodeSender);
+app.get('/verification/candidate/:phone', sendCandidateCode);
 
 // generate form
-app.get('/form/:formId/:cid', formGetter);
+app.get('/form/:formId/:cid', getForm);
 
 // get all history recruitments
-app.get('/recruitment', recruitmentGetterAll);
+app.get('/recruitment', getAllRecruitments);
 
 // get a certain recruitment
-app.get('/recruitment/:title', recruitmentGetterOne);
+app.get('/recruitment/:title', getOneRecruitment);
 
 // launch a new recruitment
 app.post('/recruitment', recruitmetnLauncher);

@@ -1,4 +1,4 @@
-import { verifyJWT } from '../../lib/checker';
+import { verifyJWT } from '../../lib/checkData';
 import { GROUPS as groups, smsSendURL, token } from '../../lib/consts';
 import { ObjectId } from 'mongodb';
 import { generateModel } from '../../lib/generateModel';
@@ -6,7 +6,7 @@ import fetch from 'node-fetch';
 import { database, redisClient } from '../../app';
 import { Request, Response } from 'express';
 
-export const sender = (req: Request, res: Response) => {
+export const sendCommon = (req: Request, res: Response) => {
     const body = req.body;
     const { step, type, group, title, candidates } = body;
     (async () => {

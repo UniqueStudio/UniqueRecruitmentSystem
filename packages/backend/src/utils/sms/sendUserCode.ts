@@ -1,11 +1,11 @@
-import { verifyJWT } from '../../lib/checker';
+import { verifyJWT } from '../../lib/checkData';
 import { ObjectId } from 'mongodb';
 import fetch from 'node-fetch';
 import { smsSendURL, token } from '../../lib/consts';
 import { database, redisClient } from '../../app';
 import { Request, Response } from 'express';
 
-export const userCodeSender = (req: Request, res: Response) => {
+export const sendUserCode = (req: Request, res: Response) => {
     (async () => {
         try {
             const decoded = verifyJWT(req.get('Authorization'));

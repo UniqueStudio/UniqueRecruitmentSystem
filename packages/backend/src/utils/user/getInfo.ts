@@ -1,9 +1,9 @@
-import { verifyJWT } from '../../lib/checker';
+import { verifyJWT } from '../../lib/checkData';
 import { ObjectId } from 'mongodb';
 import { database } from '../../app';
 import { Request, Response } from 'express';
 
-export const infoGetter = (req: Request, res: Response) => {
+export const getInfo = (req: Request, res: Response) => {
     (async () => {
         try {
             verifyJWT(req.get('Authorization'));

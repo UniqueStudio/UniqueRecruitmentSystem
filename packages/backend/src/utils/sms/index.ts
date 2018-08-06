@@ -1,6 +1,6 @@
-import { sender } from "./sender";
-import { interviewSender } from "./interviewSender";
-import { userCodeSender } from "./userCodeSender";
-import { candidateCodeSender } from "./candidateCodeSender";
+import { sendCommon } from "./sendCommon";
+import { sendInterview } from "./sendInterview";
+import { sendUserCode } from "./sendUserCode";
+import { sendCandidateCode } from "./sendCandidateCode";
 
-export { sender, interviewSender, userCodeSender, candidateCodeSender };
+export { sendCommon, sendInterview, sendUserCode, sendCandidateCode };

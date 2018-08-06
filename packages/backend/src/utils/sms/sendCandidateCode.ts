@@ -1,10 +1,10 @@
-import { checkPhone } from '../../lib/checker';
+import { checkPhone } from '../../lib/checkData';
 import fetch from 'node-fetch';
 import { smsSendURL, token } from '../../lib/consts';
 import { redisClient } from '../../app';
 import { Request, Response } from 'express';
 
-export const candidateCodeSender = (req: Request, res: Response) => {
+export const sendCandidateCode = (req: Request, res: Response) => {
     (async () => {
         try {
             const phone = req.params.phone;

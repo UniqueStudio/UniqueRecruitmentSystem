@@ -5,7 +5,7 @@ import { database } from '../../app';
 import { Request, Response } from 'express';
 
 
-export const formGetter = (req: Request, res: Response) => {
+export const getForm = (req: Request, res: Response) => {
     const formId = req.params.formId;
     const type = +formId.slice(-1);
     const cid = req.params.cid;

@@ -2,7 +2,7 @@ import fetch from 'node-fetch';
 import { getQRCodeURL } from '../../lib/consts';
 import { Request, Response } from 'express';
 
-export const loginHandler = (req: Request, res: Response) => {
+export const handleLogin = (req: Request, res: Response) => {
     (async () => {
         try {
             const response = await fetch(getQRCodeURL);

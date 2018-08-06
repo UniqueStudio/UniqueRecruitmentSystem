@@ -1,8 +1,8 @@
 import { Request, Response } from 'express';
-import { verifyJWT } from '../../lib/checker';
+import { verifyJWT } from '../../lib/checkData';
 import { database } from '../../app';
 
-export const groupGetter = (req: Request, res: Response) => {
+export const getGroup = (req: Request, res: Response) => {
     (async () => {
         try {
             verifyJWT(req.get('Authorization'));

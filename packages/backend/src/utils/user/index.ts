@@ -1,8 +1,8 @@
-import { infoGetter } from './infoGetter';
-import { loginHandler } from './loginHandler';
-import { scanHandler } from './scanHandler';
-import { infoChanger } from './infoChanger';
+import { getInfo } from './getInfo';
+import { handleLogin } from './handleLogin';
+import { handleScan } from './handleScan';
+import { changeInfo } from './changeInfo';
 import { messenger } from './messenger';
-import { groupGetter } from './groupGetter';
+import { getGroup } from './getGroup';
 
-export { infoGetter, loginHandler, scanHandler, infoChanger, messenger, groupGetter };
+export { getInfo, handleLogin, handleScan, changeInfo, messenger, getGroup };

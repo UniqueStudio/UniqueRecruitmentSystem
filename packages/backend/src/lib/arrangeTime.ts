@@ -1,4 +1,7 @@
+
+
 export const interviewTimer = (slots: number[]) => {
+
     let selections = [...new Array(30)].map(() => {
         const selects: number[] = [];
         [...new Array(6)].map((j, k) => {

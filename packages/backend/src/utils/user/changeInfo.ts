@@ -1,9 +1,9 @@
-import { checkMail, checkPhone, verifyJWT } from '../../lib/checker';
+import { checkMail, checkPhone, verifyJWT } from '../../lib/checkData';
 import { ObjectId } from 'mongodb';
 import { database } from '../../app';
 import { Request, Response } from 'express';
 
-export const infoChanger = (req: Request, res: Response) => {
+export const changeInfo = (req: Request, res: Response) => {
     const body = req.body;
     (async () => {
         try {

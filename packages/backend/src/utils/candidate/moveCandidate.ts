@@ -1,5 +1,5 @@
 import { Socket } from 'socket.io';
-import { verifyJWT } from '../../lib/checker';
+import { verifyJWT } from '../../lib/checkData';
 import { ObjectId } from 'mongodb';
 import { database, io } from '../../app';
 

@@ -1,9 +1,9 @@
-import { checkMail, checkPhone } from '../../lib/checker';
+import { checkMail, checkPhone } from '../../lib/checkData';
 import { ObjectId } from 'mongodb';
 import { database, io, redisClient, getAsync } from '../../app';
 import { Request, Response } from 'express';
 
-export const candidateAdder = (req: Request, res: Response) => {
+export const addCandidate = (req: Request, res: Response) => {
     const body = req.body;
     const { name, grade, institute, major, score, mail, phone, group, sex, intro, title } = body;
     (async () => {

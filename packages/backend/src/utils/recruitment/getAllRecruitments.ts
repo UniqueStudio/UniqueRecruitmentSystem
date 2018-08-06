@@ -1,8 +1,8 @@
-import { verifyJWT } from '../../lib/checker';
+import { verifyJWT } from '../../lib/checkData';
 import { database } from '../../app';
 import { Request, Response } from 'express';
 
-export const recruitmentGetterAll = (req: Request, res: Response) => {
+export const getAllRecruitments = (req: Request, res: Response) => {
     (async () => {
         try {
             verifyJWT(req.get('Authorization'));

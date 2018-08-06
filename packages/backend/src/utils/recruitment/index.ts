@@ -1,5 +1,5 @@
-import { recruitmentGetterAll } from "./recruitmentGetterAll";
-import { recruitmentGetterOne } from "./recruitmentGetterOne";
-import { recruitmetnLauncher } from "./recruitmentLauncher";
+import { getAllRecruitments } from "./getAllRecruitments";
+import { getOneRecruitment } from "./getOneRecruitment";
+import { recruitmetnLauncher } from "./launchRecruitment";
 
-export { recruitmentGetterAll, recruitmentGetterOne, recruitmetnLauncher };
+export { getAllRecruitments, getOneRecruitment, recruitmetnLauncher };

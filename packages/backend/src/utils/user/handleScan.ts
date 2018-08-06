@@ -4,7 +4,7 @@ import jwt from 'jsonwebtoken';
 import { Request, Response } from 'express';
 import { database } from '../../app';
 
-export const scanHandler = (req: Request, res: Response) => {
+export const handleScan = (req: Request, res: Response) => {
     (async () => {
         try {
             const scanResponse = await fetch(`${scanningURL}${req.params.key}`);

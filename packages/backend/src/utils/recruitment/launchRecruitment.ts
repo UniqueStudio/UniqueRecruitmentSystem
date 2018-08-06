@@ -1,4 +1,4 @@
-import { verifyJWT } from '../../lib/checker';
+import { verifyJWT } from '../../lib/checkData';
 import { GROUPS as groups } from '../../lib/consts';
 import { database, getAsync, io, redisClient } from '../../app';
 import { Request, Response } from 'express';
@@ -10,6 +10,11 @@ export const recruitmetnLauncher = (req: Request, res: Response) => {
             const decoded = verifyJWT(req.get('Authorization'));
             const userCode = await getAsync(`userCode:${decoded['uid']}`);
             if (userCode === code) {
+                const queryResult = await database.query('recruitments', {title});
+                if (queryResult.length) {
+                    res.send({ message: '不能重复发起招新', type: 'warning' });
+                    return;
+                }
                 await database.insert('recruitments', {
                     title, begin, end,
                     data: groups.map(i => ({ group: i, total: 0, steps: [0, 0, 0, 0, 0, 0] })),
