@@ -16,7 +16,7 @@ type DispatchType = Dispatch<ToggleSnackbarOn>
 
 const mapDispatchToProps = (dispatch: DispatchType) => ({
     fetchInfo: (uid: string) => requestUser(uid)(dispatch),
-    submitInfo: (uid: string, info: object) => updateUser(uid, info)(dispatch),
+    submitInfo: (uid: string, info: User) => updateUser(uid, info)(dispatch),
     toggleSnackbar: (info: string, color: string) => dispatch(toggleSnackbarOn(info, color)),
 });
 

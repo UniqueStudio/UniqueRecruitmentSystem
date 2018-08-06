@@ -1,7 +1,9 @@
 import * as actions from '../action';
 import * as asyncActions from '../action/async'
+import { User as UType } from '../lib/const';
 
 const info = sessionStorage.getItem('userInfo');
+const group = sessionStorage.getItem('groupInfo');
 
 const init = {
     loggedIn: !!sessionStorage.getItem('uid'),
@@ -10,13 +12,16 @@ const init = {
     info: info ? JSON.parse(info) : {},
     key: '',
     qRCodeGettable: true,
-    messages: []
+    messages: [],
+    group: group ? JSON.parse(group) : [],
+    shouldUpdateGroup: false
 };
 
 type Action =
     actions.Login
     | actions.Logout
     | actions.ChangeUserInfo
+    | actions.ChangeGroupInfo
     | actions.SetKey
     | actions.SetGettable
     | actions.AddMessage
@@ -30,6 +35,8 @@ export interface User {
     key: string;
     qRCodeGettable: boolean;
     messages: object[];
+    group: UType[];
+    shouldUpdateGroup: boolean;
 }
 
 const insert = (item: object, arr: object[]) => {
@@ -60,9 +67,12 @@ export function user(state: User = init, action: Action): User {
         case actions.LOGOUT:
             sessionStorage.removeItem('uid');
             sessionStorage.removeItem('userInfo');
+            sessionStorage.removeItem('token');
             return { ...state, loggedIn: false };
         case actions.CHANGE_USER_INFO:
-            return { ...state, info: action.info };
+            return { ...state, info: action.info, shouldUpdateGroup: true };
+        case actions.CHANGE_GROUP_INFO:
+            return { ...state, group: action.info, shouldUpdateGroup: false };
         case actions.SET_KEY:
             return { ...state, key: action.key };
         case actions.SET_GETTABLE:

@@ -84,13 +84,13 @@ class Column extends Component<Props> {
 
     handleSelectAll = (all: string[]) => () => {
         const { select, candidates } = this.props;
-        select(all.filter(i => !candidates.get(i)!.abandon));
+        select(all.filter(i => !(candidates.get(i)!.abandon || candidates.get(i)!.rejected)));
     };
 
     handleInverse = (all: string[], selected: string[]) => () => {
         const { select, deselect, candidates } = this.props;
-        deselect(selected.filter(i => !candidates.get(i)!.abandon));
-        select(all.filter((i: string) => !selected.includes(i) && !candidates.get(i)!.abandon));
+        deselect(selected.filter(i => !(candidates.get(i)!.abandon || candidates.get(i)!.rejected)));
+        select(all.filter((i: string) => !selected.includes(i) && !(candidates.get(i)!.abandon || candidates.get(i)!.rejected)));
     };
 
     confirmRemove = () => {
