@@ -11,6 +11,7 @@ import SendIcon from '@material-ui/icons/Send';
 import InsertPhotoIcon from '@material-ui/icons/InsertPhoto';
 import PlusOneIcon from '@material-ui/icons/ExposurePlus1';
 import RemoveIcon from '@material-ui/icons/Remove';
+import FaceIcon from '@material-ui/icons/Face';
 import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 
 import styles from "../../style/finalInterview";
@@ -123,11 +124,11 @@ class Messenger extends PureComponent<Props> {
                     {messages.map((i, j) =>
                         <div key={j}
                              className={classNames(classes.messageContainer, { [classes.my]: i['isSelf'] })}>
-                            <Avatar
+                            {i['avatar'] ? <Avatar
                                 alt={i['name']}
                                 src={i['avatar']}
                                 className={classes.avatar}
-                            />
+                            /> : <Avatar className={classes.avatar}><FaceIcon /></Avatar>}
                             <Chip
                                 label={
                                     <div className={classes.message}>

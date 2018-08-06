@@ -3,7 +3,7 @@ import io from 'socket.io-client';
 
 import { store } from '../App';
 import * as actions from './index';
-import { URL } from '../lib/const';
+import { URL, User } from '../lib/const';
 
 const socket = io(URL);
 
@@ -130,7 +130,37 @@ export const requestUser = (uid: string) => (dispatch: Dispatch) => {
         .catch(err => errHandler(err, dispatch, USER))
 };
 
-export const updateUser = (uid: string, info: object) => (dispatch: Dispatch) => {
+export const requestGroup = (group: string) => (dispatch: Dispatch) => {
+    dispatch({ type: USER.START });
+    const groupInfo = sessionStorage.getItem('groupInfo');
+    if (groupInfo && !store.getState().user.shouldUpdateGroup) {
+        dispatch(actions.changeGroupInfo(JSON.parse(groupInfo)));
+        dispatch({ type: USER.SUCCESS });
+        return;
+    }
+    const token = sessionStorage.getItem('token');
+    if (!token) {
+        errHandler({ message: 'token不存在', type: 'danger' }, dispatch, USER);
+        return;
+    }
+    return fetch(`${URL}/user/group/${group}`, {
+        headers: {
+            'Authorization': `Bearer ${token}`
+        }
+    })
+        .then(resHandler)
+        .then(res => {
+            if (res.type === 'success') {
+                sessionStorage.setItem('groupInfo', JSON.stringify(res.data));
+                dispatch(actions.changeGroupInfo(res.data));
+                dispatch({ type: USER.SUCCESS });
+            } else throw res;
+        })
+        .catch(err => errHandler(err, dispatch, USER))
+};
+
+
+export const updateUser = (uid: string, info: User) => (dispatch: Dispatch) => {
     dispatch({ type: USER.START });
     const token = sessionStorage.getItem('token');
     const formerInfo = sessionStorage.getItem('userInfo') || {};
@@ -160,22 +190,20 @@ export const updateUser = (uid: string, info: object) => (dispatch: Dispatch) =>
 
 export const CANDIDATE = actionTypeCreator('CANDIDATE');
 export const requestCandidate = (group: string) => (dispatch: Dispatch) => {
-    dispatch({ type: CANDIDATE.START });
-    const candidates = sessionStorage.getItem('candidates');
-    const storedGroup = sessionStorage.getItem('group');
-    if (candidates && storedGroup === group) {
-        dispatch(actions.setCandidates(JSON.parse(candidates)));
-        dispatch({ type: CANDIDATE.SUCCESS });
-        return;
-    }
     const token = sessionStorage.getItem('token');
     if (!token) {
         errHandler({ message: 'token不存在', type: 'danger' }, dispatch, CANDIDATE);
         return;
     }
+    dispatch({ type: CANDIDATE.START });
     dispatch(actions.setGroup(group));
-    sessionStorage.setItem('group', group);
-    return fetch(`${URL}/candidates/${group}`, {
+    const candidates = sessionStorage.getItem(group);
+    if (candidates && !store.getState().candidates.shouldUpdateCandidates) {
+        dispatch(actions.setCandidates(JSON.parse(candidates)));
+        dispatch({ type: CANDIDATE.SUCCESS });
+        return;
+    }
+    return fetch(`${URL}/candidates/group/${group}`, {
         headers: {
             'Authorization': `Bearer ${token}`
         },
@@ -183,13 +211,36 @@ export const requestCandidate = (group: string) => (dispatch: Dispatch) => {
         .then(resHandler)
         .then(res => {
             if (res.type === 'success') {
-                sessionStorage.setItem('candidates', JSON.stringify(res.data));
+                sessionStorage.setItem(group, JSON.stringify(res.data));
                 dispatch(actions.setCandidates(res.data));
                 dispatch({ type: CANDIDATE.SUCCESS });
             } else throw res;
         })
         .catch(err => errHandler(err, dispatch, CANDIDATE))
 };
+
+// export const requestStepCandidate = (step: number) => (dispatch: Dispatch) => {
+//     const token = sessionStorage.getItem('token');
+//     if (!token) {
+//         errHandler({ message: 'token不存在', type: 'danger' }, dispatch, CANDIDATE);
+//         return;
+//     }
+//     dispatch({ type: CANDIDATE.START });
+//     return fetch(`${URL}/candidates/step/${step}`, {
+//         headers: {
+//             'Authorization': `Bearer ${token}`
+//         },
+//     })
+//         .then(resHandler)
+//         .then(res => {
+//             if (res.type === 'success') {
+//                 //dispatch(actions.setCandidates(res.data));
+//                 dispatch({ type: CANDIDATE.SUCCESS });
+//             } else throw res;
+//         })
+//         .catch(err => errHandler(err, dispatch, CANDIDATE))
+// };
+
 
 export const requestResume = (cid: string) => (dispatch: Dispatch) => {
     dispatch({ type: CANDIDATE.START });
@@ -346,12 +397,11 @@ export const removeComment = (step: number, cid: string, commenter: string) => (
 };
 
 
-let shouldUpdateRecruitment = false;
 export const RECRUITMENT = actionTypeCreator('RECRUITMENT');
 export const requestRecruitments = () => (dispatch: Dispatch) => {
     dispatch({ type: RECRUITMENT.START });
     const recruitments = sessionStorage.getItem('historyRecruitments');
-    if (recruitments && !shouldUpdateRecruitment) {
+    if (recruitments && !store.getState().recruitments.shouldUpdateRecruitment) {
         dispatch(actions.setRecruitments(JSON.parse(recruitments)));
         dispatch({ type: RECRUITMENT.SUCCESS });
         return;
@@ -361,7 +411,6 @@ export const requestRecruitments = () => (dispatch: Dispatch) => {
         errHandler({ message: 'token不存在', type: 'danger' }, dispatch, RECRUITMENT);
         return;
     }
-    shouldUpdateRecruitment = false;
     return fetch(`${URL}/recruitment`, {
         headers: {
             'Authorization': `Bearer ${token}`
@@ -530,7 +579,9 @@ socket.on('addCandidate', (candidate: object) => {
 });
 
 socket.on('updateRecruitment', () => {
-    shouldUpdateRecruitment = true;
+    store.dispatch({ type: RECRUITMENT.START });
+    store.dispatch(actions.setShouldUpdateRecruitment());
+    store.dispatch({ type: RECRUITMENT.SUCCESS });
 });
 
 socket.on('receiveMessage', (name: string, avatar: string, time: number, message: string) => {

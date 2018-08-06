@@ -14,7 +14,8 @@ const init = {
     inputtingComment: {
         comment: '',
         evaluation: '',
-    }
+    },
+    shouldUpdateCandidates: false
 };
 
 type Action =
@@ -40,7 +41,8 @@ export interface Candidates {
     inputtingComment: {
         comment: string;
         evaluation: string;
-    }
+    },
+    shouldUpdateCandidates: boolean;
 }
 
 export function candidates(
@@ -62,11 +64,17 @@ export function candidates(
                 comment: '',
                 evaluation: '',
             };
-            sessionStorage.setItem('candidates', JSON.stringify(newState.candidates.map(i => mapToObj(i))));
+            sessionStorage.setItem(newState.group, JSON.stringify(newState.candidates.map(i => mapToObj(i))));
+            if (newState.group === 'interview') {
+                newState.shouldUpdateCandidates = true
+            }
             return newState;
         case actions.REMOVE_COMMENT:
             delete newState.candidates[action.step].get(action.cid)!.comments[action.commenter];
-            sessionStorage.setItem('candidates', JSON.stringify(newState.candidates.map(i => mapToObj(i))));
+            sessionStorage.setItem(newState.group, JSON.stringify(newState.candidates.map(i => mapToObj(i))));
+            if (newState.group === 'interview') {
+                newState.shouldUpdateCandidates = true
+            }
             return newState;
         case asyncActions.CANDIDATE.START:
             newState.isLoading.candidates = true;
@@ -77,12 +85,12 @@ export function candidates(
             return newState;
         case actions.SET_CANDIDATES:
             const candidatesToMap = action.candidates.map(i => new Map(Object.entries(i)));
-            return { ...state, candidates: candidatesToMap };
+            return { ...state, candidates: candidatesToMap, shouldUpdateCandidates: false };
         case actions.ADD_CANDIDATE:
             if (newState.group === action.candidate['group']) {
                 if (!newState.candidates[action.candidate['step']]) newState.candidates[action.candidate['step']] = new Map<string, Candidate>();
                 newState.candidates[action.candidate['step']].set(action.candidate['_id'], action.candidate as Candidate);
-                sessionStorage.setItem('candidates', JSON.stringify(newState.candidates.map(i => mapToObj(i))));
+                sessionStorage.setItem(newState.group, JSON.stringify(newState.candidates.map(i => mapToObj(i))));
             }
             return newState;
         case actions.SELECT_CANDIDATE:
@@ -97,7 +105,10 @@ export function candidates(
                     ? step.delete(action.cid)
                     : action.cid.map(i => step.delete(i)));
             newState.selected = newState.selected.filter((i: string) => !action.cid.includes(i));
-            sessionStorage.setItem('candidates', JSON.stringify(newState.candidates.map(i => mapToObj(i))));
+            sessionStorage.setItem(newState.group, JSON.stringify(newState.candidates.map(i => mapToObj(i))));
+            if (newState.group === 'interview') {
+                newState.shouldUpdateCandidates = true
+            }
             return newState;
         case actions.MOVE_CANDIDATE:
             if (!newState.candidates[action.from] || !newState.candidates[action.from].get(action.cid)) return newState;
@@ -113,7 +124,10 @@ export function candidates(
             } else {
                 newState.candidates[action.to].set(action.cid, info);
             }
-            sessionStorage.setItem('candidates', JSON.stringify(newState.candidates.map(i => mapToObj(i))));
+            sessionStorage.setItem(newState.group, JSON.stringify(newState.candidates.map(i => mapToObj(i))));
+            if (newState.group === 'interview') {
+                newState.shouldUpdateCandidates = true
+            }
             return newState;
         case actions.SET_GROUP:
             return { ...state, group: action.group };

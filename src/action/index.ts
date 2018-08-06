@@ -1,3 +1,5 @@
+import { Recruitment, User } from '../lib/const';
+
 export const TOGGLE_DRAWER_OPEN = 'TOGGLE_DRAWER_OPEN';
 export type TOGGLE_DRAWER_OPEN = typeof TOGGLE_DRAWER_OPEN;
 
@@ -332,38 +334,31 @@ export type CHANGE_USER_INFO = typeof CHANGE_USER_INFO;
 
 export interface ChangeUserInfo {
     type: CHANGE_USER_INFO;
-    info: {
-        joinTime?: string; // e.g. 2018A || 2018S (A: AUTUMN, S: SPRING, C: CAMP)
-        isCaptain?: boolean;
-        isAdmin?: boolean;
-        phone?: string;
-        mail?: string;
-        sex?: string;
-        group?: string;
-        username?: string;
-        avatar?: string;
-    }
+    info: User;
 }
 
 export function changeUserInfo(info: ChangeUserInfo['info']): ChangeUserInfo {
     return {
         type: CHANGE_USER_INFO,
-        info: {
-            username: info.username,
-            joinTime: info.joinTime || '',
-            isCaptain: info.isCaptain || false,
-            isAdmin: info.isAdmin || false,
-            phone: info.phone || '',
-            mail: info.mail || '',
-            sex: info.sex || 'Male',
-            group: info.group || '',
-            avatar: info.avatar || '',
-        }
+        info: { ...info, sex: info.sex || 'Male' }
     }
 }
 
+export const CHANGE_GROUP_INFO = 'CHANGE_GROUP_INFO';
+export type CHANGE_GROUP_INFO = typeof CHANGE_GROUP_INFO;
 
-import { Recruitment } from '../reducer/recruitments';
+export interface ChangeGroupInfo {
+    type: CHANGE_GROUP_INFO;
+    info: ChangeUserInfo['info'][]
+}
+
+export function changeGroupInfo(info: ChangeGroupInfo['info']): ChangeGroupInfo {
+    return {
+        type: CHANGE_GROUP_INFO,
+        info
+    }
+}
+
 
 export const SET_RECRUITMENTS = 'SET_RECRUITMENTS';
 export type SET_RECRUITMENTS = typeof SET_RECRUITMENTS;
@@ -392,6 +387,19 @@ export function updateRecruitment(recruitment: Recruitment): UpdateRecruitment {
     return {
         type: UPDATE_RECRUITMENT,
         recruitment,
+    }
+}
+
+export const SET_SHOULD_UPDATE_RECRUITMENT = 'SET_SHOULD_UPDATE_RECRUITMENT';
+export type SET_SHOULD_UPDATE_RECRUITMENT = typeof SET_SHOULD_UPDATE_RECRUITMENT;
+
+export interface SetShouldUpdateRecruitment {
+    type: SET_SHOULD_UPDATE_RECRUITMENT;
+}
+
+export function setShouldUpdateRecruitment(): SetShouldUpdateRecruitment {
+    return {
+        type: SET_SHOULD_UPDATE_RECRUITMENT,
     }
 }
 
