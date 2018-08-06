@@ -15,19 +15,12 @@ import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 import styles from '../../style/template'
 import withRoot from '../../style/withRoot';
 import generateModel from '../../lib/generateModel';
-import { STEP } from '../../lib/const';
-
-interface Date {
-    date: string;
-    morning: boolean;
-    afternoon: boolean;
-    evening: boolean;
-}
+import { STEP, Time } from '../../lib/const';
 
 export interface MainInfo extends WithStyles {
     type: string;
     step: string;
-    date: Date[];
+    date: Time[];
 }
 
 interface Props extends MainInfo {

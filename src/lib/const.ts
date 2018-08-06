@@ -35,4 +35,28 @@ export interface User {
     mail: string;
     sex: "Male" | "Female";
     group: string;
+    avatar: string;
+}
+
+export interface Data {
+    group: "web" | "lab" | "ai" | "game" | "android" | "ios" | "design" | "pm";
+    total: number;
+    steps: number[];
+}
+
+export interface Time {
+    date: string;
+    morning: boolean;
+    afternoon: boolean;
+    evening: boolean;
+}
+
+export interface Recruitment {
+    title: string; // e.g. 2018A || 2018S (A: AUTUMN, S: SPRING, C: CAMP)
+    begin: number;
+    end: number;
+    total: number;
+    time2: Time[];
+    time1: object;
+    data: Data[];
 }

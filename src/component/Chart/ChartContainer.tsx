@@ -5,7 +5,7 @@ import Chart from './Chart';
 import ChartNew from './ChartNew';
 import withRoot from '../../style/withRoot';
 import styles from '../../style/chart';
-import { Recruitment } from '../../reducer/recruitments';
+import { Recruitment } from '../../lib/const';
 import titleConventor from '../../lib/titleConventor';
 
 interface Props extends WithStyles {

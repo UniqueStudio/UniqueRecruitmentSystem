@@ -1,34 +1,25 @@
 import * as actions from '../action';
 import * as asyncActions from '../action/async'
+import { Recruitment } from '../lib/const';
 
 const init = {
     recruitments: [],
     isLoading: false,
-    status: ''
+    status: '',
+    shouldUpdateRecruitment: false
 };
 
 type Action =
     actions.SetRecruitments
-    | actions.UpdateRecruitment;
+    | actions.UpdateRecruitment
+    | actions.SetShouldUpdateRecruitment;
 
-export interface Data {
-    group: "web" | "lab" | "ai" | "game" | "android" | "ios" | "design" | "pm";
-    total: number;
-    steps: number[];
-}
-
-export interface Recruitment {
-    title: string; // e.g. 2018A || 2018S (A: AUTUMN, S: SPRING, C: CAMP)
-    begin: number;
-    end: number;
-    total: number;
-    data: Data[];
-}
 
 export interface Recruitments {
     recruitments: Recruitment[];
     isLoading: boolean;
     status: string;
+    shouldUpdateRecruitment: boolean;
 }
 
 export function recruitments(state: Recruitments = init, action: Action): Recruitments {
@@ -40,7 +31,9 @@ export function recruitments(state: Recruitments = init, action: Action): Recrui
         case asyncActions.RECRUITMENT.SUCCESS:
             return { ...state, isLoading: false, status: 'success' };
         case actions.SET_RECRUITMENTS:
-            return { ...state, recruitments: action.recruitments };
+            return { ...state, recruitments: action.recruitments, shouldUpdateRecruitment: false };
+        case actions.SET_SHOULD_UPDATE_RECRUITMENT:
+            return { ...state, shouldUpdateRecruitment: true };
     }
     return state;
 }

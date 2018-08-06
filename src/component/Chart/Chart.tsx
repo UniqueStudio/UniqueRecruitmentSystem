@@ -16,8 +16,7 @@ import { Doughnut } from 'react-chartjs-2';
 
 import withRoot from '../../style/withRoot';
 import styles from '../../style/chart';
-import { GROUP } from '../../lib/const';
-import { Data } from '../../reducer/recruitments';
+import { Data, GROUP } from '../../lib/const';
 
 const getColors = (i: number) => [red[i], purple[i], indigo[i], blue[i], cyan[i], green[i], yellow[i], orange[i]];
 
