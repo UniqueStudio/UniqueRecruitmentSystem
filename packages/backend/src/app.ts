@@ -7,7 +7,7 @@ import { Server } from 'http';
 import socket from 'socket.io';
 import bodyParser from 'body-parser';
 import Index from './db/index';
-import { scanHandler, loginHandler, infoGetter, infoChanger, messenger } from './utils/user';
+import { scanHandler, loginHandler, infoGetter, infoChanger, messenger, groupGetter } from './utils/user';
 import {
     candidateAdder, candidateSetter, candidateGetterAll, candidateGetterGroup, resumeGetter, formGetter,
     onMoveCandidate,
@@ -92,6 +92,9 @@ app.get('/user/:uid', infoGetter);
 
 // change user info
 app.put('/user/:uid', infoChanger);
+
+// get users in a group
+app.get('/user/group/:group', groupGetter);
 
 // add new candidate
 app.post('/candidates', upload.single('resume'), candidateAdder);
