@@ -23,7 +23,7 @@ class Container extends React.Component {
 
     checkMobile = () => {
         this.setState({
-            isMobile: document.body.clientWidth < 500
+            isMobile: window.innerWidth <= 500
         })
     };
     submit = () => {
