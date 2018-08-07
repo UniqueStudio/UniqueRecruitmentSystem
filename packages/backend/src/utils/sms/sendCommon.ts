@@ -3,7 +3,7 @@ import { GROUPS as groups, smsSendURL, token } from '../../lib/consts';
 import { ObjectId } from 'mongodb';
 import { generateModel } from '../../lib/generateModel';
 import fetch from 'node-fetch';
-import { database, redisClient } from '../../app';
+import { database, redisClient, getAsync } from '../../app';
 import { Request, Response } from 'express';
 
 export const sendCommon = (req: Request, res: Response) => {
@@ -26,8 +26,8 @@ export const sendCommon = (req: Request, res: Response) => {
                     await database.update('recruitments', { title }, { time2: body.date });
                 }
             }
-            //const code = await getAsync(`userCode:${decoded['uid']}`);
-            if (/*body.code === code*/ true) {
+            const code = await getAsync(`userCode:${decoded['uid']}`);
+            if (body.code === code) {
                 const results = candidates.map(async (i: string) => {
                     const candidateInfo = (await database.query('candidates', { _id: new ObjectId(i) }))[0];
                     if (type === 'reject') {
