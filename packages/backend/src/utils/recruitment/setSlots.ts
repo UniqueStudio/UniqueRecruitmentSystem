@@ -14,7 +14,6 @@ export const setSlots = (req: Request, res: Response) => {
                 await database.update('recruitments', { title }, { [`time1.slots.${group}`]: slots });
                 const candidates = await database.query('candidates', { group, title, step: 2, abandon: false });
                 const result = arrangeTime(slots, candidates, 1);
-                console.log(result);
                 const promises = result.map(async i => {
                     if (i['slot1']) {
                         await database.update('candidates', { _id: new ObjectId(i['_id']) }, { slot1: i['slot1'] })
@@ -23,7 +22,7 @@ export const setSlots = (req: Request, res: Response) => {
                     }
                 });
                 Promise.all(promises).then(() => {
-                    res.send({ type: 'success', result, failed });
+                    res.send({ type: 'success', result, failed, interview: 1 });
                 })
             } else {
                 await database.update('recruitments', { title }, { slots });
@@ -37,7 +36,7 @@ export const setSlots = (req: Request, res: Response) => {
                     }
                 });
                 Promise.all(promises).then(() => {
-                    res.send({ type: 'success', result, failed });
+                    res.send({ type: 'success', result, failed, interview: 2 });
                 })
             }
         } catch (err) {

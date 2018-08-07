@@ -56,6 +56,5 @@ export const arrangeTime = (slots: number[], candidates: Candidate[], interview:
         }
     };
     findFromMin();
-    console.log(result);
     return result;
 };
