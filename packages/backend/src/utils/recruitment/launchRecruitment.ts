@@ -3,7 +3,7 @@ import { GROUPS as groups } from '../../lib/consts';
 import { database, getAsync, io, redisClient } from '../../app';
 import { Request, Response } from 'express';
 
-export const recruitmetnLauncher = (req: Request, res: Response) => {
+export const launchRecruitment = (req: Request, res: Response) => {
     (async () => {
         try {
             const { title, begin, end, code } = req.body;

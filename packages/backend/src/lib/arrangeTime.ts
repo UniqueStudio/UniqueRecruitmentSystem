@@ -1,49 +1,26 @@
+import { Candidate } from './consts';
 
-
-export const interviewTimer = (slots: number[]) => {
-
-    let selections = [...new Array(30)].map(() => {
-        const selects: number[] = [];
-        [...new Array(6)].map((j, k) => {
-            if (Math.random() > 0.3) selects.push(k)
-        });
-        if (selects.length === 0) selects.push(Math.floor(Math.random() * 6));
-        return { name: 'aaa', select: selects, slot: -1 }
+const converter = (selections: object[]) => {
+    const result: number[] = [];
+    selections.map((i, j) => {
+        i['morning'] && result.push(j * 3);
+        i['afternoon'] && result.push(j * 3 + 1);
+        i['evening'] && result.push(j * 3 + 2);
     });
+    return result;
+};
+
+export const arrangeTime = (slots: number[], candidates: Candidate[], interview: 1 | 2) => {
 
     let result: object[] = [];
+    let selections = candidates.map(i => ({
+        _id: i._id,
+        select: converter(i[`time${interview}`]),
+        [`slot${interview}`]: i[`slot${interview}`]
+    }));
 
-    const findFromMax = () => {
-        while (selections.map(i => i.slot).filter(i => i === -1).length) {
-            let maxLength = -Infinity;
-            let maxItems: any[] = [];
-            for (const i of selections) {
-                if (i.select.length > maxLength) {
-                    maxLength = i.select.length;
-                    maxItems = [i];
-                } else if (i.select.length === maxLength) {
-                    maxItems.push(i);
-                }
-            }
-            selections = selections.filter(i => !maxItems.includes(i));
-            for (const i of maxItems) {
-                let maxSlot = i.select[0];
-                for (const j of i.select) {
-                    if (slots[j] > slots[maxSlot]) {
-                        maxSlot = j;
-                    }
-                }
-                if (slots[maxSlot] === 0) {
-                    continue;
-                }
-                i.slot = maxSlot;
-                slots[maxSlot] -= 1;
-            }
-            result = [...result, ...maxItems];
-        }
-    };
     const findFromMin = () => {
-        while (selections.map(i => i.slot).filter(i => i === -1).length) {
+        while (selections.map(i => i[`slot${interview}`]).filter(i => i === undefined).length) {
             let minLength = Infinity;
             let minItems: any[] = [];
             for (const i of selections) {
@@ -65,14 +42,13 @@ export const interviewTimer = (slots: number[]) => {
                         continue;
                     }
                     slots[j] -= 1;
-                    i.slot = j;
+                    i[`slot${interview}`] = j;
                     hasPlaced = true;
                 }
             }
             result = [...result, ...minItems];
         }
     };
-    0 && findFromMax();
     findFromMin();
     return result;
 };

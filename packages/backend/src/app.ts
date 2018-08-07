@@ -15,7 +15,7 @@ import {
     onAddComment, onRemoveComment, getStepCandidates
 } from './utils/candidate';
 import { sendInterview, sendCommon, sendUserCode, sendCandidateCode } from './utils/sms';
-import { getAllRecruitments, getOneRecruitment, recruitmetnLauncher } from './utils/recruitment';
+import { getAllRecruitments, getOneRecruitment, launchRecruitment, setSlots } from './utils/recruitment';
 
 const app = express();
 const server = new Server(app);
@@ -145,7 +145,10 @@ app.get('/recruitment', getAllRecruitments);
 app.get('/recruitment/:title', getOneRecruitment);
 
 // launch a new recruitment
-app.post('/recruitment', recruitmetnLauncher);
+app.post('/recruitment', launchRecruitment);
+
+// set time slots
+app.post('/recruitment/slots', setSlots);
 
 io.on('connection', (socket) => {
     console.log('WebSocket connected');

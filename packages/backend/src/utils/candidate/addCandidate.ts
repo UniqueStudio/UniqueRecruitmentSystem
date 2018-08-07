@@ -57,6 +57,7 @@ export const addCandidate = (req: Request, res: Response) => {
                 intro,
                 title,
                 comments: {},
+                abandon: false,
                 rejected: false,
                 resume: `/www/resumes/${title}/${group}/${name} - ${req.file.originalname}`
             });
