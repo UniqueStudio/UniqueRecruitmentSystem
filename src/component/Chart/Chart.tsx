@@ -57,12 +57,6 @@ class Chart extends PureComponent<Props> {
         }
     };
 
-    componentWillReceiveProps(nextProps: Props) {
-        this.setState({
-            data: [...nextProps.totalData]
-        })
-    }
-
     render() {
         const dataSet = {
             labels: this.state.labels,
