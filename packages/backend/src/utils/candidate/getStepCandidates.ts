@@ -13,6 +13,8 @@ export const getStepCandidates = (req: Request, res: Response) => {
             const formatted = {};
             if (title) {
                 data = await database.query('candidates', { title, step });
+                data.map((i: Candidate) => formatted[`${i._id}`] = { ...i, resume: '' }); // hide resume path
+                res.send({ data: formatted, type: 'success' });
             } else {
                 const pendingRecruitments = await database.query('recruitments', { end: { $gt: +new Date() } });
                 if (pendingRecruitments.length === 0) {
@@ -20,9 +22,9 @@ export const getStepCandidates = (req: Request, res: Response) => {
                     return;
                 }
                 data = await database.query('candidates', { title: pendingRecruitments[0].title, step });
+                data.map((i: Candidate) => formatted[`${i._id}`] = { ...i, resume: '' }); // hide resume path
+                res.send({ data: formatted, type: 'success', title: pendingRecruitments[0].title });
             }
-            data.map((i: Candidate) => formatted[`${i._id}`] = { ...i, resume: '' }); // hide resume path
-            res.send({ data: formatted, type: 'success' });
         } catch (err) {
             res.send({ message: err.message, type: 'danger' })
         }

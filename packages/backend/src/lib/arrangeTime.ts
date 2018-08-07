@@ -13,11 +13,17 @@ const converter = (selections: object[]) => {
 export const arrangeTime = (slots: number[], candidates: Candidate[], interview: 1 | 2) => {
 
     let result: object[] = [];
-    let selections = candidates.map(i => ({
-        _id: i._id,
-        select: converter(i[`time${interview}`]),
-        [`slot${interview}`]: i[`slot${interview}`]
-    }));
+    let selections = candidates.map(i => {
+        if (!i[`time${interview}`]) {
+            throw new Error('有选手未选择时间！');
+        }
+        return {
+            _id: i._id,
+                select: converter(i[`time${interview}`]),
+            [`slot${interview}`]: i[`slot${interview}`],
+            date: i[`time${interview}`].date
+        }
+    });
 
     const findFromMin = () => {
         while (selections.map(i => i[`slot${interview}`]).filter(i => i === undefined).length) {
@@ -42,7 +48,7 @@ export const arrangeTime = (slots: number[], candidates: Candidate[], interview:
                         continue;
                     }
                     slots[j] -= 1;
-                    i[`slot${interview}`] = j;
+                    i[`slot${interview}`] = [i.date, ['morning', 'afternoon', 'evening'][j % 3]];
                     hasPlaced = true;
                 }
             }
