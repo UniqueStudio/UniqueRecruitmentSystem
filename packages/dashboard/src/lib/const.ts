@@ -13,8 +13,10 @@ export interface Candidate {
     mail: string;
     phone: string;
     abandon?: boolean;
-    time1: string;
-    time2: string;
+    time1?: object[];
+    slot1?: string[];
+    time2?: object[];
+    slot2?: string[];
     group: string;
     sex: "Male" | "Female";
     title: string; // e.g. 2018A || 2018S (A: AUTUMN, S: SPRING, C: CAMP)

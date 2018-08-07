@@ -255,6 +255,23 @@ export function moveCandidate(from: number, to: number, cid: string, position?: 
     }
 }
 
+export const SET_SLOT = 'SET_SLOT';
+export type SET_SLOT = typeof SET_SLOT;
+
+export interface SetSlot {
+    type: SET_SLOT;
+    interview: 1 | 2;
+    slot: object[]
+}
+
+export function setSlot(slot: object[], interview: 1 | 2): SetSlot {
+    return {
+        type: SET_SLOT,
+        slot,
+        interview
+    }
+}
+
 export const SET_GROUP = 'SET_GROUP';
 export type SET_GROUP = typeof SET_GROUP;
 

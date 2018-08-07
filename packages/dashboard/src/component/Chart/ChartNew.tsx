@@ -26,8 +26,8 @@ class ChartNew extends PureComponent<Props> {
         modalOpen: false,
         year: '',
         type: '',
-        begin: new Date().toISOString().slice(0, 10),
-        end: new Date().toISOString().slice(0, 10),
+        begin: (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().slice(0, 10),
+        end: (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().slice(0, 10),
         code: '',
         launched: false
     };
