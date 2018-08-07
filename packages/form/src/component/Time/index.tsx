@@ -118,7 +118,7 @@ class Time extends React.Component<Props> {
     };
 
     handleConfirm = () => (type: string) => {
-        const time = this.state.time.map(i => ({ date: i.date }));
+        const time = this.state.time.map(i => ({ date: i.date, morning: false, afternoon: false, evening: false }));
         this.state.clicked.map(i => {
             const int = Math.floor(i / 3);
             const res = i - int * 3;
