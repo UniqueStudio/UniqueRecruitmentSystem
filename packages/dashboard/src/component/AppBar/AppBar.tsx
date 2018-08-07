@@ -57,6 +57,18 @@ class Bar extends PureComponent<Props> {
         this.setState({ anchorEl: null });
     };
 
+    refresh = () => {
+        const token = sessionStorage.getItem('token');
+        const uid = sessionStorage.getItem('uid');
+        const userInfo = sessionStorage.getItem('userInfo');
+        sessionStorage.clear();
+        token && sessionStorage.setItem('token', token);
+        uid && sessionStorage.setItem('uid', uid);
+        userInfo && sessionStorage.setItem('userInfo', userInfo);
+        this.handleClose();
+        location.reload();
+    };
+
     render() {
         const { classes, open, loggedIn, toggleOpen, logout, path } = this.props;
         return (
@@ -98,6 +110,7 @@ class Bar extends PureComponent<Props> {
                                 >
                                     <Anchor to='/myInfo'><MenuItem onClick={this.handleClose}>个人信息</MenuItem></Anchor>
                                     <Anchor to='/myGroup'><MenuItem onClick={this.handleClose}>组员信息</MenuItem></Anchor>
+                                    <MenuItem onClick={this.refresh}>强制刷新</MenuItem>
                                     <MenuItem onClick={() => {
                                         this.handleClose();
                                         logout();
