@@ -21,7 +21,7 @@ export const arrangeTime = (slots: number[], candidates: Candidate[], interview:
             _id: i._id,
                 select: converter(i[`time${interview}`]),
             [`slot${interview}`]: i[`slot${interview}`],
-            date: i[`time${interview}`].date
+            date: i[`time${interview}`].map((i: object) => i['date'])
         }
     });
 
@@ -48,7 +48,7 @@ export const arrangeTime = (slots: number[], candidates: Candidate[], interview:
                         continue;
                     }
                     slots[j] -= 1;
-                    i[`slot${interview}`] = [i.date, ['morning', 'afternoon', 'evening'][j % 3]];
+                    i[`slot${interview}`] = [i.date[~~(j / 3)], ['morning', 'afternoon', 'evening'][j % 3]];
                     hasPlaced = true;
                 }
             }

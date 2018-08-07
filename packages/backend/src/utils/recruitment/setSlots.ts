@@ -14,7 +14,6 @@ export const setSlots = (req: Request, res: Response) => {
             if (group !== 'interview') {
                 await database.update('recruitments', { title }, { [`time1.slots.${group}`]: slots });
                 const candidates = await database.query('candidates', { group, title, step: 2, abandon: false });
-                console.log(candidates);
                 result = arrangeTime(slots, candidates, 1);
                 result.map(async i => {
                     if (i['slot1']) {
