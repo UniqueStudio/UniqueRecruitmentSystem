@@ -18,9 +18,9 @@ interface Props extends WithStyles {
 }
 
 class ChartContainer extends PureComponent<Props> {
-    constructor(props: Props) {
-        super(props);
-        props.fetchData();
+
+    componentDidMount() {
+        this.props.fetchData();
     }
 
     render() {

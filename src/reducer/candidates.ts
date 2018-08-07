@@ -28,6 +28,7 @@ type Action =
     | actions.RemoveCandidate
     | actions.MoveCandidate
     | actions.SetGroup
+    | actions.SetSlot
     | actions.InupttingComment;
 
 export interface Candidates {
@@ -132,7 +133,18 @@ export function candidates(
         case actions.SET_GROUP:
             return { ...state, group: action.group };
         case actions.INPUTTING_COMMENT:
-            return { ...state, inputtingComment: { evaluation: action.evaluation, comment: action.comment } }
+            return { ...state, inputtingComment: { evaluation: action.evaluation, comment: action.comment } };
+        case actions.SET_SLOT:
+            action.slot.map(i => {
+                const candidates = newState.candidates[action.interview === 1 ? 2 : 4];
+                const info = candidates.get(i['_id']);
+                candidates.set(i['_id'], {
+                    ...info,
+                    [`slot${action.interview}`]: i[`slot${action.interview}`]
+                } as Candidate);
+            });
+            sessionStorage.setItem(newState.group, JSON.stringify(newState.candidates.map(i => mapToObj(i))));
+            return newState;
     }
     return state;
 }

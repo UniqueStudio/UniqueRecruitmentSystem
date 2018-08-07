@@ -25,10 +25,9 @@ class User extends PureComponent<Props> {
         info: this.props.info
     };
 
-    constructor(props: Props) {
-        super(props);
+    componentDidMount() {
         const { fetchInfo, uid } = this.props;
-        uid.length && fetchInfo(uid);
+        uid && fetchInfo(uid);
     }
 
     componentWillReceiveProps(nextProps: Props) {

@@ -21,22 +21,29 @@ import { Candidate, Recruitment, Time, User } from '../../lib/const';
 interface Props extends WithStyles {
     candidates: Map<string, Candidate>[];
     group: User[];
+    userInfo: object;
     currentRecruitment: Recruitment;
     requestCandidate: (group: string) => void;
     requestGroup: (group: string) => void;
     requestRecruitments: () => void;
     toggleSnackbar: (message: string, color: string) => void;
+    submit: (title: string, slots: number[], group: string) => void;
 }
 
 class Group extends PureComponent<Props> {
 
     state = {
         step: 1,
-        groupName: '',
+        groupName: this.props.userInfo['group'],
         numbers: [] as number[][],
         open: false
     };
+
     initTime = (time: Time[]) => {
+        if (!time) {
+            this.props.toggleSnackbar('请先设置面试时间！', 'info');
+            return;
+        }
         this.setState({
             numbers: time.map(i =>
                 [i.morning ? 0 : -1, i.afternoon ? 0 : -1, i.evening ? 0 : -1]
@@ -48,8 +55,9 @@ class Group extends PureComponent<Props> {
         const { currentRecruitment, requestCandidate } = this.props;
         const { groupName } = this.state;
         this.setState({ step });
-        this.initTime(step === 1 ? currentRecruitment.time1[groupName] : currentRecruitment.time2);
         step === 1 ? requestCandidate(groupName) : requestCandidate('interview');
+        console.log(step);
+        this.initTime(step === 1 ? currentRecruitment.time1[groupName] : currentRecruitment.time2);
     };
     handleSelect = (i: number, j: number) => (event: React.ChangeEvent) => {
         const numbers = [...this.state.numbers];
@@ -65,8 +73,8 @@ class Group extends PureComponent<Props> {
         })
     };
     submitArrange = () => {
-        const { toggleSnackbar, candidates } = this.props;
-        const { numbers, step } = this.state;
+        const { toggleSnackbar, candidates, currentRecruitment, submit } = this.props;
+        const { numbers, step, groupName } = this.state;
         const candidateNumbers = candidates.map(i => [...i.values()])[step === 1 ? 2 : 4].filter(i => !i.abandon).length;
         let total = 0;
         let message = '';
@@ -87,28 +95,19 @@ class Group extends PureComponent<Props> {
             toggleSnackbar(message, 'info');
             return;
         }
+        const slots = numbers.reduce((i, j) => [...i, ...j]);
+        submit(currentRecruitment.title, slots, step === 1 ? groupName : 'interview');
+        this.toggleModal();
     };
 
-    constructor(props: Props) {
-        super(props);
-        const userInfo = sessionStorage.getItem('userInfo');
-        if (userInfo) {
-            const group = JSON.parse(userInfo)['group'];
-            this.state.groupName = group;
-            props.requestRecruitments();
-            props.requestCandidate(group);
-            props.requestGroup(group);
-        }
-    }
-
     componentDidMount() {
-        if (this.props.currentRecruitment) {
-            this.initTime(this.props.currentRecruitment.time1[this.state.groupName]);
-        }
+        this.props.requestRecruitments();
+        this.props.requestCandidate(this.state.groupName);
+        this.props.requestGroup(this.state.groupName);
     }
 
     componentWillReceiveProps(nextProps: Props) {
-        if (!this.props.currentRecruitment && nextProps.currentRecruitment) {
+        if (nextProps.currentRecruitment && !this.props.currentRecruitment) {
             this.initTime(nextProps.currentRecruitment.time1[this.state.groupName]);
         }
     }
@@ -118,8 +117,8 @@ class Group extends PureComponent<Props> {
         const { step, groupName, numbers, open } = this.state;
         const translator = { 'morning': '上午', 'afternoon': '下午', 'evening': '晚上' };
         const disabled = step === 1
-            ? !(candidates.length && currentRecruitment && currentRecruitment.time1 && currentRecruitment.time1[groupName] && numbers.length)
-            : !(candidates.length && currentRecruitment && currentRecruitment.time2 && numbers.length);
+            ? !(candidates.length && candidates[2].size && currentRecruitment && currentRecruitment.time1 && currentRecruitment.time1[groupName] && numbers.length)
+            : !(candidates.length && candidates[4].size && currentRecruitment && currentRecruitment.time2 && numbers.length);
         return (
             <div className={classes.infoContainer}>
                 <Paper className={classes.paper}>
@@ -143,7 +142,7 @@ class Group extends PureComponent<Props> {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {group.length && group.map((i, j) => (
+                            {Boolean(group.length) && group.map((i, j) => (
                                 <TableRow key={j}>
                                     <TableCell component="th" scope="row" classes={{
                                         root: classes.tableCell
@@ -177,16 +176,19 @@ class Group extends PureComponent<Props> {
                         <TableHead>
                             <TableRow>
                                 <TableCell>候选人姓名</TableCell>
-                                <TableCell>{step === 1 ? '组面时间' : '群面时间'}</TableCell>
+                                <TableCell>选择情况</TableCell>
+                                <TableCell>分配结果</TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
                             {candidates.length !== 0 && candidates.map(i => [...i.values()])[step === 1 ? 2 : 4].map((i, j) => {
                                 const time = step === 1 ? i.time1 : i.time2;
+                                const slot = step === 1 ? i.slot1 : i.slot2;
                                 return (
                                     <TableRow key={j}>
                                         <TableCell component="th" scope="row">{i.name}</TableCell>
                                         <TableCell>{i.abandon ? '已放弃' : time && time.length ? '已选择' : '未选择'}</TableCell>
+                                        <TableCell>{slot && slot.length ? `${slot[0]}${translator[slot[1]]}${slot[2]}` : '未分配'}</TableCell>
                                     </TableRow>
                                 )
                             })}

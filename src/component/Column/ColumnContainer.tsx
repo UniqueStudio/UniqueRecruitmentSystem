@@ -50,9 +50,8 @@ class Container extends PureComponent<Props> {
         })
     };
 
-    constructor(props: Props) {
-        super(props);
-        const { pathname, changeGroup, group } = props;
+    componentDidMount() {
+        const { pathname, changeGroup, group } = this.props;
         pathname === '/finalInterview' ? changeGroup('interview') : changeGroup(group === 'interview' ? 'web' : group);
     }
 

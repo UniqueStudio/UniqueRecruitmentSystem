@@ -163,7 +163,7 @@ export const requestGroup = (group: string) => (dispatch: Dispatch) => {
 export const updateUser = (uid: string, info: User) => (dispatch: Dispatch) => {
     dispatch({ type: USER.START });
     const token = sessionStorage.getItem('token');
-    const formerInfo = sessionStorage.getItem('userInfo') || {};
+    const formerInfo = sessionStorage.getItem('userInfo') || '{}';
     if (!token) {
         errHandler({ message: 'token不存在', type: 'danger' }, dispatch, USER);
         return;
@@ -179,7 +179,7 @@ export const updateUser = (uid: string, info: User) => (dispatch: Dispatch) => {
         .then(resHandler)
         .then(res => {
             if (res.type === 'success') {
-                sessionStorage.setItem('userInfo', JSON.stringify({ ...formerInfo, ...info }));
+                sessionStorage.setItem('userInfo', JSON.stringify({ ...JSON.parse(formerInfo), ...info }));
                 dispatch(actions.toggleSnackbarOn('已成功修改信息！', 'success'));
                 dispatch(actions.changeUserInfo(info));
                 dispatch({ type: USER.SUCCESS });
@@ -506,6 +506,42 @@ export const getVerifyCode = () => (dispatch: Dispatch) => {
             }
         })
         .catch(err => errHandler(err, dispatch, SMS))
+};
+
+export const submitSlots = (title: string, slots: number[], group: string) => (dispatch: Dispatch) => {
+    dispatch({ type: CANDIDATE.START });
+    const token = sessionStorage.getItem('token');
+    if (!token) {
+        errHandler({ message: 'token不存在', type: 'danger' }, dispatch, SMS);
+        return;
+    }
+    return fetch(`${URL}/recruitment/slots`, {
+        method: 'POST',
+        body: JSON.stringify({
+            title,
+            slots,
+            group
+        }),
+        headers: {
+            'content-type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        },
+    })
+        .then(resHandler)
+        .then(res => {
+            if (res.type === 'success') {
+                dispatch(actions.setSlot(res.result, res.interview));
+                if (res.failed === 0) {
+                    dispatch(actions.toggleSnackbarOn('所有候选人均分配了时间！', 'success'));
+                } else {
+                    dispatch(actions.toggleSnackbarOn(`有${res.failed}位候选人没有分配到时间！`, 'info'));
+                }
+                dispatch({ type: CANDIDATE.SUCCESS });
+            } else {
+                throw res;
+            }
+        })
+        .catch(err => errHandler(err, dispatch, CANDIDATE))
 };
 
 export const sendMessage = (message: string) => (dispatch: Dispatch) => {
