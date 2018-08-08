@@ -190,12 +190,12 @@ export const updateUser = (uid: string, info: User) => (dispatch: Dispatch) => {
 
 export const CANDIDATE = actionTypeCreator('CANDIDATE');
 export const requestCandidate = (group: string) => (dispatch: Dispatch) => {
+    dispatch({ type: CANDIDATE.START });
     const token = sessionStorage.getItem('token');
     if (!token) {
         errHandler({ message: 'token不存在', type: 'danger' }, dispatch, CANDIDATE);
         return;
     }
-    dispatch({ type: CANDIDATE.START });
     dispatch(actions.setGroup(group));
     const candidates = sessionStorage.getItem(group);
     if (candidates && !store.getState().candidates.shouldUpdateCandidates) {
@@ -465,6 +465,33 @@ export const sendSMS = (content: object) => (dispatch: Dispatch) => {
         return;
     }
     return fetch(`${URL}/sms`, {
+        method: 'POST',
+        body: JSON.stringify(content),
+        headers: {
+            'content-type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        },
+    })
+        .then(resHandler)
+        .then(res => {
+            if (res.type === 'success') {
+                dispatch(actions.toggleSnackbarOn('已成功发送短信', 'success'));
+                dispatch({ type: SMS.SUCCESS });
+            } else {
+                throw res;
+            }
+        })
+        .catch(err => errHandler(err, dispatch, SMS))
+};
+
+export const sendInterview = (content: object) => (dispatch: Dispatch) => {
+    dispatch({ type: SMS.START });
+    const token = sessionStorage.getItem('token');
+    if (!token) {
+        errHandler({ message: 'token不存在', type: 'danger' }, dispatch, SMS);
+        return;
+    }
+    return fetch(`${URL}/sms/interview`, {
         method: 'POST',
         body: JSON.stringify(content),
         headers: {
