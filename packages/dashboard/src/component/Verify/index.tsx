@@ -13,7 +13,7 @@ interface Props extends WithStyles {
     getVerifyCode: () => void;
 }
 
-class Index extends PureComponent<Props> {
+class Verify extends PureComponent<Props> {
 
     state = {
         sent: false,
@@ -55,7 +55,7 @@ class Index extends PureComponent<Props> {
                         disabled={this.state.sent}>{this.state.sent ? `${this.state.time}秒后重新获取` : '获取验证码'}</Button>
                 <TextField
                     label="输入验证码"
-                    className={classes.templateItem}
+                    className={classNames(classes.templateItem, classes.input)}
                     onChange={onChange}
                     value={code}
                 />
@@ -64,6 +64,6 @@ class Index extends PureComponent<Props> {
     }
 }
 
-export default withRoot(withStyles(styles)(Index));
+export default withRoot(withStyles(styles)(Verify));
 
 

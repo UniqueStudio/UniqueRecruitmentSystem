@@ -1,10 +1,7 @@
 import React, { PureComponent } from "react";
 import Button from '@material-ui/core/Button';
-import FormControl from '@material-ui/core/FormControl';
-import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import Paper from "@material-ui/core/Paper";
-import Select from "@material-ui/core/Select";
 import TextField from '@material-ui/core/TextField';
 import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 
@@ -90,60 +87,65 @@ class User extends PureComponent<Props> {
                     className={classes.userInfo}
                     InputProps={{ readOnly: true } as any}
                 />
-                <FormControl className={classes.userInfo}>
-                    <InputLabel>性别</InputLabel>
-                    <Select
-                        value={sex}
-                        onChange={this.handleChange('sex')}
-                    >
-                        <MenuItem value='Male'>男</MenuItem>
-                        <MenuItem value='Female'>女</MenuItem>
-                    </Select>
-                </FormControl>
-                <FormControl className={classes.userInfo}>
-                    <InputLabel>组别</InputLabel>
-                    <Select
-                        value={group}
-                        onChange={this.handleChange('group')}
-                    >
-                        {GROUP.map(i => <MenuItem value={i.toLowerCase()} key={i}>{i}</MenuItem>)}
-                    </Select>
-                </FormControl>
-                <FormControl className={classes.userInfo}>
-                    <InputLabel>加入时间</InputLabel>
-                    <Select
-                        value={joinTime}
-                        onChange={this.handleChange('joinTime')}
-                    >
-                        {(() => {
-                            const year = new Date().getFullYear();
-                            return [year - 3, year - 2, year - 1, year].map(i =>
-                                [['春招', 'S'], ['夏令营', 'C'], ['秋招', 'A']].map(j =>
-                                    <MenuItem value={i + j[1]}>{i + j[0]}</MenuItem>
-                                ))
-                        })()}
-                    </Select>
-                </FormControl>
-                <FormControl className={classes.userInfo}>
-                    <InputLabel>组长?</InputLabel>
-                    <Select
-                        value={isCaptain ? 1 : 0}
-                        onChange={this.handleChange('isCaptain')}
-                    >
-                        <MenuItem value={1}>是</MenuItem>
-                        <MenuItem value={0}>否</MenuItem>
-                    </Select>
-                </FormControl>
-                <FormControl className={classes.userInfo}>
-                    <InputLabel>管理员?</InputLabel>
-                    <Select
-                        value={isAdmin ? 1 : 0}
-                        onChange={this.handleChange('isAdmin')}
-                    >
-                        <MenuItem value={1}>是</MenuItem>
-                        <MenuItem value={0}>否</MenuItem>
-                    </Select>
-                </FormControl>
+                <TextField
+                    select
+                    label="性别"
+                    className={classes.userInfo}
+                    value={sex}
+                    onChange={this.handleChange('sex')}
+                    margin="normal"
+                >
+                    <MenuItem value='Male'>男</MenuItem>
+                    <MenuItem value='Female'>女</MenuItem>
+                </TextField>
+                <TextField
+                    select
+                    label="组别"
+                    className={classes.userInfo}
+                    value={group}
+                    onChange={this.handleChange('group')}
+                    margin="normal"
+                >
+                    {GROUP.map(i => <MenuItem value={i.toLowerCase()} key={i}>{i}</MenuItem>)}
+                </TextField>
+                <TextField
+                    select
+                    label="加入时间"
+                    className={classes.userInfo}
+                    value={joinTime}
+                    onChange={this.handleChange('joinTime')}
+                    margin="normal"
+                >
+                    {(() => {
+                        const year = new Date().getFullYear();
+                        return [year - 3, year - 2, year - 1, year].map(i =>
+                            [['春招', 'S'], ['夏令营', 'C'], ['秋招', 'A']].map(j =>
+                                <MenuItem value={i + j[1]}>{i + j[0]}</MenuItem>
+                            ))
+                    })()}
+                </TextField>
+                <TextField
+                    select
+                    label="组长?"
+                    className={classes.userInfo}
+                    value={isCaptain ? 1 : 0}
+                    onChange={this.handleChange('isCaptain')}
+                    margin="normal"
+                >
+                    <MenuItem value={1}>是</MenuItem>
+                    <MenuItem value={0}>否</MenuItem>
+                </TextField>
+                <TextField
+                    select
+                    label="管理员?"
+                    className={classes.userInfo}
+                    value={isAdmin ? 1 : 0}
+                    onChange={this.handleChange('isAdmin')}
+                    margin="normal"
+                >
+                    <MenuItem value={1}>是</MenuItem>
+                    <MenuItem value={0}>否</MenuItem>
+                </TextField>
                 <TextField
                     label="手机号"
                     value={phone}

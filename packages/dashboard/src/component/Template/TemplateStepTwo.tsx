@@ -55,32 +55,32 @@ class Step extends PureComponent<Props> {
                         {generateModel(type === 'accept', '{{候选人姓名}}', '{{招新名称}}', '{{组别}}', step)}
                     </Typography>
                 </div>
-                <div className={classNames(classes.templateContent, classes.templateItem, classes.templateParams)}>
+                <div
+                    className={classNames(classes.templateContent, classes.templateItem, classes.templateParams, classes.inputContainer)}>
                     <TextField
                         label="候选人姓名"
                         defaultValue='(默认)'
-                        className={classes.templateItem}
+                        className={classNames(classes.templateItem, classes.input)}
                         InputProps={inputProps}
                     />
                     <TextField
                         label="招新名称"
                         defaultValue='(默认)'
-                        className={classes.templateItem}
+                        className={classNames(classes.templateItem, classes.input)}
                         InputProps={inputProps}
                     />
                     <TextField
                         label="组别"
                         defaultValue={`${group}(默认)`}
-                        className={classes.templateItem}
+                        className={classNames(classes.templateItem, classes.input)}
                         InputProps={inputProps}
                     />
                     <TextField
                         select
                         label="轮次"
-                        className={classes.templateItem}
+                        className={classNames(classes.templateItem, classes.input)}
                         value={step}
                         onChange={handleChange("step")}
-                        margin="normal"
                     >
                         {STEP.map((i, j) => (
                             <MenuItem key={j} value={i}>
@@ -97,7 +97,7 @@ class Step extends PureComponent<Props> {
                             <TextField
                                 label="日期"
                                 type="date"
-                                defaultValue={date[j].date}
+                                value={date[j].date}
                                 InputLabelProps={{
                                     shrink: true,
                                 }}

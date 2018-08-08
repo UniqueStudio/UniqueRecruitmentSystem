@@ -39,7 +39,24 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
     },
     dateSelect: {
         display: 'flex',
-        alignItems: 'center'
+        alignItems: 'center',
+        flexWrap: 'wrap',
+        [theme.breakpoints.down("xs")]: {
+            marginTop: theme.spacing.unit
+        },
+    },
+    verify: {
+        paddingLeft: 0
+    },
+    inputContainer: {
+        display: 'flex',
+        flexWrap: 'wrap'
+    },
+    input: {
+        [theme.breakpoints.down("xs")]: {
+            width: 100
+        },
+        width: 150
     }
 });
 

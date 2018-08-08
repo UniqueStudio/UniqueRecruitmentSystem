@@ -52,7 +52,28 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
         },
         zIndex: theme.zIndex.snackbar * 4,
     },
-    fabButtonsContainer: {
+    fabMoveUp: {
+        [theme.breakpoints.down('sm')]: {
+            transform: 'translateY(-46px)',
+            transition: theme.transitions.create(['transform'], {
+                duration: theme.transitions.duration.enteringScreen,
+                easing: theme.transitions.easing.easeOut,
+            }),
+        },
+        [theme.breakpoints.down('xs')]: {
+            transform: 'translateY(-60px)',
+        },
+    },
+    fabMoveDown: {
+        [theme.breakpoints.down('sm')]: {
+            transform: 'translateY(0)',
+            transition: theme.transitions.create(['transform'], {
+                duration: theme.transitions.duration.leavingScreen,
+                easing: theme.transitions.easing.sharp,
+            }),
+        },
+    },
+    fabButtonsZoom: {
         position: 'fixed',
         right: theme.spacing.unit * 15,
         bottom: theme.spacing.unit * 8,
@@ -60,9 +81,11 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
             right: theme.spacing.unit,
             bottom: theme.spacing.unit * 9,
         },
+        zIndex: theme.zIndex.snackbar * 4,
+    },
+    fabButtonsContainer: {
         display: 'flex',
         flexDirection: 'column',
-        zIndex: theme.zIndex.snackbar * 4,
     },
     fabButton: {
         margin: theme.spacing.unit,
