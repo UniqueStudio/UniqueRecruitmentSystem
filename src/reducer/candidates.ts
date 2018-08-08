@@ -107,9 +107,7 @@ export function candidates(
                     : action.cid.map(i => step.delete(i)));
             newState.selected = newState.selected.filter((i: string) => !action.cid.includes(i));
             sessionStorage.setItem(newState.group, JSON.stringify(newState.candidates.map(i => mapToObj(i))));
-            if (newState.group === 'interview') {
-                newState.shouldUpdateCandidates = true
-            }
+            newState.shouldUpdateCandidates = true;
             return newState;
         case actions.MOVE_CANDIDATE:
             if (!newState.candidates[action.from] || !newState.candidates[action.from].get(action.cid)) return newState;
@@ -126,9 +124,7 @@ export function candidates(
                 newState.candidates[action.to].set(action.cid, info);
             }
             sessionStorage.setItem(newState.group, JSON.stringify(newState.candidates.map(i => mapToObj(i))));
-            if (newState.group === 'interview') {
-                newState.shouldUpdateCandidates = true
-            }
+            newState.shouldUpdateCandidates = true;
             return newState;
         case actions.SET_GROUP:
             return { ...state, group: action.group };

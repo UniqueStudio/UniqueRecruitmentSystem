@@ -25,9 +25,15 @@ interface Props extends WithStyles {
     toggleSnackbar: (message: string, color: string) => void;
 }
 
+interface State {
+    messages: object[];
+    content: string;
+    minimize: boolean;
+}
+
 class Messenger extends PureComponent<Props> {
 
-    state = {
+    state: State = {
         messages: this.props.messages,
         content: '',
         minimize: true
@@ -98,12 +104,13 @@ class Messenger extends PureComponent<Props> {
         this.scrollToBottom();
     }
 
-    componentWillReceiveProps(nextProps: Props) {
-        if (nextProps.messages.length !== this.props.messages.length) {
-            this.setState({
+    static getDerivedStateFromProps(nextProps: Props, prevState: State) {
+        if (nextProps.messages.length !== prevState.messages.length) {
+            return {
                 messages: nextProps.messages
-            })
+            };
         }
+        return null;
     }
 
     render() {

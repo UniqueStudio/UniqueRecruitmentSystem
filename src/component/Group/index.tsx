@@ -131,16 +131,19 @@ class Group extends PureComponent<Props> {
     };
 
     componentDidMount() {
-        const { requestCandidate, requestGroup, requestRecruitments } = this.props;
+        const { requestCandidate, requestGroup, requestRecruitments, currentRecruitment } = this.props;
         const groupName = this.groupName;
         requestRecruitments();
         requestCandidate(groupName);
         requestGroup(groupName);
+        if (currentRecruitment) {
+            this.initTime(this.props.currentRecruitment.time1[groupName]);
+        }
     }
 
-    componentWillReceiveProps(nextProps: Props) {
-        if (nextProps.currentRecruitment && !this.props.currentRecruitment) {
-            this.initTime(nextProps.currentRecruitment.time1[this.groupName]);
+    componentDidUpdate(prevProps: Props) {
+        if (!prevProps.currentRecruitment && this.props.currentRecruitment) {
+            this.initTime(this.props.currentRecruitment.time1[this.groupName]);
         }
     }
 

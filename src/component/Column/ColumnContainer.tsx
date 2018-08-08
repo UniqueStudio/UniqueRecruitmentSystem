@@ -10,14 +10,14 @@ import { STEP } from '../../lib/const';
 
 interface Props extends WithStyles {
     group: string;
-    pathname: string;
+    type: string;
     changeGroup: (group: string) => void;
     move: (from: number, to: number, cid: string, position: number) => void;
 }
 
 class Container extends PureComponent<Props> {
     state = {
-        steps: this.props.pathname === '/finalInterview' ? STEP.slice(4) : STEP,
+        steps: this.props.type === 'final' ? STEP.slice(4) : STEP,
         flag: false,
     };
     onDragEnd = (result: DropResult) => {
@@ -51,13 +51,12 @@ class Container extends PureComponent<Props> {
     };
 
     componentDidMount() {
-        const { pathname, changeGroup, group } = this.props;
-        pathname === '/finalInterview' ? changeGroup('interview') : changeGroup(group === 'interview' ? 'web' : group);
+        const { changeGroup, group, type } = this.props;
+        type === 'final' ? changeGroup('interview') : changeGroup(group === 'interview' ? 'web' : group);
     }
 
     render() {
         const { classes } = this.props;
-
         return (
             <>
                 <DragDropContext
