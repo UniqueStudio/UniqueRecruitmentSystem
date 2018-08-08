@@ -143,6 +143,10 @@ export const requestGroup = (group: string) => (dispatch: Dispatch) => {
         errHandler({ message: 'token不存在', type: 'danger' }, dispatch, USER);
         return;
     }
+    if (!group) {
+        errHandler({ message: '请先完善个人信息！', type: 'warning' }, dispatch, CANDIDATE);
+        return;
+    }
     return fetch(`${URL}/user/group/${group}`, {
         headers: {
             'Authorization': `Bearer ${token}`
@@ -194,6 +198,10 @@ export const requestCandidate = (group: string) => (dispatch: Dispatch) => {
     const token = sessionStorage.getItem('token');
     if (!token) {
         errHandler({ message: 'token不存在', type: 'danger' }, dispatch, CANDIDATE);
+        return;
+    }
+    if (!group) {
+        errHandler({ message: '请先完善个人信息！', type: 'warning' }, dispatch, CANDIDATE);
         return;
     }
     dispatch(actions.setGroup(group));
