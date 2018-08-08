@@ -17,8 +17,12 @@ interface Props extends WithStyles {
     toggleSnackbar: (info: string, color: string) => void;
 }
 
+interface State {
+    info: UserType
+}
+
 class User extends PureComponent<Props> {
-    state = {
+    state: State = {
         info: this.props.info
     };
 
@@ -27,11 +31,13 @@ class User extends PureComponent<Props> {
         uid && fetchInfo(uid);
     }
 
-    componentWillReceiveProps(nextProps: Props) {
-        if (nextProps.info !== this.props.info) {
-            this.setState({ info: nextProps.info })
-        }
-    }
+    handleChange = (name: string) => (event: React.ChangeEvent) => {
+        const info = { ...this.state.info };
+        info[name] = event.target['value'];
+        this.setState({
+            info,
+        });
+    };
 
     checkMail = (mail: string) => {
         const re = /^(([^<>()\[\].,;:\s@"]+(\.[^<>()\[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/i;
@@ -63,16 +69,14 @@ class User extends PureComponent<Props> {
         this.props.submitInfo(this.props.uid, this.state.info);
     };
 
-
-    handleChange = (name: string) => (event: React.ChangeEvent) => {
-        this.setState({
-            info: {
-                ...this.state.info,
-                [name]: event.target['value']
-            },
-        });
-    };
-
+    static getDerivedStateFromProps(nextProps: Props, prevState: State) {
+        if (prevState.info !== nextProps.info && !prevState.info.sex) {
+            return {
+                info: nextProps.info
+            };
+        }
+        return null;
+    }
 
     render() {
         const { classes } = this.props;
@@ -102,7 +106,7 @@ class User extends PureComponent<Props> {
                     select
                     label="组别"
                     className={classes.userInfo}
-                    value={group}
+                    value={group || ''}
                     onChange={this.handleChange('group')}
                     margin="normal"
                 >
@@ -112,7 +116,7 @@ class User extends PureComponent<Props> {
                     select
                     label="加入时间"
                     className={classes.userInfo}
-                    value={joinTime}
+                    value={joinTime || ''}
                     onChange={this.handleChange('joinTime')}
                     margin="normal"
                 >
@@ -148,14 +152,14 @@ class User extends PureComponent<Props> {
                 </TextField>
                 <TextField
                     label="手机号"
-                    value={phone}
+                    value={phone || ''}
                     onChange={this.handleChange('phone')}
                     margin="normal"
                     className={classes.userInfo}
                 />
                 <TextField
                     label="邮箱"
-                    value={mail}
+                    value={mail || ''}
                     onChange={this.handleChange('mail')}
                     className={classes.userInfo}
                     margin="normal"

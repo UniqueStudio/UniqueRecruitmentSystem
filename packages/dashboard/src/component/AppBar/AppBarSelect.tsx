@@ -12,17 +12,22 @@ interface Props extends WithStyles {
     changeGroup: (group: string) => void;
 }
 
+interface State {
+    group: string;
+}
+
 class Selects extends PureComponent<Props> {
-    state = {
+    state: State = {
         group: this.props.group
     };
 
-    componentWillReceiveProps(nextProps: Props) {
-        if (nextProps.group !== this.props.group) {
-            this.setState({
+    static getDerivedStateFromProps(nextProps: Props, prevState: State) {
+        if (nextProps.group !== prevState.group) {
+            return {
                 group: nextProps.group
-            })
+            }
         }
+        return null;
     }
 
     handleChange = (event: React.ChangeEvent) => {

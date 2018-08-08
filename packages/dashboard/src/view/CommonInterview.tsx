@@ -7,7 +7,7 @@ import ColumnContainer from '../container/Column/ColumnContainer';
 
 class CommonInterview extends PureComponent<WithStyles> {
     render() {
-        return <ColumnContainer />;
+        return <ColumnContainer type='common' />;
     }
 }
 

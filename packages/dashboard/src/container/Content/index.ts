@@ -4,9 +4,8 @@ import { Dispatch } from 'redux';
 import { StoreState } from '../../reducer';
 import { toggleDrawerOpen } from '../../action';
 
-const mapStateToProps = ({ components, routerReducer, candidates, recruitments, user, sms }: StoreState) => ({
+const mapStateToProps = ({ components, candidates, recruitments, user, sms }: StoreState) => ({
     open: components.drawerOpen,
-    path: routerReducer.location,
     loading: [...Object.values(candidates.isLoading), user.isLoading, recruitments.isLoading, sms.isLoading].includes(true),
 });
 
