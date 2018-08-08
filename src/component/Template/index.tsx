@@ -176,7 +176,9 @@ class Template extends PureComponent<Props> {
                     {steps.map((i, j) => (
                         <Step key={j}>
                             <StepLabel>{i}</StepLabel>
-                            <StepContent>
+                            <StepContent classes={{
+                                last: classes.verify
+                            }}>
                                 {stepContent[j]}
                                 <div>
                                     <Button

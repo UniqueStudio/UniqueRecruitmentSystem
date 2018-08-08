@@ -13,7 +13,7 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
         flexDirection: 'column',
         padding: theme.spacing.unit,
         height: 'calc(100vh - 112px)',
-        transition: theme.transitions.create("height", {
+        transition: theme.transitions.create(['height', 'width', 'background'], {
             easing: theme.transitions.easing.sharp,
             duration: theme.transitions.duration.enteringScreen
         }),
@@ -21,9 +21,16 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
         top: 0,
         [theme.breakpoints.down('md')]: {
             position: 'fixed',
-            top: 'auto',
-            bottom: 0,
-            right: 0,
+            minWidth: 400,
+            right: theme.spacing.unit * 3,
+            top: theme.spacing.unit * 11,
+        },
+        [theme.breakpoints.down('sm')]: {
+            background: colorToAlpha('#ffffff', 0.5),
+            minWidth: 'auto',
+            right: 'auto',
+            left: 0,
+            top: theme.spacing.unit * 8,
             zIndex: 5000,
             width: 400,
         },
@@ -35,9 +42,21 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
     },
     minimize: {
         height: 64,
-        transition: theme.transitions.create("height", {
+        [theme.breakpoints.down('md')]: {
+            overflowX: 'hidden',
+            position: 'fixed',
+            background: colorToAlpha('#ffffff', 0.5),
+            minWidth: 400,
+        },
+        [theme.breakpoints.down('sm')]: {
+            background: colorToAlpha('#ffffff', 0),
+            boxShadow: 'none',
+            minWidth: 64,
+            width: 64,
+        },
+        transition: theme.transitions.create(['height', 'width', 'background'], {
             easing: theme.transitions.easing.sharp,
-            duration: theme.transitions.duration.enteringScreen
+            duration: theme.transitions.duration.leavingScreen
         }),
         overflowY: 'hidden'
     },
@@ -46,6 +65,17 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
         overflowY: 'auto',
         padding: theme.spacing.unit,
         marginBottom: theme.spacing.unit,
+        transition: theme.transitions.create(['padding'], {
+            easing: theme.transitions.easing.sharp,
+            duration: theme.transitions.duration.enteringScreen
+        }),
+    },
+    minimizeMessages: {
+        padding: 0,
+        transition: theme.transitions.create(['padding'], {
+            easing: theme.transitions.easing.sharp,
+            duration: theme.transitions.duration.leavingScreen
+        }),
     },
     messageContainer: {
         display: 'flex',
@@ -81,6 +111,7 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
         wordWrap: 'break-word',
         maxWidth: 200,
         userSelect: 'text',
+        cursor: 'text',
         marginTop: theme.spacing.unit
     },
     avatar: {

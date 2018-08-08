@@ -1,6 +1,7 @@
 import React, { PureComponent } from 'react';
 import Button from '@material-ui/core/Button';
 import Chip from '@material-ui/core/Chip';
+import Dialog from '@material-ui/core/Dialog';
 import MenuItem from '@material-ui/core/MenuItem';
 import Paper from '@material-ui/core/Paper';
 import Select from '@material-ui/core/Select'
@@ -16,6 +17,7 @@ import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 import styles from '../../style/group';
 import withRoot from "../../style/withRoot";
 import Modal from '../Modal';
+import Verify from '../../container/Verify';
 import { Candidate, Recruitment, Time, User } from '../../lib/const';
 
 interface Props extends WithStyles {
@@ -26,6 +28,7 @@ interface Props extends WithStyles {
     requestCandidate: (group: string) => void;
     requestGroup: (group: string) => void;
     requestRecruitments: () => void;
+    sendInterview: (content: object) => void;
     toggleSnackbar: (message: string, color: string) => void;
     submit: (title: string, slots: number[], group: string) => void;
 }
@@ -34,10 +37,13 @@ class Group extends PureComponent<Props> {
 
     state = {
         step: 1,
-        groupName: this.props.userInfo['group'],
         numbers: [] as number[][],
-        open: false
+        modalOpen: false,
+        dialogOpen: false,
+        code: ''
     };
+
+    groupName = this.props.userInfo['group'];
 
     initTime = (time: Time[]) => {
         if (!time) {
@@ -53,11 +59,12 @@ class Group extends PureComponent<Props> {
     handleChange = (event: React.ChangeEvent) => {
         const step = event.target['value'];
         const { currentRecruitment, requestCandidate } = this.props;
-        const { groupName } = this.state;
-        this.setState({ step });
-        step === 1 ? requestCandidate(groupName) : requestCandidate('interview');
-        console.log(step);
-        this.initTime(step === 1 ? currentRecruitment.time1[groupName] : currentRecruitment.time2);
+        const group = this.groupName;
+        this.setState({
+            step
+        });
+        step === 1 ? requestCandidate(group) : requestCandidate('interview');
+        this.initTime(step === 1 ? currentRecruitment.time1[group] : currentRecruitment.time2);
     };
     handleSelect = (i: number, j: number) => (event: React.ChangeEvent) => {
         const numbers = [...this.state.numbers];
@@ -67,14 +74,24 @@ class Group extends PureComponent<Props> {
             numbers
         })
     };
+    handleInput = (event: React.ChangeEvent) => {
+        this.setState({
+            code: event.target['value'],
+        });
+    };
     toggleModal = () => {
         this.setState({
-            open: !this.state.open
+            modalOpen: !this.state.modalOpen
+        })
+    };
+    toggleDialog = () => {
+        this.setState({
+            dialogOpen: !this.state.dialogOpen
         })
     };
     submitArrange = () => {
         const { toggleSnackbar, candidates, currentRecruitment, submit } = this.props;
-        const { numbers, step, groupName } = this.state;
+        const { numbers, step } = this.state;
         const candidateNumbers = candidates.map(i => [...i.values()])[step === 1 ? 2 : 4].filter(i => !i.abandon).length;
         let total = 0;
         let message = '';
@@ -96,25 +113,45 @@ class Group extends PureComponent<Props> {
             return;
         }
         const slots = numbers.reduce((i, j) => [...i, ...j]);
-        submit(currentRecruitment.title, slots, step === 1 ? groupName : 'interview');
+        submit(currentRecruitment.title, slots, step === 1 ? this.groupName : 'interview');
         this.toggleModal();
+    };
+    sendInterview = () => {
+        const { code, step } = this.state;
+        const candidates = this.props.candidates
+            .map(i => [...i.values()])[step * 2]
+            .filter(i => (!i.abandon && i[`time${step}`] && i[`slot${step}`]))
+            .map(i => i._id);
+        this.props.sendInterview({
+            code,
+            step,
+            candidates
+        });
+        this.toggleDialog();
     };
 
     componentDidMount() {
-        this.props.requestRecruitments();
-        this.props.requestCandidate(this.state.groupName);
-        this.props.requestGroup(this.state.groupName);
+        const { requestCandidate, requestGroup, requestRecruitments } = this.props;
+        const groupName = this.groupName;
+        requestRecruitments();
+        requestCandidate(groupName);
+        requestGroup(groupName);
     }
 
     componentWillReceiveProps(nextProps: Props) {
         if (nextProps.currentRecruitment && !this.props.currentRecruitment) {
-            this.initTime(nextProps.currentRecruitment.time1[this.state.groupName]);
+            this.initTime(nextProps.currentRecruitment.time1[this.groupName]);
         }
     }
 
     render() {
-        const { classes, candidates, group, currentRecruitment } = this.props;
-        const { step, groupName, numbers, open } = this.state;
+        const { classes, candidates, group, currentRecruitment, toggleSnackbar } = this.props;
+        const { step, numbers, modalOpen, code, dialogOpen } = this.state;
+        const groupName = this.groupName;
+        if (!groupName) {
+            toggleSnackbar('请先完善个人信息！', 'warning');
+            return <></>;
+        }
         const translator = { 'morning': '上午', 'afternoon': '下午', 'evening': '晚上' };
         const disabled = step === 1
             ? !(candidates.length && candidates[2].size && currentRecruitment && currentRecruitment.time1 && currentRecruitment.time1[groupName] && numbers.length)
@@ -162,7 +199,7 @@ class Group extends PureComponent<Props> {
                     <div className={classes.title}>
                         <div />
                         <Typography variant="title">
-                            报名成员信息
+                            候选人信息
                         </Typography>
                         <Select
                             value={step}
@@ -175,20 +212,32 @@ class Group extends PureComponent<Props> {
                     <Table className={classes.table}>
                         <TableHead>
                             <TableRow>
-                                <TableCell>候选人姓名</TableCell>
-                                <TableCell>选择情况</TableCell>
-                                <TableCell>分配结果</TableCell>
+                                <TableCell classes={{
+                                    root: classes.tableCell
+                                }}>姓名</TableCell>
+                                <TableCell classes={{
+                                    root: classes.tableCell
+                                }}>选择情况</TableCell>
+                                <TableCell classes={{
+                                    root: classes.tableCell
+                                }}>分配结果</TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {candidates.length !== 0 && candidates.map(i => [...i.values()])[step === 1 ? 2 : 4].map((i, j) => {
-                                const time = step === 1 ? i.time1 : i.time2;
-                                const slot = step === 1 ? i.slot1 : i.slot2;
+                            {candidates.length !== 0 && candidates.map(i => [...i.values()])[step * 2].map((i, j) => {
+                                const time = i[`time${step}`];
+                                const slot = i[`slot${step}`];
                                 return (
                                     <TableRow key={j}>
-                                        <TableCell component="th" scope="row">{i.name}</TableCell>
-                                        <TableCell>{i.abandon ? '已放弃' : time && time.length ? '已选择' : '未选择'}</TableCell>
-                                        <TableCell>{slot && slot.length ? `${slot[0]}${translator[slot[1]]}${slot[2]}` : '未分配'}</TableCell>
+                                        <TableCell component="th" scope="row" classes={{
+                                            root: classes.tableCell
+                                        }}>{i.name}</TableCell>
+                                        <TableCell classes={{
+                                            root: classes.tableCell
+                                        }}>{i.abandon ? '已放弃' : time && time.length ? '已选择' : '未选择'}</TableCell>
+                                        <TableCell classes={{
+                                            root: classes.tableCell
+                                        }}>{slot && slot.length ? `${slot[0]}-${slot[2]}` : '未分配'}</TableCell>
                                     </TableRow>
                                 )
                             })}
@@ -202,10 +251,20 @@ class Group extends PureComponent<Props> {
                                 disabled={disabled}
                         >分配时间</Button>
                         <Button color='primary' variant='contained' className={classes.button}
-                                disabled={disabled}>发送短信</Button>
+                                disabled={disabled} onClick={this.toggleDialog}>发送短信</Button>
                     </div>
                 </Paper>
-                <Modal title='选定人数' open={open} onClose={this.toggleModal}>
+                <Dialog open={dialogOpen} onClose={this.toggleDialog}>
+                    <div className={classes.dialog}>
+                        <Verify onChange={this.handleInput} code={code} />
+                        <div className={classes.buttonContainer}>
+                            <Button color='primary' variant='contained' className={classes.button}
+                                    onClick={this.sendInterview}>确认发送</Button>
+                            <Button color='primary' className={classes.button} onClick={this.toggleDialog}>取消</Button>
+                        </div>
+                    </div>
+                </Dialog>
+                <Modal title='选定人数' open={modalOpen} onClose={this.toggleModal}>
                     <div className={classes.chooseContainer}>
                         {!disabled && (step === 1 ? currentRecruitment.time1[groupName] : currentRecruitment.time2).map((i: Time, j: number) =>
                             <div key={j} className={classes.choose}>

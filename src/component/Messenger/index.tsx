@@ -86,7 +86,7 @@ class Messenger extends PureComponent<Props> {
         this.props.sendMessage(this.state.content);
         this.setState({
             content: ''
-        })
+        });
     };
     toggleMinimize = () => {
         this.setState({
@@ -118,12 +118,13 @@ class Messenger extends PureComponent<Props> {
                 <IconButton color="primary" component="span" onClick={this.toggleMinimize}>
                     <RemoveIcon />
                 </IconButton>
-                <div className={classes.messages} ref={(el) => {
+                <div className={classNames(classes.messages, minimize && classes.minimizeMessages)} ref={(el) => {
                     this.end = el;
                 }}>
                     {messages.map((i, j) =>
                         <div key={j}
-                             className={classNames(classes.messageContainer, { [classes.my]: i['isSelf'] })}>
+                             className={classNames(classes.messageContainer, { [classes.my]: i['isSelf'] })}
+                        >
                             {i['avatar'] ? <Avatar
                                 alt={i['name']}
                                 src={i['avatar']}
