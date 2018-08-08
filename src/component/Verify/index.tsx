@@ -20,7 +20,7 @@ class Verify extends PureComponent<Props> {
         time: 0
     };
 
-    interval = null as any;
+    interval = NaN;
 
     getCode = () => {
         this.props.getVerifyCode();
@@ -28,12 +28,12 @@ class Verify extends PureComponent<Props> {
             sent: true,
             time: 60
         });
-        this.interval = setInterval(() => {
+        this.interval = window.setInterval(() => {
             if (this.state.time === 0) {
                 this.setState({
                     sent: false,
                 });
-                clearInterval(this.interval);
+                window.clearInterval(this.interval);
                 return;
             }
             this.setState({
@@ -43,7 +43,7 @@ class Verify extends PureComponent<Props> {
     };
 
     componentWillUnmount() {
-        clearInterval(this.interval);
+        window.clearInterval(this.interval);
     }
 
     render() {
