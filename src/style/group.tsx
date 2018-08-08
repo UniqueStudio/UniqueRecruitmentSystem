@@ -7,7 +7,8 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
         justifyContent: 'space-around',
         [theme.breakpoints.down('sm')]: {
             flexDirection: 'column'
-        }
+        },
+        minWidth: 320
     },
     paper: {
         margin: theme.spacing.unit * 2,
@@ -32,8 +33,7 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
     },
     tableCell: {
         [theme.breakpoints.down('xs')]: {
-            padding: 0,
-            width: 50,
+            padding: theme.spacing.unit,
             textAlign: 'center'
         }
     },
@@ -69,6 +69,9 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
     },
     notification: {
         margin: theme.spacing.unit
+    },
+    dialog: {
+        margin: theme.spacing.unit * 2
     }
 });
 

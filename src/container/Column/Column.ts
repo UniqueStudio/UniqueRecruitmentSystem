@@ -33,7 +33,8 @@ const mapStateToProps = ({ candidates, components }: StoreState, ownProps: OwnPr
     isLoading: candidates.isLoading.candidates,
     modalOn: components.modalOn,
     candidates: candidates.candidates[STEP.indexOf(ownProps.title)] || new Map<string, object>(),
-    fabOn: components.fabOn
+    fabOn: components.fabOn,
+    snackbarOn: components.snackbar.on
 });
 
 type DispatchType =
@@ -48,7 +49,7 @@ type DispatchType =
 const mapDispatchToProps = (dispatch: DispatchType) => ({
     select: (name: string[]) => dispatch(selectCandidate(name)),
     deselect: (name: string[]) => dispatch(deselectCandidate(name)),
-    toggleOn: (info: string, color: string = 'info') => dispatch(toggleSnackbarOn(info, color)),
+    toggleSnakcbarOn: (info: string, color: string = 'info') => dispatch(toggleSnackbarOn(info, color)),
     remove: (cid: string) => removeCandidate(cid)(dispatch),
     toggleModalOn: (cid: string) => dispatch(toggleModalOn(cid)),
     toggleModalOff: () => dispatch(toggleModalOff()),

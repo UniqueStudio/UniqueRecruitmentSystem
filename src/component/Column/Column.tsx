@@ -13,6 +13,7 @@ import withRoot from "../../style/withRoot";
 import ColumnDialog from './ColumnDialog';
 import ColumnModal from './ColumnModal';
 import ColumnCandidate from './ColumnCandidate';
+import classNames from "classnames";
 
 interface Props extends WithStyles {
     dropIndex: number;
@@ -23,10 +24,11 @@ interface Props extends WithStyles {
     selected: string[];
     modalOn: string;
     fabOn: number;
+    snackbarOn: boolean;
     select: (cid: string[]) => void;
     deselect: (cid: string[] | string) => void;
     remove: (cid: string) => void;
-    toggleOn: (info: string, color?: string) => void;
+    toggleSnakcbarOn: (info: string, color?: string) => void;
     toggleModalOn: (cid: string) => void;
     toggleModalOff: () => void;
     changeInputting: (comment: string, evaluation: string) => void;
@@ -43,7 +45,8 @@ class Column extends Component<Props> {
         modal: false,
         removeConfirm: false,
         direction: 'left' as "left" | "right" | "up" | "down",
-        buttons: false
+        buttons: false,
+        fab: false
     };
 
     toggleButtons = () => {
@@ -74,9 +77,9 @@ class Column extends Component<Props> {
 
     handleRemove = (selected: string[]) => () => {
         this.toggleOpen('dialog')();
-        const { toggleOn, remove } = this.props;
+        const { toggleSnakcbarOn, remove } = this.props;
         if (selected.length === 0) {
-            toggleOn('你没有选中任何人');
+            toggleSnakcbarOn('你没有选中任何人');
             return;
         }
         selected.map(i => remove(i));
@@ -95,6 +98,7 @@ class Column extends Component<Props> {
 
     confirmRemove = () => {
         this.toggleOpen('dialog')();
+        this.toggleButtons();
     };
 
     toggleOpen = (name: string) => () => {
@@ -103,67 +107,84 @@ class Column extends Component<Props> {
         });
     };
 
+    hideFab = () => {
+        const { deselect, selected } = this.props;
+        this.toggleButtons();
+        deselect(selected);
+    };
+
+    sendNotification = () => {
+        this.toggleOpen('modal')();
+        this.toggleButtons();
+    };
+
     componentWillReceiveProps(nextProps: Props) {
         const { group, title } = this.props;
         if (nextProps.group !== group) {
             this.props.toggleModalOff();
         }
-        if (nextProps.selected.length === 0 && nextProps.fabOn === titleToStep(title)) {
-            this.props.toggleFabOff();
-            if (this.state.buttons) {
-                this.toggleButtons();
+        if (nextProps.fabOn === titleToStep(title)) {
+            if (nextProps.selected.length === 0) {
+                this.props.toggleFabOff();
+                if (this.state.buttons) {
+                    this.toggleButtons();
+                }
+                setTimeout(() => this.setState({ fab: false }), 225)
+            } else {
+                this.setState({
+                    fab: true
+                })
             }
         }
     }
 
     render() {
-        const { classes, title, candidates, group, selected, deselect, modalOn, toggleModalOff, dropIndex, toggleFabOff, fabOn, downloadResume } = this.props;
+        const { classes, title, candidates, group, selected, deselect, modalOn, toggleModalOff, dropIndex, fabOn, downloadResume, snackbarOn } = this.props;
         const allCandidatesCids = [...candidates.keys()];
         const selectedCandidatesCids = selected.filter((i: string) => allCandidatesCids.includes(i));
         const selectedCandidatesInfo = selectedCandidatesCids.map((i: string) => candidates.get(i) as CType);
 
         const ButtonBox = (
-            <div className={classes.fabButtonsContainer}>
-                <Button
-                    color='primary'
-                    size='small'
-                    variant='contained'
-                    className={classes.fabButton}
-                    onClick={this.handleSelectAll(allCandidatesCids)}
-                >全选</Button>
-                <Button
-                    color='primary'
-                    size='small'
-                    variant='contained'
-                    className={classes.fabButton}
-                    onClick={this.handleInverse(allCandidatesCids, selectedCandidatesCids)}
-                >反选</Button>
-                <Button
-                    color='primary'
-                    size='small'
-                    variant='contained'
-                    className={classes.fabButton}
-                    onClick={this.toggleOpen('modal')}
-                    disabled={selectedCandidatesCids.length === 0}
-                >发送通知</Button>
-                <Button
-                    color='primary'
-                    size='small'
-                    variant='contained'
-                    className={classes.fabButton}
-                    onClick={this.confirmRemove}
-                >移除</Button>
-                <Button
-                    color='primary'
-                    size='small'
-                    variant='contained'
-                    className={classes.fabButton}
-                    onClick={() => {
-                        toggleFabOff();
-                        this.toggleButtons();
-                        deselect(selected);
-                    }}
-                >隐藏</Button>
+            <div className={classes.fabButtonsZoom}>
+                <div
+                    className={classNames(classes.fabButtonsContainer, snackbarOn ? classes.fabMoveUp : classes.fabMoveDown)}>
+                    <Button
+                        color='primary'
+                        size='small'
+                        variant='contained'
+                        className={classes.fabButton}
+                        onClick={this.handleSelectAll(allCandidatesCids)}
+                    >全选</Button>
+                    <Button
+                        color='primary'
+                        size='small'
+                        variant='contained'
+                        className={classes.fabButton}
+                        onClick={this.handleInverse(allCandidatesCids, selectedCandidatesCids)}
+                    >反选</Button>
+                    <Button
+                        color='primary'
+                        size='small'
+                        variant='contained'
+                        className={classes.fabButton}
+                        onClick={this.sendNotification}
+                        disabled={selectedCandidatesCids.length === 0}
+                    >发送通知</Button>
+                    <Button
+                        color='primary'
+                        size='small'
+                        variant='contained'
+                        className={classes.fabButton}
+                        onClick={this.confirmRemove}
+                    >移除</Button>
+                    <Button
+                        color='primary'
+                        size='small'
+                        variant='contained'
+                        className={classes.fabButton}
+                        onClick={this.hideFab}
+                    >隐藏</Button>
+                </div>
             </div>
         );
 
@@ -223,11 +244,15 @@ class Column extends Component<Props> {
                         </div>
                     )}
                 </Draggable>
-                {<>
+                {this.state.fab && <>
                     <Zoom in={fabOn === titleToStep(title)}>
-                        <Button variant="fab" className={classes.fab} color='primary' onClick={this.toggleButtons}>
-                            <AddIcon />
-                        </Button>
+                        <div className={classes.fab}>
+                            <Button variant="fab"
+                                    className={snackbarOn ? classes.fabMoveUp : classes.fabMoveDown}
+                                    color='primary' onClick={this.toggleButtons}>
+                                <AddIcon />
+                            </Button>
+                        </div>
                     </Zoom>
                     <Zoom in={this.state.buttons}>
                         {ButtonBox}
