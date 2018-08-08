@@ -12,7 +12,7 @@ import withRoot from '../../style/withRoot';
 import TemplateStepOne from './TemplateStepOne';
 import TemplateStepTwo from './TemplateStepTwo';
 import Verify from '../../container/Verify';
-import { Candidate } from '../../lib/const';
+import { Candidate, Time } from '../../lib/const';
 
 interface Props extends WithStyles {
     group: string;
@@ -24,6 +24,16 @@ interface Props extends WithStyles {
     sendSMS: (content: object) => void;
 }
 
+interface State {
+    selected: Candidate[];
+    activeStep: number;
+    type: string;
+    step: string;
+    date: Time[];
+    code: string;
+    sent: boolean;
+}
+
 class Template extends PureComponent<Props> {
     defaultDate = {
         date: new Date().toISOString().slice(0, 10),
@@ -32,7 +42,7 @@ class Template extends PureComponent<Props> {
         evening: false
     };
 
-    state = {
+    state: State = {
         selected: this.props.selected,
         activeStep: 0,
         type: 'accept',
@@ -137,16 +147,18 @@ class Template extends PureComponent<Props> {
         })
     };
 
-    componentWillReceiveProps(nextProps: Props) {
-        if (this.props.selected.length !== nextProps.selected.length
-            || !this.props.selected.every((value, index) => value === nextProps.selected[index])) {
-            this.setState({
+    static getDerivedStateFromProps(nextProps: Props, prevState: State) {
+        if (nextProps.selected !== prevState.selected) {
+            return {
                 selected: nextProps.selected
-            })
+            };
         }
-        if (nextProps.status === 'success' && this.state.sent) {
-            this.handleNext();
+        if (nextProps.status === 'success' && prevState.sent) {
+            return {
+                activeStep: prevState.activeStep + 1,
+            };
         }
+        return null;
     }
 
     render() {

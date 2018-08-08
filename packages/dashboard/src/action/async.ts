@@ -447,6 +447,7 @@ export const launchRecruitment = (info: object) => (dispatch: Dispatch) => {
         .then(resHandler)
         .then(res => {
             if (res.type === 'success') {
+                dispatch(actions.setShouldUpdateRecruitment());
                 dispatch(actions.toggleSnackbarOn('已成功发起招新！', 'success'));
                 dispatch({ type: RECRUITMENT.SUCCESS });
             } else {

@@ -118,25 +118,55 @@ class Column extends Component<Props> {
         this.toggleButtons();
     };
 
-    componentWillReceiveProps(nextProps: Props) {
-        const { group, title } = this.props;
-        if (nextProps.group !== group) {
-            this.props.toggleModalOff();
-        }
-        if (nextProps.fabOn === titleToStep(title)) {
+    timer = NaN;
+    isCancelled = false;
+
+    static getDerivedStateFromProps(nextProps: Props) {
+        if (nextProps.fabOn === titleToStep(nextProps.title)) {
             if (nextProps.selected.length === 0) {
-                this.props.toggleFabOff();
-                if (this.state.buttons) {
-                    this.toggleButtons();
+                nextProps.toggleFabOff();
+                return {
+                    buttons: false
                 }
-                setTimeout(() => this.setState({ fab: false }), 225)
             } else {
-                this.setState({
+                return {
                     fab: true
-                })
+                }
             }
         }
+        return null;
     }
+
+    componentDidUpdate() {
+        if (this.props.selected.length === 0) {
+            this.timer = window.setTimeout(() => !this.isCancelled && this.setState({ fab: false }), 225);
+        }
+    }
+
+    componentWillUnmount() {
+        this.isCancelled = true;
+        window.clearTimeout(this.timer);
+    }
+
+    // componentWillReceiveProps(nextProps: Props) {
+    //     const { group, title } = this.props;
+    //     if (nextProps.group !== group) {
+    //         this.props.toggleModalOff();
+    //     }
+    //     if (nextProps.fabOn === titleToStep(title)) {
+    //         if (nextProps.selected.length === 0) {
+    //             this.props.toggleFabOff();
+    //             if (this.state.buttons) {
+    //                 this.toggleButtons();
+    //             }
+    //             setTimeout(() => this.setState({ fab: false }), 225)
+    //         } else {
+    //             this.setState({
+    //                 fab: true
+    //             })
+    //         }
+    //     }
+    // }
 
     render() {
         const { classes, title, candidates, group, selected, deselect, modalOn, toggleModalOff, dropIndex, fabOn, downloadResume, snackbarOn } = this.props;

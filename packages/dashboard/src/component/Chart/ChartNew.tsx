@@ -19,6 +19,17 @@ interface Props extends WithStyles {
     status: string;
     toggleSnackbarOn: (info: string) => void;
     launchRecruitment: (info: object) => void;
+    fetchData: () => void;
+}
+
+interface State {
+    modalOpen: boolean;
+    year: string;
+    type: string;
+    begin: string;
+    end: string;
+    code: string;
+    launched: boolean;
 }
 
 class ChartNew extends PureComponent<Props> {
@@ -65,14 +76,16 @@ class ChartNew extends PureComponent<Props> {
         })
     };
 
-    componentWillReceiveProps(nextProps: Props) {
-        if (nextProps.status === 'success' && this.state.launched) {
-            this.setState({
+    static getDerivedStateFromProps(nextProps: Props, prevState: State) {
+        if (nextProps.status === 'success' && prevState.launched) {
+            nextProps.fetchData();
+            return {
                 modalOpen: false,
                 code: '',
                 launched: false
-            });
+            };
         }
+        return null;
     }
 
     render() {

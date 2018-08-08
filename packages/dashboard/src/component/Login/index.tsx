@@ -18,26 +18,31 @@ interface Props extends WithStyles {
 
 class Login extends PureComponent<Props> {
     state = {
-        modal: true,
-        name: '',
-        src: this.props.weChatKey ? `${QR_CODE_URL}${this.props.weChatKey}` : ''
+        //modal: true,
+        //name: '',
+        src: ''
     };
     login = () => {
         //this.props.login(this.state.name);
         this.props.getQRCode();
     };
 
-    componentWillReceiveProps(nextProps: Props) {
-        this.setState({
-            src: nextProps.weChatKey ? `${QR_CODE_URL}${nextProps.weChatKey}` : ''
-        })
+    static getDerivedStateFromProps(nextProps: Props) {
+        if (nextProps.weChatKey) {
+            return {
+                src: `${QR_CODE_URL}${nextProps.weChatKey}`
+            };
+        }
+        return {
+            src: ''
+        };
     }
 
-    handleChange = (event: React.ChangeEvent) => {
-        this.setState({
-            name: event.target['value'],
-        });
-    };
+    // handleChange = (event: React.ChangeEvent) => {
+    //     this.setState({
+    //         name: event.target['value'],
+    //     });
+    // };
 
     render() {
         const { classes, loggedIn, buttonAble } = this.props;

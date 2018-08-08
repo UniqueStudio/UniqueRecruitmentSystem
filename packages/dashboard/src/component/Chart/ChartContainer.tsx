@@ -24,7 +24,7 @@ class ChartContainer extends PureComponent<Props> {
     }
 
     render() {
-        const { data, toggleSnackbarOn, launchRecruitment, canLaunch, status } = this.props;
+        const { data, toggleSnackbarOn, launchRecruitment, canLaunch, status, fetchData } = this.props;
         const compare = (i: Recruitment, j: Recruitment) => {
             if (i === j) return 0;
             if (i.title.slice(0, 4) > j.title.slice(0, 4)) return 1;
@@ -43,7 +43,7 @@ class ChartContainer extends PureComponent<Props> {
                                   key={i['_id']} />
                 })}
                 <ChartNew toggleSnackbarOn={toggleSnackbarOn} launchRecruitment={launchRecruitment}
-                          disabled={!canLaunch} status={status} />
+                          disabled={!canLaunch} status={status} fetchData={fetchData} />
             </>
         )
     }

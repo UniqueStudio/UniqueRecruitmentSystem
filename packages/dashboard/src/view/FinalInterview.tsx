@@ -10,7 +10,7 @@ class FinalInterview extends PureComponent<WithStyles> {
         const { classes } = this.props;
         return (
             <div className={classes.container}>
-                <ColumnContainer />
+                <ColumnContainer type='final' />
                 <Messenger />
             </div>
         );

@@ -4,8 +4,11 @@ import ColumnContainer from '../../component/Column/ColumnContainer';
 import { StoreState } from '../../reducer';
 import { moveCandidate, requestCandidate } from '../../action/async';
 
-const mapStateToProps = ({ routerReducer, candidates }: StoreState) => ({
-    pathname: (routerReducer.location || { pathname: '' }).pathname,
+interface OwnProps {
+    type: string
+}
+
+const mapStateToProps = ({ candidates }: StoreState, ownProps: OwnProps) => ({
     group: candidates.group,
 });
 

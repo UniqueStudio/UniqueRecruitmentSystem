@@ -19,10 +19,10 @@ class ColumnModal extends PureComponent<Props> {
         selected: this.props.selected
     };
 
-    componentWillReceiveProps(nextProps: Props) {
-        this.setState({
+    static getDerivedStateFromProps(nextProps: Props) {
+        return {
             selected: nextProps.selected
-        })
+        }
     }
 
     render() {
