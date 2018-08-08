@@ -1,5 +1,5 @@
 import { verifyJWT } from '../../lib/checkData';
-import { GROUPS as groups, smsSendURL, token } from '../../lib/consts';
+import { formURL, GROUPS as groups, smsSendURL, token } from '../../lib/consts';
 import { ObjectId } from 'mongodb';
 import { generateModel } from '../../lib/generateModel';
 import fetch from 'node-fetch';
@@ -35,7 +35,7 @@ export const sendCommon = (req: Request, res: Response) => {
                     }
                     let model = generateModel(candidateInfo['name'], step, type, group);
                     if (body.date) {
-                        model += `http://cvs.hustunique.com/form/${formId}/${i}`;
+                        model += `${formURL}/form/${formId}/${i}`;
                     }
                     console.log(model);
                     const response = await fetch(smsSendURL, {
