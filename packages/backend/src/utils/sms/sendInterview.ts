@@ -15,8 +15,9 @@ export const sendInterview = (req: Request, res: Response) => {
             if (body.code === code) {
                 const results = candidates.map(async (i: string) => {
                     const candidateInfo = (await database.query('candidates', { _id: new ObjectId(i) }))[0];
+                    const translator = { 'morning': '上午', 'afternoon': '下午', 'evening': '晚上' };
                     const slot = candidateInfo[`slot${step}`];
-                    const time = `${slot[0]}(${slot[1]})${slot[2]}`;
+                    const time = `${slot[0]}(${translator[slot[1]]})${slot[2]}`;
                     let model = `${candidateInfo['name']}你好，你的${step === 2 ? '群面' : `${candidateInfo['group']}组组面`}时间为${time}，请准时到场`;
                     const response = await fetch(smsSendURL, {
                         method: 'POST',
