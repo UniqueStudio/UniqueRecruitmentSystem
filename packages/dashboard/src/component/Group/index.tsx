@@ -58,13 +58,13 @@ class Group extends PureComponent<Props> {
     };
     handleChange = (event: React.ChangeEvent) => {
         const step = event.target['value'];
-        const { currentRecruitment, requestCandidate } = this.props;
+        const { requestCandidate } = this.props;
         const group = this.groupName;
         this.setState({
             step
         });
         step === 1 ? requestCandidate(group) : requestCandidate('interview');
-        this.initTime(step === 1 ? currentRecruitment.time1[group] : currentRecruitment.time2);
+
     };
     handleSelect = (i: number, j: number) => (event: React.ChangeEvent) => {
         const numbers = [...this.state.numbers];
@@ -134,16 +134,22 @@ class Group extends PureComponent<Props> {
         const { requestCandidate, requestGroup, requestRecruitments, currentRecruitment } = this.props;
         const groupName = this.groupName;
         requestRecruitments();
-        requestCandidate(groupName);
-        requestGroup(groupName);
-        if (currentRecruitment) {
-            this.initTime(this.props.currentRecruitment.time1[groupName]);
+        if (groupName) {
+            requestCandidate(groupName);
+            requestGroup(groupName);
+            if (currentRecruitment && currentRecruitment.time1) {
+                this.initTime(currentRecruitment.time1[groupName]);
+            }
         }
     }
 
     componentDidUpdate(prevProps: Props) {
         if (!prevProps.currentRecruitment && this.props.currentRecruitment) {
-            this.initTime(this.props.currentRecruitment.time1[this.groupName]);
+            if (this.state.step === 1 && this.props.currentRecruitment.time1) {
+                this.initTime(this.props.currentRecruitment.time1[this.groupName]);
+            } else if (this.state.step === 2 && this.props.currentRecruitment.time2) {
+                this.initTime(this.props.currentRecruitment.time2);
+            }
         }
     }
 
