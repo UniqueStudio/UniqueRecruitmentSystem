@@ -31,7 +31,7 @@ class Time extends React.Component<Props> {
     };
 
     componentDidMount() {
-        const params = window.location.pathname.split('/').splice(-2);
+        const params = window.location.pathname.split('/').splice(2);
         const cid = params[1];
         const formId = params[0];
         this.getForm(cid, formId);
