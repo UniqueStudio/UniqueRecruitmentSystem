@@ -525,8 +525,7 @@ body {
 .background_primary {
   background: $primary;
   border: {
-    width: 3px;
-    color: $primary;
+    width: 0;
   }
 }
 

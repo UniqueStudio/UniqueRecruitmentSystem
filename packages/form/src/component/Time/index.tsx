@@ -4,6 +4,7 @@ import Button from '../Button';
 import Modal from '../Modal';
 import Submitted from '../Submitted';
 import SnackBar from '../SnackBar';
+import { URL } from '../../const';
 
 interface Date {
     date: string;
@@ -15,8 +16,6 @@ interface Date {
 interface Props {
     isMobile: boolean
 }
-
-const URL = 'http://39.108.175.151:5000';
 
 class Time extends React.Component<Props> {
 
@@ -32,7 +31,7 @@ class Time extends React.Component<Props> {
     };
 
     componentDidMount() {
-        const params = window.location.pathname.split('/').splice(1);
+        const params = window.location.pathname.split('/').splice(-2);
         const cid = params[1];
         const formId = params[0];
         this.getForm(cid, formId);

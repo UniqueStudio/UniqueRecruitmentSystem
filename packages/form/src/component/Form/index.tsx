@@ -51,13 +51,27 @@ class Form extends React.Component<Props> {
 
     handleClick = () => {
         const info = { title: '2018A', ...this.state.info };
-        if (Object.values(info).includes('')) {
-            this.setState({
-                snackBarOn: true,
-                content: '请完整填写表单!'
-            });
-            return;
-        }
+        const translator = {
+            name: '姓名',
+            mail: '邮箱',
+            institute: '学院',
+            major: '专业',
+            sex: '性别',
+            grade: '年级',
+            group: '组别',
+            score: '成绩排名',
+            phone: '电话号码',
+            code: '验证码',
+            intro: '自我介绍',
+        };
+        Object.entries(info).map(i => {
+            if (i[1] === '') {
+                this.setState({
+                    snackBarOn: true,
+                    content: `请填写${translator[i[0]]}`
+                });
+            }
+        });
         if (!this.checkMail(info.mail)) {
             this.setState({
                 snackBarOn: true,
@@ -178,7 +192,7 @@ class Form extends React.Component<Props> {
     }
 
     public render() {
-        const { submitted, content, snackBarOn } = this.state;
+        const { submitted, content, snackBarOn, info } = this.state;
         const { isMobile } = this.props;
         const Name = <Input for='name' size='md' name='姓名' onChange={this.handleChange}
                             className={classNames({ mobile_sm: isMobile })} />;
@@ -192,7 +206,7 @@ class Form extends React.Component<Props> {
         );
         const Grade = <Select selections={GRADES} name='所属年级' onChange={this.handleChange('grade')} />;
         const Group = <Select selections={GROUPS} name='组别选择' onChange={this.handleChange('group')} />;
-        const Score = <Select selections={SCORES} name='加权选择' onChange={this.handleChange('score')} />;
+        const Score = <Select selections={SCORES} name='成绩排名' onChange={this.handleChange('score')} />;
         const Phone = <Input for='phone' size='ml' name='电话' onChange={this.handleChange} />;
         const CodeButton = <Button name={this.state.sent ? `${this.state.time}秒后${isMobile ? '重新获取' : '重获'}` : '接受验证码'}
                                    bgColor='primaryLighter' textColor='primary'
@@ -206,8 +220,8 @@ class Form extends React.Component<Props> {
                        onChange={this.handleFile} />
                 <label htmlFor='resume'>
                     <span className={classNames(
-                        'background_primaryLighter',
-                        'text_primary',
+                        info.resume ? 'background_primary' : 'background_primaryLighter',
+                        info.resume ? 'text_white' : 'text_primary',
                         'fontSize',
                         'button',
                         'contentPadding',
