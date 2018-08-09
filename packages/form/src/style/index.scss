@@ -647,17 +647,16 @@ body {
 
 .selectContainer {
   position: relative;
-  &:hover .selectMenu {
-    display: block;
-  }
-  &:hover .selectArrow {
-    transform: rotate(180deg);
-  }
-  &:hover .select {
-    border-bottom: 0;
-    border-bottom-left-radius: 0;
-    border-bottom-right-radius: 0;
-  }
+}
+
+.selectClicked {
+  border-bottom: 0;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.selectArrowRotate {
+  transform: rotate(180deg);
 }
 
 .select {
@@ -740,7 +739,6 @@ body {
 
 .selectMenu {
   position: absolute;
-  display: none;
   width: 100%;
   cursor: pointer;
   background: white;
