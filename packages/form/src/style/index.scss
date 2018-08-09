@@ -1,4 +1,3 @@
-@import url('https://fonts.lug.ustc.edu.cn/css?family=Roboto');
 
 $spacing: 8px;
 $primary: #3FA9F5;
@@ -10,9 +9,14 @@ $primaryLightest: #EBF0F4;
 $secondary: #F57E82;
 $secondaryLight: #F58086;
 $secondaryLighter: #FAF1F2;
+@font-face {
+  font-family: 'Hiragino';
+  src: url("../asset/font/Hiragino.ttf");
+}
 
 * {
   box-sizing: border-box;
+  font-family: 'Hiragino';
 }
 
 ::-webkit-scrollbar {
@@ -180,7 +184,6 @@ body {
 
 .title {
   font: {
-    family: 'Roboto';
     size: 3.3rem;
   }
   @media screen and (max-width: 1600px) {

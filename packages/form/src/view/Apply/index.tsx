@@ -35,7 +35,6 @@ class Container extends React.Component {
     public render() {
         const { isMobile, submit } = this.state;
         const params = window.location.pathname.split('/').splice(1);
-        /* TODO */
         /* http://cvs.hustunique.com/form/:formId/:candidateId */
         /* formId: recruitmentId + groupId(if type === 1) + type(0: apply, 1: interview1, 2: interview2) */
         const MobileInterface = (

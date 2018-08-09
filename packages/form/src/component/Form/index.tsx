@@ -194,7 +194,7 @@ class Form extends React.Component<Props> {
         const Group = <Select selections={GROUPS} name='组别选择' onChange={this.handleChange('group')} />;
         const Score = <Select selections={SCORES} name='加权选择' onChange={this.handleChange('score')} />;
         const Phone = <Input for='phone' size='ml' name='电话' onChange={this.handleChange} />;
-        const CodeButton = <Button name={this.state.sent ? `${this.state.time}秒后重获` : '接受验证码'}
+        const CodeButton = <Button name={this.state.sent ? `${this.state.time}秒后${isMobile ? '重新获取' : '重获'}` : '接受验证码'}
                                    bgColor='primaryLighter' textColor='primary'
                                    onClick={this.state.sent ? undefined : this.getVerification}
                                    className={classNames({ disabled: this.state.sent })} />;
