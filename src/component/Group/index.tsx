@@ -137,14 +137,14 @@ class Group extends PureComponent<Props> {
         if (groupName) {
             requestCandidate(groupName);
             requestGroup(groupName);
-            if (currentRecruitment) {
-                this.initTime(this.props.currentRecruitment.time1[groupName]);
+            if (currentRecruitment && currentRecruitment.time1) {
+                this.initTime(currentRecruitment.time1[groupName]);
             }
         }
     }
 
     componentDidUpdate(prevProps: Props) {
-        if (!prevProps.currentRecruitment && this.props.currentRecruitment) {
+        if (!prevProps.currentRecruitment && this.props.currentRecruitment && this.props.currentRecruitment.time1) {
             this.initTime(this.props.currentRecruitment.time1[this.groupName]);
         }
     }
