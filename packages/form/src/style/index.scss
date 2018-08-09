@@ -10,16 +10,9 @@ $primaryLightest: #EBF0F4;
 $secondary: #F57E82;
 $secondaryLight: #F58086;
 $secondaryLighter: #FAF1F2;
-$chineseFont: 'Hiragino Sans GB W3';
-
-@font-face {
-  font-family: $chineseFont;
-  src: url(../asset/font/Hiragino.otf);
-}
 
 * {
   box-sizing: border-box;
-  font-family: $chineseFont;
 }
 
 ::-webkit-scrollbar {
@@ -187,7 +180,7 @@ body {
 
 .title {
   font: {
-    family: 'Roboto', $chineseFont;
+    family: 'Roboto';
     size: 3.3rem;
   }
   @media screen and (max-width: 1600px) {
