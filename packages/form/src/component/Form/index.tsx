@@ -137,8 +137,8 @@ class Form extends React.Component<Props> {
     };
 
     getVerification = () => {
-        try {
-            (async () => {
+        (async () => {
+            try {
                 const phone = this.state.info.phone;
                 if (!phone) {
                     this.setState({
@@ -177,14 +177,20 @@ class Form extends React.Component<Props> {
                             time: this.state.time - 1
                         });
                     }, 1000);
-                } else throw result;
-            })()
-        } catch (err) {
-            this.setState({
-                snackBarOn: true,
-                content: err.message
-            });
-        }
+                } else {
+                    this.setState({
+                        snackBarOn: true,
+                        content: '获取验证码失败'
+                    });
+                }
+            } catch (err) {
+                this.setState({
+                    snackBarOn: true,
+                    content: '无法预知的错误'
+                });
+            }
+        })()
+
     };
 
     componentWillUnmount() {
@@ -192,11 +198,12 @@ class Form extends React.Component<Props> {
     }
 
     public render() {
-        const { submitted, content, snackBarOn, info } = this.state;
+        const { submitted, content, snackBarOn, info, sent, time } = this.state;
         const { isMobile } = this.props;
+        const canGetCode = this.checkPhone(info.phone);
         const Name = <Input for='name' size='md' name='姓名' onChange={this.handleChange}
                             className={classNames({ mobile_sm: isMobile })} />;
-        const Mail = <Input for='mail' size='lg' name='邮箱' onChange={this.handleChange} />;
+        const Mail = <Input for='mail' size='md' name='邮箱' onChange={this.handleChange} />;
         const Institute = <Input for='institute' size='md' name='学院' onChange={this.handleChange} />;
         const Major = <Input for='major' size='md' name='专业' onChange={this.handleChange} />;
         const Sex = (
@@ -208,10 +215,10 @@ class Form extends React.Component<Props> {
         const Group = <Select selections={GROUPS} name='组别选择' onChange={this.handleChange('group')} />;
         const Score = <Select selections={SCORES} name='成绩排名' onChange={this.handleChange('score')} />;
         const Phone = <Input for='phone' size='ml' name='电话' onChange={this.handleChange} />;
-        const CodeButton = <Button name={this.state.sent ? `${this.state.time}秒后${isMobile ? '重新获取' : '重获'}` : '接受验证码'}
-                                   bgColor='primaryLighter' textColor='primary'
-                                   onClick={this.state.sent ? undefined : this.getVerification}
-                                   className={classNames({ disabled: this.state.sent })} />;
+        const CodeButton = <Button name={sent ? `${time}秒后${isMobile ? '重新获取' : '重获'}` : '接收验证码'}
+                                   bgColor={canGetCode ? 'primary' : 'primaryLighter'} textColor={canGetCode ? 'white' : 'primary'}
+                                   onClick={sent || !canGetCode ? undefined : this.getVerification}
+                                   className={classNames({ disabled: sent || !canGetCode }, { codeButton: !isMobile })} />;
         const Code = <Input for='code' size='sm' name='验证码' onChange={this.handleChange}
                             className={classNames({ mobile_sm: isMobile })} />;
         const Resume = (
@@ -240,36 +247,23 @@ class Form extends React.Component<Props> {
         const Intro = <TextArea onChange={this.handleChange('intro')} />;
         const PCInterface = (
             <>
-                <div className='form'>
-                    <div className='formRow'>
-                        {Name}
-                        {Mail}
-                        {Institute}
-                        {Major}
-                    </div>
-                    <div className='formRow'>
-                        {Sex}
-                        <div className='formRow selects'>
-                            {Grade}
-                            {Group}
-                            {Score}
+                <div className='gridWrapper'>
+                    <div className='name'>{Name}</div>
+                    <div className='mail'>{Mail}</div>
+                    <div className='institute'>{Institute}</div>
+                    <div className='major'>{Major}</div>
+                    <div className='sex'>{Sex}</div>
+                    <div className='phone'>
+                        <div className='codeBox'>
+                            {Phone}{CodeButton}
                         </div>
                     </div>
-                    <div className='formRow'>
-                        <div className='formColumn'>
-                            <div className='formRow rowItem'>
-                                {Phone}
-                                {CodeButton}
-                            </div>
-                            <div className='formRow rowItem'>
-                                {Code}
-                                {Resume}
-                            </div>
-                        </div>
-                        <div className='formColumn'>
-                            {Intro}
-                        </div>
-                    </div>
+                    <div className='code'>{Code}</div>
+                    <div className='grade'>{Grade}</div>
+                    <div className='group'>{Group}</div>
+                    <div className='score'>{Score}</div>
+                    <div className='resume'>{Resume}</div>
+                    <div className='intro'>{Intro}</div>
                 </div>
                 {Submit}
             </>

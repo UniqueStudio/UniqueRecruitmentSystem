@@ -1,4 +1,3 @@
-
 $spacing: 8px;
 $primary: #3FA9F5;
 $primaryLightLittle: #7AC3F8;
@@ -183,6 +182,7 @@ body {
 }
 
 .title {
+  user-select: none;
   font: {
     size: 3.3rem;
   }
@@ -233,11 +233,11 @@ body {
   width: 100%;
   padding: $spacing * 7 $spacing * 5;
   @media screen and (max-width: 800px) and (min-width: 501px) {
-    padding: $spacing * 5 $spacing * 3;
+    padding: $spacing * 3 $spacing * 3;
     flex: 0 1 260px;
   }
   @media screen and (max-width: 900px) and (min-width: 801px) {
-    padding: $spacing * 5 $spacing * 3;
+    padding: $spacing * 3 $spacing * 3;
     flex: 0 1 33vw;
   }
   @media screen and (max-width: 1024px) and (min-width: 901px) {
@@ -365,72 +365,73 @@ body {
 }
 
 @mixin getInputWidth($type) {
-  @if $type == 'lg' {
-    width: 185px;
-    @media screen and (max-width: 1600px) {
-      width: 170px;
-    }
-    @media screen and (max-width: 1440px) {
-      width: 160px;
-    }
-    @media screen and (max-width: 1280px) {
-      width: 150px;
-    }
-    @media screen and (max-width: 1024px) {
-      width: 140px;
-    }
-  }
-  @if $type == 'ml' {
-    width: 145px;
-    @media screen and (max-width: 1600px) {
-      width: 130px;
-    }
-    @media screen and (max-width: 1440px) {
-      width: 115px;
-    }
-    @media screen and (max-width: 1280px) {
-      width: 105px;
-    }
-    @media screen and (max-width: 1024px) {
-      width: 95px;
-    }
-    @media screen and (max-width: 900px) {
-      width: 85px;
-    }
-  }
-  @if $type == 'md' {
-    width: 110px;
-    @media screen and (max-width: 1600px) {
-      width: 94px;
-    }
-    @media screen and (max-width: 1440px) {
-      width: 74px;
-    }
-    @media screen and (max-width: 1280px) {
-      width: 64px;
-    }
-    @media screen and (max-width: 1024px) {
-      width: 60px;
-    }
-    @media screen and (max-width: 900px) {
-      width: 54px;
-    }
-  }
-  @if $type == 'sm' {
-    width: 95px;
-    @media screen and (max-width: 1600px) {
-      width: 75px;
-    }
-    @media screen and (max-width: 1440px) {
-      width: 55px;
-    }
-    @media screen and (max-width: 1280px) {
-      width: 45px;
-    }
-    @media screen and (max-width: 1024px) {
-      width: 40px;
-    }
-  }
+  width: 100%;
+  //@if $type == 'lg' {
+  //  width: 185px;
+  //  @media screen and (max-width: 1600px) {
+  //    width: 170px;
+  //  }
+  //  @media screen and (max-width: 1440px) {
+  //    width: 160px;
+  //  }
+  //  @media screen and (max-width: 1280px) {
+  //    width: 150px;
+  //  }
+  //  @media screen and (max-width: 1024px) {
+  //    width: 140px;
+  //  }
+  //}
+  //@if $type == 'ml' {
+  //  width: 145px;
+  //  @media screen and (max-width: 1600px) {
+  //    width: 130px;
+  //  }
+  //  @media screen and (max-width: 1440px) {
+  //    width: 115px;
+  //  }
+  //  @media screen and (max-width: 1280px) {
+  //    width: 105px;
+  //  }
+  //  @media screen and (max-width: 1024px) {
+  //    width: 95px;
+  //  }
+  //  @media screen and (max-width: 900px) {
+  //    width: 85px;
+  //  }
+  //}
+  //@if $type == 'md' {
+  //  width: 110px;
+  //  @media screen and (max-width: 1600px) {
+  //    width: 94px;
+  //  }
+  //  @media screen and (max-width: 1440px) {
+  //    width: 74px;
+  //  }
+  //  @media screen and (max-width: 1280px) {
+  //    width: 64px;
+  //  }
+  //  @media screen and (max-width: 1024px) {
+  //    width: 60px;
+  //  }
+  //  @media screen and (max-width: 900px) {
+  //    width: 54px;
+  //  }
+  //}
+  //@if $type == 'sm' {
+  //  width: 95px;
+  //  @media screen and (max-width: 1600px) {
+  //    width: 75px;
+  //  }
+  //  @media screen and (max-width: 1440px) {
+  //    width: 55px;
+  //  }
+  //  @media screen and (max-width: 1280px) {
+  //    width: 45px;
+  //  }
+  //  @media screen and (max-width: 1024px) {
+  //    width: 40px;
+  //  }
+  //}
 }
 
 .inputContent {
@@ -442,8 +443,8 @@ body {
   outline: none;
   @extend .fontSize;
   padding-left: $spacing;
+  flex: 1;
   @media screen and (max-width: 500px) {
-    flex-grow: 1;
     width: auto;
   }
   @media screen and (max-width: 1024px) {
@@ -499,9 +500,14 @@ body {
   color: $secondary;
 }
 
+.colorTransition {
+  transition: 225ms;
+}
+
 .background_white {
   background: none;
   border-width: 3px;
+  @extend .colorTransition;
   @media screen and (max-width: 500px) {
     border-width: 2px;
   }
@@ -512,18 +518,22 @@ body {
 
 .background_grey {
   background: #ddd;
+  @extend .colorTransition;
   border: {
     width: 3px;
     color: #ddd;
-  }}
+  }
+}
 
 .background_pureWhite {
   background: white;
+  @extend .colorTransition;
   border-width: 0;
 }
 
 .background_primary {
   background: $primary;
+  @extend .colorTransition;
   border: {
     width: 0;
   }
@@ -531,16 +541,19 @@ body {
 
 .background_primaryLightLittleMore {
   background: $primaryLightLittleMore;
+  @extend .colorTransition;
   border: 0;
 }
 
 .background_primaryLight {
   @extend .background_white;
+  @extend .colorTransition;
   background: $primaryLight;
 }
 
 .background_primaryLighter {
   background: $primaryLighter;
+  @extend .colorTransition;
   border: 0;
   &:hover {
     background: $primaryLight;
@@ -549,6 +562,7 @@ body {
 
 .background_secondary {
   background: $secondary;
+  @extend .colorTransition;
   width: 100%;
   border: 0;
 }
@@ -573,6 +587,33 @@ body {
     padding-left: $spacing;
   }
   padding-left: $spacing * 2;
+}
+
+.codeBox {
+  display: flex;
+  margin: 3px;
+  align-items: flex-end;
+}
+
+.codeButton {
+  margin: 0 $spacing 0 $spacing * 3;
+  @media screen and (max-width: 1440px) {
+    margin: 0 $spacing 0 $spacing * 2;
+  }
+  @media screen and (max-width: 1440px) {
+    margin: 0 $spacing;
+  }
+  & > div {
+    margin: 0;
+  }
+}
+
+.rowItem {
+  justify-content: start;
+  align-items: center;
+  & > :first-child {
+    margin-right: 15%;
+  }
 }
 
 .rowItem:first-child {
@@ -627,7 +668,6 @@ body {
 }
 
 .choose {
-  width: 35%;
   @media screen and (max-width: 500px) {
     width: 80%;
   }
@@ -657,18 +697,18 @@ body {
 .select {
   outline: none;
   @media screen and (max-width: 1600px) {
-    padding: 15px 54px 15px 19px;
+    padding: 15px 42px 15px 19px;
   }
   @media screen and (max-width: 1440px) {
-    padding: 12px 48px 12px 16px;
+    padding: 12px 36px 12px 16px;
   }
   @media screen and (max-width: 1120px) {
-    padding: 9px 42px 9px 13px;
+    padding: 9px 30px 9px 13px;
   }
   @media screen and (max-width: 1024px) {
-    padding: 7px 36px 7px 11px;
+    padding: 7px 24px 7px 11px;
   }
-  padding: 16px 56px 16px 20px;
+  padding: 16px 48px 16px 20px;
   @extend .fontSize;
   @media screen and (max-width: 500px) {
     font-weight: normal;
@@ -742,7 +782,7 @@ body {
   border-top: 0;
   border-top-left-radius: 0;
   border-top-right-radius: 0;
-  max-height: 200px;
+  max-height: 150px;
   @media screen and (max-width: 500px) {
     max-height: 300px;
   }
@@ -1099,7 +1139,6 @@ body {
   }
 }
 
-
 .fullHeight {
   height: 100%;
   @media screen and (max-width: 500px) {
@@ -1112,9 +1151,106 @@ body {
     font-weight: normal;
   }
   font-weight: bold;
-  display: block;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .submittedContainer {
   margin-top: $spacing * 3;
+}
+
+.gridWrapper {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  height: 100%;
+  grid-row-gap: $spacing * 2;
+  grid-template-areas:
+          "nm nm ml ml is is mj mj"
+          "sx sx sx ph ph ph cd cd"
+          "gd gd gp gp it it it it"
+          "sc sc rs rs it it it it";
+  & > div {
+    align-self: center;
+    &:last-child {
+      height: 100%;
+    }
+  }
+}
+
+.name {
+  grid-area: nm;
+  width: 80%;
+}
+
+.mail {
+  grid-area: ml;
+  width: 110%;
+  margin-left: -5%;
+}
+
+.institute {
+  grid-area: is;
+  justify-self: flex-end;
+  width: 80%;
+}
+
+.major {
+  grid-area: mj;
+  justify-self: flex-end;
+  width: 80%;
+}
+
+.sex {
+  grid-area: sx;
+  width: 90%;
+}
+
+.phone {
+  grid-area: ph;
+  width: 115%;
+  @media screen and (max-width: 1440px) {
+    width: 120%;
+  }
+  .input {
+    width: 60%;
+  }
+}
+
+.code {
+  grid-area: cd;
+  justify-self: flex-end;
+  @media screen and (max-width: 1440px) {
+    width: 70%;
+  }
+  width: 80%;
+}
+
+.grade {
+  grid-area: gd;
+  width: 75%;
+}
+
+.group {
+  grid-area: gp;
+  width: 75%;
+}
+
+.score {
+  grid-area: sc;
+  width: 75%;
+  .selectMenu {
+    bottom: -50px;
+    @extend .border;
+    max-height: 250px;
+  }
+}
+
+.resume {
+  grid-area: rs;
+  width: 90%;
+}
+
+.intro {
+  grid-area: it
 }
