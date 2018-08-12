@@ -86,7 +86,6 @@ class Form extends React.Component<Props> {
             });
             return;
         }
-        info.grade = info.grade.replace('前', '');
         info.group = info.group.toLowerCase();
         const formData = new FormData();
         Object.entries(info).map(i => formData.append(i[0], i[1]));
