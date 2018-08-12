@@ -1,4 +1,4 @@
-import { Recruitment, User } from '../lib/const';
+import { Comment, Recruitment, User } from '../lib/const';
 
 export const TOGGLE_DRAWER_OPEN = 'TOGGLE_DRAWER_OPEN';
 export type TOGGLE_DRAWER_OPEN = typeof TOGGLE_DRAWER_OPEN;
@@ -43,7 +43,6 @@ export function toggleSnackbarOff(): ToggleSnackbarOff {
     }
 }
 
-export type direction = 'left' | 'right' | 'up' | 'down';
 export const TOGGLE_MODAL_ON = 'TOGGLE_MODAL_ON';
 export type TOGGLE_MODAL_ON = typeof TOGGLE_MODAL_ON;
 
@@ -103,13 +102,13 @@ export function toggleFabOff(): ToggleFabOff {
 export const INPUTTING_COMMENT = 'INPUTTING_COMMENT';
 export type INPUTTING_COMMENT = typeof INPUTTING_COMMENT;
 
-export interface InupttingComment {
+export interface InputtingComment {
     type: INPUTTING_COMMENT;
     comment: string;
     evaluation: string;
 }
 
-export function inputtingComment(comment: string, evaluation: string): InupttingComment {
+export function inputtingComment(comment: string, evaluation: string): InputtingComment {
     return {
         type: INPUTTING_COMMENT,
         comment,
@@ -117,21 +116,20 @@ export function inputtingComment(comment: string, evaluation: string): Inuptting
     }
 }
 
+export const ADD_COMMENT_START = 'ADD_COMMENT_START';
+export type ADD_COMMENT_START = typeof ADD_COMMENT_START;
 
-export const ADD_COMMENT = 'ADD_COMMENT';
-export type ADD_COMMENT = typeof ADD_COMMENT;
-
-export interface AddComment {
-    type: ADD_COMMENT;
+export interface AddCommentStart {
+    type: ADD_COMMENT_START;
     step: number;
     cid: string;
     commenter: string;
-    comment: object;
+    comment: Comment;
 }
 
-export function addComment(step: number, cid: string, commenter: string, comment: object): AddComment {
+export function addCommentStart(step: number, cid: string, commenter: string, comment: Comment): AddCommentStart {
     return {
-        type: ADD_COMMENT,
+        type: ADD_COMMENT_START,
         step,
         cid,
         commenter,
@@ -139,22 +137,79 @@ export function addComment(step: number, cid: string, commenter: string, comment
     }
 }
 
-export const REMOVE_COMMENT = 'REMOVE_COMMENT';
-export type REMOVE_COMMENT = typeof REMOVE_COMMENT;
 
-export interface RemoveComment {
-    type: REMOVE_COMMENT;
+export const ADD_COMMENT_FULFILLED = 'ADD_COMMENT_FULFILLED';
+export type ADD_COMMENT_FULFILLED = typeof ADD_COMMENT_FULFILLED;
+
+export interface AddCommentFulfilled {
+    type: ADD_COMMENT_FULFILLED;
+    step: number;
+    cid: string;
+    commenter: string;
+    comment: Comment;
+}
+
+export function addCommentFulfilled(step: number, cid: string, commenter: string, comment: Comment): AddCommentFulfilled {
+    return {
+        type: ADD_COMMENT_FULFILLED,
+        step,
+        cid,
+        commenter,
+        comment
+    }
+}
+
+export const REMOVE_COMMENT_START = 'REMOVE_COMMENT_START';
+export type REMOVE_COMMENT_START = typeof REMOVE_COMMENT_START;
+
+export interface RemoveCommentStart {
+    type: REMOVE_COMMENT_START;
     step: number;
     cid: string;
     commenter: string;
 }
 
-export function removeComment(step: number, cid: string, commenter: string): RemoveComment {
+export function removeCommentStart(step: number, cid: string, commenter: string): RemoveCommentStart {
     return {
-        type: REMOVE_COMMENT,
+        type: REMOVE_COMMENT_START,
         step,
         cid,
         commenter,
+    }
+}
+
+export const REMOVE_COMMENT_FULFILLED = 'REMOVE_COMMENT_FULFILLED';
+export type REMOVE_COMMENT_FULFILLED = typeof REMOVE_COMMENT_FULFILLED;
+
+export interface RemoveCommentFulfilled {
+    type: REMOVE_COMMENT_FULFILLED;
+    step: number;
+    cid: string;
+    commenter: string;
+}
+
+export function removeCommentFulfilled(step: number, cid: string, commenter: string): RemoveCommentFulfilled {
+    return {
+        type: REMOVE_COMMENT_FULFILLED,
+        step,
+        cid,
+        commenter,
+    }
+}
+
+
+export const GET_CANDIDATES = 'GET_CANDIDATES';
+export type GET_CANDIDATES = typeof GET_CANDIDATES;
+
+export interface GetCandidates {
+    type: GET_CANDIDATES;
+    group: string;
+}
+
+export function getCandidates(group: string): GetCandidates {
+    return {
+        type: GET_CANDIDATES,
+        group
     }
 }
 
@@ -164,6 +219,21 @@ export type SET_CANDIDATES = typeof SET_CANDIDATES;
 export interface SetCandidates {
     type: SET_CANDIDATES;
     candidates: object[];
+}
+
+export const GET_RESUME = 'GET_RESUME';
+export type GET_RESUME = typeof GET_RESUME;
+
+export interface GetResume {
+    type: GET_RESUME;
+    cid: string;
+}
+
+export function getResume(cid: string): GetResume {
+    return {
+        type: GET_RESUME,
+        cid
+    }
 }
 
 export function setCandidates(candidates: object[]): SetCandidates {
@@ -219,35 +289,50 @@ export function deselectCandidate(cid: string | Array<string>): DeselectCandidat
     }
 }
 
-export const REMOVE_CANDIDATE = 'REMOVE_CANDIDATE';
-export type REMOVE_CANDIDATE = typeof REMOVE_CANDIDATE;
+export const REMOVE_CANDIDATE_START = 'REMOVE_CANDIDATE_START';
+export type REMOVE_CANDIDATE_START = typeof REMOVE_CANDIDATE_START;
 
-export interface RemoveCandidate {
-    type: REMOVE_CANDIDATE;
+export interface RemoveCandidateStart {
+    type: REMOVE_CANDIDATE_START;
     cid: string | string[];
 }
 
-export function removeCandidate(cid: string | string[]): RemoveCandidate {
+export function removeCandidateStart(cid: string | string[]): RemoveCandidateStart {
     return {
-        type: REMOVE_CANDIDATE,
+        type: REMOVE_CANDIDATE_START,
         cid,
     }
 }
 
-export const MOVE_CANDIDATE = 'MOVE_CANDIDATE';
-export type MOVE_CANDIDATE = typeof MOVE_CANDIDATE;
+export const REMOVE_CANDIDATE_FULFILLED = 'REMOVE_CANDIDATE_FULFILLED';
+export type REMOVE_CANDIDATE_FULFILLED = typeof REMOVE_CANDIDATE_FULFILLED;
 
-export interface MoveCandidate {
-    type: MOVE_CANDIDATE;
+export interface RemoveCandidateFulfilled {
+    type: REMOVE_CANDIDATE_FULFILLED;
+    cid: string | string[];
+}
+
+export function removeCandidateFulfilled(cid: string | string[]): RemoveCandidateFulfilled {
+    return {
+        type: REMOVE_CANDIDATE_FULFILLED,
+        cid,
+    }
+}
+
+export const MOVE_CANDIDATE_START = 'MOVE_CANDIDATE_START';
+export type MOVE_CANDIDATE_START = typeof MOVE_CANDIDATE_START;
+
+export interface MoveCandidateStart {
+    type: MOVE_CANDIDATE_START;
     from: number;
     to: number;
     cid: string;
     position?: number;
 }
 
-export function moveCandidate(from: number, to: number, cid: string, position?: number): MoveCandidate {
+export function moveCandidateStart(from: number, to: number, cid: string, position?: number): MoveCandidateStart {
     return {
-        type: MOVE_CANDIDATE,
+        type: MOVE_CANDIDATE_START,
         from,
         to,
         cid,
@@ -255,18 +340,60 @@ export function moveCandidate(from: number, to: number, cid: string, position?: 
     }
 }
 
-export const SET_SLOT = 'SET_SLOT';
-export type SET_SLOT = typeof SET_SLOT;
 
-export interface SetSlot {
-    type: SET_SLOT;
+export const MOVE_CANDIDATE_FULFILLED = 'MOVE_CANDIDATE_FULFILLED';
+export type MOVE_CANDIDATE_FULFILLED = typeof MOVE_CANDIDATE_FULFILLED;
+
+export interface MoveCandidateFulfilled {
+    type: MOVE_CANDIDATE_FULFILLED;
+    from: number;
+    to: number;
+    cid: string;
+    position?: number;
+}
+
+export function moveCandidateFulfilled(from: number, to: number, cid: string, position?: number): MoveCandidateFulfilled {
+    return {
+        type: MOVE_CANDIDATE_FULFILLED,
+        from,
+        to,
+        cid,
+        position,
+    }
+}
+
+export const SUBMIT_SLOTS = 'SUBMIT_SLOTS';
+export type SUBMIT_SLOTS = typeof SUBMIT_SLOTS;
+
+export interface SubmitSlots {
+    type: SUBMIT_SLOTS;
+    title: string;
+    slots: number[];
+    group: string;
+}
+
+export function submitSlots(title: string, slots: number[], group: string): SubmitSlots {
+    return {
+        type: SUBMIT_SLOTS,
+        title,
+        slots,
+        group
+    }
+}
+
+
+export const SET_SLOTS = 'SET_SLOTS';
+export type SET_SLOTS = typeof SET_SLOTS;
+
+export interface SetSlots {
+    type: SET_SLOTS;
     interview: 1 | 2;
     slot: object[]
 }
 
-export function setSlot(slot: object[], interview: 1 | 2): SetSlot {
+export function setSlots(slot: object[], interview: 1 | 2): SetSlots {
     return {
-        type: SET_SLOT,
+        type: SET_SLOTS,
         slot,
         interview
     }
@@ -284,36 +411,6 @@ export function setGroup(group: string): SetGroup {
     return {
         type: SET_GROUP,
         group
-    }
-}
-
-export const SET_KEY = 'SET_KEY';
-export type SET_KEY = typeof SET_KEY;
-
-export interface SetKey {
-    type: SET_KEY;
-    key: string
-}
-
-export function setKey(key: string): SetKey {
-    return {
-        type: SET_KEY,
-        key
-    }
-}
-
-export const SET_GETTABLE = 'SET_GETTABLE';
-export type SET_GETTABLE = typeof SET_GETTABLE;
-
-export interface SetGettable {
-    type: SET_GETTABLE;
-    able: boolean
-}
-
-export function setGettable(able: boolean): SetGettable {
-    return {
-        type: SET_GETTABLE,
-        able
     }
 }
 
@@ -346,36 +443,125 @@ export function logout(): Logout {
     }
 }
 
-export const CHANGE_USER_INFO = 'CHANGE_USER_INFO';
-export type CHANGE_USER_INFO = typeof CHANGE_USER_INFO;
+export const GET_QR_CODE = 'GET_QR_CODE';
+export type GET_QR_CODE = typeof GET_QR_CODE;
 
-export interface ChangeUserInfo {
-    type: CHANGE_USER_INFO;
+export interface GetQRCode {
+    type: GET_QR_CODE
+}
+
+export function getQRCode(): GetQRCode {
+    return {
+        type: GET_QR_CODE
+    }
+}
+
+export const SET_QR_CODE = 'SET_QR_CODE';
+export type SET_QR_CODE = typeof SET_QR_CODE;
+
+export interface SetQRCode {
+    type: SET_QR_CODE;
+    key: string
+}
+
+export function setQRCode(key: string): SetQRCode {
+    return {
+        type: SET_QR_CODE,
+        key
+    }
+}
+
+export const GET_USER_INFO = 'GET_USER_INFO';
+export type GET_USER_INFO = typeof GET_USER_INFO;
+
+export interface GetUserInfo {
+    type: GET_USER_INFO;
+    uid: string
+}
+
+export function getUserInfo(uid: string): GetUserInfo {
+    return {
+        type: GET_USER_INFO,
+        uid
+    }
+}
+
+export const SET_USER_INFO = 'SET_USER_INFO';
+export type SET_USER_INFO = typeof SET_USER_INFO;
+
+export interface SetUserInfo {
+    type: SET_USER_INFO;
     info: User;
 }
 
-export function changeUserInfo(info: ChangeUserInfo['info']): ChangeUserInfo {
+export function setUserInfo(info: User): SetUserInfo {
     return {
-        type: CHANGE_USER_INFO,
+        type: SET_USER_INFO,
         info: { ...info, sex: info.sex || 'Male' }
     }
 }
 
-export const CHANGE_GROUP_INFO = 'CHANGE_GROUP_INFO';
-export type CHANGE_GROUP_INFO = typeof CHANGE_GROUP_INFO;
+export const UPDATE_USER_INFO = 'UPDATE_USER_INFO';
+export type UPDATE_USER_INFO = typeof UPDATE_USER_INFO;
 
-export interface ChangeGroupInfo {
-    type: CHANGE_GROUP_INFO;
-    info: ChangeUserInfo['info'][]
+export interface UpdateUserInfo {
+    type: UPDATE_USER_INFO;
+    info: User;
+    uid: string;
 }
 
-export function changeGroupInfo(info: ChangeGroupInfo['info']): ChangeGroupInfo {
+export function updateUserInfo(uid: string, info: User): UpdateUserInfo {
     return {
-        type: CHANGE_GROUP_INFO,
+        type: UPDATE_USER_INFO,
+        info,
+        uid
+    }
+}
+
+
+export const GET_GROUP_INFO = 'GET_GROUP_INFO';
+export type GET_GROUP_INFO = typeof GET_GROUP_INFO;
+
+export interface GetGroupInfo {
+    type: GET_GROUP_INFO;
+    group: string
+}
+
+export function getGroupInfo(group: string): GetGroupInfo {
+    return {
+        type: GET_GROUP_INFO,
+        group
+    }
+}
+
+
+export const SET_GROUP_INFO = 'SET_GROUP_INFO';
+export type SET_GROUP_INFO = typeof SET_GROUP_INFO;
+
+export interface SetGroupInfo {
+    type: SET_GROUP_INFO;
+    info: User[]
+}
+
+export function setGroupInfo(info: User[]): SetGroupInfo {
+    return {
+        type: SET_GROUP_INFO,
         info
     }
 }
 
+export const GET_RECRUITMENTS = 'GET_RECRUITMENTS';
+export type GET_RECRUITMENTS = typeof GET_RECRUITMENTS;
+
+export interface GetRecruitments {
+    type: GET_RECRUITMENTS;
+}
+
+export function getRecruitments(): GetRecruitments {
+    return {
+        type: GET_RECRUITMENTS,
+    }
+}
 
 export const SET_RECRUITMENTS = 'SET_RECRUITMENTS';
 export type SET_RECRUITMENTS = typeof SET_RECRUITMENTS;
@@ -391,6 +577,22 @@ export function setRecruitments(recruitments: Recruitment[]): SetRecruitments {
         recruitments,
     }
 }
+
+export const LAUNCH_RECRUITMENT = 'LAUNCH_RECRUITMENT';
+export type LAUNCH_RECRUITMENT = typeof LAUNCH_RECRUITMENT;
+
+export interface LaunchRecruitment {
+    type: LAUNCH_RECRUITMENT;
+    info: object;
+}
+
+export function launchRecruitment(info: object): LaunchRecruitment {
+    return {
+        type: LAUNCH_RECRUITMENT,
+        info,
+    }
+}
+
 
 export const UPDATE_RECRUITMENT = 'UPDATE_RECRUITMENT';
 export type UPDATE_RECRUITMENT = typeof UPDATE_RECRUITMENT;
@@ -443,6 +645,36 @@ export function addMessage(name: string, avatar: string, time: number, message: 
     }
 }
 
+export const SEND_MESSAGE = 'SEND_MESSAGE';
+export type SEND_MESSAGE = typeof SEND_MESSAGE;
+
+export interface SendMessage {
+    type: SEND_MESSAGE;
+    message: string;
+}
+
+export function sendMessage(message: string): SendMessage {
+    return {
+        type: SEND_MESSAGE,
+        message,
+    }
+}
+
+export const SEND_IMAGE = 'SEND_IMAGE';
+export type SEND_IMAGE = typeof SEND_IMAGE;
+
+export interface SendImage {
+    type: SEND_IMAGE;
+    image: string;
+}
+
+export function sendImage(image: string): SendImage {
+    return {
+        type: SEND_IMAGE,
+        image,
+    }
+}
+
 export const ADD_IMAGE = 'ADD_IMAGE';
 export type ADD_IMAGE = typeof ADD_IMAGE;
 
@@ -463,5 +695,48 @@ export function addImage(name: string, avatar: string, time: number, image: stri
         time,
         image,
         isSelf
+    }
+}
+
+export const SEND_SMS = 'SEND_SMS';
+export type SEND_SMS = typeof SEND_SMS;
+
+export interface SendSMS {
+    type: SEND_SMS;
+    content: object;
+}
+
+export function sendSMS(content: object): SendSMS {
+    return {
+        type: SEND_SMS,
+        content,
+    }
+}
+
+export const SEND_INTERVIEW = 'SEND_INTERVIEW';
+export type SEND_INTERVIEW = typeof SEND_INTERVIEW;
+
+export interface SendInterview {
+    type: SEND_INTERVIEW;
+    content: object;
+}
+
+export function sendInterview(content: object): SendInterview {
+    return {
+        type: SEND_INTERVIEW,
+        content,
+    }
+}
+
+export const GET_VERIFY_CODE = 'GET_VERIFY_CODE';
+export type GET_VERIFY_CODE = typeof GET_VERIFY_CODE;
+
+export interface GetVerifyCode {
+    type: GET_VERIFY_CODE;
+}
+
+export function getVerifyCode(): GetVerifyCode {
+    return {
+        type: GET_VERIFY_CODE,
     }
 }

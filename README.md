@@ -30,5 +30,4 @@ the other is [Form](https://github.com/UniqueStudio/UniqueRecruitmentForm).
 
 ## TODOS
 
-1. Separate last interview
-2. Instant message(?)
+1. none

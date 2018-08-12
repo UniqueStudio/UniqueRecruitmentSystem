@@ -1,5 +1,5 @@
 import * as actions from '../action';
-import * as asyncActions from '../action/async';
+import { CANDIDATE, COMMENT } from '../epic';
 import { Candidate } from '../lib/const';
 import mapToObj from '../lib/mapToObj';
 
@@ -19,17 +19,17 @@ const init = {
 };
 
 type Action =
-    actions.AddComment
-    | actions.RemoveComment
+    actions.AddCommentFulfilled
+    | actions.RemoveCommentFulfilled
     | actions.SetCandidates
     | actions.AddCandidate
     | actions.SelectCandidate
     | actions.DeselectCandidate
-    | actions.RemoveCandidate
-    | actions.MoveCandidate
+    | actions.RemoveCandidateFulfilled
+    | actions.MoveCandidateFulfilled
     | actions.SetGroup
-    | actions.SetSlot
-    | actions.InupttingComment;
+    | actions.SetSlots
+    | actions.InputtingComment;
 
 export interface Candidates {
     candidates: Map<string, Candidate>[];
@@ -52,14 +52,14 @@ export function candidates(
 ): Candidates {
     const newState = { ...state };
     switch (action.type) {
-        case asyncActions.COMMENT.START:
+        case COMMENT.START:
             newState.isLoading.comments = true;
             return newState;
-        case asyncActions.COMMENT.SUCCESS:
-        case asyncActions.COMMENT.FAILURE:
+        case COMMENT.SUCCESS:
+        case COMMENT.FAILURE:
             newState.isLoading.comments = false;
             return newState;
-        case actions.ADD_COMMENT:
+        case actions.ADD_COMMENT_FULFILLED:
             newState.candidates[action.step].get(action.cid)!.comments[action.commenter] = action.comment;
             newState.inputtingComment = {
                 comment: '',
@@ -70,18 +70,18 @@ export function candidates(
                 newState.shouldUpdateCandidates = true
             }
             return newState;
-        case actions.REMOVE_COMMENT:
+        case actions.REMOVE_COMMENT_FULFILLED:
             delete newState.candidates[action.step].get(action.cid)!.comments[action.commenter];
             sessionStorage.setItem(newState.group, JSON.stringify(newState.candidates.map(i => mapToObj(i))));
             if (newState.group === 'interview') {
                 newState.shouldUpdateCandidates = true
             }
             return newState;
-        case asyncActions.CANDIDATE.START:
+        case CANDIDATE.START:
             newState.isLoading.candidates = true;
             return newState;
-        case asyncActions.CANDIDATE.SUCCESS:
-        case asyncActions.CANDIDATE.FAILURE:
+        case CANDIDATE.SUCCESS:
+        case CANDIDATE.FAILURE:
             newState.isLoading.candidates = false;
             return newState;
         case actions.SET_CANDIDATES:
@@ -100,7 +100,7 @@ export function candidates(
         case actions.DESELECT_CANDIDATE:
             newState.selected = newState.selected.filter((i: string) => !action.cid.includes(i));
             return newState;
-        case actions.REMOVE_CANDIDATE:
+        case actions.REMOVE_CANDIDATE_FULFILLED:
             newState.candidates.map(step =>
                 typeof action.cid === 'string'
                     ? step.delete(action.cid)
@@ -109,7 +109,7 @@ export function candidates(
             sessionStorage.setItem(newState.group, JSON.stringify(newState.candidates.map(i => mapToObj(i))));
             newState.shouldUpdateCandidates = true;
             return newState;
-        case actions.MOVE_CANDIDATE:
+        case actions.MOVE_CANDIDATE_FULFILLED:
             if (!newState.candidates[action.from] || !newState.candidates[action.from].get(action.cid)) return newState;
             const info = { ...newState.candidates[action.from].get(action.cid) } as Candidate;
             newState.candidates[action.from].delete(action.cid);
@@ -130,7 +130,7 @@ export function candidates(
             return { ...state, group: action.group };
         case actions.INPUTTING_COMMENT:
             return { ...state, inputtingComment: { evaluation: action.evaluation, comment: action.comment } };
-        case actions.SET_SLOT:
+        case actions.SET_SLOTS:
             action.slot.map(i => {
                 const candidates = newState.candidates[action.interview === 1 ? 2 : 4];
                 const info = candidates.get(i['_id']);

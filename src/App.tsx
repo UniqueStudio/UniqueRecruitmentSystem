@@ -6,14 +6,18 @@ import { BrowserRouter as Router } from "react-router-dom";
 import { createBrowserHistory as createHistory } from 'history';
 import { composeWithDevTools } from 'redux-devtools-extension';
 import { reducers } from "./reducer";
+import { epicMiddleware, epics } from "./epic";
 
 import Main from './view/Main';
 
 export const history = createHistory();
 
-const middleware = [thunk];
+
+const middleware = [thunk, epicMiddleware];
 
 export const store = createStore(reducers, composeWithDevTools(applyMiddleware(...middleware)));
+
+epicMiddleware.run(epics);
 
 class App extends PureComponent {
     componentDidMount() {

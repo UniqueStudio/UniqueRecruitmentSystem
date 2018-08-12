@@ -1,8 +1,7 @@
 import { connect } from 'react-redux';
 import Template from '../../component/Template';
-import { toggleSnackbarOn, ToggleSnackbarOn } from '../../action';
+import { sendSMS, SendSMS, toggleSnackbarOn, ToggleSnackbarOn } from '../../action';
 import { Dispatch } from 'redux';
-import { sendSMS } from '../../action/async';
 import { Candidate } from '../../lib/const';
 import { StoreState } from '../../reducer';
 
@@ -17,11 +16,11 @@ const mapStateToProps = ({ sms }: StoreState, ownProps: OwnProps) => ({
     status: sms.status,
 });
 
-type DispatchType = Dispatch<ToggleSnackbarOn>
+type DispatchType = Dispatch<ToggleSnackbarOn | SendSMS>
 
 const mapDispatchToProps = (dispatch: DispatchType) => ({
     toggleSnackbar: (info: string, color: string = 'info') => dispatch(toggleSnackbarOn(info, color)),
-    sendSMS: (content: object) => sendSMS(content)(dispatch),
+    sendSMS: (content: object) => dispatch(sendSMS(content)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Template);

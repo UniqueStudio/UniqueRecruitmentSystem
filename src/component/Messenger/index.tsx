@@ -105,12 +105,27 @@ class Messenger extends PureComponent<Props> {
     }
 
     static getDerivedStateFromProps(nextProps: Props, prevState: State) {
-        if (nextProps.messages.length !== prevState.messages.length) {
+        const nextLength = nextProps.messages.length;
+        const prevLength = prevState.messages.length;
+        if (!prevLength) {
+            return {
+                messages: nextProps.messages
+            };
+        }
+        const nextLastTime = nextProps.messages[nextLength - 1]['time'];
+        const prevLastTime = prevState.messages[prevLength - 1]['time'];
+        if (nextLastTime !== prevLastTime) {
             return {
                 messages: nextProps.messages
             };
         }
         return null;
+    }
+
+    componentDidUpdate() {
+        if (this.end.scrollHeight - this.end.scrollTop < 1000) {
+            this.scrollToBottom();
+        }
     }
 
     render() {
@@ -176,7 +191,9 @@ class Messenger extends PureComponent<Props> {
                             onChange={this.handleChange}
                             onKeyPress={this.handleKey}
                         />
-                        <Tooltip title="ctrl + Enter以输入回车">
+                        <Tooltip title="ctrl + Enter以输入回车" classes={{
+                            popper: classes.tooltip
+                        }}>
                             <IconButton color="primary" component="span" onClick={this.send}
                                         disabled={!Boolean(content && content.match(/\S+/))}>
                                 <SendIcon />

@@ -1,14 +1,16 @@
 import { connect } from 'react-redux';
 import Verify from '../../component/Verify';
 import { Dispatch } from 'redux';
-import { getVerifyCode } from '../../action/async';
+import { getVerifyCode, GetVerifyCode } from '../../action';
 
 interface OwnProps {
     onChange: (event: React.ChangeEvent) => void;
 }
 
-const mapDispatchToProps = (dispatch: Dispatch, ownProps: OwnProps) => ({
-    getVerifyCode: () => getVerifyCode()(dispatch)
+type DispatchType = Dispatch<GetVerifyCode>
+
+const mapDispatchToProps = (dispatch: DispatchType, ownProps: OwnProps) => ({
+    getVerifyCode: () => dispatch(getVerifyCode())
 });
 
 export default connect(null, mapDispatchToProps)(Verify);

@@ -1,5 +1,5 @@
 import * as actions from '../action';
-import * as asyncActions from '../action/async'
+import { RECRUITMENT } from '../epic'
 import { Recruitment } from '../lib/const';
 
 const init = {
@@ -24,11 +24,11 @@ export interface Recruitments {
 
 export function recruitments(state: Recruitments = init, action: Action): Recruitments {
     switch (action.type) {
-        case asyncActions.RECRUITMENT.START:
+        case RECRUITMENT.START:
             return { ...state, isLoading: true, status: 'start' };
-        case asyncActions.RECRUITMENT.FAILURE:
+        case RECRUITMENT.FAILURE:
             return { ...state, isLoading: false, status: 'failure' };
-        case asyncActions.RECRUITMENT.SUCCESS:
+        case RECRUITMENT.SUCCESS:
             return { ...state, isLoading: false, status: 'success' };
         case actions.SET_RECRUITMENTS:
             return { ...state, recruitments: action.recruitments, shouldUpdateRecruitment: false };
