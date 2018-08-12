@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
-import { inputtingComment, InupttingComment, toggleSnackbarOn, ToggleSnackbarOn } from '../../action';
+import { inputtingComment, InputtingComment, toggleSnackbarOn, ToggleSnackbarOn } from '../../action';
 import { addComment, removeComment } from '../../action/async';
 import CandidateComments from '../../component/Candidate/CandidateComments';
 import { StoreState } from '../../reducer';
@@ -19,7 +19,7 @@ const mapStateToProps = ({ components, candidates, user }: StoreState, ownProps:
     username: user.info['username']
 });
 
-type DispatchType = Dispatch<ToggleSnackbarOn | InupttingComment>
+type DispatchType = Dispatch<ToggleSnackbarOn | InputtingComment>
 
 const mapDispatchToProps = (dispatch: DispatchType) => ({
     submit: (step: number, cid: string, commenter: string, comment: object) => addComment(step, cid, commenter, comment)(dispatch),

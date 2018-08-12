@@ -3,7 +3,7 @@ import io from 'socket.io-client';
 
 import { store } from '../App';
 import * as actions from './index';
-import { URL, User } from '../lib/const';
+import { Comment, URL, User } from '../lib/const';
 
 const socket = io(URL);
 
@@ -39,47 +39,47 @@ const errHandler = (err: CustomError, dispatch: Dispatch, type: actionType) => {
 
 export const USER = actionTypeCreator('USER');
 
-export const getQRCode = () => (dispatch: Dispatch) => {
-    dispatch({ type: USER.START });
-    dispatch(actions.setGettable(false));
-    (async () => {
-        try {
-            const initResponse = await fetch(`${URL}/user`);
-            const initResult = await resHandler(initResponse);
-            if (initResult.type === 'success') {
-                const { key } = initResult;
-                dispatch(actions.setKey(key));
-                dispatch(actions.toggleSnackbarOn('请尽快用企业微信扫描二维码！', 'info'));
-                dispatch({ type: USER.SUCCESS });
-                const loginResponse = await fetch(`${URL}/user/${key}/status`);
-                const loginResult = await resHandler(loginResponse);
-                if (loginResult.type === 'success') {
-                    const { uid, token } = loginResult;
-                    dispatch(actions.login(uid));
-                    dispatch(actions.toggleSnackbarOn('已成功登录！', 'success'));
-                    sessionStorage.setItem('uid', uid);
-                    sessionStorage.setItem('token', token);
-                    dispatch({ type: USER.SUCCESS });
-                    requestUser(uid)(dispatch);
-                } else {
-                    dispatch(actions.setKey(''));
-                    dispatch(actions.setGettable(true));
-                    errHandler(loginResult, dispatch, USER);
-                    return;
-                }
-            } else {
-                dispatch(actions.setKey(''));
-                dispatch(actions.setGettable(true));
-                errHandler(initResult, dispatch, USER);
-                return;
-            }
-        } catch (err) {
-            dispatch(actions.setKey(''));
-            dispatch(actions.setGettable(true));
-            errHandler(err, dispatch, USER);
-        }
-    })();
-};
+// export const getQRCode = () => (dispatch: Dispatch) => {
+//     dispatch({ type: USER.START });
+//     dispatch(actions.setGettable(false));
+//     (async () => {
+//         try {
+//             const initResponse = await fetch(`${URL}/user`);
+//             const initResult = await resHandler(initResponse);
+//             if (initResult.type === 'success') {
+//                 const { key } = initResult;
+//                 dispatch(actions.setKey(key));
+//                 dispatch(actions.toggleSnackbarOn('请尽快用企业微信扫描二维码！', 'info'));
+//                 dispatch({ type: USER.SUCCESS });
+//                 const loginResponse = await fetch(`${URL}/user/${key}/status`);
+//                 const loginResult = await resHandler(loginResponse);
+//                 if (loginResult.type === 'success') {
+//                     const { uid, token } = loginResult;
+//                     dispatch(actions.login(uid));
+//                     dispatch(actions.toggleSnackbarOn('已成功登录！', 'success'));
+//                     sessionStorage.setItem('uid', uid);
+//                     sessionStorage.setItem('token', token);
+//                     dispatch({ type: USER.SUCCESS });
+//                     requestUser(uid)(dispatch);
+//                 } else {
+//                     dispatch(actions.setKey(''));
+//                     dispatch(actions.setGettable(true));
+//                     errHandler(loginResult, dispatch, USER);
+//                     return;
+//                 }
+//             } else {
+//                 dispatch(actions.setKey(''));
+//                 dispatch(actions.setGettable(true));
+//                 errHandler(initResult, dispatch, USER);
+//                 return;
+//             }
+//         } catch (err) {
+//             dispatch(actions.setKey(''));
+//             dispatch(actions.setGettable(true));
+//             errHandler(err, dispatch, USER);
+//         }
+//     })();
+// };
 
 // export const login = (username: string) => (dispatch: Dispatch) => {
 //     dispatch({ type: USER.START });
@@ -624,7 +624,7 @@ socket.on('moveCandidateError', (message: string, color: string, data: { to: num
     store.dispatch({ type: CANDIDATE.FAILURE });
 });
 
-socket.on('addComment', (step: number, cid: string, commenter: string, comment: object) => {
+socket.on('addComment', (step: number, cid: string, commenter: string, comment: Comment) => {
     store.dispatch({ type: COMMENT.START });
     store.dispatch(actions.addComment(step, cid, commenter, comment));
     store.dispatch({ type: COMMENT.SUCCESS });

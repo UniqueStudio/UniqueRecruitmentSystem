@@ -1,4 +1,4 @@
-import { Recruitment, User } from '../lib/const';
+import { Comment, Recruitment, User } from '../lib/const';
 
 export const TOGGLE_DRAWER_OPEN = 'TOGGLE_DRAWER_OPEN';
 export type TOGGLE_DRAWER_OPEN = typeof TOGGLE_DRAWER_OPEN;
@@ -103,13 +103,13 @@ export function toggleFabOff(): ToggleFabOff {
 export const INPUTTING_COMMENT = 'INPUTTING_COMMENT';
 export type INPUTTING_COMMENT = typeof INPUTTING_COMMENT;
 
-export interface InupttingComment {
+export interface InputtingComment {
     type: INPUTTING_COMMENT;
     comment: string;
     evaluation: string;
 }
 
-export function inputtingComment(comment: string, evaluation: string): InupttingComment {
+export function inputtingComment(comment: string, evaluation: string): InputtingComment {
     return {
         type: INPUTTING_COMMENT,
         comment,
@@ -126,10 +126,10 @@ export interface AddComment {
     step: number;
     cid: string;
     commenter: string;
-    comment: object;
+    comment: Comment;
 }
 
-export function addComment(step: number, cid: string, commenter: string, comment: object): AddComment {
+export function addComment(step: number, cid: string, commenter: string, comment: Comment): AddComment {
     return {
         type: ADD_COMMENT,
         step,
@@ -302,22 +302,6 @@ export function setKey(key: string): SetKey {
     }
 }
 
-export const SET_GETTABLE = 'SET_GETTABLE';
-export type SET_GETTABLE = typeof SET_GETTABLE;
-
-export interface SetGettable {
-    type: SET_GETTABLE;
-    able: boolean
-}
-
-export function setGettable(able: boolean): SetGettable {
-    return {
-        type: SET_GETTABLE,
-        able
-    }
-}
-
-
 export const LOGIN = 'LOGIN';
 export type LOGIN = typeof LOGIN;
 
@@ -343,6 +327,37 @@ export interface Logout {
 export function logout(): Logout {
     return {
         type: LOGOUT
+    }
+}
+
+export const GET_QR_CODE = 'GET_QR_CODE';
+export type GET_QR_CODE = typeof GET_QR_CODE;
+
+export interface GetQRCode {
+    type: GET_QR_CODE
+}
+
+export function getQRCode(): GetQRCode {
+    return {
+        type: GET_QR_CODE
+    }
+}
+
+
+export const UPDATE_USER_START = 'UPDATE_USER_START';
+export type UPDATE_USER_START = typeof UPDATE_USER_START;
+
+export interface UpdateUserStart {
+    type: UPDATE_USER_START;
+    uid: string;
+    info: User;
+}
+
+export function updateUserStart(uid: string, info: User): UpdateUserStart {
+    return {
+        type: UPDATE_USER_START,
+        uid,
+        info
     }
 }
 

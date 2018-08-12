@@ -1,6 +1,5 @@
 import React, { PureComponent } from "react";
 import Button from '@material-ui/core/Button';
-// import TextField from '@material-ui/core/TextField';
 import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 
 import withRoot from "../../style/withRoot";
@@ -8,12 +7,14 @@ import styles from "../../style/login";
 import Modal from '../Modal';
 import { QR_CODE_URL } from '../../lib/const';
 
+// import TextField from '@material-ui/core/TextField';
+
 interface Props extends WithStyles {
     loggedIn: boolean;
     //login: (username: string) => void;
     getQRCode: () => void;
     weChatKey: string;
-    buttonAble: boolean;
+    isScanning: boolean;
 }
 
 class Login extends PureComponent<Props> {
@@ -45,7 +46,7 @@ class Login extends PureComponent<Props> {
     // };
 
     render() {
-        const { classes, loggedIn, buttonAble } = this.props;
+        const { classes, loggedIn, isScanning } = this.props;
         return (
             <Modal open={!loggedIn} title='登录'>
                 <div className={classes.login}>
@@ -56,7 +57,7 @@ class Login extends PureComponent<Props> {
                     {/*margin="normal"*/}
                     {/*/>*/}
                     <img src={this.state.src} />
-                    <Button color="primary" size="large" onClick={this.login} disabled={!buttonAble}>获取二维码</Button>
+                    <Button color="primary" size="large" onClick={this.login} disabled={isScanning}>获取二维码</Button>
                 </div>
             </Modal>
         );

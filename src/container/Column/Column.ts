@@ -5,7 +5,7 @@ import {
     deselectCandidate,
     DeselectCandidate,
     inputtingComment,
-    InupttingComment,
+    InputtingComment,
     selectCandidate,
     SelectCandidate,
     toggleFabOff,
@@ -43,7 +43,7 @@ type DispatchType =
         | ToggleSnackbarOn
         | ToggleModalOn
         | ToggleModalOff
-        | InupttingComment
+        | InputtingComment
         | ToggleFabOff>
 
 const mapDispatchToProps = (dispatch: DispatchType) => ({
