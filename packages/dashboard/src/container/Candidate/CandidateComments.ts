@@ -1,9 +1,18 @@
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
-import { inputtingComment, InupttingComment, toggleSnackbarOn, ToggleSnackbarOn } from '../../action';
-import { addComment, removeComment } from '../../action/async';
+import {
+    addCommentStart,
+    AddCommentStart,
+    inputtingComment,
+    InputtingComment,
+    removeCommentStart,
+    RemoveCommentStart,
+    toggleSnackbarOn,
+    ToggleSnackbarOn
+} from '../../action';
 import CandidateComments from '../../component/Candidate/CandidateComments';
 import { StoreState } from '../../reducer';
+import { Comment } from '../../lib/const';
 
 interface OwnProps {
     step: number;
@@ -19,11 +28,11 @@ const mapStateToProps = ({ components, candidates, user }: StoreState, ownProps:
     username: user.info['username']
 });
 
-type DispatchType = Dispatch<ToggleSnackbarOn | InupttingComment>
+type DispatchType = Dispatch<ToggleSnackbarOn | InputtingComment | AddCommentStart | RemoveCommentStart>
 
 const mapDispatchToProps = (dispatch: DispatchType) => ({
-    submit: (step: number, cid: string, commenter: string, comment: object) => addComment(step, cid, commenter, comment)(dispatch),
-    remove: (step: number, name: string, commenter: string) => removeComment(step, name, commenter)(dispatch),
+    submit: (step: number, cid: string, commenter: string, comment: Comment) => dispatch(addCommentStart(step, cid, commenter, comment)),
+    remove: (step: number, name: string, commenter: string) => dispatch(removeCommentStart(step, name, commenter)),
     toggleOn: (info: string) => dispatch(toggleSnackbarOn(info, 'warning')),
     changeInputting: (comment: string, evaluation: string) => dispatch(inputtingComment(comment, evaluation))
 });

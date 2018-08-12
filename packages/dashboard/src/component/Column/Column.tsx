@@ -36,15 +36,24 @@ interface Props extends WithStyles {
     downloadResume: (cid: string) => void;
 }
 
+interface State {
+    dialog: boolean;
+    modal: boolean;
+    removeConfirm: boolean;
+    direction: "left" | "right" | "up" | "down",
+    buttons: boolean;
+    fab: boolean;
+}
+
 const titleToStep = (title: string) => STEP.indexOf(title);
 
 class Column extends Component<Props> {
 
-    state = {
+    state: State = {
         dialog: false,
         modal: false,
         removeConfirm: false,
-        direction: 'left' as "left" | "right" | "up" | "down",
+        direction: 'left',
         buttons: false,
         fab: false
     };
@@ -54,10 +63,6 @@ class Column extends Component<Props> {
             buttons: !this.state.buttons
         })
     };
-
-    shouldComponentUpdate() {
-        return !this.props.isDragging;
-    }
 
     handleNext = (cid: string) => () => {
         this.props.toggleModalOn(cid);
@@ -118,8 +123,6 @@ class Column extends Component<Props> {
         this.toggleButtons();
     };
 
-    timer = NaN;
-    isCancelled = false;
 
     static getDerivedStateFromProps(nextProps: Props) {
         if (nextProps.fabOn === titleToStep(nextProps.title)) {
@@ -137,15 +140,8 @@ class Column extends Component<Props> {
         return null;
     }
 
-    componentDidUpdate() {
-        if (this.props.selected.length === 0) {
-            this.timer = window.setTimeout(() => !this.isCancelled && this.setState({ fab: false }), 225);
-        }
-    }
-
-    componentWillUnmount() {
-        this.isCancelled = true;
-        window.clearTimeout(this.timer);
+    shouldComponentUpdate() {
+        return !this.props.isDragging;
     }
 
     // componentWillReceiveProps(nextProps: Props) {
@@ -173,7 +169,6 @@ class Column extends Component<Props> {
         const allCandidatesCids = [...candidates.keys()];
         const selectedCandidatesCids = selected.filter((i: string) => allCandidatesCids.includes(i));
         const selectedCandidatesInfo = selectedCandidatesCids.map((i: string) => candidates.get(i) as CType);
-
         const ButtonBox = (
             <div className={classes.fabButtonsZoom}>
                 <div

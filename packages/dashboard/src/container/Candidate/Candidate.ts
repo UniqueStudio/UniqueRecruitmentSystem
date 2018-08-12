@@ -4,7 +4,7 @@ import {
     deselectCandidate,
     DeselectCandidate,
     inputtingComment,
-    InupttingComment,
+    InputtingComment,
     selectCandidate,
     SelectCandidate,
     toggleFabOn,
@@ -29,7 +29,7 @@ const mapStateToProps = ({ candidates, components }: StoreState, ownProps: OwnPr
     fabOn: components.fabOn
 });
 
-type DispatchType = Dispatch<SelectCandidate | DeselectCandidate | ToggleModalOn | InupttingComment | ToggleFabOn>
+type DispatchType = Dispatch<SelectCandidate | DeselectCandidate | ToggleModalOn | InputtingComment | ToggleFabOn>
 
 const mapDispatchToProps = (dispatch: DispatchType) => ({
     select: (name: string) => dispatch(selectCandidate(name)),
