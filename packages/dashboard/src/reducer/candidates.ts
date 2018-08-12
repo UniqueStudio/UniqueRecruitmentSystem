@@ -29,7 +29,7 @@ type Action =
     | actions.MoveCandidate
     | actions.SetGroup
     | actions.SetSlot
-    | actions.InupttingComment;
+    | actions.InputtingComment;
 
 export interface Candidates {
     candidates: Map<string, Candidate>[];
