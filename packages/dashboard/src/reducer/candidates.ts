@@ -25,7 +25,7 @@ type Action =
     | actions.AddCandidate
     | actions.SelectCandidate
     | actions.DeselectCandidate
-    | actions.RemoveCandidate
+    | actions.RemoveCandidateFulFilled
     | actions.MoveCandidate
     | actions.SetGroup
     | actions.SetSlot
@@ -100,7 +100,7 @@ export function candidates(
         case actions.DESELECT_CANDIDATE:
             newState.selected = newState.selected.filter((i: string) => !action.cid.includes(i));
             return newState;
-        case actions.REMOVE_CANDIDATE:
+        case actions.REMOVE_CANDIDATE_FULFILLED:
             newState.candidates.map(step =>
                 typeof action.cid === 'string'
                     ? step.delete(action.cid)

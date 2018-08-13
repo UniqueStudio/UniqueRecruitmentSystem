@@ -1,31 +1,20 @@
-import { catchError, endWith, filter, map, mergeMap, startWith } from 'rxjs/operators';
-import { of } from 'rxjs';
+import { catchError, endWith, filter, map, mergeMap, startWith, switchMap } from 'rxjs/operators';
+import { concat, of } from 'rxjs';
 import { ajax } from 'rxjs/ajax';
 import { Epic, ofType } from "redux-observable";
-import {
-    GET_QR_CODE,
-    GetQRCode,
-    login,
-    Login,
-    SET_KEY,
-    SetKey,
-    setKey,
-    ToggleSnackbarOn,
-    toggleSnackbarOn
-} from '../../action';
+import { GET_QR_CODE, getUserInfo, login, SET_QR_CODE, SetQRCode, setQRCode, toggleSnackbarOn } from '../../action';
 import { URL } from '../../lib/const';
 import { USER, UserAction } from './index';
 import { customError } from '../index';
 
-
-export const getQRCodeEpic: Epic<GetQRCode | ToggleSnackbarOn | SetKey | UserAction> = action$ =>
+export const getQRCodeEpic: Epic<UserAction> = action$ =>
     action$.pipe(
         ofType(GET_QR_CODE),
         mergeMap(() => ajax.getJSON(`${URL}/user`)
             .pipe(
                 map((res: any) => {
                     if (res.type === 'success') {
-                        return setKey(res.key);
+                        return setQRCode(res.key);
                     }
                     throw customError(res);
                 }),
@@ -44,25 +33,29 @@ export const getQRCodeEpic: Epic<GetQRCode | ToggleSnackbarOn | SetKey | UserAct
         ),
     );
 
-export const loginEpic: Epic<SetKey | Login | ToggleSnackbarOn | UserAction> = action$ =>
+export const loginEpic: Epic<UserAction> = action$ =>
     action$.pipe(
-        ofType(SET_KEY),
-        filter(action => action['key']),
-        mergeMap(action => ajax.getJSON(`${URL}/user/${action['key']}/status`).pipe(
-            map((res: any) => {
+        ofType(SET_QR_CODE),
+        filter((action: SetQRCode) => Boolean(action.key)),
+        switchMap((action: SetQRCode) => ajax.getJSON(`${URL}/user/${action.key}/status`).pipe(
+            mergeMap((res: any) => {
                 const { uid, token, type } = res;
                 if (type === 'success') {
                     sessionStorage.setItem('uid', uid);
                     sessionStorage.setItem('token', token);
-                    return login(uid);
+                    return concat(
+                        of(login(uid)),
+                        of(getUserInfo(uid))
+                    );
                 }
                 throw customError(res);
             }),
             endWith(
                 toggleSnackbarOn('已成功登录！', 'success'),
+
             ),
             catchError(err => of(
-                setKey(''),
+                setQRCode(''),
                 toggleSnackbarOn(`Error: ${err.message}`, err.type || 'danger'),
             ))
         ))
