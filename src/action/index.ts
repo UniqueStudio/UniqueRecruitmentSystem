@@ -43,7 +43,6 @@ export function toggleSnackbarOff(): ToggleSnackbarOff {
     }
 }
 
-export type direction = 'left' | 'right' | 'up' | 'down';
 export const TOGGLE_MODAL_ON = 'TOGGLE_MODAL_ON';
 export type TOGGLE_MODAL_ON = typeof TOGGLE_MODAL_ON;
 
@@ -158,12 +157,42 @@ export function removeComment(step: number, cid: string, commenter: string): Rem
     }
 }
 
+export const GET_CANDIDATES = 'GET_CANDIDATES';
+export type GET_CANDIDATES = typeof GET_CANDIDATES;
+
+export interface GetCandidates {
+    type: GET_CANDIDATES;
+    group: string;
+}
+
+export function getCandidates(group: string): GetCandidates {
+    return {
+        type: GET_CANDIDATES,
+        group
+    }
+}
+
 export const SET_CANDIDATES = 'SET_CANDIDATES';
 export type SET_CANDIDATES = typeof SET_CANDIDATES;
 
 export interface SetCandidates {
     type: SET_CANDIDATES;
     candidates: object[];
+}
+
+export const GET_RESUME = 'GET_RESUME';
+export type GET_RESUME = typeof GET_RESUME;
+
+export interface GetResume {
+    type: GET_RESUME;
+    cid: string;
+}
+
+export function getResume(cid: string): GetResume {
+    return {
+        type: GET_RESUME,
+        cid
+    }
 }
 
 export function setCandidates(candidates: object[]): SetCandidates {
@@ -219,17 +248,32 @@ export function deselectCandidate(cid: string | Array<string>): DeselectCandidat
     }
 }
 
-export const REMOVE_CANDIDATE = 'REMOVE_CANDIDATE';
-export type REMOVE_CANDIDATE = typeof REMOVE_CANDIDATE;
+export const REMOVE_CANDIDATE_START = 'REMOVE_CANDIDATE_START';
+export type REMOVE_CANDIDATE_START = typeof REMOVE_CANDIDATE_START;
 
-export interface RemoveCandidate {
-    type: REMOVE_CANDIDATE;
+export interface RemoveCandidateStart {
+    type: REMOVE_CANDIDATE_START;
     cid: string | string[];
 }
 
-export function removeCandidate(cid: string | string[]): RemoveCandidate {
+export function removeCandidateStart(cid: string | string[]): RemoveCandidateStart {
     return {
-        type: REMOVE_CANDIDATE,
+        type: REMOVE_CANDIDATE_START,
+        cid,
+    }
+}
+
+export const REMOVE_CANDIDATE_FULFILLED = 'REMOVE_CANDIDATE_FULFILLED';
+export type REMOVE_CANDIDATE_FULFILLED = typeof REMOVE_CANDIDATE_FULFILLED;
+
+export interface RemoveCandidateFulFilled {
+    type: REMOVE_CANDIDATE_FULFILLED;
+    cid: string | string[];
+}
+
+export function removeCandidateFulFilled(cid: string | string[]): RemoveCandidateFulFilled {
+    return {
+        type: REMOVE_CANDIDATE_FULFILLED,
         cid,
     }
 }
@@ -287,20 +331,6 @@ export function setGroup(group: string): SetGroup {
     }
 }
 
-export const SET_KEY = 'SET_KEY';
-export type SET_KEY = typeof SET_KEY;
-
-export interface SetKey {
-    type: SET_KEY;
-    key: string
-}
-
-export function setKey(key: string): SetKey {
-    return {
-        type: SET_KEY,
-        key
-    }
-}
 
 export const LOGIN = 'LOGIN';
 export type LOGIN = typeof LOGIN;
@@ -343,50 +373,96 @@ export function getQRCode(): GetQRCode {
     }
 }
 
+export const SET_QR_CODE = 'SET_QR_CODE';
+export type SET_QR_CODE = typeof SET_QR_CODE;
 
-export const UPDATE_USER_START = 'UPDATE_USER_START';
-export type UPDATE_USER_START = typeof UPDATE_USER_START;
-
-export interface UpdateUserStart {
-    type: UPDATE_USER_START;
-    uid: string;
-    info: User;
+export interface SetQRCode {
+    type: SET_QR_CODE;
+    key: string
 }
 
-export function updateUserStart(uid: string, info: User): UpdateUserStart {
+export function setQRCode(key: string): SetQRCode {
     return {
-        type: UPDATE_USER_START,
-        uid,
-        info
+        type: SET_QR_CODE,
+        key
     }
 }
 
-export const CHANGE_USER_INFO = 'CHANGE_USER_INFO';
-export type CHANGE_USER_INFO = typeof CHANGE_USER_INFO;
+export const GET_USER_INFO = 'GET_USER_INFO';
+export type GET_USER_INFO = typeof GET_USER_INFO;
 
-export interface ChangeUserInfo {
-    type: CHANGE_USER_INFO;
+export interface GetUserInfo {
+    type: GET_USER_INFO;
+    uid: string
+}
+
+export function getUserInfo(uid: string): GetUserInfo {
+    return {
+        type: GET_USER_INFO,
+        uid
+    }
+}
+
+export const SET_USER_INFO = 'SET_USER_INFO';
+export type SET_USER_INFO = typeof SET_USER_INFO;
+
+export interface SetUserInfo {
+    type: SET_USER_INFO;
     info: User;
 }
 
-export function changeUserInfo(info: ChangeUserInfo['info']): ChangeUserInfo {
+export function setUserInfo(info: User): SetUserInfo {
     return {
-        type: CHANGE_USER_INFO,
+        type: SET_USER_INFO,
         info: { ...info, sex: info.sex || 'Male' }
     }
 }
 
-export const CHANGE_GROUP_INFO = 'CHANGE_GROUP_INFO';
-export type CHANGE_GROUP_INFO = typeof CHANGE_GROUP_INFO;
+export const UPDATE_USER_INFO = 'UPDATE_USER_INFO';
+export type UPDATE_USER_INFO = typeof UPDATE_USER_INFO;
 
-export interface ChangeGroupInfo {
-    type: CHANGE_GROUP_INFO;
-    info: ChangeUserInfo['info'][]
+export interface UpdateUserInfo {
+    type: UPDATE_USER_INFO;
+    info: User;
+    uid: string;
 }
 
-export function changeGroupInfo(info: ChangeGroupInfo['info']): ChangeGroupInfo {
+export function updateUserInfo(uid: string, info: User): UpdateUserInfo {
     return {
-        type: CHANGE_GROUP_INFO,
+        type: UPDATE_USER_INFO,
+        info,
+        uid
+    }
+}
+
+
+export const GET_GROUP_INFO = 'GET_GROUP_INFO';
+export type GET_GROUP_INFO = typeof GET_GROUP_INFO;
+
+export interface GetGroupInfo {
+    type: GET_GROUP_INFO;
+    group: string
+}
+
+export function getGroupInfo(group: string): GetGroupInfo {
+    return {
+        type: GET_GROUP_INFO,
+        group
+    }
+}
+
+
+export const SET_GROUP_INFO = 'SET_GROUP_INFO';
+export type SET_GROUP_INFO = typeof SET_GROUP_INFO;
+
+export interface SetGroupInfo {
+    type: SET_GROUP_INFO;
+    info: User[]
+}
+
+export function setGroupInfo(info: User[]): SetGroupInfo {
+    return {
+        type: SET_GROUP_INFO,
         info
     }
 }

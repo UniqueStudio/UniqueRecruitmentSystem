@@ -1,5 +1,6 @@
-import userEpic from './user';
 import { combineEpics } from "redux-observable";
+import userEpic from './user';
+import candidateEpic from './candidate';
 
 export const customError = (obj: object) => {
     const err = new Error(obj['message']);
@@ -15,4 +16,4 @@ export function actionTypeCreator(action: string) {
     }
 }
 
-export const epics = combineEpics(...userEpic);
+export const epics = combineEpics(...userEpic, ...candidateEpic);

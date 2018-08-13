@@ -4,8 +4,12 @@ import Column from '../../component/Column/Column';
 import {
     deselectCandidate,
     DeselectCandidate,
+    getResume,
+    GetResume,
     inputtingComment,
     InputtingComment,
+    removeCandidateStart,
+    RemoveCandidateStart,
     selectCandidate,
     SelectCandidate,
     toggleFabOff,
@@ -18,7 +22,6 @@ import {
     ToggleSnackbarOn,
 } from '../../action';
 import { Dispatch } from 'redux';
-import { removeCandidate, requestResume } from '../../action/async';
 import { STEP } from '../../lib/const';
 
 interface OwnProps {
@@ -44,18 +47,20 @@ type DispatchType =
         | ToggleModalOn
         | ToggleModalOff
         | InputtingComment
-        | ToggleFabOff>
+        | ToggleFabOff
+        | GetResume
+        | RemoveCandidateStart>
 
 const mapDispatchToProps = (dispatch: DispatchType) => ({
     select: (name: string[]) => dispatch(selectCandidate(name)),
     deselect: (name: string[]) => dispatch(deselectCandidate(name)),
     toggleSnakcbarOn: (info: string, color: string = 'info') => dispatch(toggleSnackbarOn(info, color)),
-    remove: (cid: string) => removeCandidate(cid)(dispatch),
+    remove: (cid: string) => dispatch(removeCandidateStart(cid)),
     toggleModalOn: (cid: string) => dispatch(toggleModalOn(cid)),
     toggleModalOff: () => dispatch(toggleModalOff()),
     changeInputting: (comment: string, evaluation: string) => dispatch(inputtingComment(comment, evaluation)),
     toggleFabOff: () => dispatch(toggleFabOff()),
-    downloadResume: (cid: string) => requestResume(cid)(dispatch)
+    downloadResume: (cid: string) => dispatch(getResume(cid))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Column);

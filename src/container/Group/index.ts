@@ -2,8 +2,15 @@ import { connect } from 'react-redux';
 import Group from '../../component/Group';
 import { Dispatch } from 'redux';
 import { StoreState } from '../../reducer';
-import { requestCandidate, requestGroup, requestRecruitments, sendInterview, submitSlots } from '../../action/async';
-import { toggleSnackbarOn } from '../../action';
+import { requestRecruitments, sendInterview, submitSlots } from '../../action/async';
+import {
+    getCandidates,
+    GetCandidates,
+    getGroupInfo,
+    GetGroupInfo,
+    toggleSnackbarOn,
+    ToggleSnackbarOn
+} from '../../action';
 
 const mapStateToProps = ({ candidates, user, recruitments }: StoreState) => ({
     candidates: candidates.candidates || [],
@@ -13,9 +20,11 @@ const mapStateToProps = ({ candidates, user, recruitments }: StoreState) => ({
     isLoading: candidates.isLoading.candidates
 });
 
-const mapDispatchToProps = (dispatch: Dispatch) => ({
-    requestCandidate: (group: string) => requestCandidate(group)(dispatch),
-    requestGroup: (group: string) => requestGroup(group)(dispatch),
+type DispatchType = Dispatch<ToggleSnackbarOn | GetGroupInfo | GetCandidates>
+
+const mapDispatchToProps = (dispatch: DispatchType) => ({
+    requestCandidate: (group: string) => dispatch(getCandidates(group)),
+    requestGroup: (group: string) => dispatch(getGroupInfo(group)),
     requestRecruitments: () => requestRecruitments()(dispatch),
     sendInterview: (content: object) => sendInterview(content)(dispatch),
     toggleSnackbar: (message: string, color: string) => dispatch(toggleSnackbarOn(message, color)),
