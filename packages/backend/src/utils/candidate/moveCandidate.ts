@@ -16,7 +16,7 @@ export const onMoveCandidate = (socket: Socket) => (cid: string, from: number, t
                 socket.emit('moveCandidateSuccess');
                 processing = processing.filter(i => i !== cid);
             } else {
-                socket.emit('moveCandidateError', '候选人已被拖动', 'warning', { cid, to, from: movingCandidate.step });
+                socket.emit('moveCandidateError', '该候选人已被他人拖动！', 'warning', { cid, to, from: movingCandidate.step });
                 return;
             }
             const candidate = (await database.query('candidates', { _id: new ObjectId(cid) }))[0];
