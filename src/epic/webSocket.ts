@@ -1,5 +1,5 @@
 import { ignoreElements, startWith, switchMap, tap } from 'rxjs/operators';
-import { EMPTY, Observable, Subscriber } from 'rxjs';
+import { EMPTY, Observable, Subscriber, timer } from 'rxjs';
 import { Epic, ofType } from "redux-observable";
 import {
     addCandidate,
@@ -59,7 +59,10 @@ export const socketReceiveEpic: Epic<Action, any, StoreState, Dependencies> = (a
                 });
                 socket.on('moveCandidateError', (message: string, color: string, data: { to: number, from: number, cid: string }) => {
                     o.next(moveCandidateFulfilled(data.to, data.from, data.cid));
-                    o.next(toggleSnackbarOn(`ERROR: ${message}`, color || 'danger'));
+                    const snackbarOn = state$.value.components.snackbar.on;
+                    if (snackbarOn) {
+                        timer(1000).subscribe(() => o.next(toggleSnackbarOn(`ERROR: ${message}`, color || 'danger')))
+                    }
                     o.next({ type: CANDIDATE.FAILURE });
                 });
 
