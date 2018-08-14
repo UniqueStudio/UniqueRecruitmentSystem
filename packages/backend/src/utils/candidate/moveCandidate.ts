@@ -9,9 +9,10 @@ export const onMoveCandidate = (socket: Socket) => (cid: string, from: number, t
         try {
             verifyJWT(token);
             console.log(processing);
-            if (!processing.includes(cid)) {
-                console.log(cid, from, to);
-                processing.push(cid);
+            console.log(cid, from, to);
+            processing.push(cid);
+            const movingCandidate = await database.query('candidates', { _id: new ObjectId(cid), step: from });
+            if (!processing.includes(cid) && movingCandidate.length) {
                 await database.update('candidates', { _id: new ObjectId(cid) }, { step: to });
                 socket.broadcast.emit('moveCandidate', cid, from, to);
                 socket.emit('moveCandidateSuccess');
