@@ -1,6 +1,5 @@
 import React, { PureComponent } from "react";
 import { applyMiddleware, createStore } from 'redux';
-import thunk from 'redux-thunk';
 import { Provider } from 'react-redux';
 import { BrowserRouter as Router } from "react-router-dom";
 import { createBrowserHistory as createHistory } from 'history';
@@ -12,8 +11,7 @@ import Main from './view/Main';
 
 export const history = createHistory();
 
-
-const middleware = [thunk, epicMiddleware];
+const middleware = [epicMiddleware];
 
 export const store = createStore(reducers, composeWithDevTools(applyMiddleware(...middleware)));
 
