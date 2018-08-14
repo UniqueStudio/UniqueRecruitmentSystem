@@ -20,6 +20,7 @@ export const onMoveCandidate = (socket: Socket) => (cid: string, from: number, t
             } else {
                 console.log('err');
                 socket.emit('moveCandidateError', '候选人已被拖动', 'warning', { cid, from, to });
+                processing = processing.filter(i => i !== cid);
                 return;
             }
             const candidate = (await database.query('candidates', { _id: new ObjectId(cid) }))[0];
