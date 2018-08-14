@@ -1,13 +1,13 @@
-import { catchError, endWith, filter, map, mergeMap, startWith, switchMap } from 'rxjs/operators';
+import { catchError, endWith, filter, map, mergeMap, startWith, switchMap, tap } from 'rxjs/operators';
 import { concat, of } from 'rxjs';
 import { ajax } from 'rxjs/ajax';
 import { Epic, ofType } from "redux-observable";
 import { GET_QR_CODE, getUserInfo, login, SET_QR_CODE, SetQRCode, setQRCode, toggleSnackbarOn } from '../../action';
 import { URL } from '../../lib/const';
-import { USER, UserAction } from './index';
-import { customError } from '../index';
+import { Action, customError, Dependencies, errHandler, USER } from '../index';
+import { StoreState } from '../../reducer';
 
-export const getQRCodeEpic: Epic<UserAction> = action$ =>
+export const getQRCodeEpic: Epic<Action> = action$ =>
     action$.pipe(
         ofType(GET_QR_CODE),
         mergeMap(() => ajax.getJSON(`${URL}/user`)
@@ -25,34 +25,33 @@ export const getQRCodeEpic: Epic<UserAction> = action$ =>
                     toggleSnackbarOn('请尽快用企业微信扫描二维码！', 'info'),
                     { type: USER.SUCCESS },
                 ),
-                catchError(err => of(
-                    toggleSnackbarOn(`Error: ${err.message}`, err.type || 'danger'),
-                    { type: USER.FAILURE }
-                ))
+                catchError(err => errHandler(err, USER))
             )
         ),
     );
 
-export const loginEpic: Epic<UserAction> = action$ =>
+export const loginEpic: Epic<Action, any, StoreState, Dependencies> = (action$, state$, { sessionStorage }) =>
     action$.pipe(
         ofType(SET_QR_CODE),
         filter((action: SetQRCode) => Boolean(action.key)),
         switchMap((action: SetQRCode) => ajax.getJSON(`${URL}/user/${action.key}/status`).pipe(
-            mergeMap((res: any) => {
+            map((res: any) => {
                 const { uid, token, type } = res;
                 if (type === 'success') {
-                    sessionStorage.setItem('uid', uid);
-                    sessionStorage.setItem('token', token);
-                    return concat(
-                        of(login(uid)),
-                        of(getUserInfo(uid))
-                    );
+                    return { uid, token };
                 }
                 throw customError(res);
             }),
+            tap(data => {
+                sessionStorage.setItem('uid', data.uid);
+                sessionStorage.setItem('token', data.token);
+            }),
+            mergeMap(data => concat(
+                of(login(data.uid)),
+                of(getUserInfo(data.uid))
+            )),
             endWith(
                 toggleSnackbarOn('已成功登录！', 'success'),
-
             ),
             catchError(err => of(
                 setQRCode(''),

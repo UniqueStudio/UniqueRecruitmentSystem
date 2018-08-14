@@ -1,24 +1,23 @@
-import { catchError, endWith, map, mergeMap, startWith } from 'rxjs/operators';
+import { catchError, endWith, map, mergeMap, startWith, tap } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { ajax } from 'rxjs/ajax';
 import { Epic, ofType } from "redux-observable";
-import { CANDIDATE, CandidateAction } from './index';
-import { GET_CANDIDATES, GetCandidates, setCandidates, setGroup, toggleSnackbarOn } from '../../action';
+import { Action, CANDIDATE, customError, Dependencies, errHandler } from '../index';
+import { GET_CANDIDATES, GetCandidates, setCandidates, setGroup } from '../../action';
 import { URL } from '../../lib/const';
-import { customError } from '../index';
 import { StoreState } from '../../reducer';
 
-export const getCandidatesEpic: Epic<CandidateAction, any, any, StoreState> = (action$, state$) =>
+export const getCandidatesEpic: Epic<Action, any, StoreState, Dependencies> = (action$, state$, { sessionStorage }) =>
     action$.pipe(
         ofType(GET_CANDIDATES),
         mergeMap((action: GetCandidates) => {
             const token = sessionStorage.getItem('token');
             const { group } = action;
             if (!token) {
-                throw customError({ message: 'token不存在', type: 'danger' });
+                return errHandler({ message: 'token不存在', type: 'danger' }, CANDIDATE);
             }
             if (!group) {
-                throw customError({ message: '请先完善个人信息！', type: 'danger' });
+                return errHandler({ message: '请先完善个人信息', type: 'danger' }, CANDIDATE);
             }
             const candidates = sessionStorage.getItem(group);
             if (candidates && !state$.value.candidates.shouldUpdateCandidates) {
@@ -32,11 +31,12 @@ export const getCandidatesEpic: Epic<CandidateAction, any, any, StoreState> = (a
             }).pipe(
                 map((res: any) => {
                     if (res.type === 'success') {
-                        sessionStorage.setItem(group, JSON.stringify(res.data));
-                        return setCandidates(res.data);
+                        return res.data;
                     }
                     throw customError(res);
                 }),
+                tap(data => sessionStorage.setItem(group, JSON.stringify(data))),
+                map(data => setCandidates(data)),
                 startWith(
                     { type: CANDIDATE.START }
                 ),
@@ -44,10 +44,7 @@ export const getCandidatesEpic: Epic<CandidateAction, any, any, StoreState> = (a
                     setGroup(group),
                     { type: CANDIDATE.SUCCESS },
                 ),
+                catchError(err => errHandler(err, CANDIDATE))
             )
         }),
-        catchError(err => of(
-            toggleSnackbarOn(`Error: ${err.message}`, err.type || 'danger'),
-            { type: CANDIDATE.FAILURE }
-        ))
     );

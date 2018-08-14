@@ -17,6 +17,7 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
             easing: theme.transitions.easing.sharp,
             duration: theme.transitions.duration.enteringScreen
         }),
+        zIndex: 5000,
         position: 'sticky',
         top: 0,
         [theme.breakpoints.down('md')]: {
@@ -31,7 +32,7 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
             right: 'auto',
             left: 0,
             top: theme.spacing.unit * 8,
-            zIndex: 5000,
+
             width: 400,
         },
         [theme.breakpoints.down('xs')]: {
@@ -140,6 +141,9 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
         maxWidth: '100%',
     },
     imageRoot: {
+        zIndex: theme.zIndex.snackbar * 4
+    },
+    tooltip: {
         zIndex: theme.zIndex.snackbar * 4
     }
 });

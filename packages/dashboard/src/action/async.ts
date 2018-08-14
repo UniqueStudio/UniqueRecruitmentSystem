@@ -1,43 +1,43 @@
-import { Dispatch } from 'redux';
-import io from 'socket.io-client';
+// import { Dispatch } from 'redux';
+// import io from 'socket.io-client';
 
-import { store } from '../App';
-import * as actions from './index';
-import { Comment, URL } from '../lib/const';
+// import { store } from '../App';
+// import * as actions from './index';
+// import { URL } from '../lib/const';
 
-const socket = io(URL);
+// const socket = io(URL);
 
-interface actionType {
-    START: string;
-    SUCCESS: string;
-    FAILURE: string;
-}
+// interface actionType {
+//     START: string;
+//     SUCCESS: string;
+//     FAILURE: string;
+// }
+//
+// const actionTypeCreator = (action: string) => ({
+//     START: `${action}_START`,
+//     SUCCESS: `${action}_SUCCESS`,
+//     FAILURE: `${action}_FAILURE`,
+// });
+//
+// const resHandler = (res: Response) => {
+//     try {
+//         return res.json();
+//     } catch (e) {
+//         throw new Error('Network is not OK');
+//     }
+// };
+//
+// interface CustomError {
+//     message: string;
+//     type: string;
+// }
+//
+// const errHandler = (err: CustomError, dispatch: Dispatch, type: actionType) => {
+//     dispatch(actions.toggleSnackbarOn(`ERROR: ${err.message}`, err.type || 'danger'));
+//     dispatch({ type: type.FAILURE });
+// };
 
-const actionTypeCreator = (action: string) => ({
-    START: `${action}_START`,
-    SUCCESS: `${action}_SUCCESS`,
-    FAILURE: `${action}_FAILURE`,
-});
-
-const resHandler = (res: Response) => {
-    try {
-        return res.json();
-    } catch (e) {
-        throw new Error('Network is not OK');
-    }
-};
-
-interface CustomError {
-    message: string;
-    type: string;
-}
-
-const errHandler = (err: CustomError, dispatch: Dispatch, type: actionType) => {
-    dispatch(actions.toggleSnackbarOn(`ERROR: ${err.message}`, err.type || 'danger'));
-    dispatch({ type: type.FAILURE });
-};
-
-export const USER = actionTypeCreator('USER');
+// export const USER = actionTypeCreator('USER');
 
 // export const getQRCode = () => (dispatch: Dispatch) => {
 //     dispatch({ type: USER.START });
@@ -192,7 +192,7 @@ export const USER = actionTypeCreator('USER');
 //         .catch(err => errHandler(err, dispatch, USER))
 // };
 
-export const CANDIDATE = actionTypeCreator('CANDIDATE');
+// export const CANDIDATE = actionTypeCreator('CANDIDATE');
 // export const requestCandidate = (group: string) => (dispatch: Dispatch) => {
 //     dispatch({ type: CANDIDATE.START });
 //     const token = sessionStorage.getItem('token');
@@ -319,351 +319,351 @@ export const CANDIDATE = actionTypeCreator('CANDIDATE');
 //     //     });
 // };
 
-export const moveCandidate = (from: number, to: number, cid: string, position?: number) => (dispatch: Dispatch) => {
-    const token = sessionStorage.getItem('token');
-    if (!token) {
-        errHandler({ message: 'token不存在', type: 'danger' }, dispatch, CANDIDATE);
-        return;
-    }
-    dispatch(actions.moveCandidate(from, to, cid, position));
-    dispatch({ type: CANDIDATE.START });
-    socket.emit('moveCandidate', cid, from, to, token);
-    // return fetch(`${URL}/candidates/${cid}/step/${to}`, {
-    //     method: 'PUT',
-    //     body: JSON.stringify({ from }),
-    //     headers: { 'content-type': 'application/json' },
-    // })
-    //     .then(resHandler)
-    //     .then(res => {
-    //         if (res.type !== 'success') throw res;
-    //         store.dispatch({ type: COMMENT.SUCCESS });
-    //     })
-    //     // .then(() => {
-    //     //     store.dispatch({ type: CANDIDATE.SUCCESS });
-    //     //     store.dispatch(actions.moveCandidate(from, to, cid));
-    //     // })
-    //     .catch(err => {
-    //         dispatch(actions.moveCandidate(to, from, cid));
-    //         dispatch(actions.toggleSnackbarOn(`ERROR: ${err.message}`, err.type || 'danger'));
-    //         dispatch({ type: CANDIDATE.FAILURE });
-    //     });
-};
+// export const moveCandidate = (from: number, to: number, cid: string, position?: number) => (dispatch: Dispatch) => {
+//     const token = sessionStorage.getItem('token');
+//     if (!token) {
+//         errHandler({ message: 'token不存在', type: 'danger' }, dispatch, CANDIDATE);
+//         return;
+//     }
+//     dispatch(actions.moveCandidate(from, to, cid, position));
+//     dispatch({ type: CANDIDATE.START });
+//     //socket.emit('moveCandidate', cid, from, to, token);
+//     // return fetch(`${URL}/candidates/${cid}/step/${to}`, {
+//     //     method: 'PUT',
+//     //     body: JSON.stringify({ from }),
+//     //     headers: { 'content-type': 'application/json' },
+//     // })
+//     //     .then(resHandler)
+//     //     .then(res => {
+//     //         if (res.type !== 'success') throw res;
+//     //         store.dispatch({ type: COMMENT.SUCCESS });
+//     //     })
+//     //     // .then(() => {
+//     //     //     store.dispatch({ type: CANDIDATE.SUCCESS });
+//     //     //     store.dispatch(actions.moveCandidate(from, to, cid));
+//     //     // })
+//     //     .catch(err => {
+//     //         dispatch(actions.moveCandidate(to, from, cid));
+//     //         dispatch(actions.toggleSnackbarOn(`ERROR: ${err.message}`, err.type || 'danger'));
+//     //         dispatch({ type: CANDIDATE.FAILURE });
+//     //     });
+// };
 
-export const COMMENT = actionTypeCreator('COMMENT');
-export const addComment = (step: number, cid: string, commenter: string, comment: object) => (dispatch: Dispatch) => {
-    dispatch({ type: COMMENT.START });
-    const token = sessionStorage.getItem('token');
-    if (!token) {
-        errHandler({ message: 'token不存在', type: 'danger' }, dispatch, COMMENT);
-        return;
-    }
-    socket.emit('addComment', step, cid, commenter, comment, token);
-    // return fetch(`${URL}/candidates/${cid}/comments`, {
-    //     method: 'POST',
-    //     body: JSON.stringify({ uid: commenter, comment, step }),
-    //     headers: { 'content-type': 'application/json' },
-    // })
-    //     .then(resHandler)
-    //     .then(res => {
-    //         if (res.type !== 'success') throw res;
-    //     })
-    //     // .then(() => {
-    //     //     dispatch({ type: COMMENT.SUCCESS });
-    //     //     dispatch(actions.addComment(step, cid, commenter, comment));
-    //     // })
-    //     .catch(err => {
-    //         dispatch(actions.toggleSnackbarOn(`ERROR: ${err.message}`, err.type || 'danger'));
-    //         dispatch({ type: COMMENT.FAILURE });
-    //     });
-};
+// export const COMMENT = actionTypeCreator('COMMENT');
+// export const addComment = (step: number, cid: string, commenter: string, comment: object) => (dispatch: Dispatch) => {
+//     dispatch({ type: COMMENT.START });
+//     const token = sessionStorage.getItem('token');
+//     if (!token) {
+//         errHandler({ message: 'token不存在', type: 'danger' }, dispatch, COMMENT);
+//         return;
+//     }
+//     //socket.emit('addComment', step, cid, commenter, comment, token);
+//     // return fetch(`${URL}/candidates/${cid}/comments`, {
+//     //     method: 'POST',
+//     //     body: JSON.stringify({ uid: commenter, comment, step }),
+//     //     headers: { 'content-type': 'application/json' },
+//     // })
+//     //     .then(resHandler)
+//     //     .then(res => {
+//     //         if (res.type !== 'success') throw res;
+//     //     })
+//     //     // .then(() => {
+//     //     //     dispatch({ type: COMMENT.SUCCESS });
+//     //     //     dispatch(actions.addComment(step, cid, commenter, comment));
+//     //     // })
+//     //     .catch(err => {
+//     //         dispatch(actions.toggleSnackbarOn(`ERROR: ${err.message}`, err.type || 'danger'));
+//     //         dispatch({ type: COMMENT.FAILURE });
+//     //     });
+// };
 
-export const removeComment = (step: number, cid: string, commenter: string) => (dispatch: Dispatch) => {
-    dispatch({ type: COMMENT.START });
-    const token = sessionStorage.getItem('token');
-    if (!token) {
-        errHandler({ message: 'token不存在', type: 'danger' }, dispatch, COMMENT);
-        return;
-    }
-    socket.emit('removeComment', step, cid, commenter, token);
-    // return fetch(`${URL}/candidates/${cid}/comments/${commenter}`, {
-    //     method: 'DELETE',
-    //     body: JSON.stringify({ step }),
-    //     headers: { 'content-type': 'application/json' },
-    // })
-    //     .then(resHandler)
-    //     .then(res => {
-    //         if (res.type !== 'success') throw res;
-    //     })
-    //     // .then(() => {
-    //     //     dispatch({ type: COMMENT.SUCCESS });
-    //     //     dispatch(actions.removeComment(step, cid, commenter));
-    //     // })
-    //     .catch(err => {
-    //         dispatch({ type: COMMENT.FAILURE });
-    //         dispatch(actions.toggleSnackbarOn(`ERROR: ${err.message}`, err.type || 'danger'));
-    //     });
-};
+// export const removeComment = (step: number, cid: string, commenter: string) => (dispatch: Dispatch) => {
+//     dispatch({ type: COMMENT.START });
+//     const token = sessionStorage.getItem('token');
+//     if (!token) {
+//         errHandler({ message: 'token不存在', type: 'danger' }, dispatch, COMMENT);
+//         return;
+//     }
+//     //socket.emit('removeComment', step, cid, commenter, token);
+//     // return fetch(`${URL}/candidates/${cid}/comments/${commenter}`, {
+//     //     method: 'DELETE',
+//     //     body: JSON.stringify({ step }),
+//     //     headers: { 'content-type': 'application/json' },
+//     // })
+//     //     .then(resHandler)
+//     //     .then(res => {
+//     //         if (res.type !== 'success') throw res;
+//     //     })
+//     //     // .then(() => {
+//     //     //     dispatch({ type: COMMENT.SUCCESS });
+//     //     //     dispatch(actions.removeComment(step, cid, commenter));
+//     //     // })
+//     //     .catch(err => {
+//     //         dispatch({ type: COMMENT.FAILURE });
+//     //         dispatch(actions.toggleSnackbarOn(`ERROR: ${err.message}`, err.type || 'danger'));
+//     //     });
+// };
 
 
-export const RECRUITMENT = actionTypeCreator('RECRUITMENT');
-export const requestRecruitments = () => (dispatch: Dispatch) => {
-    dispatch({ type: RECRUITMENT.START });
-    const recruitments = sessionStorage.getItem('historyRecruitments');
-    if (recruitments && !store.getState().recruitments.shouldUpdateRecruitment) {
-        dispatch(actions.setRecruitments(JSON.parse(recruitments)));
-        dispatch({ type: RECRUITMENT.SUCCESS });
-        return;
-    }
-    const token = sessionStorage.getItem('token');
-    if (!token) {
-        errHandler({ message: 'token不存在', type: 'danger' }, dispatch, RECRUITMENT);
-        return;
-    }
-    return fetch(`${URL}/recruitment`, {
-        headers: {
-            'Authorization': `Bearer ${token}`
-        },
-    })
-        .then(resHandler)
-        .then(res => {
-            if (res.type === 'success') {
-                sessionStorage.setItem('historyRecruitments', JSON.stringify(res.data));
-                dispatch(actions.setRecruitments(res.data));
-                dispatch({ type: RECRUITMENT.SUCCESS });
-            } else {
-                throw res;
-            }
-        })
-        .catch(err => errHandler(err, dispatch, RECRUITMENT))
-};
+// export const RECRUITMENT = actionTypeCreator('RECRUITMENT');
+// export const requestRecruitments = () => (dispatch: Dispatch) => {
+//     dispatch({ type: RECRUITMENT.START });
+//     const recruitments = sessionStorage.getItem('historyRecruitments');
+//     if (recruitments && !store.getState().recruitments.shouldUpdateRecruitment) {
+//         dispatch(actions.setRecruitments(JSON.parse(recruitments)));
+//         dispatch({ type: RECRUITMENT.SUCCESS });
+//         return;
+//     }
+//     const token = sessionStorage.getItem('token');
+//     if (!token) {
+//         errHandler({ message: 'token不存在', type: 'danger' }, dispatch, RECRUITMENT);
+//         return;
+//     }
+//     return fetch(`${URL}/recruitment`, {
+//         headers: {
+//             'Authorization': `Bearer ${token}`
+//         },
+//     })
+//         .then(resHandler)
+//         .then(res => {
+//             if (res.type === 'success') {
+//                 sessionStorage.setItem('historyRecruitments', JSON.stringify(res.data));
+//                 dispatch(actions.setRecruitments(res.data));
+//                 dispatch({ type: RECRUITMENT.SUCCESS });
+//             } else {
+//                 throw res;
+//             }
+//         })
+//         .catch(err => errHandler(err, dispatch, RECRUITMENT))
+// };
 
-export const launchRecruitment = (info: object) => (dispatch: Dispatch) => {
-    dispatch({ type: RECRUITMENT.START });
-    const token = sessionStorage.getItem('token');
-    if (!token) {
-        errHandler({ message: 'token不存在', type: 'danger' }, dispatch, RECRUITMENT);
-        return;
-    }
-    return fetch(`${URL}/recruitment`, {
-        method: 'POST',
-        body: JSON.stringify(info),
-        headers: {
-            'content-type': 'application/json',
-            'Authorization': `Bearer ${token}`
-        },
-    })
-        .then(resHandler)
-        .then(res => {
-            if (res.type === 'success') {
-                dispatch(actions.setShouldUpdateRecruitment());
-                dispatch(actions.toggleSnackbarOn('已成功发起招新！', 'success'));
-                dispatch({ type: RECRUITMENT.SUCCESS });
-            } else {
-                throw res;
-            }
-        })
-        .catch(err => errHandler(err, dispatch, RECRUITMENT))
-};
+// export const launchRecruitment = (info: object) => (dispatch: Dispatch) => {
+//     dispatch({ type: RECRUITMENT.START });
+//     const token = sessionStorage.getItem('token');
+//     if (!token) {
+//         errHandler({ message: 'token不存在', type: 'danger' }, dispatch, RECRUITMENT);
+//         return;
+//     }
+//     return fetch(`${URL}/recruitment`, {
+//         method: 'POST',
+//         body: JSON.stringify(info),
+//         headers: {
+//             'content-type': 'application/json',
+//             'Authorization': `Bearer ${token}`
+//         },
+//     })
+//         .then(resHandler)
+//         .then(res => {
+//             if (res.type === 'success') {
+//                 dispatch(actions.setShouldUpdateRecruitment());
+//                 dispatch(actions.toggleSnackbarOn('已成功发起招新！', 'success'));
+//                 dispatch({ type: RECRUITMENT.SUCCESS });
+//             } else {
+//                 throw res;
+//             }
+//         })
+//         .catch(err => errHandler(err, dispatch, RECRUITMENT))
+// };
 
-export const SMS = actionTypeCreator('SMS');
-export const sendSMS = (content: object) => (dispatch: Dispatch) => {
-    dispatch({ type: SMS.START });
-    const token = sessionStorage.getItem('token');
-    if (!token) {
-        errHandler({ message: 'token不存在', type: 'danger' }, dispatch, SMS);
-        return;
-    }
-    return fetch(`${URL}/sms`, {
-        method: 'POST',
-        body: JSON.stringify(content),
-        headers: {
-            'content-type': 'application/json',
-            'Authorization': `Bearer ${token}`
-        },
-    })
-        .then(resHandler)
-        .then(res => {
-            if (res.type === 'success') {
-                dispatch(actions.toggleSnackbarOn('已成功发送短信', 'success'));
-                dispatch({ type: SMS.SUCCESS });
-            } else {
-                throw res;
-            }
-        })
-        .catch(err => errHandler(err, dispatch, SMS))
-};
+// export const SMS = actionTypeCreator('SMS');
+// export const sendSMS = (content: object) => (dispatch: Dispatch) => {
+//     dispatch({ type: SMS.START });
+//     const token = sessionStorage.getItem('token');
+//     if (!token) {
+//         errHandler({ message: 'token不存在', type: 'danger' }, dispatch, SMS);
+//         return;
+//     }
+//     return fetch(`${URL}/sms`, {
+//         method: 'POST',
+//         body: JSON.stringify(content),
+//         headers: {
+//             'content-type': 'application/json',
+//             'Authorization': `Bearer ${token}`
+//         },
+//     })
+//         .then(resHandler)
+//         .then(res => {
+//             if (res.type === 'success') {
+//                 dispatch(actions.toggleSnackbarOn('已成功发送短信', 'success'));
+//                 dispatch({ type: SMS.SUCCESS });
+//             } else {
+//                 throw res;
+//             }
+//         })
+//         .catch(err => errHandler(err, dispatch, SMS))
+// };
 
-export const sendInterview = (content: object) => (dispatch: Dispatch) => {
-    dispatch({ type: SMS.START });
-    const token = sessionStorage.getItem('token');
-    if (!token) {
-        errHandler({ message: 'token不存在', type: 'danger' }, dispatch, SMS);
-        return;
-    }
-    return fetch(`${URL}/sms/interview`, {
-        method: 'POST',
-        body: JSON.stringify(content),
-        headers: {
-            'content-type': 'application/json',
-            'Authorization': `Bearer ${token}`
-        },
-    })
-        .then(resHandler)
-        .then(res => {
-            if (res.type === 'success') {
-                dispatch(actions.toggleSnackbarOn('已成功发送短信', 'success'));
-                dispatch({ type: SMS.SUCCESS });
-            } else {
-                throw res;
-            }
-        })
-        .catch(err => errHandler(err, dispatch, SMS))
-};
+// export const sendInterview = (content: object) => (dispatch: Dispatch) => {
+//     dispatch({ type: SMS.START });
+//     const token = sessionStorage.getItem('token');
+//     if (!token) {
+//         errHandler({ message: 'token不存在', type: 'danger' }, dispatch, SMS);
+//         return;
+//     }
+//     return fetch(`${URL}/sms/interview`, {
+//         method: 'POST',
+//         body: JSON.stringify(content),
+//         headers: {
+//             'content-type': 'application/json',
+//             'Authorization': `Bearer ${token}`
+//         },
+//     })
+//         .then(resHandler)
+//         .then(res => {
+//             if (res.type === 'success') {
+//                 dispatch(actions.toggleSnackbarOn('已成功发送短信', 'success'));
+//                 dispatch({ type: SMS.SUCCESS });
+//             } else {
+//                 throw res;
+//             }
+//         })
+//         .catch(err => errHandler(err, dispatch, SMS))
+// };
 
-export const getVerifyCode = () => (dispatch: Dispatch) => {
-    dispatch({ type: SMS.START });
-    const token = sessionStorage.getItem('token');
-    if (!token) {
-        errHandler({ message: 'token不存在', type: 'danger' }, dispatch, SMS);
-        return;
-    }
-    return fetch(`${URL}/verification/user`, {
-        headers: {
-            'Authorization': `Bearer ${token}`
-        },
-    })
-        .then(resHandler)
-        .then(res => {
-            if (res.type === 'success') {
-                dispatch(actions.toggleSnackbarOn('验证码已发送！', 'success'));
-                dispatch({ type: SMS.SUCCESS });
-            } else {
-                throw res;
-            }
-        })
-        .catch(err => errHandler(err, dispatch, SMS))
-};
+// export const getVerifyCode = () => (dispatch: Dispatch) => {
+//     dispatch({ type: SMS.START });
+//     const token = sessionStorage.getItem('token');
+//     if (!token) {
+//         errHandler({ message: 'token不存在', type: 'danger' }, dispatch, SMS);
+//         return;
+//     }
+//     return fetch(`${URL}/verification/user`, {
+//         headers: {
+//             'Authorization': `Bearer ${token}`
+//         },
+//     })
+//         .then(resHandler)
+//         .then(res => {
+//             if (res.type === 'success') {
+//                 dispatch(actions.toggleSnackbarOn('验证码已发送！', 'success'));
+//                 dispatch({ type: SMS.SUCCESS });
+//             } else {
+//                 throw res;
+//             }
+//         })
+//         .catch(err => errHandler(err, dispatch, SMS))
+// };
 
-export const submitSlots = (title: string, slots: number[], group: string) => (dispatch: Dispatch) => {
-    dispatch({ type: CANDIDATE.START });
-    const token = sessionStorage.getItem('token');
-    if (!token) {
-        errHandler({ message: 'token不存在', type: 'danger' }, dispatch, SMS);
-        return;
-    }
-    return fetch(`${URL}/recruitment/slots`, {
-        method: 'POST',
-        body: JSON.stringify({
-            title,
-            slots,
-            group
-        }),
-        headers: {
-            'content-type': 'application/json',
-            'Authorization': `Bearer ${token}`
-        },
-    })
-        .then(resHandler)
-        .then(res => {
-            if (res.type === 'success') {
-                dispatch(actions.setSlot(res.result, res.interview));
-                if (res.failed === 0) {
-                    dispatch(actions.toggleSnackbarOn('所有候选人均分配了时间！', 'success'));
-                } else {
-                    dispatch(actions.toggleSnackbarOn(`有${res.failed}位候选人没有分配到时间！`, 'info'));
-                }
-                dispatch({ type: CANDIDATE.SUCCESS });
-            } else {
-                throw res;
-            }
-        })
-        .catch(err => errHandler(err, dispatch, CANDIDATE))
-};
+// export const submitSlots = (title: string, slots: number[], group: string) => (dispatch: Dispatch) => {
+//     dispatch({ type: CANDIDATE.START });
+//     const token = sessionStorage.getItem('token');
+//     if (!token) {
+//         errHandler({ message: 'token不存在', type: 'danger' }, dispatch, SMS);
+//         return;
+//     }
+//     return fetch(`${URL}/recruitment/slots`, {
+//         method: 'POST',
+//         body: JSON.stringify({
+//             title,
+//             slots,
+//             group
+//         }),
+//         headers: {
+//             'content-type': 'application/json',
+//             'Authorization': `Bearer ${token}`
+//         },
+//     })
+//         .then(resHandler)
+//         .then(res => {
+//             if (res.type === 'success') {
+//                 dispatch(actions.setSlot(res.result, res.interview));
+//                 if (res.failed === 0) {
+//                     dispatch(actions.toggleSnackbarOn('所有候选人均分配了时间！', 'success'));
+//                 } else {
+//                     dispatch(actions.toggleSnackbarOn(`有${res.failed}位候选人没有分配到时间！`, 'info'));
+//                 }
+//                 dispatch({ type: CANDIDATE.SUCCESS });
+//             } else {
+//                 throw res;
+//             }
+//         })
+//         .catch(err => errHandler(err, dispatch, CANDIDATE))
+// };
 
-export const sendMessage = (message: string) => (dispatch: Dispatch) => {
-    const state = store.getState();
-    const name = state.user.info.username;
-    const avatar = state.user.info.avatar;
-    const time = +new Date();
-    dispatch(actions.addMessage(name, avatar, time, message, true));
-    socket.emit('sendMessage', name, avatar, time, message, false);
-};
+// export const sendMessage = (message: string) => (dispatch: Dispatch) => {
+//     const state = store.getState();
+//     const name = state.user.info.username;
+//     const avatar = state.user.info.avatar;
+//     const time = +new Date();
+//     dispatch(actions.addMessage(name, avatar, time, message, true));
+//     //socket.emit('sendMessage', name, avatar, time, message, false);
+// };
 
-export const sendImage = (image: string) => (dispatch: Dispatch) => {
-    const state = store.getState();
-    const name = state.user.info.username;
-    const avatar = state.user.info.avatar;
-    const time = +new Date();
-    dispatch(actions.addImage(name, avatar, time, image, true));
-    socket.emit('sendMessage', name, avatar, time, image, true);
-};
+// export const sendImage = (image: string) => (dispatch: Dispatch) => {
+//     const state = store.getState();
+//     const name = state.user.info.username;
+//     const avatar = state.user.info.avatar;
+//     const time = +new Date();
+//     dispatch(actions.addImage(name, avatar, time, image, true));
+//     //socket.emit('sendMessage', name, avatar, time, image, true);
+// };
 
-socket.on('removeCandidate', (cid: string) => {
-    store.dispatch({ type: CANDIDATE.START });
-    store.dispatch(actions.removeCandidateFulFilled(cid));
-    store.dispatch(actions.toggleSnackbarOn('有候选人被移除了！', 'info'));
-    store.dispatch({ type: CANDIDATE.SUCCESS });
-});
-socket.on('removeCandidateError', (message: string, color: string) => {
-    store.dispatch(actions.toggleSnackbarOn(`ERROR: ${message}`, color || 'danger'));
-    store.dispatch({ type: CANDIDATE.FAILURE });
-});
-
-socket.on('moveCandidate', (cid: string, from: number, to: number) => {
-    store.dispatch({ type: CANDIDATE.START });
-    store.dispatch(actions.moveCandidate(from, to, cid));
-    store.dispatch(actions.toggleSnackbarOn('有候选人被移动了！', 'info'));
-    store.dispatch({ type: CANDIDATE.SUCCESS });
-});
-socket.on('moveCandidateSuccess', () => {
-    store.dispatch({ type: CANDIDATE.SUCCESS });
-});
-socket.on('moveCandidateError', (message: string, color: string, data: { to: number, from: number, cid: string }) => {
-    store.dispatch(actions.moveCandidate(data.to, data.from, data.cid));
-    store.dispatch(actions.toggleSnackbarOn(`ERROR: ${message}`, color || 'danger'));
-    store.dispatch({ type: CANDIDATE.FAILURE });
-});
-
-socket.on('addComment', (step: number, cid: string, commenter: string, comment: Comment) => {
-    store.dispatch({ type: COMMENT.START });
-    store.dispatch(actions.addComment(step, cid, commenter, comment));
-    store.dispatch({ type: COMMENT.SUCCESS });
-});
-socket.on('addCommentError', (message: string, color: string) => {
-    store.dispatch(actions.toggleSnackbarOn(`ERROR: ${message}`, color || 'danger'));
-    store.dispatch({ type: COMMENT.FAILURE });
-});
-
-socket.on('removeComment', (step: number, cid: string, commenter: string) => {
-    store.dispatch({ type: COMMENT.START });
-    store.dispatch(actions.removeComment(step, cid, commenter));
-    store.dispatch({ type: COMMENT.SUCCESS });
-});
-socket.on('removeCommentError', (message: string, color: string) => {
-    store.dispatch(actions.toggleSnackbarOn(`ERROR: ${message}`, color || 'danger'));
-    store.dispatch({ type: COMMENT.FAILURE });
-});
-socket.on('addCandidate', (candidate: object) => {
-    store.dispatch({ type: CANDIDATE.START });
-    store.dispatch(actions.addCandidate(candidate));
-    store.dispatch(actions.toggleSnackbarOn(`${candidate['group']}组多了一名报名选手！`, 'info'));
-    store.dispatch({ type: CANDIDATE.SUCCESS });
-});
-
-socket.on('updateRecruitment', () => {
-    store.dispatch({ type: RECRUITMENT.START });
-    store.dispatch(actions.setShouldUpdateRecruitment());
-    store.dispatch({ type: RECRUITMENT.SUCCESS });
-});
-
-socket.on('receiveMessage', (name: string, avatar: string, time: number, message: string) => {
-    store.dispatch({ type: USER.START });
-    store.dispatch(actions.addMessage(name, avatar, time, message, false));
-    store.dispatch({ type: USER.SUCCESS });
-});
-
-socket.on('receiveImage', (name: string, avatar: string, time: number, image: string) => {
-    store.dispatch({ type: USER.START });
-    store.dispatch(actions.addImage(name, avatar, time, image, false));
-    store.dispatch({ type: USER.SUCCESS });
-});
+// socket.on('removeCandidate', (cid: string) => {
+//     store.dispatch({ type: CANDIDATE.START });
+//     store.dispatch(actions.removeCandidateFulFilled(cid));
+//     store.dispatch(actions.toggleSnackbarOn('有候选人被移除了！', 'info'));
+//     store.dispatch({ type: CANDIDATE.SUCCESS });
+// });
+// socket.on('removeCandidateError', (message: string, color: string) => {
+//     store.dispatch(actions.toggleSnackbarOn(`ERROR: ${message}`, color || 'danger'));
+//     store.dispatch({ type: CANDIDATE.FAILURE });
+// });
+//
+// socket.on('moveCandidate', (cid: string, from: number, to: number) => {
+//     store.dispatch({ type: CANDIDATE.START });
+//     store.dispatch(actions.moveCandidate(from, to, cid));
+//     store.dispatch(actions.toggleSnackbarOn('有候选人被移动了！', 'info'));
+//     store.dispatch({ type: CANDIDATE.SUCCESS });
+// });
+// socket.on('moveCandidateSuccess', () => {
+//     store.dispatch({ type: CANDIDATE.SUCCESS });
+// });
+// socket.on('moveCandidateError', (message: string, color: string, data: { to: number, from: number, cid: string }) => {
+//     store.dispatch(actions.moveCandidate(data.to, data.from, data.cid));
+//     store.dispatch(actions.toggleSnackbarOn(`ERROR: ${message}`, color || 'danger'));
+//     store.dispatch({ type: CANDIDATE.FAILURE });
+// });
+//
+// socket.on('addComment', (step: number, cid: string, commenter: string, comment: Comment) => {
+//     store.dispatch({ type: COMMENT.START });
+//     store.dispatch(actions.addComment(step, cid, commenter, comment));
+//     store.dispatch({ type: COMMENT.SUCCESS });
+// });
+// socket.on('addCommentError', (message: string, color: string) => {
+//     store.dispatch(actions.toggleSnackbarOn(`ERROR: ${message}`, color || 'danger'));
+//     store.dispatch({ type: COMMENT.FAILURE });
+// });
+//
+// socket.on('removeComment', (step: number, cid: string, commenter: string) => {
+//     store.dispatch({ type: COMMENT.START });
+//     store.dispatch(actions.removeComment(step, cid, commenter));
+//     store.dispatch({ type: COMMENT.SUCCESS });
+// });
+// socket.on('removeCommentError', (message: string, color: string) => {
+//     store.dispatch(actions.toggleSnackbarOn(`ERROR: ${message}`, color || 'danger'));
+//     store.dispatch({ type: COMMENT.FAILURE });
+// });
+// socket.on('addCandidate', (candidate: object) => {
+//     store.dispatch({ type: CANDIDATE.START });
+//     store.dispatch(actions.addCandidate(candidate));
+//     store.dispatch(actions.toggleSnackbarOn(`${candidate['group']}组多了一名报名选手！`, 'info'));
+//     store.dispatch({ type: CANDIDATE.SUCCESS });
+// });
+//
+// socket.on('updateRecruitment', () => {
+//     store.dispatch({ type: RECRUITMENT.START });
+//     store.dispatch(actions.setShouldUpdateRecruitment());
+//     store.dispatch({ type: RECRUITMENT.SUCCESS });
+// });
+//
+// socket.on('receiveMessage', (name: string, avatar: string, time: number, message: string) => {
+//     store.dispatch({ type: USER.START });
+//     store.dispatch(actions.addMessage(name, avatar, time, message, false));
+//     store.dispatch({ type: USER.SUCCESS });
+// });
+//
+// socket.on('receiveImage', (name: string, avatar: string, time: number, image: string) => {
+//     store.dispatch({ type: USER.START });
+//     store.dispatch(actions.addImage(name, avatar, time, image, false));
+//     store.dispatch({ type: USER.SUCCESS });
+// });

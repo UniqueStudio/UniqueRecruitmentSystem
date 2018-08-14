@@ -1,10 +1,10 @@
 import { catchError, map, mergeMap, startWith } from 'rxjs/operators';
-import { from, of } from 'rxjs';
+import { from } from 'rxjs';
 import { Epic, ofType } from "redux-observable";
-import { CANDIDATE, CandidateAction } from './index';
-import { GET_RESUME, GetResume, toggleSnackbarOn } from '../../action';
+import { Action, CANDIDATE, customError, Dependencies, errHandler } from '../index';
+import { GET_RESUME, GetResume } from '../../action';
 import { URL } from '../../lib/const';
-import { customError } from '../index';
+import { StoreState } from '../../reducer';
 
 const downloadResume = (res: Response) => {
     if (!res.ok) {
@@ -37,14 +37,14 @@ const downloadResume = (res: Response) => {
     );
 };
 
-export const getResumeEpic: Epic<CandidateAction> = action$ =>
+export const getResumeEpic: Epic<Action, any, StoreState, Dependencies> = (action$, state$, { sessionStorage }) =>
     action$.pipe(
         ofType(GET_RESUME),
         mergeMap((action: GetResume) => {
             const token = sessionStorage.getItem('token');
             const { cid } = action;
             if (!token) {
-                throw customError({ message: 'token不存在', type: 'danger' });
+                return errHandler({ message: 'token不存在', type: 'danger' }, CANDIDATE)
             }
             return from(fetch(`${URL}/candidates/${cid}/resume`, {
                 headers: {
@@ -55,10 +55,7 @@ export const getResumeEpic: Epic<CandidateAction> = action$ =>
                 startWith(
                     { type: CANDIDATE.START }
                 ),
+                catchError(err => errHandler(err, CANDIDATE))
             )
         }),
-        catchError(err => of(
-            toggleSnackbarOn(`Error: ${err.message}`, err.type || 'danger'),
-            { type: CANDIDATE.FAILURE }
-        ))
     );
