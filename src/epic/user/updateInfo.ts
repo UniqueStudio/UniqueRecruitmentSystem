@@ -1,13 +1,12 @@
-import { catchError, endWith, map, mergeMap, startWith } from 'rxjs/operators';
-import { of } from 'rxjs';
-import { ajax } from 'rxjs/ajax';
+import { catchError, endWith, map, mergeMap, startWith, tap } from 'rxjs/operators';
+import { ajax, AjaxResponse } from 'rxjs/ajax';
 import { Epic, ofType } from "redux-observable";
-import { USER, UserAction } from './index';
+import { Action, customError, Dependencies, errHandler, USER } from '../index';
 import { setUserInfo, toggleSnackbarOn, UPDATE_USER_INFO, UpdateUserInfo } from '../../action';
 import { URL } from '../../lib/const';
-import { customError } from '../index';
+import { StoreState } from '../../reducer';
 
-export const updateInfoEpic: Epic<UserAction> = action$ =>
+export const updateInfoEpic: Epic<Action, any, StoreState, Dependencies> = (action$, state$, { sessionStorage }) =>
     action$.pipe(
         ofType(UPDATE_USER_INFO),
         mergeMap((action: UpdateUserInfo) => {
@@ -15,20 +14,20 @@ export const updateInfoEpic: Epic<UserAction> = action$ =>
             const formerInfo = sessionStorage.getItem('userInfo') || '{}';
             const { uid, info } = action;
             if (!token) {
-                throw customError({ message: 'token不存在', type: 'danger' });
+                return errHandler({ message: 'token不存在', type: 'danger' }, USER);
             }
             return ajax.put(`${URL}/user/${uid}`, JSON.stringify({ uid, ...info }), {
                 'Authorization': `Bearer ${token}`,
                 'Content-Type': 'application/json',
             }).pipe(
-                map((response: any) => {
+                map((response: AjaxResponse) => {
                     const res = response.response;
                     if (res.type === 'success') {
-                        sessionStorage.setItem('userInfo', JSON.stringify({ ...JSON.parse(formerInfo), ...info }));
                         return setUserInfo(info);
                     }
                     throw customError(res);
                 }),
+                tap(() => sessionStorage.setItem('userInfo', JSON.stringify({ ...JSON.parse(formerInfo), ...info }))),
                 startWith(
                     { type: USER.START }
                 ),
@@ -36,10 +35,7 @@ export const updateInfoEpic: Epic<UserAction> = action$ =>
                     { type: USER.SUCCESS },
                     toggleSnackbarOn('已成功修改信息！', 'success')
                 ),
+                catchError(err => errHandler(err, USER))
             )
         }),
-        catchError(err => of(
-            toggleSnackbarOn(`Error: ${err.message}`, err.type || 'danger'),
-            { type: USER.FAILURE }
-        ))
     );

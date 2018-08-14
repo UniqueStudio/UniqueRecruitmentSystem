@@ -1,4 +1,4 @@
-import * as asyncActions from '../action/async';
+import { SMS } from '../epic';
 
 const init = {
     isLoading: false,
@@ -15,11 +15,11 @@ export function sms(
     action: { type: string }
 ): Sms {
     switch (action.type) {
-        case asyncActions.SMS.START:
+        case SMS.START:
             return { ...state, isLoading: true, status: 'start' };
-        case asyncActions.SMS.SUCCESS:
+        case SMS.SUCCESS:
             return { ...state, isLoading: false, status: 'success' };
-        case asyncActions.SMS.FAILURE:
+        case SMS.FAILURE:
             return { ...state, isLoading: false, status: 'failure' };
 
     }

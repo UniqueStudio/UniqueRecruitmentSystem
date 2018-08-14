@@ -1,24 +1,23 @@
-import { catchError, endWith, map, mergeMap, startWith } from 'rxjs/operators';
+import { catchError, endWith, map, mergeMap, startWith, tap } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { ajax } from 'rxjs/ajax';
 import { Epic, ofType } from "redux-observable";
-import { USER, UserAction } from './index';
-import { GET_GROUP_INFO, GetGroupInfo, setGroupInfo, toggleSnackbarOn } from '../../action';
+import { Action, customError, Dependencies, errHandler, USER } from '../index';
+import { GET_GROUP_INFO, GetGroupInfo, setGroupInfo } from '../../action';
 import { URL } from '../../lib/const';
-import { customError } from '../index';
 import { StoreState } from '../../reducer';
 
-export const getGroupEpic: Epic<UserAction, any, any, StoreState> = (action$, state$) =>
+export const getGroupEpic: Epic<Action, any, StoreState, Dependencies> = (action$, state$, { sessionStorage }) =>
     action$.pipe(
         ofType(GET_GROUP_INFO),
         mergeMap((action: GetGroupInfo) => {
             const token = sessionStorage.getItem('token');
             const { group } = action;
             if (!token) {
-                throw customError({ message: 'token不存在', type: 'danger' });
+                return errHandler({ message: 'token不存在', type: 'danger' }, USER);
             }
             if (!group) {
-                throw customError({ message: '请先完善个人信息！', type: 'danger' });
+                return errHandler({ message: '请先完善个人信息', type: 'danger' }, USER);
             }
             const groupInfo = sessionStorage.getItem('groupInfo');
             if (groupInfo && !state$.value.user.shouldUpdateGroup) {
@@ -32,21 +31,19 @@ export const getGroupEpic: Epic<UserAction, any, any, StoreState> = (action$, st
                 .pipe(
                     map((res: any) => {
                         if (res.type === 'success') {
-                            sessionStorage.setItem('groupInfo', JSON.stringify(res.data));
-                            return setGroupInfo(res.data);
+                            return res.data;
                         }
                         throw customError(res);
                     }),
+                    tap(data => sessionStorage.setItem('groupInfo', JSON.stringify(data))),
+                    map(data => setGroupInfo(data)),
                     startWith(
                         { type: USER.START }
                     ),
                     endWith(
                         { type: USER.SUCCESS },
                     ),
-                )
-        }),
-        catchError(err => of(
-            toggleSnackbarOn(`Error: ${err.message}`, err.type || 'danger'),
-            { type: USER.FAILURE }
-        ))
+                    catchError(err => errHandler(err, USER)
+                    ))
+        })
     );

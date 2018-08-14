@@ -1,5 +1,5 @@
 import * as actions from '../action';
-import * as asyncActions from '../action/async'
+import { USER } from '../epic'
 import { User as UType } from '../lib/const';
 
 const info = sessionStorage.getItem('userInfo');
@@ -31,7 +31,7 @@ export interface User {
     uid: string;
     isLoading: boolean;
     isScanning: boolean;
-    info: object;
+    info: UType;
     key: string;
     messages: object[];
     group: UType[];
@@ -51,15 +51,15 @@ const insert = (item: object, arr: object[]) => {
             break;
         }
     }
-    return arr;
+    return arr.slice(-75); // get 75 messages
 };
 
 export function user(state: User = init, action: Action): User {
     switch (action.type) {
-        case asyncActions.USER.START:
+        case USER.START:
             return { ...state, isLoading: true };
-        case asyncActions.USER.FAILURE:
-        case asyncActions.USER.SUCCESS:
+        case USER.FAILURE:
+        case USER.SUCCESS:
             return { ...state, isLoading: false };
         case actions.SET_QR_CODE:
             return { ...state, key: action.key, isScanning: Boolean(action.key) };

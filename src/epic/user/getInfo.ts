@@ -1,19 +1,19 @@
 import { of } from 'rxjs';
 import { ajax } from 'rxjs/ajax';
-import { catchError, endWith, map, mergeMap, startWith } from 'rxjs/operators';
+import { catchError, endWith, map, mergeMap, startWith, tap } from 'rxjs/operators';
 import { Epic, ofType } from "redux-observable";
-import { GET_USER_INFO, GetUserInfo, setUserInfo, toggleSnackbarOn } from '../../action';
-import { USER, UserAction } from './index';
+import { GET_USER_INFO, GetUserInfo, setUserInfo } from '../../action';
+import { Action, Dependencies, errHandler, USER } from '../index';
 import { URL } from '../../lib/const';
-import { customError } from '../index';
+import { StoreState } from '../../reducer';
 
-export const getInfoEpic: Epic<UserAction> = action$ =>
+export const getInfoEpic: Epic<Action, any, StoreState, Dependencies> = (action$, state$, { sessionStorage }) =>
     action$.pipe(
         ofType(GET_USER_INFO),
         mergeMap((action: GetUserInfo) => {
             const token = sessionStorage.getItem('token');
             if (!token) {
-                throw customError({ message: 'token不存在', type: 'danger' });
+                return errHandler({ message: 'token不存在', type: 'danger' }, USER);
             }
             const user = sessionStorage.getItem('userInfo');
             if (user && action.uid === sessionStorage.getItem('uid')) {
@@ -27,21 +27,19 @@ export const getInfoEpic: Epic<UserAction> = action$ =>
                 .pipe(
                     map((res: any) => {
                         if (res.type === 'success') {
-                            sessionStorage.setItem('userInfo', JSON.stringify(res.data));
-                            return setUserInfo(res.data);
+                            return res.data;
                         }
-                        throw customError(res);
+                        throw res;
                     }),
+                    tap(data => sessionStorage.setItem('userInfo', JSON.stringify(data))),
+                    map(data => setUserInfo(data)),
                     startWith(
                         { type: USER.START }
                     ),
                     endWith(
                         { type: USER.SUCCESS },
                     ),
+                    catchError(err => errHandler(err, USER))
                 )
         }),
-        catchError(err => of(
-            toggleSnackbarOn(`Error: ${err.message}`, err.type || 'danger'),
-            { type: USER.FAILURE }
-        ))
     );
