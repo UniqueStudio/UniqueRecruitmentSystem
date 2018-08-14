@@ -16,19 +16,19 @@
     esutils "^2.0.2"
     js-tokens "^3.0.0"
 
+"@babel/runtime-corejs2@7.0.0-beta.56":
+  version "7.0.0-beta.56"
+  resolved "https://registry.yarnpkg.com/@babel/runtime-corejs2/-/runtime-corejs2-7.0.0-beta.56.tgz#6df5fbaa78e4bfdc22dfc5b36493ef238d55a027"
+  dependencies:
+    core-js "^2.5.7"
+    regenerator-runtime "^0.12.0"
+
 "@babel/runtime@7.0.0-beta.42":
   version "7.0.0-beta.42"
   resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.0.0-beta.42.tgz#352e40c92e0460d3e82f49bd7e79f6cda76f919f"
   dependencies:
     core-js "^2.5.3"
     regenerator-runtime "^0.11.1"
-
-"@babel/runtime@7.0.0-beta.52":
-  version "7.0.0-beta.52"
-  resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.0.0-beta.52.tgz#3f3b42b82b92b4e1a283fc78df1bb2fd4ba8d0c7"
-  dependencies:
-    core-js "^2.5.7"
-    regenerator-runtime "^0.12.0"
 
 "@babel/runtime@^7.0.0-beta.42":
   version "7.0.0-beta.55"
@@ -126,9 +126,9 @@
   dependencies:
     "@types/react" "*"
 
-"@types/react-beautiful-dnd@^7.1.0":
-  version "7.1.0"
-  resolved "https://registry.yarnpkg.com/@types/react-beautiful-dnd/-/react-beautiful-dnd-7.1.0.tgz#a2dedec5e4fd7b301c51901dd709d7d5c1602a02"
+"@types/react-beautiful-dnd@^7.1.1":
+  version "7.1.1"
+  resolved "https://registry.yarnpkg.com/@types/react-beautiful-dnd/-/react-beautiful-dnd-7.1.1.tgz#f0e2360ca9ccfed94461d52cccb67f72675e4706"
   dependencies:
     "@types/react" "*"
 
@@ -6030,11 +6030,11 @@ rc@^1.0.1, rc@^1.1.6, rc@^1.2.7:
     minimist "^1.2.0"
     strip-json-comments "~2.0.1"
 
-react-beautiful-dnd@^8.0.5:
-  version "8.0.5"
-  resolved "https://registry.yarnpkg.com/react-beautiful-dnd/-/react-beautiful-dnd-8.0.5.tgz#962faf703f1334679b779936674f2da0dd8791f1"
+react-beautiful-dnd@^9.0.0:
+  version "9.0.0"
+  resolved "https://registry.yarnpkg.com/react-beautiful-dnd/-/react-beautiful-dnd-9.0.0.tgz#94ec61f0ba45c773063eec6653eb712c11fb78d4"
   dependencies:
-    "@babel/runtime" "7.0.0-beta.52"
+    "@babel/runtime-corejs2" "7.0.0-beta.56"
     css-box-model "^1.0.0"
     memoize-one "^4.0.0"
     prop-types "^15.6.1"
@@ -6335,10 +6335,6 @@ redux-devtools-extension@^2.13.5:
 redux-observable@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/redux-observable/-/redux-observable-1.0.0.tgz#780ff2455493eedcef806616fe286b454fd15d91"
-
-redux-thunk@^2.3.0:
-  version "2.3.0"
-  resolved "https://registry.yarnpkg.com/redux-thunk/-/redux-thunk-2.3.0.tgz#51c2c19a185ed5187aaa9a2d08b666d0d6467622"
 
 redux@^4.0.0:
   version "4.0.0"
