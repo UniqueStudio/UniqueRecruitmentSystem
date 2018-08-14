@@ -9,10 +9,10 @@ export const onMoveCandidate = (socket: Socket) => (cid: string, from: number, t
         try {
             verifyJWT(token);
             console.log(processing);
-            console.log(cid, from, to);
-            processing.push(cid);
             const movingCandidate = await database.query('candidates', { _id: new ObjectId(cid), step: from });
             if (!processing.includes(cid) && movingCandidate.length) {
+                processing.push(cid);
+                console.log(cid, from, to);
                 await database.update('candidates', { _id: new ObjectId(cid) }, { step: to });
                 socket.broadcast.emit('moveCandidate', cid, from, to);
                 socket.emit('moveCandidateSuccess');
@@ -20,7 +20,6 @@ export const onMoveCandidate = (socket: Socket) => (cid: string, from: number, t
             } else {
                 console.log('err');
                 socket.emit('moveCandidateError', '候选人已被拖动', 'warning', { cid, from, to });
-                processing = processing.filter(i => i !== cid);
                 return;
             }
             const candidate = (await database.query('candidates', { _id: new ObjectId(cid) }))[0];
