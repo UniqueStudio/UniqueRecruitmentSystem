@@ -10,6 +10,8 @@ import io from 'socket.io-client';
 import { toggleSnackbarOn } from '../action';
 import { socketConnectEpic, socketReceiveEpic } from './webSocket';
 
+export type Socket = typeof io.Socket;
+
 export interface Action {
     type: string;
 }
@@ -54,7 +56,7 @@ const dependencies = { io, socket$: new BehaviorSubject(null), sessionStorage };
 
 export type Dependencies = typeof dependencies;
 
-export const epicMiddleware: EpicMiddleware<any, any, StoreState> = createEpicMiddleware({
+export const epicMiddleware: EpicMiddleware<Action, Action, StoreState> = createEpicMiddleware({
     dependencies
 });
 

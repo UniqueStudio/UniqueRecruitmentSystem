@@ -6,7 +6,7 @@ import { setUserInfo, toggleSnackbarOn, UPDATE_USER_INFO, UpdateUserInfo } from 
 import { URL } from '../../lib/const';
 import { StoreState } from '../../reducer';
 
-export const updateInfoEpic: Epic<Action, any, StoreState, Dependencies> = (action$, state$, { sessionStorage }) =>
+export const updateInfoEpic: Epic<Action, Action, StoreState, Dependencies> = (action$, state$, { sessionStorage }) =>
     action$.pipe(
         ofType(UPDATE_USER_INFO),
         mergeMap((action: UpdateUserInfo) => {

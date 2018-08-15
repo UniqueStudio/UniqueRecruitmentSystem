@@ -1,13 +1,13 @@
 import { mergeMap, switchMap, tap } from 'rxjs/operators';
 import { EMPTY, of } from 'rxjs';
 import { Epic, ofType } from "redux-observable";
-import { Action, CANDIDATE, Dependencies, errHandler } from '../index';
+import { Action, CANDIDATE, Dependencies, errHandler, Socket } from '../index';
 import { MOVE_CANDIDATE_START, moveCandidateFulfilled, MoveCandidateStart } from '../../action';
 import { StoreState } from '../../reducer';
 
-export const moveCandidateEpic: Epic<Action, any, StoreState, Dependencies> = (action$, state$, { sessionStorage, socket$ }) =>
+export const moveCandidateEpic: Epic<Action, Action, StoreState, Dependencies> = (action$, state$, { sessionStorage, socket$ }) =>
     socket$.pipe(
-        switchMap((socket: any) => {
+        switchMap((socket: Socket) => {
             if (socket) {
                 return action$.pipe(
                     ofType(MOVE_CANDIDATE_START),
