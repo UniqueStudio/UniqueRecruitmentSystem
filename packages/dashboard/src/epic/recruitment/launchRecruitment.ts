@@ -6,7 +6,7 @@ import { LAUNCH_RECRUITMENT, LaunchRecruitment, setShouldUpdateRecruitment, togg
 import { URL } from '../../lib/const';
 import { StoreState } from '../../reducer';
 
-export const launchRecruitmentsEpic: Epic<Action, any, StoreState, Dependencies> = (action$, state$, { sessionStorage }) =>
+export const launchRecruitmentsEpic: Epic<Action, Action, StoreState, Dependencies> = (action$, state$, { sessionStorage }) =>
     action$.pipe(
         ofType(LAUNCH_RECRUITMENT),
         mergeMap((action: LaunchRecruitment) => {

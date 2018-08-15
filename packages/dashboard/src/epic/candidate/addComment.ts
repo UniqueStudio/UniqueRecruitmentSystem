@@ -1,13 +1,13 @@
 import { map, switchMap, tap } from 'rxjs/operators';
 import { EMPTY } from 'rxjs';
 import { Epic, ofType } from "redux-observable";
-import { Action, COMMENT, Dependencies, errHandler } from '../index';
+import { Action, COMMENT, Dependencies, errHandler, Socket } from '../index';
 import { ADD_COMMENT_START, AddCommentStart } from '../../action';
 import { StoreState } from '../../reducer';
 
-export const addCommentEpic: Epic<Action, any, StoreState, Dependencies> = (action$, state$, { sessionStorage, socket$ }) =>
+export const addCommentEpic: Epic<Action, Action, StoreState, Dependencies> = (action$, state$, { sessionStorage, socket$ }) =>
     socket$.pipe(
-        switchMap((socket: any) => {
+        switchMap((socket: Socket) => {
             if (socket) {
                 return action$.pipe(
                     ofType(ADD_COMMENT_START),

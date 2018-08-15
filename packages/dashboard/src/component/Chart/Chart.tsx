@@ -36,7 +36,7 @@ class Chart extends PureComponent<Props> {
         clicked: false,
         title: this.props.title
     };
-    setData = (e: any) => {
+    setData = (e: object[]) => {
         // magic function to reset legend
         if (e.length) e['0']._chart.data.datasets['0']._meta[e['0']._chart.id].data.map((i: object) => i['hidden'] = false);
         if (!this.state.clicked && e.length) {
@@ -66,7 +66,7 @@ class Chart extends PureComponent<Props> {
                 hoverBackgroundColor: getColors(300),
             }]
         };
-        const options: any = {
+        const options = {
             cutoutPercentage: this.state.clicked ? 50 : 75,
             maintainAspectRatio: false,
             title: {
@@ -74,7 +74,7 @@ class Chart extends PureComponent<Props> {
                 text: this.state.title
             },
             legend: {
-                position: 'bottom',
+                position: 'bottom' as 'bottom',
                 labels: {
                     boxWidth: 12
                 }

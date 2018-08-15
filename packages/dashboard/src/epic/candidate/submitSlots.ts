@@ -7,7 +7,7 @@ import { setSlots, SUBMIT_SLOTS, SubmitSlots, toggleSnackbarOn } from '../../act
 import { URL } from '../../lib/const';
 import { StoreState } from '../../reducer';
 
-export const submitSlotsEpic: Epic<Action, any, StoreState, Dependencies> = (action$, state$, { sessionStorage }) =>
+export const submitSlotsEpic: Epic<Action, Action, StoreState, Dependencies> = (action$, state$, { sessionStorage }) =>
     action$.pipe(
         ofType(SUBMIT_SLOTS),
         mergeMap((action: SubmitSlots) => {

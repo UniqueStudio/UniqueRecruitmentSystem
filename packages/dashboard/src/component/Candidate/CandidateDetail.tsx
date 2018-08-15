@@ -25,8 +25,7 @@ class CandidateDetail extends PureComponent<Props> {
     render() {
         const { classes, info, downloadResume } = this.props;
         const { name, group, sex, grade, institute, intro, mail, major, phone, score, time1, time2, abandon } = info;
-        const inputProps = { readOnly: true } as any;
-        /* see https://github.com/mui-org/material-ui/issues/8047 */
+        const inputProps = { readOnly: true };
         return (
             <>
                 <div className={classes.detail}>
@@ -35,19 +34,19 @@ class CandidateDetail extends PureComponent<Props> {
                             label="姓名"
                             defaultValue={name}
                             margin="normal"
-                            InputProps={inputProps}
+                            InputProps={{ inputProps }}
                         />
                         <TextField
                             label="组别"
                             defaultValue={group}
                             margin="normal"
-                            InputProps={inputProps}
+                            InputProps={{ inputProps }}
                         />
                         <TextField
                             label="性别"
                             defaultValue={sex === 'Male' ? '男' : '女'}
                             margin="normal"
-                            InputProps={inputProps}
+                            InputProps={{ inputProps }}
                         />
                     </div>
                     <div className={classes.detailRow}>
@@ -55,13 +54,13 @@ class CandidateDetail extends PureComponent<Props> {
                             label="学院"
                             defaultValue={institute}
                             margin="normal"
-                            InputProps={inputProps}
+                            InputProps={{ inputProps }}
                         />
                         <TextField
                             label="专业"
                             defaultValue={major}
                             margin="normal"
-                            InputProps={inputProps}
+                            InputProps={{ inputProps }}
                         />
                     </div>
                     <div className={classes.detailRow}>
@@ -69,13 +68,13 @@ class CandidateDetail extends PureComponent<Props> {
                             label="年级"
                             defaultValue={grade}
                             margin="normal"
-                            InputProps={inputProps}
+                            InputProps={{ inputProps }}
                         />
                         <TextField
                             label="加权"
                             defaultValue={score}
                             margin="normal"
-                            InputProps={inputProps}
+                            InputProps={{ inputProps }}
                         />
                     </div>
                     <div className={classes.detailRow}>
@@ -83,13 +82,13 @@ class CandidateDetail extends PureComponent<Props> {
                             label="邮箱"
                             defaultValue={mail}
                             margin="normal"
-                            InputProps={inputProps}
+                            InputProps={{ inputProps }}
                         />
                         <TextField
                             label="电话号码"
                             defaultValue={phone}
                             margin="normal"
-                            InputProps={inputProps}
+                            InputProps={{ inputProps }}
                         />
                     </div>
                     <div className={classes.detailRow}>
@@ -97,13 +96,13 @@ class CandidateDetail extends PureComponent<Props> {
                             label="组面时间"
                             defaultValue={abandon ? '已放弃' : time1 ? '已决定' : '未决定'}
                             margin="normal"
-                            InputProps={inputProps}
+                            InputProps={{ inputProps }}
                         />
                         <TextField
                             label="群面时间"
                             defaultValue={abandon ? '已放弃' : time2 ? '已决定' : '未决定'}
                             margin="normal"
-                            InputProps={inputProps}
+                            InputProps={{ inputProps }}
                         />
                     </div>
                     <div className={classes.detailRow}>

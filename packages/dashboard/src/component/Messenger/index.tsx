@@ -39,7 +39,7 @@ class Messenger extends PureComponent<Props> {
         minimize: true
     };
 
-    end = null as any;
+    end = document.body as HTMLElement;
 
     scrollToBottom = () => {
         this.end.scrollTop = this.end.scrollHeight;
@@ -141,7 +141,7 @@ class Messenger extends PureComponent<Props> {
                     <RemoveIcon />
                 </IconButton>
                 <div className={classNames(classes.messages, minimize && classes.minimizeMessages)} ref={(el) => {
-                    this.end = el;
+                    el && (this.end = el);
                 }}>
                     {messages.map((i, j) =>
                         <div key={j}
