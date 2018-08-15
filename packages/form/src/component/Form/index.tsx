@@ -37,7 +37,7 @@ class Form extends React.Component<Props> {
         time: 0
     };
 
-    interval = null as any;
+    interval = NaN;
 
     checkMail = (mail: string) => {
         const re = /^(([^<>()\[\].,;:\s@"]+(\.[^<>()\[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/i;
@@ -47,6 +47,11 @@ class Form extends React.Component<Props> {
     checkPhone = (phone: string) => {
         const re = /^((13[0-9])|(14[57])|(15[0-3,5-9])|166|(17[035678])|(18[0-9])|(19[89]))\d{8}$/i;
         return re.test(phone);
+    };
+
+    checkChinese = (data: string) => {
+        const re = /^([\u4E00-\u9FCC\u3400-\u4DB5\uFA0E\uFA0F\uFA11\uFA13\uFA14\uFA1F\uFA21\uFA23\uFA24\uFA27-\uFA29]|[\ud840-\ud868][\udc00-\udfff]|\ud869[\udc00-\uded6\udf00-\udfff]|[\ud86a-\ud86c][\udc00-\udfff]|\ud86d[\udc00-\udf34\udf40-\udfff]|\ud86e[\udc00-\udc1d])+$/;
+        return re.test(data);
     };
 
     handleClick = () => {
@@ -64,14 +69,26 @@ class Form extends React.Component<Props> {
             code: '验证码',
             intro: '自我介绍',
         };
+        let shouldReturn = false;
         Object.entries(info).map(i => {
             if (i[1] === '') {
                 this.setState({
                     snackBarOn: true,
                     content: `请填写${translator[i[0]]}`
                 });
+                shouldReturn = true;
             }
         });
+        [info.name, info.institute, info.major].map(i => {
+            if (!this.checkChinese(i)) {
+                this.setState({
+                    snackBarOn: true,
+                    content: `${translator[i]}必须为中文！`
+                });
+                shouldReturn = true;
+            }
+        });
+        if (shouldReturn) return;
         if (!this.checkMail(info.mail)) {
             this.setState({
                 snackBarOn: true,
@@ -122,9 +139,25 @@ class Form extends React.Component<Props> {
         this.setState({ info: { ...this.state.info, [name]: e.target['value'] } });
     };
 
-    handleFile = (e: React.ChangeEvent) => {
+    handleFile = (event: React.ChangeEvent) => {
+        const file = event.target['files'][0];
+        event.target['value'] = null;
+        if (!file) {
+            this.setState({
+                snackBarOn: true,
+                content: '你没有上传任何文件'
+            });
+            return;
+        }
+        if (file.size > 1024 * 1024 * 100) {
+            this.setState({
+                snackBarOn: true,
+                content: '文件大小必须小于100MB'
+            });
+            return;
+        }
         this.setState({
-            info: { ...this.state.info, resume: e.target['files'][0] }
+            info: { ...this.state.info, resume: file }
         })
     };
 
@@ -164,7 +197,7 @@ class Form extends React.Component<Props> {
                         sent: true,
                         time: 60
                     });
-                    this.interval = setInterval(() => {
+                    this.interval = window.setInterval(() => {
                         if (this.state.time === 0) {
                             this.setState({
                                 sent: false,
@@ -193,7 +226,7 @@ class Form extends React.Component<Props> {
     };
 
     componentWillUnmount() {
-        clearInterval(this.interval);
+        window.clearInterval(this.interval);
     }
 
     public render() {
