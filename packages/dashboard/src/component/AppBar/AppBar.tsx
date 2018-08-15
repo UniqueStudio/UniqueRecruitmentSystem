@@ -5,7 +5,6 @@ import IconButton from '@material-ui/core/IconButton';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
 import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 import MenuIcon from '@material-ui/icons/Menu';
 import PersonIcon from '@material-ui/icons/Person';
@@ -14,30 +13,13 @@ import withRoot from '../../style/withRoot';
 import Select from '../../container/AppBar/AppBarSelect';
 import Anchor from '../Anchor';
 import { Redirect, RouteComponentProps } from 'react-router-dom';
+import { Header } from './Header';
 
 interface Props extends WithStyles {
     open: boolean;
     loggedIn: boolean;
     toggleOpen: () => void;
     logout: () => void;
-}
-
-interface HeaderProps {
-    title: string;
-}
-
-class Header extends PureComponent<HeaderProps> {
-    render() {
-        const { title, children } = this.props;
-        return (
-            <>
-                <Typography variant="title" color="inherit" noWrap>
-                    {title}
-                </Typography>
-                {children}
-            </>
-        )
-    }
 }
 
 class Bar extends PureComponent<Props & RouteComponentProps<{}>> {
@@ -53,6 +35,11 @@ class Bar extends PureComponent<Props & RouteComponentProps<{}>> {
         this.setState({ anchorEl: null });
     };
 
+    handleLogout = () => {
+        this.handleClose();
+        this.props.logout();
+    };
+
     refresh = () => {
         const token = sessionStorage.getItem('token');
         const uid = sessionStorage.getItem('uid');
@@ -66,7 +53,7 @@ class Bar extends PureComponent<Props & RouteComponentProps<{}>> {
     };
 
     render() {
-        const { classes, open, loggedIn, toggleOpen, logout, location } = this.props;
+        const { classes, open, loggedIn, toggleOpen, location } = this.props;
         const { pathname } = location;
         const pathToTitle = {
             '/': '联创团队招新管理系统',
@@ -111,10 +98,7 @@ class Bar extends PureComponent<Props & RouteComponentProps<{}>> {
                                 <Anchor to='/myInfo'><MenuItem onClick={this.handleClose}>个人信息</MenuItem></Anchor>
                                 <Anchor to='/myGroup'><MenuItem onClick={this.handleClose}>组员信息</MenuItem></Anchor>
                                 <MenuItem onClick={this.refresh}>强制刷新</MenuItem>
-                                <MenuItem onClick={() => {
-                                    this.handleClose();
-                                    logout();
-                                }}>退出</MenuItem>
+                                <MenuItem onClick={this.handleLogout}>退出</MenuItem>
                             </Menu>
                         </> : location.pathname !== '/' && <Redirect to='/' />}
                 </Toolbar>
