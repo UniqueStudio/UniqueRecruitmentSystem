@@ -6,20 +6,35 @@ import withRoot from "../../style/withRoot";
 import styles from "../../style/column";
 import Column from "../../container/Column/Column";
 
-import { STEP } from '../../lib/const';
+import { Candidate, STEP } from '../../lib/const';
+import Fab from '../Fab';
+import ColumnDialog from './ColumnDialog';
+import ColumnModal from './ColumnModal';
 
 interface Props extends WithStyles {
     group: string;
     type: string;
+    candidates: Map<string, Candidate>[];
+    selected: string[];
+    fabOn: number;
+    snackbarOn: boolean;
+    select: (cid: string[]) => void;
+    deselect: (cid: string[] | string) => void;
     changeGroup: (group: string) => void;
+    toggleFabOff: () => void;
     move: (from: number, to: number, cid: string, position: number) => void;
+    remove: (cid: string) => void;
+    toggleSnakcbarOn: (info: string, color?: string) => void;
 }
 
 class Container extends PureComponent<Props> {
     state = {
         steps: this.props.type === 'final' ? STEP.slice(4) : STEP,
         flag: false,
+        dialog: false,
+        modal: false,
     };
+
     onDragEnd = (result: DropResult) => {
         this.setState({
             flag: false
@@ -50,13 +65,35 @@ class Container extends PureComponent<Props> {
         })
     };
 
+    handleRemove = (selected: string[]) => () => {
+        this.toggleOpen('dialog')();
+        const { toggleSnakcbarOn, remove } = this.props;
+        if (selected.length === 0) {
+            toggleSnakcbarOn('你没有选中任何人');
+            return;
+        }
+        selected.map(i => remove(i));
+    };
+
+
+    toggleOpen = (name: string) => () => {
+        this.setState({
+            [name]: !this.state[name]
+        });
+    };
+
     componentDidMount() {
         const { changeGroup, group, type } = this.props;
         type === 'final' ? changeGroup('interview') : changeGroup(group === 'interview' ? 'web' : group);
     }
 
     render() {
-        const { classes } = this.props;
+        const { classes, selected, candidates, fabOn, snackbarOn, select, deselect, toggleFabOff, group } = this.props;
+        const current = candidates[Math.max(fabOn, 0)] || new Map<string, Candidate>();
+        const allCid = [...current.keys()];
+        const selectedCid = selected.filter(i => allCid.includes(i));
+        const selectedInfo = selectedCid.map(i => current.get(i) as Candidate);
+
         return (
             <>
                 <DragDropContext
@@ -84,6 +121,19 @@ class Container extends PureComponent<Props> {
                         )}
                     </Droppable>
                 </DragDropContext>
+                <Fab selected={selected} deselect={deselect} fabOn={fabOn} snackbarOn={snackbarOn} select={select}
+                     candidates={current} toggleFabOff={toggleFabOff}
+                     toggleOpen={this.toggleOpen} />
+                <ColumnDialog
+                    open={this.state.dialog}
+                    onClick={this.handleRemove(selectedCid)}
+                    toggleOpen={this.toggleOpen('dialog')} />
+                <ColumnModal
+                    open={this.state.modal}
+                    toggleOpen={this.toggleOpen('modal')}
+                    selected={selectedInfo}
+                    deselect={deselect}
+                    group={group} />
             </>
         );
     }

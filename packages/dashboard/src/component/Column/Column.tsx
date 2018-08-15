@@ -1,67 +1,33 @@
 import React, { Component } from "react";
 import { Draggable, DraggableProvided, Droppable, DroppableProvided } from 'react-beautiful-dnd';
-import Button from '@material-ui/core/Button';
 import Divider from '@material-ui/core/Divider';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
-import Zoom from '@material-ui/core/Zoom';
 import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
-import AddIcon from '@material-ui/icons/Add';
-import { Candidate as CType, STEP } from '../../lib/const';
+import { Candidate, STEP } from '../../lib/const';
 import styles from "../../style/column";
 import withRoot from "../../style/withRoot";
-import ColumnDialog from './ColumnDialog';
-import ColumnModal from './ColumnModal';
-import ColumnCandidate from './ColumnCandidate';
-import classNames from "classnames";
+import CandidateContainer from '../Candidate/CandidateContainer';
 
 interface Props extends WithStyles {
-    dropIndex: number;
     title: string;
+    dropIndex: number;
     isDragging: boolean;
-    candidates: Map<string, CType>;
-    group: string;
+    candidates: Map<string, Candidate>;
     selected: string[];
     modalOn: string;
-    fabOn: number;
-    snackbarOn: boolean;
-    select: (cid: string[]) => void;
-    deselect: (cid: string[] | string) => void;
-    remove: (cid: string) => void;
-    toggleSnakcbarOn: (info: string, color?: string) => void;
     toggleModalOn: (cid: string) => void;
     toggleModalOff: () => void;
     changeInputting: (comment: string, evaluation: string) => void;
-    toggleFabOff: () => void;
     downloadResume: (cid: string) => void;
-}
-
-interface State {
-    dialog: boolean;
-    modal: boolean;
-    removeConfirm: boolean;
-    direction: "left" | "right" | "up" | "down",
-    buttons: boolean;
-    fab: boolean;
 }
 
 const titleToStep = (title: string) => STEP.indexOf(title);
 
 class Column extends Component<Props> {
 
-    state: State = {
-        dialog: false,
-        modal: false,
-        removeConfirm: false,
-        direction: 'left',
-        buttons: false,
-        fab: false
-    };
-
-    toggleButtons = () => {
-        this.setState({
-            buttons: !this.state.buttons
-        })
+    state = {
+        direction: 'left' as 'left',
     };
 
     handleNext = (cid: string) => () => {
@@ -80,65 +46,11 @@ class Column extends Component<Props> {
         });
     };
 
-    handleRemove = (selected: string[]) => () => {
-        this.toggleOpen('dialog')();
-        const { toggleSnakcbarOn, remove } = this.props;
-        if (selected.length === 0) {
-            toggleSnakcbarOn('你没有选中任何人');
-            return;
-        }
-        selected.map(i => remove(i));
-    };
-
-    handleSelectAll = (all: string[]) => () => {
-        const { select, candidates } = this.props;
-        select(all.filter(i => !(candidates.get(i)!.abandon || candidates.get(i)!.rejected)));
-    };
-
-    handleInverse = (all: string[], selected: string[]) => () => {
-        const { select, deselect, candidates } = this.props;
-        deselect(selected.filter(i => !(candidates.get(i)!.abandon || candidates.get(i)!.rejected)));
-        select(all.filter((i: string) => !selected.includes(i) && !(candidates.get(i)!.abandon || candidates.get(i)!.rejected)));
-    };
-
-    confirmRemove = () => {
-        this.toggleOpen('dialog')();
-        this.toggleButtons();
-    };
-
     toggleOpen = (name: string) => () => {
         this.setState({
             [name]: !this.state[name]
         });
     };
-
-    hideFab = () => {
-        const { deselect, selected } = this.props;
-        this.toggleButtons();
-        deselect(selected);
-    };
-
-    sendNotification = () => {
-        this.toggleOpen('modal')();
-        this.toggleButtons();
-    };
-
-
-    static getDerivedStateFromProps(nextProps: Props) {
-        if (nextProps.fabOn === titleToStep(nextProps.title)) {
-            if (nextProps.selected.length === 0) {
-                nextProps.toggleFabOff();
-                return {
-                    buttons: false
-                }
-            } else {
-                return {
-                    fab: true
-                }
-            }
-        }
-        return null;
-    }
 
     shouldComponentUpdate() {
         return !this.props.isDragging;
@@ -165,69 +77,10 @@ class Column extends Component<Props> {
     // }
 
     render() {
-        const { classes, title, candidates, group, selected, deselect, modalOn, toggleModalOff, dropIndex, fabOn, downloadResume, snackbarOn } = this.props;
-        const allCandidatesCids = [...candidates.keys()];
-        const selectedCandidatesCids = selected.filter((i: string) => allCandidatesCids.includes(i));
-        const selectedCandidatesInfo = selectedCandidatesCids.map((i: string) => candidates.get(i) as CType);
-        const ButtonBox = (
-            <div className={classes.fabButtonsZoom}>
-                <div
-                    className={classNames(classes.fabButtonsContainer, snackbarOn ? classes.fabMoveUp : classes.fabMoveDown)}>
-                    <Button
-                        color='primary'
-                        size='small'
-                        variant='contained'
-                        className={classes.fabButton}
-                        onClick={this.handleSelectAll(allCandidatesCids)}
-                    >全选</Button>
-                    <Button
-                        color='primary'
-                        size='small'
-                        variant='contained'
-                        className={classes.fabButton}
-                        onClick={this.handleInverse(allCandidatesCids, selectedCandidatesCids)}
-                    >反选</Button>
-                    <Button
-                        color='primary'
-                        size='small'
-                        variant='contained'
-                        className={classes.fabButton}
-                        onClick={this.sendNotification}
-                        disabled={selectedCandidatesCids.length === 0}
-                    >发送通知</Button>
-                    <Button
-                        color='primary'
-                        size='small'
-                        variant='contained'
-                        className={classes.fabButton}
-                        onClick={this.confirmRemove}
-                    >移除</Button>
-                    <Button
-                        color='primary'
-                        size='small'
-                        variant='contained'
-                        className={classes.fabButton}
-                        onClick={this.hideFab}
-                    >隐藏</Button>
-                </div>
-            </div>
-        );
+        const { classes, title, candidates, selected, modalOn, toggleModalOff, dropIndex, downloadResume } = this.props;
+        const allCid = [...candidates.keys()];
+        const selectedCid = selected.filter(i => allCid.includes(i));
 
-        const CandidateBox = (i: [string, CType], j: number) => (
-            <ColumnCandidate
-                i={i}
-                j={j}
-                key={j}
-                disabled={i[1].abandon || i[1].rejected || selectedCandidatesCids.includes(i[0])}
-                toggleModalOff={toggleModalOff}
-                modalOn={modalOn}
-                step={titleToStep(title)}
-                direction={this.state.direction}
-                handlePrev={this.handlePrev(allCandidatesCids[j - 1])}
-                handleNext={this.handleNext(allCandidatesCids[j + 1])}
-                downloadResume={downloadResume}
-            />
-        );
         const DroppableBox = (
             <Droppable droppableId={title} type="CANDIDATE">
                 {(dropProvided: DroppableProvided) => (
@@ -235,12 +88,27 @@ class Column extends Component<Props> {
                          ref={element => dropProvided.innerRef(element)}
                          {...dropProvided.droppableProps}
                     >
-                        {[...candidates.entries()].map(CandidateBox)}
+                        {[...candidates.entries()].map((i: [string, Candidate], j: number) => (
+                            <CandidateContainer
+                                i={i}
+                                j={j}
+                                key={j}
+                                disabled={i[1].abandon || i[1].rejected || selectedCid.includes(i[0])}
+                                toggleModalOff={toggleModalOff}
+                                modalOn={modalOn}
+                                step={titleToStep(title)}
+                                direction={this.state.direction}
+                                handlePrev={this.handlePrev(allCid[j - 1])}
+                                handleNext={this.handleNext(allCid[j + 1])}
+                                downloadResume={downloadResume}
+                            />
+                        ))}
                         {dropProvided.placeholder}
                     </div>
                 )}
             </Droppable>
         );
+
         return (
             <>
                 <Draggable draggableId={title} index={dropIndex}>
@@ -248,41 +116,18 @@ class Column extends Component<Props> {
                         <div ref={provided.innerRef} {...provided.draggableProps}>
                             <Paper className={classes.column}>
                                 <div className={classes.columnHeader}>
-                                    <Typography variant='title'
-                                                className={classes.columnTitle}
-                                                {...provided.dragHandleProps}
+                                    <Typography
+                                        variant='title'
+                                        className={classes.columnTitle}
+                                        {...provided.dragHandleProps}
                                     >{title}</Typography>
                                 </div>
                                 <Divider />
                                 {DroppableBox}
-                                <ColumnDialog
-                                    open={this.state.dialog}
-                                    onClick={this.handleRemove(selectedCandidatesCids)}
-                                    toggleOpen={this.toggleOpen('dialog')} />
-                                <ColumnModal
-                                    open={this.state.modal}
-                                    toggleOpen={this.toggleOpen('modal')}
-                                    selected={selectedCandidatesInfo}
-                                    deselect={deselect}
-                                    group={group} />
                             </Paper>
                         </div>
                     )}
                 </Draggable>
-                {this.state.fab && <>
-                    <Zoom in={fabOn === titleToStep(title)}>
-                        <div className={classes.fab}>
-                            <Button variant="fab"
-                                    className={snackbarOn ? classes.fabMoveUp : classes.fabMoveDown}
-                                    color='primary' onClick={this.toggleButtons}>
-                                <AddIcon />
-                            </Button>
-                        </div>
-                    </Zoom>
-                    <Zoom in={this.state.buttons}>
-                        {ButtonBox}
-                    </Zoom>
-                </>}
             </>
         );
     }

@@ -19,14 +19,14 @@ the other is [Form](https://github.com/UniqueStudio/UniqueRecruitmentForm).
 
 ![Preview image](./src/image/preview.png)
 
-## Toolchain (possibly will be changed)
+## Toolchain
 
 1. `TypeScript`
 2. `React`
 3. `Redux`
 4. `Material UI`
 5. `Create-react-app`
-6. ...
+6. `RxJS` && `redux-observable`
 
 ## TODOS
 

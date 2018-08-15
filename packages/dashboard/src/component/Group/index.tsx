@@ -1,7 +1,6 @@
 import React, { PureComponent } from 'react';
 import Button from '@material-ui/core/Button';
 import Chip from '@material-ui/core/Chip';
-import Dialog from '@material-ui/core/Dialog';
 import MenuItem from '@material-ui/core/MenuItem';
 import Paper from '@material-ui/core/Paper';
 import Select from '@material-ui/core/Select'
@@ -17,8 +16,8 @@ import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 import styles from '../../style/group';
 import withRoot from "../../style/withRoot";
 import Modal from '../Modal';
-import Verify from '../../container/Verify';
 import { Candidate, Recruitment, Time, User } from '../../lib/const';
+import GroupDialog from './GroupDialog';
 
 interface Props extends WithStyles {
     candidates: Map<string, Candidate>[];
@@ -131,15 +130,17 @@ class Group extends PureComponent<Props> {
     };
 
     componentDidMount() {
-        const { requestCandidate, requestGroup, requestRecruitments, currentRecruitment } = this.props;
+        const { requestCandidate, requestGroup, requestRecruitments, currentRecruitment, toggleSnackbar } = this.props;
         const groupName = this.groupName;
-        requestRecruitments();
         if (groupName) {
+            requestRecruitments();
             requestCandidate(groupName);
             requestGroup(groupName);
             if (currentRecruitment && currentRecruitment.time1) {
                 this.initTime(currentRecruitment.time1[groupName]);
             }
+        } else {
+            toggleSnackbar('请先完善个人信息！', 'warning');
         }
     }
 
@@ -154,11 +155,10 @@ class Group extends PureComponent<Props> {
     }
 
     render() {
-        const { classes, candidates, group, currentRecruitment, toggleSnackbar } = this.props;
+        const { classes, candidates, group, currentRecruitment } = this.props;
         const { step, numbers, modalOpen, code, dialogOpen } = this.state;
         const groupName = this.groupName;
         if (!groupName) {
-            toggleSnackbar('请先完善个人信息！', 'warning');
             return <></>;
         }
         const translator = { 'morning': '上午', 'afternoon': '下午', 'evening': '晚上' };
@@ -263,16 +263,9 @@ class Group extends PureComponent<Props> {
                                 disabled={disabled} onClick={this.toggleDialog}>发送短信</Button>
                     </div>
                 </Paper>
-                <Dialog open={dialogOpen} onClose={this.toggleDialog}>
-                    <div className={classes.dialog}>
-                        <Verify onChange={this.handleInput} code={code} />
-                        <div className={classes.buttonContainer}>
-                            <Button color='primary' variant='contained' className={classes.button}
-                                    onClick={this.sendInterview}>确认发送</Button>
-                            <Button color='primary' className={classes.button} onClick={this.toggleDialog}>取消</Button>
-                        </div>
-                    </div>
-                </Dialog>
+                <GroupDialog dialogOpen={dialogOpen} toggleDialog={this.toggleDialog}
+                             handleInput={this.handleInput} code={code}
+                             sendInterview={this.sendInterview} />
                 <Modal title='选定人数' open={modalOpen} onClose={this.toggleModal}>
                     <div className={classes.chooseContainer}>
                         {!disabled && (step === 1 ? currentRecruitment.time1[groupName] : currentRecruitment.time2).map((i: Time, j: number) =>
