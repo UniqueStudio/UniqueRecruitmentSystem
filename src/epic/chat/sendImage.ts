@@ -1,13 +1,13 @@
 import { map, switchMap, tap } from 'rxjs/operators';
 import { EMPTY } from 'rxjs';
 import { Epic, ofType } from "redux-observable";
-import { Action, Dependencies, errHandler, USER } from '../index';
+import { Action, Dependencies, errHandler, Socket, USER } from '../index';
 import { addImage, SEND_IMAGE, SendImage } from '../../action';
 import { StoreState } from '../../reducer';
 
-export const sendImageEpic: Epic<Action, any, StoreState, Dependencies> = (action$, state$, { sessionStorage, socket$ }) =>
+export const sendImageEpic: Epic<Action, Action, StoreState, Dependencies> = (action$, state$, { sessionStorage, socket$ }) =>
     socket$.pipe(
-        switchMap((socket: any) => {
+        switchMap((socket: Socket) => {
             if (socket) {
                 return action$.pipe(
                     ofType(SEND_IMAGE),

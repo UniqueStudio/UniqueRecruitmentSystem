@@ -4,10 +4,10 @@ import { ajax } from 'rxjs/ajax';
 import { Epic, ofType } from "redux-observable";
 import { Action, customError, Dependencies, errHandler, RECRUITMENT } from '../index';
 import { GET_RECRUITMENTS, setRecruitments } from '../../action';
-import { URL } from '../../lib/const';
+import { Recruitment, URL } from '../../lib/const';
 import { StoreState } from '../../reducer';
 
-export const getRecruitmentsEpic: Epic<Action, any, StoreState, Dependencies> = (action$, state$, { sessionStorage }) =>
+export const getRecruitmentsEpic: Epic<Action, Action, StoreState, Dependencies> = (action$, state$, { sessionStorage }) =>
     action$.pipe(
         ofType(GET_RECRUITMENTS),
         mergeMap(() => {
@@ -24,7 +24,7 @@ export const getRecruitmentsEpic: Epic<Action, any, StoreState, Dependencies> = 
             return ajax.getJSON(`${URL}/recruitment`, {
                 'Authorization': `Bearer ${token}`,
             }).pipe(
-                map((res: any) => {
+                map((res: { type: string, data: Recruitment[] }) => {
                     if (res.type === 'success') {
                         return res.data;
                     }

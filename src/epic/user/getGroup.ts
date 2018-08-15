@@ -4,10 +4,10 @@ import { ajax } from 'rxjs/ajax';
 import { Epic, ofType } from "redux-observable";
 import { Action, customError, Dependencies, errHandler, USER } from '../index';
 import { GET_GROUP_INFO, GetGroupInfo, setGroupInfo } from '../../action';
-import { URL } from '../../lib/const';
+import { URL, User } from '../../lib/const';
 import { StoreState } from '../../reducer';
 
-export const getGroupEpic: Epic<Action, any, StoreState, Dependencies> = (action$, state$, { sessionStorage }) =>
+export const getGroupEpic: Epic<Action, Action, StoreState, Dependencies> = (action$, state$, { sessionStorage }) =>
     action$.pipe(
         ofType(GET_GROUP_INFO),
         mergeMap((action: GetGroupInfo) => {
@@ -29,7 +29,7 @@ export const getGroupEpic: Epic<Action, any, StoreState, Dependencies> = (action
                 'Authorization': `Bearer ${token}`
             })
                 .pipe(
-                    map((res: any) => {
+                    map((res: { type: string, data: User[] }) => {
                         if (res.type === 'success') {
                             return res.data;
                         }

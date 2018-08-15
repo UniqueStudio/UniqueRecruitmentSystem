@@ -6,7 +6,7 @@ import { GET_VERIFY_CODE, toggleSnackbarOn } from '../../action';
 import { URL } from '../../lib/const';
 import { StoreState } from '../../reducer';
 
-export const getCodeEpic: Epic<Action, any, StoreState, Dependencies> = (action$, state$, { sessionStorage }) =>
+export const getCodeEpic: Epic<Action, Action, StoreState, Dependencies> = (action$, state$, { sessionStorage }) =>
     action$.pipe(
         ofType(GET_VERIFY_CODE),
         mergeMap(() => {
@@ -17,7 +17,7 @@ export const getCodeEpic: Epic<Action, any, StoreState, Dependencies> = (action$
             return ajax.getJSON(`${URL}/verification/user`, {
                 'Authorization': `Bearer ${token}`
             }).pipe(
-                map((res: any) => {
+                map((res: { type: string }) => {
                     if (res.type === 'success') {
                         return toggleSnackbarOn('验证码已发送！', 'success');
                     }

@@ -37,7 +37,7 @@ const downloadResume = (res: Response) => {
     );
 };
 
-export const getResumeEpic: Epic<Action, any, StoreState, Dependencies> = (action$, state$, { sessionStorage }) =>
+export const getResumeEpic: Epic<Action, Action, StoreState, Dependencies> = (action$, state$, { sessionStorage }) =>
     action$.pipe(
         ofType(GET_RESUME),
         mergeMap((action: GetResume) => {
