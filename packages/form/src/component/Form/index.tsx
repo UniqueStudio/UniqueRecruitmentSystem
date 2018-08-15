@@ -79,16 +79,28 @@ class Form extends React.Component<Props> {
                 shouldReturn = true;
             }
         });
-        [info.name, info.institute, info.major].map(i => {
-            if (!this.checkChinese(i)) {
-                this.setState({
-                    snackBarOn: true,
-                    content: `${translator[i]}必须为中文！`
-                });
-                shouldReturn = true;
-            }
-        });
         if (shouldReturn) return;
+        if (!this.checkChinese(info.name)) {
+            this.setState({
+                snackBarOn: true,
+                content: '姓名必须为中文!'
+            });
+            return;
+        }
+        if (!this.checkChinese(info.institute)) {
+            this.setState({
+                snackBarOn: true,
+                content: '学院必须为中文!'
+            });
+            return;
+        }
+        if (!this.checkChinese(info.major)) {
+            this.setState({
+                snackBarOn: true,
+                content: '专业必须为中文!'
+            });
+            return;
+        }
         if (!this.checkMail(info.mail)) {
             this.setState({
                 snackBarOn: true,
