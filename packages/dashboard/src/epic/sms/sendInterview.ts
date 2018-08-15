@@ -6,7 +6,7 @@ import { SEND_INTERVIEW, SendInterview, toggleSnackbarOn } from '../../action';
 import { URL } from '../../lib/const';
 import { StoreState } from '../../reducer';
 
-export const sendInterviewEpic: Epic<Action, any, StoreState, Dependencies> = (action$, state$, { sessionStorage }) =>
+export const sendInterviewEpic: Epic<Action, Action, StoreState, Dependencies> = (action$, state$, { sessionStorage }) =>
     action$.pipe(
         ofType(SEND_INTERVIEW),
         mergeMap((action: SendInterview) => {

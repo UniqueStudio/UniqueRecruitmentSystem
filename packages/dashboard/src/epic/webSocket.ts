@@ -12,30 +12,31 @@ import {
     setShouldUpdateRecruitment,
     toggleSnackbarOn
 } from '../action';
-import { Action, CANDIDATE, COMMENT, Dependencies, RECRUITMENT, USER } from './index';
+import { Action, CANDIDATE, COMMENT, Dependencies, RECRUITMENT, Socket, USER } from './index';
 import { StoreState } from '../reducer';
 import { Comment, URL } from '../lib/const';
 
-export const socketConnectEpic: Epic<Action, any, StoreState, Dependencies> = (action$, state$, { io, socket$ }) =>
+export const socketConnectEpic: Epic<Action, Action, StoreState, Dependencies> = (action$, state$, { io, socket$ }) =>
     action$.pipe(
         ofType('SOCKET_START'),
         switchMap(() =>
-            new Observable((o: Subscriber<any>) => {
-                const socket = io(URL);
+            new Observable((o: Subscriber<Socket>) => {
+                const socket: Socket = io(URL);
                 socket.on('connect', () => o.next(socket));
-                socket.on('disconnect', () => o.next(null));
+                socket.on('disconnect', () => o.next(undefined));
                 return () => {
                     socket.close();
                 };
-            })),
+            })
+        ),
         tap(socket$),
         ignoreElements(),
         startWith({ type: 'SOCKET_START' })
     );
 
-export const socketReceiveEpic: Epic<Action, any, StoreState, Dependencies> = (action$, state$, { socket$ }) =>
+export const socketReceiveEpic: Epic<Action, Action, StoreState, Dependencies> = (action$, state$, { socket$ }) =>
     socket$.pipe(
-        switchMap((socket: any) => socket == null ? EMPTY :
+        switchMap((socket: Socket) => !socket ? EMPTY :
             new Observable(o => {
                 socket.on('removeCandidate', (cid: string) => {
                     o.next({ type: CANDIDATE.START });
@@ -109,4 +110,6 @@ export const socketReceiveEpic: Epic<Action, any, StoreState, Dependencies> = (a
                     o.next(addImage(name, avatar, time, image, false));
                     o.next({ type: USER.SUCCESS });
                 });
-            })));
+            })
+        )
+    );

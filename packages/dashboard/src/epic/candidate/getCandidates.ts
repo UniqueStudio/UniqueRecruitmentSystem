@@ -7,7 +7,7 @@ import { GET_CANDIDATES, GetCandidates, setCandidates, setGroup } from '../../ac
 import { URL } from '../../lib/const';
 import { StoreState } from '../../reducer';
 
-export const getCandidatesEpic: Epic<Action, any, StoreState, Dependencies> = (action$, state$, { sessionStorage }) =>
+export const getCandidatesEpic: Epic<Action, Action, StoreState, Dependencies> = (action$, state$, { sessionStorage }) =>
     action$.pipe(
         ofType(GET_CANDIDATES),
         mergeMap((action: GetCandidates) => {
@@ -29,7 +29,7 @@ export const getCandidatesEpic: Epic<Action, any, StoreState, Dependencies> = (a
             return ajax.getJSON(`${URL}/candidates/group/${group}`, {
                 'Authorization': `Bearer ${token}`,
             }).pipe(
-                map((res: any) => {
+                map((res: { type: string, data: object[] }) => {
                     if (res.type === 'success') {
                         return res.data;
                     }

@@ -89,7 +89,7 @@ class User extends PureComponent<Props> {
                     onChange={this.handleChange('username')}
                     margin="normal"
                     className={classes.userInfo}
-                    InputProps={{ readOnly: true } as any}
+                    InputProps={{ inputProps: { readOnly: true } }}
                 />
                 <TextField
                     select

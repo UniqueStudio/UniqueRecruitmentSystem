@@ -4,10 +4,10 @@ import { catchError, endWith, map, mergeMap, startWith, tap } from 'rxjs/operato
 import { Epic, ofType } from "redux-observable";
 import { GET_USER_INFO, GetUserInfo, setUserInfo } from '../../action';
 import { Action, Dependencies, errHandler, USER } from '../index';
-import { URL } from '../../lib/const';
+import { URL, User } from '../../lib/const';
 import { StoreState } from '../../reducer';
 
-export const getInfoEpic: Epic<Action, any, StoreState, Dependencies> = (action$, state$, { sessionStorage }) =>
+export const getInfoEpic: Epic<Action, Action, StoreState, Dependencies> = (action$, state$, { sessionStorage }) =>
     action$.pipe(
         ofType(GET_USER_INFO),
         mergeMap((action: GetUserInfo) => {
@@ -25,7 +25,7 @@ export const getInfoEpic: Epic<Action, any, StoreState, Dependencies> = (action$
                 'Authorization': `Bearer ${token}`
             })
                 .pipe(
-                    map((res: any) => {
+                    map((res: { type: string, data: User }) => {
                         if (res.type === 'success') {
                             return res.data;
                         }

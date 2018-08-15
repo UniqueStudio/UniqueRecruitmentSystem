@@ -39,8 +39,7 @@ class Step extends PureComponent<Props> {
     render() {
         const { classes, group, type, step, date, fns } = this.props;
         const { handleChange, changeDate, setTime, addDate, deleteDate } = fns;
-        const inputProps = { readOnly: true } as any;
-        /* see https://github.com/mui-org/material-ui/issues/8047 */
+        const inputProps = { readOnly: true };
         return (
             <>
                 <div className={classNames(classes.templateContent, classes.templateItem)}>
@@ -61,19 +60,19 @@ class Step extends PureComponent<Props> {
                         label="候选人姓名"
                         defaultValue='(默认)'
                         className={classNames(classes.templateItem, classes.input)}
-                        InputProps={inputProps}
+                        InputProps={{ inputProps }}
                     />
                     <TextField
                         label="招新名称"
                         defaultValue='(默认)'
                         className={classNames(classes.templateItem, classes.input)}
-                        InputProps={inputProps}
+                        InputProps={{ inputProps }}
                     />
                     <TextField
                         label="组别"
                         defaultValue={`${group}(默认)`}
                         className={classNames(classes.templateItem, classes.input)}
-                        InputProps={inputProps}
+                        InputProps={{ inputProps }}
                     />
                     <TextField
                         select
