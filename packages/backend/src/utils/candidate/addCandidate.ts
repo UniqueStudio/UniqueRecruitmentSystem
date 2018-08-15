@@ -1,7 +1,8 @@
-import { checkMail, checkPhone } from '../../lib/checkData';
+import { checkChinese, checkMail, checkPhone } from '../../lib/checkData';
 import { ObjectId } from 'mongodb';
 import { database, io, redisClient, getAsync } from '../../app';
 import { Request, Response } from 'express';
+import { GRADES, GROUPS, SCORES } from '../../lib/consts';
 
 export const addCandidate = (req: Request, res: Response) => {
     const body = req.body;
@@ -9,7 +10,7 @@ export const addCandidate = (req: Request, res: Response) => {
     (async () => {
         try {
             let candidateResult = await database.query('candidates', { name, phone });
-            if (Object.values(body).includes('')) {
+            if (!(name && grade && institute && mail && major && score && phone && group && sex && intro)) {
                 res.send({ message: '请完整填写表单!', type: 'warning' });
                 return;
             }
@@ -23,6 +24,34 @@ export const addCandidate = (req: Request, res: Response) => {
             }
             if (!checkPhone(phone)) {
                 res.send({ message: '手机号码格式不正确!', type: 'warning' });
+                return;
+            }
+            if (!checkChinese(name)) {
+                res.send({ message: '姓名必须为中文!', type: 'warning' });
+                return;
+            }
+            if (!checkChinese(institute)) {
+                res.send({ message: '学院必须为中文!', type: 'warning' });
+                return;
+            }
+            if (!checkChinese(major)) {
+                res.send({ message: '专业必须为中文!', type: 'warning' });
+                return;
+            }
+            if (!["Male", "Female"].includes(sex)) {
+                res.send({ message: '性别不正确!', type: 'warning' });
+                return;
+            }
+            if (!GRADES.includes(grade)) {
+                res.send({ message: '年级不正确!', type: 'warning' });
+                return;
+            }
+            if (!GROUPS.includes(group.toLowerCase())) {
+                res.send({ message: '组别不正确!', type: 'warning' });
+                return;
+            }
+            if (!SCORES.includes(score)) {
+                res.send({ message: '排名不正确!', type: 'warning' });
                 return;
             }
             const code = await getAsync(`candidateCode:${phone}`);
@@ -59,7 +88,7 @@ export const addCandidate = (req: Request, res: Response) => {
                 comments: {},
                 abandon: false,
                 rejected: false,
-                resume: `/www/resumes/${title}/${group}/${name} - ${req.file.originalname}`
+                resume: req.file ? `/www/resumes/${title}/${group}/${name} - ${req.file.originalname}` : ''
             });
 
             const data = recruitment['data'].map((i: object) => {
