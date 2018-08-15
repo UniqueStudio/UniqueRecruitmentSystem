@@ -131,7 +131,7 @@ class Group extends PureComponent<Props> {
     };
 
     componentDidMount() {
-        const { requestCandidate, requestGroup, requestRecruitments, currentRecruitment } = this.props;
+        const { requestCandidate, requestGroup, requestRecruitments, currentRecruitment, toggleSnackbar } = this.props;
         const groupName = this.groupName;
         requestRecruitments();
         if (groupName) {
@@ -140,6 +140,8 @@ class Group extends PureComponent<Props> {
             if (currentRecruitment && currentRecruitment.time1) {
                 this.initTime(currentRecruitment.time1[groupName]);
             }
+        } else {
+            toggleSnackbar('请先完善个人信息！', 'warning');
         }
     }
 
@@ -154,11 +156,10 @@ class Group extends PureComponent<Props> {
     }
 
     render() {
-        const { classes, candidates, group, currentRecruitment, toggleSnackbar } = this.props;
+        const { classes, candidates, group, currentRecruitment } = this.props;
         const { step, numbers, modalOpen, code, dialogOpen } = this.state;
         const groupName = this.groupName;
         if (!groupName) {
-            toggleSnackbar('请先完善个人信息！', 'warning');
             return <></>;
         }
         const translator = { 'morning': '上午', 'afternoon': '下午', 'evening': '晚上' };
