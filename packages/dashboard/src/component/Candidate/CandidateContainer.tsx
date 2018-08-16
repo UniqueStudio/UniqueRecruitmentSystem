@@ -3,10 +3,10 @@ import { Draggable, DraggableProvided } from 'react-beautiful-dnd';
 import IconButton from '@material-ui/core/IconButton';
 import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import Detail from '../Candidate/CandidateDetail';
+import Detail from './CandidateDetail';
 import Comments from '../../container/Candidate/CandidateComments';
 import Candidate from "../../container/Candidate/Candidate";
-import Modal from '../Modal';
+import Modal from '../Modal/index';
 import { Candidate as CType } from '../../lib/const';
 import styles from "../../style/column";
 import withRoot from "../../style/withRoot";
@@ -25,7 +25,7 @@ interface Props extends WithStyles {
 }
 
 
-class ColumnCandidate extends PureComponent<Props> {
+class CandidateContainer extends PureComponent<Props> {
 
     render() {
         const { i, j, classes, toggleModalOff, step, modalOn, disabled, direction, handleNext, handlePrev, downloadResume } = this.props;
@@ -59,4 +59,4 @@ class ColumnCandidate extends PureComponent<Props> {
     }
 }
 
-export default withRoot(withStyles(styles)(ColumnCandidate));
+export default withRoot(withStyles(styles)(CandidateContainer));
