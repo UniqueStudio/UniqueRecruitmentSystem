@@ -1,0 +1,10 @@
+version: "3"
+services:
+  dashboard:
+    build: .
+    environment:
+    - NODE_ENV=production
+  nginx:
+    ports:
+    - 7341:7341
+    - 6655:6655
