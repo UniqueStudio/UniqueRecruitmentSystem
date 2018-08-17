@@ -2,8 +2,6 @@ FROM node:10.9.0-alpine
 
 RUN npm install -g yarn
 
-RUN mkdir /usr/src/dashboard
-
 WORKDIR /usr/src/dashboard
 
 COPY package.json .
@@ -13,3 +11,11 @@ RUN yarn
 COPY . .
 
 RUN yarn build
+
+FROM nginx:1.15.2-alpine
+
+COPY nginx/nginx.conf /etc/nginx/nginx.conf
+
+COPY dashboard /www/dashboard
+
+CMD ["nginx", "-g", "daemon off;"]
