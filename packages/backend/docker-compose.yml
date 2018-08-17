@@ -12,7 +12,7 @@ services:
     command:
     - mongod
   backend:
-    build: src
+    build: .
     environment:
     - NODE_ENV=production
     - MONGO_DATABASE=mongodb://mongodb/recruitment
