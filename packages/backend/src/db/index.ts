@@ -1,6 +1,7 @@
 import { MongoClient } from 'mongodb';
+import { dbURL } from '../lib/consts';
 
-const url = "mongodb://localhost:27017/recruitment";
+const url = dbURL;
 
 class Index {
     constructor() {
