@@ -1,0 +1,26 @@
+version: "3"
+services:
+  redis:
+    image: redis:alpine
+  mongodb:
+    image: mongo:latest
+    environment:
+    - MONGO_DATA_DIR=/data/db
+    - MONGO_LOG_DIR=/dev/null
+    ports:
+    - 27017:27017
+    command:
+    - mongod
+  backend:
+    build: src
+    environment:
+    - NODE_ENV=production
+    - MONGO_DATABASE=mongodb://mongodb/recruitment
+    ports:
+    - 5000:5000
+    links:
+    - mongodb
+    - redis
+    depends_on:
+    - mongodb
+    - redis
