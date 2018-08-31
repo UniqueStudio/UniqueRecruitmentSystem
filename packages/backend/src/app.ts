@@ -3,7 +3,7 @@ import { promisify } from 'util';
 import redis from 'redis';
 import multer from 'multer';
 import fs from 'fs';
-import { Server } from 'http';
+import https from 'https';
 import socket from 'socket.io';
 import bodyParser from 'body-parser';
 import Index from './db/index';
@@ -18,7 +18,10 @@ import { sendInterview, sendCommon, sendUserCode, sendCandidateCode } from './ut
 import { getAllRecruitments, getOneRecruitment, launchRecruitment, setSlots } from './utils/recruitment';
 
 const app = express();
-const server = new Server(app);
+const server = https.createServer({
+    key: fs.readFileSync('/etc/pki/tls/private/uniqcert.key'),
+    cert: fs.readFileSync('/etc/pki/tls/uniqcert.fullchain')
+}, app);
 export const io = socket(server);
 export const database = new Index();
 const storage = multer.diskStorage({
