@@ -1165,11 +1165,7 @@ body {
   grid-template-columns: repeat(8, 1fr);
   height: 100%;
   grid-row-gap: $spacing * 2;
-  grid-template-areas:
-          "nm nm ml ml is is mj mj"
-          "sx sx sx ph ph ph cd cd"
-          "gd gd gp gp it it it it"
-          "sc sc rs rs it it it it";
+  grid-template-areas: "nm nm ml ml is is mj mj" "sx sx sx ph ph ph cd cd" "gd gd gp gp it it it it" "sc sc rs rs it it it it";
   & > div {
     align-self: center;
     &:last-child {
@@ -1253,4 +1249,45 @@ body {
 
 .intro {
   grid-area: it
+}
+
+.quick {
+  font-size: 0.8rem;
+  color: $primary;
+  font-weight: bold;
+  text-align: end;
+  margin-top: $spacing;
+  user-select: none;
+  @media screen and (max-width: 900px) {
+    margin-top: 0;
+  }
+  @media screen and (max-width: 500px) {
+    margin-top: $spacing * 2;
+    font-size: 1.2rem;
+  }
+  input {
+    display: none;
+  }
+  label {
+    .checker {
+      height: 10px;
+      width: 10px;
+      @media screen and (max-width: 500px) {
+        height: 12px;
+        width: 12px;
+      }
+      margin-right: $spacing / 2;
+      background-color: #eee;
+      transition: background-color 300ms;
+      display: inline-block;
+      vertical-align: baseline;
+    }
+    cursor: pointer;
+  }
+  label:hover .checker {
+    background-color: $primaryLight;
+  }
+  input:checked ~ label .checker {
+    background-color: $primary;
+  }
 }

@@ -29,6 +29,7 @@ class Form extends React.Component<Props> {
             code: '',
             intro: '',
             resume: '',
+            isQuick: '0'
         },
         submitted: false,
         snackBarOn: false,
@@ -55,6 +56,7 @@ class Form extends React.Component<Props> {
     };
 
     handleClick = () => {
+        console.log(this.state.info)
         const info = { title: '2018A', ...this.state.info };
         const translator = {
             name: '姓名',
@@ -69,17 +71,15 @@ class Form extends React.Component<Props> {
             code: '验证码',
             intro: '自我介绍',
         };
-        let shouldReturn = false;
-        Object.entries(info).map(i => {
-            if (i[1] === '') {
+        for (const i of Object.entries(info)) {
+            if (i[1] === '' && i[0] !== 'resume') {
                 this.setState({
                     snackBarOn: true,
                     content: `请填写${translator[i[0]]}`
                 });
-                shouldReturn = true;
+                return;
             }
-        });
-        if (shouldReturn) return;
+        }
         if (!this.checkChinese(info.name)) {
             this.setState({
                 snackBarOn: true,
@@ -149,6 +149,10 @@ class Form extends React.Component<Props> {
 
     handleChange = (name: string) => (e: React.ChangeEvent) => {
         this.setState({ info: { ...this.state.info, [name]: e.target['value'] } });
+    };
+
+    handleCheck = (e: React.ChangeEvent) => {
+        this.setState({ info: { ...this.state.info, isQuick: e.target['checked'] ? '1' : '0' } });
     };
 
     handleFile = (event: React.ChangeEvent) => {
@@ -260,7 +264,8 @@ class Form extends React.Component<Props> {
         const Score = <Select selections={SCORES} name='成绩排名' onChange={this.handleChange('score')} />;
         const Phone = <Input for='phone' size='ml' name='电话' onChange={this.handleChange} />;
         const CodeButton = <Button name={sent ? `${time}秒后${isMobile ? '重新获取' : '重获'}` : '接收验证码'}
-                                   bgColor={canGetCode ? 'primary' : 'primaryLighter'} textColor={canGetCode ? 'white' : 'primary'}
+                                   bgColor={canGetCode ? 'primary' : 'primaryLighter'}
+                                   textColor={canGetCode ? 'white' : 'primary'}
                                    onClick={sent || !canGetCode ? undefined : this.getVerification}
                                    className={classNames({ disabled: sent || !canGetCode }, { codeButton: !isMobile })} />;
         const Code = <Input for='code' size='sm' name='验证码' onChange={this.handleChange}
@@ -282,6 +287,12 @@ class Form extends React.Component<Props> {
                     </span>
                 </label>
             </>
+        );
+        const Quick = (
+            <div className='quick'>
+                <input type="checkbox" id="quick" name="quick" onChange={this.handleCheck}/>
+                <label htmlFor="quick"><div className='checker'/>快速通道（要求很高，请慎重勾选）</label>
+            </div>
         );
         const Submit = (
             <div className='submit'>
@@ -307,7 +318,7 @@ class Form extends React.Component<Props> {
                     <div className='group'>{Group}</div>
                     <div className='score'>{Score}</div>
                     <div className='resume'>{Resume}</div>
-                    <div className='intro'>{Intro}</div>
+                    <div className='intro'>{Intro}{Quick}</div>
                 </div>
                 {Submit}
             </>
@@ -335,6 +346,7 @@ class Form extends React.Component<Props> {
                         {Intro}
                     </div>
                     {Resume}
+                    {Quick}
                     {Submit}
                 </div>
             </>
