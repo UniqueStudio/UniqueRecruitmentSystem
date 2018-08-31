@@ -3,7 +3,7 @@ services:
   redis:
     image: redis:alpine
     ports:
-      - 6379:6379
+      - 9211:9211
   mongodb:
     image: mongo:latest
     environment:
