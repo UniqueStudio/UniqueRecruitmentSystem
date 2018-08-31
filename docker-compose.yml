@@ -4,8 +4,10 @@ services:
     build: .
     environment:
     - NODE_ENV=production
+  nginx:
+    build:
+      context: nginx
     ports:
     - 7341:7341
-    - 6655:6655
     volumes:
     - ./build:/usr/share/nginx/dashboard
