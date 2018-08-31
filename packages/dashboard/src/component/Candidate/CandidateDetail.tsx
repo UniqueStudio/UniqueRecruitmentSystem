@@ -24,7 +24,7 @@ class CandidateDetail extends PureComponent<Props> {
 
     render() {
         const { classes, info, downloadResume } = this.props;
-        const { name, group, sex, grade, institute, intro, mail, major, phone, score, time1, time2, abandon } = info;
+        const { name, group, sex, grade, institute, intro, mail, major, phone, score, time1, time2, abandon, isQuick } = info;
         const inputProps = { readOnly: true };
         return (
             <>
@@ -101,6 +101,12 @@ class CandidateDetail extends PureComponent<Props> {
                         <TextField
                             label="群面时间"
                             defaultValue={abandon ? '已放弃' : time2 ? '已决定' : '未决定'}
+                            margin="normal"
+                            InputProps={{ inputProps }}
+                        />
+                        <TextField
+                            label="是否快通"
+                            defaultValue={isQuick ? '是' : '否'}
                             margin="normal"
                             InputProps={{ inputProps }}
                         />
