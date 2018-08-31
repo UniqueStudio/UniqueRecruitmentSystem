@@ -26,3 +26,6 @@ services:
     depends_on:
     - mongodb
     - redis
+    volumes:
+      - /etc/pki/tls/private/uniqcert.key:/etc/pki/tls/private/uniqcert.key
+      - /etc/pki/tls/uniqcert.fullchain:/etc/pki/tls/uniqcert.fullchain
