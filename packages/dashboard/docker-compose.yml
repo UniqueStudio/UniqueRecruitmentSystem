@@ -1,11 +1,21 @@
 version: "3"
 services:
   dashboard:
-    build: .
+    build:
+      context: dashboard
     environment:
     - NODE_ENV=production
+  form:
+    build:
+      context: form
+    environment:
+    - NODE_ENV=production
+  nginx:
+    build:
+      context: nginx
     ports:
     - 7341:7341
     - 6655:6655
     volumes:
-    - ./build:/usr/share/nginx/dashboard
+    - ./dashboard/build:/usr/share/nginx/dashboard
+    - ./form/build:/usr/share/nginx/form
