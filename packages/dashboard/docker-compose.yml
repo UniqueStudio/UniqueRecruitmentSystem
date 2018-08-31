@@ -2,12 +2,7 @@ version: "3"
 services:
   dashboard:
     build:
-      context: dashboard
-    environment:
-    - NODE_ENV=production
-  form:
-    build:
-      context: form
+      context: .
     environment:
     - NODE_ENV=production
   nginx:
@@ -15,7 +10,7 @@ services:
       context: nginx
     ports:
     - 7341:7341
-    - 6655:6655
     volumes:
-    - ./dashboard/build:/usr/share/nginx/dashboard
-    - ./form/build:/usr/share/nginx/form
+    - ./build:/usr/share/nginx/dashboard
+    - /etc/pki/tls:/etc/nginx/certs
+
