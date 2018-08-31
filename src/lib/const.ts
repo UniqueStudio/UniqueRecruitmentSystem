@@ -1,6 +1,6 @@
 export const GROUP = ['Web', 'Lab', 'AI', 'Game', 'Android', 'iOS', 'Design', 'PM'];
 export const STEP = ['报名流程', '笔试流程', '面试流程', '熬测流程', '群面流程', '通过'];
-export const URL = 'http://39.108.175.151:5000';
+export const URL = 'https://hustunique.com:5000';
 export const QR_CODE_URL = 'https://open.work.weixin.qq.com/wwopen/sso/qrImg?key=';
 
 type Group = "web" | "lab" | "ai" | "game" | "android" | "ios" | "design" | "pm";
@@ -24,6 +24,7 @@ export interface Candidate {
     title: string; // e.g. 2018A || 2018S (A: AUTUMN, S: SPRING, C: CAMP)
     step: number;
     intro: string;
+    isQuick: boolean;
     resume: string; // file path
     comments: {
         [uid: string]: Comment;
