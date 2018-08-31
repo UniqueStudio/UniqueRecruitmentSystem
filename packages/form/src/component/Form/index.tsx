@@ -4,7 +4,7 @@ import Button from '../Button';
 import Input from '../Input';
 import Choose from '../Choose';
 import Select from '../Select';
-import { GRADES, GROUPS, SCORES } from '../../const';
+import { GRADES, GROUPS, SCORES, URL } from '../../const';
 import TextArea from '../TextArea';
 import Submitted from '../Submitted';
 import SnackBar from '../SnackBar';
@@ -56,7 +56,6 @@ class Form extends React.Component<Props> {
     };
 
     handleClick = () => {
-        console.log(this.state.info)
         const info = { title: '2018A', ...this.state.info };
         const translator = {
             name: '姓名',
@@ -120,7 +119,7 @@ class Form extends React.Component<Props> {
         Object.entries(info).map(i => formData.append(i[0], i[1]));
         (async () => {
             try {
-                const response = await fetch(`http://39.108.175.151:5000/candidates`, {
+                const response = await fetch(`${URL}/candidates`, {
                     method: 'POST',
                     body: formData,
                 });
@@ -202,7 +201,7 @@ class Form extends React.Component<Props> {
                     });
                     return;
                 }
-                const response = await fetch(`http://39.108.175.151:5000/verification/candidate/${phone}`);
+                const response = await fetch(`${URL}/verification/candidate/${phone}`);
                 const result = await response.json();
                 if (result.type === 'success') {
                     this.setState({
