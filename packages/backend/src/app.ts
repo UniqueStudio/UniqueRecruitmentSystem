@@ -33,7 +33,10 @@ const storage = multer.diskStorage({
     filename: (req, file, cb) => cb(null, `${req['body'].name} - ${file.originalname}`)
 });
 const upload = multer({ storage: storage, limits: { fileSize: 104857600 } });  // 100MB
-export const redisClient = redis.createClient(9211);
+export const redisClient = redis.createClient({
+    host: 'redis',
+    port: 9211
+});
 export const getAsync = promisify(redisClient.get).bind(redisClient);
 redisClient.on("error", err => {
     console.log("Redis Error: " + err);
