@@ -6,11 +6,11 @@ import { GRADES, GROUPS, SCORES } from '../../lib/consts';
 
 export const addCandidate = (req: Request, res: Response) => {
     const body = req.body;
-    const { name, grade, institute, major, score, mail, phone, group, sex, intro, title } = body;
+    const { name, grade, institute, major, score, mail, phone, group, sex, intro, title, isQuick } = body;
     (async () => {
         try {
             let candidateResult = await database.query('candidates', { name, phone });
-            if (!(name && grade && institute && mail && major && score && phone && group && sex && intro)) {
+            if (!(name && grade && institute && mail && major && score && phone && group && sex && intro && isQuick)) {
                 res.send({ message: '请完整填写表单!', type: 'warning' });
                 return;
             }
@@ -40,6 +40,10 @@ export const addCandidate = (req: Request, res: Response) => {
             }
             if (!["Male", "Female"].includes(sex)) {
                 res.send({ message: '性别不正确!', type: 'warning' });
+                return;
+            }
+            if (!['0', '1'].includes(isQuick)) {
+                res.send({ message: '是否快通不正确!', type: 'warning' });
                 return;
             }
             if (!GRADES.includes(grade)) {
@@ -84,6 +88,7 @@ export const addCandidate = (req: Request, res: Response) => {
                 sex,
                 step: 0,
                 intro,
+                isQuick: Boolean(+isQuick),
                 title,
                 comments: {},
                 abandon: false,
