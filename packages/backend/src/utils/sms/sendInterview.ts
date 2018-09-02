@@ -18,7 +18,6 @@ export const sendInterview = (req: Request, res: Response) => {
                     const translator = { 'morning': '上午', 'afternoon': '下午', 'evening': '晚上' };
                     const slot = candidateInfo[`slot${step}`];
                     const time = `${slot[0]}(${translator[slot[1]]})${slot[2]}`;
-                    let model = `${candidateInfo['name']}你好，你的${step === 2 ? '群面' : `${candidateInfo['group']}组组面`}时间为${time}，请准时到场`;
                     const response = await fetch(smsSendURL, {
                         method: 'POST',
                         headers: {
@@ -27,8 +26,8 @@ export const sendInterview = (req: Request, res: Response) => {
                         },
                         body: JSON.stringify({
                             phone: candidateInfo['phone'],
-                            template: 96387,
-                            param_list: [`${model}（请无视以下内容：`, '', '', '']
+                            template: 96404,
+                            param_list: [candidateInfo['name'], time, '', step === 2 ? '群面' : `${candidateInfo['group']}组组面`]
                         })
                     });
                     const result = await response.json();

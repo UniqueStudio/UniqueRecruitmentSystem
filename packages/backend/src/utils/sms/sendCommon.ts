@@ -1,10 +1,27 @@
 import { verifyJWT } from '../../lib/checkData';
 import { formURL, GROUPS as groups, smsSendURL, token } from '../../lib/consts';
 import { ObjectId } from 'mongodb';
-import { generateModel } from '../../lib/generateModel';
 import fetch from 'node-fetch';
 import { database, redisClient, getAsync } from '../../app';
 import { Request, Response } from 'express';
+
+const generateSMS = (name: string, step: string, type: string, group: string, link?: string) => {
+    if (step === '通过' && type === 'accept') {
+        return {
+            template: 185985,
+            param_list: [name, '2018年秋季招新', group]
+        };
+    }
+    return type === 'accept' ?
+        {
+            template: 185990,
+            param_list: [name, '2018年秋季招新', group, step, step === '笔试流程' || step === '熬测流程' ? `，请进入以下链接选择面试时间：${link}` : '']
+        }
+        : {
+            template: 185987,
+            param_list: [name, '2018年秋季招新', group, step, '不要灰心，继续学习。期待与更强大的你的相遇！']
+        }
+};
 
 export const sendCommon = (req: Request, res: Response) => {
     const body = req.body;
@@ -33,11 +50,7 @@ export const sendCommon = (req: Request, res: Response) => {
                     if (type === 'reject') {
                         await database.update('candidates', { _id: new ObjectId(i) }, { rejected: true })
                     }
-                    let model = generateModel(candidateInfo['name'], step, type, group);
-                    if (body.date) {
-                        model += `${formURL}/${formId}/${i}`;
-                    }
-                    console.log(model);
+                    const smsBody = generateSMS(candidateInfo['name'], step, type, group, body.date ? `${formURL}/${formId}/${i}` : '');
                     const response = await fetch(smsSendURL, {
                         method: 'POST',
                         headers: {
@@ -46,8 +59,7 @@ export const sendCommon = (req: Request, res: Response) => {
                         },
                         body: JSON.stringify({
                             phone: candidateInfo['phone'],
-                            template: 96387,
-                            param_list: [`${model}（请无视以下内容：`, '', '', '']
+                            ...smsBody
                         })
                     });
                     const result = await response.json();

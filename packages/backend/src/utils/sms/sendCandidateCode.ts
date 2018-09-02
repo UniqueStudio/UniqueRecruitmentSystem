@@ -28,8 +28,8 @@ export const sendCandidateCode = (req: Request, res: Response) => {
                 },
                 body: JSON.stringify({
                     phone: phone,
-                    template: 96385,
-                    param_list: ["本次报名表单", code]
+                    template: 185982,
+                    param_list: ["报名本次招新", code]
                 })
             });
             const result = await response.json();

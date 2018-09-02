@@ -29,7 +29,7 @@ export const sendUserCode = (req: Request, res: Response) => {
                 body: JSON.stringify({
                     phone: phone,
                     template: 96385,
-                    param_list: ["发起招新业务/发送通知业务", code]
+                    param_list: ["在dashboard中当前", code]
                 })
             });
             const result = await response.json();
