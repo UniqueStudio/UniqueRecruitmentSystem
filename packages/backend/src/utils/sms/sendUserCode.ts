@@ -28,7 +28,7 @@ export const sendUserCode = (req: Request, res: Response) => {
                 },
                 body: JSON.stringify({
                     phone: phone,
-                    template: 96385,
+                    template: 185982,
                     param_list: ["在dashboard中当前", code]
                 })
             });
