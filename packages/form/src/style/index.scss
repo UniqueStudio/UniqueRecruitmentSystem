@@ -187,7 +187,7 @@ body {
     size: 3.3rem;
   }
   @media screen and (max-width: 1600px) {
-    font-size: 3.1rem;
+    font-size: 3rem;
   }
   @media screen and (max-width: 1440px) {
     font-size: 2.9rem;
@@ -685,7 +685,6 @@ body {
 }
 
 .selectClicked {
-  border-bottom: 0;
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
 }
@@ -787,6 +786,7 @@ body {
     max-height: 300px;
   }
   overflow-y: auto;
+  transform: translateY(-4px);
   div {
     text-align: center;
     color: $primary;

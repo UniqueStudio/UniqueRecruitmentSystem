@@ -34,6 +34,7 @@ class Form extends React.Component<Props> {
         submitted: false,
         snackBarOn: false,
         content: '',
+        open: '',
         sent: false,
         time: 0
     };
@@ -240,6 +241,12 @@ class Form extends React.Component<Props> {
 
     };
 
+    handleToggle = (name: string) => {
+        this.setState({
+            open: this.state.open === name ? '' : name
+        })
+    };
+
     componentWillUnmount() {
         window.clearInterval(this.interval);
     }
@@ -258,9 +265,9 @@ class Form extends React.Component<Props> {
                 <Choose onChange={this.handleChange('sex')} />
             </div>
         );
-        const Grade = <Select selections={GRADES} name='所属年级' onChange={this.handleChange('grade')} />;
-        const Group = <Select selections={GROUPS} name='组别选择' onChange={this.handleChange('group')} />;
-        const Score = <Select selections={SCORES} name='成绩排名' onChange={this.handleChange('score')} />;
+        const Grade = <Select selections={GRADES} name='所属年级' onChange={this.handleChange('grade')} onToggle={() => this.handleToggle('grade')} open={this.state.open === 'grade'} />;
+        const Group = <Select selections={GROUPS} name='组别选择' onChange={this.handleChange('group')} onToggle={() => this.handleToggle('group')} open={this.state.open === 'group'} />;
+        const Score = <Select selections={SCORES} name='成绩排名' onChange={this.handleChange('score')} onToggle={() => this.handleToggle('score')} open={this.state.open === 'score'} />;
         const Phone = <Input for='phone' size='ml' name='电话' onChange={this.handleChange} />;
         const CodeButton = <Button name={sent ? `${time}秒后${isMobile ? '重新获取' : '重获'}` : '接收验证码'}
                                    bgColor={canGetCode ? 'primary' : 'primaryLighter'}
