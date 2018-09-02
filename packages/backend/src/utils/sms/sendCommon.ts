@@ -35,7 +35,7 @@ export const sendCommon = (req: Request, res: Response) => {
                     }
                     let model = generateModel(candidateInfo['name'], step, type, group);
                     if (body.date) {
-                        model += `${formURL}/form/${formId}/${i}`;
+                        model += `${formURL}/${formId}/${i}`;
                     }
                     console.log(model);
                     const response = await fetch(smsSendURL, {
