@@ -297,7 +297,7 @@ class Form extends React.Component<Props> {
         const Quick = (
             <div className='quick'>
                 <input type="checkbox" id="quick" name="quick" onChange={this.handleCheck}/>
-                <label htmlFor="quick"><div className='checker'/>快速通道（要求很高，请慎重勾选）</label>
+                <label htmlFor="quick"><div className='checker'/>我想要走快速通道（要求很高，请慎重勾选）</label>
             </div>
         );
         const Submit = (
