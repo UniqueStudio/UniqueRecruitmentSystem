@@ -265,9 +265,12 @@ class Form extends React.Component<Props> {
                 <Choose onChange={this.handleChange('sex')} />
             </div>
         );
-        const Grade = <Select selections={GRADES} name='所属年级' onChange={this.handleChange('grade')} onToggle={() => this.handleToggle('grade')} open={this.state.open === 'grade'} />;
-        const Group = <Select selections={GROUPS} name='组别选择' onChange={this.handleChange('group')} onToggle={() => this.handleToggle('group')} open={this.state.open === 'group'} />;
-        const Score = <Select selections={SCORES} name='成绩排名' onChange={this.handleChange('score')} onToggle={() => this.handleToggle('score')} open={this.state.open === 'score'} />;
+        const Grade = <Select selections={GRADES} name='所属年级' onChange={this.handleChange('grade')}
+                              onToggle={() => this.handleToggle('grade')} open={this.state.open === 'grade'} />;
+        const Group = <Select selections={GROUPS} name='组别选择' onChange={this.handleChange('group')}
+                              onToggle={() => this.handleToggle('group')} open={this.state.open === 'group'} />;
+        const Score = <Select selections={SCORES} name='成绩排名' onChange={this.handleChange('score')}
+                              onToggle={() => this.handleToggle('score')} open={this.state.open === 'score'} />;
         const Phone = <Input for='phone' size='ml' name='电话' onChange={this.handleChange} />;
         const CodeButton = <Button name={sent ? `${time}秒后${isMobile ? '重新获取' : '重获'}` : '接收验证码'}
                                    bgColor={canGetCode ? 'primary' : 'primaryLighter'}
@@ -296,8 +299,11 @@ class Form extends React.Component<Props> {
         );
         const Quick = (
             <div className='quick'>
-                <input type="checkbox" id="quick" name="quick" onChange={this.handleCheck}/>
-                <label htmlFor="quick"><div className='checker'/>我想要走快速通道（要求很高，请慎重勾选）</label>
+                <input type="checkbox" id="quick" name="quick" onChange={this.handleCheck} />
+                <label htmlFor="quick">
+                    <div className='checker' />
+                    我想要走快速通道{isMobile && <br />}（要求很高，请慎重勾选）
+                </label>
             </div>
         );
         const Submit = (
