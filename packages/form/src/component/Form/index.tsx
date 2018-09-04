@@ -302,7 +302,7 @@ class Form extends React.Component<Props> {
                 <input type="checkbox" id="quick" name="quick" onChange={this.handleCheck} />
                 <label htmlFor="quick">
                     <div className='checker' />
-                    我想要走快速通道{isMobile && <br />}（要求很高，请慎重勾选）
+                    我想走快速通道(要求很高，请慎重勾选)
                 </label>
             </div>
         );
