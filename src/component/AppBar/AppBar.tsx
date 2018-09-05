@@ -94,6 +94,7 @@ class Bar extends PureComponent<Props & RouteComponentProps<{}>> {
                                 anchorEl={this.state.anchorEl}
                                 open={Boolean(this.state.anchorEl)}
                                 onClose={this.handleClose}
+                                className={classes.options}
                             >
                                 <Anchor to='/myInfo'><MenuItem onClick={this.handleClose}>个人信息</MenuItem></Anchor>
                                 <Anchor to='/myGroup'><MenuItem onClick={this.handleClose}>组员信息</MenuItem></Anchor>

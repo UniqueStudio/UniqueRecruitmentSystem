@@ -29,6 +29,9 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
     personButton: {
         marginLeft: 'auto',
     },
+    options: {
+        zIndex: 5000
+    },
     hide: {
         display: "none"
     },
