@@ -29,6 +29,8 @@ const storage = multer.diskStorage({
         const candidateInfo = req['body'];
         const parentDir = `/www/resumes/${candidateInfo.title}`;
         const childDir = `${parentDir}/${candidateInfo.group}`;
+        if (!fs.existsSync('/www')) fs.mkdirSync('/www');
+        if (!fs.existsSync('/www/resumes')) fs.mkdirSync('/www/resumes');
         if (!fs.existsSync(parentDir)) fs.mkdirSync(parentDir);
         if (!fs.existsSync(childDir)) fs.mkdirSync(childDir);
         cb(null, `${childDir}/`);
