@@ -163,8 +163,8 @@ class Group extends PureComponent<Props> {
         }
         const translator = { 'morning': '上午', 'afternoon': '下午', 'evening': '晚上' };
         const disabled = step === 1
-            ? !(candidates.length && candidates[2].size && currentRecruitment && currentRecruitment.time1 && currentRecruitment.time1[groupName] && numbers.length)
-            : !(candidates.length && candidates[4].size && currentRecruitment && currentRecruitment.time2 && numbers.length);
+            ? !(candidates[2] && candidates[2].size && currentRecruitment && currentRecruitment.time1 && currentRecruitment.time1[groupName] && numbers.length)
+            : !(candidates[4] && candidates[4].size && currentRecruitment && currentRecruitment.time2 && numbers.length);
         return (
             <div className={classes.infoContainer}>
                 <Paper className={classes.paper}>
