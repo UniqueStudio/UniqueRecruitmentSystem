@@ -8,8 +8,10 @@ import { StoreState } from '../../reducer';
 
 const downloadResume = (res: Response) => {
     if (!res.ok) {
-        throw from(res.json()).pipe(
-            map(err => customError(err))
+        return from(res.json()).pipe(
+            map(err => {
+                throw customError(err)
+            })
         );
     }
     let filename = 'resume';
@@ -33,6 +35,7 @@ const downloadResume = (res: Response) => {
             document.body.removeChild(a);
             window.URL.revokeObjectURL(url);
             return { type: CANDIDATE.SUCCESS };
+
         })
     );
 };
@@ -52,10 +55,10 @@ export const getResumeEpic: Epic<Action, Action, StoreState, Dependencies> = (ac
                 },
             })).pipe(
                 mergeMap(downloadResume),
+                catchError(err => errHandler(err, CANDIDATE)),
                 startWith(
                     { type: CANDIDATE.START }
                 ),
-                catchError(err => errHandler(err, CANDIDATE))
             )
         }),
     );
