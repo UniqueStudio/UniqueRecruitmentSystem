@@ -33,7 +33,7 @@ class User extends PureComponent<Props> {
 
     handleChange = (name: string) => (event: React.ChangeEvent) => {
         const info = { ...this.state.info };
-        info[name] = name === 'isCaptain' || 'isAdmin' ? Boolean(event.target['value']) : event.target['value'];
+        info[name] = name === 'isCaptain' || name === 'isAdmin' ? Boolean(event.target['value']) : event.target['value'];
         this.setState({
             info,
         });
