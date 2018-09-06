@@ -510,8 +510,10 @@ body {
   @media screen and (max-width: 500px) {
     border-width: 2px;
   }
-  &:hover {
-    background: $primaryLight;
+  @media screen and (min-width: 500.1px) {
+    &:hover {
+      background: $primaryLight;
+    }
   }
 }
 
@@ -554,8 +556,10 @@ body {
   background: $primaryLighter;
   @extend .colorTransition;
   border: 0;
-  &:hover {
-    background: $primaryLight;
+  @media screen and (min-width: 500.1px) {
+    &:hover {
+      background: $primaryLight;
+    }
   }
 }
 
@@ -793,8 +797,10 @@ body {
     @extend .contentPadding;
     @extend .fontSize;
     user-select: none;
-    &:hover {
-      background: #C5E5FC;
+    @media screen and (min-width: 500.1px) {
+      &:hover {
+        background: $primaryLight;
+      }
     }
   }
 }

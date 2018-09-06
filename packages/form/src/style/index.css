@@ -357,8 +357,9 @@ body {
   @media screen and (max-width: 500px) {
     .background_white, .background_primaryLight {
       border-width: 2px; } }
-  .background_white:hover, .background_primaryLight:hover {
-    background: #C5E5FC; }
+  @media screen and (min-width: 500.1px) {
+    .background_white:hover, .background_primaryLight:hover {
+      background: #C5E5FC; } }
 
 .background_grey {
   background: #ddd;
@@ -383,8 +384,9 @@ body {
 .background_primaryLighter {
   background: #E5F1FD;
   border: 0; }
-  .background_primaryLighter:hover {
-    background: #C5E5FC; }
+  @media screen and (min-width: 500.1px) {
+    .background_primaryLighter:hover {
+      background: #C5E5FC; } }
 
 .background_secondary {
   background: #F57E82;
@@ -591,8 +593,9 @@ body {
     text-align: center;
     color: #3FA9F5;
     user-select: none; }
-    .selectMenu div:hover {
-      background: #C5E5FC; }
+    @media screen and (min-width: 500.1px) {
+      .selectMenu div:hover {
+        background: #C5E5FC; } }
 
 .selectValue {
   position: absolute; }
