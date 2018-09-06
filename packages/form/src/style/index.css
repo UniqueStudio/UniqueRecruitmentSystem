@@ -1,0 +1,1042 @@
+@font-face {
+  font-family: 'Hiragino';
+  src: url("../asset/font/Hiragino.ttf"); }
+
+* {
+  box-sizing: border-box;
+  font-family: 'Hiragino'; }
+
+::-webkit-scrollbar {
+  width: 3px;
+  height: 3px; }
+
+::-webkit-scrollbar-thumb {
+  background: #3FA9F5; }
+
+html {
+  font-size: 12px; }
+  @media screen and (min-width: 360px) {
+    html {
+      font-size: 13.5px; } }
+  @media screen and (min-width: 375px) {
+    html {
+      font-size: 14px; } }
+  @media screen and (min-width: 800px) {
+    html {
+      font-size: 16px; } }
+
+body {
+  margin: 0; }
+
+.main {
+  display: flex;
+  justify-content: flex-end;
+  flex-direction: column; }
+  @media screen and (min-width: 500.1px) {
+    .main {
+      min-width: 800px; } }
+
+.background {
+  flex: 1;
+  background-size: contain;
+  background-repeat: repeat-y;
+  background-position: bottom;
+  margin-bottom: 16px; }
+  @media screen and (max-width: 500px) {
+    .background {
+      display: none; } }
+
+#bgLeft {
+  background-image: url(../asset/img/bgLeft.png);
+  margin-left: 32px; }
+
+#bgRight {
+  background-image: url(../asset/img/bgRight.png);
+  margin-right: 24px; }
+
+.logo {
+  user-select: none; }
+  @media screen and (min-width: 500.1px) {
+    .logo {
+      position: absolute;
+      top: 24px;
+      left: 40px;
+      width: 20%; } }
+  @media screen and (max-width: 500px) {
+    .logo {
+      width: 50%;
+      margin-top: 32px; } }
+
+.container {
+  display: flex;
+  min-height: 100vh; }
+  @media screen and (max-width: 500px) {
+    .container {
+      flex-direction: column;
+      align-items: center; } }
+
+.center {
+  flex: 3;
+  flex-direction: column;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 24px;
+  margin-bottom: 16px; }
+  @media screen and (max-width: 1440px) {
+    .center {
+      flex: 4;
+      margin-top: 16px;
+      margin-bottom: 8px; } }
+  @media screen and (max-width: 1024px) {
+    .center {
+      flex: 6; } }
+
+.header {
+  width: 70%;
+  user-select: none; }
+  @media screen and (max-width: 1024px) {
+    .header {
+      width: 80%; } }
+
+.borderTop, .borderBottom {
+  width: 90%;
+  user-select: none; }
+
+.borderTopSubmitted {
+  margin-top: 32px; }
+
+.borderVertical {
+  background-image: linear-gradient(#7AC3F8 50%, rgba(0, 0, 0, 0) 0%);
+  background-position: left;
+  background-size: 2px 14.1px;
+  background-repeat: repeat-y;
+  width: 2.5px; }
+
+.borderLeft {
+  margin-left: -1px; }
+
+.borderRight {
+  margin-right: -1px;
+  margin-top: -4px; }
+
+.borderBottom {
+  transform: rotate(180deg); }
+
+.fakeBorderContainer {
+  width: 90%;
+  display: flex;
+  justify-content: space-between; }
+
+.content {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 16px 0; }
+
+.title {
+  user-select: none;
+  font-size: 3.3rem;
+  margin: -16px 0 0;
+  color: #F58086; }
+  @media screen and (max-width: 1600px) {
+    .title {
+      font-size: 3rem; } }
+  @media screen and (max-width: 1440px) {
+    .title {
+      font-size: 2.9rem; } }
+  @media screen and (max-width: 1280px) {
+    .title {
+      font-size: 2.7rem; } }
+  @media screen and (max-width: 1024px) {
+    .title {
+      font-size: 2.6rem; } }
+  @media screen and (max-width: 800px) {
+    .title {
+      font-size: 2.5rem; } }
+  @media screen and (max-width: 640px) {
+    .title {
+      font-size: 2rem; } }
+  @media screen and (max-width: 500px) {
+    .title {
+      margin: 8px 0 0; } }
+
+.titleContainer {
+  margin-top: 8px;
+  margin-bottom: 24px;
+  text-align: center; }
+
+.formContainer, .timeContainer {
+  background-image: url(../asset/img/form.png);
+  background-size: contain;
+  background-repeat: no-repeat;
+  position: relative;
+  flex: 0 1 27vw;
+  width: 100%;
+  padding: 56px 40px; }
+  @media screen and (max-width: 1600px) {
+    .formContainer, .timeContainer {
+      padding: 40px 40px; } }
+  @media screen and (max-width: 1440px) {
+    .formContainer, .timeContainer {
+      padding: 40px 40px;
+      width: 90%;
+      flex: 0 1 26.6vw; } }
+  @media screen and (max-width: 1280px) {
+    .formContainer, .timeContainer {
+      width: 100%;
+      padding: 48px 40px;
+      flex: 0 1 30vw; } }
+  @media screen and (max-width: 1024px) {
+    .formContainer, .timeContainer {
+      padding: 40px 40px;
+      flex: 0 1 33vw; } }
+  @media screen and (max-width: 900px) {
+    .formContainer, .timeContainer {
+      padding: 24px 24px;
+      flex: 0 1 33vw; } }
+  @media screen and (max-width: 800px) {
+    .formContainer, .timeContainer {
+      padding: 24px 24px;
+      flex: 0 1 260px; } }
+  @media screen and (max-width: 500px) {
+    .formContainer, .timeContainer {
+      width: 95%;
+      background: none;
+      padding: 0;
+      flex: auto; } }
+
+.form {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; }
+  @media screen and (max-width: 500px) {
+    .form {
+      align-items: center; }
+      .form > * {
+        margin: 24px 0; } }
+
+.formRow {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between; }
+
+.input {
+  display: flex; }
+  @media screen and (max-width: 500px) {
+    .input {
+      width: 90%; } }
+
+.border, .label, .inputContent, .button, .select, .selectMenu, .textAreaContainer, .modal, .score .selectMenu, .popover {
+  border-radius: 12px;
+  border-color: #C5E5FC;
+  border-width: 3px;
+  border-style: solid; }
+  @media screen and (max-width: 1600px) {
+    .border, .label, .inputContent, .button, .select, .selectMenu, .textAreaContainer, .modal, .score .selectMenu, .popover {
+      border-radius: 10px; } }
+  @media screen and (max-width: 1440px) {
+    .border, .label, .inputContent, .button, .select, .selectMenu, .textAreaContainer, .modal, .score .selectMenu, .popover {
+      border-radius: 8px; } }
+  @media screen and (max-width: 500px) {
+    .border, .label, .inputContent, .button, .select, .selectMenu, .textAreaContainer, .modal, .score .selectMenu, .popover {
+      border-radius: 12px;
+      border-width: 2px; } }
+
+.label {
+  border-width: 0;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+  background: #3FA9F5;
+  color: white; }
+
+.fontSize, .labelName, .buttonName, .inputContent, .select, .selectMenu div, .textArea, .popover, .quick {
+  font-size: 1.2rem; }
+  @media screen and (max-width: 1600px) {
+    .fontSize, .labelName, .buttonName, .inputContent, .select, .selectMenu div, .textArea, .popover, .quick {
+      font-size: 1rem; } }
+  @media screen and (max-width: 1440px) {
+    .fontSize, .labelName, .buttonName, .inputContent, .select, .selectMenu div, .textArea, .popover, .quick {
+      font-size: 0.9rem; } }
+  @media screen and (max-width: 1280px) {
+    .fontSize, .labelName, .buttonName, .inputContent, .select, .selectMenu div, .textArea, .popover, .quick {
+      font-size: 0.8rem; } }
+  @media screen and (max-width: 1024px) {
+    .fontSize, .labelName, .buttonName, .inputContent, .select, .selectMenu div, .textArea, .popover, .quick {
+      font-size: 0.75rem; } }
+  @media screen and (max-width: 500px) {
+    .fontSize, .labelName, .buttonName, .inputContent, .select, .selectMenu div, .textArea, .popover, .quick {
+      font-size: 1.2rem; } }
+
+.labelName, .buttonName {
+  margin: 16px 20px;
+  font-weight: bold;
+  user-select: none; }
+  @media screen and (max-width: 1600px) {
+    .labelName, .buttonName {
+      margin: 15px 19px; } }
+  @media screen and (max-width: 1440px) {
+    .labelName, .buttonName {
+      margin: 12px 16px; } }
+  @media screen and (max-width: 1120px) {
+    .labelName, .buttonName {
+      margin: 9px 13px; } }
+  @media screen and (max-width: 1024px) {
+    .labelName, .buttonName {
+      margin: 8px 12px; } }
+  @media screen and (max-width: 500px) {
+    .labelName, .buttonName {
+      margin: 16px 20px;
+      font-weight: normal; } }
+  @media screen and (max-width: 400px) {
+    .labelName, .buttonName {
+      margin: 12px 16px;
+      font-weight: normal; } }
+  @media screen and (max-width: 320px) {
+    .labelName, .buttonName {
+      margin: 8px 12px;
+      font-weight: normal; } }
+
+.inputContent {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  border-left-width: 0;
+  height: auto;
+  outline: none;
+  padding-left: 8px;
+  flex: 1; }
+  @media screen and (max-width: 500px) {
+    .inputContent {
+      width: auto; } }
+  @media screen and (max-width: 1024px) {
+    .inputContent {
+      padding-left: 4px; } }
+
+.lg {
+  width: 100%; }
+
+.ml {
+  width: 100%; }
+
+.md {
+  width: 100%; }
+
+.sm {
+  width: 100%; }
+
+.xs {
+  width: 100%; }
+
+.mobile_sm {
+  width: 70%; }
+
+.button {
+  -webkit-tap-highlight-color: transparent;
+  border-width: 0;
+  outline: none;
+  cursor: pointer; }
+
+.text_primary {
+  color: #3FA9F5; }
+
+.text_white {
+  color: white; }
+
+.text_secondary {
+  color: #F57E82; }
+
+.colorTransition, .background_white, .background_primaryLight, .background_grey, .background_pureWhite, .background_primary, .background_primaryLightLittleMore, .background_primaryLighter, .background_secondary {
+  transition: 225ms; }
+
+.background_white, .background_primaryLight {
+  background: none;
+  border-width: 3px; }
+  @media screen and (max-width: 500px) {
+    .background_white, .background_primaryLight {
+      border-width: 2px; } }
+  .background_white:hover, .background_primaryLight:hover {
+    background: #C5E5FC; }
+
+.background_grey {
+  background: #ddd;
+  border-width: 3px;
+  border-color: #ddd; }
+
+.background_pureWhite {
+  background: white;
+  border-width: 0; }
+
+.background_primary {
+  background: #3FA9F5;
+  border-width: 0; }
+
+.background_primaryLightLittleMore {
+  background: #93CEFA;
+  border: 0; }
+
+.background_primaryLight {
+  background: #C5E5FC; }
+
+.background_primaryLighter {
+  background: #E5F1FD;
+  border: 0; }
+  .background_primaryLighter:hover {
+    background: #C5E5FC; }
+
+.background_secondary {
+  background: #F57E82;
+  width: 100%;
+  border: 0; }
+
+.formColumn {
+  display: inline-block;
+  width: 50%; }
+  @media screen and (max-width: 500px) {
+    .formColumn {
+      width: 90%; } }
+
+.formColumn:first-child {
+  padding-right: 16px; }
+  @media screen and (max-width: 1120px) {
+    .formColumn:first-child {
+      padding-right: 8px; } }
+
+.formColumn:last-child {
+  padding-left: 16px; }
+  @media screen and (max-width: 1120px) {
+    .formColumn:last-child {
+      padding-left: 8px; } }
+
+.codeBox {
+  display: flex;
+  margin: 3px;
+  align-items: flex-end; }
+
+.codeButton {
+  margin: 0 8px 0 24px; }
+  @media screen and (max-width: 1440px) {
+    .codeButton {
+      margin: 0 8px 0 16px; } }
+  @media screen and (max-width: 1280px) {
+    .codeButton {
+      margin: 0 8px; } }
+  .codeButton > div {
+    margin: 0; }
+
+.rowItem {
+  justify-content: start;
+  align-items: center; }
+  .rowItem > :first-child {
+    margin-right: 15%; }
+
+.rowItem:first-child {
+  margin-bottom: 32px; }
+  @media screen and (max-width: 1440px) {
+    .rowItem:first-child {
+      margin-bottom: 24px; } }
+
+.submit {
+  position: absolute;
+  bottom: 8px;
+  right: -192px; }
+  @media screen and (max-width: 1280px) {
+    .submit {
+      right: -144px; } }
+  @media screen and (max-width: 1024px) {
+    .submit {
+      right: -96px; } }
+  @media screen and (max-width: 500px) {
+    .submit {
+      position: static;
+      display: flex;
+      flex-direction: column;
+      align-items: center; } }
+  .submit button {
+    border-radius: 8px; }
+    @media screen and (max-width: 500px) {
+      .submit button {
+        width: auto; } }
+    .submit button div {
+      font-size: 1.5rem;
+      margin: 8px 32px; }
+      @media screen and (max-width: 1280px) {
+        .submit button div {
+          margin: 8px 16px;
+          font-size: 1.2rem; } }
+      @media screen and (max-width: 1024px) {
+        .submit button div {
+          right: 32px;
+          font-size: 1rem; } }
+      @media screen and (max-width: 500px) {
+        .submit button div {
+          margin: 8px 32px;
+          font-size: 1.5rem; } }
+
+.disabled {
+  cursor: auto; }
+
+@media screen and (max-width: 500px) {
+  .choose {
+    width: 80%; } }
+
+@media screen and (max-width: 400px) {
+  .choose {
+    width: 90%; } }
+
+.selects {
+  width: 60%; }
+
+.selectContainer {
+  position: relative; }
+
+.selectClicked {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0; }
+
+.selectArrowRotate {
+  transform: rotate(180deg); }
+
+.select {
+  -webkit-tap-highlight-color: transparent;
+  outline: none;
+  padding: 16px 48px 16px 20px;
+  font-weight: bold;
+  color: #3FA9F5;
+  cursor: pointer;
+  appearance: none;
+  user-select: none;
+  position: relative; }
+  @media screen and (max-width: 1600px) {
+    .select {
+      padding: 15px 42px 15px 19px; } }
+  @media screen and (max-width: 1440px) {
+    .select {
+      padding: 12px 36px 12px 16px; } }
+  @media screen and (max-width: 1120px) {
+    .select {
+      padding: 9px 30px 9px 13px; } }
+  @media screen and (max-width: 1024px) {
+    .select {
+      padding: 7px 24px 7px 11px; } }
+  @media screen and (max-width: 500px) {
+    .select {
+      font-weight: normal;
+      padding: 16px 56px 16px 20px; } }
+
+.selectArrow {
+  position: absolute;
+  cursor: pointer;
+  top: calc(50% - 15px);
+  right: 20px;
+  height: 30px;
+  width: 30px;
+  pointer-events: none;
+  transition: transform 0.2s; }
+  @media screen and (max-width: 1600px) {
+    .selectArrow {
+      zoom: 90%; } }
+  @media screen and (max-width: 1440px) {
+    .selectArrow {
+      zoom: 80%; } }
+  @media screen and (max-width: 1120px) {
+    .selectArrow {
+      zoom: 70%; } }
+  @media screen and (max-width: 1024px) {
+    .selectArrow {
+      zoom: 60%; } }
+  @media screen and (max-width: 500px) {
+    .selectArrow {
+      zoom: 90%; } }
+
+.up {
+  transition: transform 0.2s; }
+
+.contentPadding, .selectMenu div {
+  padding: 16px 20px; }
+  @media screen and (max-width: 1600px) {
+    .contentPadding, .selectMenu div {
+      padding: 15px 19px; } }
+  @media screen and (max-width: 1440px) {
+    .contentPadding, .selectMenu div {
+      padding: 12px 16px; } }
+  @media screen and (max-width: 1120px) {
+    .contentPadding, .selectMenu div {
+      padding: 9px 13px; } }
+  @media screen and (max-width: 1024px) {
+    .contentPadding, .selectMenu div {
+      padding: 8px 12px; } }
+  @media screen and (max-width: 500px) {
+    .contentPadding, .selectMenu div {
+      padding: 16px 20px; } }
+
+.selectMenu {
+  position: absolute;
+  width: 100%;
+  cursor: pointer;
+  background: white;
+  z-index: 1;
+  border-top: 0;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+  max-height: 150px;
+  overflow-y: auto;
+  transform: translateY(-4px); }
+  @media screen and (max-width: 500px) {
+    .selectMenu {
+      max-height: 300px; } }
+  .selectMenu div {
+    text-align: center;
+    color: #3FA9F5;
+    user-select: none; }
+    .selectMenu div:hover {
+      background: #C5E5FC; }
+
+.selectValue {
+  position: absolute; }
+
+.hidden {
+  visibility: hidden; }
+
+.textArea {
+  resize: none;
+  outline: none;
+  height: 100%;
+  width: 100%;
+  border: 0;
+  flex: 1;
+  background: none;
+  padding: 24px; }
+  @media screen and (max-width: 500px) {
+    .textArea {
+      padding: 16px; } }
+
+.textAreaLabel {
+  border-top-left-radius: 0; }
+  @media screen and (min-width: 500.1px) {
+    .textAreaLabel {
+      border-bottom-left-radius: 0;
+      margin-top: 16px;
+      margin-left: -3px; } }
+  @media screen and (max-width: 500px) {
+    .textAreaLabel {
+      border-top-right-radius: 0;
+      margin-top: -2px; }
+      .textAreaLabel > div {
+        margin: 8px; } }
+
+.textAreaContainer {
+  height: 100%;
+  display: flex;
+  align-items: flex-start;
+  overflow-x: visible; }
+  @media screen and (max-width: 500px) {
+    .textAreaContainer {
+      height: 200px;
+      flex-direction: column;
+      align-items: center; } }
+
+.time {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  height: 100%; }
+
+.timeHeader {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: -48px; }
+  @media screen and (max-width: 1600px) {
+    .timeHeader {
+      margin-top: -32px; } }
+  @media screen and (max-width: 500px) {
+    .timeHeader {
+      margin-top: 0;
+      margin-bottom: 8px; } }
+
+.subtitle {
+  margin: 0;
+  color: #3FA9F5;
+  font-weight: bold;
+  font-size: 2.5rem; }
+  @media screen and (max-width: 1600px) {
+    .subtitle {
+      font-size: 2.25rem; } }
+  @media screen and (max-width: 1440px) {
+    .subtitle {
+      font-size: 2rem; } }
+  @media screen and (max-width: 1280px) {
+    .subtitle {
+      font-size: 1.75rem; } }
+  @media screen and (max-width: 1024px) {
+    .subtitle {
+      font-size: 1.5rem; } }
+  @media screen and (max-width: 500px) {
+    .subtitle {
+      font-size: 2rem;
+      font-weight: normal;
+      margin-bottom: 8px; } }
+
+.descriptionFontSize, .description, .modalButtons button div, .prompt, .decidedDescription, .snackBar {
+  font-size: 1.4rem; }
+  @media screen and (max-width: 1600px) {
+    .descriptionFontSize, .description, .modalButtons button div, .prompt, .decidedDescription, .snackBar {
+      font-size: 1.3rem; } }
+  @media screen and (max-width: 1440px) {
+    .descriptionFontSize, .description, .modalButtons button div, .prompt, .decidedDescription, .snackBar {
+      font-size: 1.2rem; } }
+  @media screen and (max-width: 1280px) {
+    .descriptionFontSize, .description, .modalButtons button div, .prompt, .decidedDescription, .snackBar {
+      font-size: 1.1rem; } }
+  @media screen and (max-width: 1024px) {
+    .descriptionFontSize, .description, .modalButtons button div, .prompt, .decidedDescription, .snackBar {
+      font-size: 1rem; } }
+  @media screen and (max-width: 500px) {
+    .descriptionFontSize, .description, .modalButtons button div, .prompt, .decidedDescription, .snackBar {
+      font-size: 1.3rem; } }
+
+.description {
+  margin: 0;
+  color: #7AC3F8;
+  font-weight: bold; }
+  @media screen and (max-width: 500px) {
+    .description {
+      font-weight: normal; } }
+
+.emphasize {
+  color: #F58086; }
+
+.timeContent {
+  display: flex;
+  justify-content: space-around; }
+  @media screen and (max-width: 500px) {
+    .timeContent {
+      flex-direction: column;
+      align-items: center; }
+      .timeContent > * {
+        margin: 24px 0; } }
+
+@media screen and (max-width: 500px) {
+  .timeButtons {
+    width: 100%;
+    display: flex;
+    justify-content: space-around; } }
+
+.timeSubmit {
+  margin-right: -40px; }
+  .timeSubmit button {
+    display: block;
+    margin-top: 16px; }
+  @media screen and (max-width: 500px) {
+    .timeSubmit > button {
+      margin: 24px 0; } }
+  @media screen and (max-width: 1280px) {
+    .timeSubmit {
+      margin-right: -16px; } }
+  @media screen and (max-width: 500px) {
+    .timeSubmit {
+      margin-right: 0; } }
+
+.layer {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1; }
+
+.none {
+  display: none; }
+
+.layerPrimary {
+  background: #EBF0F4; }
+
+.layerSecondary {
+  background: #FAF1F2; }
+
+.modal {
+  position: absolute;
+  padding: 32px;
+  width: 250%;
+  right: 0;
+  border-width: 0; }
+  @media screen and (max-width: 500px) {
+    .modal {
+      width: 100%; } }
+
+.modal_abandon {
+  bottom: 140px; }
+  @media screen and (max-width: 500px) {
+    .modal_abandon {
+      bottom: 190px; } }
+
+.modal_submit {
+  bottom: 70px; }
+  @media screen and (max-width: 500px) {
+    .modal_submit {
+      bottom: 120px; } }
+
+.modalButtons {
+  display: flex;
+  justify-content: space-around; }
+  @media screen and (max-width: 360px) {
+    .modalButtons {
+      flex-direction: column;
+      align-items: center; } }
+  @media screen and (max-width: 360px) {
+    .modalButtons button {
+      margin: 16px 0; } }
+  .modalButtons button div {
+    margin: 8px 16px; }
+    @media screen and (max-width: 1024px) {
+      .modalButtons button div {
+        margin: 8px 8px; } }
+
+.prompt {
+  color: white;
+  font-weight: 100;
+  margin: 0; }
+
+.decided {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center; }
+
+.decidedTitle {
+  color: #3FA9F5;
+  font-size: 3.5rem;
+  font-weight: bold; }
+  @media screen and (max-width: 1600px) {
+    .decidedTitle {
+      font-size: 3.3rem; } }
+  @media screen and (max-width: 1440px) {
+    .decidedTitle {
+      font-size: 3.1rem; } }
+  @media screen and (max-width: 1280px) {
+    .decidedTitle {
+      font-size: 2.9rem; } }
+  @media screen and (max-width: 1024px) {
+    .decidedTitle {
+      font-size: 2.7rem; } }
+  @media screen and (max-width: 500px) {
+    .decidedTitle {
+      font-weight: normal; } }
+  @media screen and (max-width: 320px) {
+    .decidedTitle {
+      font-size: 2.4rem; } }
+
+.decidedDescription {
+  color: #7AC3F8;
+  font-weight: bold; }
+  @media screen and (max-width: 500px) {
+    .decidedDescription {
+      font-weight: normal;
+      margin-top: 16px;
+      font-size: 0.9rem; } }
+
+.done {
+  height: 3.5rem;
+  fill: #3FA9F5;
+  vertical-align: text-top; }
+  @media screen and (max-width: 1600px) {
+    .done {
+      height: 3.3rem; } }
+  @media screen and (max-width: 1440px) {
+    .done {
+      height: 3.1rem; } }
+  @media screen and (max-width: 1280px) {
+    .done {
+      height: 2.9rem; } }
+  @media screen and (max-width: 1024px) {
+    .done {
+      height: 2.7rem; } }
+
+.snackBar {
+  position: fixed;
+  left: 24px;
+  bottom: 16px;
+  padding: 16px 32px;
+  margin-bottom: -70px;
+  background: #F57E82;
+  border-radius: 6px;
+  color: white;
+  z-index: 1;
+  font-weight: bold;
+  box-shadow: 0 0 5px #F58086;
+  animation-duration: 3s;
+  animation-name: pop; }
+
+@keyframes pop {
+  10% {
+    margin-bottom: 0; }
+  90% {
+    margin-bottom: 0; }
+  100% {
+    margin-bottom: -70px; } }
+
+.fullHeight {
+  height: 100%; }
+  @media screen and (max-width: 500px) {
+    .fullHeight {
+      min-height: 250px; } }
+
+.fileButton {
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center; }
+  @media screen and (max-width: 500px) {
+    .fileButton {
+      font-weight: normal; } }
+
+.submittedContainer {
+  margin-top: 24px; }
+
+.gridWrapper {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  height: 100%;
+  grid-row-gap: 16px;
+  grid-template-areas: "nm nm ml ml is is mj mj" "sx sx sx ph ph ph cd cd" "gd gd gp gp it it it it" "sc sc rs rs it it it it"; }
+  .gridWrapper > div {
+    align-self: center; }
+    .gridWrapper > div:last-child {
+      height: 100%; }
+
+.name {
+  grid-area: nm;
+  width: 80%; }
+
+.mail {
+  grid-area: ml;
+  width: 110%;
+  margin-left: -5%; }
+
+.institute {
+  grid-area: is;
+  justify-self: flex-end;
+  width: 80%; }
+
+.major {
+  grid-area: mj;
+  justify-self: flex-end;
+  width: 80%; }
+
+.sex {
+  grid-area: sx;
+  width: 90%; }
+
+.phone {
+  grid-area: ph;
+  width: 115%; }
+  @media screen and (max-width: 1440px) {
+    .phone {
+      width: 120%; } }
+  .phone .input {
+    width: 60%; }
+
+.code {
+  grid-area: cd;
+  justify-self: flex-end;
+  width: 80%; }
+  @media screen and (max-width: 1440px) {
+    .code {
+      width: 70%; } }
+
+.grade {
+  grid-area: gd;
+  width: 75%; }
+
+.group {
+  grid-area: gp;
+  width: 75%; }
+
+.score {
+  grid-area: sc;
+  width: 75%; }
+  .score .selectMenu {
+    bottom: -50px;
+    max-height: 250px; }
+
+.resume {
+  grid-area: rs;
+  width: 90%; }
+
+.intro {
+  grid-area: it; }
+
+.popover {
+  position: absolute;
+  bottom: 24px;
+  right: 0;
+  opacity: 0;
+  visibility: hidden;
+  transition: visibility 300ms, opacity 300ms;
+  width: 80%;
+  background-color: #7AC3F8;
+  color: white;
+  padding: 8px;
+  border-color: #7AC3F8;
+  text-align: left;
+  font-weight: normal; }
+  .popover p {
+    margin: 4px; }
+  @media screen and (max-width: 1280px) {
+    .popover {
+      bottom: 16px; } }
+  @media screen and (max-width: 500px) {
+    .popover {
+      bottom: 24px;
+      width: 100%; } }
+
+.popoverOn {
+  opacity: 1;
+  visibility: visible; }
+
+.quick {
+  color: #3FA9F5;
+  font-weight: bold;
+  text-align: end;
+  margin-top: 8px;
+  user-select: none;
+  position: relative;
+  -webkit-tap-highlight-color: transparent; }
+  @media screen and (max-width: 900px) {
+    .quick {
+      margin-top: 0; } }
+  @media screen and (max-width: 500px) {
+    .quick {
+      margin-top: 16px;
+      font-size: 1.2rem; } }
+  @media screen and (max-width: 350px) {
+    .quick {
+      font-size: 1rem; } }
+  .quick input {
+    display: none; }
+  .quick label {
+    cursor: pointer; }
+    .quick label .checker {
+      height: 10px;
+      width: 10px;
+      margin-right: 4px;
+      background-color: #eee;
+      transition: background-color 300ms;
+      display: inline-block;
+      vertical-align: baseline; }
+      @media screen and (max-width: 500px) {
+        .quick label .checker {
+          height: 12px;
+          width: 12px; } }
+  .quick input:checked ~ label .checker {
+    background-color: #3FA9F5; }
+  @media screen and (min-width: 500.1px) {
+    .quick label:hover .checker {
+      background-color: #C5E5FC; }
+    .quick label:hover .popover {
+      opacity: 1;
+      visibility: visible; } }
