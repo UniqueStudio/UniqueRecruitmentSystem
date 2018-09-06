@@ -7,12 +7,16 @@ import fetch from 'node-fetch';
 
 export const sendInterview = (req: Request, res: Response) => {
     const body = req.body;
-    const { step, candidates } = body;
+    const { step, candidates, code: userCode } = body;
     (async () => {
         try {
             const decoded = verifyJWT(req.get('Authorization'));
+            if ([step, candidates, userCode].includes(undefined)) {
+                res.send({ message: '请完整填写信息', type: 'warning' });
+                return;
+            }
             const code = await getAsync(`userCode:${decoded['uid']}`);
-            if (body.code === code) {
+            if (userCode === code) {
                 const results = candidates.map(async (i: string) => {
                     const candidateInfo = (await database.query('candidates', { _id: new ObjectId(i) }))[0];
                     const translator = { 'morning': '上午', 'afternoon': '下午', 'evening': '晚上' };

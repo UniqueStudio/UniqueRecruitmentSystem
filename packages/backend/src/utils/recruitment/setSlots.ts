@@ -3,12 +3,25 @@ import { verifyJWT } from '../../lib/checkData';
 import { arrangeTime } from '../../lib/arrangeTime';
 import { database } from '../../app';
 import { ObjectId } from 'mongodb';
+import { GROUPS } from '../../lib/consts';
 
 export const setSlots = (req: Request, res: Response) => {
     (async () => {
         try {
             verifyJWT(req.get('Authorization'));
             const { group, slots, title } = req.body;
+            if (!group || !GROUPS.includes(group.toLowerCase())) {
+                res.send({ message: '组别不正确!', type: 'warning' });
+                return;
+            }
+            if (!slots) {
+                res.send({ message: '未设置时间!', type: 'warning' });
+                return;
+            }
+            if (!title) {
+                res.send({ message: '未指定招新!', type: 'warning' });
+                return;
+            }
             let failed = 0;
             if (group !== 'interview') {
                 await database.update('recruitments', { title }, { [`time1.slots.${group}`]: slots });

@@ -25,32 +25,38 @@ const generateSMS = (name: string, step: string, type: string, group: string, li
 
 export const sendCommon = (req: Request, res: Response) => {
     const body = req.body;
-    const { step, type, group, title, candidates } = body;
+    const { step, type, group, title, candidates, code: userCode, date } = body;
     (async () => {
         try {
             const decoded = verifyJWT(req.get('Authorization'));
+            if ([step, type, group, title, candidates, userCode].includes(undefined)
+                || [step, type, group, title, candidates, userCode].includes('')
+            ) {
+                res.send({ message: '请完整填写信息', type: 'warning' });
+                return;
+            }
             const recruitment = (await database.query('recruitments', { title }))[0];
             let formId = '';
-            if (body.date) {
+            if (date) {
                 if (step === '笔试流程') {
                     formId = `${recruitment['_id']}${groups.indexOf(group)}1`;
                     await database.update('recruitments',
                         { title },
-                        { time1: { ...recruitment.time1, [group]: body.date } }
+                        { time1: { ...recruitment.time1, [group]: date } }
                     );
                 } else if (step === '熬测流程') {
                     formId = `${recruitment['_id']}2`;
-                    await database.update('recruitments', { title }, { time2: body.date });
+                    await database.update('recruitments', { title }, { time2: date });
                 }
             }
             const code = await getAsync(`userCode:${decoded['uid']}`);
-            if (body.code === code) {
+            if (userCode === code) {
                 const results = candidates.map(async (i: string) => {
                     const candidateInfo = (await database.query('candidates', { _id: new ObjectId(i) }))[0];
                     if (type === 'reject') {
                         await database.update('candidates', { _id: new ObjectId(i) }, { rejected: true })
                     }
-                    const smsBody = generateSMS(candidateInfo['name'], step, type, group, body.date ? `${formURL}/${formId}/${i}` : '');
+                    const smsBody = generateSMS(candidateInfo['name'], step, type, group, date ? `${formURL}/${formId}/${i}` : '');
                     const response = await fetch(smsSendURL, {
                         method: 'POST',
                         headers: {

@@ -7,8 +7,16 @@ import { Request, Response } from 'express';
 
 export const getForm = (req: Request, res: Response) => {
     const formId = req.params.formId;
+    if (!formId) {
+        res.send({ message: 'URL不正确！', type: 'warning' });
+        return;
+    }
     const type = +formId.slice(-1);
     const cid = req.params.cid;
+    if (!cid) {
+        res.send({ message: 'URL不正确！', type: 'warning' });
+        return;
+    }
     const token = jwt.sign({ cid }, secret, {
         expiresIn: 86400
     });

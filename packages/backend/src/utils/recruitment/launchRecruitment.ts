@@ -6,11 +6,16 @@ import { Request, Response } from 'express';
 export const launchRecruitment = (req: Request, res: Response) => {
     (async () => {
         try {
-            const { title, begin, end, code } = req.body;
+            const { title, begin, end, code: userCode } = req.body;
             const decoded = verifyJWT(req.get('Authorization'));
-            const userCode = await getAsync(`userCode:${decoded['uid']}`);
+            const code = await getAsync(`userCode:${decoded['uid']}`);
+            if ([title, begin, end, userCode].includes(undefined)
+                || [title, begin, end, userCode].includes('')) {
+                res.send({ message: '请完整填写信息', type: 'warning' });
+                return;
+            }
             if (userCode === code) {
-                const queryResult = await database.query('recruitments', {title});
+                const queryResult = await database.query('recruitments', { title });
                 if (queryResult.length) {
                     res.send({ message: '不能重复发起招新', type: 'warning' });
                     return;

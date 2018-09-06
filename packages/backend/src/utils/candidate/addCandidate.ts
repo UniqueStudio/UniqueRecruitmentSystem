@@ -6,16 +6,31 @@ import { GRADES, GROUPS, SCORES } from '../../lib/consts';
 
 export const addCandidate = (req: Request, res: Response) => {
     const body = req.body;
-    const { name, grade, institute, major, score, mail, phone, group, sex, intro, title, isQuick } = body;
+    const { name, grade, institute, major, score, mail, phone, group, sex, intro, title, isQuick, code: userCode } = body;
     (async () => {
         try {
             let candidateResult = await database.query('candidates', { name, phone });
-            if (!(name && grade && institute && mail && major && score && phone && group && sex && intro && isQuick)) {
+            if ([name, grade, institute, major, score, mail, phone, group, sex, intro, title, isQuick, userCode].includes(undefined)
+                || [name, grade, institute, major, score, mail, phone, group, sex, intro, title, isQuick, userCode].includes('')
+            ) {
                 res.send({ message: '请完整填写表单!', type: 'warning' });
                 return;
             }
             if (candidateResult.length !== 0) {
                 res.send({ message: '不能重复报名!', type: 'warning' });
+                return;
+            }
+            const recruitment = (await database.query('recruitments', { title }))[0];
+            if (!recruitment) {
+                res.send({ message: '当前招新不存在!', type: 'warning' });
+                return;
+            }
+            if (+new Date() < recruitment.begin) {
+                res.send({ message: '当前招新未开始!', type: 'warning' });
+                return;
+            }
+            if (+new Date() > recruitment.end) {
+                res.send({ message: '当前招新已结束!', type: 'warning' });
                 return;
             }
             if (!checkMail(mail)) {
@@ -59,21 +74,8 @@ export const addCandidate = (req: Request, res: Response) => {
                 return;
             }
             const code = await getAsync(`candidateCode:${phone}`);
-            if (code !== body.code) {
+            if (code !== userCode) {
                 res.send({ message: '验证码不正确!', type: 'warning' });
-                return;
-            }
-            const recruitment = (await database.query('recruitments', { title }))[0];
-            if (!recruitment) {
-                res.send({ message: '当前招新不存在!', type: 'warning' });
-                return;
-            }
-            if (+new Date() < recruitment.begin) {
-                res.send({ message: '当前招新未开始!', type: 'warning' });
-                return;
-            }
-            if (+new Date() > recruitment.end) {
-                res.send({ message: '当前招新已结束!', type: 'warning' });
                 return;
             }
             const cid = await database.insert('candidates', {
