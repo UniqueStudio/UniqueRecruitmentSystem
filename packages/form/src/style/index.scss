@@ -28,17 +28,15 @@ $secondaryLighter: #FAF1F2;
 }
 
 html {
-  @media screen and (min-width: 800px) {
-    font-size: 16px;
-  }
-  @media screen and (min-width: 375px) and (max-width: 800px) {
-    font-size: 14px;
-  }
-  @media screen and (min-width: 360px) and (max-width: 375px) {
+  font-size: 12px;
+  @media screen and (min-width: 360px) {
     font-size: 13.5px;
   }
-  @media screen and (max-width: 360px) {
-    font-size: 12px;
+  @media screen and (min-width: 375px) {
+    font-size: 14px;
+  }
+  @media screen and (min-width: 800px) {
+    font-size: 16px;
   }
 }
 
@@ -50,7 +48,7 @@ body {
   display: flex;
   justify-content: flex-end;
   flex-direction: column;
-  @media screen and (min-width: 501px) {
+  @media screen and (min-width: 500.1px) {
     min-width: 800px;
   }
 }
@@ -80,7 +78,7 @@ body {
 
 .logo {
   user-select: none;
-  @media screen and (min-width: 501px) {
+  @media screen and (min-width: 500.1px) {
     position: absolute;
     top: $spacing * 3;
     left: $spacing * 5;
@@ -104,6 +102,10 @@ body {
 .center {
   @media screen and (max-width: 1440px) {
     flex: 4;
+    margin: {
+      top: $spacing * 2;
+      bottom: $spacing;
+    }
   }
   @media screen and (max-width: 1024px) {
     flex: 6;
@@ -116,12 +118,6 @@ body {
   margin: {
     top: $spacing * 3;
     bottom: $spacing * 2;
-  }
-  @media screen and (max-width: 1440px) {
-    margin: {
-      top: $spacing * 2;
-      bottom: $spacing;
-    }
   }
 }
 
@@ -224,37 +220,39 @@ body {
     repeat: no-repeat;
   }
   position: relative;
-  @media screen and (max-width: 500px) {
-    width: 95%;
-    background: none;
-    padding: 0;
-  }
   flex: 0 1 27vw;
   width: 100%;
   padding: $spacing * 7 $spacing * 5;
-  @media screen and (max-width: 800px) and (min-width: 501px) {
-    padding: $spacing * 3 $spacing * 3;
-    flex: 0 1 260px;
-  }
-  @media screen and (max-width: 900px) and (min-width: 801px) {
-    padding: $spacing * 3 $spacing * 3;
-    flex: 0 1 33vw;
-  }
-  @media screen and (max-width: 1024px) and (min-width: 901px) {
+  @media screen and (max-width: 1600px) {
     padding: $spacing * 5 $spacing * 5;
-    flex: 0 1 33vw;
   }
-  @media screen and (max-width: 1280px) and (min-width: 1025px) {
-    padding: $spacing * 6 $spacing * 5;
-    flex: 0 1 30vw;
-  }
-  @media screen and (max-width: 1440px) and (min-width: 1281px) {
+  @media screen and (max-width: 1440px) {
     padding: $spacing * 5 $spacing * 5;
     width: 90%;
     flex: 0 1 26.6vw;
   }
-  @media screen and (max-width: 1600px) and (min-width: 1441px) {
+  @media screen and (max-width: 1280px) {
+    width: 100%;
+    padding: $spacing * 6 $spacing * 5;
+    flex: 0 1 30vw;
+  }
+  @media screen and (max-width: 1024px) {
     padding: $spacing * 5 $spacing * 5;
+    flex: 0 1 33vw;
+  }
+  @media screen and (max-width: 900px) {
+    padding: $spacing * 3 $spacing * 3;
+    flex: 0 1 33vw;
+  }
+  @media screen and (max-width: 800px) {
+    padding: $spacing * 3 $spacing * 3;
+    flex: 0 1 260px;
+  }
+  @media screen and (max-width: 500px) {
+    width: 95%;
+    background: none;
+    padding: 0;
+    flex: auto;
   }
 }
 
@@ -601,7 +599,7 @@ body {
   @media screen and (max-width: 1440px) {
     margin: 0 $spacing 0 $spacing * 2;
   }
-  @media screen and (max-width: 1440px) {
+  @media screen and (max-width: 1280px) {
     margin: 0 $spacing;
   }
   & > div {
@@ -826,7 +824,7 @@ body {
 
 .textAreaLabel {
   border-top-left-radius: 0;
-  @media screen and (min-width: 501px) {
+  @media screen and (min-width: 500.1px) {
     border-bottom-left-radius: 0;
     margin-top: $spacing * 2;
     margin-left: -3px;
@@ -1272,10 +1270,10 @@ body {
   p {
     margin: $spacing / 2;
   }
-  @media screen and (max-width: 1281px) {
+  @media screen and (max-width: 1280px) {
     bottom: $spacing * 2;
   }
-  @media screen and (max-width: 501px) {
+  @media screen and (max-width: 500px) {
     bottom: $spacing * 3;
     width: 100%;
   }
@@ -1327,7 +1325,7 @@ body {
   input:checked ~ label .checker {
     background-color: $primary;
   }
-  @media screen and (min-width: 500px) {
+  @media screen and (min-width: 500.1px) {
     label:hover .checker {
       background-color: $primaryLight;
     }
