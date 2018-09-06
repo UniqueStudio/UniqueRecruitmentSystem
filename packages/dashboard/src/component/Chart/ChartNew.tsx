@@ -49,8 +49,9 @@ class ChartNew extends PureComponent<Props> {
             return;
         }
         info['title'] = info.year + info.type;
-        info['beginTime'] = +new Date(info.begin);
-        info['endTime'] = +new Date(info.end);
+        // UTC+8 00:00
+        info['beginTime'] = +new Date(info.begin) + (new Date()).getTimezoneOffset() * 60000;
+        info['endTime'] = +new Date(info.end) + (new Date()).getTimezoneOffset() * 60000;
         if (info['beginTime'] >= info['endTime']) {
             this.props.toggleSnackbarOn('结束时间必须大于开始时间！');
             return;
