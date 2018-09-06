@@ -8,6 +8,7 @@ import { GRADES, GROUPS, SCORES, URL } from '../../const';
 import TextArea from '../TextArea';
 import Submitted from '../Submitted';
 import SnackBar from '../SnackBar';
+import Popover from '../Popover';
 
 interface Props {
     isMobile: boolean;
@@ -301,6 +302,7 @@ class Form extends React.Component<Props> {
             <div className='quick'>
                 <input type="checkbox" id="quick" name="quick" onChange={this.handleCheck} />
                 <label htmlFor="quick">
+                    <Popover />
                     <div className='checker' />
                     我想走快速通道(要求很高，请慎重勾选)
                 </label>

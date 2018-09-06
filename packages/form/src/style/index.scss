@@ -1251,13 +1251,42 @@ body {
   grid-area: it
 }
 
+.popover {
+  position: absolute;
+  bottom: $spacing * 3;
+  right: 0;
+  opacity: 0;
+  visibility: hidden;
+  transition: visibility 300ms, opacity 300ms;
+  width: 80%;
+  background-color: $primaryLightLittle;
+  color: white;
+  padding: $spacing;
+  @extend .border;
+  @extend .fontSize;
+  border-color: $primaryLightLittle;
+  text-align: left;
+  font-weight: normal;
+  p {
+    margin: $spacing / 2;
+  }
+  @media screen and (max-width: 1280px) {
+    bottom: $spacing * 2;
+  }
+  @media screen and (max-width: 500px) {
+    bottom: $spacing * 3;
+    width: 100%;
+  }
+}
+
 .quick {
-  font-size: 0.8rem;
+  @extend .fontSize;
   color: $primary;
   font-weight: bold;
   text-align: end;
   margin-top: $spacing;
   user-select: none;
+  position: relative;
   @media screen and (max-width: 900px) {
     margin-top: 0;
   }
@@ -1293,4 +1322,9 @@ body {
   input:checked ~ label .checker {
     background-color: $primary;
   }
+  label:hover .popover {
+    opacity: 1;
+    visibility: visible;
+  }
 }
+
