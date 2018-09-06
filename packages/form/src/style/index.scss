@@ -478,6 +478,7 @@ body {
 
 .button {
   @extend .border;
+  -webkit-tap-highlight-color: transparent;
   border-width: 0;
   outline: none;
   cursor: pointer;
@@ -694,6 +695,7 @@ body {
 }
 
 .select {
+  -webkit-tap-highlight-color: transparent;
   outline: none;
   @media screen and (max-width: 1600px) {
     padding: 15px 42px 15px 19px;
@@ -1292,6 +1294,7 @@ body {
   margin-top: $spacing;
   user-select: none;
   position: relative;
+  -webkit-tap-highlight-color: transparent;
   @media screen and (max-width: 900px) {
     margin-top: 0;
   }
