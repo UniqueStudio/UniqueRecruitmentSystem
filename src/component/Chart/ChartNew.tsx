@@ -44,7 +44,7 @@ class ChartNew extends PureComponent<Props> {
     };
     launchRecruitment = () => {
         const info = { ...this.state };
-        if (!info.year || !info.type || !info.code) {
+        if (!info.year || !info.type || !info.code || !info.begin || !info.end) {
             this.props.toggleSnackbarOn('请完整填写信息！');
             return;
         }
