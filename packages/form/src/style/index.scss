@@ -1270,13 +1270,18 @@ body {
   p {
     margin: $spacing / 2;
   }
-  @media screen and (max-width: 1280px) {
+  @media screen and (max-width: 1281px) {
     bottom: $spacing * 2;
   }
-  @media screen and (max-width: 500px) {
+  @media screen and (max-width: 501px) {
     bottom: $spacing * 3;
     width: 100%;
   }
+}
+
+.popoverOn {
+  opacity: 1;
+  visibility: visible;
 }
 
 .quick {
@@ -1316,15 +1321,16 @@ body {
     }
     cursor: pointer;
   }
-  label:hover .checker {
-    background-color: $primaryLight;
-  }
   input:checked ~ label .checker {
     background-color: $primary;
   }
-  label:hover .popover {
-    opacity: 1;
-    visibility: visible;
+  @media screen and (min-width: 500px) {
+    label:hover .checker {
+      background-color: $primaryLight;
+    }
+    label:hover .popover {
+      opacity: 1;
+      visibility: visible;
+    }
   }
 }
-

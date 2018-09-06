@@ -30,13 +30,14 @@ class Form extends React.Component<Props> {
             code: '',
             intro: '',
             resume: '',
-            isQuick: '0'
+            isQuick: false
         },
         submitted: false,
         snackBarOn: false,
         content: '',
         open: '',
         sent: false,
+        popoverOn: false,
         time: 0
     };
 
@@ -118,7 +119,7 @@ class Form extends React.Component<Props> {
         }
         info.group = info.group.toLowerCase();
         const formData = new FormData();
-        Object.entries(info).map(i => formData.append(i[0], i[1]));
+        Object.entries(info).map(i => formData.append(i[0], i[0] === 'isQuick' ? (i[1] ? '1' : '0') : i[1] as string));
         (async () => {
             try {
                 const response = await fetch(`${URL}/candidates`, {
@@ -152,8 +153,8 @@ class Form extends React.Component<Props> {
         this.setState({ info: { ...this.state.info, [name]: e.target['value'] } });
     };
 
-    handleCheck = (e: React.ChangeEvent) => {
-        this.setState({ info: { ...this.state.info, isQuick: e.target['checked'] ? '1' : '0' } });
+    handleCheck = () => {
+        this.setState({ info: { ...this.state.info, isQuick: !this.state.info.isQuick } });
     };
 
     handleFile = (event: React.ChangeEvent) => {
@@ -248,12 +249,18 @@ class Form extends React.Component<Props> {
         })
     };
 
+    handlePop = () => {
+        this.setState({
+            popoverOn: !this.state.popoverOn
+        });
+    };
+
     componentWillUnmount() {
         window.clearInterval(this.interval);
     }
 
     public render() {
-        const { submitted, content, snackBarOn, info, sent, time } = this.state;
+        const { submitted, content, snackBarOn, info, sent, time, popoverOn } = this.state;
         const { isMobile } = this.props;
         const canGetCode = this.checkPhone(info.phone);
         const Name = <Input for='name' size='md' name='姓名' onChange={this.handleChange}
@@ -300,11 +307,11 @@ class Form extends React.Component<Props> {
         );
         const Quick = (
             <div className='quick'>
-                <input type="checkbox" id="quick" name="quick" onChange={this.handleCheck} />
-                <label htmlFor="quick">
-                    <Popover />
-                    <div className='checker' />
-                    我想走快速通道(要求很高，请慎重勾选)
+                <input type="checkbox" id="quick" name="quick" checked={info.isQuick} />
+                <label onClick={!isMobile ? this.handleCheck: undefined}>
+                    <Popover on={popoverOn}/>
+                    <div className='checker' onClick={isMobile ? this.handleCheck : undefined} />
+                    <span onClick={isMobile ? this.handlePop : undefined}>我想走快速通道(要求很高，请慎重勾选)</span>
                 </label>
             </div>
         );
