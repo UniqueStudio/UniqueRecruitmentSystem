@@ -57,9 +57,9 @@ class Bar extends PureComponent<Props & RouteComponentProps<{}>> {
         const { pathname } = location;
         const pathToTitle = {
             '/': '联创团队招新管理系统',
-            '/commonInterview': '8102年秋季招新',
+            '/commonInterview': '2018年秋季招新',
             '/data': '历年数据展示',
-            '/finalInterview': '8102秋招・群面',
+            '/finalInterview': '2018秋招・群面',
             '/myInfo': '个人信息管理',
             '/myGroup': '组员信息管理',
         };

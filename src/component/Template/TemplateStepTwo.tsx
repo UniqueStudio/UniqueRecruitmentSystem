@@ -21,6 +21,8 @@ export interface MainInfo extends WithStyles {
     type: string;
     step: string;
     date: Time[];
+    time: string;
+    place: string;
 }
 
 interface Props extends MainInfo {
@@ -37,7 +39,7 @@ interface Props extends MainInfo {
 class Step extends PureComponent<Props> {
 
     render() {
-        const { classes, group, type, step, date, fns } = this.props;
+        const { classes, group, type, step, date, fns, time, place } = this.props;
         const { handleChange, changeDate, setTime, addDate, deleteDate } = fns;
         const inputProps = { readOnly: true };
         return (
@@ -81,14 +83,14 @@ class Step extends PureComponent<Props> {
                         value={step}
                         onChange={handleChange("step")}
                     >
-                        {STEP.map((i, j) => (
+                        {STEP.slice(0, 5).map((i, j) => (
                             <MenuItem key={j} value={i}>
                                 {i}
                             </MenuItem>
                         ))}
                     </TextField>
                 </div>
-                {(step === '笔试流程' || step === '熬测流程') && type === 'accept' &&
+                {(step === STEP[1] || step === STEP[3]) && type === 'accept' &&
                 <div
                     className={classNames(classes.templateContent, classes.templateItem, classes.templateParams, classes.templateColumn)}>
                     {date.map((i, j) => (
@@ -146,6 +148,27 @@ class Step extends PureComponent<Props> {
                             }</Button>
                         </div>
                     ))}
+                </div>}
+                {(step === STEP[0] || step === STEP[2]) && type === 'accept' &&
+                <div className={classNames(classes.templateContent, classes.templateItem, classes.templateParams)}>
+                    <TextField
+                        label="时间"
+                        value={time}
+                        className={classNames(classes.templateItem, classes.input)}
+                        InputLabelProps={{
+                            shrink: true,
+                        }}
+                        onChange={handleChange('time')}
+                    />
+                    <TextField
+                        label="地点"
+                        value={place}
+                        className={classNames(classes.templateItem, classes.input)}
+                        InputLabelProps={{
+                            shrink: true,
+                        }}
+                        onChange={handleChange('place')}
+                    />
                 </div>}
             </>
         );
