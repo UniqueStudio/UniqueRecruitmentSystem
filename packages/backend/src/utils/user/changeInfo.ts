@@ -46,8 +46,8 @@ export const changeInfo = (req: Request, res: Response) => {
             await database.update('users', { _id: new ObjectId(req.params.uid) }, {
                 username,
                 joinTime,
-                isCaptain: Boolean(isCaptain),
-                isAdmin: Boolean(isAdmin),
+                isCaptain,
+                isAdmin,
                 phone,
                 mail,
                 sex,
