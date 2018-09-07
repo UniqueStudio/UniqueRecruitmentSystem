@@ -12,7 +12,7 @@ import withRoot from '../../style/withRoot';
 import TemplateStepOne from './TemplateStepOne';
 import TemplateStepTwo from './TemplateStepTwo';
 import Verify from '../../container/Verify';
-import { Candidate, Time } from '../../lib/const';
+import { Candidate, STEP, Time } from '../../lib/const';
 
 interface Props extends WithStyles {
     group: string;
@@ -30,6 +30,8 @@ interface State {
     type: string;
     step: string;
     date: Time[];
+    time: string;
+    place: string;
     code: string;
     sent: boolean;
 }
@@ -48,6 +50,8 @@ class Template extends PureComponent<Props> {
         type: 'accept',
         step: '{{xx流程}}',
         date: [{ ...this.defaultDate }],
+        time: '',
+        place: '',
         code: '',
         sent: false
     };
@@ -59,18 +63,27 @@ class Template extends PureComponent<Props> {
     };
 
     handleNext = () => {
-        const { activeStep, step, date, type } = this.state;
+        const { activeStep, step, date, type, time, place } = this.state;
         const { toggleSnackbar } = this.props;
         if (activeStep === 1) {
             if (step === '{{xx流程}}') {
                 toggleSnackbar('请选择流程！');
                 return;
-            } else if ((step === '笔试流程' || step === '熬测流程') && type === 'accept') {
+            } else if ((step === STEP[1] || step === STEP[3]) && type === 'accept') {
                 for (const i of date) {
                     if (!(i.afternoon || i.morning || i.evening)) {
-                        toggleSnackbar('请选择时间段！');
+                        toggleSnackbar('请选择正确的时间段！');
                         return;
                     }
+                }
+            } else if ((step === STEP[0] || step === STEP[2]) && type === 'accept') {
+                if (!time) {
+                    toggleSnackbar('请填写时间！');
+                    return;
+                }
+                if (!place) {
+                    toggleSnackbar('请填写地点！');
+                    return;
                 }
             }
         }
@@ -79,7 +92,7 @@ class Template extends PureComponent<Props> {
         });
     };
     sendSMS = () => {
-        const { selected, type, step, date, code } = this.state;
+        const { selected, type, step, date, code, time, place } = this.state;
         const { toggleSnackbar, group } = this.props;
         if (code === '') {
             toggleSnackbar('未填写验证码！');
@@ -93,8 +106,12 @@ class Template extends PureComponent<Props> {
             group: group.toLowerCase(),
             title: '2018A'
         };
-        if ((step === '笔试流程' || step === '熬测流程') && type === 'accept') {
+        if ((step === STEP[1] || step === STEP[3]) && type === 'accept') {
             content['date'] = date;
+        }
+        if ((step === STEP[0] || step === STEP[2]) && type === 'accept') {
+            content['time'] = time;
+            content['place'] = place;
         }
         this.props.sendSMS(content);
         this.setState({
@@ -163,7 +180,7 @@ class Template extends PureComponent<Props> {
 
     render() {
         const { classes, toggleOpen, group } = this.props;
-        const { activeStep, selected, step, type, date, code } = this.state;
+        const { activeStep, selected, step, type, date, code, time, place } = this.state;
         const steps = ['发送对象', '消息模板', '确认发送'];
         const stepContent = [
             <TemplateStepOne selected={selected} onDelete={this.handleDelete} />,
@@ -172,6 +189,8 @@ class Template extends PureComponent<Props> {
                 type={type}
                 date={date}
                 group={group}
+                time={time}
+                place={place}
                 fns={{
                     handleChange: this.handleChange,
                     changeDate: this.changeDate,
