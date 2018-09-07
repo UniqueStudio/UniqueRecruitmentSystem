@@ -1043,3 +1043,6 @@ body {
     .quick label:hover .popover {
       opacity: 1;
       visibility: visible; } }
+
+input {
+  min-width: 0; }
