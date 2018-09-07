@@ -311,7 +311,7 @@ class Form extends React.Component<Props> {
                 <label onClick={!isMobile ? this.handleCheck: undefined}>
                     <Popover on={popoverOn}/>
                     <div className='checker' onClick={isMobile ? this.handleCheck : undefined} />
-                    <span onClick={isMobile ? this.handlePop : undefined}>我想走快速通道(要求很高，请慎重勾选)</span>
+                    <span onClick={isMobile ? this.handlePop : undefined}>{isMobile ? '' : '我想走'}快速通道(要求很高，请慎重勾选)</span>
                 </label>
             </div>
         );
