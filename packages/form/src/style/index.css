@@ -899,12 +899,13 @@ body {
   display: flex;
   align-items: center;
   justify-content: center; }
-  @media screen and (max-width: 500px) {
-    .fileButton {
-      font-weight: normal; } }
   @media screen and (max-width: 1024px) {
     .fileButton {
       padding: 8px 10px; } }
+  @media screen and (max-width: 500px) {
+    .fileButton {
+      font-weight: normal;
+      padding: 16px 20px; } }
 
 .submittedContainer {
   margin-top: 24px; }
@@ -1054,4 +1055,5 @@ body {
       visibility: visible; } }
 
 input {
-  min-width: 0; }
+  min-width: 0;
+  -webkit-appearance: none; }

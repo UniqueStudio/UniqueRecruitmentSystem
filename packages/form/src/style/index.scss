@@ -1159,15 +1159,16 @@ body {
 }
 
 .fileButton {
-  @media screen and (max-width: 500px) {
-    font-weight: normal;
-  }
   font-weight: bold;
   display: flex;
   align-items: center;
   justify-content: center;
   @media screen and (max-width: 1024px) {
     padding: 8px 10px;
+  }
+  @media screen and (max-width: 500px) {
+    font-weight: normal;
+    padding: 16px 20px;
   }
 }
 
@@ -1352,5 +1353,6 @@ body {
 }
 
 input {
-  min-width: 0;
+  min-width: 0; // firefox && edge
+  -webkit-appearance: none; // mobile safari
 }
