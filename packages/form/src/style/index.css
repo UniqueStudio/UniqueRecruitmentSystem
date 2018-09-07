@@ -152,10 +152,10 @@ body {
       font-size: 2.7rem; } }
   @media screen and (max-width: 1024px) {
     .title {
-      font-size: 2.6rem; } }
+      font-size: 2.5rem; } }
   @media screen and (max-width: 800px) {
     .title {
-      font-size: 2.5rem; } }
+      font-size: 2.3rem; } }
   @media screen and (max-width: 640px) {
     .title {
       font-size: 2rem; } }
@@ -289,7 +289,7 @@ body {
       margin: 8px 12px; } }
   @media screen and (max-width: 900px) {
     .labelName, .buttonName {
-      margin: 6px 8px; } }
+      margin: 8px 10px; } }
   @media screen and (max-width: 500px) {
     .labelName, .buttonName {
       margin: 16px 20px;
@@ -902,6 +902,9 @@ body {
   @media screen and (max-width: 500px) {
     .fileButton {
       font-weight: normal; } }
+  @media screen and (max-width: 1024px) {
+    .fileButton {
+      padding: 8px 10px; } }
 
 .submittedContainer {
   margin-top: 24px; }

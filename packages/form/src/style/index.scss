@@ -192,10 +192,10 @@ body {
     font-size: 2.7rem;
   }
   @media screen and (max-width: 1024px) {
-    font-size: 2.6rem;
+    font-size: 2.5rem;
   }
   @media screen and (max-width: 800px) {
-    font-size: 2.5rem;
+    font-size: 2.3rem;
   }
   @media screen and (max-width: 640px) {
     font-size: 2rem;
@@ -345,7 +345,7 @@ body {
     margin: 8px 12px;
   }
   @media screen and (max-width: 900px) {
-    margin: 6px 8px;
+    margin: 8px 10px;
   }
   @media screen and (max-width: 500px) {
     margin: 16px 20px;
@@ -1166,6 +1166,9 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
+  @media screen and (max-width: 1024px) {
+    padding: 8px 10px;
+  }
 }
 
 .submittedContainer {
