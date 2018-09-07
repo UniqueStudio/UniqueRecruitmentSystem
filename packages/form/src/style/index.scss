@@ -602,7 +602,7 @@ body {
 }
 
 .codeButton {
-  margin: 0 $spacing 0 $spacing * 3;
+  margin: 0 $spacing 0 $spacing * 2.5;
   @media screen and (max-width: 1440px) {
     margin: 0 $spacing 0 $spacing * 2;
   }
@@ -824,6 +824,7 @@ body {
   height: 100%;
   width: 100%;
   border: 0;
+  font-family: initial;
   @extend .fontSize;
   flex: 1;
   background: none;

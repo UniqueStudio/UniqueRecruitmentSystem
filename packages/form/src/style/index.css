@@ -421,7 +421,7 @@ body {
   align-items: flex-end; }
 
 .codeButton {
-  margin: 0 8px 0 24px; }
+  margin: 0 8px 0 20px; }
   @media screen and (max-width: 1440px) {
     .codeButton {
       margin: 0 8px 0 16px; } }
@@ -614,6 +614,7 @@ body {
   height: 100%;
   width: 100%;
   border: 0;
+  font-family: initial;
   flex: 1;
   background: none;
   padding: 24px; }
