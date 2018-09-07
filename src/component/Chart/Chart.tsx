@@ -16,7 +16,7 @@ import { Doughnut } from 'react-chartjs-2';
 
 import withRoot from '../../style/withRoot';
 import styles from '../../style/chart';
-import { Data, GROUP } from '../../lib/const';
+import { Data, GROUP, STEP } from '../../lib/const';
 
 const getColors = (i: number) => [red[i], purple[i], indigo[i], blue[i], cyan[i], green[i], yellow[i], orange[i]];
 
@@ -38,20 +38,22 @@ class Chart extends PureComponent<Props> {
     };
     setData = (e: object[]) => {
         // magic function to reset legend
+        const { end, title, totalData, flowData } = this.props;
+        const expired = +new Date() > end;
         if (e.length) e['0']._chart.data.datasets['0']._meta[e['0']._chart.id].data.map((i: object) => i['hidden'] = false);
         if (!this.state.clicked && e.length) {
             const i = e['0']._index;
             this.setState({
-                labels: ['报名被刷', '笔试被刷', '面试被刷', '熬测被刷', '群面被刷', '通过'],
-                data: { ...this.props.flowData }[GROUP[i].toLowerCase()],
+                labels: STEP.map((i, j) => expired ? `${i.slice(0, 2)}${j === 5 ? '' : '被刷'}` : i),
+                data: { ...flowData }[GROUP[i].toLowerCase()],
                 clicked: true,
                 title: `${GROUP[i]}组各轮情况`
             });
         } else if (this.state.clicked === Boolean(e.length)) {
             this.setState({
-                title: this.props.title,
+                title: title,
                 labels: GROUP,
-                data: [...this.props.totalData],
+                data: [...totalData],
                 clicked: false,
             });
         }
