@@ -25,7 +25,13 @@ export const setSlots = (req: Request, res: Response) => {
             let failed = 0;
             if (group !== 'interview') {
                 await database.update('recruitments', { title }, { [`time1.slots.${group}`]: slots });
-                const candidates = await database.query('candidates', { group, title, step: 2, abandon: false });
+                const candidates = await database.query('candidates', {
+                    group,
+                    title,
+                    step: 2,
+                    abandon: false,
+                    rejected: false
+                });
                 const result = arrangeTime(slots, candidates, 1);
                 const promises = result.map(async i => {
                     if (i['slot1']) {
@@ -39,7 +45,12 @@ export const setSlots = (req: Request, res: Response) => {
                 })
             } else {
                 await database.update('recruitments', { title }, { slots });
-                const candidates = await database.query('candidates', { title, step: 4, abandon: false });
+                const candidates = await database.query('candidates', {
+                    title,
+                    step: 4,
+                    abandon: false,
+                    rejected: false
+                });
                 const result = arrangeTime(slots, candidates, 2);
                 const promises = result.map(async i => {
                     if (i['slot2']) {
