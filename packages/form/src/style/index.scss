@@ -344,6 +344,9 @@ body {
   @media screen and (max-width: 1024px) {
     margin: 8px 12px;
   }
+  @media screen and (max-width: 900px) {
+    margin: 6px 8px;
+  }
   @media screen and (max-width: 500px) {
     margin: 16px 20px;
     font-weight: normal;
@@ -605,6 +608,9 @@ body {
   }
   @media screen and (max-width: 1280px) {
     margin: 0 $spacing;
+  }
+  @media screen and (max-width: 900px) {
+    margin: 0 $spacing / 2;
   }
   & > div {
     margin: 0;

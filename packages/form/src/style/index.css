@@ -287,6 +287,9 @@ body {
   @media screen and (max-width: 1024px) {
     .labelName, .buttonName {
       margin: 8px 12px; } }
+  @media screen and (max-width: 900px) {
+    .labelName, .buttonName {
+      margin: 6px 8px; } }
   @media screen and (max-width: 500px) {
     .labelName, .buttonName {
       margin: 16px 20px;
@@ -425,6 +428,9 @@ body {
   @media screen and (max-width: 1280px) {
     .codeButton {
       margin: 0 8px; } }
+  @media screen and (max-width: 900px) {
+    .codeButton {
+      margin: 0 4px; } }
   .codeButton > div {
     margin: 0; }
 
