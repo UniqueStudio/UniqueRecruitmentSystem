@@ -60,6 +60,9 @@ export function candidates(
             newState.isLoading.comments = false;
             return newState;
         case actions.ADD_COMMENT_FULFILLED:
+            if (!newState.candidates[action.step] || !newState.candidates[action.step].get(action.cid)) {
+                return newState;
+            }
             newState.candidates[action.step].get(action.cid)!.comments[action.commenter] = action.comment;
             newState.inputtingComment = {
                 comment: '',
@@ -71,6 +74,9 @@ export function candidates(
             }
             return newState;
         case actions.REMOVE_COMMENT_FULFILLED:
+            if (!newState.candidates[action.step] || !newState.candidates[action.step].get(action.cid)) {
+                return newState;
+            }
             delete newState.candidates[action.step].get(action.cid)!.comments[action.commenter];
             sessionStorage.setItem(newState.group, JSON.stringify(newState.candidates.map(i => mapToObj(i))));
             if (newState.group === 'interview') {
