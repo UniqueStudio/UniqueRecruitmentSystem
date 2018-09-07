@@ -504,13 +504,13 @@ body {
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0; }
 
-.selectArrowRotate {
-  transform: rotate(180deg); }
-
 .select {
   -webkit-tap-highlight-color: transparent;
   outline: none;
-  padding: 16px 48px 16px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 20px;
   font-weight: bold;
   color: #3FA9F5;
   cursor: pointer;
@@ -519,45 +519,44 @@ body {
   position: relative; }
   @media screen and (max-width: 1600px) {
     .select {
-      padding: 15px 42px 15px 19px; } }
+      padding: 12px 19px; } }
   @media screen and (max-width: 1440px) {
     .select {
-      padding: 12px 36px 12px 16px; } }
+      padding: 9px 16px; } }
   @media screen and (max-width: 1120px) {
     .select {
-      padding: 9px 30px 9px 13px; } }
+      padding: 7px 13px; } }
   @media screen and (max-width: 1024px) {
     .select {
-      padding: 7px 24px 7px 11px; } }
+      padding: 5px 11px; } }
+  @media screen and (max-width: 900px) {
+    .select {
+      padding: 3px 8px; } }
   @media screen and (max-width: 500px) {
     .select {
       font-weight: normal;
-      padding: 16px 56px 16px 20px; } }
+      padding: 16px 20px; } }
 
 .selectArrow {
-  position: absolute;
+  transform: rotate(90deg);
   cursor: pointer;
-  top: calc(50% - 15px);
-  right: 20px;
-  height: 30px;
-  width: 30px;
   pointer-events: none;
   transition: transform 0.2s; }
-  @media screen and (max-width: 1600px) {
-    .selectArrow {
-      zoom: 90%; } }
   @media screen and (max-width: 1440px) {
     .selectArrow {
-      zoom: 80%; } }
+      height: 24px; } }
   @media screen and (max-width: 1120px) {
     .selectArrow {
-      zoom: 70%; } }
-  @media screen and (max-width: 1024px) {
+      height: 22px; } }
+  @media screen and (max-width: 900px) {
     .selectArrow {
-      zoom: 60%; } }
+      height: 18px; } }
   @media screen and (max-width: 500px) {
     .selectArrow {
-      zoom: 90%; } }
+      height: 24px; } }
+
+.selectArrowRotate {
+  transform: rotate(-90deg); }
 
 .up {
   transition: transform 0.2s; }
@@ -1013,7 +1012,7 @@ body {
 .quick {
   color: #3FA9F5;
   font-weight: bold;
-  text-align: end;
+  text-align: right;
   margin-top: 8px;
   user-select: none;
   position: relative;

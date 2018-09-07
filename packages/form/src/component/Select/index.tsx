@@ -1,5 +1,6 @@
 import * as React from 'react';
 import classNames from 'classnames';
+import arrow from '../../asset/img/arrow.svg'
 
 interface Props {
     selections: string[];
@@ -31,18 +32,14 @@ class Select extends React.Component<Props> {
                 <div className={classNames('select', {'selectClicked': open})}>
                     <div className={classNames('selectValue', {'hidden': value === name})}>{value}</div>
                     <div className={classNames({'hidden': value !== name})}>{name}</div>
+                    <img src={arrow} className={classNames('selectArrow', {'selectArrowRotate': open})} />
                 </div>
                 {open && <div className='selectMenu'>
                     {selections.map((i, j) =>
                         <div key={j} onClick={this.handleChange}>{i}</div>
                     )}
                 </div>}
-                <svg className={classNames('selectArrow', {'selectArrowRotate': open})}>
-                    <polyline points="3 11, 15 23, 27 11"
-                              strokeWidth="2"
-                              stroke="#3FA9F5"
-                              fill="transparent" />
-                </svg>
+
             </div>
         );
     }
