@@ -8,6 +8,9 @@ import { StoreState } from '../../reducer';
 
 const downloadResume = (res: Response) => {
     if (!res.ok) {
+        if (res.status == 404) {
+            throw customError({ message: '简历不存在', type: 'info' })
+        }
         return from(res.json()).pipe(
             map(err => {
                 throw customError(err)
@@ -35,7 +38,6 @@ const downloadResume = (res: Response) => {
             document.body.removeChild(a);
             window.URL.revokeObjectURL(url);
             return { type: CANDIDATE.SUCCESS };
-
         })
     );
 };

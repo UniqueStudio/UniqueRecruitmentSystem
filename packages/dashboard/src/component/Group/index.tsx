@@ -119,7 +119,7 @@ class Group extends PureComponent<Props> {
         const { code, step } = this.state;
         const candidates = this.props.candidates
             .map(i => [...i.values()])[step * 2]
-            .filter(i => (!i.abandon && i[`time${step}`] && i[`slot${step}`]))
+            .filter(i => (!i.abandon && !i.rejected && i[`time${step}`] && i[`slot${step}`]))
             .map(i => i._id);
         this.props.sendInterview({
             code,
@@ -243,7 +243,7 @@ class Group extends PureComponent<Props> {
                                         }}>{i.name}</TableCell>
                                         <TableCell classes={{
                                             root: classes.tableCell
-                                        }}>{i.abandon ? '已放弃' : time && time.length ? '已选择' : '未选择'}</TableCell>
+                                        }}>{i.rejected ? '已淘汰' : i.abandon ? '已放弃' : time && time.length ? '已选择' : '未选择'}</TableCell>
                                         <TableCell classes={{
                                             root: classes.tableCell
                                         }}>{slot && slot.length ? `${slot[0]}-${slot[2]}` : '未分配'}</TableCell>
@@ -263,9 +263,18 @@ class Group extends PureComponent<Props> {
                                 disabled={disabled} onClick={this.toggleDialog}>发送短信</Button>
                     </div>
                 </Paper>
-                <GroupDialog dialogOpen={dialogOpen} toggleDialog={this.toggleDialog}
-                             handleInput={this.handleInput} code={code}
-                             sendInterview={this.sendInterview} />
+                <GroupDialog
+                    dialogOpen={dialogOpen}
+                    toggleDialog={this.toggleDialog}
+                    handleInput={this.handleInput}
+                    code={code}
+                    sendInterview={this.sendInterview}
+                    candidates={
+                        candidates.length ? candidates.map(i => [...i.values()])[step * 2]
+                            .filter(i => (!i.abandon && !i.rejected && i[`time${step}`] && i[`slot${step}`]))
+                            .map(i => i.name) : []
+                    }
+                />
                 <Modal title='选定人数' open={modalOpen} onClose={this.toggleModal}>
                     <div className={classes.chooseContainer}>
                         {!disabled && (step === 1 ? currentRecruitment.time1[groupName] : currentRecruitment.time2).map((i: Time, j: number) =>
