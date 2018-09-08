@@ -54,10 +54,6 @@ class User extends PureComponent<Props> {
             this.props.toggleSnackbar('请完整填写信息', 'warning');
             return;
         }
-        if (info === this.props.info) {
-            this.props.toggleSnackbar('你没有做任何修改', 'info');
-            return;
-        }
         if (!this.checkMail(info.mail)) {
             this.props.toggleSnackbar('邮箱格式不正确', 'warning');
             return;
