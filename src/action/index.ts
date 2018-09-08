@@ -497,7 +497,7 @@ export interface SetUserInfo {
 export function setUserInfo(info: User): SetUserInfo {
     return {
         type: SET_USER_INFO,
-        info: { ...info, sex: info.sex || 'Male' }
+        info: { ...info, sex: info.sex || 'Male', isAdmin: info.isAdmin || false, isCaptain: info.isCaptain || false }
     }
 }
 
