@@ -138,6 +138,7 @@ body {
 
 .title {
   user-select: none;
+  white-space: nowrap;
   font-size: 3.3rem;
   margin: -16px 0 0;
   color: #F58086; }
