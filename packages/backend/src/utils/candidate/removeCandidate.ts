@@ -2,12 +2,14 @@ import { Socket } from 'socket.io';
 import { verifyJWT } from '../../lib/checkData';
 import { ObjectId } from 'mongodb';
 import { database, io } from '../../app';
+import { deleteFile } from '../../lib/deleteFile';
 
 export const onRemoveCandidate = (socket: Socket) => (cid: string, token: string) => {
     (async () => {
         try {
             verifyJWT(token);
             const candidate = (await database.query('candidates', { _id: new ObjectId(cid) }))[0];
+            deleteFile(candidate.resume);
             await database.delete('candidates', { _id: new ObjectId(cid) });
             io.emit('removeCandidate', cid);
             const recruitment = (await database.query('recruitments', { title: candidate['title'] }))[0];
