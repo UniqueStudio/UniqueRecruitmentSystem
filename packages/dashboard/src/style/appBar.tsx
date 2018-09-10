@@ -26,8 +26,9 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
         marginLeft: 12,
         marginRight: 36
     },
-    personButton: {
+    rightButtons: {
         marginLeft: 'auto',
+        display: 'flex'
     },
     options: {
         zIndex: 5000
