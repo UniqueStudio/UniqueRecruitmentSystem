@@ -26,7 +26,7 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
         marginLeft: 12,
         marginRight: 36
     },
-    personButton: {
+    rightButtons: {
         marginLeft: 'auto',
     },
     options: {

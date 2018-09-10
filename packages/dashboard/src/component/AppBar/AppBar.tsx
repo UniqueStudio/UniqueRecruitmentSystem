@@ -8,6 +8,7 @@ import Toolbar from '@material-ui/core/Toolbar';
 import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 import MenuIcon from '@material-ui/icons/Menu';
 import PersonIcon from '@material-ui/icons/Person';
+import RefreshIcon from '@material-ui/icons/Refresh';
 import styles from '../../style/appBar'
 import withRoot from '../../style/withRoot';
 import Select from '../../container/AppBar/AppBarSelect';
@@ -83,13 +84,21 @@ class Bar extends PureComponent<Props & RouteComponentProps<{}>> {
                     </Header>
                     {loggedIn ?
                         <>
-                            <IconButton
-                                color="inherit"
-                                className={classNames(classes.personButton, open && classes.hide)}
-                                onClick={this.handleClick}
-                            >
-                                <PersonIcon />
-                            </IconButton>
+                            <div className={classes.rightButtons}>
+                                <IconButton
+                                    color="inherit"
+                                    onClick={this.refresh}
+                                >
+                                    <RefreshIcon />
+                                </IconButton>
+                                <IconButton
+                                    color="inherit"
+                                    className={classNames(open && classes.hide)}
+                                    onClick={this.handleClick}
+                                >
+                                    <PersonIcon />
+                                </IconButton>
+                            </div>
                             <Menu
                                 anchorEl={this.state.anchorEl}
                                 open={Boolean(this.state.anchorEl)}
@@ -98,7 +107,6 @@ class Bar extends PureComponent<Props & RouteComponentProps<{}>> {
                             >
                                 <Anchor to='/myInfo'><MenuItem onClick={this.handleClose}>个人信息</MenuItem></Anchor>
                                 <Anchor to='/myGroup'><MenuItem onClick={this.handleClose}>组员信息</MenuItem></Anchor>
-                                <MenuItem onClick={this.refresh}>强制刷新</MenuItem>
                                 <MenuItem onClick={this.handleLogout}>退出</MenuItem>
                             </Menu>
                         </> : location.pathname !== '/' && <Redirect to='/' />}
