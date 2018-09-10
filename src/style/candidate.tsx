@@ -68,7 +68,7 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
         [theme.breakpoints.up('md')]: {
             marginRight: theme.spacing.unit * 2,
         },
-        minHeight: 300,
+        minHeight: 450,
         justifyContent: 'space-around',
     },
     detailRow: {
@@ -85,8 +85,7 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
             marginLeft: 'auto',
             marginRight: 'auto'
         }
-    },
-
+    }
 });
 
 export default styles;
