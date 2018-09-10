@@ -15,6 +15,28 @@ interface Props {
     submit: () => void;
 }
 
+interface XHRTarget extends EventTarget {
+    responseText?: string;
+}
+
+interface XHREvent extends Event {
+    target: XHRTarget;
+}
+
+function upload(url: string, opts: RequestInit = {}, onProgress: (a: ProgressEvent) => any) {
+    return new Promise((res, rej) => {
+        const xhr = new XMLHttpRequest();
+        xhr.open(opts.method || 'get', url);
+        for (var k in opts.headers || {})
+            xhr.setRequestHeader(k, opts.headers![k]);
+        xhr.onload = (e: XHREvent) => res(e.target.responseText);
+        xhr.onerror = rej;
+        if (xhr.upload && onProgress)
+            xhr.upload.onprogress = onProgress;
+        xhr.send(opts.body);
+    });
+}
+
 class Form extends React.Component<Props> {
     state = {
         info: {
@@ -38,7 +60,8 @@ class Form extends React.Component<Props> {
         open: '',
         sent: false,
         popoverOn: false,
-        time: 0
+        time: 0,
+        progress: 0
     };
 
     interval = NaN;
@@ -122,28 +145,39 @@ class Form extends React.Component<Props> {
         Object.entries(info).map(i => formData.append(i[0], i[0] === 'isQuick' ? (i[1] ? '1' : '0') : i[1] as string));
         (async () => {
             try {
-                const response = await fetch(`${URL}/candidates`, {
+                info.resume && this.setState({
+                    snackBarOn: true,
+                    content: '开始上传，请耐心等待'
+                });
+                const response = await upload(`${URL}/candidates`, {
                     method: 'POST',
                     body: formData,
-                });
-                const result = await response.json();
-                if (result.type === 'success') {
-                    localStorage.setItem('info', JSON.stringify(info));
+                }, e => {
                     this.setState({
-                        submitted: true
+                        progress: (e.loaded / e.total * 100).toFixed(1)
+                    })
+                }) as string;
+                const result = JSON.parse(response);
+                if (result.type === 'success') {
+                    // localStorage.setItem('info', JSON.stringify(info));
+                    this.setState({
+                        submitted: true,
+                        progress: 0
                     });
                     this.props.submit();
                 } else {
                     this.setState({
                         snackBarOn: true,
-                        content: result.message
+                        content: result.message,
+                        progress: 0
                     });
                     return;
                 }
             } catch (err) {
                 this.setState({
                     snackBarOn: true,
-                    content: err.message
+                    content: err.message,
+                    progress: 0
                 });
             }
         })();
@@ -260,7 +294,7 @@ class Form extends React.Component<Props> {
     }
 
     public render() {
-        const { submitted, content, snackBarOn, info, sent, time, popoverOn } = this.state;
+        const { submitted, content, snackBarOn, info, sent, time, popoverOn, progress } = this.state;
         const { isMobile } = this.props;
         const canGetCode = this.checkPhone(info.phone);
         const Name = <Input for='name' size='md' name='姓名' onChange={this.handleChange}
@@ -300,7 +334,7 @@ class Form extends React.Component<Props> {
                         'contentPadding',
                         'fileButton'
                     )}>
-                        上传简历/作品集
+                        {info.resume && progress ? `上传中: ${progress}%` : '上传简历/作品集'}
                     </span>
                 </label>
             </>
@@ -308,8 +342,8 @@ class Form extends React.Component<Props> {
         const Quick = (
             <div className='quick'>
                 <input type="checkbox" id="quick" name="quick" checked={info.isQuick} />
-                <label onClick={!isMobile ? this.handleCheck: undefined}>
-                    <Popover on={popoverOn}/>
+                <label onClick={!isMobile ? this.handleCheck : undefined}>
+                    <Popover on={popoverOn} />
                     <div className='checker' onClick={isMobile ? this.handleCheck : undefined} />
                     <span onClick={isMobile ? this.handlePop : undefined}>{isMobile ? '' : '我想走'}快速通道(要求很高，请慎重勾选)</span>
                 </label>
