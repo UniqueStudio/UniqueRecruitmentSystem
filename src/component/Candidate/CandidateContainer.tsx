@@ -1,8 +1,8 @@
 import React, { PureComponent } from "react";
 import { Draggable, DraggableProvided } from 'react-beautiful-dnd';
-import IconButton from '@material-ui/core/IconButton';
 import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import IconButton from '@material-ui/core/IconButton';
 import Detail from './CandidateDetail';
 import Comments from '../../container/Candidate/CandidateComments';
 import Candidate from "../../container/Candidate/Candidate";

@@ -85,8 +85,7 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
             marginLeft: 'auto',
             marginRight: 'auto'
         }
-    },
-
+    }
 });
 
 export default styles;

@@ -2,7 +2,6 @@ import React, { PureComponent } from "react";
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
-
 import styles from "../../style/candidate";
 import withRoot from "../../style/withRoot";
 import Modal from '../Modal';
@@ -118,6 +117,16 @@ class CandidateDetail extends PureComponent<Props> {
                         <Button size="large" color='primary' onClick={downloadResume}>
                             简历下载
                         </Button>
+                    </div>
+                    <div className={classes.detailRow}>
+                        <TextField
+                            label="预览"
+                            defaultValue={intro}
+                            InputProps={{ inputProps }}
+                            fullWidth={true}
+                            multiline={true}
+                            rowsMax={2}
+                        />
                     </div>
                 </div>
                 <Modal open={this.state.modalOpen} onClose={this.toggleModalOpen} title='自我介绍'>
