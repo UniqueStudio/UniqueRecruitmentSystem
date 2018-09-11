@@ -8,6 +8,7 @@ import CommentChip from "./CommentChip";
 
 import styles from "../../style/candidate";
 import withRoot from "../../style/withRoot";
+import { Comment } from '../../lib/const';
 
 interface Props extends WithStyles {
     step: number;
@@ -70,6 +71,10 @@ class CandidateComments extends PureComponent<Props> {
         this.setState({});
     };
 
+    handleCopy = (comment: Comment) => {
+        this.setState(comment);
+    };
+
     render() {
         const { comments, classes, uid } = this.props;
         return (
@@ -105,7 +110,7 @@ class CandidateComments extends PureComponent<Props> {
                 </div>
                 {Object.entries(comments).map(i => (
                     <CommentChip name={i[1].username} uid={i[0]} comment={i[1]} key={i[0]} currentUid={uid}
-                                 remove={this.handleRemove} />
+                                 remove={this.handleRemove} handleCopy={this.handleCopy} />
                 ))}
             </div>
         );
