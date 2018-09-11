@@ -24,16 +24,17 @@ export const handleScan = (req: Request, res: Response) => {
                     const userID = userIDResult.UserId;
                     const userInfoResponse = await fetch(userInfoURL(accessToken, userID));
                     const userInfoResult = await userInfoResponse.json();
+                    const { name, userid, mobile, avatar } = userInfoResult;
                     const user = await database.query('users', {
-                        username: userInfoResult.name,
-                        phone: userInfoResult.mobile
+                        weChatID: userid
                     });
                     let uid;
                     if (!user.length) {
                         uid = await database.insert('users', {
-                            username: userInfoResult.name,
-                            phone: userInfoResult.mobile,
-                            avatar: userInfoResult.avatar,
+                            username: name,
+                            phone: mobile,
+                            weChatID: userid,
+                            avatar,
                         });
                     } else {
                         uid = user[0]['_id'];
