@@ -6,13 +6,15 @@ import Popover from '@material-ui/core/Popover';
 import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 
 import styles from '../../style/comment';
+import { Comment } from '../../lib/const';
 
 interface Props extends WithStyles {
     name: string;
     uid: string;
     currentUid: string;
-    comment: string;
+    comment: Comment;
     remove: () => void;
+    handleCopy: (comment: Comment) => void;
 }
 
 const evaluationToStyle = {
@@ -40,8 +42,8 @@ class CommentChip extends PureComponent<Props> {
     };
 
     render() {
-        const { name, uid, comment, classes, currentUid } = this.props;
-        let content = `${name}： ${comment["comment"]}`;
+        const { name, uid, comment, classes, currentUid, handleCopy } = this.props;
+        let content = `${name ? name : '无名'}： ${comment["comment"]}`;
         content = content.length > 15 ? content.slice(0, 15) + '…' : content;
         const color = evaluationToStyle[comment["evaluation"]];
         return (
@@ -54,6 +56,7 @@ class CommentChip extends PureComponent<Props> {
                     }}
                     onMouseOver={this.handleOpen}
                     onMouseOut={this.handleClose}
+                    onClick={uid === currentUid ? () => handleCopy(comment) : undefined}
                     onDelete={uid === currentUid ? this.handleDelete : undefined}
                 />
                 <Popover
