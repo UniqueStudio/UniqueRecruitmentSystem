@@ -13,6 +13,7 @@ import ColumnModal from './ColumnModal';
 
 interface Props extends WithStyles {
     group: string;
+    userGroup: string;
     type: string;
     candidates: Map<string, Candidate>[];
     selected: string[];
@@ -88,7 +89,7 @@ class Container extends PureComponent<Props> {
     }
 
     render() {
-        const { classes, selected, candidates, fabOn, snackbarOn, select, deselect, toggleFabOff, group } = this.props;
+        const { classes, selected, candidates, fabOn, snackbarOn, select, deselect, toggleFabOff, group, userGroup } = this.props;
         const current = candidates[Math.max(fabOn, 0)] || new Map<string, Candidate>();
         const allCid = [...current.keys()];
         const selectedCid = selected.filter(i => allCid.includes(i));
@@ -123,7 +124,7 @@ class Container extends PureComponent<Props> {
                 </DragDropContext>
                 <Fab selected={selected} deselect={deselect} fabOn={fabOn} snackbarOn={snackbarOn} select={select}
                      candidates={current} toggleFabOff={toggleFabOff}
-                     toggleOpen={this.toggleOpen} />
+                     toggleOpen={this.toggleOpen} canDelete={userGroup === group} />
                 <ColumnDialog
                     open={this.state.dialog}
                     onClick={this.handleRemove(selectedCid)}

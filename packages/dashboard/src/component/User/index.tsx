@@ -85,7 +85,7 @@ class User extends PureComponent<Props> {
                     onChange={this.handleChange('username')}
                     margin="normal"
                     className={classes.userInfo}
-                    InputProps={{ inputProps: { readOnly: true } }}
+                    disabled={true}
                 />
                 <TextField
                     select
@@ -105,6 +105,7 @@ class User extends PureComponent<Props> {
                     value={group || ''}
                     onChange={this.handleChange('group')}
                     margin="normal"
+                    disabled={!!group}
                 >
                     {GROUP.map(i => <MenuItem value={i.toLowerCase()} key={i}>{i}</MenuItem>)}
                 </TextField>
