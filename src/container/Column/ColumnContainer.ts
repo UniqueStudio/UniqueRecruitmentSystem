@@ -23,12 +23,13 @@ interface OwnProps {
     type: string
 }
 
-const mapStateToProps = ({ candidates, components }: StoreState, ownProps: OwnProps) => ({
+const mapStateToProps = ({ candidates, components, user }: StoreState, ownProps: OwnProps) => ({
     group: candidates.group,
     selected: candidates.selected,
     fabOn: components.fabOn,
     snackbarOn: components.snackbar.on,
     candidates: candidates.candidates,
+    userGroup: user.info.group
 });
 
 type DispatchType = Dispatch<GetCandidates | MoveCandidateStart | DeselectCandidate | SelectCandidate | ToggleFabOff | ToggleSnackbarOn | RemoveCandidateStart>;
