@@ -28,6 +28,7 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
     },
     rightButtons: {
         marginLeft: 'auto',
+        display: 'flex'
     },
     options: {
         zIndex: 5000

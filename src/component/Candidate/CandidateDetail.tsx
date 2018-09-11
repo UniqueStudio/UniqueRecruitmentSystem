@@ -125,7 +125,7 @@ class CandidateDetail extends PureComponent<Props> {
                             InputProps={{ inputProps }}
                             fullWidth={true}
                             multiline={true}
-                            rowsMax={2}
+                            rowsMax={3}
                         />
                     </div>
                 </div>
