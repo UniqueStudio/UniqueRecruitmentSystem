@@ -12,7 +12,6 @@ import styles from "../../style/candidate";
 import { colorToAlpha, dangerColor, successColor, warningColor } from '../../style';
 import withRoot from "../../style/withRoot";
 import { Candidate as CType } from '../../lib/const';
-import classNames from "classnames";
 
 interface Props extends WithStyles {
     provided: DraggableProvided;
@@ -57,7 +56,8 @@ class Candidate extends PureComponent<Props> {
 
     render() {
         const { cid, info, selected, classes, toggleModalOn, changeInputting, provided, fabOn, step } = this.props;
-        const { name, grade, institute, comments, abandon, rejected, sex, isQuick } = info;
+        const {sex, isQuick} = this.props.info
+        const { name, grade, institute, comments, abandon, rejected } = info;
         const evaluations = Object.values(comments).map(i => i['evaluation']);
         const red = colorToAlpha(dangerColor, 0.1),
             yellow = colorToAlpha(warningColor, 0.1),
@@ -67,6 +67,10 @@ class Candidate extends PureComponent<Props> {
         const coloredPanelStyle = {
             background: abandon ? 'rgba(0, 0, 0, 0.1)' : evaluations.length === 0 ? 'rgba(0, 0, 0, 0)' : `linear-gradient(to right, ${green}, ${green} ${greenP}%, ${yellow} ${greenP}%, ${yellow} ${greenP + yellowP}%, ${red} ${greenP + yellowP}%, ${red})`
         };
+        const suffix = () => 
+            (sex === "Male" ? "": "👩") +
+            (isQuick ? "⚡️" : "")
+
         const card = (
             <div onMouseOver={this.handleOpen}
                  onMouseOut={this.handleClose}
@@ -88,12 +92,7 @@ class Candidate extends PureComponent<Props> {
                             disabled={abandon || rejected || (selected.length !== 0 && fabOn !== step)}
                         />
                         <span className={classes.cardTitle}>
-                            <Typography
-                                variant='title'
-                                className={classNames(sex === 'Male' ? classes.cardTitleMale : classes.cardTitleFemale, { [classes.cardTitleQuick]: isQuick })}
-                            >
-                                {name}
-                            </Typography>
+                            <Typography variant='title'>{name}{suffix()}</Typography>
                             <Typography color='textSecondary' variant='caption'>{`${grade} - ${institute}`}</Typography>
                         </span>
                         <IconButton className={classes.iconButton}
