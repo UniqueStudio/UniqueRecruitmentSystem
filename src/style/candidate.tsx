@@ -1,4 +1,7 @@
 import { StyleRulesCallback } from "@material-ui/core/styles/withStyles";
+import blue from '@material-ui/core/colors/blue';
+import pink from '@material-ui/core/colors/pink';
+import yellow from '@material-ui/core/colors/yellow';
 import { Theme } from "@material-ui/core/styles";
 
 const styles: StyleRulesCallback = (theme: Theme) => ({
@@ -30,6 +33,18 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
     },
     cardTitle: {
         userSelect: 'none'
+    },
+    cardTitleQuick: {
+        '&:after': {
+            content: '" ★"',
+            color: yellow['700']
+        }
+    },
+    cardTitleMale: {
+        color: blue.A400,
+    },
+    cardTitleFemale: {
+        color: pink.A400
     },
     popper: {
         pointerEvents: 'none'
