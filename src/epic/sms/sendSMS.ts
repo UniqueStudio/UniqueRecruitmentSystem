@@ -6,11 +6,11 @@ import { SEND_SMS, SendSMS, toggleSnackbarOn } from '../../action';
 import { URL } from '../../lib/const';
 import { StoreState } from '../../reducer';
 
-export const sendSMSEpic: Epic<Action, Action, StoreState, Dependencies> = (action$, state$, { sessionStorage }) =>
+export const sendSMSEpic: Epic<Action, Action, StoreState, Dependencies> = (action$, state$, { localStorage }) =>
     action$.pipe(
         ofType(SEND_SMS),
         mergeMap((action: SendSMS) => {
-            const token = sessionStorage.getItem('token');
+            const token = localStorage.getItem('token');
             if (!token) {
                 return errHandler({ message: 'token不存在', type: 'danger' }, SMS);
             }

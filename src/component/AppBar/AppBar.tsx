@@ -42,13 +42,7 @@ class Bar extends PureComponent<Props & RouteComponentProps<{}>> {
     };
 
     refresh = () => {
-        const token = sessionStorage.getItem('token');
-        const uid = sessionStorage.getItem('uid');
-        const userInfo = sessionStorage.getItem('userInfo');
         sessionStorage.clear();
-        token && sessionStorage.setItem('token', token);
-        uid && sessionStorage.setItem('uid', uid);
-        userInfo && sessionStorage.setItem('userInfo', userInfo);
         this.handleClose();
         window.location.reload();
     };

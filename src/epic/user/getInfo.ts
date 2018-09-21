@@ -7,16 +7,16 @@ import { Action, Dependencies, errHandler, USER } from '../index';
 import { URL, User } from '../../lib/const';
 import { StoreState } from '../../reducer';
 
-export const getInfoEpic: Epic<Action, Action, StoreState, Dependencies> = (action$, state$, { sessionStorage }) =>
+export const getInfoEpic: Epic<Action, Action, StoreState, Dependencies> = (action$, state$, { sessionStorage, localStorage }) =>
     action$.pipe(
         ofType(GET_USER_INFO),
         mergeMap((action: GetUserInfo) => {
-            const token = sessionStorage.getItem('token');
+            const token = localStorage.getItem('token');
             if (!token) {
                 return errHandler({ message: 'token不存在', type: 'danger' }, USER);
             }
-            const user = sessionStorage.getItem('userInfo');
-            if (user && action.uid === sessionStorage.getItem('uid')) {
+            const user = localStorage.getItem('userInfo');
+            if (user && action.uid === localStorage.getItem('uid')) {
                 return of(
                     setUserInfo(JSON.parse(user)),
                 );
@@ -31,7 +31,7 @@ export const getInfoEpic: Epic<Action, Action, StoreState, Dependencies> = (acti
                         }
                         throw res;
                     }),
-                    tap(data => sessionStorage.setItem('userInfo', JSON.stringify(data))),
+                    tap(data => localStorage.setItem('userInfo', JSON.stringify(data))),
                     map(data => setUserInfo(data)),
                     startWith(
                         { type: USER.START }

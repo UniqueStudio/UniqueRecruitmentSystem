@@ -6,14 +6,14 @@ import { REMOVE_CANDIDATE_START, RemoveCandidateStart } from '../../action';
 import { StoreState } from '../../reducer';
 
 
-export const removeCandidateEpic: Epic<Action, Action, StoreState, Dependencies> = (action$, state$, { sessionStorage, socket$ }) =>
+export const removeCandidateEpic: Epic<Action, Action, StoreState, Dependencies> = (action$, state$, { sessionStorage, socket$, localStorage }) =>
     socket$.pipe(
         switchMap((socket: Socket) => {
             if (socket) {
                 return action$.pipe(
                     ofType(REMOVE_CANDIDATE_START),
                     tap((action: RemoveCandidateStart) => {
-                        const token = sessionStorage.getItem('token');
+                        const token = localStorage.getItem('token');
                         if (!token) {
                             errHandler({ message: 'token不存在', type: 'danger' }, CANDIDATE);
                         }

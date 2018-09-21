@@ -5,7 +5,7 @@ import { Action, COMMENT, Dependencies, errHandler, Socket } from '../index';
 import { REMOVE_COMMENT_START, RemoveCommentStart } from '../../action';
 import { StoreState } from '../../reducer';
 
-export const removeCommentEpic: Epic<Action, Action, StoreState, Dependencies> = (action$, state$, { sessionStorage, socket$ }) =>
+export const removeCommentEpic: Epic<Action, Action, StoreState, Dependencies> = (action$, state$, { socket$, localStorage }) =>
     socket$.pipe(
         switchMap((socket: Socket) => {
             if (socket) {
@@ -13,7 +13,7 @@ export const removeCommentEpic: Epic<Action, Action, StoreState, Dependencies> =
                     ofType(REMOVE_COMMENT_START),
                     tap((action: RemoveCommentStart) => {
                         const { cid, step, commenter } = action;
-                        const token = sessionStorage.getItem('token');
+                        const token = localStorage.getItem('token');
                         if (!token) {
                             errHandler({ message: 'token不存在', type: 'danger' }, COMMENT);
                         }

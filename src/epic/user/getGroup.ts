@@ -7,11 +7,11 @@ import { GET_GROUP_INFO, GetGroupInfo, setGroupInfo } from '../../action';
 import { URL, User } from '../../lib/const';
 import { StoreState } from '../../reducer';
 
-export const getGroupEpic: Epic<Action, Action, StoreState, Dependencies> = (action$, state$, { sessionStorage }) =>
+export const getGroupEpic: Epic<Action, Action, StoreState, Dependencies> = (action$, state$, { sessionStorage, localStorage }) =>
     action$.pipe(
         ofType(GET_GROUP_INFO),
         mergeMap((action: GetGroupInfo) => {
-            const token = sessionStorage.getItem('token');
+            const token = localStorage.getItem('token');
             const { group } = action;
             if (!token) {
                 return errHandler({ message: 'token不存在', type: 'danger' }, USER);
