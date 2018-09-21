@@ -5,7 +5,7 @@ import { Action, Dependencies, errHandler, Socket, USER } from '../index';
 import { addMessage, SEND_MESSAGE, SendMessage } from '../../action';
 import { StoreState } from '../../reducer';
 
-export const sendMessageEpic: Epic<Action, Action, StoreState, Dependencies> = (action$, state$, { sessionStorage, socket$ }) =>
+export const sendMessageEpic: Epic<Action, Action, StoreState, Dependencies> = (action$, state$, { localStorage, socket$ }) =>
     socket$.pipe(
         switchMap((socket: Socket) => {
             if (socket) {
@@ -19,7 +19,7 @@ export const sendMessageEpic: Epic<Action, Action, StoreState, Dependencies> = (
                         return { message, name, avatar, time };
                     }),
                     tap(obj => {
-                        const token = sessionStorage.getItem('token');
+                        const token = localStorage.getItem('token');
                         if (!token) {
                             errHandler({ message: 'token不存在', type: 'danger' }, USER);
                         }

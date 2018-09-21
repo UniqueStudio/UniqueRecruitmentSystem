@@ -5,7 +5,7 @@ import { Action, CANDIDATE, Dependencies, errHandler, Socket } from '../index';
 import { MOVE_CANDIDATE_START, moveCandidateFulfilled, MoveCandidateStart } from '../../action';
 import { StoreState } from '../../reducer';
 
-export const moveCandidateEpic: Epic<Action, Action, StoreState, Dependencies> = (action$, state$, { sessionStorage, socket$ }) =>
+export const moveCandidateEpic: Epic<Action, Action, StoreState, Dependencies> = (action$, state$, { sessionStorage, socket$, localStorage }) =>
     socket$.pipe(
         switchMap((socket: Socket) => {
             if (socket) {
@@ -13,7 +13,7 @@ export const moveCandidateEpic: Epic<Action, Action, StoreState, Dependencies> =
                     ofType(MOVE_CANDIDATE_START),
                     tap((action: MoveCandidateStart) => {
                         const { cid, from, to } = action;
-                        const token = sessionStorage.getItem('token');
+                        const token = localStorage.getItem('token');
                         if (!token) {
                             errHandler({ message: 'token不存在', type: 'danger' }, CANDIDATE);
                         }

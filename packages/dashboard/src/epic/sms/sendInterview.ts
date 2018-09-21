@@ -6,11 +6,11 @@ import { SEND_INTERVIEW, SendInterview, toggleSnackbarOn } from '../../action';
 import { URL } from '../../lib/const';
 import { StoreState } from '../../reducer';
 
-export const sendInterviewEpic: Epic<Action, Action, StoreState, Dependencies> = (action$, state$, { sessionStorage }) =>
+export const sendInterviewEpic: Epic<Action, Action, StoreState, Dependencies> = (action$, state$, { localStorage }) =>
     action$.pipe(
         ofType(SEND_INTERVIEW),
         mergeMap((action: SendInterview) => {
-            const token = sessionStorage.getItem('token');
+            const token = localStorage.getItem('token');
             if (!token) {
                 return errHandler({ message: 'token不存在', type: 'danger' }, SMS);
             }

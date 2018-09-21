@@ -2,12 +2,12 @@ import * as actions from '../action';
 import { USER } from '../epic'
 import { User as UType } from '../lib/const';
 
-const info = sessionStorage.getItem('userInfo');
+const info = localStorage.getItem('userInfo');
 const group = sessionStorage.getItem('groupInfo');
 
 const init = {
-    loggedIn: !!sessionStorage.getItem('uid'),
-    uid: sessionStorage.getItem('uid') || '',
+    loggedIn: !!localStorage.getItem('uid'),
+    uid: localStorage.getItem('uid') || '',
     isLoading: false,
     isScanning: false,
     info: info ? JSON.parse(info) : {},
@@ -66,9 +66,9 @@ export function user(state: User = init, action: Action): User {
         case actions.LOGIN:
             return { ...state, loggedIn: true, uid: action.uid };
         case actions.LOGOUT:
-            sessionStorage.removeItem('uid');
-            sessionStorage.removeItem('userInfo');
-            sessionStorage.removeItem('token');
+            localStorage.removeItem('uid');
+            localStorage.removeItem('userInfo');
+            localStorage.removeItem('token');
             return { ...state, loggedIn: false };
         case actions.SET_USER_INFO:
             return { ...state, info: action.info, shouldUpdateGroup: true };
