@@ -6,12 +6,12 @@ import { setUserInfo, toggleSnackbarOn, UPDATE_USER_INFO, UpdateUserInfo } from 
 import { URL } from '../../lib/const';
 import { StoreState } from '../../reducer';
 
-export const updateInfoEpic: Epic<Action, Action, StoreState, Dependencies> = (action$, state$, { sessionStorage }) =>
+export const updateInfoEpic: Epic<Action, Action, StoreState, Dependencies> = (action$, state$, { sessionStorage, localStorage }) =>
     action$.pipe(
         ofType(UPDATE_USER_INFO),
         mergeMap((action: UpdateUserInfo) => {
-            const token = sessionStorage.getItem('token');
-            const formerInfo = sessionStorage.getItem('userInfo') || '{}';
+            const token = localStorage.getItem('token');
+            const formerInfo = localStorage.getItem('userInfo') || '{}';
             const { uid, info } = action;
             if (!token) {
                 return errHandler({ message: 'token不存在', type: 'danger' }, USER);
@@ -27,7 +27,7 @@ export const updateInfoEpic: Epic<Action, Action, StoreState, Dependencies> = (a
                     }
                     throw customError(res);
                 }),
-                tap(() => sessionStorage.setItem('userInfo', JSON.stringify({ ...JSON.parse(formerInfo), ...info }))),
+                tap(() => localStorage.setItem('userInfo', JSON.stringify({ ...JSON.parse(formerInfo), ...info }))),
                 startWith(
                     { type: USER.START }
                 ),

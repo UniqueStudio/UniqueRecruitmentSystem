@@ -7,11 +7,11 @@ import { GET_CANDIDATES, GetCandidates, setCandidates, setGroup } from '../../ac
 import { URL } from '../../lib/const';
 import { StoreState } from '../../reducer';
 
-export const getCandidatesEpic: Epic<Action, Action, StoreState, Dependencies> = (action$, state$, { sessionStorage }) =>
+export const getCandidatesEpic: Epic<Action, Action, StoreState, Dependencies> = (action$, state$, { sessionStorage, localStorage }) =>
     action$.pipe(
         ofType(GET_CANDIDATES),
         mergeMap((action: GetCandidates) => {
-            const token = sessionStorage.getItem('token');
+            const token = localStorage.getItem('token');
             const { group } = action;
             if (!token) {
                 return errHandler({ message: 'token不存在', type: 'danger' }, CANDIDATE);

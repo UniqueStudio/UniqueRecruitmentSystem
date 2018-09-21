@@ -7,11 +7,11 @@ import { setSlots, SUBMIT_SLOTS, SubmitSlots, toggleSnackbarOn } from '../../act
 import { URL } from '../../lib/const';
 import { StoreState } from '../../reducer';
 
-export const submitSlotsEpic: Epic<Action, Action, StoreState, Dependencies> = (action$, state$, { sessionStorage }) =>
+export const submitSlotsEpic: Epic<Action, Action, StoreState, Dependencies> = (action$, state$, { localStorage }) =>
     action$.pipe(
         ofType(SUBMIT_SLOTS),
         mergeMap((action: SubmitSlots) => {
-            const token = sessionStorage.getItem('token');
+            const token = localStorage.getItem('token');
             if (!token) {
                 return errHandler({ message: 'token不存在', type: 'danger' }, CANDIDATE);
             }

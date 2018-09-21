@@ -52,7 +52,7 @@ export const errHandler = (err: CustomError, type: actionType) => of(
     toggleSnackbarOn(`ERROR: ${err.message}`, err.type || 'danger'),
     { type: type.FAILURE });
 
-const dependencies = { io, socket$: new BehaviorSubject(null), sessionStorage };
+const dependencies = { io, socket$: new BehaviorSubject(null), sessionStorage, localStorage };
 
 export type Dependencies = typeof dependencies;
 
