@@ -6,11 +6,11 @@ import { LAUNCH_RECRUITMENT, LaunchRecruitment, setShouldUpdateRecruitment, togg
 import { URL } from '../../lib/const';
 import { StoreState } from '../../reducer';
 
-export const launchRecruitmentsEpic: Epic<Action, Action, StoreState, Dependencies> = (action$, state$, { sessionStorage }) =>
+export const launchRecruitmentsEpic: Epic<Action, Action, StoreState, Dependencies> = (action$, state$, { localStorage }) =>
     action$.pipe(
         ofType(LAUNCH_RECRUITMENT),
         mergeMap((action: LaunchRecruitment) => {
-            const token = sessionStorage.getItem('token');
+            const token = localStorage.getItem('token');
             if (!token) {
                 return errHandler({ message: 'token不存在', type: 'danger' }, RECRUITMENT);
             }

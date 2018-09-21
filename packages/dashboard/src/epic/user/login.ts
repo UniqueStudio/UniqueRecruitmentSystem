@@ -30,7 +30,7 @@ export const getQRCodeEpic: Epic<Action> = action$ =>
         ),
     );
 
-export const loginEpic: Epic<Action, Action, StoreState, Dependencies> = (action$, state$, { sessionStorage }) =>
+export const loginEpic: Epic<Action, Action, StoreState, Dependencies> = (action$, state$, { localStorage }) =>
     action$.pipe(
         ofType(SET_QR_CODE),
         filter((action: SetQRCode) => Boolean(action.key)),
@@ -43,8 +43,8 @@ export const loginEpic: Epic<Action, Action, StoreState, Dependencies> = (action
                 throw customError(res);
             }),
             tap(data => {
-                sessionStorage.setItem('uid', data.uid);
-                sessionStorage.setItem('token', data.token);
+                localStorage.setItem('uid', data.uid);
+                localStorage.setItem('token', data.token);
             }),
             mergeMap(data => concat(
                 of(login(data.uid)),

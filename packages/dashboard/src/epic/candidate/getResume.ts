@@ -42,11 +42,11 @@ const downloadResume = (res: Response) => {
     );
 };
 
-export const getResumeEpic: Epic<Action, Action, StoreState, Dependencies> = (action$, state$, { sessionStorage }) =>
+export const getResumeEpic: Epic<Action, Action, StoreState, Dependencies> = (action$, state$, { localStorage }) =>
     action$.pipe(
         ofType(GET_RESUME),
         mergeMap((action: GetResume) => {
-            const token = sessionStorage.getItem('token');
+            const token = localStorage.getItem('token');
             const { cid } = action;
             if (!token) {
                 return errHandler({ message: 'token不存在', type: 'danger' }, CANDIDATE)
