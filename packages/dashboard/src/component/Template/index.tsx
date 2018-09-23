@@ -73,7 +73,7 @@ class Template extends PureComponent<Props> {
                 return;
             } else if ((step === STEP[1] || step === STEP[3]) && type === 'accept') {
                 for (const i of date) {
-                    if (!(i.afternoon || i.morning || i.evening)) {
+                    if (!(i.afternoon || i.morning || i.evening) || !i.date) {
                         toggleSnackbar('请选择正确的时间段！');
                         return;
                     }
