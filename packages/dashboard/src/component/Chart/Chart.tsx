@@ -38,13 +38,13 @@ class Chart extends PureComponent<Props> {
     };
     setData = (e: object[]) => {
         // magic function to reset legend
-        const { end, title, totalData, flowData } = this.props;
-        const expired = +new Date() > end;
+        const { /*end, */title, totalData, flowData } = this.props;
+        //const expired = +new Date() > end;
         if (e.length) e['0']._chart.data.datasets['0']._meta[e['0']._chart.id].data.map((i: object) => i['hidden'] = false);
         if (!this.state.clicked && e.length) {
             const i = e['0']._index;
             this.setState({
-                labels: STEP.map((i, j) => expired ? `${i.slice(0, 2)}${j === 5 ? '' : '被刷'}` : i),
+                labels: STEP/*.map((i, j) => expired ? `${i.slice(0, 2)}${j === 5 ? '' : '被刷'}` : i)*/,
                 data: { ...flowData }[GROUP[i].toLowerCase()],
                 clicked: true,
                 title: `${GROUP[i]}组各轮情况`
@@ -96,7 +96,7 @@ class Chart extends PureComponent<Props> {
                 `总计：${this.state.data.reduce((i, j) => i + j)}人`
             }</Typography>
         </Paper>;
-        return expired ? <Tooltip title="该招新已过期" classes={{ tooltip: classes.tooltip }}
+        return expired ? <Tooltip title="该招新报名已截止" classes={{ tooltip: classes.tooltip }}
                                   placement='top'>{ChartBox}</Tooltip> : ChartBox
     }
 }
