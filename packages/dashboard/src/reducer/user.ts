@@ -2,11 +2,14 @@ import * as actions from '../action';
 import { USER } from '../epic'
 import { User as UType } from '../lib/const';
 
+const token = localStorage.getItem('token');
+const payload = token && token.split('.')[1];
+const time = payload && JSON.parse(atob(payload)).exp;
 const info = localStorage.getItem('userInfo');
 const group = sessionStorage.getItem('groupInfo');
 
 const init = {
-    loggedIn: !!localStorage.getItem('uid'),
+    loggedIn: !!localStorage.getItem('uid') && time && time > +new Date() / 1000,
     uid: localStorage.getItem('uid') || '',
     isLoading: false,
     isScanning: false,
