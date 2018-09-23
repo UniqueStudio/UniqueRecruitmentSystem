@@ -23,6 +23,7 @@ export interface MainInfo extends WithStyles {
     date: Time[];
     time: string;
     place: string;
+    rest: string;
 }
 
 interface Props extends MainInfo {
@@ -39,7 +40,7 @@ interface Props extends MainInfo {
 class Step extends PureComponent<Props> {
 
     render() {
-        const { classes, group, type, step, date, fns, time, place } = this.props;
+        const { classes, group, type, step, date, fns, time, place, rest } = this.props;
         const { handleChange, changeDate, setTime, addDate, deleteDate } = fns;
         const inputProps = { readOnly: true };
         return (
@@ -53,7 +54,7 @@ class Step extends PureComponent<Props> {
                         <MenuItem value='reject'>被刷</MenuItem>
                     </Select>
                     <Typography variant='subheading' className={classes.templateItem}>
-                        {generateModel(type === 'accept', '{{候选人姓名}}', '{{招新名称}}', '{{组别}}', step)}
+                        {generateModel(type === 'accept', '{{候选人姓名}}', '{{招新名称}}', '{{组别}}', step, time, place, rest)}
                     </Typography>
                 </div>
                 <div
@@ -89,6 +90,16 @@ class Step extends PureComponent<Props> {
                             </MenuItem>
                         ))}
                     </TextField>
+                    {type === 'accept' && <TextField
+                        label="自定义"
+                        value={rest}
+                        className={classNames(classes.templateItem)}
+                        fullWidth
+                        InputLabelProps={{
+                            shrink: true,
+                        }}
+                        onChange={handleChange('rest')}
+                    />}
                 </div>
                 {(step === STEP[1] || step === STEP[3]) && type === 'accept' &&
                 <div
@@ -149,7 +160,7 @@ class Step extends PureComponent<Props> {
                         </div>
                     ))}
                 </div>}
-                {(step === STEP[0] || step === STEP[2]) && type === 'accept' &&
+                {(step === STEP[0] || step === STEP[2]) && type === 'accept' && !rest &&
                 <div className={classNames(classes.templateContent, classes.templateItem, classes.templateParams)}>
                     <TextField
                         label="时间"

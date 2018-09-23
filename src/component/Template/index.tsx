@@ -32,6 +32,7 @@ interface State {
     date: Time[];
     time: string;
     place: string;
+    rest: string,
     code: string;
     sent: boolean;
 }
@@ -52,6 +53,7 @@ class Template extends PureComponent<Props> {
         date: [{ ...this.defaultDate }],
         time: '',
         place: '',
+        rest: '',
         code: '',
         sent: false
     };
@@ -63,7 +65,7 @@ class Template extends PureComponent<Props> {
     };
 
     handleNext = () => {
-        const { activeStep, step, date, type, time, place } = this.state;
+        const { activeStep, step, date, type, time, place, rest } = this.state;
         const { toggleSnackbar } = this.props;
         if (activeStep === 1) {
             if (step === '{{xx流程}}') {
@@ -76,7 +78,7 @@ class Template extends PureComponent<Props> {
                         return;
                     }
                 }
-            } else if ((step === STEP[0] || step === STEP[2]) && type === 'accept') {
+            } else if ((step === STEP[0] || step === STEP[2]) && type === 'accept' && !rest) {
                 if (!time) {
                     toggleSnackbar('请填写时间！');
                     return;
@@ -91,8 +93,9 @@ class Template extends PureComponent<Props> {
             activeStep: activeStep + 1,
         });
     };
+
     sendSMS = () => {
-        const { selected, type, step, date, code, time, place } = this.state;
+        const { selected, type, step, date, code, time, place, rest } = this.state;
         const { toggleSnackbar, group } = this.props;
         if (code === '') {
             toggleSnackbar('未填写验证码！');
@@ -103,6 +106,7 @@ class Template extends PureComponent<Props> {
             type,
             step,
             code,
+            rest,
             group: group.toLowerCase(),
             title: '2018A'
         };
@@ -180,7 +184,7 @@ class Template extends PureComponent<Props> {
 
     render() {
         const { classes, toggleOpen, group } = this.props;
-        const { activeStep, selected, step, type, date, code, time, place } = this.state;
+        const { activeStep, selected, step, type, date, code, time, place, rest } = this.state;
         const steps = ['发送对象', '消息模板', '确认发送'];
         const stepContent = [
             <TemplateStepOne selected={selected} onDelete={this.handleDelete} />,
@@ -191,6 +195,7 @@ class Template extends PureComponent<Props> {
                 group={group}
                 time={time}
                 place={place}
+                rest={rest}
                 fns={{
                     handleChange: this.handleChange,
                     changeDate: this.changeDate,
