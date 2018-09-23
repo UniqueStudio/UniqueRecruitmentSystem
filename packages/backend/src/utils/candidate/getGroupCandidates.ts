@@ -12,7 +12,11 @@ export const getGroupCandidates = (req: Request, res: Response) => {
             let data;
             const formatted = [{}, {}, {}, {}, {}, {}];
             if (title) {
-                data = await database.query('candidates', { title, group });
+                if (group === 'interview') {
+                    data = await database.query('candidates', { title, step: { $gt: 3 } });
+                } else {
+                    data = await database.query('candidates', { title, group });
+                }
                 data.map((i: Candidate) => formatted[i.step][`${i._id}`] = { ...i, resume: '' }); // hide resume path
                 res.send({ data: formatted, type: 'success' });
             } else {
