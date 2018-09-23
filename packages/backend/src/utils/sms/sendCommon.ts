@@ -5,7 +5,7 @@ import fetch from 'node-fetch';
 import { database, redisClient, getAsync } from '../../app';
 import { Request, Response } from 'express';
 
-const generateSMS = (name: string, step: string, type: string, group: string, rest?: string) => {
+const generateSMS = (name: string, step: string, type: string, group: string, rest?: string, userRest?: string) => {
     return type === 'accept' ?
         {
             template: 185990,
@@ -14,7 +14,7 @@ const generateSMS = (name: string, step: string, type: string, group: string, re
                 '2018年秋季招新',
                 group,
                 step,
-                step === STEP[1] || step === STEP[3] ? `，请进入以下链接选择面试时间：${rest}`
+                userRest ? userRest : step === STEP[1] || step === STEP[3] ? `，请进入以下链接选择面试时间：${rest}`
                     : step === STEP[0] ? `，${rest}${STEP[1]}，请务必准时到场`
                     : step === STEP[2] ? `，${rest}${STEP[3]}，请务必准时到场`
                     : step === STEP[4] ? `，你已成功加入${group}组`
@@ -29,7 +29,7 @@ const generateSMS = (name: string, step: string, type: string, group: string, re
 
 export const sendCommon = (req: Request, res: Response) => {
     const body = req.body;
-    const { step, type, group, title, candidates, code: userCode, date, time, place } = body;
+    const { step, type, group, title, candidates, code: userCode, date, time, place, rest: userRest } = body;
     (async () => {
         try {
             const decoded = verifyJWT(req.get('Authorization'));
@@ -64,7 +64,7 @@ export const sendCommon = (req: Request, res: Response) => {
                     if (type === 'reject') {
                         await database.update('candidates', { _id: new ObjectId(i) }, { rejected: true })
                     }
-                    const smsBody = generateSMS(candidateInfo['name'], step, type, group, date ? `${formURL}/${formId}/${i}` : rest ? rest : '');
+                    const smsBody = generateSMS(candidateInfo['name'], step, type, group, date ? `${formURL}/${formId}/${i}` : rest ? rest : '', userRest);
                     const response = await fetch(smsSendURL, {
                         method: 'POST',
                         headers: {
