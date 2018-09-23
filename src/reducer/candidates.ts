@@ -3,6 +3,9 @@ import { CANDIDATE, COMMENT } from '../epic';
 import { Candidate } from '../lib/const';
 import mapToObj from '../lib/mapToObj';
 
+const user = localStorage.getItem('userInfo');
+const group = user && JSON.parse(user) && JSON.parse(user).group;
+
 const init = {
     candidates: [],
     selected: [],
@@ -10,7 +13,7 @@ const init = {
         comments: false,
         candidates: false
     },
-    group: 'web',
+    group: group || 'web',
     inputtingComment: {
         comment: '',
         evaluation: '',
