@@ -96,7 +96,7 @@ class Chart extends PureComponent<Props> {
                 `总计：${this.state.data.reduce((i, j) => i + j)}人`
             }</Typography>
         </Paper>;
-        return expired ? <Tooltip title="该招新已过期" classes={{ tooltip: classes.tooltip }}
+        return expired ? <Tooltip title="该招新报名已截止" classes={{ tooltip: classes.tooltip }}
                                   placement='top'>{ChartBox}</Tooltip> : ChartBox
     }
 }
