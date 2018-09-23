@@ -26,7 +26,7 @@ export const getCandidatesEpic: Epic<Action, Action, StoreState, Dependencies> =
                     setCandidates(JSON.parse(candidates))
                 );
             }
-            return ajax.getJSON(`${URL}/candidates/group/${group}`, {
+            return ajax.getJSON(`${URL}/candidates/group/${group}/recruitment/2018A`, {
                 'Authorization': `Bearer ${token}`,
             }).pipe(
                 map((res: { type: string, data: object[] }) => {
