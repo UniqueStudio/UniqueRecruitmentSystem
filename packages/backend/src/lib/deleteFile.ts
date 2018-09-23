@@ -1,7 +1,7 @@
 import fs from "fs";
 
 export const deleteFile = (filename: string) => {
-    filename && fs.unlink(filename, err => {
-        if (err) throw err;
-    });
+    if (filename && fs.existsSync(filename)) {
+        fs.unlinkSync(filename);
+    }
 };
