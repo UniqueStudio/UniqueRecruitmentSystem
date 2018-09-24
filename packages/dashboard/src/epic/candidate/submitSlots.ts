@@ -16,7 +16,7 @@ export const submitSlotsEpic: Epic<Action, Action, StoreState, Dependencies> = (
                 return errHandler({ message: 'token不存在', type: 'danger' }, CANDIDATE);
             }
             const { title, slots, group } = action;
-            return ajax.post(`${URL}/recruitment/slots`, JSON.stringify({ title, slots, group }), {
+            return ajax.post(`${URL}/recruitment/${title}/slots`, JSON.stringify({ slots, group }), {
                 'Authorization': `Bearer ${token}`,
                 'Content-Type': 'application/json',
             }).pipe(

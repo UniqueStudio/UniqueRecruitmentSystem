@@ -24,14 +24,8 @@ class Index extends PureComponent<Props> {
         modalOpen: ''
     };
 
-    toggleModalOpen = (title?: string) => () => {
-        this.setState({
-            modalOpen: title || ''
-        })
-    };
-
-    submit = (begin: number, end: number, time1: { [group: string]: Time[] }, time2: Time[]) => {
-        this.props.submitRecruitment({ begin, end, time1, time2 });
+    submit = (title: string, begin: number, end: number, time1: { [group: string]: Time[] }, time2: Time[]) => {
+        this.props.submitRecruitment({ title, begin, end, time1, time2 });
     };
 
     componentDidMount() {
