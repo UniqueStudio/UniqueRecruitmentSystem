@@ -12,7 +12,7 @@ interface Props extends WithStyles {
     candidates: Map<string, CType>;
     selected: string[];
     fabOn: number;
-    canDelete: boolean;
+    canOperate: boolean;
     snackbarOn: boolean;
     select: (cid: string[]) => void;
     deselect: (cid: string[] | string) => void;
@@ -68,7 +68,7 @@ class Fab extends PureComponent<Props> {
     }
 
     render() {
-        const { classes, candidates, selected, fabOn, snackbarOn, canDelete } = this.props;
+        const { classes, candidates, selected, fabOn, snackbarOn, canOperate } = this.props;
         const allCandidatesCids = [...candidates.keys()];
         const selectedCandidatesCids = selected.filter((i: string) => allCandidatesCids.includes(i));
 
@@ -107,7 +107,7 @@ class Fab extends PureComponent<Props> {
                                 variant='contained'
                                 className={classes.fabButton}
                                 onClick={this.sendNotification}
-                                disabled={selectedCandidatesCids.length === 0}
+                                disabled={selectedCandidatesCids.length === 0 || !canOperate}
                             >发送通知</Button>
                             <Button
                                 color='primary'
@@ -115,7 +115,7 @@ class Fab extends PureComponent<Props> {
                                 variant='contained'
                                 className={classes.fabButton}
                                 onClick={this.confirmRemove}
-                                disabled={!canDelete}
+                                disabled={!canOperate}
                             >移除</Button>
                             <Button
                                 color='primary'
