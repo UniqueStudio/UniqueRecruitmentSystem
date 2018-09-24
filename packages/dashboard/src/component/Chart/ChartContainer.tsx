@@ -59,7 +59,7 @@ class ChartContainer extends PureComponent<Props> {
     };
 
     addDate = (group?: string) => () => {
-        const date = [...(group ? this.state.time1[group] : this.state.time2) || [], { ...this.defaultDate }];
+        const date = [...(group ? this.state.time1 && this.state.time1[group] : this.state.time2) || [], { ...this.defaultDate }];
         this.setStateTime(date, group);
     };
 
