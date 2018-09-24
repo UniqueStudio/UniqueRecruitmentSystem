@@ -13,6 +13,7 @@ import withRoot from '../../style/withRoot';
 import styles from '../../style/chart';
 import Modal from '../Modal';
 import Verify from '../../container/Verify';
+import timeStampToString from '../../lib/timeStampToString';
 
 interface Props extends WithStyles {
     disabled: boolean;
@@ -37,8 +38,8 @@ class ChartNew extends PureComponent<Props> {
         modalOpen: false,
         year: '',
         type: '',
-        begin: (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().slice(0, 10),
-        end: (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().slice(0, 10),
+        begin: timeStampToString(Date.now()),
+        end: timeStampToString(Date.now()),
         code: '',
         launched: false
     };
@@ -94,7 +95,8 @@ class ChartNew extends PureComponent<Props> {
         const { code } = this.state;
         return (
             <>
-                <Tooltip title={disabled ? "只有组长能发起招新" : "发起招新"} classes={{ tooltip: classes.tooltip }} placement='top'>
+                <Tooltip title={disabled ? "只有组长或管理员能发起招新" : "发起招新"} classes={{ tooltip: classes.tooltip }}
+                         placement='top'>
                     <Paper className={classes.chart}>
                         <IconButton
                             className={classes.newButton}

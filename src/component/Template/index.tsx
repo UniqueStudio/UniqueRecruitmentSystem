@@ -12,7 +12,7 @@ import withRoot from '../../style/withRoot';
 import TemplateStepOne from './TemplateStepOne';
 import TemplateStepTwo from './TemplateStepTwo';
 import Verify from '../../container/Verify';
-import { Candidate, STEP, Time } from '../../lib/const';
+import { Candidate, PENDING_RECRUITMENT, STEP } from '../../lib/const';
 
 interface Props extends WithStyles {
     group: string;
@@ -29,7 +29,6 @@ interface State {
     activeStep: number;
     type: string;
     step: string;
-    date: Time[];
     time: string;
     place: string;
     rest: string,
@@ -38,19 +37,12 @@ interface State {
 }
 
 class Template extends PureComponent<Props> {
-    defaultDate = {
-        date: new Date().toISOString().slice(0, 10),
-        morning: false,
-        afternoon: false,
-        evening: false
-    };
 
     state: State = {
         selected: this.props.selected,
         activeStep: 0,
         type: 'accept',
         step: '{{xx流程}}',
-        date: [{ ...this.defaultDate }],
         time: '',
         place: '',
         rest: '',
@@ -65,19 +57,12 @@ class Template extends PureComponent<Props> {
     };
 
     handleNext = () => {
-        const { activeStep, step, date, type, time, place, rest } = this.state;
+        const { activeStep, step, type, time, place, rest } = this.state;
         const { toggleSnackbar } = this.props;
         if (activeStep === 1) {
             if (step === '{{xx流程}}') {
                 toggleSnackbar('请选择流程！');
                 return;
-            } else if ((step === STEP[1] || step === STEP[3]) && type === 'accept') {
-                for (const i of date) {
-                    if (!(i.afternoon || i.morning || i.evening) || !i.date) {
-                        toggleSnackbar('请选择正确的时间段！');
-                        return;
-                    }
-                }
             } else if ((step === STEP[0] || step === STEP[2]) && type === 'accept' && !rest) {
                 if (!time) {
                     toggleSnackbar('请填写时间！');
@@ -95,7 +80,7 @@ class Template extends PureComponent<Props> {
     };
 
     sendSMS = () => {
-        const { selected, type, step, date, code, time, place, rest } = this.state;
+        const { selected, type, step, code, time, place, rest } = this.state;
         const { toggleSnackbar, group } = this.props;
         if (code === '') {
             toggleSnackbar('未填写验证码！');
@@ -108,11 +93,8 @@ class Template extends PureComponent<Props> {
             code,
             rest,
             group: group.toLowerCase(),
-            title: '2018A'
+            title: PENDING_RECRUITMENT
         };
-        if ((step === STEP[1] || step === STEP[3]) && type === 'accept') {
-            content['date'] = date;
-        }
         if ((step === STEP[0] || step === STEP[2]) && type === 'accept') {
             content['time'] = time;
             content['place'] = place;
@@ -137,37 +119,6 @@ class Template extends PureComponent<Props> {
         });
     };
 
-    changeDate = (id: number) => (event: React.ChangeEvent) => {
-        const copiedDate = [...this.state.date];
-        copiedDate[id]['date'] = event.target['value'];
-        this.setState({
-            date: copiedDate
-        })
-    };
-
-    setTime = (id: number) => (event: React.ChangeEvent) => {
-        const time = event.target['value'];
-        const copiedDate = [...this.state.date];
-        copiedDate[id][time] = !copiedDate[id][time];
-        this.setState({
-            date: copiedDate
-        })
-    };
-
-    addDate = () => {
-        this.setState({
-            date: [...this.state.date, { ...this.defaultDate }]
-        })
-    };
-
-    deleteDate = (id: number) => () => {
-        const copiedDate = [...this.state.date];
-        copiedDate.splice(id, 1);
-        this.setState({
-            date: copiedDate
-        })
-    };
-
     static getDerivedStateFromProps(nextProps: Props, prevState: State) {
         if (nextProps.selected !== prevState.selected) {
             return {
@@ -184,25 +135,19 @@ class Template extends PureComponent<Props> {
 
     render() {
         const { classes, toggleOpen, group } = this.props;
-        const { activeStep, selected, step, type, date, code, time, place, rest } = this.state;
+        const { activeStep, selected, step, type, code, time, place, rest } = this.state;
         const steps = ['发送对象', '消息模板', '确认发送'];
         const stepContent = [
             <TemplateStepOne selected={selected} onDelete={this.handleDelete} />,
             <TemplateStepTwo
                 step={step}
                 type={type}
-                date={date}
                 group={group}
                 time={time}
                 place={place}
                 rest={rest}
-                fns={{
-                    handleChange: this.handleChange,
-                    changeDate: this.changeDate,
-                    setTime: this.setTime,
-                    addDate: this.addDate,
-                    deleteDate: this.deleteDate
-                }} />,
+                handleChange={this.handleChange}
+            />,
             <Verify onChange={this.handleChange('code')} code={code} />,
         ];
 
