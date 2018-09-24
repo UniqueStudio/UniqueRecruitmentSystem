@@ -124,7 +124,7 @@ class Container extends PureComponent<Props> {
                 </DragDropContext>
                 <Fab selected={selected} deselect={deselect} fabOn={fabOn} snackbarOn={snackbarOn} select={select}
                      candidates={current} toggleFabOff={toggleFabOff}
-                     toggleOpen={this.toggleOpen} canDelete={userGroup === group} />
+                     toggleOpen={this.toggleOpen} canOperate={userGroup === group} />
                 <ColumnDialog
                     open={this.state.dialog}
                     onClick={this.handleRemove(selectedCid)}
