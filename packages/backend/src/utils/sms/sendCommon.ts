@@ -4,14 +4,15 @@ import { ObjectId } from 'mongodb';
 import fetch from 'node-fetch';
 import { database, redisClient, getAsync } from '../../app';
 import { Request, Response } from 'express';
+import titleConverter from '../../lib/titleConverter';
 
-const generateSMS = (name: string, step: string, type: string, group: string, rest?: string, userRest?: string) => {
+const generateSMS = (name: string, title: string, step: string, type: string, group: string, rest?: string, userRest?: string) => {
     return type === 'accept' ?
         {
             template: 185990,
             param_list: [
                 name,
-                '2018年秋季招新',
+                title,
                 group,
                 step,
                 userRest ? userRest : step === STEP[1] || step === STEP[3] ? `，请进入以下链接选择面试时间：${rest}`
@@ -23,13 +24,13 @@ const generateSMS = (name: string, step: string, type: string, group: string, re
         }
         : {
             template: 185987,
-            param_list: [name, '2018年秋季招新', group, step, '不要灰心，继续学习。期待与更强大的你的相遇！']
+            param_list: [name, title, group, step, '不要灰心，继续学习。期待与更强大的你的相遇！']
         }
 };
 
 export const sendCommon = (req: Request, res: Response) => {
     const body = req.body;
-    const { step, type, group, title, candidates, code: userCode, date, time, place, rest: userRest } = body;
+    const { step, type, group, title, candidates, code: userCode, time, place, rest: userRest } = body;
     (async () => {
         try {
             const decoded = verifyJWT(req.get('Authorization'));
@@ -41,16 +42,19 @@ export const sendCommon = (req: Request, res: Response) => {
             }
             const recruitment = (await database.query('recruitments', { title }))[0];
             let formId = '';
-            if (date) {
+            if (type === 'accept') {
                 if (step === '笔试流程') {
+                    if (!(recruitment['time1'] && recruitment['time1'][group])) {
+                        res.send({ message: '请设置组面时间！', type: 'warning' });
+                        return;
+                    }
                     formId = `${recruitment['_id']}${groups.indexOf(group)}1`;
-                    await database.update('recruitments',
-                        { title },
-                        { time1: { ...recruitment.time1, [group]: date } }
-                    );
                 } else if (step === '熬测流程') {
+                    if (!recruitment['time2']) {
+                        res.send({ message: '请设置群面时间！', type: 'warning' });
+                        return;
+                    }
                     formId = `${recruitment['_id']}2`;
-                    await database.update('recruitments', { title }, { time2: date });
                 }
             }
             let rest = '';
@@ -64,7 +68,7 @@ export const sendCommon = (req: Request, res: Response) => {
                     if (type === 'reject') {
                         await database.update('candidates', { _id: new ObjectId(i) }, { rejected: true })
                     }
-                    const smsBody = generateSMS(candidateInfo['name'], step, type, group, date ? `${formURL}/${formId}/${i}` : rest ? rest : '', userRest);
+                    const smsBody = generateSMS(candidateInfo['name'], titleConverter(title), step, type, group, formId ? `${formURL}/${formId}/${i}` : rest ? rest : '', userRest);
                     const response = await fetch(smsSendURL, {
                         method: 'POST',
                         headers: {

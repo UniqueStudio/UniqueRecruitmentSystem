@@ -15,7 +15,13 @@ import {
     onAddComment, onRemoveComment, getStepCandidates
 } from './utils/candidate';
 import { sendInterview, sendCommon, sendUserCode, sendCandidateCode } from './utils/sms';
-import { getAllRecruitments, getOneRecruitment, launchRecruitment, setSlots } from './utils/recruitment';
+import {
+    getAllRecruitments,
+    getOneRecruitment,
+    launchRecruitment,
+    setRecruitment,
+    setSlots
+} from './utils/recruitment';
 
 const app = express();
 const server = https.createServer({
@@ -153,6 +159,9 @@ app.get('/recruitment/:title', getOneRecruitment);
 
 // launch a new recruitment
 app.post('/recruitment', launchRecruitment);
+
+// set recruitment
+app.post('/recruitment/:title', setRecruitment);
 
 // set time slots
 app.post('/recruitment/slots', setSlots);
