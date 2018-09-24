@@ -1,4 +1,5 @@
 import { getRecruitmentsEpic } from './getRecruitments';
 import { launchRecruitmentsEpic } from './launchRecruitment';
+import { setRecruitmentEpic } from './setRecruitment';
 
-export default [getRecruitmentsEpic, launchRecruitmentsEpic];
+export default [getRecruitmentsEpic, launchRecruitmentsEpic, setRecruitmentEpic];

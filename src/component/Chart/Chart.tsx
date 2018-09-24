@@ -23,7 +23,7 @@ const getColors = (i: number) => [red[i], purple[i], indigo[i], blue[i], cyan[i]
 interface Props extends WithStyles {
     data: Data[];
     totalData: number[];
-    flowData: object;
+    stepData: object;
     title: string;
     end: number;
 }
@@ -38,14 +38,14 @@ class Chart extends PureComponent<Props> {
     };
     setData = (e: object[]) => {
         // magic function to reset legend
-        const { /*end, */title, totalData, flowData } = this.props;
+        const { /*end, */title, totalData, stepData } = this.props;
         //const expired = +new Date() > end;
         if (e.length) e['0']._chart.data.datasets['0']._meta[e['0']._chart.id].data.map((i: object) => i['hidden'] = false);
         if (!this.state.clicked && e.length) {
             const i = e['0']._index;
             this.setState({
                 labels: STEP/*.map((i, j) => expired ? `${i.slice(0, 2)}${j === 5 ? '' : '被刷'}` : i)*/,
-                data: { ...flowData }[GROUP[i].toLowerCase()],
+                data: { ...stepData }[GROUP[i].toLowerCase()],
                 clicked: true,
                 title: `${GROUP[i]}组各轮情况`
             });
