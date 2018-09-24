@@ -16,11 +16,12 @@ import {
     toggleSnackbarOn,
     ToggleSnackbarOn
 } from '../../action';
+import { PENDING_RECRUITMENT } from "../../lib/const";
 
 const mapStateToProps = ({ candidates, user, recruitments }: StoreState) => ({
     candidates: candidates.candidates || [],
     group: user.group,
-    currentRecruitment: recruitments.recruitments.filter(i => i.end > +new Date())[0],
+    currentRecruitment: recruitments.recruitments.filter(i => i.title === PENDING_RECRUITMENT)[0],
     userInfo: user.info,
     isLoading: candidates.isLoading.candidates
 });
