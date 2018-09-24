@@ -593,6 +593,20 @@ export function launchRecruitment(info: object): LaunchRecruitment {
     }
 }
 
+export const POST_RECRUITMENT = 'POST_RECRUITMENT';
+export type POST_RECRUITMENT = typeof POST_RECRUITMENT;
+
+export interface PostRecruitment {
+    type: POST_RECRUITMENT;
+    data: object;
+}
+
+export function postRecruitment(data: object): PostRecruitment {
+    return {
+        type: POST_RECRUITMENT,
+        data
+    }
+}
 
 export const UPDATE_RECRUITMENT = 'UPDATE_RECRUITMENT';
 export type UPDATE_RECRUITMENT = typeof UPDATE_RECRUITMENT;
