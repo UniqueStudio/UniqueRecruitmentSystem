@@ -3,13 +3,32 @@ import { Theme } from "@material-ui/core/styles";
 import { colorToAlpha } from './index';
 
 const styles: StyleRulesCallback = (theme: Theme) => ({
-    chart: {
+    chartContainer: {
         display: 'inline-flex',
+        flexDirection: 'column',
+        alignItems: 'center'
+    },
+    chart: {
+        display: 'flex',
         margin: theme.spacing.unit,
         width: 300,
         height: 300,
         verticalAlign: 'top',
         position: 'relative'
+    },
+    detail: {
+        margin: theme.spacing.unit * 2,
+        overflowY: 'auto'
+    },
+    commonTime: {
+        display: 'flex',
+        justifyContent: 'space-around'
+    },
+    formGroup: {
+        flexDirection: 'row'
+    },
+    expansion: {
+        margin: theme.spacing.unit
     },
     expired: {
         background: colorToAlpha(theme.palette.secondary.light, 0.1),

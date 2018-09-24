@@ -2,6 +2,7 @@ export const GROUP = ['Web', 'Lab', 'AI', 'Game', 'Android', 'iOS', 'Design', 'P
 export const STEP = ['报名流程', '笔试流程', '面试流程', '熬测流程', '群面流程', '通过'];
 export const URL = 'https://hustunique.com:5000';
 export const QR_CODE_URL = 'https://open.work.weixin.qq.com/wwopen/sso/qrImg?key=';
+export const PENDING_RECRUITMENT = '2022A';
 
 type Group = "web" | "lab" | "ai" | "game" | "android" | "ios" | "design" | "pm";
 
@@ -69,6 +70,8 @@ export interface Recruitment {
     end: number;
     total: number;
     time2: Time[];
-    time1: object;
+    time1: {
+        [group: string]: Time[];
+    };
     data: Data[];
 }

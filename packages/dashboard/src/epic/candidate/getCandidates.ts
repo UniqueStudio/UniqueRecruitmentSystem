@@ -4,7 +4,7 @@ import { ajax } from 'rxjs/ajax';
 import { Epic, ofType } from "redux-observable";
 import { Action, CANDIDATE, customError, Dependencies, errHandler } from '../index';
 import { GET_CANDIDATES, GetCandidates, setCandidates, setGroup } from '../../action';
-import { URL } from '../../lib/const';
+import { PENDING_RECRUITMENT, URL } from '../../lib/const';
 import { StoreState } from '../../reducer';
 
 export const getCandidatesEpic: Epic<Action, Action, StoreState, Dependencies> = (action$, state$, { sessionStorage, localStorage }) =>
@@ -26,7 +26,7 @@ export const getCandidatesEpic: Epic<Action, Action, StoreState, Dependencies> =
                     setCandidates(JSON.parse(candidates))
                 );
             }
-            return ajax.getJSON(`${URL}/candidates/group/${group}/recruitment/2018A`, {
+            return ajax.getJSON(`${URL}/candidates/group/${group}/recruitment/${PENDING_RECRUITMENT}`, {
                 'Authorization': `Bearer ${token}`,
             }).pipe(
                 map((res: { type: string, data: object[] }) => {

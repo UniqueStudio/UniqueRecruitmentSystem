@@ -17,6 +17,7 @@ import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 import styles from "../../style/finalInterview";
 import withRoot from "../../style/withRoot";
 import EnlargeableImage from '../EnlargeableImg';
+import timeStampToString from '../../lib/timeStampToString';
 
 interface Props extends WithStyles {
     messages: object[];
@@ -131,10 +132,7 @@ class Messenger extends PureComponent<Props> {
     render() {
         const { classes } = this.props;
         const { minimize, messages, content } = this.state;
-        const time = (i: number) => {
-            const timezoneOffset = new Date(i).getTimezoneOffset() * 60000;
-            return new Date(i - timezoneOffset).toISOString().slice(0, -5).split('T')[1];
-        };
+        const time = (i: number) => timeStampToString(i, -5).split('T')[1];
         return (
             <Paper className={classNames(classes.messenger, minimize && classes.minimize)}>
                 <IconButton color="primary" component="span" onClick={this.toggleMinimize}>

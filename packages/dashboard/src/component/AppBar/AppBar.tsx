@@ -11,16 +11,19 @@ import PersonIcon from '@material-ui/icons/Person';
 import RefreshIcon from '@material-ui/icons/Refresh';
 import styles from '../../style/appBar'
 import withRoot from '../../style/withRoot';
-import Select from '../../container/AppBar/AppBarSelect';
+import Select from './AppBarSelect';
 import Anchor from '../Anchor';
 import { Redirect, RouteComponentProps } from 'react-router-dom';
 import { Header } from './Header';
+import { GROUP, STEP } from '../../lib/const';
 
 interface Props extends WithStyles {
     open: boolean;
     loggedIn: boolean;
+    group: string;
     toggleOpen: () => void;
     logout: () => void;
+    changeGroup: (group: string) => void;
 }
 
 class Bar extends PureComponent<Props & RouteComponentProps<{}>> {
@@ -41,6 +44,10 @@ class Bar extends PureComponent<Props & RouteComponentProps<{}>> {
         this.props.logout();
     };
 
+    handleChange = (event: React.ChangeEvent) => {
+        this.props.changeGroup(event.target['value']);
+    };
+
     refresh = () => {
         sessionStorage.clear();
         this.handleClose();
@@ -48,7 +55,7 @@ class Bar extends PureComponent<Props & RouteComponentProps<{}>> {
     };
 
     render() {
-        const { classes, open, loggedIn, toggleOpen, location } = this.props;
+        const { classes, open, loggedIn, toggleOpen, location, group } = this.props;
         const { pathname } = location;
         const pathToTitle = {
             '/': '联创团队招新管理系统',
@@ -74,7 +81,11 @@ class Bar extends PureComponent<Props & RouteComponentProps<{}>> {
                         <MenuIcon />
                     </IconButton>
                     <Header title={pathToTitle[pathname]}>
-                        {pathname === '/commonInterview' && <Select />}
+                        {pathname === '/commonInterview' && <>
+                            <Select data={GROUP} onChange={this.handleChange} currentValue={group} />
+                            <Select data={STEP} onChange={() => {
+                            }} currentValue='' />
+                        </>}
                     </Header>
                     {loggedIn ?
                         <>
