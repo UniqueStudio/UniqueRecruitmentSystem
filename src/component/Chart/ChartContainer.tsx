@@ -20,7 +20,7 @@ interface Props extends WithStyles {
     data: Recruitment;
     userGroup: string;
     canLaunch: boolean;
-    submit: (begin: number, end: number, time1: { [group: string]: Time[] }, time2: Time[]) => void;
+    submit: (title: string, begin: number, end: number, time1: { [group: string]: Time[] }, time2: Time[]) => void;
     toggleSnackbarOn: (info: string, color?: string) => void;
 }
 
@@ -33,13 +33,16 @@ class ChartContainer extends PureComponent<Props> {
         evening: false
     };
 
-    state = {
-        modalOpen: '',
-        begin: timeStampToString(this.props.data.begin),
-        end: timeStampToString(this.props.data.end),
-        time1: this.props.data.time1,
-        time2: this.props.data.time2
-    };
+    state = (() => {
+        const { begin, end, time1, time2 } = this.props.data;
+        return {
+            modalOpen: '',
+            begin: timeStampToString(begin),
+            end: timeStampToString(end),
+            time1,
+            time2
+        }
+    })();
 
     setStateTime = (date: Time[], group?: string) => {
         this.setState(group ? {
@@ -90,7 +93,7 @@ class ChartContainer extends PureComponent<Props> {
 
     handleConfirm = () => {
         const { begin, end, time1, time2 } = this.state;
-        const { submit, toggleSnackbarOn } = this.props;
+        const { submit, toggleSnackbarOn, data } = this.props;
         if (!begin) {
             toggleSnackbarOn('请填写开始时间！');
             return;
@@ -119,10 +122,9 @@ class ChartContainer extends PureComponent<Props> {
                 }
             }
         }
-        submit(+new Date(begin) + (new Date()).getTimezoneOffset() * 60000,
-            +new Date(end) + (new Date()).getTimezoneOffset() * 60000,
-            time1,
-            time2);
+        const beginTimeStamp = +new Date(begin) + (new Date()).getTimezoneOffset() * 60000;
+        const endTimeStamp = +new Date(end) + (new Date()).getTimezoneOffset() * 60000;
+        submit(data.title, beginTimeStamp, endTimeStamp, time1, time2);
     };
 
     render() {

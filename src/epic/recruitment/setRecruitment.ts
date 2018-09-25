@@ -3,7 +3,7 @@ import { ajax, AjaxResponse } from 'rxjs/ajax';
 import { Epic, ofType } from "redux-observable";
 import { Action, customError, Dependencies, errHandler, RECRUITMENT } from '../index';
 import { POST_RECRUITMENT, PostRecruitment, setShouldUpdateRecruitment, toggleSnackbarOn } from '../../action';
-import { PENDING_RECRUITMENT, URL } from '../../lib/const';
+import { URL } from '../../lib/const';
 import { StoreState } from '../../reducer';
 
 export const setRecruitmentEpic: Epic<Action, Action, StoreState, Dependencies> = (action$, state$, { localStorage }) =>
@@ -15,7 +15,7 @@ export const setRecruitmentEpic: Epic<Action, Action, StoreState, Dependencies> 
                 return errHandler({ message: 'token不存在', type: 'danger' }, RECRUITMENT);
             }
             const { data } = action;
-            return ajax.post(`${URL}/recruitment/${PENDING_RECRUITMENT}`, JSON.stringify(data), {
+            return ajax.post(`${URL}/recruitment/${data['title']}`, JSON.stringify(data), {
                 'Authorization': `Bearer ${token}`,
                 'Content-Type': 'application/json',
             }).pipe(
