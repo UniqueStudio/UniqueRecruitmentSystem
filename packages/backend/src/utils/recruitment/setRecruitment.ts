@@ -12,6 +12,9 @@ export const setRecruitment = (req: Request, res: Response) => {
                 res.send({ message: '未指定招新!', type: 'warning' });
                 return;
             }
+            const data = { begin, end };
+            time1 && (data['time1'] = time1);
+            time2 && (data['time2'] = time2);
             await database.update('recruitments',
                 { title },
                 { time1, time2, begin, end }
@@ -21,4 +24,4 @@ export const setRecruitment = (req: Request, res: Response) => {
             res.send({ message: err.message, type: 'danger' })
         }
     })();
-}
+};
