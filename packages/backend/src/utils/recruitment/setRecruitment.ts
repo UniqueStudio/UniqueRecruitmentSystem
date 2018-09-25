@@ -17,7 +17,7 @@ export const setRecruitment = (req: Request, res: Response) => {
             time2 && (data['time2'] = time2);
             await database.update('recruitments',
                 { title },
-                { time1, time2, begin, end }
+                data
             );
             res.send({ type: 'success' })
         } catch (err) {
