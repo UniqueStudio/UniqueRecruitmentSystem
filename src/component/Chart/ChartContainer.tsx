@@ -103,8 +103,9 @@ class ChartContainer extends PureComponent<Props> {
             return;
         }
         if (time1) {
+            console.log(time1);
             for (const i of Object.values(time1)) {
-                if (i) {
+                if (i && Array.isArray(i)) {
                     for (const j of i) {
                         if (!(j.afternoon || j.morning || j.evening) || !j.date) {
                             toggleSnackbarOn('请选择正确的时间段！');
