@@ -9,7 +9,8 @@ export const setSlots = (req: Request, res: Response) => {
     (async () => {
         try {
             verifyJWT(req.get('Authorization'));
-            const { group, slots, title } = req.body;
+            const { group, slots } = req.body;
+            const title = req.params.title;
             if (!group || !GROUPS.includes(group.toLowerCase())) {
                 res.send({ message: '组别不正确!', type: 'warning' });
                 return;

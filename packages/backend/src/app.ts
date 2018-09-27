@@ -164,7 +164,7 @@ app.post('/recruitment', launchRecruitment);
 app.post('/recruitment/:title', setRecruitment);
 
 // set time slots
-app.post('/recruitment/slots', setSlots);
+app.post('/recruitment/:title/slots', setSlots);
 
 io.on('connection', (socket) => {
     console.log('WebSocket connected');
