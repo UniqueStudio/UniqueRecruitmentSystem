@@ -25,7 +25,7 @@ export const setSlots = (req: Request, res: Response) => {
             }
             let failed = 0;
             if (group !== 'interview') {
-                const recruitment = await database.query('recruitments', { title })[0];
+                const recruitment = (await database.query('recruitments', { title }))[0];
                 await database.update('recruitments', { title }, recruitment.time1.slots ? { [`time1.slots.${group}`]: slots } : { [`time1.slots`]: { [group]: slots } });
                 const candidates = await database.query('candidates', {
                     group,
