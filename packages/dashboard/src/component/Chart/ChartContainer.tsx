@@ -136,7 +136,7 @@ class ChartContainer extends PureComponent<Props> {
         const title = titleConverter(data.title);
         return (
             <div className={classes.chartContainer}>
-                <Button onClick={this.toggleModalOpen(title)}>{title}</Button>
+                <Button onClick={this.toggleModalOpen(title)} color='primary' variant='contained'>{title}</Button>
                 <Chart
                     data={chartData}
                     totalData={totalData}
