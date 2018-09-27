@@ -24,8 +24,16 @@ export const setSlots = (req: Request, res: Response) => {
                 return;
             }
             let failed = 0;
+            const recruitment = (await database.query('recruitments', { title }))[0];
+            if (!recruitment) {
+                res.send({ message: '招新不存在!', type: 'warning' });
+                return;
+            }
             if (group !== 'interview') {
-                const recruitment = (await database.query('recruitments', { title }))[0];
+                if (!recruitment.time1) {
+                    res.send({ message: '请先设置组面时间!', type: 'warning' });
+                    return;
+                }
                 await database.update('recruitments', { title }, recruitment.time1.slots ? { [`time1.slots.${group}`]: slots } : { [`time1.slots`]: { [group]: slots } });
                 const candidates = await database.query('candidates', {
                     group,
