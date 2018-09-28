@@ -30,7 +30,7 @@ interface Props extends WithStyles {
 
 class Container extends PureComponent<Props> {
     state = {
-        steps: this.props.type === 'final' ? STEPS.slice(4) : STEPS,
+        steps: this.props.type === 'massInterview' ? STEPS.slice(4) : STEPS,
         flag: false,
         dialog: false,
         modal: false,
@@ -84,8 +84,8 @@ class Container extends PureComponent<Props> {
     };
 
     componentDidMount() {
-        const { changeGroup, group, type } = this.props;
-        type === 'final' ? changeGroup('interview') : changeGroup(group === 'interview' ? 'web' : group);
+        const { changeGroup, group, type, userGroup } = this.props;
+        type === 'massInterview' ? changeGroup('interview') : changeGroup(group === 'interview' ? userGroup : group);
     }
 
     render() {
