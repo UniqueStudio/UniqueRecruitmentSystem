@@ -1,7 +1,7 @@
 import React, { PureComponent } from "react";
 import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 import Modal from '../Modal';
-import Template from '../../container/Template';
+import Template from '../../container/SMS';
 import withRoot from "../../style/withRoot";
 import { Candidate } from '../../lib/const';
 

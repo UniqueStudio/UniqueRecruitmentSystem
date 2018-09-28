@@ -15,7 +15,7 @@ class Content extends PureComponent<Props> {
 
     handleClick = () => {
         const { open, toggleOpen } = this.props;
-        if (open) toggleOpen();
+        open && toggleOpen();
     };
 
     render() {

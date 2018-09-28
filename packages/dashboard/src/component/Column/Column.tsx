@@ -4,7 +4,7 @@ import Divider from '@material-ui/core/Divider';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
-import { Candidate, STEP } from '../../lib/const';
+import { Candidate, STEPS } from '../../lib/const';
 import styles from "../../style/column";
 import withRoot from "../../style/withRoot";
 import CandidateContainer from '../Candidate/CandidateContainer';
@@ -22,7 +22,7 @@ interface Props extends WithStyles {
     downloadResume: (cid: string) => void;
 }
 
-const titleToStep = (title: string) => STEP.indexOf(title);
+const titleToStep = (title: string) => STEPS.indexOf(title);
 
 class Column extends Component<Props> {
 
@@ -110,25 +110,23 @@ class Column extends Component<Props> {
         );
 
         return (
-            <>
-                <Draggable draggableId={title} index={dropIndex}>
-                    {(provided: DraggableProvided) => (
-                        <div ref={provided.innerRef} {...provided.draggableProps}>
-                            <Paper className={classes.column}>
-                                <div className={classes.columnHeader}>
-                                    <Typography
-                                        variant='title'
-                                        className={classes.columnTitle}
-                                        {...provided.dragHandleProps}
-                                    >{title}</Typography>
-                                </div>
-                                <Divider />
-                                {DroppableBox}
-                            </Paper>
-                        </div>
-                    )}
-                </Draggable>
-            </>
+            <Draggable draggableId={title} index={dropIndex}>
+                {(provided: DraggableProvided) => (
+                    <div ref={provided.innerRef} {...provided.draggableProps}>
+                        <Paper className={classes.column}>
+                            <div className={classes.columnHeader}>
+                                <Typography
+                                    variant='title'
+                                    className={classes.columnTitle}
+                                    {...provided.dragHandleProps}
+                                >{title}</Typography>
+                            </div>
+                            <Divider/>
+                            {DroppableBox}
+                        </Paper>
+                    </div>
+                )}
+            </Draggable>
         );
     }
 }

@@ -12,7 +12,7 @@ import {
     ToggleModalOn,
 } from '../../action';
 import { Dispatch } from 'redux';
-import { STEP } from '../../lib/const';
+import { STEPS } from '../../lib/const';
 
 interface OwnProps {
     title: string;
@@ -24,7 +24,7 @@ const mapStateToProps = ({ candidates, components }: StoreState, ownProps: OwnPr
     selected: candidates.selected,
     isLoading: candidates.isLoading.candidates,
     modalOn: components.modalOn,
-    candidates: candidates.candidates[STEP.indexOf(ownProps.title)] || new Map<string, object>(),
+    candidates: candidates.candidates[STEPS.indexOf(ownProps.title)] || new Map<string, object>(),
 });
 
 type DispatchType =

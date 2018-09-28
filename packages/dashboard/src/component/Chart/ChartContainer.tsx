@@ -11,7 +11,7 @@ import Chart from './Chart';
 import Modal from '../Modal';
 import withRoot from '../../style/withRoot';
 import styles from '../../style/chart';
-import { GROUP, Recruitment, Time } from '../../lib/const';
+import { Group, GROUPS, GROUPS_, Recruitment, Time } from '../../lib/const';
 import titleConverter from '../../lib/titleConverter';
 import DateSelect from './DateSelect';
 import timeStampToString from '../../lib/timeStampToString';
@@ -164,37 +164,36 @@ class ChartContainer extends PureComponent<Props> {
                             />
                         </div>
                         <ExpansionPanel className={classes.expansion}>
-                            <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>组面时间</ExpansionPanelSummary>
+                            <ExpansionPanelSummary expandIcon={<ExpandMoreIcon/>}>组面时间</ExpansionPanelSummary>
                             <ExpansionPanelDetails>
                                 <div>
-                                    {GROUP.map((i, j) => {
-                                        const group = i.toLowerCase();
-                                        return <div key={j}>
-                                            <Typography variant='caption' color='textSecondary'>{i}</Typography>
-                                            {time1 && time1[group] ? time1[group].map((k, l) =>
+                                    {GROUPS_.map((i: Group, j) =>
+                                        <div key={j}>
+                                            <Typography variant='caption' color='textSecondary'>{GROUPS[j]}</Typography>
+                                            {time1 && time1[i] ? time1[i].map((k, l) =>
                                                 <DateSelect
                                                     key={l}
                                                     dateInfo={k}
-                                                    setDate={this.setDate(l, group)}
-                                                    setTime={this.setTime(l, group)}
-                                                    addDate={this.addDate(group)}
-                                                    deleteDate={this.deleteDate(l, group)}
-                                                    isLast={l === time1[group].length - 1}
-                                                    disabled={userGroup !== group}
-                                                />) : userGroup === group
+                                                    setDate={this.setDate(l, i)}
+                                                    setTime={this.setTime(l, i)}
+                                                    addDate={this.addDate(i)}
+                                                    deleteDate={this.deleteDate(l, i)}
+                                                    isLast={l === time1[i].length - 1}
+                                                    disabled={userGroup !== i}
+                                                />) : userGroup === i
                                                 ? <Button
-                                                    onClick={this.addDate(group)}
+                                                    onClick={this.addDate(i)}
                                                     variant='contained'
                                                     color='primary'
                                                 >设置</Button>
                                                 : '未设置'}
                                         </div>
-                                    })}
+                                    )}
                                 </div>
                             </ExpansionPanelDetails>
                         </ExpansionPanel>
                         <ExpansionPanel className={classes.expansion}>
-                            <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>群面时间</ExpansionPanelSummary>
+                            <ExpansionPanelSummary expandIcon={<ExpandMoreIcon/>}>群面时间</ExpansionPanelSummary>
                             <ExpansionPanelDetails>
                                 <div>
                                     {time2 ? time2.map((k, l) =>

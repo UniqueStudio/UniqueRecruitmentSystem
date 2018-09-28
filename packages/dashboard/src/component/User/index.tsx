@@ -7,7 +7,7 @@ import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 
 import styles from "../../style/user";
 import withRoot from "../../style/withRoot";
-import { GROUP, User as UserType } from '../../lib/const';
+import { GROUPS, GROUPS_, User as UserType } from '../../lib/const';
 
 interface Props extends WithStyles {
     uid: string;
@@ -107,7 +107,7 @@ class User extends PureComponent<Props> {
                     margin="normal"
                     disabled={!!group}
                 >
-                    {GROUP.map(i => <MenuItem value={i.toLowerCase()} key={i}>{i}</MenuItem>)}
+                    {GROUPS.map((i, j) => <MenuItem value={GROUPS_[j]} key={j}>{i}</MenuItem>)}
                 </TextField>
                 <TextField
                     select

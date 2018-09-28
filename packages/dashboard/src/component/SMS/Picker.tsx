@@ -13,7 +13,7 @@ interface Props extends WithStyles {
     onDelete: (name: string) => void;
 }
 
-class Step extends PureComponent<Props> {
+class Picker extends PureComponent<Props> {
 
     render() {
         const { classes, onDelete, selected } = this.props;
@@ -35,6 +35,6 @@ class Step extends PureComponent<Props> {
     }
 }
 
-export default withRoot(withStyles(styles)(Step));
+export default withRoot(withStyles(styles)(Picker));
 
 

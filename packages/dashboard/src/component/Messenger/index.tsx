@@ -14,7 +14,7 @@ import RemoveIcon from '@material-ui/icons/Remove';
 import FaceIcon from '@material-ui/icons/Face';
 import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 
-import styles from "../../style/finalInterview";
+import styles from "../../style/massInterview";
 import withRoot from "../../style/withRoot";
 import EnlargeableImage from '../EnlargeableImg';
 import timeStampToString from '../../lib/timeStampToString';
