@@ -46,9 +46,16 @@ class GroupDialog extends PureComponent<Props> {
         return (
             <Dialog open={dialogOpen} onClose={toggleDialog}>
                 <div className={classes.dialog}>
-                    {candidates.length ? candidates.map((i, j) => <Chip key={j} label={i.name} className={classes.chip}
-                                                                        onDelete={this.handleDelete(i._id)}/>)
-                        : <Typography align='center'>没有满足条件的候选人</Typography>}
+                    {
+                        candidates.length ? candidates.map((i, j) =>
+                            <Chip
+                                key={j}
+                                label={i.name}
+                                className={classes.chip}
+                                onDelete={candidates.length > 1 ? this.handleDelete(i._id) : undefined}
+                            />
+                        ) : <Typography align='center'>没有满足条件的候选人</Typography>
+                    }
                     <div className={classes.smsDetail}>
                         <Typography>{`{{姓名}}你好，请于{{时间}}在启明学院亮胜楼${place}参加{{群面/组面}}，请准时到场。`}</Typography>
                         <TextField
@@ -66,7 +73,7 @@ class GroupDialog extends PureComponent<Props> {
                             color='primary'
                             variant='contained'
                             className={classes.button}
-                            onClick={sendInterview(this.state.candidates.map(i => i._id))}
+                            onClick={sendInterview(candidates.map(i => i._id))}
                         >确认发送</Button>
                         <Button color='primary' className={classes.button}
                                 onClick={toggleDialog}>取消</Button>
