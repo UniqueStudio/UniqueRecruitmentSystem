@@ -7,6 +7,7 @@ import { Request, Response } from 'express';
 import titleConverter from '../../lib/titleConverter';
 
 const generateSMS = (name: string, title: string, step: string, type: string, group: string, rest?: string, userRest?: string) => {
+    const suffix = '请勿回复本短信';
     return type === 'accept' ?
         {
             template: 185990,
@@ -15,16 +16,16 @@ const generateSMS = (name: string, title: string, step: string, type: string, gr
                 title,
                 group,
                 step,
-                userRest ? userRest : step === STEP[1] || step === STEP[3] ? `，请进入以下链接选择面试时间：${rest}`
-                    : step === STEP[0] ? `，${rest}${STEP[1]}，请务必准时到场`
-                    : step === STEP[2] ? `，${rest}${STEP[3]}，请务必准时到场`
-                    : step === STEP[4] ? `，你已成功加入${group}组`
+                userRest ? userRest : step === STEP[1] || step === STEP[3] ? `，请进入以下链接选择面试时间：${rest}。${suffix}`
+                    : step === STEP[0] ? `，${rest}${STEP[1]}，请务必准时到场。${suffix}`
+                    : step === STEP[2] ? `，${rest}${STEP[3]}，请务必准时到场。${suffix}`
+                    : step === STEP[4] ? `，你已成功加入${group}组。${suffix}`
                     : ''
             ]
         }
         : {
             template: 185987,
-            param_list: [name, title, group, step, '不要灰心，继续学习。期待与更强大的你的相遇！']
+            param_list: [name, title, group, step, `不要灰心，继续学习。期待与更强大的你的相遇！${suffix}`]
         }
 };
 

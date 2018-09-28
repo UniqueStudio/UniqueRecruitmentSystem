@@ -27,3 +27,4 @@ services:
     volumes:
       - /etc/pki/tls/private/uniqcert.key:/etc/pki/tls/private/uniqcert.key
       - /etc/pki/tls/uniqcert.fullchain:/etc/pki/tls/uniqcert.fullchain
+      - /home/bbs/backup/resumes:/www/resumes

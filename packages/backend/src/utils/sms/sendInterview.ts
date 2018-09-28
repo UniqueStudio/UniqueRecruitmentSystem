@@ -7,11 +7,11 @@ import fetch from 'node-fetch';
 
 export const sendInterview = (req: Request, res: Response) => {
     const body = req.body;
-    const { step, candidates, code: userCode } = body;
+    const { interviewStage, candidates, code: userCode, place } = body;
     (async () => {
         try {
             const decoded = verifyJWT(req.get('Authorization'));
-            if ([step, candidates, userCode].includes(undefined)) {
+            if ([interviewStage, candidates, userCode, place].includes(undefined)) {
                 res.send({ message: '请完整填写信息', type: 'warning' });
                 return;
             }
@@ -20,7 +20,7 @@ export const sendInterview = (req: Request, res: Response) => {
                 const results = candidates.map(async (i: string) => {
                     const candidateInfo = (await database.query('candidates', { _id: new ObjectId(i) }))[0];
                     const translator = { 'morning': '上午', 'afternoon': '下午', 'evening': '晚上' };
-                    const slot = candidateInfo[`slot${step}`];
+                    const slot = candidateInfo[`slot${interviewStage}`];
                     const time = `${slot[0]}(${translator[slot[1]]})${slot[2]}`;
                     const response = await fetch(smsSendURL, {
                         method: 'POST',
@@ -31,7 +31,7 @@ export const sendInterview = (req: Request, res: Response) => {
                         body: JSON.stringify({
                             phone: candidateInfo['phone'],
                             template: 96404,
-                            param_list: [candidateInfo['name'], time, '', step === 2 ? '群面' : `${candidateInfo['group']}组组面`]
+                            param_list: [candidateInfo['name'], time, place, interviewStage === 2 ? '群面' : `${candidateInfo['group']}组组面`]
                         })
                     });
                     const result = await response.json();

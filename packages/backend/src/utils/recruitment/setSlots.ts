@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { verifyJWT } from '../../lib/checkData';
-import { arrangeTime } from '../../lib/arrangeTime';
+import { allocateTime } from '../../lib/allocateTime';
 import { database } from '../../app';
 import { ObjectId } from 'mongodb';
 import { GROUPS, Recruitment } from '../../lib/consts';
@@ -42,7 +42,7 @@ export const setSlots = (req: Request, res: Response) => {
                     abandon: false,
                     rejected: false
                 });
-                const result = arrangeTime(slots, candidates, 1, recruitment.time1[group].map(i => i.date));
+                const result = allocateTime(slots, candidates, 1, recruitment.time1[group].map(i => i.date));
                 const promises = result.map(async i => {
                     if (i['slot1']) {
                         await database.update('candidates', { _id: new ObjectId(i['_id']) }, { slot1: i['slot1'] })
@@ -65,7 +65,7 @@ export const setSlots = (req: Request, res: Response) => {
                     abandon: false,
                     rejected: false
                 });
-                const result = arrangeTime(slots, candidates, 2, recruitment.time2.map(i => i.date));
+                const result = allocateTime(slots, candidates, 2, recruitment.time2.map(i => i.date));
                 const promises = result.map(async i => {
                     if (i['slot2']) {
                         await database.update('candidates', { _id: new ObjectId(i['_id']) }, { slot2: i['slot2'] })
