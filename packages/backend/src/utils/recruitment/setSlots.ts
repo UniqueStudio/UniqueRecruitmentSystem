@@ -3,7 +3,7 @@ import { verifyJWT } from '../../lib/checkData';
 import { arrangeTime } from '../../lib/arrangeTime';
 import { database } from '../../app';
 import { ObjectId } from 'mongodb';
-import { GROUPS } from '../../lib/consts';
+import { GROUPS, Recruitment } from '../../lib/consts';
 
 export const setSlots = (req: Request, res: Response) => {
     (async () => {
@@ -24,7 +24,7 @@ export const setSlots = (req: Request, res: Response) => {
                 return;
             }
             let failed = 0;
-            const recruitment = (await database.query('recruitments', { title }))[0];
+            const recruitment: Recruitment = (await database.query('recruitments', { title }))[0];
             if (!recruitment) {
                 res.send({ message: '招新不存在!', type: 'warning' });
                 return;
@@ -42,7 +42,7 @@ export const setSlots = (req: Request, res: Response) => {
                     abandon: false,
                     rejected: false
                 });
-                const result = arrangeTime(slots, candidates, 1);
+                const result = arrangeTime(slots, candidates, 1, recruitment.time1[group].map(i => i.date));
                 const promises = result.map(async i => {
                     if (i['slot1']) {
                         await database.update('candidates', { _id: new ObjectId(i['_id']) }, { slot1: i['slot1'] })
@@ -54,6 +54,10 @@ export const setSlots = (req: Request, res: Response) => {
                     res.send({ type: 'success', result, failed, interview: 1 });
                 })
             } else {
+                if (!recruitment.time2) {
+                    res.send({ message: '请先设置群面时间!', type: 'warning' });
+                    return;
+                }
                 await database.update('recruitments', { title }, { slots });
                 const candidates = await database.query('candidates', {
                     title,
@@ -61,7 +65,7 @@ export const setSlots = (req: Request, res: Response) => {
                     abandon: false,
                     rejected: false
                 });
-                const result = arrangeTime(slots, candidates, 2);
+                const result = arrangeTime(slots, candidates, 2, recruitment.time2.map(i => i.date));
                 const promises = result.map(async i => {
                     if (i['slot2']) {
                         await database.update('candidates', { _id: new ObjectId(i['_id']) }, { slot2: i['slot2'] })

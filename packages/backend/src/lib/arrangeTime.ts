@@ -10,13 +10,18 @@ const converter = (selections: object[]) => {
     return result;
 };
 
-export const arrangeTime = (slots: number[], candidates: Candidate[], interview: 1 | 2) => {
+export const arrangeTime = (slots: number[], candidates: Candidate[], interview: 1 | 2, dates: string[]) => {
 
-    const time = {
+    const timeSlots = {
         morning: ['8:00', '8:30', '9:00', '9:30', '10:00', '10:30', '11:00', '11:30'],
         afternoon: ['13:30', '14:00', '14:30', '15:00', '15:30', '16:00', '16:30', '17:00'],
         evening: ['18:30', '19:00', '19:30', '20:00', '20:30', '21:00', '21:30', '22:00']
     };
+
+    let time = {};
+    dates.map(i => {
+        time[i] = timeSlots;
+    });
 
     let result: object[] = [];
     let selections = candidates.map(i => {
@@ -25,7 +30,7 @@ export const arrangeTime = (slots: number[], candidates: Candidate[], interview:
         }
         return {
             _id: i._id,
-                select: converter(i[`time${interview}`]),
+            select: converter(i[`time${interview}`]),
             [`slot${interview}`]: i[`slot${interview}`],
             date: i[`time${interview}`].map((i: object) => i['date'])
         }
@@ -57,7 +62,7 @@ export const arrangeTime = (slots: number[], candidates: Candidate[], interview:
                     i[`slot${interview}`] = [
                         i.date[~~(j / 3)],
                         ['morning', 'afternoon', 'evening'][j % 3],
-                        time[['morning', 'afternoon', 'evening'][j % 3]].splice(0, 1)[0] || ''
+                        time[i.date[~~(j / 3)]][['morning', 'afternoon', 'evening'][j % 3]].splice(0, 1)[0] || ''
                     ];
                     hasPlaced = true;
                 }
