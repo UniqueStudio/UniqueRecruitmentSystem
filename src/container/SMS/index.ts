@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import Template from '../../component/Template';
+import Template from '../../component/SMS';
 import { sendSMS, SendSMS, toggleSnackbarOn, ToggleSnackbarOn } from '../../action';
 import { Dispatch } from 'redux';
 import { Candidate } from '../../lib/const';

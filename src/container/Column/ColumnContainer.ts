@@ -40,7 +40,7 @@ const mapDispatchToProps = (dispatch: DispatchType) => ({
     deselect: (name: string[]) => dispatch(deselectCandidate(name)),
     select: (name: string[]) => dispatch(selectCandidate(name)),
     toggleFabOff: () => dispatch(toggleFabOff()),
-    toggleSnakcbarOn: (info: string, color: string = 'info') => dispatch(toggleSnackbarOn(info, color)),
+    toggleSnackbarOn: (info: string, color: string = 'info') => dispatch(toggleSnackbarOn(info, color)),
     remove: (cid: string) => dispatch(removeCandidateStart(cid)),
 });
 
