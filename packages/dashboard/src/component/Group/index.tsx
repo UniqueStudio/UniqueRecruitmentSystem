@@ -168,8 +168,8 @@ class Group extends PureComponent<Props> {
                     handleInput={this.handleInput}
                     code={code}
                     place={place}
-                    sendInterview={this.sendInterview(filteredCandidates.map(i => i._id))}
-                    candidates={filteredCandidates.map(i => i.name)}
+                    sendInterview={this.sendInterview}
+                    candidates={filteredCandidates}
                 />
                 {!disabled && <GroupModal
                     userGroup={userGroup}

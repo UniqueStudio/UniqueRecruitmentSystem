@@ -10,7 +10,7 @@ class MassInterview extends PureComponent<WithStyles> {
         const { classes } = this.props;
         return (
             <div className={classes.container}>
-                <ColumnContainer type='final' />
+                <ColumnContainer type='massInterview'/>
                 <Messenger />
             </div>
         );
