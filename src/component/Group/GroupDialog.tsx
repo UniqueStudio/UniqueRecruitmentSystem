@@ -8,6 +8,7 @@ import Button from '@material-ui/core/Button';
 import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 import withRoot from '../../style/withRoot';
 import styles from '../../style/group';
+import { Candidate } from "../../lib/const";
 
 interface Props extends WithStyles {
     dialogOpen: boolean;
@@ -15,18 +16,38 @@ interface Props extends WithStyles {
     handleInput: (name: string) => (event: React.ChangeEvent) => void;
     code: string;
     place: string;
-    sendInterview: () => void;
-    candidates: string[];
+    sendInterview: (candidates: string[]) => () => void;
+    candidates: Candidate[];
 }
 
 class GroupDialog extends PureComponent<Props> {
+    state = {
+        candidates: this.props.candidates
+    };
+
+    handleDelete = (cid: string) => () => {
+        this.setState({
+            candidates: this.state.candidates.filter(i => i._id !== cid)
+        })
+    };
+
+    componentDidUpdate() {
+        if (!this.state.candidates.length) {
+            this.setState({
+                candidates: this.props.candidates
+            })
+        }
+    }
+
     render() {
-        const { dialogOpen, toggleDialog, sendInterview, classes, code, handleInput, candidates, place } = this.props;
+        const { dialogOpen, toggleDialog, sendInterview, classes, code, handleInput, place } = this.props;
+        const { candidates } = this.state;
 
         return (
             <Dialog open={dialogOpen} onClose={toggleDialog}>
                 <div className={classes.dialog}>
-                    {candidates.length ? candidates.map((i, j) => <Chip key={j} label={i} className={classes.chip}/>)
+                    {candidates.length ? candidates.map((i, j) => <Chip key={j} label={i.name} className={classes.chip}
+                                                                        onDelete={this.handleDelete(i._id)}/>)
                         : <Typography align='center'>没有满足条件的候选人</Typography>}
                     <div className={classes.smsDetail}>
                         <Typography>{`{{姓名}}你好，请于{{时间}}在启明学院亮胜楼${place}参加{{群面/组面}}，请准时到场。`}</Typography>
@@ -45,7 +66,7 @@ class GroupDialog extends PureComponent<Props> {
                             color='primary'
                             variant='contained'
                             className={classes.button}
-                            onClick={sendInterview}
+                            onClick={sendInterview(this.state.candidates.map(i => i._id))}
                         >确认发送</Button>
                         <Button color='primary' className={classes.button}
                                 onClick={toggleDialog}>取消</Button>
