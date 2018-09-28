@@ -58,6 +58,9 @@ export const allocateTime = (slots: number[], candidates: Candidate[], interview
                     slots[j] -= 1;
                     const date = i.date[~~(j / 3)];
                     const period = ['morning', 'afternoon', 'evening'][j % 3];
+                    if (!time[date]) {
+                        continue;
+                    }
                     const allocatedTime = time[date][period].splice(0, 1)[0];
                     if (!allocatedTime) {
                         continue;

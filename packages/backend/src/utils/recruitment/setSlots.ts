@@ -34,7 +34,7 @@ export const setSlots = (req: Request, res: Response) => {
                     res.send({ message: '请先设置组面时间!', type: 'warning' });
                     return;
                 }
-                await database.update('recruitments', { title }, recruitment.time1.slots ? { [`time1.slots.${group}`]: slots } : { [`time1.slots`]: { [group]: slots } });
+                await database.update('recruitments', { title }, recruitment.slot1 ? { [`slot1.${group}`]: slots } : { slot1: { [group]: slots } });
                 const candidates = await database.query('candidates', {
                     group,
                     title,
@@ -58,7 +58,7 @@ export const setSlots = (req: Request, res: Response) => {
                     res.send({ message: '请先设置群面时间!', type: 'warning' });
                     return;
                 }
-                await database.update('recruitments', { title }, { slots });
+                await database.update('recruitments', { title }, { slot2: slots });
                 const candidates = await database.query('candidates', {
                     title,
                     step: 4,
