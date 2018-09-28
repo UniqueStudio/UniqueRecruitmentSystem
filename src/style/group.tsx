@@ -72,6 +72,12 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
     },
     dialog: {
         margin: theme.spacing.unit * 2
+    },
+    smsDetail: {
+        margin: theme.spacing.unit * 2,
+    },
+    placeInput: {
+        marginTop: theme.spacing.unit
     }
 });
 

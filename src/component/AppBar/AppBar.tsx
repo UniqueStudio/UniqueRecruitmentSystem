@@ -15,7 +15,7 @@ import Select from './AppBarSelect';
 import Anchor from '../Anchor';
 import { Redirect, RouteComponentProps } from 'react-router-dom';
 import { Header } from './Header';
-import { GROUP, STEP } from '../../lib/const';
+import { GROUPS, GROUPS_, STEPS } from '../../lib/const';
 
 interface Props extends WithStyles {
     open: boolean;
@@ -59,9 +59,9 @@ class Bar extends PureComponent<Props & RouteComponentProps<{}>> {
         const { pathname } = location;
         const pathToTitle = {
             '/': '联创团队招新管理系统',
-            '/commonInterview': '2018年秋季招新',
+            '/candidates': '2018年秋季招新',
             '/data': '历年数据展示',
-            '/finalInterview': '2018秋招・群面',
+            '/massInterview': '2018秋招・群面',
             '/myInfo': '个人信息管理',
             '/myGroup': '组员信息管理',
         };
@@ -81,10 +81,9 @@ class Bar extends PureComponent<Props & RouteComponentProps<{}>> {
                         <MenuIcon />
                     </IconButton>
                     <Header title={pathToTitle[pathname]}>
-                        {pathname === '/commonInterview' && <>
-                            <Select data={GROUP} onChange={this.handleChange} currentValue={group} />
-                            <Select data={STEP} onChange={() => {
-                            }} currentValue='' />
+                        {pathname === '/candidates' && <>
+                            <Select data={GROUPS} values={GROUPS_} onChange={this.handleChange} currentValue={group}/>
+                            <Select data={STEPS} values={STEPS} currentValue=''/>
                         </>}
                     </Header>
                     {loggedIn ?

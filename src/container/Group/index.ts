@@ -22,7 +22,7 @@ const mapStateToProps = ({ candidates, user, recruitments }: StoreState) => ({
     candidates: candidates.candidates || [],
     group: user.group,
     currentRecruitment: recruitments.recruitments.filter(i => i.title === PENDING_RECRUITMENT)[0],
-    userInfo: user.info,
+    userGroup: user.info.group,
     isLoading: candidates.isLoading.candidates
 });
 
