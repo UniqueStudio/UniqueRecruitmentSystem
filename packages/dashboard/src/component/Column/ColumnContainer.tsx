@@ -6,7 +6,7 @@ import withRoot from "../../style/withRoot";
 import styles from "../../style/column";
 import Column from "../../container/Column/Column";
 
-import { Candidate, STEP } from '../../lib/const';
+import { Candidate, STEPS } from '../../lib/const';
 import Fab from '../Fab';
 import ColumnDialog from './ColumnDialog';
 import ColumnModal from './ColumnModal';
@@ -25,12 +25,12 @@ interface Props extends WithStyles {
     toggleFabOff: () => void;
     move: (from: number, to: number, cid: string, position: number) => void;
     remove: (cid: string) => void;
-    toggleSnakcbarOn: (info: string, color?: string) => void;
+    toggleSnackbarOn: (info: string, color?: string) => void;
 }
 
 class Container extends PureComponent<Props> {
     state = {
-        steps: this.props.type === 'final' ? STEP.slice(4) : STEP,
+        steps: this.props.type === 'final' ? STEPS.slice(4) : STEPS,
         flag: false,
         dialog: false,
         modal: false,
@@ -56,7 +56,7 @@ class Container extends PureComponent<Props> {
             });
             return;
         } else if (result.type = 'CANDIDATE') {
-            this.props.move(STEP.indexOf(source.droppableId), STEP.indexOf(destination.droppableId), result.draggableId, destination.index);
+            this.props.move(STEPS.indexOf(source.droppableId), STEPS.indexOf(destination.droppableId), result.draggableId, destination.index);
         }
     };
 
@@ -68,9 +68,9 @@ class Container extends PureComponent<Props> {
 
     handleRemove = (selected: string[]) => () => {
         this.toggleOpen('dialog')();
-        const { toggleSnakcbarOn, remove } = this.props;
+        const { toggleSnackbarOn, remove } = this.props;
         if (selected.length === 0) {
-            toggleSnakcbarOn('你没有选中任何人');
+            toggleSnackbarOn('你没有选中任何人');
             return;
         }
         selected.map(i => remove(i));

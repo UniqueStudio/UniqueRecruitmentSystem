@@ -56,8 +56,7 @@ class Candidate extends PureComponent<Props> {
 
     render() {
         const { cid, info, selected, classes, toggleModalOn, changeInputting, provided, fabOn, step } = this.props;
-        const {sex, isQuick} = this.props.info
-        const { name, grade, institute, comments, abandon, rejected } = info;
+        const { name, grade, institute, comments, abandon, rejected, sex, isQuick } = info;
         const evaluations = Object.values(comments).map(i => i['evaluation']);
         const red = colorToAlpha(dangerColor, 0.1),
             yellow = colorToAlpha(warningColor, 0.1),
@@ -67,9 +66,7 @@ class Candidate extends PureComponent<Props> {
         const coloredPanelStyle = {
             background: abandon ? 'rgba(0, 0, 0, 0.1)' : evaluations.length === 0 ? 'rgba(0, 0, 0, 0)' : `linear-gradient(to right, ${green}, ${green} ${greenP}%, ${yellow} ${greenP}%, ${yellow} ${greenP + yellowP}%, ${red} ${greenP + yellowP}%, ${red})`
         };
-        const suffix = () => 
-            (sex === "Male" ? "": "👩") +
-            (isQuick ? "⚡️" : "")
+        const suffix = () => (sex === "Male" ? "" : "👩") + (isQuick ? "⚡️" : "");
 
         const card = (
             <div onMouseOver={this.handleOpen}
@@ -100,10 +97,10 @@ class Candidate extends PureComponent<Props> {
                                         toggleModalOn(cid);
                                         changeInputting('', '');
                                     }}>
-                            <InfoIcon />
+                            <InfoIcon/>
                         </IconButton>
                         {/* this div is used to get avoid of default style on :last-child */}
-                        <div style={{ position: 'absolute' }} />
+                        <div style={{ position: 'absolute' }}/>
                     </div>
                 </Card>
             </div>

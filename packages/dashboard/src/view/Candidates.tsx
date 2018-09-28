@@ -5,10 +5,10 @@ import withRoot from "../style/withRoot";
 
 import ColumnContainer from '../container/Column/ColumnContainer';
 
-class CommonInterview extends PureComponent<WithStyles> {
+class Candidates extends PureComponent<WithStyles> {
     render() {
         return <ColumnContainer type='common' />;
     }
 }
 
-export default withRoot(withStyles({})(CommonInterview));
+export default withRoot(withStyles({})(Candidates));

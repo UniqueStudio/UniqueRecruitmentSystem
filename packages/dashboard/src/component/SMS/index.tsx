@@ -9,10 +9,10 @@ import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 
 import styles from '../../style/template'
 import withRoot from '../../style/withRoot';
-import TemplateStepOne from './TemplateStepOne';
-import TemplateStepTwo from './TemplateStepTwo';
+import TemplateStepOne from './Picker';
+import TemplateStepTwo from './SMSDetail';
 import Verify from '../../container/Verify';
-import { Candidate, PENDING_RECRUITMENT, STEP } from '../../lib/const';
+import { Candidate, PENDING_RECRUITMENT, STEPS } from '../../lib/const';
 
 interface Props extends WithStyles {
     group: string;
@@ -49,6 +49,7 @@ class Template extends PureComponent<Props> {
         code: '',
         sent: false
     };
+
     handleBack = () => {
         this.setState({
             activeStep: this.state.activeStep - 1,
@@ -63,7 +64,7 @@ class Template extends PureComponent<Props> {
             if (step === '{{xx流程}}') {
                 toggleSnackbar('请选择流程！');
                 return;
-            } else if ((step === STEP[0] || step === STEP[2]) && type === 'accept' && !rest) {
+            } else if ((step === STEPS[0] || step === STEPS[2]) && type === 'accept' && !rest) {
                 if (!time) {
                     toggleSnackbar('请填写时间！');
                     return;
@@ -95,7 +96,7 @@ class Template extends PureComponent<Props> {
             group: group.toLowerCase(),
             title: PENDING_RECRUITMENT
         };
-        if ((step === STEP[0] || step === STEP[2]) && type === 'accept') {
+        if ((step === STEPS[0] || step === STEPS[2]) && type === 'accept') {
             content['time'] = time;
             content['place'] = place;
         }

@@ -60,7 +60,7 @@ class Menu extends PureComponent<Props> {
                             <ListItemText primary="历年数据" />
                         </ListItem>
                     </Anchor>
-                    <Anchor to='/commonInterview'>
+                    <Anchor to='/candidates'>
                         <ListItem button onClick={open ? toggleOpen : undefined}>
                             <ListItemIcon>
                                 <DashboardIcon />
@@ -68,7 +68,7 @@ class Menu extends PureComponent<Props> {
                             <ListItemText primary="报名审核" />
                         </ListItem>
                     </Anchor>
-                    <Anchor to='/finalInterview'>
+                    <Anchor to='/massInterview'>
                         <ListItem button onClick={open ? toggleOpen : undefined}>
                             <ListItemIcon>
                                 <GroupWorkIcon />

@@ -9,8 +9,8 @@ import withRoot from "../style/withRoot";
 import Content from "../container/Content";
 import Index from './Index';
 import Data from './Data';
-import CommonInterview from './CommonInterview';
-import FinalInterview from './FinalInterview';
+import Candidates from './Candidates';
+import MassInterview from './MassInterview';
 import MyInfo from './MyInfo';
 import MyGroup from './MyGroup';
 
@@ -24,8 +24,8 @@ class Main extends PureComponent<WithStyles> {
                 <Content>
                     <Route path='/' exact component={Index} />
                     <Route path='/data' component={Data} />
-                    <Route path='/commonInterview' component={CommonInterview} />
-                    <Route path='/finalInterview' component={FinalInterview} />
+                    <Route path='/candidates' component={Candidates}/>
+                    <Route path='/massInterview' component={MassInterview}/>
                     <Route path='/myInfo' component={MyInfo} />
                     <Route path='/myGroup' component={MyGroup} />
                 </Content>

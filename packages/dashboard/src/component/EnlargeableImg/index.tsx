@@ -2,7 +2,7 @@ import React, { PureComponent } from "react";
 import Dialog from '@material-ui/core/Dialog';
 import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 
-import styles from '../../style/finalInterview';
+import styles from '../../style/massInterview';
 import withRoot from '../../style/withRoot';
 
 interface Props extends WithStyles {

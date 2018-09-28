@@ -9,7 +9,7 @@ import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 import styles from '../../style/template'
 import withRoot from '../../style/withRoot';
 import generateModel from '../../lib/generateModel';
-import { STEP } from '../../lib/const';
+import { STEPS } from '../../lib/const';
 
 export interface MainInfo extends WithStyles {
     type: string;
@@ -24,7 +24,7 @@ interface Props extends MainInfo {
     handleChange: (name: string) => (event: React.ChangeEvent) => void;
 }
 
-class Step extends PureComponent<Props> {
+class SMSDetail extends PureComponent<Props> {
 
     render() {
         const { classes, group, type, step, handleChange, time, place, rest } = this.props;
@@ -70,7 +70,7 @@ class Step extends PureComponent<Props> {
                         value={step}
                         onChange={handleChange("step")}
                     >
-                        {STEP.slice(0, 5).map((i, j) => (
+                        {STEPS.slice(0, 5).map((i, j) => (
                             <MenuItem key={j} value={i}>
                                 {i}
                             </MenuItem>
@@ -87,7 +87,7 @@ class Step extends PureComponent<Props> {
                         onChange={handleChange('rest')}
                     />}
                 </div>
-                {(step === STEP[0] || step === STEP[2]) && type === 'accept' && !rest &&
+                {(step === STEPS[0] || step === STEPS[2]) && type === 'accept' && !rest &&
                 <div className={classNames(classes.templateContent, classes.templateItem, classes.templateParams)}>
                     <TextField
                         label="时间"
@@ -113,6 +113,6 @@ class Step extends PureComponent<Props> {
     }
 }
 
-export default withRoot(withStyles(styles)(Step));
+export default withRoot(withStyles(styles)(SMSDetail));
 
 

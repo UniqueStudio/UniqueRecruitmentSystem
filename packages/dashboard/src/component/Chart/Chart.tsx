@@ -16,7 +16,7 @@ import { Doughnut } from 'react-chartjs-2';
 
 import withRoot from '../../style/withRoot';
 import styles from '../../style/chart';
-import { Data, GROUP, STEP } from '../../lib/const';
+import { Data, GROUPS, STEPS } from '../../lib/const';
 
 const getColors = (i: number) => [red[i], purple[i], indigo[i], blue[i], cyan[i], green[i], yellow[i], orange[i]];
 
@@ -31,7 +31,7 @@ interface Props extends WithStyles {
 class Chart extends PureComponent<Props> {
 
     state = {
-        labels: GROUP,
+        labels: GROUPS,
         data: [...this.props.totalData],
         clicked: false,
         title: this.props.title
@@ -44,15 +44,15 @@ class Chart extends PureComponent<Props> {
         if (!this.state.clicked && e.length) {
             const i = e['0']._index;
             this.setState({
-                labels: STEP/*.map((i, j) => expired ? `${i.slice(0, 2)}${j === 5 ? '' : '被刷'}` : i)*/,
-                data: { ...stepData }[GROUP[i].toLowerCase()],
+                labels: STEPS/*.map((i, j) => expired ? `${i.slice(0, 2)}${j === 5 ? '' : '被刷'}` : i)*/,
+                data: { ...stepData }[GROUPS[i].toLowerCase()],
                 clicked: true,
-                title: `${GROUP[i]}组各轮情况`
+                title: `${GROUPS[i]}组各轮情况`
             });
         } else if (this.state.clicked === Boolean(e.length)) {
             this.setState({
                 title: title,
-                labels: GROUP,
+                labels: GROUPS,
                 data: [...totalData],
                 clicked: false,
             });
