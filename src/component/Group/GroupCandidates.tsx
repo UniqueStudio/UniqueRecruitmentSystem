@@ -1,4 +1,5 @@
 import React, { PureComponent } from 'react';
+import classNames from 'classnames';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -57,7 +58,7 @@ class Candidates extends PureComponent<Props> {
         const { classes, candidates, disabled, interviewStage, handleChange, toggleDialog, toggleModal } = this.props;
         const { dialogOpen, time } = this.state;
         return (
-            <Paper className={classes.paper}>
+            <Paper className={classNames(classes.paper, classes.candidatesPaper)}>
                 <div className={classes.title}>
                     <div/>
                     <Typography variant="title">
@@ -74,18 +75,10 @@ class Candidates extends PureComponent<Props> {
                 <Table className={classes.table}>
                     <TableHead>
                         <TableRow>
-                            <TableCell classes={{
-                                root: classes.tableCell
-                            }}>姓名</TableCell>
-                            <TableCell classes={{
-                                root: classes.tableCell
-                            }}>选择情况</TableCell>
-                            <TableCell classes={{
-                                root: classes.tableCell
-                            }}>分配结果</TableCell>
-                            <TableCell classes={{
-                                root: classes.tableCell
-                            }}/>
+                            <TableCell classes={{ root: classes.tableCell }}>姓名</TableCell>
+                            <TableCell classes={{ root: classes.tableCell }}>选择情况</TableCell>
+                            <TableCell classes={{ root: classes.tableCell }}>分配结果</TableCell>
+                            <TableCell classes={{ root: classes.tableCell }}/>
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -97,15 +90,11 @@ class Candidates extends PureComponent<Props> {
                                 <TableRow key={j}>
                                     <TableCell component="th" scope="row"
                                                classes={{ root: classes.tableCell }}>{i.name}</TableCell>
-                                    <TableCell classes={{
-                                        root: classes.tableCell
-                                    }}>{state}</TableCell>
-                                    <TableCell classes={{
-                                        root: classes.tableCell
-                                    }}>{slot && slot.length ? `${slot[0]}-${slot[2]}` : '未分配'}</TableCell>
-                                    <TableCell classes={{
-                                        root: classes.tableCell
-                                    }}>
+                                    <TableCell classes={{ root: classes.tableCell }}>{state}</TableCell>
+                                    <TableCell
+                                        classes={{ root: classes.tableCell }}
+                                    >{slot && slot.length ? `${slot[0]}-${slot[2]}` : '未分配'}</TableCell>
+                                    <TableCell classes={{ root: classes.tableCell }}>
                                         <Button color='primary' onClick={this.toggleDialog(i._id)}>设置</Button>
                                     </TableCell>
                                 </TableRow>
@@ -138,8 +127,14 @@ class Candidates extends PureComponent<Props> {
                             value={time}
                             InputLabelProps={{ shrink: true }}
                             onChange={this.handleChange}
+                            className={classes.timeSelect}
                         />
-                        <Button color='primary' variant='contained' onClick={this.setTime} disabled={!time}>确定</Button>
+                        <Button
+                            color='primary'
+                            variant='contained'
+                            onClick={this.setTime}
+                            disabled={!time}
+                        >确定</Button>
                     </div>
                 </Dialog>
             </Paper>
