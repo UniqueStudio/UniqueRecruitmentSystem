@@ -1,4 +1,5 @@
 import React, { PureComponent } from 'react';
+import classNames from 'classnames';
 import Paper from '@material-ui/core/Paper';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -20,7 +21,7 @@ class GroupMembers extends PureComponent<Props> {
     render() {
         const { classes, group } = this.props;
         return (
-            <Paper className={classes.paper}>
+            <Paper className={classNames(classes.paper, classes.membersPaper)}>
                 <div className={classes.title}>
                     <Typography variant="title">
                         小组成员信息

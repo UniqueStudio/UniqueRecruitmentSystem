@@ -88,6 +88,14 @@ class Container extends PureComponent<Props> {
         type === 'massInterview' ? changeGroup('interview') : changeGroup(group === 'interview' ? userGroup : group);
     }
 
+    componentDidUpdate(prevProps: Props) {
+        if (prevProps.group !== this.props.group) {
+            this.setState({
+                steps: this.props.type === 'massInterview' ? STEPS.slice(4) : STEPS,
+            })
+        }
+    }
+
     render() {
         const { classes, selected, candidates, fabOn, snackbarOn, select, deselect, toggleFabOff, group, userGroup } = this.props;
         const current = candidates[Math.max(fabOn, 0)] || new Map<string, Candidate>();
