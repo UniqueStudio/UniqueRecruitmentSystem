@@ -19,6 +19,7 @@ interface Props extends WithStyles {
     sendInterview: (content: object) => void;
     toggleSnackbar: (message: string, color: string) => void;
     submit: (title: string, slots: number[], group: string) => void;
+    setCandidateSlot: (id: string, time: object) => void;
 }
 
 class Group extends PureComponent<Props> {
@@ -105,6 +106,20 @@ class Group extends PureComponent<Props> {
         this.toggleModal();
     };
 
+    setTime = (id: string, time: string) => {
+        const { interviewStage } = this.state;
+        const { setCandidateSlot } = this.props;
+        const key = `slot${interviewStage}`;
+        const split = time.split('T');
+        const period = (time: string) => time <= '12:00' ? 'morning' : time <= '18:00' ? 'afternoon' : 'evening';
+        const value = [
+            split[0],
+            period(split[1]),
+            split[1],
+        ];
+        setCandidateSlot(id, { [key]: value });
+    };
+
     sendInterview = (candidates: string[]) => () => {
         const { code, interviewStage, place } = this.state;
         this.props.sendInterview({
@@ -161,6 +176,7 @@ class Group extends PureComponent<Props> {
                     toggleModal={this.toggleModal}
                     toggleDialog={this.toggleDialog}
                     handleChange={this.handleChange}
+                    setTime={this.setTime}
                 />
                 <GroupDialog
                     dialogOpen={dialogOpen}

@@ -32,11 +32,9 @@ class GroupDialog extends PureComponent<Props> {
     };
 
     componentDidUpdate() {
-        if (!this.state.candidates.length) {
-            this.setState({
-                candidates: this.props.candidates
-            })
-        }
+        this.setState({
+            candidates: this.props.candidates
+        })
     }
 
     render() {

@@ -11,6 +11,8 @@ import {
     GetRecruitments,
     sendInterview,
     SendInterview,
+    SetCandidateSlot,
+    setCandidateSlot,
     submitSlots,
     SubmitSlots,
     toggleSnackbarOn,
@@ -26,7 +28,14 @@ const mapStateToProps = ({ candidates, user, recruitments }: StoreState) => ({
     isLoading: candidates.isLoading.candidates
 });
 
-type DispatchType = Dispatch<ToggleSnackbarOn | GetGroupInfo | GetCandidates | GetRecruitments | SubmitSlots | SendInterview>
+type DispatchType =
+    Dispatch<ToggleSnackbarOn
+        | GetGroupInfo
+        | GetCandidates
+        | GetRecruitments
+        | SubmitSlots
+        | SendInterview
+        | SetCandidateSlot>
 
 const mapDispatchToProps = (dispatch: DispatchType) => ({
     requestCandidate: (group: string) => dispatch(getCandidates(group)),
@@ -35,6 +44,7 @@ const mapDispatchToProps = (dispatch: DispatchType) => ({
     sendInterview: (content: object) => dispatch(sendInterview(content)),
     toggleSnackbar: (message: string, color: string) => dispatch(toggleSnackbarOn(message, color)),
     submit: (title: string, slots: number[], group: string) => dispatch(submitSlots(title, slots, group)),
+    setCandidateSlot: (id: string, time: object) => dispatch(setCandidateSlot(id, time))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Group);
