@@ -9,8 +9,8 @@ const info = localStorage.getItem('userInfo');
 const group = sessionStorage.getItem('groupInfo');
 
 const init = {
-    loggedIn: !!localStorage.getItem('uid') && time && time > +new Date() / 1000,
-    uid: localStorage.getItem('uid') || '',
+    loggedIn: !!info && time && time > +new Date() / 1000,
+    uid: (info && JSON.parse(info)._id) || '',
     isLoading: false,
     isScanning: false,
     info: info ? JSON.parse(info) : {},

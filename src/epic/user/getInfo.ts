@@ -16,7 +16,7 @@ export const getInfoEpic: Epic<Action, Action, StoreState, Dependencies> = (acti
                 return errHandler({ message: 'token不存在', type: 'danger' }, USER);
             }
             const user = localStorage.getItem('userInfo');
-            if (user && action.uid === localStorage.getItem('uid')) {
+            if (user && action.uid === JSON.parse(user)._id) {
                 return of(
                     setUserInfo(JSON.parse(user)),
                 );
