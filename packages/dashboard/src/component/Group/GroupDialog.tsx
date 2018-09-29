@@ -31,10 +31,12 @@ class GroupDialog extends PureComponent<Props> {
         })
     };
 
-    componentDidUpdate() {
-        this.setState({
-            candidates: this.props.candidates
-        })
+    componentDidUpdate(prevProps: Props) {
+        if (prevProps.candidates !== this.props.candidates && prevProps.place === this.props.place && prevProps.code === this.props.code) {
+            this.setState({
+                candidates: prevProps.candidates
+            })
+        }
     }
 
     render() {
@@ -51,8 +53,9 @@ class GroupDialog extends PureComponent<Props> {
                                 label={i.name}
                                 className={classes.chip}
                                 onDelete={candidates.length > 1 ? this.handleDelete(i._id) : undefined}
+                                color='primary'
                             />
-                        ) : <Typography align='center'>没有满足条件的候选人</Typography>
+                        ) : <Typography align='center' variant='title'>没有满足条件的候选人</Typography>
                     }
                     <div className={classes.smsDetail}>
                         <Typography>{`{{姓名}}你好，请于{{时间}}在启明学院亮胜楼${place}参加{{群面/组面}}，请准时到场。`}</Typography>
