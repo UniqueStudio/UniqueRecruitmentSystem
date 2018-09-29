@@ -112,7 +112,7 @@ app.get('/user/group/:group', getGroup);
 // add new candidate
 app.post('/candidates', upload.single('resume'), addCandidate);
 
-// set interview time
+// set candidates data
 app.put('/candidates/:cid', setCandidate);
 
 // get all candidates in the latest recruitment
