@@ -46,7 +46,9 @@ class Group extends PureComponent<Props> {
         const { requestCandidate, userGroup: group } = this.props;
         this.setState({
             interviewStage,
-            counts: []
+            counts: [],
+            code: '',
+            place: ''
         });
         interviewStage === 1 ? requestCandidate(group) : requestCandidate('interview');
     };

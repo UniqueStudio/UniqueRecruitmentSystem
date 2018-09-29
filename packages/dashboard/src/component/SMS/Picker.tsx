@@ -27,6 +27,7 @@ class Picker extends PureComponent<Props> {
                             label={`${i.name} ${i.grade} ${i.institute}`}
                             onDelete={() => onDelete(i._id)}
                             className={classes.templateItem}
+                            color='primary'
                         />
                     )
                 }
