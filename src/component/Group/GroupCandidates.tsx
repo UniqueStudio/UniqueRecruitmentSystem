@@ -138,8 +138,14 @@ class Candidates extends PureComponent<Props> {
                             value={time}
                             InputLabelProps={{ shrink: true }}
                             onChange={this.handleChange}
+                            className={classes.timeSelect}
                         />
-                        <Button color='primary' variant='contained' onClick={this.setTime} disabled={!time}>确定</Button>
+                        <Button
+                            color='primary'
+                            variant='contained'
+                            onClick={this.setTime}
+                            disabled={!time}
+                        >确定</Button>
                     </div>
                 </Dialog>
             </Paper>

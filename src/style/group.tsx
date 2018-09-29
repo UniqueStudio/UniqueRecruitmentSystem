@@ -78,6 +78,9 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
     },
     placeInput: {
         marginTop: theme.spacing.unit
+    },
+    timeSelect: {
+        marginRight: theme.spacing.unit
     }
 });
 
