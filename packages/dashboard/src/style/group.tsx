@@ -15,9 +15,16 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
         padding: theme.spacing.unit * 2,
         display: 'flex',
         flexDirection: 'column',
-        alignItems: 'center',
+        alignItems: 'center'
+    },
+    membersPaper: {
         [theme.breakpoints.up('md')]: {
-            width: '45%',
+            width: '30%',
+        }
+    },
+    candidatesPaper: {
+        [theme.breakpoints.up('md')]: {
+            width: '60%',
         }
     },
     buttonContainer: {
