@@ -43,7 +43,6 @@ export const loginEpic: Epic<Action, Action, StoreState, Dependencies> = (action
                 throw customError(res);
             }),
             tap(data => {
-                localStorage.setItem('uid', data.uid);
                 localStorage.setItem('token', data.token);
             }),
             mergeMap(data => concat(

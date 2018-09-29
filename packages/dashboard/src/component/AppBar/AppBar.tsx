@@ -15,7 +15,9 @@ import Select from './AppBarSelect';
 import Anchor from '../Anchor';
 import { Redirect, RouteComponentProps } from 'react-router-dom';
 import { Header } from './Header';
-import { GROUPS, GROUPS_, STEPS } from '../../lib/const';
+import { GROUPS, GROUPS_, PENDING_RECRUITMENT, STEPS } from '../../lib/const';
+import titleConverter from "../../lib/titleConverter";
+import packageFile from '../../../package.json';
 
 interface Props extends WithStyles {
     open: boolean;
@@ -58,10 +60,10 @@ class Bar extends PureComponent<Props & RouteComponentProps<{}>> {
         const { classes, open, loggedIn, toggleOpen, location, group } = this.props;
         const { pathname } = location;
         const pathToTitle = {
-            '/': '联创团队招新管理系统',
-            '/candidates': '2018年秋季招新',
+            '/': `联创团队招新管理系统 v${packageFile.version}`,
+            '/candidates': titleConverter(PENDING_RECRUITMENT),
             '/data': '历年数据展示',
-            '/massInterview': '2018秋招・群面',
+            '/massInterview': `${titleConverter(PENDING_RECRUITMENT)}・群面`,
             '/myInfo': '个人信息管理',
             '/myGroup': '组员信息管理',
         };
