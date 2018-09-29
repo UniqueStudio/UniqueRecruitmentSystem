@@ -221,6 +221,30 @@ export interface SetCandidates {
     candidates: object[];
 }
 
+export function setCandidates(candidates: object[]): SetCandidates {
+    return {
+        type: SET_CANDIDATES,
+        candidates,
+    }
+}
+
+export const SET_CANDIDATE_SLOT = 'SET_CANDIDATE_SLOT';
+export type SET_CANDIDATE_SLOT = typeof SET_CANDIDATE_SLOT;
+
+export interface SetCandidateSlot {
+    type: SET_CANDIDATE_SLOT;
+    id: string;
+    time: object;
+}
+
+export function setCandidateSlot(id: string, time: object): SetCandidateSlot {
+    return {
+        type: SET_CANDIDATE_SLOT,
+        id,
+        time,
+    }
+}
+
 export const GET_RESUME = 'GET_RESUME';
 export type GET_RESUME = typeof GET_RESUME;
 
@@ -233,13 +257,6 @@ export function getResume(cid: string): GetResume {
     return {
         type: GET_RESUME,
         cid
-    }
-}
-
-export function setCandidates(candidates: object[]): SetCandidates {
-    return {
-        type: SET_CANDIDATES,
-        candidates,
     }
 }
 
