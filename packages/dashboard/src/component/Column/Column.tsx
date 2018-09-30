@@ -81,7 +81,7 @@ class Column extends Component<Props> {
         const allCid = [...candidates.keys()];
         const selectedCid = selected.filter(i => allCid.includes(i));
 
-        const DroppableBox = (
+        const DropArea = (
             <Droppable droppableId={title} type="CANDIDATE">
                 {(dropProvided: DroppableProvided) => (
                     <div className={classes.columnBody}
@@ -122,7 +122,7 @@ class Column extends Component<Props> {
                                 >{title}</Typography>
                             </div>
                             <Divider/>
-                            {DroppableBox}
+                            {DropArea}
                         </Paper>
                     </div>
                 )}

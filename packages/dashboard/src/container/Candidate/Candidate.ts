@@ -14,19 +14,21 @@ import {
 } from '../../action';
 import { DraggableProvided } from 'react-beautiful-dnd';
 import Candidate from '../../component/Candidate/Candidate';
+import { Candidate as CType } from '../../lib/const';
 import { StoreState } from '../../reducer';
 
 interface OwnProps {
     step: number;
     cid: string;
-    info: object;
-    provided: DraggableProvided
+    info: CType;
+    provided: DraggableProvided;
 }
 
 const mapStateToProps = ({ candidates, components }: StoreState, ownProps: OwnProps) => ({
     selected: candidates.selected,
     isLoading: candidates.isLoading.comments,
-    fabOn: components.fabOn
+    fabOn: components.fabOn,
+    ...ownProps
 });
 
 type DispatchType = Dispatch<SelectCandidate | DeselectCandidate | ToggleModalOn | RecordInputtingComment | ToggleFabOn>

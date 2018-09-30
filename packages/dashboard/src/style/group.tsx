@@ -28,10 +28,8 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
         marginBottom: theme.spacing.unit
     },
     tableCell: {
-        [theme.breakpoints.down('xs')]: {
-            padding: theme.spacing.unit,
-            textAlign: 'center'
-        }
+        padding: theme.spacing.unit,
+        textAlign: 'center'
     },
     title: {
         display: 'flex',

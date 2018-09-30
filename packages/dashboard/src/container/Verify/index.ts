@@ -10,7 +10,8 @@ interface OwnProps {
 type DispatchType = Dispatch<GetVerifyCode>
 
 const mapDispatchToProps = (dispatch: DispatchType, ownProps: OwnProps) => ({
-    getVerifyCode: () => dispatch(getVerifyCode())
+    getVerifyCode: () => dispatch(getVerifyCode()),
+    ...ownProps
 });
 
 export default connect(null, mapDispatchToProps)(Verify);
