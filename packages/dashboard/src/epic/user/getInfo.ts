@@ -1,11 +1,14 @@
+import { Epic, ofType } from 'redux-observable';
 import { of } from 'rxjs';
 import { ajax } from 'rxjs/ajax';
 import { catchError, endWith, map, mergeMap, startWith, tap } from 'rxjs/operators';
-import { Epic, ofType } from "redux-observable";
-import { GET_USER_INFO_START, GetUserInfoStart, userInfoFulfilled } from '../../action';
+
 import { Action, Dependencies, errHandler, USER } from '../index';
-import { URL, User } from '../../lib/const';
+
+import { GET_USER_INFO_START, GetUserInfoStart, userInfoFulfilled } from '../../action';
 import { StoreState } from '../../reducer';
+
+import { URL, User } from '../../lib/const';
 
 export const getInfoEpic: Epic<Action, Action, StoreState, Dependencies> = (action$, state$, { sessionStorage, localStorage }) =>
     action$.pipe(
@@ -22,7 +25,7 @@ export const getInfoEpic: Epic<Action, Action, StoreState, Dependencies> = (acti
                 );
             }
             return ajax.getJSON(`${URL}/user/${action.uid}`, {
-                'Authorization': `Bearer ${token}`
+                Authorization: `Bearer ${token}`,
             })
                 .pipe(
                     map((res: { type: string, data: User }) => {
@@ -31,15 +34,15 @@ export const getInfoEpic: Epic<Action, Action, StoreState, Dependencies> = (acti
                         }
                         throw res;
                     }),
-                    tap(data => localStorage.setItem('userInfo', JSON.stringify(data))),
-                    map(data => userInfoFulfilled(data)),
+                    tap((data) => localStorage.setItem('userInfo', JSON.stringify(data))),
+                    map((data) => userInfoFulfilled(data)),
                     startWith(
-                        { type: USER.START }
+                        { type: USER.START },
                     ),
                     endWith(
                         { type: USER.SUCCESS },
                     ),
-                    catchError(err => errHandler(err, USER))
-                )
+                    catchError((err) => errHandler(err, USER)),
+                );
         }),
     );

@@ -1,7 +1,10 @@
-import { catchError, endWith, filter, map, mergeMap, startWith, switchMap, tap } from 'rxjs/operators';
+import { Epic, ofType } from 'redux-observable';
 import { concat, of } from 'rxjs';
 import { ajax } from 'rxjs/ajax';
-import { Epic, ofType } from "redux-observable";
+import { catchError, endWith, filter, map, mergeMap, startWith, switchMap, tap } from 'rxjs/operators';
+
+import { Action, customError, Dependencies, errHandler, USER } from '../index';
+
 import {
     GET_QR_CODE_FULFILLED,
     GET_QR_CODE_START,
@@ -9,13 +12,13 @@ import {
     getQRCodeFulfilled,
     getUserInfoStart,
     login,
-    toggleSnackbarOn
+    toggleSnackbarOn,
 } from '../../action';
-import { URL } from '../../lib/const';
-import { Action, customError, Dependencies, errHandler, USER } from '../index';
 import { StoreState } from '../../reducer';
 
-export const getQRCodeEpic: Epic<Action> = action$ =>
+import { URL } from '../../lib/const';
+
+export const getQRCodeEpic: Epic<Action> = (action$) =>
     action$.pipe(
         ofType(GET_QR_CODE_START),
         mergeMap(() => ajax.getJSON(`${URL}/user`)
@@ -27,14 +30,14 @@ export const getQRCodeEpic: Epic<Action> = action$ =>
                     throw customError(res);
                 }),
                 startWith(
-                    { type: USER.START }
+                    { type: USER.START },
                 ),
                 endWith(
                     toggleSnackbarOn('请尽快用企业微信扫描二维码！', 'info'),
                     { type: USER.SUCCESS },
                 ),
-                catchError(err => errHandler(err, USER))
-            )
+                catchError((err) => errHandler(err, USER)),
+            ),
         ),
     );
 
@@ -50,19 +53,19 @@ export const loginEpic: Epic<Action, Action, StoreState, Dependencies> = (action
                 }
                 throw customError(res);
             }),
-            tap(data => {
+            tap((data) => {
                 localStorage.setItem('token', data.token);
             }),
-            mergeMap(data => concat(
+            mergeMap((data) => concat(
                 of(login(data.uid)),
-                of(getUserInfoStart(data.uid))
+                of(getUserInfoStart(data.uid)),
             )),
             endWith(
                 toggleSnackbarOn('已成功登录！', 'success'),
             ),
-            catchError(err => of(
+            catchError((err) => of(
                 getQRCodeFulfilled(''),
                 toggleSnackbarOn(`Error: ${err.message}`, err.type || 'danger'),
-            ))
-        ))
+            )),
+        )),
     );

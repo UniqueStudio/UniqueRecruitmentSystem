@@ -1,5 +1,5 @@
-import { StyleRulesCallback } from "@material-ui/core/styles/withStyles";
-import { Theme } from "@material-ui/core/styles";
+import { Theme } from '@material-ui/core/styles';
+import { StyleRulesCallback } from '@material-ui/core/styles/withStyles';
 
 const styles: StyleRulesCallback = (theme: Theme) => ({
     infoContainer: {
@@ -18,34 +18,34 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
         width: '100%',
     },
     button: {
-        margin: theme.spacing.unit
+        margin: theme.spacing.unit,
     },
     tableContainer: {
-        overflowX: 'auto'
+        overflowX: 'auto',
     },
     table: {
         minWidth: 800,
-        marginBottom: theme.spacing.unit
+        marginBottom: theme.spacing.unit,
     },
     tableCell: {
         padding: theme.spacing.unit,
-        textAlign: 'center'
+        textAlign: 'center',
     },
     title: {
         display: 'flex',
         width: '100%',
         alignItems: 'flex-end',
-        justifyContent: 'space-around'
+        justifyContent: 'space-around',
     },
     chooseContainer: {
         margin: theme.spacing.unit * 2,
         display: 'flex',
-        flexDirection: 'column'
+        flexDirection: 'column',
     },
     choose: {
         display: 'flex',
         justifyContent: 'center',
-        alignItems: 'baseline'
+        alignItems: 'baseline',
     },
     chip: {
         margin: theme.spacing.unit,
@@ -59,23 +59,23 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
         [theme.breakpoints.down('xs')]: {
             width: 50,
             margin: theme.spacing.unit / 2,
-        }
+        },
     },
     notification: {
-        margin: theme.spacing.unit
+        margin: theme.spacing.unit,
     },
     dialog: {
-        margin: theme.spacing.unit * 2
+        margin: theme.spacing.unit * 2,
     },
     smsDetail: {
         margin: theme.spacing.unit * 2,
     },
     placeInput: {
-        marginTop: theme.spacing.unit
+        marginTop: theme.spacing.unit,
     },
     timeSelect: {
-        marginRight: theme.spacing.unit
-    }
+        marginRight: theme.spacing.unit,
+    },
 });
 
 export default styles;

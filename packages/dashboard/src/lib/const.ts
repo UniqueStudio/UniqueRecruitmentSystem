@@ -1,5 +1,5 @@
 export const GROUPS = ['Web', 'Lab', 'AI', 'Game', 'Android', 'iOS', 'Design', 'PM'];
-export const GROUPS_ = GROUPS.map(i => i.toLowerCase());
+export const GROUPS_ = GROUPS.map((i) => i.toLowerCase());
 export const STEPS = ['报名流程', '笔试流程', '面试流程', '熬测流程', '群面流程', '通过'];
 // export const STEPS_ = ['apply', 'writtenExam', 'groupInterview', 'stayUpExam', 'massInterview', 'passed'];
 // export const SCORES = ["前10%", "前25%", "前50%", "前100%", "暂无"];
@@ -7,7 +7,7 @@ export const STEPS = ['报名流程', '笔试流程', '面试流程', '熬测流
 export const URL = 'https://hustunique.com:5000';
 export const QR_CODE_URL = 'https://open.work.weixin.qq.com/wwopen/sso/qrImg?key=';
 
-export type Group = "web" | "lab" | "ai" | "game" | "android" | "ios" | "design" | "pm";
+export type Group = 'web' | 'lab' | 'ai' | 'game' | 'android' | 'ios' | 'design' | 'pm';
 
 export interface Candidate {
     _id: string;
@@ -15,7 +15,7 @@ export interface Candidate {
     grade: string;
     institute: string;
     major: string;
-    score: "前10%" | "前25%" | "前50%" | "前100%" | "暂无";
+    score: '前10%' | '前25%' | '前50%' | '前100%' | '暂无';
     mail: string;
     phone: string;
     abandon?: boolean;
@@ -24,7 +24,7 @@ export interface Candidate {
     time2?: object[];
     slot2?: string[];
     group: Group;
-    sex: "Male" | "Female";
+    sex: 'Male' | 'Female';
     title: string; // e.g. 2018A || 2018S (A: AUTUMN, S: SPRING, C: CAMP)
     step: number;
     intro: string;
@@ -38,7 +38,7 @@ export interface Candidate {
 
 export interface Comment {
     comment: string;
-    evaluation: "good" | "so-so" | "bad";
+    evaluation: 'good' | 'so-so' | 'bad';
 }
 
 export interface User {
@@ -49,7 +49,7 @@ export interface User {
     isAdmin: boolean;
     phone: string;
     mail: string;
-    sex: "Male" | "Female";
+    sex: 'Male' | 'Female';
     group: Group;
     avatar: string;
 }
@@ -77,4 +77,13 @@ export interface Recruitment {
     };
     time2: Time[];
     data: Data[];
+}
+
+export interface Message {
+    isSelf: boolean;
+    name: string;
+    time: number;
+    type: string;
+    avatar: string;
+    message: string;
 }

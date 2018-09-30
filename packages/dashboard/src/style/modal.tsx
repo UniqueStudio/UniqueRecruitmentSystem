@@ -1,5 +1,6 @@
-import { StyleRulesCallback } from "@material-ui/core/styles/withStyles";
-import { Theme } from "@material-ui/core/styles";
+import { Theme } from '@material-ui/core/styles';
+import { StyleRulesCallback } from '@material-ui/core/styles/withStyles';
+
 import { colorToShadow } from './index';
 
 const styles: StyleRulesCallback = (theme: Theme) => ({
@@ -9,8 +10,8 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
         justifyContent: 'center',
     },
     modal: {
-        display: "flex",
-        flexDirection: "column",
+        display: 'flex',
+        flexDirection: 'column',
         position: 'absolute',
         borderRadius: 6,
         backgroundColor: theme.palette.background.paper,
@@ -21,7 +22,7 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
             maxWidth: '100%',
         },
         maxHeight: '90%',
-        maxWidth: '75%'
+        maxWidth: '75%',
     },
     modalHeader: {
         background: theme.palette.primary.light,
@@ -31,12 +32,12 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
         marginRight: theme.spacing.unit * 5,
         marginBottom: theme.spacing.unit,
         boxShadow: colorToShadow(theme.palette.primary.light),
-        userSelect: 'none'
+        userSelect: 'none',
     },
     modalTitle: {
         color: theme.palette.secondary.contrastText,
         textAlign: 'center',
-        margin: theme.spacing.unit
+        margin: theme.spacing.unit,
     },
 });
 

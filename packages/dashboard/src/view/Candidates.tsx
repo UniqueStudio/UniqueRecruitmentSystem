@@ -1,7 +1,8 @@
-import React, { PureComponent } from "react";
+import React, { PureComponent } from 'react';
+
 import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 
-import withRoot from "../style/withRoot";
+import withRoot from '../style/withRoot';
 
 import ColumnContainer from '../container/Column/ColumnContainer';
 

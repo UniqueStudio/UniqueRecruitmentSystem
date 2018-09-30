@@ -1,10 +1,11 @@
-import { map, switchMap, tap } from 'rxjs/operators';
+import { Epic, ofType } from 'redux-observable';
 import { EMPTY } from 'rxjs';
-import { Epic, ofType } from "redux-observable";
+import { map, switchMap, tap } from 'rxjs/operators';
+
 import { Action, CANDIDATE, Dependencies, errHandler, Socket } from '../index';
+
 import { REMOVE_CANDIDATE_START, RemoveCandidateStart } from '../../action';
 import { StoreState } from '../../reducer';
-
 
 export const removeCandidateEpic: Epic<Action, Action, StoreState, Dependencies> = (action$, state$, { sessionStorage, socket$, localStorage }) =>
     socket$.pipe(
@@ -19,10 +20,9 @@ export const removeCandidateEpic: Epic<Action, Action, StoreState, Dependencies>
                         }
                         socket.emit('removeCandidate', action.cid, token);
                     }),
-                    map(() => ({ type: CANDIDATE.START }))
-                )
+                    map(() => ({ type: CANDIDATE.START })),
+                );
             }
             return EMPTY;
-        })
+        }),
     );
-

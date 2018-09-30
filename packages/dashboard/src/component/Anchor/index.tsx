@@ -1,12 +1,12 @@
-import React, { PureComponent } from "react";
+import React, { PureComponent } from 'react';
+import { Link } from 'react-router-dom';
+
 import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 
 import withRoot from '../../style/withRoot';
 
-import { Link } from 'react-router-dom';
-
 interface Props extends WithStyles {
-    to: string
+    to: string;
 }
 
 class Anchor extends PureComponent<Props> {
@@ -16,7 +16,7 @@ class Anchor extends PureComponent<Props> {
         return (
             <Link to={to} style={{
                 textDecoration: 'none',
-                outline: 'none'
+                outline: 'none',
             }}>
                 {children}
             </Link>

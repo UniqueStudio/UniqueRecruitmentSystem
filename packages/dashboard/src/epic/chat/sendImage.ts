@@ -1,7 +1,9 @@
-import { map, switchMap, tap } from 'rxjs/operators';
+import { Epic, ofType } from 'redux-observable';
 import { EMPTY } from 'rxjs';
-import { Epic, ofType } from "redux-observable";
+import { map, switchMap, tap } from 'rxjs/operators';
+
 import { Action, Dependencies, errHandler, Socket, USER } from '../index';
+
 import { addImage, SEND_IMAGE, SendImage } from '../../action';
 import { StoreState } from '../../reducer';
 
@@ -18,7 +20,7 @@ export const sendImageEpic: Epic<Action, Action, StoreState, Dependencies> = (ac
                         const time = +new Date();
                         return { image, name, avatar, time };
                     }),
-                    tap(obj => {
+                    tap((obj) => {
                         const token = localStorage.getItem('token');
                         if (!token) {
                             errHandler({ message: 'token不存在', type: 'danger' }, USER);
@@ -26,13 +28,12 @@ export const sendImageEpic: Epic<Action, Action, StoreState, Dependencies> = (ac
                         const { name, avatar, time, image } = obj;
                         socket.emit('sendMessage', name, avatar, time, image, true);
                     }),
-                    map(obj => {
+                    map((obj) => {
                         const { name, avatar, time, image } = obj;
                         return addImage(name, avatar, time, image, true);
-                    })
-                )
+                    }),
+                );
             }
             return EMPTY;
-        })
+        }),
     );
-

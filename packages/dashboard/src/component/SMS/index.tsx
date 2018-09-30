@@ -1,17 +1,21 @@
-import React, { PureComponent } from "react";
+import React, { PureComponent } from 'react';
+
 import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
 import Step from '@material-ui/core/Step';
 import StepContent from '@material-ui/core/StepContent';
 import StepLabel from '@material-ui/core/StepLabel';
 import Stepper from '@material-ui/core/Stepper';
+
 import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 
-import styles from '../../style/template'
+import styles from '../../style/template';
 import withRoot from '../../style/withRoot';
+
+import Verify from '../../container/Verify';
 import Picker from './Picker';
 import SMSDetail from './SMSDetail';
-import Verify from '../../container/Verify';
+
 import { Candidate, STEPS } from '../../lib/const';
 
 interface Props extends WithStyles {
@@ -32,12 +36,27 @@ interface State {
     step: string;
     time: string;
     place: string;
-    rest: string,
+    rest: string;
     code: string;
     sent: boolean;
 }
 
 class Template extends PureComponent<Props> {
+
+    static getDerivedStateFromProps(nextProps: Props, prevState: State) {
+        if (nextProps.selected !== prevState.selected) {
+            return {
+                selected: nextProps.selected,
+            };
+        }
+        if (nextProps.status === 'success' && prevState.sent) {
+            return {
+                activeStep: prevState.activeStep + 1,
+                sent: false,
+            };
+        }
+        return null;
+    }
 
     state: State = {
         selected: this.props.selected,
@@ -48,14 +67,39 @@ class Template extends PureComponent<Props> {
         place: '',
         rest: '',
         code: '',
-        sent: false
+        sent: false,
     };
-
     handleBack = () => {
         this.setState({
             activeStep: this.state.activeStep - 1,
-            sent: false
+            sent: false,
         });
+    };
+    sendSMS = () => {
+        const { selected, type, step, code, time, place, rest } = this.state;
+        const { toggleSnackbar, group, pendingRecruitment } = this.props;
+        if (code === '') {
+            toggleSnackbar('未填写验证码！');
+            return;
+        }
+        const content = {
+            candidates: selected.map((i) => i._id),
+            type,
+            step,
+            code,
+            rest,
+            group: group.toLowerCase(),
+            title: pendingRecruitment,
+        };
+        if ((step === STEPS[0] || step === STEPS[2]) && type === 'accept') {
+            content['time'] = time;
+            content['place'] = place;
+        }
+        this.setState({
+            code: '',
+            sent: true,
+        });
+        this.props.sendSMS(content);
     };
 
     handleNext = () => {
@@ -81,36 +125,9 @@ class Template extends PureComponent<Props> {
         });
     };
 
-    sendSMS = () => {
-        const { selected, type, step, code, time, place, rest } = this.state;
-        const { toggleSnackbar, group, pendingRecruitment } = this.props;
-        if (code === '') {
-            toggleSnackbar('未填写验证码！');
-            return;
-        }
-        const content = {
-            candidates: selected.map(i => i._id),
-            type,
-            step,
-            code,
-            rest,
-            group: group.toLowerCase(),
-            title: pendingRecruitment
-        };
-        if ((step === STEPS[0] || step === STEPS[2]) && type === 'accept') {
-            content['time'] = time;
-            content['place'] = place;
-        }
-        this.setState({
-            code: '',
-            sent: true
-        });
-        this.props.sendSMS(content);
-    };
-
     handleDelete = (cid: string) => {
         this.setState({
-            selected: this.state.selected.filter(i => i._id !== cid)
+            selected: this.state.selected.filter((i) => i._id !== cid),
         });
         this.props.deselect(cid);
     };
@@ -120,21 +137,6 @@ class Template extends PureComponent<Props> {
             [name]: event.target['value'],
         });
     };
-
-    static getDerivedStateFromProps(nextProps: Props, prevState: State) {
-        if (nextProps.selected !== prevState.selected) {
-            return {
-                selected: nextProps.selected
-            };
-        }
-        if (nextProps.status === 'success' && prevState.sent) {
-            return {
-                activeStep: prevState.activeStep + 1,
-                sent: false
-            };
-        }
-        return null;
-    }
 
     render() {
         const { classes, toggleOpen, group } = this.props;
@@ -156,13 +158,11 @@ class Template extends PureComponent<Props> {
 
         return (
             <div className={classes.template}>
-                <Stepper activeStep={activeStep} classes={{ root: classes.stepper }} orientation="vertical">
+                <Stepper activeStep={activeStep} classes={{ root: classes.stepper }} orientation='vertical'>
                     {steps.map((i, j) => (
                         <Step key={j}>
                             <StepLabel>{i}</StepLabel>
-                            <StepContent classes={{
-                                last: classes.verify
-                            }}>
+                            <StepContent classes={{ last: classes.verify }}>
                                 {stepContent[j]}
                                 <div>
                                     <Button
@@ -171,8 +171,8 @@ class Template extends PureComponent<Props> {
                                     >
                                         {activeStep ? '上一步' : '关闭'}
                                     </Button>
-                                    <Button variant="contained"
-                                            color="primary"
+                                    <Button variant='contained'
+                                            color='primary'
                                             onClick={activeStep === steps.length - 1 ? this.sendSMS : this.handleNext}
                                             className={classes.templateItem}
                                             disabled={selected.length === 0}
@@ -187,7 +187,7 @@ class Template extends PureComponent<Props> {
                 {activeStep === steps.length && (
                     <Paper square elevation={0} className={classes.templateEnd}>
                         <Button onClick={this.handleBack} className={classes.templateItem}>上一步</Button>
-                        <Button variant="contained" color="primary" onClick={toggleOpen}
+                        <Button variant='contained' color='primary' onClick={toggleOpen}
                                 className={classes.templateItem}>关闭</Button>
                     </Paper>
                 )}
@@ -197,5 +197,3 @@ class Template extends PureComponent<Props> {
 }
 
 export default withRoot(withStyles(styles)(Template));
-
-

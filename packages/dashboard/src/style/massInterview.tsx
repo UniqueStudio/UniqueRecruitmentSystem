@@ -1,11 +1,12 @@
-import { StyleRulesCallback } from "@material-ui/core/styles/withStyles";
-import { Theme } from "@material-ui/core/styles";
+import { Theme } from '@material-ui/core/styles';
+import { StyleRulesCallback } from '@material-ui/core/styles/withStyles';
+
 import { colorToAlpha } from './index';
 
 const styles: StyleRulesCallback = (theme: Theme) => ({
     container: {
         display: 'flex',
-        minHeight: '100%'
+        minHeight: '100%',
     },
     messenger: {
         flex: '1',
@@ -15,7 +16,7 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
         height: 'calc(100vh - 112px)',
         transition: theme.transitions.create(['height', 'width', 'background'], {
             easing: theme.transitions.easing.sharp,
-            duration: theme.transitions.duration.enteringScreen
+            duration: theme.transitions.duration.enteringScreen,
         }),
         zIndex: 5000,
         position: 'sticky',
@@ -57,9 +58,9 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
         },
         transition: theme.transitions.create(['height', 'width', 'background'], {
             easing: theme.transitions.easing.sharp,
-            duration: theme.transitions.duration.leavingScreen
+            duration: theme.transitions.duration.leavingScreen,
         }),
-        overflowY: 'hidden'
+        overflowY: 'hidden',
     },
     messages: {
         flex: '1',
@@ -68,55 +69,55 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
         marginBottom: theme.spacing.unit,
         transition: theme.transitions.create(['padding'], {
             easing: theme.transitions.easing.sharp,
-            duration: theme.transitions.duration.enteringScreen
+            duration: theme.transitions.duration.enteringScreen,
         }),
     },
     minimizeMessages: {
         padding: 0,
         transition: theme.transitions.create(['padding'], {
             easing: theme.transitions.easing.sharp,
-            duration: theme.transitions.duration.leavingScreen
+            duration: theme.transitions.duration.leavingScreen,
         }),
     },
     messageContainer: {
         display: 'flex',
-        margin: `${theme.spacing.unit}px 0`
+        margin: `${theme.spacing.unit}px 0`,
     },
     input: {
-        marginTop: 'auto'
+        marginTop: 'auto',
     },
     inputContent: {
         display: 'flex',
-        alignItems: 'flex-end'
+        alignItems: 'flex-end',
     },
     textField: {
-        width: '100%'
+        width: '100%',
     },
     chipRoot: {
-        height: 'auto',
-        padding: theme.spacing.unit,
-        whiteSpace: 'normal',
-        background: colorToAlpha(theme.palette.secondary.light, 0.3),
+        'height': 'auto',
+        'padding': theme.spacing.unit,
+        'whiteSpace': 'normal',
+        'background': colorToAlpha(theme.palette.secondary.light, 0.3),
         '& > *': {
-            whiteSpace: 'normal'
-        }
+            whiteSpace: 'normal',
+        },
     },
     myChip: {
         background: colorToAlpha(theme.palette.primary.main, 0.8),
-        color: theme.palette.primary.contrastText
+        color: theme.palette.primary.contrastText,
     },
     myDivider: {
-        background: 'white'
+        background: 'white',
     },
     messageContent: {
         wordWrap: 'break-word',
         maxWidth: 200,
         userSelect: 'text',
         cursor: 'text',
-        marginTop: theme.spacing.unit
+        marginTop: theme.spacing.unit,
     },
     avatar: {
-        margin: theme.spacing.unit
+        margin: theme.spacing.unit,
     },
     my: {
         flexDirection: 'row-reverse',
@@ -129,7 +130,7 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
         flexDirection: 'column',
     },
     hidden: {
-        display: 'none'
+        display: 'none',
     },
     imageLayer: {
         maxHeight: '100%',
@@ -138,14 +139,14 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
         '&:hover': {
             cursor: 'pointer',
         },
-        maxWidth: '100%',
+        'maxWidth': '100%',
     },
     imageRoot: {
-        zIndex: theme.zIndex.snackbar * 4
+        zIndex: theme.zIndex.snackbar * 4,
     },
     tooltip: {
-        zIndex: theme.zIndex.snackbar * 4
-    }
+        zIndex: theme.zIndex.snackbar * 4,
+    },
 });
 
 export default styles;

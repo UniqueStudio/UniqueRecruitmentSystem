@@ -1,10 +1,13 @@
-import { catchError, endWith, map, mergeMap, startWith } from 'rxjs/operators';
+import { Epic, ofType } from 'redux-observable';
 import { ajax, AjaxResponse } from 'rxjs/ajax';
-import { Epic, ofType } from "redux-observable";
+import { catchError, endWith, map, mergeMap, startWith } from 'rxjs/operators';
+
 import { Action, customError, Dependencies, errHandler, SMS } from '../index';
+
 import { SEND_INTERVIEW, SendInterview, toggleSnackbarOn } from '../../action';
-import { URL } from '../../lib/const';
 import { StoreState } from '../../reducer';
+
+import { URL } from '../../lib/const';
 
 export const sendInterviewEpic: Epic<Action, Action, StoreState, Dependencies> = (action$, state$, { localStorage }) =>
     action$.pipe(
@@ -26,12 +29,12 @@ export const sendInterviewEpic: Epic<Action, Action, StoreState, Dependencies> =
                     throw customError(res);
                 }),
                 startWith(
-                    { type: SMS.START }
+                    { type: SMS.START },
                 ),
                 endWith(
                     { type: SMS.SUCCESS },
                 ),
-                catchError(err => errHandler(err, SMS))
-            )
+                catchError((err) => errHandler(err, SMS)),
+            );
         }),
     );

@@ -1,9 +1,12 @@
 import { connect } from 'react-redux';
-import Template from '../../component/SMS';
-import { sendSMS, SendSMS, toggleSnackbarOn, ToggleSnackbarOn } from '../../action';
 import { Dispatch } from 'redux';
-import { Candidate } from '../../lib/const';
+
+import Template from '../../component/SMS';
+
+import { sendSMS, SendSMS, toggleSnackbarOn, ToggleSnackbarOn } from '../../action';
 import { StoreState } from '../../reducer';
+
+import { Candidate } from '../../lib/const';
 
 interface OwnProps {
     group: string;
@@ -15,10 +18,10 @@ interface OwnProps {
 const mapStateToProps = ({ sms, recruitments }: StoreState, ownProps: OwnProps) => ({
     status: sms.status,
     pendingRecruitment: recruitments.pending,
-    ...ownProps
+    ...ownProps,
 });
 
-type DispatchType = Dispatch<ToggleSnackbarOn | SendSMS>
+type DispatchType = Dispatch<ToggleSnackbarOn | SendSMS>;
 
 const mapDispatchToProps = (dispatch: DispatchType) => ({
     toggleSnackbar: (info: string, color: string = 'info') => dispatch(toggleSnackbarOn(info, color)),

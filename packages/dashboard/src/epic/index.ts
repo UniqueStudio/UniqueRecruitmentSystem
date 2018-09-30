@@ -1,13 +1,16 @@
-import { combineEpics, createEpicMiddleware, EpicMiddleware } from "redux-observable";
-import userEpic from './user';
+import { combineEpics, createEpicMiddleware, EpicMiddleware } from 'redux-observable';
+import { BehaviorSubject, of } from 'rxjs';
+
+import io from 'socket.io-client';
+
+import { toggleSnackbarOn } from '../action';
+import { StoreState } from '../reducer';
+
 import candidateEpic from './candidate';
 import chatEpic from './chat';
 import recruitmentEpic from './recruitment';
 import smsEpic from './sms';
-import { StoreState } from '../reducer';
-import { BehaviorSubject, of } from 'rxjs';
-import io from 'socket.io-client';
-import { toggleSnackbarOn } from '../action';
+import userEpic from './user';
 import { socketConnectEpic, socketReceiveEpic } from './webSocket';
 
 export type Socket = typeof io.Socket;
@@ -21,7 +24,7 @@ interface CustomError {
     type: string;
 }
 
-interface actionType {
+interface ActionType {
     START: string;
     SUCCESS: string;
     FAILURE: string;
@@ -38,7 +41,7 @@ function actionTypeCreator(action: string) {
         START: `${action}_START`,
         SUCCESS: `${action}_SUCCESS`,
         FAILURE: `${action}_FAILURE`,
-    }
+    };
 }
 
 export const USER = actionTypeCreator('USER');
@@ -47,8 +50,7 @@ export const COMMENT = actionTypeCreator('COMMENT');
 export const RECRUITMENT = actionTypeCreator('RECRUITMENT');
 export const SMS = actionTypeCreator('SMS');
 
-
-export const errHandler = (err: CustomError, type: actionType) => of(
+export const errHandler = (err: CustomError, type: ActionType) => of(
     toggleSnackbarOn(`ERROR: ${err.message}`, err.type || 'danger'),
     { type: type.FAILURE });
 
@@ -57,7 +59,7 @@ const dependencies = { io, socket$: new BehaviorSubject(null), sessionStorage, l
 export type Dependencies = typeof dependencies;
 
 export const epicMiddleware: EpicMiddleware<Action, Action, StoreState> = createEpicMiddleware({
-    dependencies
+    dependencies,
 });
 
 export const epics = combineEpics(
@@ -67,5 +69,5 @@ export const epics = combineEpics(
     ...recruitmentEpic,
     ...smsEpic,
     socketConnectEpic,
-    socketReceiveEpic
+    socketReceiveEpic,
 );

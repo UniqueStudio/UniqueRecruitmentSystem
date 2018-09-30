@@ -2,7 +2,7 @@ import { SMS } from '../epic';
 
 const init = {
     isLoading: false,
-    status: ''
+    status: '',
 };
 
 export interface Sms {
@@ -12,7 +12,7 @@ export interface Sms {
 
 export function sms(
     state: Sms = init,
-    action: { type: string }
+    action: { type: string },
 ): Sms {
     switch (action.type) {
         case SMS.START:

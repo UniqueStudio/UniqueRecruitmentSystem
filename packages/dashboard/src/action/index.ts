@@ -9,8 +9,8 @@ export interface ToggleDrawerOpen {
 
 export function toggleDrawerOpen(): ToggleDrawerOpen {
     return {
-        type: TOGGLE_DRAWER_OPEN
-    }
+        type: TOGGLE_DRAWER_OPEN,
+    };
 }
 
 export const TOGGLE_SNACKBAR_ON = 'TOGGLE_SNACKBAR_ON';
@@ -26,8 +26,8 @@ export function toggleSnackbarOn(info: string, color: string): ToggleSnackbarOn 
     return {
         type: TOGGLE_SNACKBAR_ON,
         color,
-        info
-    }
+        info,
+    };
 }
 
 export const TOGGLE_SNACKBAR_OFF = 'TOGGLE_SNACKBAR_OFF';
@@ -39,8 +39,8 @@ export interface ToggleSnackbarOff {
 
 export function toggleSnackbarOff(): ToggleSnackbarOff {
     return {
-        type: TOGGLE_SNACKBAR_OFF
-    }
+        type: TOGGLE_SNACKBAR_OFF,
+    };
 }
 
 export const TOGGLE_MODAL_ON = 'TOGGLE_MODAL_ON';
@@ -54,8 +54,8 @@ export interface ToggleModalOn {
 export function toggleModalOn(cid: string): ToggleModalOn {
     return {
         type: TOGGLE_MODAL_ON,
-        cid
-    }
+        cid,
+    };
 }
 
 export const TOGGLE_MODAL_OFF = 'TOGGLE_MODAL_OFF';
@@ -68,7 +68,7 @@ export interface ToggleModalOff {
 export function toggleModalOff(): ToggleModalOff {
     return {
         type: TOGGLE_MODAL_OFF,
-    }
+    };
 }
 
 export const TOGGLE_FAB_ON = 'TOGGLE_FAB_ON';
@@ -76,14 +76,14 @@ export type TOGGLE_FAB_ON = typeof TOGGLE_FAB_ON;
 
 export interface ToggleFabOn {
     type: TOGGLE_FAB_ON;
-    step: number
+    step: number;
 }
 
 export function toggleFabOn(step: number): ToggleFabOn {
     return {
         type: TOGGLE_FAB_ON,
-        step
-    }
+        step,
+    };
 }
 
 export const TOGGLE_FAB_OFF = 'TOGGLE_FAB_OFF';
@@ -96,7 +96,7 @@ export interface ToggleFabOff {
 export function toggleFabOff(): ToggleFabOff {
     return {
         type: TOGGLE_FAB_OFF,
-    }
+    };
 }
 
 export const RECORD_INPUTTING_COMMENT = 'RECORD_INPUTTING_COMMENT';
@@ -112,8 +112,8 @@ export function recordInputtingComment(comment: string, evaluation: string): Rec
     return {
         type: RECORD_INPUTTING_COMMENT,
         comment,
-        evaluation
-    }
+        evaluation,
+    };
 }
 
 export const ADD_COMMENT_START = 'ADD_COMMENT_START';
@@ -133,10 +133,9 @@ export function addCommentStart(step: number, cid: string, commenter: string, co
         step,
         cid,
         commenter,
-        comment
-    }
+        comment,
+    };
 }
-
 
 export const ADD_COMMENT_FULFILLED = 'ADD_COMMENT_FULFILLED';
 export type ADD_COMMENT_FULFILLED = typeof ADD_COMMENT_FULFILLED;
@@ -155,8 +154,8 @@ export function addCommentFulfilled(step: number, cid: string, commenter: string
         step,
         cid,
         commenter,
-        comment
-    }
+        comment,
+    };
 }
 
 export const REMOVE_COMMENT_START = 'REMOVE_COMMENT_START';
@@ -175,7 +174,7 @@ export function removeCommentStart(step: number, cid: string, commenter: string)
         step,
         cid,
         commenter,
-    }
+    };
 }
 
 export const REMOVE_COMMENT_FULFILLED = 'REMOVE_COMMENT_FULFILLED';
@@ -194,9 +193,8 @@ export function removeCommentFulfilled(step: number, cid: string, commenter: str
         step,
         cid,
         commenter,
-    }
+    };
 }
-
 
 export const GET_CANDIDATES_START = 'GET_CANDIDATES_START';
 export type GET_CANDIDATES_START = typeof GET_CANDIDATES_START;
@@ -211,8 +209,8 @@ export function getCandidatesStart(group: string, recruitmentName: string): GetC
     return {
         type: GET_CANDIDATES_START,
         group,
-        recruitmentName
-    }
+        recruitmentName,
+    };
 }
 
 export const GET_CANDIDATES_FULFILLED = 'GET_CANDIDATES_FULFILLED';
@@ -227,9 +225,8 @@ export function getCandidatesFulfilled(candidates: object[]): GetCandidatesFulfi
     return {
         type: GET_CANDIDATES_FULFILLED,
         candidates,
-    }
+    };
 }
-
 
 export const GET_RESUME = 'GET_RESUME';
 export type GET_RESUME = typeof GET_RESUME;
@@ -242,8 +239,8 @@ export interface GetResume {
 export function getResume(cid: string): GetResume {
     return {
         type: GET_RESUME,
-        cid
-    }
+        cid,
+    };
 }
 
 export const ADD_CANDIDATE_FULFILLED = 'ADD_CANDIDATE_FULFILLED';
@@ -258,9 +255,8 @@ export function addCandidateFulfilled(candidate: Candidate): AddCandidateFulfill
     return {
         type: ADD_CANDIDATE_FULFILLED,
         candidate,
-    }
+    };
 }
-
 
 export const SELECT_CANDIDATE = 'SELECT_CANDIDATE';
 export type SELECT_CANDIDATE = typeof SELECT_CANDIDATE;
@@ -274,7 +270,7 @@ export function selectCandidate(cid: string | string[]): SelectCandidate {
     return {
         type: SELECT_CANDIDATE,
         cid,
-    }
+    };
 }
 
 export const DESELECT_CANDIDATE = 'DESELECT_CANDIDATE';
@@ -285,11 +281,11 @@ export interface DeselectCandidate {
     cid: string | string[];
 }
 
-export function deselectCandidate(cid: string | Array<string>): DeselectCandidate {
+export function deselectCandidate(cid: string | string[]): DeselectCandidate {
     return {
         type: DESELECT_CANDIDATE,
         cid,
-    }
+    };
 }
 
 export const REMOVE_CANDIDATE_START = 'REMOVE_CANDIDATE_START';
@@ -304,7 +300,7 @@ export function removeCandidateStart(cid: string | string[]): RemoveCandidateSta
     return {
         type: REMOVE_CANDIDATE_START,
         cid,
-    }
+    };
 }
 
 export const REMOVE_CANDIDATE_FULFILLED = 'REMOVE_CANDIDATE_FULFILLED';
@@ -319,7 +315,7 @@ export function removeCandidateFulfilled(cid: string | string[]): RemoveCandidat
     return {
         type: REMOVE_CANDIDATE_FULFILLED,
         cid,
-    }
+    };
 }
 
 export const MOVE_CANDIDATE_START = 'MOVE_CANDIDATE_START';
@@ -340,9 +336,8 @@ export function moveCandidateStart(from: number, to: number, cid: string, positi
         to,
         cid,
         position,
-    }
+    };
 }
-
 
 export const MOVE_CANDIDATE_FULFILLED = 'MOVE_CANDIDATE_FULFILLED';
 export type MOVE_CANDIDATE_FULFILLED = typeof MOVE_CANDIDATE_FULFILLED;
@@ -362,7 +357,7 @@ export function moveCandidateFulfilled(from: number, to: number, cid: string, po
         to,
         cid,
         position,
-    }
+    };
 }
 
 export const SET_ONE_SLOT_START = 'SET_ONE_SLOT_START';
@@ -379,14 +374,14 @@ export function setOneSlotStart(id: string, time: object): SetOneSlotStart {
         type: SET_ONE_SLOT_START,
         id,
         time,
-    }
+    };
 }
 
-export const SET_All_SLOTS_START = 'SET_All_SLOTS_START';
-export type SET_All_SLOTS_START = typeof SET_All_SLOTS_START;
+export const SET_ALL_SLOTS_START = 'SET_ALL_SLOTS_START';
+export type SET_ALL_SLOTS_START = typeof SET_ALL_SLOTS_START;
 
 export interface SetAllSlotsStart {
-    type: SET_All_SLOTS_START;
+    type: SET_ALL_SLOTS_START;
     title: string;
     slots: number[];
     group: string;
@@ -394,13 +389,12 @@ export interface SetAllSlotsStart {
 
 export function setAllSlotsStart(title: string, slots: number[], group: string): SetAllSlotsStart {
     return {
-        type: SET_All_SLOTS_START,
+        type: SET_ALL_SLOTS_START,
         title,
         slots,
-        group
-    }
+        group,
+    };
 }
-
 
 export const SET_SLOTS_FULFILLED = 'SET_SLOTS_FULFILLED';
 export type SET_SLOTS_FULFILLED = typeof SET_SLOTS_FULFILLED;
@@ -408,15 +402,15 @@ export type SET_SLOTS_FULFILLED = typeof SET_SLOTS_FULFILLED;
 export interface SetSlotsFulfilled {
     type: SET_SLOTS_FULFILLED;
     interview: 1 | 2;
-    slot: object[]
+    slot: object[];
 }
 
 export function setSlotsFulfilled(slot: object[], interview: 1 | 2): SetSlotsFulfilled {
     return {
         type: SET_SLOTS_FULFILLED,
         slot,
-        interview
-    }
+        interview,
+    };
 }
 
 export const SET_GROUP = 'SET_GROUP';
@@ -424,16 +418,15 @@ export type SET_GROUP = typeof SET_GROUP;
 
 export interface SetGroup {
     type: SET_GROUP;
-    group: string
+    group: string;
 }
 
 export function setGroup(group: string): SetGroup {
     return {
         type: SET_GROUP,
-        group
-    }
+        group,
+    };
 }
-
 
 export const LOGIN = 'LOGIN';
 export type LOGIN = typeof LOGIN;
@@ -446,8 +439,8 @@ export interface Login {
 export function login(uid: string): Login {
     return {
         type: LOGIN,
-        uid
-    }
+        uid,
+    };
 }
 
 export const LOGOUT = 'LOGOUT';
@@ -459,21 +452,21 @@ export interface Logout {
 
 export function logout(): Logout {
     return {
-        type: LOGOUT
-    }
+        type: LOGOUT,
+    };
 }
 
 export const GET_QR_CODE_START = 'GET_QR_CODE_START';
 export type GET_QR_CODE_START = typeof GET_QR_CODE_START;
 
 export interface GetQRCodeStart {
-    type: GET_QR_CODE_START
+    type: GET_QR_CODE_START;
 }
 
 export function getQRCodeStart(): GetQRCodeStart {
     return {
-        type: GET_QR_CODE_START
-    }
+        type: GET_QR_CODE_START,
+    };
 }
 
 export const GET_QR_CODE_FULFILLED = 'GET_QR_CODE_FULFILLED';
@@ -481,14 +474,14 @@ export type GET_QR_CODE_FULFILLED = typeof GET_QR_CODE_FULFILLED;
 
 export interface GetQRCodeFulfilled {
     type: GET_QR_CODE_FULFILLED;
-    key: string
+    key: string;
 }
 
 export function getQRCodeFulfilled(key: string): GetQRCodeFulfilled {
     return {
         type: GET_QR_CODE_FULFILLED,
-        key
-    }
+        key,
+    };
 }
 
 export const GET_USER_INFO_START = 'GET_USER_INFO_START';
@@ -496,14 +489,14 @@ export type GET_USER_INFO_START = typeof GET_USER_INFO_START;
 
 export interface GetUserInfoStart {
     type: GET_USER_INFO_START;
-    uid: string
+    uid: string;
 }
 
 export function getUserInfoStart(uid: string): GetUserInfoStart {
     return {
         type: GET_USER_INFO_START,
-        uid
-    }
+        uid,
+    };
 }
 
 export const SET_USER_INFO_START = 'SET_USER_INFO_START';
@@ -519,8 +512,8 @@ export function setUserInfoStart(uid: string, info: User): SetUserInfoStart {
     return {
         type: SET_USER_INFO_START,
         info,
-        uid
-    }
+        uid,
+    };
 }
 
 export const USER_INFO_FULFILLED = 'USER_INFO_FULFILLED';
@@ -534,8 +527,8 @@ export interface UserInfoFulfilled {
 export function userInfoFulfilled(info: User): UserInfoFulfilled {
     return {
         type: USER_INFO_FULFILLED,
-        info: { ...info, sex: info.sex || 'Male', isAdmin: info.isAdmin || false, isCaptain: info.isCaptain || false }
-    }
+        info: { ...info, sex: info.sex || 'Male', isAdmin: info.isAdmin || false, isCaptain: info.isCaptain || false },
+    };
 }
 
 export const GET_GROUP_INFO_START = 'GET_GROUP_INFO_START';
@@ -543,30 +536,29 @@ export type GET_GROUP_INFO_START = typeof GET_GROUP_INFO_START;
 
 export interface GetGroupInfoStart {
     type: GET_GROUP_INFO_START;
-    group: string
+    group: string;
 }
 
 export function getGroupInfoStart(group: string): GetGroupInfoStart {
     return {
         type: GET_GROUP_INFO_START,
-        group
-    }
+        group,
+    };
 }
-
 
 export const GET_GROUP_INFO_FULFILLED = 'GET_GROUP_INFO_FULFILLED';
 export type GET_GROUP_INFO_FULFILLED = typeof GET_GROUP_INFO_FULFILLED;
 
 export interface GetGroupInfoFulfilled {
     type: GET_GROUP_INFO_FULFILLED;
-    info: User[]
+    info: User[];
 }
 
 export function getGroupInfoFulfilled(info: User[]): GetGroupInfoFulfilled {
     return {
         type: GET_GROUP_INFO_FULFILLED,
-        info
-    }
+        info,
+    };
 }
 
 export const GET_RECRUITMENTS_START = 'GET_RECRUITMENTS_START';
@@ -579,7 +571,7 @@ export interface GetRecruitmentsStart {
 export function getRecruitmentsStart(): GetRecruitmentsStart {
     return {
         type: GET_RECRUITMENTS_START,
-    }
+    };
 }
 
 export const GET_RECRUITMENTS_FULFILLED = 'GET_RECRUITMENTS_FULFILLED';
@@ -594,7 +586,7 @@ export function getRecruitmentsFulfilled(recruitments: Recruitment[]): GetRecrui
     return {
         type: GET_RECRUITMENTS_FULFILLED,
         recruitments,
-    }
+    };
 }
 
 export const LAUNCH_RECRUITMENT = 'LAUNCH_RECRUITMENT';
@@ -609,7 +601,7 @@ export function launchRecruitment(info: object): LaunchRecruitment {
     return {
         type: LAUNCH_RECRUITMENT,
         info,
-    }
+    };
 }
 
 export const SET_RECRUITMENT = 'SET_RECRUITMENT';
@@ -623,8 +615,8 @@ export interface SetRecruitment {
 export function setRecruitment(data: object): SetRecruitment {
     return {
         type: SET_RECRUITMENT,
-        data
-    }
+        data,
+    };
 }
 
 // export const UPDATE_RECRUITMENT = 'UPDATE_RECRUITMENT';
@@ -652,7 +644,7 @@ export interface SetShouldUpdateRecruitment {
 export function setShouldUpdateRecruitment(): SetShouldUpdateRecruitment {
     return {
         type: SET_SHOULD_UPDATE_RECRUITMENT,
-    }
+    };
 }
 
 export const ADD_MESSAGE = 'ADD_MESSAGE';
@@ -674,8 +666,8 @@ export function addMessage(name: string, avatar: string, time: number, message: 
         avatar,
         time,
         message,
-        isSelf
-    }
+        isSelf,
+    };
 }
 
 export const SEND_MESSAGE = 'SEND_MESSAGE';
@@ -690,7 +682,7 @@ export function sendMessage(message: string): SendMessage {
     return {
         type: SEND_MESSAGE,
         message,
-    }
+    };
 }
 
 export const SEND_IMAGE = 'SEND_IMAGE';
@@ -705,7 +697,7 @@ export function sendImage(image: string): SendImage {
     return {
         type: SEND_IMAGE,
         image,
-    }
+    };
 }
 
 export const ADD_IMAGE = 'ADD_IMAGE';
@@ -727,8 +719,8 @@ export function addImage(name: string, avatar: string, time: number, image: stri
         avatar,
         time,
         image,
-        isSelf
-    }
+        isSelf,
+    };
 }
 
 export const SEND_SMS = 'SEND_SMS';
@@ -743,7 +735,7 @@ export function sendSMS(content: object): SendSMS {
     return {
         type: SEND_SMS,
         content,
-    }
+    };
 }
 
 export const SEND_INTERVIEW = 'SEND_INTERVIEW';
@@ -758,7 +750,7 @@ export function sendInterview(content: object): SendInterview {
     return {
         type: SEND_INTERVIEW,
         content,
-    }
+    };
 }
 
 export const GET_VERIFY_CODE = 'GET_VERIFY_CODE';
@@ -771,5 +763,5 @@ export interface GetVerifyCode {
 export function getVerifyCode(): GetVerifyCode {
     return {
         type: GET_VERIFY_CODE,
-    }
+    };
 }
