@@ -17,7 +17,7 @@ import { Redirect, RouteComponentProps } from 'react-router-dom';
 import { Header } from './Header';
 import { GROUPS, GROUPS_, STEPS } from '../../lib/const';
 import titleConverter from "../../lib/titleConverter";
-import packageFile from '../../../package.json';
+import { version } from '../../../package.json';
 
 interface Props extends WithStyles {
     open: boolean;
@@ -61,7 +61,7 @@ class Bar extends PureComponent<Props & RouteComponentProps<{}>> {
         const { classes, open, loggedIn, toggleOpen, location, group, pendingRecruitment } = this.props;
         const { pathname } = location;
         const pathToTitle = {
-            '/': `联创团队招新管理系统 v${packageFile.version}`,
+            '/': `联创团队招新管理系统 v${version}`,
             '/candidates': titleConverter(pendingRecruitment),
             '/data': '历年数据展示',
             '/massInterview': `${titleConverter(pendingRecruitment)}・群面`,
@@ -81,7 +81,7 @@ class Bar extends PureComponent<Props & RouteComponentProps<{}>> {
                         onClick={toggleOpen}
                         className={classNames(classes.menuButton, open && classes.hide)}
                     >
-                        <MenuIcon />
+                        <MenuIcon/>
                     </IconButton>
                     <Header title={pathToTitle[pathname]}>
                         {pathname === '/candidates' && <>
@@ -96,14 +96,14 @@ class Bar extends PureComponent<Props & RouteComponentProps<{}>> {
                                     color="inherit"
                                     onClick={this.refresh}
                                 >
-                                    <RefreshIcon />
+                                    <RefreshIcon/>
                                 </IconButton>
                                 <IconButton
                                     color="inherit"
                                     className={classNames(open && classes.hide)}
                                     onClick={this.handleClick}
                                 >
-                                    <PersonIcon />
+                                    <PersonIcon/>
                                 </IconButton>
                             </div>
                             <Menu
@@ -116,7 +116,7 @@ class Bar extends PureComponent<Props & RouteComponentProps<{}>> {
                                 <Anchor to='/myGroup'><MenuItem onClick={this.handleClose}>组员信息</MenuItem></Anchor>
                                 <MenuItem onClick={this.handleLogout}>退出</MenuItem>
                             </Menu>
-                        </> : location.pathname !== '/' && <Redirect to='/' />}
+                        </> : location.pathname !== '/' && <Redirect to='/'/>}
                 </Toolbar>
             </AppBar>
         );

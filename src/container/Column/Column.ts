@@ -25,6 +25,7 @@ const mapStateToProps = ({ candidates, components }: StoreState, ownProps: OwnPr
     isLoading: candidates.isLoading.candidates,
     modalOn: components.modalOn,
     candidates: candidates.candidates[STEPS.indexOf(ownProps.title)] || new Map<string, object>(),
+    ...ownProps
 });
 
 type DispatchType =
