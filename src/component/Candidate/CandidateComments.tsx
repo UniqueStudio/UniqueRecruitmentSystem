@@ -1,13 +1,16 @@
-import React, { PureComponent } from "react";
+import React, { PureComponent } from 'react';
+
 import Button from '@material-ui/core/Button';
 import MenuItem from '@material-ui/core/MenuItem';
 import TextField from '@material-ui/core/TextField';
+
 import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 
-import CommentChip from "./CommentChip";
+import CommentChip from './CommentChip';
 
-import styles from "../../style/candidate";
-import withRoot from "../../style/withRoot";
+import styles from '../../style/candidate';
+import withRoot from '../../style/withRoot';
+
 import { Comment } from '../../lib/const';
 
 interface Props extends WithStyles {
@@ -19,7 +22,7 @@ interface Props extends WithStyles {
     savedComment: {
         comment: string;
         evaluation: string;
-    }
+    };
     snackbarOn: boolean;
     submit: (step: number, cid: string, commenter: string, comment: object) => void;
     remove: (step: number, cid: string, commenter: string) => void;
@@ -39,13 +42,12 @@ class CandidateComments extends PureComponent<Props> {
 
     handleChange = (name: string) => (event: React.ChangeEvent) => {
         this.setState({
-            [name]: event.target["value"]
+            [name]: event.target['value'],
         });
-        const comment = name === 'comment' ? event.target["value"] : this.state.comment;
-        const evaluation = name === 'evaluation' ? event.target["value"] : this.state.evaluation;
+        const comment = name === 'comment' ? event.target['value'] : this.state.comment;
+        const evaluation = name === 'evaluation' ? event.target['value'] : this.state.evaluation;
         this.props.changeInputting(comment, evaluation);
     };
-
 
     handleSubmit = () => {
         const { comment, evaluation } = this.state;
@@ -54,11 +56,11 @@ class CandidateComments extends PureComponent<Props> {
             submit(step, cid, uid, {
                 username,
                 comment,
-                evaluation
+                evaluation,
             });
             this.setState({
-                evaluation: "",
-                comment: "",
+                evaluation: '',
+                comment: '',
             });
         } else {
             if (!snackbarOn) toggleOn('请完整填写评论！');
@@ -81,11 +83,11 @@ class CandidateComments extends PureComponent<Props> {
             <div className={classes.comments}>
                 <div className={classes.cardAction}>
                     <TextField
-                        id="evaluation"
+                        id='evaluation'
                         select
-                        label="评价"
+                        label='评价'
                         value={this.state.evaluation}
-                        onChange={this.handleChange("evaluation")}
+                        onChange={this.handleChange('evaluation')}
                     >
                         <MenuItem value='good'>
                             好
@@ -98,17 +100,17 @@ class CandidateComments extends PureComponent<Props> {
                         </MenuItem>
                     </TextField>
                     <TextField
-                        id="comment"
-                        label="输入评论"
+                        id='comment'
+                        label='输入评论'
                         className={classes.comment}
-                        onChange={this.handleChange("comment")}
+                        onChange={this.handleChange('comment')}
                         value={this.state.comment}
                     />
-                    <Button color="primary" size="large" onClick={this.handleSubmit}>
+                    <Button color='primary' size='large' onClick={this.handleSubmit}>
                         发表评论
                     </Button>
                 </div>
-                {Object.entries(comments).map(i => (
+                {Object.entries(comments).map((i) => (
                     <CommentChip name={i[1].username} uid={i[0]} comment={i[1]} key={i[0]} currentUid={uid}
                                  remove={this.handleRemove} handleCopy={this.handleCopy} />
                 ))}
@@ -118,7 +120,3 @@ class CandidateComments extends PureComponent<Props> {
 }
 
 export default withRoot(withStyles(styles)(CandidateComments));
-
-
-
-

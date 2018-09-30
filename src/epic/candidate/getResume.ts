@@ -1,20 +1,23 @@
-import { catchError, map, mergeMap, startWith } from 'rxjs/operators';
+import { Epic, ofType } from 'redux-observable';
 import { from } from 'rxjs';
-import { Epic, ofType } from "redux-observable";
+import { catchError, map, mergeMap, startWith } from 'rxjs/operators';
+
 import { Action, CANDIDATE, customError, Dependencies, errHandler } from '../index';
+
 import { GET_RESUME, GetResume } from '../../action';
-import { URL } from '../../lib/const';
 import { StoreState } from '../../reducer';
+
+import { URL } from '../../lib/const';
 
 const downloadResume = (res: Response) => {
     if (!res.ok) {
-        if (res.status == 404) {
-            throw customError({ message: '简历不存在', type: 'info' })
+        if (res.status === 404) {
+            throw customError({ message: '简历不存在', type: 'info' });
         }
         return from(res.json()).pipe(
-            map(err => {
-                throw customError(err)
-            })
+            map((err) => {
+                throw customError(err);
+            }),
         );
     }
     let filename = 'resume';
@@ -30,7 +33,7 @@ const downloadResume = (res: Response) => {
                 }
             }
             const url = window.URL.createObjectURL(new Blob([blob]));
-            const a = document.createElement("a");
+            const a = document.createElement('a');
             a.href = url;
             a.download = filename;
             document.body.appendChild(a);
@@ -38,7 +41,7 @@ const downloadResume = (res: Response) => {
             document.body.removeChild(a);
             window.URL.revokeObjectURL(url);
             return { type: CANDIDATE.SUCCESS };
-        })
+        }),
     );
 };
 
@@ -49,18 +52,18 @@ export const getResumeEpic: Epic<Action, Action, StoreState, Dependencies> = (ac
             const token = localStorage.getItem('token');
             const { cid } = action;
             if (!token) {
-                return errHandler({ message: 'token不存在', type: 'danger' }, CANDIDATE)
+                return errHandler({ message: 'token不存在', type: 'danger' }, CANDIDATE);
             }
             return from(fetch(`${URL}/candidates/${cid}/resume`, {
                 headers: {
-                    'Authorization': `Bearer ${token}`
+                    Authorization: `Bearer ${token}`,
                 },
             })).pipe(
                 mergeMap(downloadResume),
-                catchError(err => errHandler(err, CANDIDATE)),
+                catchError((err) => errHandler(err, CANDIDATE)),
                 startWith(
-                    { type: CANDIDATE.START }
+                    { type: CANDIDATE.START },
                 ),
-            )
+            );
         }),
     );

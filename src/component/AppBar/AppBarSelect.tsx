@@ -1,9 +1,11 @@
-import React, { PureComponent } from "react";
+import React, { PureComponent } from 'react';
+
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
+
 import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 
-import styles from '../../style/appBar'
+import styles from '../../style/appBar';
 import withRoot from '../../style/withRoot';
 
 interface Props extends WithStyles {
@@ -23,14 +25,10 @@ class Selects extends PureComponent<Props> {
                 onChange={onChange}
                 className={classes.select}
             >
-                {data.map((i, j) =>
-                    <MenuItem value={values[j]} key={j}>{i}</MenuItem>
-                )}
+                {data.map((i, j) => <MenuItem value={values[j]} key={j}>{i}</MenuItem>)}
             </Select>
         );
     }
 }
 
 export default withRoot(withStyles(styles)(Selects));
-
-

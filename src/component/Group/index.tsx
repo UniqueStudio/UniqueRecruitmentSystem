@@ -1,12 +1,16 @@
 import React, { PureComponent } from 'react';
+
 import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
+
 import styles from '../../style/group';
-import withRoot from "../../style/withRoot";
+import withRoot from '../../style/withRoot';
+
 import { Candidate, Recruitment, Time, User } from '../../lib/const';
+
+import GroupCandidates from './GroupCandidates';
 import GroupDialog from './GroupDialog';
-import GroupMembers from "./GroupMembers";
-import GroupCandidates from "./GroupCandidates";
-import GroupModal from "./GroupModal";
+import GroupMembers from './GroupMembers';
+import GroupModal from './GroupModal';
 
 interface Props extends WithStyles {
     candidates: Map<string, Candidate>[];
@@ -31,15 +35,15 @@ class Group extends PureComponent<Props> {
         modalOpen: false,
         dialogOpen: false,
         code: '',
-        place: ''
+        place: '',
     };
 
     initTime = (time: Time[]) => {
         this.setState({
-            counts: time.map(i =>
-                [i.morning ? 0 : -1, i.afternoon ? 0 : -1, i.evening ? 0 : -1]
-            )
-        })
+            counts: time.map((i) =>
+                [i.morning ? 0 : -1, i.afternoon ? 0 : -1, i.evening ? 0 : -1],
+            ),
+        });
     };
 
     handleChange = (event: React.ChangeEvent) => {
@@ -49,7 +53,7 @@ class Group extends PureComponent<Props> {
             interviewStage,
             counts: [],
             code: '',
-            place: ''
+            place: '',
         });
         const groupName = interviewStage === 1 ? group : 'interview';
         requestCandidate(groupName, pendingRecruitment);
@@ -60,8 +64,8 @@ class Group extends PureComponent<Props> {
         counts[i] = counts[i] || [];
         counts[i][j] = Math.max(event.target['value'], 1);
         this.setState({
-            counts
-        })
+            counts,
+        });
     };
 
     handleInput = (name: string) => (event: React.ChangeEvent) => {
@@ -72,31 +76,31 @@ class Group extends PureComponent<Props> {
 
     toggleModal = () => {
         this.setState({
-            modalOpen: !this.state.modalOpen
-        })
+            modalOpen: !this.state.modalOpen,
+        });
     };
 
     toggleDialog = () => {
         this.setState({
-            dialogOpen: !this.state.dialogOpen
-        })
+            dialogOpen: !this.state.dialogOpen,
+        });
     };
 
     submitAllocation = () => {
         const { toggleSnackbar, candidates, currentRecruitment, setAllSlots, userGroup: group } = this.props;
         const { counts, interviewStage } = this.state;
-        const candidateNumbers = candidates.map(i => [...i.values()])[interviewStage === 1 ? 2 : 4].filter(i => !i.abandon).length;
+        const candidateNumbers = candidates.map((i) => [...i.values()])[interviewStage === 1 ? 2 : 4].filter((i) => !i.abandon).length;
         let total = 0;
         let message = '';
-        counts.map(i => {
-            i.map(j => {
+        counts.map((i) => {
+            i.map((j) => {
                 if (j === 0) {
                     message = '每个时间段必须分配候选人';
                     return;
                 } else if (j !== -1) {
                     total += j;
                 }
-            })
+            });
         });
         if (total < candidateNumbers) {
             message = `分配人数不能小于当前候选人数量(${candidateNumbers})`;
@@ -115,7 +119,7 @@ class Group extends PureComponent<Props> {
         const { setOneSlot } = this.props;
         const key = `slot${interviewStage}`;
         const split = time.split('T');
-        const period = (time: string) => time <= '12:00' ? 'morning' : time <= '18:00' ? 'afternoon' : 'evening';
+        const period = (t: string) => t <= '12:00' ? 'morning' : t <= '18:00' ? 'afternoon' : 'evening';
         const value = [
             split[0],
             period(split[1]),
@@ -130,7 +134,7 @@ class Group extends PureComponent<Props> {
             code,
             interviewStage,
             candidates,
-            place
+            place,
         });
         this.toggleDialog();
     };
@@ -168,8 +172,9 @@ class Group extends PureComponent<Props> {
         const disabled = interviewStage === 1
             ? !(candidates[2] && candidates[2].size && currentRecruitment && currentRecruitment.time1 && currentRecruitment.time1[userGroup] && counts.length)
             : !(candidates[4] && candidates[4].size && currentRecruitment && currentRecruitment.time2 && counts.length);
-        const currentCandidates = candidates.length ? candidates.map(i => [...i.values()])[interviewStage * 2] : [];
-        const filteredCandidates = currentCandidates.filter(i => (!i.abandon && !i.rejected && i[`time${interviewStage}`] && i[`slot${interviewStage}`]));
+        const currentCandidates = candidates.length ? candidates.map((i) => [...i.values()])[interviewStage * 2] : [];
+        const filter = (i: Candidate) => (!i.abandon && !i.rejected && i[`time${interviewStage}`] && i[`slot${interviewStage}`]);
+        const filteredCandidates = currentCandidates.filter(filter);
         return (
             <>
                 <div className={classes.infoContainer}>
@@ -204,7 +209,7 @@ class Group extends PureComponent<Props> {
                     />}
                 </div>
             </>
-        )
+        );
     }
 }
 

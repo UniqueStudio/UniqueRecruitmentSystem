@@ -406,12 +406,12 @@ const css = `
 const logger = () => setTimeout(
     console.log.bind(
         console,
-        "%cUnique Studio",
+        '%cUnique Studio',
         css,
         '\nMain developers:',
         '\n@winderica https://github.com/winderica',
         '\n@Faraway https://github.com/farawaaay',
-    )
+    ),
 );
 
 export { logger };

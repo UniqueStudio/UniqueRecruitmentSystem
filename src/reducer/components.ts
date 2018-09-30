@@ -5,7 +5,7 @@ const init = {
     snackbar: {
         on: false,
         info: '',
-        color: ''
+        color: '',
     },
     modalOn: '',
     fabOn: -1,
@@ -33,7 +33,7 @@ export interface Components {
 
 export function components(
     state: Components = init,
-    action: Action
+    action: Action,
 ): Components {
     switch (action.type) {
         case actions.TOGGLE_DRAWER_OPEN:

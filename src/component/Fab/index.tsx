@@ -1,12 +1,18 @@
-import React, { PureComponent } from "react";
+import React, { PureComponent } from 'react';
+
+import classNames from 'classnames';
+
 import Button from '@material-ui/core/Button';
 import Zoom from '@material-ui/core/Zoom';
+
 import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
+
 import AddIcon from '@material-ui/icons/Add';
+
 import { Candidate as CType } from '../../lib/const';
-import styles from "../../style/column";
-import withRoot from "../../style/withRoot";
-import classNames from "classnames";
+
+import styles from '../../style/column';
+import withRoot from '../../style/withRoot';
 
 interface Props extends WithStyles {
     candidates: Map<string, CType>;
@@ -22,24 +28,34 @@ interface Props extends WithStyles {
 
 class Fab extends PureComponent<Props> {
 
+    static getDerivedStateFromProps(nextProps: Props) {
+        if (nextProps.selected.length === 0) {
+            nextProps.toggleFabOff();
+            return {
+                buttons: false,
+            };
+        }
+        return null;
+    }
+
     state = {
         buttons: false,
     };
 
     toggleButtons = () => {
         this.setState({
-            buttons: !this.state.buttons
-        })
+            buttons: !this.state.buttons,
+        });
     };
 
     handleSelectAll = (all: string[]) => () => {
         const { select, candidates } = this.props;
-        select(all.filter(i => !(candidates.get(i)!.abandon || candidates.get(i)!.rejected)));
+        select(all.filter((i) => !(candidates.get(i)!.abandon || candidates.get(i)!.rejected)));
     };
 
     handleInverse = (all: string[], selected: string[]) => () => {
         const { select, deselect, candidates } = this.props;
-        deselect(selected.filter(i => !(candidates.get(i)!.abandon || candidates.get(i)!.rejected)));
+        deselect(selected.filter((i) => !(candidates.get(i)!.abandon || candidates.get(i)!.rejected)));
         select(all.filter((i: string) => !selected.includes(i) && !(candidates.get(i)!.abandon || candidates.get(i)!.rejected)));
     };
 
@@ -57,16 +73,6 @@ class Fab extends PureComponent<Props> {
         this.toggleButtons();
     };
 
-    static getDerivedStateFromProps(nextProps: Props) {
-        if (nextProps.selected.length === 0) {
-            nextProps.toggleFabOff();
-            return {
-                buttons: false,
-            }
-        }
-        return null;
-    }
-
     render() {
         const { classes, candidates, selected, fabOn, snackbarOn, canOperate } = this.props;
         const allCandidatesCids = [...candidates.keys()];
@@ -76,7 +82,7 @@ class Fab extends PureComponent<Props> {
             <>
                 <Zoom in={fabOn !== -1}>
                     <div className={classes.fab}>
-                        <Button variant="fab"
+                        <Button variant='fab'
                                 className={snackbarOn ? classes.fabMoveUp : classes.fabMoveDown}
                                 color='primary' onClick={this.toggleButtons}>
                             <AddIcon />

@@ -1,15 +1,19 @@
-import React, { PureComponent } from "react";
+import React, { PureComponent } from 'react';
+
 import classNames from 'classnames';
+
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
+
 import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 
-import styles from '../../style/template'
+import styles from '../../style/template';
 import withRoot from '../../style/withRoot';
-import generateModel from '../../lib/generateModel';
+
 import { STEPS } from '../../lib/const';
+import generateModel from '../../lib/generateModel';
 
 export interface MainInfo extends WithStyles {
     type: string;
@@ -46,29 +50,29 @@ class SMSDetail extends PureComponent<Props> {
                 <div
                     className={classNames(classes.templateContent, classes.templateItem, classes.templateParams, classes.inputContainer)}>
                     <TextField
-                        label="候选人姓名"
+                        label='候选人姓名'
                         defaultValue='(默认)'
                         className={classNames(classes.templateItem, classes.input)}
                         InputProps={{ inputProps }}
                     />
                     <TextField
-                        label="招新名称"
+                        label='招新名称'
                         defaultValue='(默认)'
                         className={classNames(classes.templateItem, classes.input)}
                         InputProps={{ inputProps }}
                     />
                     <TextField
-                        label="组别"
+                        label='组别'
                         defaultValue={`${group}(默认)`}
                         className={classNames(classes.templateItem, classes.input)}
                         InputProps={{ inputProps }}
                     />
                     <TextField
                         select
-                        label="轮次"
+                        label='轮次'
                         className={classNames(classes.templateItem, classes.input)}
                         value={step}
-                        onChange={handleChange("step")}
+                        onChange={handleChange('step')}
                     >
                         {STEPS.slice(0, 5).map((i, j) => (
                             <MenuItem key={j} value={i}>
@@ -77,7 +81,7 @@ class SMSDetail extends PureComponent<Props> {
                         ))}
                     </TextField>
                     {type === 'accept' && <TextField
-                        label="自定义"
+                        label='自定义'
                         value={rest}
                         className={classNames(classes.templateItem)}
                         fullWidth
@@ -90,7 +94,7 @@ class SMSDetail extends PureComponent<Props> {
                 {(step === STEPS[0] || step === STEPS[2]) && type === 'accept' && !rest &&
                 <div className={classNames(classes.templateContent, classes.templateItem, classes.templateParams)}>
                     <TextField
-                        label="时间"
+                        label='时间'
                         value={time}
                         className={classNames(classes.templateItem, classes.input)}
                         InputLabelProps={{
@@ -99,7 +103,7 @@ class SMSDetail extends PureComponent<Props> {
                         onChange={handleChange('time')}
                     />
                     <TextField
-                        label="地点"
+                        label='地点'
                         value={place}
                         className={classNames(classes.templateItem, classes.input)}
                         InputLabelProps={{
@@ -114,5 +118,3 @@ class SMSDetail extends PureComponent<Props> {
 }
 
 export default withRoot(withStyles(styles)(SMSDetail));
-
-

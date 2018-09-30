@@ -1,9 +1,13 @@
-import React, { PureComponent } from "react";
+import React, { PureComponent } from 'react';
+
 import classNames from 'classnames';
+
 import Paper from '@material-ui/core/Paper';
 import Tooltip from '@material-ui/core/Tooltip';
 import Typography from '@material-ui/core/Typography';
+
 import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
+
 import blue from '@material-ui/core/colors/blue';
 import cyan from '@material-ui/core/colors/cyan';
 import green from '@material-ui/core/colors/green';
@@ -12,10 +16,12 @@ import orange from '@material-ui/core/colors/orange';
 import purple from '@material-ui/core/colors/purple';
 import red from '@material-ui/core/colors/red';
 import yellow from '@material-ui/core/colors/yellow';
+
 import { Doughnut } from 'react-chartjs-2';
 
-import withRoot from '../../style/withRoot';
 import styles from '../../style/chart';
+import withRoot from '../../style/withRoot';
+
 import { Data, GROUPS, STEPS } from '../../lib/const';
 
 const getColors = (i: number) => [red[i], purple[i], indigo[i], blue[i], cyan[i], green[i], yellow[i], orange[i]];
@@ -34,12 +40,12 @@ class Chart extends PureComponent<Props> {
         labels: GROUPS,
         data: [...this.props.totalData],
         clicked: false,
-        title: this.props.title
+        title: this.props.title,
     };
     setData = (e: object[]) => {
         // magic function to reset legend
         const { /*end, */title, totalData, stepData } = this.props;
-        //const expired = +new Date() > end;
+        // const expired = +new Date() > end;
         if (e.length) e['0']._chart.data.datasets['0']._meta[e['0']._chart.id].data.map((i: object) => i['hidden'] = false);
         if (!this.state.clicked && e.length) {
             const i = e['0']._index;
@@ -47,11 +53,11 @@ class Chart extends PureComponent<Props> {
                 labels: STEPS/*.map((i, j) => expired ? `${i.slice(0, 2)}${j === 5 ? '' : '被刷'}` : i)*/,
                 data: { ...stepData }[GROUPS[i].toLowerCase()],
                 clicked: true,
-                title: `${GROUPS[i]}组各轮情况`
+                title: `${GROUPS[i]}组各轮情况`,
             });
         } else if (this.state.clicked === Boolean(e.length)) {
             this.setState({
-                title: title,
+                title,
                 labels: GROUPS,
                 data: [...totalData],
                 clicked: false,
@@ -66,21 +72,21 @@ class Chart extends PureComponent<Props> {
                 data: this.state.data,
                 backgroundColor: getColors(500),
                 hoverBackgroundColor: getColors(300),
-            }]
+            }],
         };
         const options = {
             cutoutPercentage: this.state.clicked ? 50 : 75,
             maintainAspectRatio: false,
             title: {
                 display: true,
-                text: this.state.title
+                text: this.state.title,
             },
             legend: {
                 position: 'bottom' as 'bottom',
                 labels: {
-                    boxWidth: 12
-                }
-            }
+                    boxWidth: 12,
+                },
+            },
         };
         const { classes, end } = this.props;
         const expired = +new Date() > end;
@@ -96,8 +102,8 @@ class Chart extends PureComponent<Props> {
                 `总计：${this.state.data.reduce((i, j) => i + j)}人`
             }</Typography>
         </Paper>;
-        return expired ? <Tooltip title="该招新报名已截止" classes={{ tooltip: classes.tooltip }}
-                                  placement='top'>{ChartBox}</Tooltip> : ChartBox
+        return expired ? <Tooltip title='该招新报名已截止' classes={{ tooltip: classes.tooltip }}
+                                  placement='top'>{ChartBox}</Tooltip> : ChartBox;
     }
 }
 

@@ -1,11 +1,14 @@
+import { Epic, ofType } from 'redux-observable';
 import { of } from 'rxjs';
-import { catchError, mergeMap, startWith } from 'rxjs/operators';
 import { ajax, AjaxResponse } from 'rxjs/ajax';
-import { Epic, ofType } from "redux-observable";
+import { catchError, mergeMap, startWith } from 'rxjs/operators';
+
 import { Action, customError, Dependencies, errHandler, SMS } from '../index';
+
 import { SEND_SMS, SendSMS, toggleSnackbarOn } from '../../action';
-import { URL } from '../../lib/const';
 import { StoreState } from '../../reducer';
+
+import { URL } from '../../lib/const';
 
 export const sendSMSEpic: Epic<Action, Action, StoreState, Dependencies> = (action$, state$, { localStorage }) =>
     action$.pipe(
@@ -24,15 +27,15 @@ export const sendSMSEpic: Epic<Action, Action, StoreState, Dependencies> = (acti
                     if (res.type === 'success') {
                         return of(
                             toggleSnackbarOn('已成功发送短信', 'success'),
-                            { type: SMS.SUCCESS }
+                            { type: SMS.SUCCESS },
                         );
                     }
                     throw customError(res);
                 }),
                 startWith(
-                    { type: SMS.START }
+                    { type: SMS.START },
                 ),
-                catchError(err => errHandler(err, SMS))
-            )
+                catchError((err) => errHandler(err, SMS)),
+            );
         }),
     );

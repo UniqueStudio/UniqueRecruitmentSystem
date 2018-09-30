@@ -1,7 +1,8 @@
 import { connect } from 'react-redux';
-import Group from '../../component/Group';
 import { Dispatch } from 'redux';
-import { StoreState } from '../../reducer';
+
+import Group from '../../component/Group';
+
 import {
     getCandidatesStart,
     GetCandidatesStart,
@@ -16,16 +17,17 @@ import {
     setOneSlotStart,
     SetOneSlotStart,
     toggleSnackbarOn,
-    ToggleSnackbarOn
+    ToggleSnackbarOn,
 } from '../../action';
+import { StoreState } from '../../reducer';
 
 const mapStateToProps = ({ candidates, user, recruitments }: StoreState) => ({
     candidates: candidates.candidates || [],
     group: user.group,
-    currentRecruitment: recruitments.recruitments.filter(i => i.title === recruitments.pending)[0],
+    currentRecruitment: recruitments.recruitments.filter((i) => i.title === recruitments.pending)[0],
     userGroup: user.info.group,
     isLoading: candidates.isLoading.candidates,
-    pendingRecruitment: recruitments.pending
+    pendingRecruitment: recruitments.pending,
 });
 
 type DispatchType =
@@ -35,7 +37,7 @@ type DispatchType =
         | GetRecruitmentsStart
         | SendInterview
         | SetAllSlotsStart
-        | SetOneSlotStart>
+        | SetOneSlotStart>;
 
 const mapDispatchToProps = (dispatch: DispatchType) => ({
     requestCandidate: (group: string, recruitmentName: string) => dispatch(getCandidatesStart(group, recruitmentName)),
@@ -44,7 +46,7 @@ const mapDispatchToProps = (dispatch: DispatchType) => ({
     sendInterview: (content: object) => dispatch(sendInterview(content)),
     toggleSnackbar: (message: string, color: string) => dispatch(toggleSnackbarOn(message, color)),
     setAllSlots: (title: string, slots: number[], group: string) => dispatch(setAllSlotsStart(title, slots, group)),
-    setOneSlot: (id: string, time: object) => dispatch(setOneSlotStart(id, time))
+    setOneSlot: (id: string, time: object) => dispatch(setOneSlotStart(id, time)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Group);

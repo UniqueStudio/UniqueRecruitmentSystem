@@ -1,11 +1,12 @@
-import React, { PureComponent } from "react";
-import { applyMiddleware, createStore } from 'redux';
-import { Provider } from 'react-redux';
-import { BrowserRouter as Router } from "react-router-dom";
 import { createBrowserHistory as createHistory } from 'history';
+import React, { PureComponent } from 'react';
+import { Provider } from 'react-redux';
+import { BrowserRouter as Router } from 'react-router-dom';
+import { applyMiddleware, createStore } from 'redux';
 import { composeWithDevTools } from 'redux-devtools-extension';
-import { reducers } from "./reducer";
-import { epicMiddleware, epics } from "./epic";
+
+import { epicMiddleware, epics } from './epic';
+import { reducers } from './reducer';
 
 import Main from './view/Main';
 

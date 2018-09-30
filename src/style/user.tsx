@@ -1,5 +1,5 @@
-import { StyleRulesCallback } from "@material-ui/core/styles/withStyles";
-import { Theme } from "@material-ui/core/styles";
+import { Theme } from '@material-ui/core/styles';
+import { StyleRulesCallback } from '@material-ui/core/styles/withStyles';
 
 const styles: StyleRulesCallback = (theme: Theme) => ({
     container: {
@@ -7,7 +7,7 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
         minWidth: 320,
         maxWidth: 640,
         [theme.breakpoints.down('xs')]: {
-            padding: theme.spacing.unit
+            padding: theme.spacing.unit,
         },
         padding: theme.spacing.unit * 2,
     },
@@ -18,10 +18,10 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
             width: '50%',
         },
         [theme.breakpoints.down('xs')]: {
-            width: '100%'
+            width: '100%',
         },
-        width: 200
-    }
+        width: 200,
+    },
 });
 
 export default styles;
