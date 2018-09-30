@@ -9,16 +9,17 @@ import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 
 import styles from '../../style/template'
 import withRoot from '../../style/withRoot';
-import TemplateStepOne from './Picker';
-import TemplateStepTwo from './SMSDetail';
+import Picker from './Picker';
+import SMSDetail from './SMSDetail';
 import Verify from '../../container/Verify';
-import { Candidate, PENDING_RECRUITMENT, STEPS } from '../../lib/const';
+import { Candidate, STEPS } from '../../lib/const';
 
 interface Props extends WithStyles {
     group: string;
     status: string;
-    toggleSnackbar: (info: string, color?: string) => void;
+    pendingRecruitment: string;
     selected: Candidate[];
+    toggleSnackbar: (info: string, color?: string) => void;
     toggleOpen: () => void;
     deselect: (cid: string) => void;
     sendSMS: (content: object) => void;
@@ -82,7 +83,7 @@ class Template extends PureComponent<Props> {
 
     sendSMS = () => {
         const { selected, type, step, code, time, place, rest } = this.state;
-        const { toggleSnackbar, group } = this.props;
+        const { toggleSnackbar, group, pendingRecruitment } = this.props;
         if (code === '') {
             toggleSnackbar('未填写验证码！');
             return;
@@ -94,17 +95,17 @@ class Template extends PureComponent<Props> {
             code,
             rest,
             group: group.toLowerCase(),
-            title: PENDING_RECRUITMENT
+            title: pendingRecruitment
         };
         if ((step === STEPS[0] || step === STEPS[2]) && type === 'accept') {
             content['time'] = time;
             content['place'] = place;
         }
-        this.props.sendSMS(content);
         this.setState({
             code: '',
             sent: true
         });
+        this.props.sendSMS(content);
     };
 
     handleDelete = (cid: string) => {
@@ -129,6 +130,7 @@ class Template extends PureComponent<Props> {
         if (nextProps.status === 'success' && prevState.sent) {
             return {
                 activeStep: prevState.activeStep + 1,
+                sent: false
             };
         }
         return null;
@@ -139,8 +141,8 @@ class Template extends PureComponent<Props> {
         const { activeStep, selected, step, type, code, time, place, rest } = this.state;
         const steps = ['发送对象', '消息模板', '确认发送'];
         const stepContent = [
-            <TemplateStepOne selected={selected} onDelete={this.handleDelete} />,
-            <TemplateStepTwo
+            <Picker selected={selected} onDelete={this.handleDelete}/>,
+            <SMSDetail
                 step={step}
                 type={type}
                 group={group}

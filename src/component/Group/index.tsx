@@ -13,13 +13,14 @@ interface Props extends WithStyles {
     group: User[];
     userGroup: string;
     currentRecruitment: Recruitment;
-    requestCandidate: (group: string) => void;
+    pendingRecruitment: string;
+    requestCandidate: (group: string, recruitmentName: string) => void;
     requestGroup: (group: string) => void;
     requestRecruitments: () => void;
     sendInterview: (content: object) => void;
     toggleSnackbar: (message: string, color: string) => void;
-    submit: (title: string, slots: number[], group: string) => void;
-    setCandidateSlot: (id: string, time: object) => void;
+    setAllSlots: (title: string, slots: number[], group: string) => void;
+    setOneSlot: (id: string, time: object) => void;
 }
 
 class Group extends PureComponent<Props> {
@@ -43,14 +44,15 @@ class Group extends PureComponent<Props> {
 
     handleChange = (event: React.ChangeEvent) => {
         const interviewStage = event.target['value'];
-        const { requestCandidate, userGroup: group } = this.props;
+        const { requestCandidate, userGroup: group, pendingRecruitment } = this.props;
         this.setState({
             interviewStage,
             counts: [],
             code: '',
             place: ''
         });
-        interviewStage === 1 ? requestCandidate(group) : requestCandidate('interview');
+        const groupName = interviewStage === 1 ? group : 'interview';
+        requestCandidate(groupName, pendingRecruitment);
     };
 
     handleSelect = (i: number, j: number) => (event: React.ChangeEvent) => {
@@ -81,7 +83,7 @@ class Group extends PureComponent<Props> {
     };
 
     submitAllocation = () => {
-        const { toggleSnackbar, candidates, currentRecruitment, submit, userGroup: group } = this.props;
+        const { toggleSnackbar, candidates, currentRecruitment, setAllSlots, userGroup: group } = this.props;
         const { counts, interviewStage } = this.state;
         const candidateNumbers = candidates.map(i => [...i.values()])[interviewStage === 1 ? 2 : 4].filter(i => !i.abandon).length;
         let total = 0;
@@ -104,13 +106,13 @@ class Group extends PureComponent<Props> {
             return;
         }
         const slots = counts.reduce((i, j) => [...i, ...j]);
-        submit(currentRecruitment.title, slots, interviewStage === 1 ? group : 'interview');
+        setAllSlots(currentRecruitment.title, slots, interviewStage === 1 ? group : 'interview');
         this.toggleModal();
     };
 
-    setTime = (id: string, time: string) => {
+    setOneSlot = (id: string, time: string) => {
         const { interviewStage } = this.state;
-        const { setCandidateSlot } = this.props;
+        const { setOneSlot } = this.props;
         const key = `slot${interviewStage}`;
         const split = time.split('T');
         const period = (time: string) => time <= '12:00' ? 'morning' : time <= '18:00' ? 'afternoon' : 'evening';
@@ -119,7 +121,7 @@ class Group extends PureComponent<Props> {
             period(split[1]),
             split[1],
         ];
-        setCandidateSlot(id, { [key]: value });
+        setOneSlot(id, { [key]: value });
     };
 
     sendInterview = (candidates: string[]) => () => {
@@ -134,9 +136,9 @@ class Group extends PureComponent<Props> {
     };
 
     componentDidMount() {
-        const { requestCandidate, requestGroup, requestRecruitments, toggleSnackbar, userGroup } = this.props;
+        const { requestCandidate, requestGroup, requestRecruitments, toggleSnackbar, userGroup, pendingRecruitment } = this.props;
         if (userGroup) {
-            requestCandidate(userGroup);
+            requestCandidate(userGroup, pendingRecruitment);
             requestGroup(userGroup);
             requestRecruitments();
         } else {
@@ -169,37 +171,39 @@ class Group extends PureComponent<Props> {
         const currentCandidates = candidates.length ? candidates.map(i => [...i.values()])[interviewStage * 2] : [];
         const filteredCandidates = currentCandidates.filter(i => (!i.abandon && !i.rejected && i[`time${interviewStage}`] && i[`slot${interviewStage}`]));
         return (
-            <div className={classes.infoContainer}>
-                <GroupMembers group={group}/>
-                <GroupCandidates
-                    candidates={currentCandidates}
-                    interviewStage={interviewStage}
-                    disabled={disabled}
-                    toggleModal={this.toggleModal}
-                    toggleDialog={this.toggleDialog}
-                    handleChange={this.handleChange}
-                    setTime={this.setTime}
-                />
-                <GroupDialog
-                    dialogOpen={dialogOpen}
-                    toggleDialog={this.toggleDialog}
-                    handleInput={this.handleInput}
-                    code={code}
-                    place={place}
-                    sendInterview={this.sendInterview}
-                    candidates={filteredCandidates}
-                />
-                {!disabled && <GroupModal
-                    userGroup={userGroup}
-                    currentRecruitment={currentRecruitment}
-                    interviewStage={interviewStage}
-                    counts={counts}
-                    modalOpen={modalOpen}
-                    handleSelect={this.handleSelect}
-                    submitAllocation={this.submitAllocation}
-                    toggleModal={this.toggleModal}
-                />}
-            </div>
+            <>
+                <div className={classes.infoContainer}>
+                    <GroupCandidates
+                        candidates={currentCandidates}
+                        interviewStage={interviewStage}
+                        disabled={disabled}
+                        toggleModal={this.toggleModal}
+                        toggleDialog={this.toggleDialog}
+                        handleChange={this.handleChange}
+                        setTime={this.setOneSlot}
+                    />
+                    <GroupMembers group={group}/>
+                    <GroupDialog
+                        dialogOpen={dialogOpen}
+                        toggleDialog={this.toggleDialog}
+                        handleInput={this.handleInput}
+                        code={code}
+                        place={place}
+                        sendInterview={this.sendInterview}
+                        candidates={filteredCandidates}
+                    />
+                    {!disabled && <GroupModal
+                        userGroup={userGroup}
+                        currentRecruitment={currentRecruitment}
+                        interviewStage={interviewStage}
+                        counts={counts}
+                        modalOpen={modalOpen}
+                        handleSelect={this.handleSelect}
+                        submitAllocation={this.submitAllocation}
+                        toggleModal={this.toggleModal}
+                    />}
+                </div>
+            </>
         )
     }
 }

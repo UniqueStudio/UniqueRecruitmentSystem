@@ -21,7 +21,6 @@ export function sms(
             return { ...state, isLoading: false, status: 'success' };
         case SMS.FAILURE:
             return { ...state, isLoading: false, status: 'failure' };
-
     }
     return state;
 }

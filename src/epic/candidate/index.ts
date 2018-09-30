@@ -4,8 +4,8 @@ import { removeCandidateEpic } from './removeCandidate';
 import { moveCandidateEpic } from './moveCandidate';
 import { addCommentEpic } from './addComment';
 import { removeCommentEpic } from './removeComment';
-import { submitSlotsEpic } from './submitSlots';
-import { setCandidateSlotEpic } from "./setCandidateSlot";
+import { setAllSlotsEpic } from './setAllSlots';
+import { setOneSlotEpic } from "./setOneSlot";
 
 export default [
     getCandidatesEpic,
@@ -14,6 +14,6 @@ export default [
     moveCandidateEpic,
     addCommentEpic,
     removeCommentEpic,
-    submitSlotsEpic,
-    setCandidateSlotEpic
+    setAllSlotsEpic,
+    setOneSlotEpic
 ];
