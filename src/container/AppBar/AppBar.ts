@@ -16,7 +16,8 @@ const mapStateToProps = ({ components, user, candidates, recruitments }: StoreSt
     open: components.drawerOpen,
     loggedIn: user.loggedIn,
     group: candidates.group,
-    pendingRecruitment: recruitments.pending
+    pendingRecruitment: recruitments.pending,
+    ...ownProps
 });
 
 type DispatchType = Dispatch<ToggleDrawerOpen | Logout | GetCandidatesStart>

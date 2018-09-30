@@ -14,7 +14,8 @@ interface OwnProps {
 
 const mapStateToProps = ({ sms, recruitments }: StoreState, ownProps: OwnProps) => ({
     status: sms.status,
-    pendingRecruitment: recruitments.pending
+    pendingRecruitment: recruitments.pending,
+    ...ownProps
 });
 
 type DispatchType = Dispatch<ToggleSnackbarOn | SendSMS>
