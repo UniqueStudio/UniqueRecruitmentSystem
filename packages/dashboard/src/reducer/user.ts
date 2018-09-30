@@ -1,6 +1,7 @@
 import * as actions from '../action';
-import { USER } from '../epic'
-import { User as UType } from '../lib/const';
+import { USER } from '../epic';
+
+import { Message, User as UType } from '../lib/const';
 
 const token = localStorage.getItem('token');
 const payload = token && token.split('.')[1];
@@ -17,7 +18,7 @@ const init = {
     key: '',
     messages: [],
     group: group ? JSON.parse(group) : [],
-    shouldUpdateGroup: false
+    shouldUpdateGroup: false,
 };
 
 type Action =
@@ -36,7 +37,7 @@ export interface User {
     isScanning: boolean;
     info: UType;
     key: string;
-    messages: object[];
+    messages: Message[];
     group: UType[];
     shouldUpdateGroup: boolean;
 }
@@ -48,7 +49,7 @@ const insert = (item: object, arr: object[]) => {
     }
     for (let i = length - 1; i >= 0; i--) {
         if (arr[i]['time'] > item['time']) {
-            arr[i + 1] = arr[i]
+            arr[i + 1] = arr[i];
         } else {
             arr[i + 1] = item;
             break;
@@ -86,8 +87,8 @@ export function user(state: User = init, action: Action): User {
                     message: action.message,
                     time: action.time,
                     isSelf: action.isSelf,
-                    type: 'text'
-                }, [...state.messages])
+                    type: 'text',
+                }, [...state.messages]) as Message[],
             };
         case actions.ADD_IMAGE:
             return {
@@ -98,9 +99,9 @@ export function user(state: User = init, action: Action): User {
                     message: action.image,
                     time: action.time,
                     isSelf: action.isSelf,
-                    type: 'image'
-                }, [...state.messages])
-            }
+                    type: 'image',
+                }, [...state.messages]) as Message[],
+            };
     }
     return state;
 }

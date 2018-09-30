@@ -1,12 +1,15 @@
-import React, { PureComponent } from "react";
+import React, { PureComponent } from 'react';
+
 import Button from '@material-ui/core/Button';
 import MenuItem from '@material-ui/core/MenuItem';
-import Paper from "@material-ui/core/Paper";
+import Paper from '@material-ui/core/Paper';
 import TextField from '@material-ui/core/TextField';
+
 import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 
-import styles from "../../style/user";
-import withRoot from "../../style/withRoot";
+import styles from '../../style/user';
+import withRoot from '../../style/withRoot';
+
 import { GROUPS, GROUPS_, User as UserType } from '../../lib/const';
 
 interface Props extends WithStyles {
@@ -18,12 +21,22 @@ interface Props extends WithStyles {
 }
 
 interface State {
-    info: UserType
+    info: UserType;
 }
 
 class User extends PureComponent<Props> {
+
+    static getDerivedStateFromProps(nextProps: Props, prevState: State) {
+        if (prevState.info !== nextProps.info && !prevState.info.sex) {
+            return {
+                info: nextProps.info,
+            };
+        }
+        return null;
+    }
+
     state: State = {
-        info: this.props.info
+        info: this.props.info,
     };
 
     componentDidMount() {
@@ -65,107 +78,95 @@ class User extends PureComponent<Props> {
         this.props.submitInfo(this.props.uid, this.state.info);
     };
 
-    static getDerivedStateFromProps(nextProps: Props, prevState: State) {
-        if (prevState.info !== nextProps.info && !prevState.info.sex) {
-            return {
-                info: nextProps.info
-            };
-        }
-        return null;
-    }
-
     render() {
         const { classes } = this.props;
         const { username, sex, group, isAdmin, isCaptain, phone, mail, joinTime } = this.state.info;
+        const year = new Date().getFullYear();
+        const years = [year - 3, year - 2, year - 1, year];
+        const translator = [['春招', 'S'], ['夏令营', 'C'], ['秋招', 'A']];
         return sex !== undefined && (
             <Paper className={classes.container}>
                 <TextField
-                    label="姓名"
+                    label='姓名'
                     value={username}
                     onChange={this.handleChange('username')}
-                    margin="normal"
+                    margin='normal'
                     className={classes.userInfo}
                     disabled={true}
                 />
                 <TextField
                     select
-                    label="性别"
+                    label='性别'
                     className={classes.userInfo}
                     value={sex}
                     onChange={this.handleChange('sex')}
-                    margin="normal"
+                    margin='normal'
                 >
                     <MenuItem value='Male'>男</MenuItem>
                     <MenuItem value='Female'>女</MenuItem>
                 </TextField>
                 <TextField
                     select
-                    label="组别"
+                    label='组别'
                     className={classes.userInfo}
                     value={group || ''}
                     onChange={this.handleChange('group')}
-                    margin="normal"
+                    margin='normal'
                     disabled={!!group}
                 >
                     {GROUPS.map((i, j) => <MenuItem value={GROUPS_[j]} key={j}>{i}</MenuItem>)}
                 </TextField>
                 <TextField
                     select
-                    label="加入时间"
+                    label='加入时间'
                     className={classes.userInfo}
                     value={joinTime || ''}
                     onChange={this.handleChange('joinTime')}
-                    margin="normal"
+                    margin='normal'
                 >
-                    {(() => {
-                        const year = new Date().getFullYear();
-                        return [year - 3, year - 2, year - 1, year].map(i =>
-                            [['春招', 'S'], ['夏令营', 'C'], ['秋招', 'A']].map(j =>
-                                <MenuItem value={i + j[1]}>{i + j[0]}</MenuItem>
-                            ))
-                    })()}
+                    {years.map((i) => translator.map((j) => <MenuItem value={i + j[1]}>{i + j[0]}</MenuItem>))}
                 </TextField>
                 <TextField
                     select
-                    label="组长?"
+                    label='组长?'
                     className={classes.userInfo}
                     value={isCaptain ? 1 : 0}
                     onChange={this.handleChange('isCaptain')}
-                    margin="normal"
+                    margin='normal'
                 >
                     <MenuItem value={1}>是</MenuItem>
                     <MenuItem value={0}>否</MenuItem>
                 </TextField>
                 <TextField
                     select
-                    label="管理员?"
+                    label='管理员?'
                     className={classes.userInfo}
                     value={isAdmin ? 1 : 0}
                     onChange={this.handleChange('isAdmin')}
-                    margin="normal"
+                    margin='normal'
                 >
                     <MenuItem value={1}>是</MenuItem>
                     <MenuItem value={0}>否</MenuItem>
                 </TextField>
                 <TextField
-                    label="手机号"
+                    label='手机号'
                     value={phone || ''}
                     onChange={this.handleChange('phone')}
-                    margin="normal"
+                    margin='normal'
                     className={classes.userInfo}
                 />
                 <TextField
-                    label="邮箱"
+                    label='邮箱'
                     value={mail || ''}
                     onChange={this.handleChange('mail')}
                     className={classes.userInfo}
-                    margin="normal"
+                    margin='normal'
                 />
                 <div>
                     <Button size='large' onClick={this.submitChange} color='primary'>修改</Button>
                 </div>
             </Paper>
-        )
+        );
     }
 }
 

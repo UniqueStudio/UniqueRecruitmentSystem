@@ -1,7 +1,9 @@
-import { mergeMap, switchMap, tap } from 'rxjs/operators';
+import { Epic, ofType } from 'redux-observable';
 import { EMPTY, of } from 'rxjs';
-import { Epic, ofType } from "redux-observable";
+import { mergeMap, switchMap, tap } from 'rxjs/operators';
+
 import { Action, CANDIDATE, Dependencies, errHandler, Socket } from '../index';
+
 import { MOVE_CANDIDATE_START, moveCandidateFulfilled, MoveCandidateStart } from '../../action';
 import { StoreState } from '../../reducer';
 
@@ -25,11 +27,10 @@ export const moveCandidateEpic: Epic<Action, Action, StoreState, Dependencies> =
                             // Try to move, move back if failed
                             moveCandidateFulfilled(from, to, cid, position),
                             { type: CANDIDATE.START },
-                        )
-                    })
-                )
+                        );
+                    }),
+                );
             }
             return EMPTY;
-        })
+        }),
     );
-

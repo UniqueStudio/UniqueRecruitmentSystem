@@ -1,12 +1,13 @@
-import { StyleRulesCallback } from "@material-ui/core/styles/withStyles";
-import { Theme } from "@material-ui/core/styles";
+import { Theme } from '@material-ui/core/styles';
+import { StyleRulesCallback } from '@material-ui/core/styles/withStyles';
+
 import { colorToAlpha } from './index';
 
 const styles: StyleRulesCallback = (theme: Theme) => ({
     chartContainer: {
         display: 'inline-flex',
         flexDirection: 'column',
-        alignItems: 'center'
+        alignItems: 'center',
     },
     chart: {
         display: 'flex',
@@ -14,21 +15,21 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
         width: 300,
         height: 300,
         verticalAlign: 'top',
-        position: 'relative'
+        position: 'relative',
     },
     detail: {
         margin: theme.spacing.unit * 2,
-        overflowY: 'auto'
+        overflowY: 'auto',
     },
     commonTime: {
         display: 'flex',
-        justifyContent: 'space-around'
+        justifyContent: 'space-around',
     },
     formGroup: {
-        flexDirection: 'row'
+        flexDirection: 'row',
     },
     expansion: {
-        margin: theme.spacing.unit
+        margin: theme.spacing.unit,
     },
     expired: {
         background: colorToAlpha(theme.palette.secondary.light, 0.1),
@@ -36,23 +37,23 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
     newButton: {
         alignSelf: 'center',
         marginLeft: 'auto',
-        marginRight: 'auto'
+        marginRight: 'auto',
     },
     newButtonRoot: {
         height: 'auto',
         width: 'auto',
     },
     newIcon: {
-        fontSize: 144
+        fontSize: 144,
     },
     tooltip: {
-        fontSize: theme.typography.button.fontSize
+        fontSize: theme.typography.button.fontSize,
     },
     newContainer: {
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-        padding: `0 ${theme.spacing.unit * 2}px ${theme.spacing.unit * 2}px`
+        padding: `0 ${theme.spacing.unit * 2}px ${theme.spacing.unit * 2}px`,
     },
     doughnut: {
         position: 'absolute',
@@ -61,19 +62,19 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
         marginLeft: 'auto',
         marginRight: 'auto',
         marginTop: 128,
-        userSelect: 'none'
+        userSelect: 'none',
     },
     select: {
         width: 100,
-        margin: theme.spacing.unit
+        margin: theme.spacing.unit,
     },
     picker: {
         width: 200,
-        [theme.breakpoints.down("xs")]: {
+        [theme.breakpoints.down('xs')]: {
             width: 150,
         },
-        margin: theme.spacing.unit
-    }
+        margin: theme.spacing.unit,
+    },
 });
 
 export default styles;

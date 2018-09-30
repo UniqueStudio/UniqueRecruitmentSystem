@@ -1,6 +1,8 @@
 import { connect } from 'react-redux';
-import { StoreState } from '../../reducer';
+import { Dispatch } from 'redux';
+
 import Column from '../../component/Column/Column';
+
 import {
     getResume,
     GetResume,
@@ -11,7 +13,8 @@ import {
     toggleModalOn,
     ToggleModalOn,
 } from '../../action';
-import { Dispatch } from 'redux';
+import { StoreState } from '../../reducer';
+
 import { STEPS } from '../../lib/const';
 
 interface OwnProps {
@@ -25,20 +28,20 @@ const mapStateToProps = ({ candidates, components }: StoreState, ownProps: OwnPr
     isLoading: candidates.isLoading.candidates,
     modalOn: components.modalOn,
     candidates: candidates.candidates[STEPS.indexOf(ownProps.title)] || new Map<string, object>(),
-    ...ownProps
+    ...ownProps,
 });
 
 type DispatchType =
     Dispatch<ToggleModalOn
         | ToggleModalOff
         | RecordInputtingComment
-        | GetResume>
+        | GetResume>;
 
 const mapDispatchToProps = (dispatch: DispatchType) => ({
     toggleModalOn: (cid: string) => dispatch(toggleModalOn(cid)),
     toggleModalOff: () => dispatch(toggleModalOff()),
     changeInputting: (comment: string, evaluation: string) => dispatch(recordInputtingComment(comment, evaluation)),
-    downloadResume: (cid: string) => dispatch(getResume(cid))
+    downloadResume: (cid: string) => dispatch(getResume(cid)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Column);

@@ -1,5 +1,6 @@
 import * as actions from '../action';
-import { RECRUITMENT } from '../epic'
+import { RECRUITMENT } from '../epic';
+
 import { Recruitment } from '../lib/const';
 
 const init = {
@@ -7,14 +8,13 @@ const init = {
     pending: '2018A',
     isLoading: false,
     status: '',
-    shouldUpdateRecruitment: false
+    shouldUpdateRecruitment: false,
 };
 
 type Action =
     actions.GetRecruitmentsFulfilled
     // | actions.UpdateRecruitment
     | actions.SetShouldUpdateRecruitment;
-
 
 export interface Recruitments {
     recruitments: Recruitment[];

@@ -1,23 +1,30 @@
-import React, { PureComponent } from "react";
+import React, { PureComponent } from 'react';
+import { Redirect, RouteComponentProps } from 'react-router-dom';
+
 import classNames from 'classnames';
+
 import AppBar from '@material-ui/core/AppBar';
 import IconButton from '@material-ui/core/IconButton';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import Toolbar from '@material-ui/core/Toolbar';
+
 import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
+
 import MenuIcon from '@material-ui/icons/Menu';
 import PersonIcon from '@material-ui/icons/Person';
 import RefreshIcon from '@material-ui/icons/Refresh';
-import styles from '../../style/appBar'
+
+import styles from '../../style/appBar';
 import withRoot from '../../style/withRoot';
-import Select from './AppBarSelect';
+
 import Anchor from '../Anchor';
-import { Redirect, RouteComponentProps } from 'react-router-dom';
-import { Header } from './Header';
-import { GROUPS, GROUPS_, STEPS } from '../../lib/const';
-import titleConverter from "../../lib/titleConverter";
+import Select from './AppBarSelect';
+import Header from './Header';
+
 import { version } from '../../../package.json';
+import { GROUPS, GROUPS_, STEPS } from '../../lib/const';
+import titleConverter from '../../lib/titleConverter';
 
 interface Props extends WithStyles {
     open: boolean;
@@ -65,19 +72,19 @@ class Bar extends PureComponent<Props & RouteComponentProps<{}>> {
             '/candidates': titleConverter(pendingRecruitment),
             '/data': '历年数据展示',
             '/massInterview': `${titleConverter(pendingRecruitment)}・群面`,
-            '/myInfo': '个人信息管理',
             '/myGroup': '组员信息管理',
+            '/myInfo': '个人信息管理',
         };
         return (
             <AppBar
-                position="absolute"
+                position='absolute'
                 className={classNames(classes.appBar, open && classes.appBarShift)}
             >
                 <Toolbar disableGutters={!open} classes={{
-                    gutters: classes.appBarGutters
+                    gutters: classes.appBarGutters,
                 }}>
                     <IconButton
-                        color="inherit"
+                        color='inherit'
                         onClick={toggleOpen}
                         className={classNames(classes.menuButton, open && classes.hide)}
                     >
@@ -93,13 +100,13 @@ class Bar extends PureComponent<Props & RouteComponentProps<{}>> {
                         <>
                             <div className={classes.rightButtons}>
                                 <IconButton
-                                    color="inherit"
+                                    color='inherit'
                                     onClick={this.refresh}
                                 >
                                     <RefreshIcon/>
                                 </IconButton>
                                 <IconButton
-                                    color="inherit"
+                                    color='inherit'
                                     className={classNames(open && classes.hide)}
                                     onClick={this.handleClick}
                                 >

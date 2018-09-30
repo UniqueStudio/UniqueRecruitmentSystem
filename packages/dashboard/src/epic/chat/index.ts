@@ -1,4 +1,4 @@
-import { sendMessageEpic } from './sendMessage';
 import { sendImageEpic } from './sendImage';
+import { sendMessageEpic } from './sendMessage';
 
 export default [sendMessageEpic, sendImageEpic];

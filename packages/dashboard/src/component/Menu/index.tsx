@@ -1,5 +1,7 @@
-import React, { PureComponent } from "react";
+import React, { PureComponent } from 'react';
+
 import classNames from 'classnames';
+
 import Divider from '@material-ui/core/Divider';
 import Drawer from '@material-ui/core/Drawer';
 import IconButton from '@material-ui/core/IconButton';
@@ -7,17 +9,20 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
-import DashboardIcon from '@material-ui/icons/Dashboard';
-import PieChartIcon from '@material-ui/icons/PieChart';
-import PersonIcon from '@material-ui/icons/Person';
-import PeopleIcon from '@material-ui/icons/People';
-import HomeIcon from '@material-ui/icons/Home';
-import GroupWorkIcon from '@material-ui/icons/GroupWork';
-import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 
-import withRoot from '../../style/withRoot';
+import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
+
+import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
+import DashboardIcon from '@material-ui/icons/Dashboard';
+import GroupWorkIcon from '@material-ui/icons/GroupWork';
+import HomeIcon from '@material-ui/icons/Home';
+import PeopleIcon from '@material-ui/icons/People';
+import PersonIcon from '@material-ui/icons/Person';
+import PieChartIcon from '@material-ui/icons/PieChart';
+
 import styles from '../../style/menu';
+import withRoot from '../../style/withRoot';
+
 import Anchor from '../Anchor';
 
 interface Props extends WithStyles {
@@ -31,7 +36,7 @@ class Menu extends PureComponent<Props> {
         const { classes, open, toggleOpen } = this.props;
         return (
             <Drawer
-                variant="permanent"
+                variant='permanent'
                 classes={{
                     paper: classNames(classes.drawerPaper, !open && classes.drawerPaperClose),
                 }}
@@ -49,7 +54,7 @@ class Menu extends PureComponent<Props> {
                             <ListItemIcon>
                                 <HomeIcon />
                             </ListItemIcon>
-                            <ListItemText primary="首页" />
+                            <ListItemText primary='首页'/>
                         </ListItem>
                     </Anchor>
                     <Anchor to='/data'>
@@ -57,7 +62,7 @@ class Menu extends PureComponent<Props> {
                             <ListItemIcon>
                                 <PieChartIcon />
                             </ListItemIcon>
-                            <ListItemText primary="历年数据" />
+                            <ListItemText primary='历年数据'/>
                         </ListItem>
                     </Anchor>
                     <Anchor to='/candidates'>
@@ -65,7 +70,7 @@ class Menu extends PureComponent<Props> {
                             <ListItemIcon>
                                 <DashboardIcon />
                             </ListItemIcon>
-                            <ListItemText primary="报名审核" />
+                            <ListItemText primary='报名审核'/>
                         </ListItem>
                     </Anchor>
                     <Anchor to='/massInterview'>
@@ -73,7 +78,7 @@ class Menu extends PureComponent<Props> {
                             <ListItemIcon>
                                 <GroupWorkIcon />
                             </ListItemIcon>
-                            <ListItemText primary="群面审核" />
+                            <ListItemText primary='群面审核'/>
                         </ListItem>
                     </Anchor>
                     <Anchor to='/myInfo'>
@@ -81,7 +86,7 @@ class Menu extends PureComponent<Props> {
                             <ListItemIcon>
                                 <PersonIcon />
                             </ListItemIcon>
-                            <ListItemText primary="个人信息" />
+                            <ListItemText primary='个人信息'/>
                         </ListItem>
                     </Anchor>
                     <Anchor to='/myGroup'>
@@ -89,12 +94,12 @@ class Menu extends PureComponent<Props> {
                             <ListItemIcon>
                                 <PeopleIcon />
                             </ListItemIcon>
-                            <ListItemText primary="组员信息" />
+                            <ListItemText primary='组员信息'/>
                         </ListItem>
                     </Anchor>
                 </List>
             </Drawer>
-        )
+        );
     }
 }
 

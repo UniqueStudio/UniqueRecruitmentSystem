@@ -1,9 +1,10 @@
-import { components, Components } from './components';
+import { combineReducers } from 'redux';
+
 import { candidates, Candidates } from './candidates';
-import { user, User } from './user';
+import { components, Components } from './components';
 import { recruitments, Recruitments } from './recruitments';
 import { sms, Sms } from './sms';
-import { combineReducers } from 'redux';
+import { user, User } from './user';
 
 export interface StoreState {
     components: Components;

@@ -1,4 +1,5 @@
 import React, { PureComponent } from 'react';
+
 import Paper from '@material-ui/core/Paper';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -6,12 +7,15 @@ import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Typography from '@material-ui/core/Typography';
+
 import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 
 import styles from '../../style/group';
-import withRoot from "../../style/withRoot";
+import withRoot from '../../style/withRoot';
+
 import { User } from '../../lib/const';
-import titleConverter from "../../lib/titleConverter";
+
+import titleConverter from '../../lib/titleConverter';
 
 interface Props extends WithStyles {
     group: User[];
@@ -23,7 +27,7 @@ class GroupMembers extends PureComponent<Props> {
         return (
             <Paper className={classes.paper}>
                 <div className={classes.title}>
-                    <Typography variant="title">
+                    <Typography variant='title'>
                         小组成员信息
                     </Typography>
                 </div>
@@ -43,8 +47,8 @@ class GroupMembers extends PureComponent<Props> {
                         <TableBody>
                             {Boolean(group.length) && group.map((i, j) => (
                                 <TableRow key={j}>
-                                    <TableCell component="th" scope="row" classes={{
-                                        root: classes.tableCell
+                                    <TableCell component='th' scope='row' classes={{
+                                        root: classes.tableCell,
                                     }}>{i.username}</TableCell>
                                     <TableCell
                                         classes={{ root: classes.tableCell }}>{i.sex === 'Male' ? '男' : '女'}</TableCell>
@@ -61,7 +65,7 @@ class GroupMembers extends PureComponent<Props> {
                     </Table>
                 </div>
             </Paper>
-        )
+        );
     }
 }
 

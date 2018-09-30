@@ -7,9 +7,9 @@ export default (accepted: boolean, name: string, title: string, group: string, s
                 : step === STEPS[4] ? `，你已成功加入${group}组`
                     : '';
     if (step === '通过' && accepted) {
-        return `[联创团队]${name}你好，你在${title}中已成功加入${group}组！`
+        return `[联创团队]${name}你好，你在${title}中已成功加入${group}组！`;
     }
     return accepted ?
         `[联创团队]${name}你好，你通过了${title}${group}组${step}审核${rest}`
-        : `[联创团队]${name}你好，你没有通过${title}${group}组${step}审核，请你不要灰心，继续学习。期待与更强大的你的相遇！`
-}
+        : `[联创团队]${name}你好，你没有通过${title}${group}组${step}审核，请你不要灰心，继续学习。期待与更强大的你的相遇！`;
+};

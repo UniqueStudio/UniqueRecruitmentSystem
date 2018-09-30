@@ -1,16 +1,20 @@
-import React, { PureComponent } from "react";
+import React, { PureComponent } from 'react';
+import { DraggableProvided } from 'react-beautiful-dnd';
+
 import Card from '@material-ui/core/Card';
 import Checkbox from '@material-ui/core/Checkbox';
 import IconButton from '@material-ui/core/IconButton';
 import Popover from '@material-ui/core/Popover';
 import Typography from '@material-ui/core/Typography';
-import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
-import InfoIcon from "@material-ui/icons/InfoOutlined";
-import { DraggableProvided } from 'react-beautiful-dnd';
 
-import styles from "../../style/candidate";
+import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
+
+import InfoIcon from '@material-ui/icons/InfoOutlined';
+
 import { colorToAlpha, dangerColor, successColor, warningColor } from '../../style';
-import withRoot from "../../style/withRoot";
+import styles from '../../style/candidate';
+import withRoot from '../../style/withRoot';
+
 import { Candidate as CType } from '../../lib/const';
 
 interface Props extends WithStyles {
@@ -44,7 +48,7 @@ class Candidate extends PureComponent<Props> {
     handleCheck = (event: React.ChangeEvent) => {
         const { cid, toggleFabOn, step, select, deselect } = this.props;
         this.setState({
-            checked: event.target['checked']
+            checked: event.target['checked'],
         });
         if (event.target['checked']) {
             select(cid);
@@ -57,16 +61,17 @@ class Candidate extends PureComponent<Props> {
     render() {
         const { cid, info, selected, classes, toggleModalOn, changeInputting, provided, fabOn, step } = this.props;
         const { name, grade, institute, comments, abandon, rejected, sex, isQuick } = info;
-        const evaluations = Object.values(comments).map(i => i['evaluation']);
-        const red = colorToAlpha(dangerColor, 0.1),
-            yellow = colorToAlpha(warningColor, 0.1),
-            green = colorToAlpha(successColor, 0.1);
-        const yellowP = evaluations.filter(i => i === 'so-so').length / evaluations.length * 100,
-            greenP = evaluations.filter(i => i === 'good').length / evaluations.length * 100;
+        const evaluations = Object.values(comments).map((i) => i['evaluation']);
+        const red = colorToAlpha(dangerColor, 0.1);
+        const yellow = colorToAlpha(warningColor, 0.1);
+        const green = colorToAlpha(successColor, 0.1);
+        const greenP = evaluations.filter((i) => i === 'good').length / evaluations.length * 100;
+        const yellowP = evaluations.filter((i) => i === 'so-so').length / evaluations.length * 100 + greenP;
+        const style = `linear-gradient(to right, ${green}, ${green} ${greenP}%, ${yellow} ${greenP}%, ${yellow} ${yellowP}%, ${red} ${yellowP}%, ${red})`;
         const coloredPanelStyle = {
-            background: abandon ? 'rgba(0, 0, 0, 0.1)' : evaluations.length === 0 ? 'rgba(0, 0, 0, 0)' : `linear-gradient(to right, ${green}, ${green} ${greenP}%, ${yellow} ${greenP}%, ${yellow} ${greenP + yellowP}%, ${red} ${greenP + yellowP}%, ${red})`
+            background: abandon ? 'rgba(0, 0, 0, 0.1)' : evaluations.length === 0 ? 'rgba(0, 0, 0, 0)' : style,
         };
-        const suffix = () => (sex === "Male" ? "" : "👩") + (isQuick ? "⚡️" : "");
+        const suffix = () => (sex === 'Male' ? '' : '👩') + (isQuick ? '⚡️' : '');
 
         const card = (
             <div onMouseOver={this.handleOpen}
@@ -83,7 +88,7 @@ class Candidate extends PureComponent<Props> {
                     <div className={classes.cardContent}>
                         <Checkbox
                             color='primary'
-                            onClick={e => e.stopPropagation()}
+                            onClick={(e) => e.stopPropagation()}
                             onChange={this.handleCheck}
                             checked={selected.includes(cid)}
                             disabled={abandon || rejected || (selected.length !== 0 && fabOn !== step)}

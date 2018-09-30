@@ -1,7 +1,8 @@
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
+
 import ColumnContainer from '../../component/Column/ColumnContainer';
-import { StoreState } from '../../reducer';
+
 import {
     deselectCandidate,
     DeselectCandidate,
@@ -18,9 +19,10 @@ import {
     toggleSnackbarOn,
     ToggleSnackbarOn,
 } from '../../action';
+import { StoreState } from '../../reducer';
 
 interface OwnProps {
-    type: string
+    type: string;
 }
 
 const mapStateToProps = ({ candidates, components, user, recruitments }: StoreState, ownProps: OwnProps) => ({
@@ -31,10 +33,16 @@ const mapStateToProps = ({ candidates, components, user, recruitments }: StoreSt
     candidates: candidates.candidates,
     userGroup: user.info.group,
     pendingRecruitment: recruitments.pending,
-    ...ownProps
+    ...ownProps,
 });
 
-type DispatchType = Dispatch<GetCandidatesStart | MoveCandidateStart | DeselectCandidate | SelectCandidate | ToggleFabOff | ToggleSnackbarOn | RemoveCandidateStart>;
+type DispatchType = Dispatch<GetCandidatesStart
+    | MoveCandidateStart
+    | DeselectCandidate
+    | SelectCandidate
+    | ToggleFabOff
+    | ToggleSnackbarOn
+    | RemoveCandidateStart>;
 
 const mapDispatchToProps = (dispatch: DispatchType) => ({
     changeGroup: (group: string, recruitmentName: string) => dispatch(getCandidatesStart(group, recruitmentName)),

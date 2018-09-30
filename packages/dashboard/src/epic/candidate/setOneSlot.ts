@@ -1,11 +1,14 @@
-import { catchError, endWith, mergeMap, startWith } from 'rxjs/operators';
-import { ajax, AjaxResponse } from 'rxjs/ajax';
+import { Epic, ofType } from 'redux-observable';
 import { of } from 'rxjs';
-import { Epic, ofType } from "redux-observable";
+import { ajax, AjaxResponse } from 'rxjs/ajax';
+import { catchError, endWith, mergeMap, startWith } from 'rxjs/operators';
+
 import { Action, CANDIDATE, customError, Dependencies, errHandler } from '../index';
+
 import { SET_ONE_SLOT_START, SetOneSlotStart, setSlotsFulfilled, toggleSnackbarOn } from '../../action';
-import { URL } from '../../lib/const';
 import { StoreState } from '../../reducer';
+
+import { URL } from '../../lib/const';
 
 export const setOneSlotEpic: Epic<Action, Action, StoreState, Dependencies> = (action$, state$, { localStorage }) =>
     action$.pipe(
@@ -25,18 +28,18 @@ export const setOneSlotEpic: Epic<Action, Action, StoreState, Dependencies> = (a
                     if (res.type === 'success') {
                         return of(
                             toggleSnackbarOn('设置成功！', 'success'),
-                            setSlotsFulfilled([{ _id: id, ...time }], time['slot1'] ? 1 : 2)
+                            setSlotsFulfilled([{ _id: id, ...time }], time['slot1'] ? 1 : 2),
                         );
                     }
                     throw customError(res);
                 }),
                 startWith(
-                    { type: CANDIDATE.START }
+                    { type: CANDIDATE.START },
                 ),
                 endWith(
                     { type: CANDIDATE.SUCCESS },
                 ),
-                catchError(err => errHandler(err, CANDIDATE))
-            )
+                catchError((err) => errHandler(err, CANDIDATE)),
+            );
         }),
     );

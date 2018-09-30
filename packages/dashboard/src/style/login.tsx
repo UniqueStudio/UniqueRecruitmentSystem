@@ -1,5 +1,5 @@
-import { StyleRulesCallback } from "@material-ui/core/styles/withStyles";
-import { Theme } from "@material-ui/core/styles";
+import { Theme } from '@material-ui/core/styles';
+import { StyleRulesCallback } from '@material-ui/core/styles/withStyles';
 
 const styles: StyleRulesCallback = (theme: Theme) => ({
     login: {
@@ -11,7 +11,7 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: 'center',
     },
 });
 

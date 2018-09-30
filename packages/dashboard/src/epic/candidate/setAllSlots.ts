@@ -1,15 +1,18 @@
-import { catchError, mergeMap, startWith } from 'rxjs/operators';
-import { ajax, AjaxResponse } from 'rxjs/ajax';
+import { Epic, ofType } from 'redux-observable';
 import { of } from 'rxjs';
-import { Epic, ofType } from "redux-observable";
+import { ajax, AjaxResponse } from 'rxjs/ajax';
+import { catchError, mergeMap, startWith } from 'rxjs/operators';
+
 import { Action, CANDIDATE, customError, Dependencies, errHandler } from '../index';
-import { SET_All_SLOTS_START, SetAllSlotsStart, setSlotsFulfilled, toggleSnackbarOn } from '../../action';
-import { URL } from '../../lib/const';
+
+import { SET_ALL_SLOTS_START, SetAllSlotsStart, setSlotsFulfilled, toggleSnackbarOn } from '../../action';
 import { StoreState } from '../../reducer';
+
+import { URL } from '../../lib/const';
 
 export const setAllSlotsEpic: Epic<Action, Action, StoreState, Dependencies> = (action$, state$, { localStorage }) =>
     action$.pipe(
-        ofType(SET_All_SLOTS_START),
+        ofType(SET_ALL_SLOTS_START),
         mergeMap((action: SetAllSlotsStart) => {
             const token = localStorage.getItem('token');
             if (!token) {
@@ -27,15 +30,15 @@ export const setAllSlotsEpic: Epic<Action, Action, StoreState, Dependencies> = (
                         return of(
                             setSlotsFulfilled(res.result, res.interview),
                             toggleSnackbarOn(message, 'success'),
-                            { type: CANDIDATE.SUCCESS }
+                            { type: CANDIDATE.SUCCESS },
                         );
                     }
                     throw customError(res);
                 }),
                 startWith(
-                    { type: CANDIDATE.START }
+                    { type: CANDIDATE.START },
                 ),
-                catchError(err => errHandler(err, CANDIDATE))
-            )
+                catchError((err) => errHandler(err, CANDIDATE)),
+            );
         }),
     );

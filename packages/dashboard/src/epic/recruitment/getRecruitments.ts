@@ -1,11 +1,14 @@
-import { catchError, endWith, map, mergeMap, startWith, tap } from 'rxjs/operators';
+import { Epic, ofType } from 'redux-observable';
 import { of } from 'rxjs';
 import { ajax } from 'rxjs/ajax';
-import { Epic, ofType } from "redux-observable";
+import { catchError, endWith, map, mergeMap, startWith, tap } from 'rxjs/operators';
+
 import { Action, customError, Dependencies, errHandler, RECRUITMENT } from '../index';
+
 import { GET_RECRUITMENTS_START, getRecruitmentsFulfilled } from '../../action';
-import { Recruitment, URL } from '../../lib/const';
 import { StoreState } from '../../reducer';
+
+import { Recruitment, URL } from '../../lib/const';
 
 export const getRecruitmentsEpic: Epic<Action, Action, StoreState, Dependencies> = (action$, state$, { sessionStorage, localStorage }) =>
     action$.pipe(
@@ -18,11 +21,11 @@ export const getRecruitmentsEpic: Epic<Action, Action, StoreState, Dependencies>
             const recruitments = sessionStorage.getItem('historyRecruitments');
             if (recruitments && !state$.value.recruitments.shouldUpdateRecruitment) {
                 return of(
-                    getRecruitmentsFulfilled(JSON.parse(recruitments))
+                    getRecruitmentsFulfilled(JSON.parse(recruitments)),
                 );
             }
             return ajax.getJSON(`${URL}/recruitment`, {
-                'Authorization': `Bearer ${token}`,
+                Authorization: `Bearer ${token}`,
             }).pipe(
                 map((res: { type: string, data: Recruitment[] }) => {
                     if (res.type === 'success') {
@@ -30,15 +33,15 @@ export const getRecruitmentsEpic: Epic<Action, Action, StoreState, Dependencies>
                     }
                     throw customError(res);
                 }),
-                tap(data => sessionStorage.setItem('historyRecruitments', JSON.stringify(data))),
-                map(data => getRecruitmentsFulfilled(data)),
+                tap((data) => sessionStorage.setItem('historyRecruitments', JSON.stringify(data))),
+                map((data) => getRecruitmentsFulfilled(data)),
                 startWith(
-                    { type: RECRUITMENT.START }
+                    { type: RECRUITMENT.START },
                 ),
                 endWith(
                     { type: RECRUITMENT.SUCCESS },
                 ),
-                catchError(err => errHandler(err, RECRUITMENT))
-            )
+                catchError((err) => errHandler(err, RECRUITMENT)),
+            );
         }),
     );
