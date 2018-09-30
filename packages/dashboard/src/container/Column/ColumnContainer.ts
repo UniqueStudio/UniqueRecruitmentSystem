@@ -30,7 +30,8 @@ const mapStateToProps = ({ candidates, components, user, recruitments }: StoreSt
     snackbarOn: components.snackbar.on,
     candidates: candidates.candidates,
     userGroup: user.info.group,
-    pendingRecruitment: recruitments.pending
+    pendingRecruitment: recruitments.pending,
+    ...ownProps
 });
 
 type DispatchType = Dispatch<GetCandidatesStart | MoveCandidateStart | DeselectCandidate | SelectCandidate | ToggleFabOff | ToggleSnackbarOn | RemoveCandidateStart>;

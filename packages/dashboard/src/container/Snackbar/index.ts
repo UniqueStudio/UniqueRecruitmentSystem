@@ -12,6 +12,7 @@ const mapStateToProps = ({ components }: StoreState, ownProps: OwnProps) => ({
     on: components.snackbar.on,
     info: components.snackbar.info,
     color: components.snackbar.color,
+    ...ownProps
 });
 
 const mapDispatchToProps = (dispatch: Dispatch<ToggleSnackbarOff>) => ({

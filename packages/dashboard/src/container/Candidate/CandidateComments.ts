@@ -25,7 +25,8 @@ const mapStateToProps = ({ components, candidates, user }: StoreState, ownProps:
     isLoading: candidates.isLoading.comments,
     savedComment: candidates.inputtingComment,
     uid: user.uid,
-    username: user.info['username']
+    username: user.info['username'],
+    ...ownProps
 });
 
 type DispatchType = Dispatch<ToggleSnackbarOn | RecordInputtingComment | AddCommentStart | RemoveCommentStart>
