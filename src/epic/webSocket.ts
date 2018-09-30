@@ -1,6 +1,9 @@
-import { ignoreElements, startWith, switchMap, tap } from 'rxjs/operators';
+import { Epic, ofType } from 'redux-observable';
 import { EMPTY, Observable, Subscriber, timer } from 'rxjs';
-import { Epic, ofType } from "redux-observable";
+import { ignoreElements, startWith, switchMap, tap } from 'rxjs/operators';
+
+import { Action, CANDIDATE, COMMENT, Dependencies, RECRUITMENT, Socket, USER } from './index';
+
 import {
     addCandidateFulfilled,
     addCommentFulfilled,
@@ -10,10 +13,10 @@ import {
     removeCandidateFulfilled,
     removeCommentFulfilled,
     setShouldUpdateRecruitment,
-    toggleSnackbarOn
+    toggleSnackbarOn,
 } from '../action';
-import { Action, CANDIDATE, COMMENT, Dependencies, RECRUITMENT, Socket, USER } from './index';
 import { StoreState } from '../reducer';
+
 import { Candidate, Comment, URL } from '../lib/const';
 
 export const socketConnectEpic: Epic<Action, Action, StoreState, Dependencies> = (action$, state$, { io, socket$ }) =>
@@ -27,17 +30,17 @@ export const socketConnectEpic: Epic<Action, Action, StoreState, Dependencies> =
                 return () => {
                     socket.close();
                 };
-            })
+            }),
         ),
         tap(socket$),
         ignoreElements(),
-        startWith({ type: 'SOCKET_START' })
+        startWith({ type: 'SOCKET_START' }),
     );
 
 export const socketReceiveEpic: Epic<Action, Action, StoreState, Dependencies> = (action$, state$, { socket$ }) =>
     socket$.pipe(
         switchMap((socket: Socket) => !socket ? EMPTY :
-            new Observable(o => {
+            new Observable((o) => {
                 socket.on('removeCandidate', (cid: string) => {
                     o.next({ type: CANDIDATE.START });
                     o.next(removeCandidateFulfilled(cid));
@@ -62,7 +65,7 @@ export const socketReceiveEpic: Epic<Action, Action, StoreState, Dependencies> =
                     o.next(moveCandidateFulfilled(data.to, data.from, data.cid));
                     const snackbarOn = state$.value.components.snackbar.on;
                     if (snackbarOn) {
-                        timer(1000).subscribe(() => o.next(toggleSnackbarOn(`ERROR: ${message}`, color || 'danger')))
+                        timer(1000).subscribe(() => o.next(toggleSnackbarOn(`ERROR: ${message}`, color || 'danger')));
                     }
                     o.next({ type: CANDIDATE.FAILURE });
                 });
@@ -110,6 +113,6 @@ export const socketReceiveEpic: Epic<Action, Action, StoreState, Dependencies> =
                     o.next(addImage(name, avatar, time, image, false));
                     o.next({ type: USER.SUCCESS });
                 });
-            })
-        )
+            }),
+        ),
     );

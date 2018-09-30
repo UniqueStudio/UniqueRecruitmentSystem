@@ -1,16 +1,16 @@
-import { StyleRulesCallback } from "@material-ui/core/styles/withStyles";
-import { Theme } from "@material-ui/core/styles";
+import { Theme } from '@material-ui/core/styles';
+import { StyleRulesCallback } from '@material-ui/core/styles/withStyles';
 
 const styles: StyleRulesCallback = (theme: Theme) => ({
     template: {
-        [theme.breakpoints.down("xs")]: {
-            margin: theme.spacing.unit
+        [theme.breakpoints.down('xs')]: {
+            margin: theme.spacing.unit,
         },
         margin: theme.spacing.unit * 2,
-        overflowY: 'auto'
+        overflowY: 'auto',
     },
     stepper: {
-        [theme.breakpoints.down("xs")]: {
+        [theme.breakpoints.down('xs')]: {
             padding: 0,
         },
     },
@@ -21,43 +21,43 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
         display: 'flex',
     },
     templateItem: {
-        [theme.breakpoints.down("xs")]: {
+        [theme.breakpoints.down('xs')]: {
             margin: theme.spacing.unit / 2,
         },
         margin: theme.spacing.unit,
     },
     templateColumn: {
-        flexDirection: 'column'
+        flexDirection: 'column',
     },
     templateEnd: {
         display: 'flex',
         alignItems: 'center',
-        justifyContent: 'space-between'
+        justifyContent: 'space-between',
     },
     formGroup: {
-        flexDirection: 'row'
+        flexDirection: 'row',
     },
     dateSelect: {
         display: 'flex',
         alignItems: 'center',
         flexWrap: 'wrap',
-        [theme.breakpoints.down("xs")]: {
-            marginTop: theme.spacing.unit
+        [theme.breakpoints.down('xs')]: {
+            marginTop: theme.spacing.unit,
         },
     },
     verify: {
-        paddingLeft: 0
+        paddingLeft: 0,
     },
     inputContainer: {
         display: 'flex',
-        flexWrap: 'wrap'
+        flexWrap: 'wrap',
     },
     input: {
-        [theme.breakpoints.down("xs")]: {
-            width: 100
+        [theme.breakpoints.down('xs')]: {
+            width: 100,
         },
-        width: 150
-    }
+        width: 150,
+    },
 });
 
 export default styles;

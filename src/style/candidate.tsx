@@ -1,12 +1,12 @@
-import { StyleRulesCallback } from "@material-ui/core/styles/withStyles";
 // import blue from '@material-ui/core/colors/blue';
 // import pink from '@material-ui/core/colors/pink';
 // import yellow from '@material-ui/core/colors/yellow';
-import { Theme } from "@material-ui/core/styles";
+import { Theme } from '@material-ui/core/styles';
+import { StyleRulesCallback } from '@material-ui/core/styles/withStyles';
 
 const styles: StyleRulesCallback = (theme: Theme) => ({
     cardContainer: {
-        padding: `${theme.spacing.unit / 2}px ${theme.spacing.unit}px`
+        padding: `${theme.spacing.unit / 2}px ${theme.spacing.unit}px`,
     },
     card: {
         position: 'relative',
@@ -18,21 +18,21 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
         alignItems: 'center',
         display: 'flex',
         [theme.breakpoints.down('sm')]: {
-            margin: `${theme.spacing.unit}px 0`,
+            'margin': `${theme.spacing.unit}px 0`,
             '& button': {
                 padding: theme.spacing.unit,
-                minWidth: 80
-            }
+                minWidth: 80,
+            },
         },
     },
     cardContent: {
         margin: theme.spacing.unit,
         display: 'flex',
         flexGrow: 1,
-        alignItems: 'center'
+        alignItems: 'center',
     },
     cardTitle: {
-        userSelect: 'none'
+        userSelect: 'none',
     },
     // cardTitleQuick: {
     //     '&:after': {
@@ -47,7 +47,7 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
     //     color: pink.A400
     // },
     popper: {
-        pointerEvents: 'none'
+        pointerEvents: 'none',
     },
     popperRoot: {
         padding: theme.spacing.unit,
@@ -68,11 +68,11 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
     introContent: {
         display: 'flex',
         [theme.breakpoints.down('sm')]: {
-            margin: `${theme.spacing.unit}px 0`,
+            'margin': `${theme.spacing.unit}px 0`,
             '& button': {
                 width: 'auto',
-                height: 'auto'
-            }
+                height: 'auto',
+            },
         },
         overflowY: 'auto',
         margin: theme.spacing.unit * 2,
@@ -87,20 +87,20 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
         justifyContent: 'space-around',
     },
     detailRow: {
-        display: 'flex',
+        'display': 'flex',
         [theme.breakpoints.up('md')]: {
             width: 400,
         },
-        width: 250,
+        'width': 250,
         '& *': {
             marginLeft: theme.spacing.unit / 2,
-            marginRight: theme.spacing.unit / 2
+            marginRight: theme.spacing.unit / 2,
         },
         '& button': {
             marginLeft: 'auto',
-            marginRight: 'auto'
-        }
-    }
+            marginRight: 'auto',
+        },
+    },
 });
 
 export default styles;

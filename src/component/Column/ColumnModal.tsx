@@ -1,29 +1,33 @@
-import React, { PureComponent } from "react";
+import React, { PureComponent } from 'react';
+
 import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
-import Modal from '../Modal';
+
 import Template from '../../container/SMS';
-import withRoot from "../../style/withRoot";
+import Modal from '../Modal';
+
+import withRoot from '../../style/withRoot';
+
 import { Candidate } from '../../lib/const';
 
 interface Props extends WithStyles {
     open: boolean;
     toggleOpen: () => void;
-    selected: Candidate[],
+    selected: Candidate[];
     deselect: (cid: string[] | string) => void;
     group: string;
 }
 
 class ColumnModal extends PureComponent<Props> {
 
-    state = {
-        selected: this.props.selected
-    };
-
     static getDerivedStateFromProps(nextProps: Props) {
         return {
-            selected: nextProps.selected
-        }
+            selected: nextProps.selected,
+        };
     }
+
+    state = {
+        selected: this.props.selected,
+    };
 
     render() {
         const { open, toggleOpen, selected, deselect, group } = this.props;

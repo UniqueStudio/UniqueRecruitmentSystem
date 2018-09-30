@@ -11,4 +11,4 @@ export default (title: string) => {
         return title.slice(0, 4) + abbr[i];
     }
     throw new Error('parameter is not a valid title');
-}
+};

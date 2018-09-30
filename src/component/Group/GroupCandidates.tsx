@@ -1,9 +1,10 @@
 import React, { PureComponent } from 'react';
+
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import MenuItem from '@material-ui/core/MenuItem';
 import Paper from '@material-ui/core/Paper';
-import Select from '@material-ui/core/Select'
+import Select from '@material-ui/core/Select';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -11,12 +12,14 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
+
 import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 
 import styles from '../../style/group';
-import withRoot from "../../style/withRoot";
+import withRoot from '../../style/withRoot';
+
 import { Candidate } from '../../lib/const';
-import timeStampToString from "../../lib/timeStampToString";
+import timeStampToString from '../../lib/timeStampToString';
 
 interface Props extends WithStyles {
     candidates: Candidate[];
@@ -32,20 +35,20 @@ class Candidates extends PureComponent<Props> {
 
     state = {
         dialogOpen: '',
-        time: timeStampToString(+new Date(), 16)
+        time: timeStampToString(+new Date(), 16),
     };
 
     toggleDialog = (id: string = '') => () => {
         this.setState({
             dialogOpen: id,
-            time: id ? this.state.time : timeStampToString(+new Date(), 16)
-        })
+            time: id ? this.state.time : timeStampToString(+new Date(), 16),
+        });
     };
 
     handleChange = (event: React.ChangeEvent) => {
         this.setState({
-            time: event.target['value']
-        })
+            time: event.target['value'],
+        });
     };
 
     setTime = () => {
@@ -60,7 +63,7 @@ class Candidates extends PureComponent<Props> {
             <Paper className={classes.paper}>
                 <div className={classes.title}>
                     <div/>
-                    <Typography variant="title">
+                    <Typography variant='title'>
                         候选人信息
                     </Typography>
                     <Select
@@ -83,12 +86,12 @@ class Candidates extends PureComponent<Props> {
                         </TableHead>
                         <TableBody>
                             {Boolean(candidates.length) && candidates.map((i, j) => {
-                                const time = i[`time${interviewStage}`];
+                                const timeChosen = i[`time${interviewStage}`];
                                 const slot = i[`slot${interviewStage}`];
-                                const state = i.rejected ? '已淘汰' : i.abandon ? '已放弃' : time && time.length ? '已选择' : '未选择';
+                                const state = i.rejected ? '已淘汰' : i.abandon ? '已放弃' : timeChosen && timeChosen.length ? '已选择' : '未选择';
                                 return (
                                     <TableRow key={j}>
-                                        <TableCell component="th" scope="row"
+                                        <TableCell component='th' scope='row'
                                                    classes={{ root: classes.tableCell }}>{i.name}</TableCell>
                                         <TableCell classes={{ root: classes.tableCell }}>{state}</TableCell>
                                         <TableCell
@@ -98,7 +101,7 @@ class Candidates extends PureComponent<Props> {
                                             <Button color='primary' onClick={this.toggleDialog(i._id)}>设置</Button>
                                         </TableCell>
                                     </TableRow>
-                                )
+                                );
                             })}
                         </TableBody>
                     </Table>
@@ -122,9 +125,9 @@ class Candidates extends PureComponent<Props> {
                 <Dialog open={!!dialogOpen} onClose={this.toggleDialog()}>
                     <div className={classes.dialog}>
                         <TextField
-                            id="datetime-local"
+                            id='datetime-local'
                             label={interviewStage === 1 ? '组面时间' : '群面时间'}
-                            type="datetime-local"
+                            type='datetime-local'
                             value={time}
                             InputLabelProps={{ shrink: true }}
                             onChange={this.handleChange}
@@ -139,7 +142,7 @@ class Candidates extends PureComponent<Props> {
                     </div>
                 </Dialog>
             </Paper>
-        )
+        );
     }
 }
 

@@ -1,12 +1,17 @@
-import React, { Component } from "react";
+import React, { Component } from 'react';
 import { Draggable, DraggableProvided, Droppable, DroppableProvided } from 'react-beautiful-dnd';
+
 import Divider from '@material-ui/core/Divider';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
+
 import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
+
 import { Candidate, STEPS } from '../../lib/const';
-import styles from "../../style/column";
-import withRoot from "../../style/withRoot";
+
+import styles from '../../style/column';
+import withRoot from '../../style/withRoot';
+
 import CandidateContainer from '../Candidate/CandidateContainer';
 
 interface Props extends WithStyles {
@@ -34,7 +39,7 @@ class Column extends Component<Props> {
         this.props.toggleModalOn(cid);
         this.props.changeInputting('', '');
         this.setState({
-            direction: 'left'
+            direction: 'left',
         });
     };
 
@@ -42,13 +47,13 @@ class Column extends Component<Props> {
         this.props.toggleModalOn(cid);
         this.props.changeInputting('', '');
         this.setState({
-            direction: 'right'
+            direction: 'right',
         });
     };
 
     toggleOpen = (name: string) => () => {
         this.setState({
-            [name]: !this.state[name]
+            [name]: !this.state[name],
         });
     };
 
@@ -79,13 +84,13 @@ class Column extends Component<Props> {
     render() {
         const { classes, title, candidates, selected, modalOn, toggleModalOff, dropIndex, downloadResume } = this.props;
         const allCid = [...candidates.keys()];
-        const selectedCid = selected.filter(i => allCid.includes(i));
+        const selectedCid = selected.filter((i) => allCid.includes(i));
 
         const DropArea = (
-            <Droppable droppableId={title} type="CANDIDATE">
+            <Droppable droppableId={title} type='CANDIDATE'>
                 {(dropProvided: DroppableProvided) => (
                     <div className={classes.columnBody}
-                         ref={element => dropProvided.innerRef(element)}
+                         ref={(element) => dropProvided.innerRef(element)}
                          {...dropProvided.droppableProps}
                     >
                         {[...candidates.entries()].map((i: [string, Candidate], j: number) => (

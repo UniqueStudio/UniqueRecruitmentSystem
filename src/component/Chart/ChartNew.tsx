@@ -1,18 +1,22 @@
-import React, { PureComponent } from "react";
+import React, { PureComponent } from 'react';
+
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import MenuItem from '@material-ui/core/MenuItem';
 import Paper from '@material-ui/core/Paper';
 import TextField from '@material-ui/core/TextField';
 import Tooltip from '@material-ui/core/Tooltip';
+
 import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 
 import AddIcon from '@material-ui/icons/Add';
 
-import withRoot from '../../style/withRoot';
 import styles from '../../style/chart';
-import Modal from '../Modal';
+import withRoot from '../../style/withRoot';
+
 import Verify from '../../container/Verify';
+import Modal from '../Modal';
+
 import timeStampToString from '../../lib/timeStampToString';
 
 interface Props extends WithStyles {
@@ -34,6 +38,19 @@ interface State {
 }
 
 class ChartNew extends PureComponent<Props> {
+
+    static getDerivedStateFromProps(nextProps: Props, prevState: State) {
+        if (nextProps.status === 'success' && prevState.launched) {
+            nextProps.fetchData();
+            return {
+                modalOpen: false,
+                code: '',
+                launched: false,
+            };
+        }
+        return null;
+    }
+
     state = {
         modalOpen: false,
         year: '',
@@ -41,7 +58,7 @@ class ChartNew extends PureComponent<Props> {
         begin: timeStampToString(Date.now()),
         end: timeStampToString(Date.now()),
         code: '',
-        launched: false
+        launched: false,
     };
     launchRecruitment = () => {
         const info = { ...this.state };
@@ -61,41 +78,28 @@ class ChartNew extends PureComponent<Props> {
             title: info['title'],
             begin: info['beginTime'],
             end: info['endTime'],
-            code: info.code
+            code: info.code,
         });
         this.setState({
-            launched: true
-        })
+            launched: true,
+        });
+    };
+    handleChange = (name: string) => (e: React.ChangeEvent) => {
+        this.setState({
+            [name]: e.target['value'],
+        });
     };
 
     toggleModalOpen = () => {
         this.setState({ modalOpen: !this.state.modalOpen });
     };
 
-    handleChange = (name: string) => (e: React.ChangeEvent) => {
-        this.setState({
-            [name]: e.target['value']
-        })
-    };
-
-    static getDerivedStateFromProps(nextProps: Props, prevState: State) {
-        if (nextProps.status === 'success' && prevState.launched) {
-            nextProps.fetchData();
-            return {
-                modalOpen: false,
-                code: '',
-                launched: false
-            };
-        }
-        return null;
-    }
-
     render() {
         const { classes, disabled } = this.props;
         const { code } = this.state;
         return (
             <>
-                <Tooltip title={disabled ? "只有组长或管理员能发起招新" : "发起招新"} classes={{ tooltip: classes.tooltip }}
+                <Tooltip title={disabled ? '只有组长或管理员能发起招新' : '发起招新'} classes={{ tooltip: classes.tooltip }}
                          placement='top'>
                     <Paper className={classes.chart}>
                         <IconButton
@@ -108,7 +112,7 @@ class ChartNew extends PureComponent<Props> {
                         </IconButton>
                     </Paper>
                 </Tooltip>
-                <Modal title="发起招新"
+                <Modal title='发起招新'
                        open={this.state.modalOpen}
                        onClose={this.toggleModalOpen}
                 >
@@ -116,11 +120,11 @@ class ChartNew extends PureComponent<Props> {
                         <span>
                             <TextField
                                 select
-                                label="选择年份"
+                                label='选择年份'
                                 className={classes.select}
                                 value={this.state.year}
                                 onChange={this.handleChange('year')}
-                                margin="normal"
+                                margin='normal'
                             >
                                 {[...new Array(5)].map((i, j) => (
                                     <MenuItem key={j} value={j + new Date().getFullYear()}>
@@ -129,8 +133,8 @@ class ChartNew extends PureComponent<Props> {
                                 ))}
                             </TextField>
                             <TextField
-                                label="开始时间"
-                                type="date"
+                                label='开始时间'
+                                type='date'
                                 defaultValue={this.state.begin}
                                 InputLabelProps={{
                                     shrink: true,
@@ -142,21 +146,21 @@ class ChartNew extends PureComponent<Props> {
                         <span>
                             <TextField
                                 select
-                                label="选择类型"
+                                label='选择类型'
                                 className={classes.select}
                                 value={this.state.type}
                                 onChange={this.handleChange('type')}
-                                margin="normal"
+                                margin='normal'
                             >
-                                {[['春招', 'S'], ['夏令营', 'C'], ['秋招', 'A']].map(i => (
+                                {[['春招', 'S'], ['夏令营', 'C'], ['秋招', 'A']].map((i) => (
                                     <MenuItem key={i[1]} value={i[1]}>
                                         {i[0]}
                                     </MenuItem>
                                 ))}
                             </TextField>
                             <TextField
-                                label="结束时间"
-                                type="date"
+                                label='结束时间'
+                                type='date'
                                 defaultValue={this.state.end}
                                 InputLabelProps={{
                                     shrink: true,
@@ -170,7 +174,7 @@ class ChartNew extends PureComponent<Props> {
                     </div>
                 </Modal>
             </>
-        )
+        );
     }
 }
 

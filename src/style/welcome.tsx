@@ -1,5 +1,5 @@
-import { StyleRulesCallback } from "@material-ui/core/styles/withStyles";
-import { Theme } from "@material-ui/core/styles";
+import { Theme } from '@material-ui/core/styles';
+import { StyleRulesCallback } from '@material-ui/core/styles/withStyles';
 
 const styles: StyleRulesCallback = (theme: Theme) => ({
     indexImage: {
@@ -11,13 +11,13 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
     },
     logoImage: {
         width: '50%',
-        minWidth: 300
+        minWidth: 300,
     },
     welcomeImage: {
         [theme.breakpoints.down('xs')]: {
             display: 'none',
         },
-        width: '100%'
+        width: '100%',
     },
 });
 

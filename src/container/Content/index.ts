@@ -1,8 +1,10 @@
 import { connect } from 'react-redux';
-import Content from '../../component/Content'
 import { Dispatch } from 'redux';
-import { StoreState } from '../../reducer';
+
+import Content from '../../component/Content';
+
 import { toggleDrawerOpen } from '../../action';
+import { StoreState } from '../../reducer';
 
 const mapStateToProps = ({ components, candidates, recruitments, user, sms }: StoreState) => ({
     open: components.drawerOpen,
@@ -10,7 +12,7 @@ const mapStateToProps = ({ components, candidates, recruitments, user, sms }: St
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
-    toggleOpen: () => dispatch(toggleDrawerOpen())
+    toggleOpen: () => dispatch(toggleDrawerOpen()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Content);

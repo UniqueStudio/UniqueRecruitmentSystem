@@ -1,7 +1,9 @@
-import { map, switchMap, tap } from 'rxjs/operators';
+import { Epic, ofType } from 'redux-observable';
 import { EMPTY } from 'rxjs';
-import { Epic, ofType } from "redux-observable";
+import { map, switchMap, tap } from 'rxjs/operators';
+
 import { Action, COMMENT, Dependencies, errHandler, Socket } from '../index';
+
 import { REMOVE_COMMENT_START, RemoveCommentStart } from '../../action';
 import { StoreState } from '../../reducer';
 
@@ -19,10 +21,9 @@ export const removeCommentEpic: Epic<Action, Action, StoreState, Dependencies> =
                         }
                         socket.emit('removeComment', step, cid, commenter, token);
                     }),
-                    map(() => ({ type: COMMENT.START }))
-                )
+                    map(() => ({ type: COMMENT.START })),
+                );
             }
             return EMPTY;
-        })
+        }),
     );
-

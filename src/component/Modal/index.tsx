@@ -1,11 +1,13 @@
-import React, { PureComponent } from "react";
+import React, { PureComponent } from 'react';
+
 import Modal from '@material-ui/core/Modal/Modal';
 import Slide from '@material-ui/core/Slide';
 import Typography from '@material-ui/core/Typography';
+
 import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 
-import styles from "../../style/modal";
-import withRoot from "../../style/withRoot";
+import styles from '../../style/modal';
+import withRoot from '../../style/withRoot';
 
 interface Props extends WithStyles {
     open: boolean;
@@ -24,7 +26,7 @@ class InfoModal extends PureComponent<Props> {
                 <Slide direction={open ? direction || 'right' : leaveDirection} in={open} mountOnEnter unmountOnExit>
                     <div className={classes.modal}>
                         <div className={classes.modalHeader}>
-                            <Typography variant="headline" className={classes.modalTitle}>
+                            <Typography variant='headline' className={classes.modalTitle}>
                                 {title}
                             </Typography>
                         </div>
@@ -32,9 +34,8 @@ class InfoModal extends PureComponent<Props> {
                     </div>
                 </Slide>
             </Modal>
-        )
+        );
     }
 }
 
 export default withRoot(withStyles(styles)(InfoModal));
-

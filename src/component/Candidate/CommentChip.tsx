@@ -1,11 +1,15 @@
-import React, { PureComponent } from "react";
+import React, { PureComponent } from 'react';
+
 import classNames from 'classnames';
+
 import Chip from '@material-ui/core/Chip';
 import Paper from '@material-ui/core/Paper';
 import Popover from '@material-ui/core/Popover';
+
 import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 
 import styles from '../../style/comment';
+
 import { Comment } from '../../lib/const';
 
 interface Props extends WithStyles {
@@ -18,9 +22,9 @@ interface Props extends WithStyles {
 }
 
 const evaluationToStyle = {
-    'good': "success",
-    'so-so': "warning",
-    'bad': "danger"
+    'good': 'success',
+    'so-so': 'warning',
+    'bad': 'danger',
 };
 
 class CommentChip extends PureComponent<Props> {
@@ -43,16 +47,16 @@ class CommentChip extends PureComponent<Props> {
 
     render() {
         const { name, uid, comment, classes, currentUid, handleCopy } = this.props;
-        let content = `${name ? name : '无名'}： ${comment["comment"]}`;
+        let content = `${name ? name : '无名'}： ${comment.comment}`;
         content = content.length > 15 ? content.slice(0, 15) + '…' : content;
-        const color = evaluationToStyle[comment["evaluation"]];
+        const color = evaluationToStyle[comment.evaluation];
         return (
             <>
                 <Chip
                     label={content}
                     className={classes.chip}
                     classes={{
-                        root: classNames(classes[color], classes[`root-${color}`])
+                        root: classNames(classes[color], classes[`root-${color}`]),
                     }}
                     onMouseOver={this.handleOpen}
                     onMouseOut={this.handleClose}
@@ -74,7 +78,7 @@ class CommentChip extends PureComponent<Props> {
                     onClose={this.handleClose}
                     disableRestoreFocus
                 >
-                    <Paper className={classNames(classes.content, classes[color])}>{comment["comment"]}</Paper>
+                    <Paper className={classNames(classes.content, classes[color])}>{comment.comment}</Paper>
                 </Popover>
             </>
         );

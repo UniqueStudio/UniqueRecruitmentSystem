@@ -163,7 +163,6 @@
 //         .catch(err => errHandler(err, dispatch, USER))
 // };
 
-
 // export const updateUser = (uid: string, info: User) => (dispatch: Dispatch) => {
 //     dispatch({ type: USER.START });
 //     const token = sessionStorage.getItem('token');
@@ -248,7 +247,6 @@
 //         })
 //         .catch(err => errHandler(err, dispatch, CANDIDATE))
 // };
-
 
 // export const requestResume = (cid: string) => (dispatch: Dispatch) => {
 //     dispatch({ type: CANDIDATE.START });
@@ -403,7 +401,6 @@
 //     //         dispatch(actions.toggleSnackbarOn(`ERROR: ${err.message}`, err.type || 'danger'));
 //     //     });
 // };
-
 
 // export const RECRUITMENT = actionTypeCreator('RECRUITMENT');
 // export const requestRecruitments = () => (dispatch: Dispatch) => {

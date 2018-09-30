@@ -1,10 +1,13 @@
-import { catchError, endWith, map, mergeMap, startWith, tap } from 'rxjs/operators';
+import { Epic, ofType } from 'redux-observable';
 import { ajax, AjaxResponse } from 'rxjs/ajax';
-import { Epic, ofType } from "redux-observable";
+import { catchError, endWith, map, mergeMap, startWith, tap } from 'rxjs/operators';
+
 import { Action, customError, Dependencies, errHandler, USER } from '../index';
+
 import { SET_USER_INFO_START, SetUserInfoStart, toggleSnackbarOn, userInfoFulfilled } from '../../action';
-import { URL } from '../../lib/const';
 import { StoreState } from '../../reducer';
+
+import { URL } from '../../lib/const';
 
 export const setInfoEpic: Epic<Action, Action, StoreState, Dependencies> = (action$, state$, { sessionStorage, localStorage }) =>
     action$.pipe(
@@ -29,13 +32,13 @@ export const setInfoEpic: Epic<Action, Action, StoreState, Dependencies> = (acti
                 }),
                 tap(() => localStorage.setItem('userInfo', JSON.stringify({ ...JSON.parse(formerInfo), ...info }))),
                 startWith(
-                    { type: USER.START }
+                    { type: USER.START },
                 ),
                 endWith(
                     { type: USER.SUCCESS },
-                    toggleSnackbarOn('已成功修改信息！', 'success')
+                    toggleSnackbarOn('已成功修改信息！', 'success'),
                 ),
-                catchError(err => errHandler(err, USER))
-            )
+                catchError((err) => errHandler(err, USER)),
+            );
         }),
     );

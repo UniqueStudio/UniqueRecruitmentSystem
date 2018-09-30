@@ -1,20 +1,26 @@
-import React, { PureComponent } from "react";
+import React, { PureComponent } from 'react';
+
 import Button from '@material-ui/core/Button';
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
-import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
+import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
+
 import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
+
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import Chart from './Chart';
+
 import Modal from '../Modal';
-import withRoot from '../../style/withRoot';
-import styles from '../../style/chart';
-import { Group, GROUPS, GROUPS_, Recruitment, Time } from '../../lib/const';
-import titleConverter from '../../lib/titleConverter';
+import Chart from './Chart';
 import DateSelect from './DateSelect';
+
+import styles from '../../style/chart';
+import withRoot from '../../style/withRoot';
+
+import { Group, GROUPS, GROUPS_, Recruitment, Time } from '../../lib/const';
 import timeStampToString from '../../lib/timeStampToString';
+import titleConverter from '../../lib/titleConverter';
 
 interface Props extends WithStyles {
     data: Recruitment;
@@ -30,7 +36,7 @@ class ChartContainer extends PureComponent<Props> {
         date: timeStampToString(Date.now()),
         morning: false,
         afternoon: false,
-        evening: false
+        evening: false,
     };
 
     state = (() => {
@@ -40,19 +46,19 @@ class ChartContainer extends PureComponent<Props> {
             begin: timeStampToString(begin),
             end: timeStampToString(end),
             time1,
-            time2
-        }
+            time2,
+        };
     })();
 
     setStateTime = (date: Time[], group?: string) => {
         this.setState(group ? {
             time1: {
                 ...this.state.time1,
-                [group]: date
-            }
+                [group]: date,
+            },
         } : {
-            time2: date
-        })
+            time2: date,
+        });
     };
 
     setDate = (id: number, group?: string) => (event: React.ChangeEvent) => {
@@ -81,14 +87,14 @@ class ChartContainer extends PureComponent<Props> {
 
     handleChange = (name: string) => (event: React.ChangeEvent) => {
         this.setState({
-            [name]: event.target['value']
-        })
+            [name]: event.target['value'],
+        });
     };
 
     toggleModalOpen = (title?: string) => () => {
         this.setState({
-            modalOpen: title || ''
-        })
+            modalOpen: title || '',
+        });
     };
 
     handleConfirm = () => {
@@ -103,7 +109,6 @@ class ChartContainer extends PureComponent<Props> {
             return;
         }
         if (time1) {
-            console.log(time1);
             for (const i of Object.values(time1)) {
                 if (i && Array.isArray(i)) {
                     for (const j of i) {
@@ -132,7 +137,7 @@ class ChartContainer extends PureComponent<Props> {
         const { data, classes, userGroup, canLaunch } = this.props;
         const { end, begin, time1, time2, modalOpen } = this.state;
         const chartData = data.data;
-        const totalData = chartData.map(i => i.total || 0);
+        const totalData = chartData.map((i) => i.total || 0);
         const stepData = [{}, ...chartData].reduce((i, j) => ({ ...i, [j['group']]: j['steps'] }));
         const title = titleConverter(data.title);
         return (
@@ -149,15 +154,15 @@ class ChartContainer extends PureComponent<Props> {
                     <div className={classes.detail}>
                         <div className={classes.commonTime}>
                             <TextField
-                                label="开始时间"
-                                type="date"
+                                label='开始时间'
+                                type='date'
                                 value={begin}
                                 onChange={this.handleChange('begin')}
                                 disabled={!canLaunch}
                             />
                             <TextField
-                                label="结束时间"
-                                type="date"
+                                label='结束时间'
+                                type='date'
                                 value={end}
                                 onChange={this.handleChange('end')}
                                 disabled={!canLaunch}
@@ -167,28 +172,26 @@ class ChartContainer extends PureComponent<Props> {
                             <ExpansionPanelSummary expandIcon={<ExpandMoreIcon/>}>组面时间</ExpansionPanelSummary>
                             <ExpansionPanelDetails>
                                 <div>
-                                    {GROUPS_.map((i: Group, j) =>
-                                        <div key={j}>
-                                            <Typography variant='caption' color='textSecondary'>{GROUPS[j]}</Typography>
-                                            {time1 && time1[i] ? time1[i].map((k, l) =>
-                                                <DateSelect
-                                                    key={l}
-                                                    dateInfo={k}
-                                                    setDate={this.setDate(l, i)}
-                                                    setTime={this.setTime(l, i)}
-                                                    addDate={this.addDate(i)}
-                                                    deleteDate={this.deleteDate(l, i)}
-                                                    isLast={l === time1[i].length - 1}
-                                                    disabled={userGroup !== i}
-                                                />) : userGroup === i
-                                                ? <Button
-                                                    onClick={this.addDate(i)}
-                                                    variant='contained'
-                                                    color='primary'
-                                                >设置</Button>
-                                                : '未设置'}
-                                        </div>
-                                    )}
+                                    {GROUPS_.map((i: Group, j) => <div key={j}>
+                                        <Typography variant='caption' color='textSecondary'>{GROUPS[j]}</Typography>
+                                        {time1 && time1[i] ? time1[i].map((k, l) =>
+                                            <DateSelect
+                                                key={l}
+                                                dateInfo={k}
+                                                setDate={this.setDate(l, i)}
+                                                setTime={this.setTime(l, i)}
+                                                addDate={this.addDate(i)}
+                                                deleteDate={this.deleteDate(l, i)}
+                                                isLast={l === time1[i].length - 1}
+                                                disabled={userGroup !== i}
+                                            />) : userGroup === i
+                                            ? <Button
+                                                onClick={this.addDate(i)}
+                                                variant='contained'
+                                                color='primary'
+                                            >设置</Button>
+                                            : '未设置'}
+                                    </div>)}
                                 </div>
                             </ExpansionPanelDetails>
                         </ExpansionPanel>
@@ -221,7 +224,7 @@ class ChartContainer extends PureComponent<Props> {
                     </div>
                 </Modal>
             </div>
-        )
+        );
     }
 }
 

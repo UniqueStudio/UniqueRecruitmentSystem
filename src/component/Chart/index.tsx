@@ -1,11 +1,16 @@
-import React, { PureComponent } from "react";
+import React, { PureComponent } from 'react';
+
 import Button from '@material-ui/core/Button';
+
 import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
-import ChartNew from './ChartNew';
-import withRoot from '../../style/withRoot';
-import styles from '../../style/chart';
-import { Recruitment, Time } from '../../lib/const';
+
 import ChartContainer from './ChartContainer';
+import ChartNew from './ChartNew';
+
+import styles from '../../style/chart';
+import withRoot from '../../style/withRoot';
+
+import { Recruitment, Time } from '../../lib/const';
 
 interface Props extends WithStyles {
     data: Recruitment[];
@@ -21,7 +26,7 @@ interface Props extends WithStyles {
 class Index extends PureComponent<Props> {
 
     state = {
-        modalOpen: ''
+        modalOpen: '',
     };
 
     submit = (title: string, begin: number, end: number, time1: { [group: string]: Time[] }, time2: Time[]) => {
@@ -42,10 +47,15 @@ class Index extends PureComponent<Props> {
         };
         return (
             <>
-                {data.sort(compare).map((i, j) =>
-                    <ChartContainer key={j} data={i} userGroup={userGroup} canLaunch={canLaunch} submit={this.submit}
-                                    toggleSnackbarOn={toggleSnackbarOn} />
-                )}
+                {data.sort(compare).map(
+                    (i, j) => <ChartContainer
+                        key={j}
+                        data={i}
+                        userGroup={userGroup}
+                        canLaunch={canLaunch}
+                        submit={this.submit}
+                        toggleSnackbarOn={toggleSnackbarOn}
+                    />)}
                 <div className={classes.chartContainer}>
                     <Button disabled={!canLaunch}>发起招新</Button>
                     <ChartNew
@@ -57,7 +67,7 @@ class Index extends PureComponent<Props> {
                     />
                 </div>
             </>
-        )
+        );
     }
 }
 
