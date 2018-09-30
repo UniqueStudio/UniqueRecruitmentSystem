@@ -92,10 +92,10 @@ export const sendCommon = (req: Request, res: Response) => {
                         ? res.send({ type: 'success' })
                         : res.send({ type: 'info', message: `未能成功发送短信的有：${failedNames}` })
                 });
-                redisClient.del(`userCode:${decoded['uid']}`);
             } else {
                 res.send({ message: '验证码不正确', type: 'warning' })
             }
+            redisClient.del(`userCode:${decoded['uid']}`);
         } catch (err) {
             res.send({ message: err.message, type: 'danger' })
         }
