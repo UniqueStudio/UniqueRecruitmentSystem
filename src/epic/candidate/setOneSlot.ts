@@ -3,14 +3,14 @@ import { ajax, AjaxResponse } from 'rxjs/ajax';
 import { of } from 'rxjs';
 import { Epic, ofType } from "redux-observable";
 import { Action, CANDIDATE, customError, Dependencies, errHandler } from '../index';
-import { SET_CANDIDATE_SLOT, SetCandidateSlot, setSlots, toggleSnackbarOn } from '../../action';
+import { SET_ONE_SLOT_START, SetOneSlotStart, setSlotsFulfilled, toggleSnackbarOn } from '../../action';
 import { URL } from '../../lib/const';
 import { StoreState } from '../../reducer';
 
-export const setCandidateSlotEpic: Epic<Action, Action, StoreState, Dependencies> = (action$, state$, { localStorage }) =>
+export const setOneSlotEpic: Epic<Action, Action, StoreState, Dependencies> = (action$, state$, { localStorage }) =>
     action$.pipe(
-        ofType(SET_CANDIDATE_SLOT),
-        mergeMap((action: SetCandidateSlot) => {
+        ofType(SET_ONE_SLOT_START),
+        mergeMap((action: SetOneSlotStart) => {
             const token = localStorage.getItem('token');
             if (!token) {
                 return errHandler({ message: 'token不存在', type: 'danger' }, CANDIDATE);
@@ -25,7 +25,7 @@ export const setCandidateSlotEpic: Epic<Action, Action, StoreState, Dependencies
                     if (res.type === 'success') {
                         return of(
                             toggleSnackbarOn('设置成功！', 'success'),
-                            setSlots([{ _id: id, ...time }], time['slot1'] ? 1 : 2)
+                            setSlotsFulfilled([{ _id: id, ...time }], time['slot1'] ? 1 : 2)
                         );
                     }
                     throw customError(res);

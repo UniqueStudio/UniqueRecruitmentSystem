@@ -3,13 +3,13 @@ import { of } from 'rxjs';
 import { ajax } from 'rxjs/ajax';
 import { Epic, ofType } from "redux-observable";
 import { Action, customError, Dependencies, errHandler, RECRUITMENT } from '../index';
-import { GET_RECRUITMENTS, setRecruitments } from '../../action';
+import { GET_RECRUITMENTS_START, getRecruitmentsFulfilled } from '../../action';
 import { Recruitment, URL } from '../../lib/const';
 import { StoreState } from '../../reducer';
 
 export const getRecruitmentsEpic: Epic<Action, Action, StoreState, Dependencies> = (action$, state$, { sessionStorage, localStorage }) =>
     action$.pipe(
-        ofType(GET_RECRUITMENTS),
+        ofType(GET_RECRUITMENTS_START),
         mergeMap(() => {
             const token = localStorage.getItem('token');
             if (!token) {
@@ -18,7 +18,7 @@ export const getRecruitmentsEpic: Epic<Action, Action, StoreState, Dependencies>
             const recruitments = sessionStorage.getItem('historyRecruitments');
             if (recruitments && !state$.value.recruitments.shouldUpdateRecruitment) {
                 return of(
-                    setRecruitments(JSON.parse(recruitments))
+                    getRecruitmentsFulfilled(JSON.parse(recruitments))
                 );
             }
             return ajax.getJSON(`${URL}/recruitment`, {
@@ -31,7 +31,7 @@ export const getRecruitmentsEpic: Epic<Action, Action, StoreState, Dependencies>
                     throw customError(res);
                 }),
                 tap(data => sessionStorage.setItem('historyRecruitments', JSON.stringify(data))),
-                map(data => setRecruitments(data)),
+                map(data => getRecruitmentsFulfilled(data)),
                 startWith(
                     { type: RECRUITMENT.START }
                 ),

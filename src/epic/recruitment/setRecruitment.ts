@@ -2,14 +2,14 @@ import { catchError, endWith, map, mergeMap, startWith } from 'rxjs/operators';
 import { ajax, AjaxResponse } from 'rxjs/ajax';
 import { Epic, ofType } from "redux-observable";
 import { Action, customError, Dependencies, errHandler, RECRUITMENT } from '../index';
-import { POST_RECRUITMENT, PostRecruitment, setShouldUpdateRecruitment, toggleSnackbarOn } from '../../action';
+import { SET_RECRUITMENT, SetRecruitment, setShouldUpdateRecruitment, toggleSnackbarOn } from '../../action';
 import { URL } from '../../lib/const';
 import { StoreState } from '../../reducer';
 
 export const setRecruitmentEpic: Epic<Action, Action, StoreState, Dependencies> = (action$, state$, { localStorage }) =>
     action$.pipe(
-        ofType(POST_RECRUITMENT),
-        mergeMap((action: PostRecruitment) => {
+        ofType(SET_RECRUITMENT),
+        mergeMap((action: SetRecruitment) => {
             const token = localStorage.getItem('token');
             if (!token) {
                 return errHandler({ message: 'token不存在', type: 'danger' }, RECRUITMENT);

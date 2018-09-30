@@ -2,7 +2,7 @@ import { ignoreElements, startWith, switchMap, tap } from 'rxjs/operators';
 import { EMPTY, Observable, Subscriber, timer } from 'rxjs';
 import { Epic, ofType } from "redux-observable";
 import {
-    addCandidate,
+    addCandidateFulfilled,
     addCommentFulfilled,
     addImage,
     addMessage,
@@ -14,7 +14,7 @@ import {
 } from '../action';
 import { Action, CANDIDATE, COMMENT, Dependencies, RECRUITMENT, Socket, USER } from './index';
 import { StoreState } from '../reducer';
-import { Comment, URL } from '../lib/const';
+import { Candidate, Comment, URL } from '../lib/const';
 
 export const socketConnectEpic: Epic<Action, Action, StoreState, Dependencies> = (action$, state$, { io, socket$ }) =>
     action$.pipe(
@@ -86,10 +86,10 @@ export const socketReceiveEpic: Epic<Action, Action, StoreState, Dependencies> =
                     o.next(toggleSnackbarOn(`ERROR: ${message}`, color || 'danger'));
                     o.next({ type: COMMENT.FAILURE });
                 });
-                socket.on('addCandidate', (candidate: object) => {
+                socket.on('addCandidate', (candidate: Candidate) => {
                     o.next({ type: CANDIDATE.START });
-                    o.next(addCandidate(candidate));
-                    o.next(toggleSnackbarOn(`${candidate['group']}组多了一名报名选手！`, 'info'));
+                    o.next(addCandidateFulfilled(candidate));
+                    o.next(toggleSnackbarOn(`${candidate.group}组多了一名报名选手！`, 'info'));
                     o.next({ type: CANDIDATE.SUCCESS });
                 });
 

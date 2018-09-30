@@ -3,14 +3,14 @@ import { of } from 'rxjs';
 import { ajax } from 'rxjs/ajax';
 import { Epic, ofType } from "redux-observable";
 import { Action, customError, Dependencies, errHandler, USER } from '../index';
-import { GET_GROUP_INFO, GetGroupInfo, setGroupInfo } from '../../action';
+import { GET_GROUP_INFO_START, getGroupInfoFulfilled, GetGroupInfoStart } from '../../action';
 import { URL, User } from '../../lib/const';
 import { StoreState } from '../../reducer';
 
 export const getGroupEpic: Epic<Action, Action, StoreState, Dependencies> = (action$, state$, { sessionStorage, localStorage }) =>
     action$.pipe(
-        ofType(GET_GROUP_INFO),
-        mergeMap((action: GetGroupInfo) => {
+        ofType(GET_GROUP_INFO_START),
+        mergeMap((action: GetGroupInfoStart) => {
             const token = localStorage.getItem('token');
             const { group } = action;
             if (!token) {
@@ -22,7 +22,7 @@ export const getGroupEpic: Epic<Action, Action, StoreState, Dependencies> = (act
             const groupInfo = sessionStorage.getItem('groupInfo');
             if (groupInfo && !state$.value.user.shouldUpdateGroup) {
                 return of(
-                    setGroupInfo(JSON.parse(groupInfo))
+                    getGroupInfoFulfilled(JSON.parse(groupInfo))
                 );
             }
             return ajax.getJSON(`${URL}/user/group/${group}`, {
@@ -36,7 +36,7 @@ export const getGroupEpic: Epic<Action, Action, StoreState, Dependencies> = (act
                         throw customError(res);
                     }),
                     tap(data => sessionStorage.setItem('groupInfo', JSON.stringify(data))),
-                    map(data => setGroupInfo(data)),
+                    map(data => getGroupInfoFulfilled(data)),
                     startWith(
                         { type: USER.START }
                     ),

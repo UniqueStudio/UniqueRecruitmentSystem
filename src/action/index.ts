@@ -1,4 +1,4 @@
-import { Comment, Recruitment, User } from '../lib/const';
+import { Candidate, Comment, Recruitment, User } from '../lib/const';
 
 export const TOGGLE_DRAWER_OPEN = 'TOGGLE_DRAWER_OPEN';
 export type TOGGLE_DRAWER_OPEN = typeof TOGGLE_DRAWER_OPEN;
@@ -99,18 +99,18 @@ export function toggleFabOff(): ToggleFabOff {
     }
 }
 
-export const INPUTTING_COMMENT = 'INPUTTING_COMMENT';
-export type INPUTTING_COMMENT = typeof INPUTTING_COMMENT;
+export const RECORD_INPUTTING_COMMENT = 'RECORD_INPUTTING_COMMENT';
+export type RECORD_INPUTTING_COMMENT = typeof RECORD_INPUTTING_COMMENT;
 
-export interface InputtingComment {
-    type: INPUTTING_COMMENT;
+export interface RecordInputtingComment {
+    type: RECORD_INPUTTING_COMMENT;
     comment: string;
     evaluation: string;
 }
 
-export function inputtingComment(comment: string, evaluation: string): InputtingComment {
+export function recordInputtingComment(comment: string, evaluation: string): RecordInputtingComment {
     return {
-        type: INPUTTING_COMMENT,
+        type: RECORD_INPUTTING_COMMENT,
         comment,
         evaluation
     }
@@ -198,52 +198,38 @@ export function removeCommentFulfilled(step: number, cid: string, commenter: str
 }
 
 
-export const GET_CANDIDATES = 'GET_CANDIDATES';
-export type GET_CANDIDATES = typeof GET_CANDIDATES;
+export const GET_CANDIDATES_START = 'GET_CANDIDATES_START';
+export type GET_CANDIDATES_START = typeof GET_CANDIDATES_START;
 
-export interface GetCandidates {
-    type: GET_CANDIDATES;
+export interface GetCandidatesStart {
+    type: GET_CANDIDATES_START;
     group: string;
+    recruitmentName: string;
 }
 
-export function getCandidates(group: string): GetCandidates {
+export function getCandidatesStart(group: string, recruitmentName: string): GetCandidatesStart {
     return {
-        type: GET_CANDIDATES,
-        group
+        type: GET_CANDIDATES_START,
+        group,
+        recruitmentName
     }
 }
 
-export const SET_CANDIDATES = 'SET_CANDIDATES';
-export type SET_CANDIDATES = typeof SET_CANDIDATES;
+export const GET_CANDIDATES_FULFILLED = 'GET_CANDIDATES_FULFILLED';
+export type GET_CANDIDATES_FULFILLED = typeof GET_CANDIDATES_FULFILLED;
 
-export interface SetCandidates {
-    type: SET_CANDIDATES;
+export interface GetCandidatesFulfilled {
+    type: GET_CANDIDATES_FULFILLED;
     candidates: object[];
 }
 
-export function setCandidates(candidates: object[]): SetCandidates {
+export function getCandidatesFulfilled(candidates: object[]): GetCandidatesFulfilled {
     return {
-        type: SET_CANDIDATES,
+        type: GET_CANDIDATES_FULFILLED,
         candidates,
     }
 }
 
-export const SET_CANDIDATE_SLOT = 'SET_CANDIDATE_SLOT';
-export type SET_CANDIDATE_SLOT = typeof SET_CANDIDATE_SLOT;
-
-export interface SetCandidateSlot {
-    type: SET_CANDIDATE_SLOT;
-    id: string;
-    time: object;
-}
-
-export function setCandidateSlot(id: string, time: object): SetCandidateSlot {
-    return {
-        type: SET_CANDIDATE_SLOT,
-        id,
-        time,
-    }
-}
 
 export const GET_RESUME = 'GET_RESUME';
 export type GET_RESUME = typeof GET_RESUME;
@@ -260,17 +246,17 @@ export function getResume(cid: string): GetResume {
     }
 }
 
-export const ADD_CANDIDATE = 'ADD_CANDIDATE';
-export type ADD_CANDIDATE = typeof ADD_CANDIDATE;
+export const ADD_CANDIDATE_FULFILLED = 'ADD_CANDIDATE_FULFILLED';
+export type ADD_CANDIDATE_FULFILLED = typeof ADD_CANDIDATE_FULFILLED;
 
-export interface AddCandidate {
-    type: ADD_CANDIDATE;
-    candidate: object;
+export interface AddCandidateFulfilled {
+    type: ADD_CANDIDATE_FULFILLED;
+    candidate: Candidate;
 }
 
-export function addCandidate(candidate: object): AddCandidate {
+export function addCandidateFulfilled(candidate: Candidate): AddCandidateFulfilled {
     return {
-        type: ADD_CANDIDATE,
+        type: ADD_CANDIDATE_FULFILLED,
         candidate,
     }
 }
@@ -379,19 +365,36 @@ export function moveCandidateFulfilled(from: number, to: number, cid: string, po
     }
 }
 
-export const SUBMIT_SLOTS = 'SUBMIT_SLOTS';
-export type SUBMIT_SLOTS = typeof SUBMIT_SLOTS;
+export const SET_ONE_SLOT_START = 'SET_ONE_SLOT_START';
+export type SET_ONE_SLOT_START = typeof SET_ONE_SLOT_START;
 
-export interface SubmitSlots {
-    type: SUBMIT_SLOTS;
+export interface SetOneSlotStart {
+    type: SET_ONE_SLOT_START;
+    id: string;
+    time: object;
+}
+
+export function setOneSlotStart(id: string, time: object): SetOneSlotStart {
+    return {
+        type: SET_ONE_SLOT_START,
+        id,
+        time,
+    }
+}
+
+export const SET_All_SLOTS_START = 'SET_All_SLOTS_START';
+export type SET_All_SLOTS_START = typeof SET_All_SLOTS_START;
+
+export interface SetAllSlotsStart {
+    type: SET_All_SLOTS_START;
     title: string;
     slots: number[];
     group: string;
 }
 
-export function submitSlots(title: string, slots: number[], group: string): SubmitSlots {
+export function setAllSlotsStart(title: string, slots: number[], group: string): SetAllSlotsStart {
     return {
-        type: SUBMIT_SLOTS,
+        type: SET_All_SLOTS_START,
         title,
         slots,
         group
@@ -399,18 +402,18 @@ export function submitSlots(title: string, slots: number[], group: string): Subm
 }
 
 
-export const SET_SLOTS = 'SET_SLOTS';
-export type SET_SLOTS = typeof SET_SLOTS;
+export const SET_SLOTS_FULFILLED = 'SET_SLOTS_FULFILLED';
+export type SET_SLOTS_FULFILLED = typeof SET_SLOTS_FULFILLED;
 
-export interface SetSlots {
-    type: SET_SLOTS;
+export interface SetSlotsFulfilled {
+    type: SET_SLOTS_FULFILLED;
     interview: 1 | 2;
     slot: object[]
 }
 
-export function setSlots(slot: object[], interview: 1 | 2): SetSlots {
+export function setSlotsFulfilled(slot: object[], interview: 1 | 2): SetSlotsFulfilled {
     return {
-        type: SET_SLOTS,
+        type: SET_SLOTS_FULFILLED,
         slot,
         interview
     }
@@ -460,137 +463,136 @@ export function logout(): Logout {
     }
 }
 
-export const GET_QR_CODE = 'GET_QR_CODE';
-export type GET_QR_CODE = typeof GET_QR_CODE;
+export const GET_QR_CODE_START = 'GET_QR_CODE_START';
+export type GET_QR_CODE_START = typeof GET_QR_CODE_START;
 
-export interface GetQRCode {
-    type: GET_QR_CODE
+export interface GetQRCodeStart {
+    type: GET_QR_CODE_START
 }
 
-export function getQRCode(): GetQRCode {
+export function getQRCodeStart(): GetQRCodeStart {
     return {
-        type: GET_QR_CODE
+        type: GET_QR_CODE_START
     }
 }
 
-export const SET_QR_CODE = 'SET_QR_CODE';
-export type SET_QR_CODE = typeof SET_QR_CODE;
+export const GET_QR_CODE_FULFILLED = 'GET_QR_CODE_FULFILLED';
+export type GET_QR_CODE_FULFILLED = typeof GET_QR_CODE_FULFILLED;
 
-export interface SetQRCode {
-    type: SET_QR_CODE;
+export interface GetQRCodeFulfilled {
+    type: GET_QR_CODE_FULFILLED;
     key: string
 }
 
-export function setQRCode(key: string): SetQRCode {
+export function getQRCodeFulfilled(key: string): GetQRCodeFulfilled {
     return {
-        type: SET_QR_CODE,
+        type: GET_QR_CODE_FULFILLED,
         key
     }
 }
 
-export const GET_USER_INFO = 'GET_USER_INFO';
-export type GET_USER_INFO = typeof GET_USER_INFO;
+export const GET_USER_INFO_START = 'GET_USER_INFO_START';
+export type GET_USER_INFO_START = typeof GET_USER_INFO_START;
 
-export interface GetUserInfo {
-    type: GET_USER_INFO;
+export interface GetUserInfoStart {
+    type: GET_USER_INFO_START;
     uid: string
 }
 
-export function getUserInfo(uid: string): GetUserInfo {
+export function getUserInfoStart(uid: string): GetUserInfoStart {
     return {
-        type: GET_USER_INFO,
+        type: GET_USER_INFO_START,
         uid
     }
 }
 
-export const SET_USER_INFO = 'SET_USER_INFO';
-export type SET_USER_INFO = typeof SET_USER_INFO;
+export const SET_USER_INFO_START = 'SET_USER_INFO_START';
+export type SET_USER_INFO_START = typeof SET_USER_INFO_START;
 
-export interface SetUserInfo {
-    type: SET_USER_INFO;
-    info: User;
-}
-
-export function setUserInfo(info: User): SetUserInfo {
-    return {
-        type: SET_USER_INFO,
-        info: { ...info, sex: info.sex || 'Male', isAdmin: info.isAdmin || false, isCaptain: info.isCaptain || false }
-    }
-}
-
-export const UPDATE_USER_INFO = 'UPDATE_USER_INFO';
-export type UPDATE_USER_INFO = typeof UPDATE_USER_INFO;
-
-export interface UpdateUserInfo {
-    type: UPDATE_USER_INFO;
+export interface SetUserInfoStart {
+    type: SET_USER_INFO_START;
     info: User;
     uid: string;
 }
 
-export function updateUserInfo(uid: string, info: User): UpdateUserInfo {
+export function setUserInfoStart(uid: string, info: User): SetUserInfoStart {
     return {
-        type: UPDATE_USER_INFO,
+        type: SET_USER_INFO_START,
         info,
         uid
     }
 }
 
+export const USER_INFO_FULFILLED = 'USER_INFO_FULFILLED';
+export type USER_INFO_FULFILLED = typeof USER_INFO_FULFILLED;
 
-export const GET_GROUP_INFO = 'GET_GROUP_INFO';
-export type GET_GROUP_INFO = typeof GET_GROUP_INFO;
+export interface UserInfoFulfilled {
+    type: USER_INFO_FULFILLED;
+    info: User;
+}
 
-export interface GetGroupInfo {
-    type: GET_GROUP_INFO;
+export function userInfoFulfilled(info: User): UserInfoFulfilled {
+    return {
+        type: USER_INFO_FULFILLED,
+        info: { ...info, sex: info.sex || 'Male', isAdmin: info.isAdmin || false, isCaptain: info.isCaptain || false }
+    }
+}
+
+export const GET_GROUP_INFO_START = 'GET_GROUP_INFO_START';
+export type GET_GROUP_INFO_START = typeof GET_GROUP_INFO_START;
+
+export interface GetGroupInfoStart {
+    type: GET_GROUP_INFO_START;
     group: string
 }
 
-export function getGroupInfo(group: string): GetGroupInfo {
+export function getGroupInfoStart(group: string): GetGroupInfoStart {
     return {
-        type: GET_GROUP_INFO,
+        type: GET_GROUP_INFO_START,
         group
     }
 }
 
 
-export const SET_GROUP_INFO = 'SET_GROUP_INFO';
-export type SET_GROUP_INFO = typeof SET_GROUP_INFO;
+export const GET_GROUP_INFO_FULFILLED = 'GET_GROUP_INFO_FULFILLED';
+export type GET_GROUP_INFO_FULFILLED = typeof GET_GROUP_INFO_FULFILLED;
 
-export interface SetGroupInfo {
-    type: SET_GROUP_INFO;
+export interface GetGroupInfoFulfilled {
+    type: GET_GROUP_INFO_FULFILLED;
     info: User[]
 }
 
-export function setGroupInfo(info: User[]): SetGroupInfo {
+export function getGroupInfoFulfilled(info: User[]): GetGroupInfoFulfilled {
     return {
-        type: SET_GROUP_INFO,
+        type: GET_GROUP_INFO_FULFILLED,
         info
     }
 }
 
-export const GET_RECRUITMENTS = 'GET_RECRUITMENTS';
-export type GET_RECRUITMENTS = typeof GET_RECRUITMENTS;
+export const GET_RECRUITMENTS_START = 'GET_RECRUITMENTS_START';
+export type GET_RECRUITMENTS_START = typeof GET_RECRUITMENTS_START;
 
-export interface GetRecruitments {
-    type: GET_RECRUITMENTS;
+export interface GetRecruitmentsStart {
+    type: GET_RECRUITMENTS_START;
 }
 
-export function getRecruitments(): GetRecruitments {
+export function getRecruitmentsStart(): GetRecruitmentsStart {
     return {
-        type: GET_RECRUITMENTS,
+        type: GET_RECRUITMENTS_START,
     }
 }
 
-export const SET_RECRUITMENTS = 'SET_RECRUITMENTS';
-export type SET_RECRUITMENTS = typeof SET_RECRUITMENTS;
+export const GET_RECRUITMENTS_FULFILLED = 'GET_RECRUITMENTS_FULFILLED';
+export type GET_RECRUITMENTS_FULFILLED = typeof GET_RECRUITMENTS_FULFILLED;
 
-export interface SetRecruitments {
-    type: SET_RECRUITMENTS;
+export interface GetRecruitmentsFulfilled {
+    type: GET_RECRUITMENTS_FULFILLED;
     recruitments: Recruitment[];
 }
 
-export function setRecruitments(recruitments: Recruitment[]): SetRecruitments {
+export function getRecruitmentsFulfilled(recruitments: Recruitment[]): GetRecruitmentsFulfilled {
     return {
-        type: SET_RECRUITMENTS,
+        type: GET_RECRUITMENTS_FULFILLED,
         recruitments,
     }
 }
@@ -610,35 +612,35 @@ export function launchRecruitment(info: object): LaunchRecruitment {
     }
 }
 
-export const POST_RECRUITMENT = 'POST_RECRUITMENT';
-export type POST_RECRUITMENT = typeof POST_RECRUITMENT;
+export const SET_RECRUITMENT = 'SET_RECRUITMENT';
+export type SET_RECRUITMENT = typeof SET_RECRUITMENT;
 
-export interface PostRecruitment {
-    type: POST_RECRUITMENT;
+export interface SetRecruitment {
+    type: SET_RECRUITMENT;
     data: object;
 }
 
-export function postRecruitment(data: object): PostRecruitment {
+export function setRecruitment(data: object): SetRecruitment {
     return {
-        type: POST_RECRUITMENT,
+        type: SET_RECRUITMENT,
         data
     }
 }
 
-export const UPDATE_RECRUITMENT = 'UPDATE_RECRUITMENT';
-export type UPDATE_RECRUITMENT = typeof UPDATE_RECRUITMENT;
-
-export interface UpdateRecruitment {
-    type: UPDATE_RECRUITMENT;
-    recruitment: Recruitment;
-}
-
-export function updateRecruitment(recruitment: Recruitment): UpdateRecruitment {
-    return {
-        type: UPDATE_RECRUITMENT,
-        recruitment,
-    }
-}
+// export const UPDATE_RECRUITMENT = 'UPDATE_RECRUITMENT';
+// export type UPDATE_RECRUITMENT = typeof UPDATE_RECRUITMENT;
+//
+// export interface UpdateRecruitment {
+//     type: UPDATE_RECRUITMENT;
+//     recruitment: Recruitment;
+// }
+//
+// export function updateRecruitment(recruitment: Recruitment): UpdateRecruitment {
+//     return {
+//         type: UPDATE_RECRUITMENT,
+//         recruitment,
+//     }
+// }
 
 export const SET_SHOULD_UPDATE_RECRUITMENT = 'SET_SHOULD_UPDATE_RECRUITMENT';
 export type SET_SHOULD_UPDATE_RECRUITMENT = typeof SET_SHOULD_UPDATE_RECRUITMENT;

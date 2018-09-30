@@ -22,17 +22,17 @@ const init = {
 };
 
 type Action =
-    actions.AddCommentFulfilled
-    | actions.RemoveCommentFulfilled
-    | actions.SetCandidates
-    | actions.AddCandidate
-    | actions.SelectCandidate
+    actions.AddCandidateFulfilled
+    | actions.AddCommentFulfilled
     | actions.DeselectCandidate
-    | actions.RemoveCandidateFulfilled
+    | actions.GetCandidatesFulfilled
     | actions.MoveCandidateFulfilled
+    | actions.RecordInputtingComment
+    | actions.RemoveCandidateFulfilled
+    | actions.RemoveCommentFulfilled
+    | actions.SelectCandidate
     | actions.SetGroup
-    | actions.SetSlots
-    | actions.InputtingComment;
+    | actions.SetSlotsFulfilled;
 
 export interface Candidates {
     candidates: Map<string, Candidate>[];
@@ -93,13 +93,14 @@ export function candidates(
         case CANDIDATE.FAILURE:
             newState.isLoading.candidates = false;
             return newState;
-        case actions.SET_CANDIDATES:
+        case actions.GET_CANDIDATES_FULFILLED:
             const candidatesToMap = action.candidates.map(i => new Map(Object.entries(i)));
             return { ...state, candidates: candidatesToMap, shouldUpdateCandidates: false };
-        case actions.ADD_CANDIDATE:
-            if (newState.group === action.candidate['group']) {
-                if (!newState.candidates[action.candidate['step']]) newState.candidates[action.candidate['step']] = new Map<string, Candidate>();
-                newState.candidates[action.candidate['step']].set(action.candidate['_id'], action.candidate as Candidate);
+        case actions.ADD_CANDIDATE_FULFILLED:
+            const { group, step, _id } = action.candidate;
+            if (newState.group === group) {
+                if (!newState.candidates[step]) newState.candidates[step] = new Map<string, Candidate>();
+                newState.candidates[step].set(_id, action.candidate);
                 sessionStorage.setItem(newState.group, JSON.stringify(newState.candidates.map(i => mapToObj(i))));
             }
             return newState;
@@ -137,9 +138,9 @@ export function candidates(
             return newState;
         case actions.SET_GROUP:
             return { ...state, group: action.group };
-        case actions.INPUTTING_COMMENT:
+        case actions.RECORD_INPUTTING_COMMENT:
             return { ...state, inputtingComment: { evaluation: action.evaluation, comment: action.comment } };
-        case actions.SET_SLOTS:
+        case actions.SET_SLOTS_FULFILLED:
             action.slot.map(i => {
                 const candidates = newState.candidates[action.interview === 1 ? 2 : 4];
                 const info = candidates.get(i['_id']);

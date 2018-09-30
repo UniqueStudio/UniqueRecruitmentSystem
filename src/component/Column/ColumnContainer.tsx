@@ -19,9 +19,10 @@ interface Props extends WithStyles {
     selected: string[];
     fabOn: number;
     snackbarOn: boolean;
+    pendingRecruitment: string;
     select: (cid: string[]) => void;
     deselect: (cid: string[] | string) => void;
-    changeGroup: (group: string) => void;
+    changeGroup: (group: string, recruitmentName: string) => void;
     toggleFabOff: () => void;
     move: (from: number, to: number, cid: string, position: number) => void;
     remove: (cid: string) => void;
@@ -78,14 +79,17 @@ class Container extends PureComponent<Props> {
 
 
     toggleOpen = (name: string) => () => {
+        const { deselect, selected } = this.props;
+        this.state.modal && deselect(selected);
         this.setState({
             [name]: !this.state[name]
         });
     };
 
     componentDidMount() {
-        const { changeGroup, group, type, userGroup } = this.props;
-        type === 'massInterview' ? changeGroup('interview') : changeGroup(group === 'interview' ? userGroup : group);
+        const { changeGroup, group, type, userGroup, pendingRecruitment } = this.props;
+        const changeTo = type === 'massInterview' ? 'interview' : group === 'interview' ? userGroup : group;
+        changeGroup(changeTo, pendingRecruitment);
     }
 
     componentDidUpdate(prevProps: Props) {
@@ -123,7 +127,7 @@ class Container extends PureComponent<Props> {
                             >
                                 {this.state.steps.map(i => <Column title={i} key={i}
                                                                    dropIndex={this.state.steps.indexOf(i)}
-                                                                   isDragging={this.state.flag} />)}
+                                                                   isDragging={this.state.flag}/>)}
                                 {/*this div with a full-width-space is used to show right margin of the last element*/}
                                 <div style={{ visibility: 'hidden' }}>{'　'}</div>
                             </div>
@@ -132,17 +136,17 @@ class Container extends PureComponent<Props> {
                 </DragDropContext>
                 <Fab selected={selected} deselect={deselect} fabOn={fabOn} snackbarOn={snackbarOn} select={select}
                      candidates={current} toggleFabOff={toggleFabOff}
-                     toggleOpen={this.toggleOpen} canOperate={userGroup === group} />
+                     toggleOpen={this.toggleOpen} canOperate={userGroup === group}/>
                 <ColumnDialog
                     open={this.state.dialog}
                     onClick={this.handleRemove(selectedCid)}
-                    toggleOpen={this.toggleOpen('dialog')} />
+                    toggleOpen={this.toggleOpen('dialog')}/>
                 <ColumnModal
                     open={this.state.modal}
                     toggleOpen={this.toggleOpen('modal')}
                     selected={selectedInfo}
                     deselect={deselect}
-                    group={group} />
+                    group={group}/>
             </>
         );
     }

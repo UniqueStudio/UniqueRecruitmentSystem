@@ -5,8 +5,8 @@ import { StoreState } from '../../reducer';
 import {
     deselectCandidate,
     DeselectCandidate,
-    getCandidates,
-    GetCandidates,
+    getCandidatesStart,
+    GetCandidatesStart,
     moveCandidateStart,
     MoveCandidateStart,
     removeCandidateStart,
@@ -23,19 +23,20 @@ interface OwnProps {
     type: string
 }
 
-const mapStateToProps = ({ candidates, components, user }: StoreState, ownProps: OwnProps) => ({
+const mapStateToProps = ({ candidates, components, user, recruitments }: StoreState, ownProps: OwnProps) => ({
     group: candidates.group,
     selected: candidates.selected,
     fabOn: components.fabOn,
     snackbarOn: components.snackbar.on,
     candidates: candidates.candidates,
-    userGroup: user.info.group
+    userGroup: user.info.group,
+    pendingRecruitment: recruitments.pending
 });
 
-type DispatchType = Dispatch<GetCandidates | MoveCandidateStart | DeselectCandidate | SelectCandidate | ToggleFabOff | ToggleSnackbarOn | RemoveCandidateStart>;
+type DispatchType = Dispatch<GetCandidatesStart | MoveCandidateStart | DeselectCandidate | SelectCandidate | ToggleFabOff | ToggleSnackbarOn | RemoveCandidateStart>;
 
 const mapDispatchToProps = (dispatch: DispatchType) => ({
-    changeGroup: (group: string) => dispatch(getCandidates(group)),
+    changeGroup: (group: string, recruitmentName: string) => dispatch(getCandidatesStart(group, recruitmentName)),
     move: (from: number, to: number, cid: string, position: number) => dispatch(moveCandidateStart(from, to, cid, position)),
     deselect: (name: string[]) => dispatch(deselectCandidate(name)),
     select: (name: string[]) => dispatch(selectCandidate(name)),

@@ -5,7 +5,6 @@ export const STEPS_ = ['apply', 'writtenExam', 'groupInterview', 'stayUpExam', '
 export const SCORES = ["前10%", "前25%", "前50%", "前100%", "暂无"];
 export const URL = 'https://hustunique.com:5000';
 export const QR_CODE_URL = 'https://open.work.weixin.qq.com/wwopen/sso/qrImg?key=';
-export const PENDING_RECRUITMENT = '2018A';
 
 export type Group = "web" | "lab" | "ai" | "game" | "android" | "ios" | "design" | "pm";
 

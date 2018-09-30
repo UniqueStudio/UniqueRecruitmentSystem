@@ -3,8 +3,8 @@ import { Dispatch } from 'redux';
 import {
     addCommentStart,
     AddCommentStart,
-    inputtingComment,
-    InputtingComment,
+    recordInputtingComment,
+    RecordInputtingComment,
     removeCommentStart,
     RemoveCommentStart,
     toggleSnackbarOn,
@@ -28,13 +28,13 @@ const mapStateToProps = ({ components, candidates, user }: StoreState, ownProps:
     username: user.info['username']
 });
 
-type DispatchType = Dispatch<ToggleSnackbarOn | InputtingComment | AddCommentStart | RemoveCommentStart>
+type DispatchType = Dispatch<ToggleSnackbarOn | RecordInputtingComment | AddCommentStart | RemoveCommentStart>
 
 const mapDispatchToProps = (dispatch: DispatchType) => ({
     submit: (step: number, cid: string, commenter: string, comment: Comment) => dispatch(addCommentStart(step, cid, commenter, comment)),
     remove: (step: number, name: string, commenter: string) => dispatch(removeCommentStart(step, name, commenter)),
     toggleOn: (info: string) => dispatch(toggleSnackbarOn(info, 'warning')),
-    changeInputting: (comment: string, evaluation: string) => dispatch(inputtingComment(comment, evaluation))
+    changeInputting: (comment: string, evaluation: string) => dispatch(recordInputtingComment(comment, evaluation))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(CandidateComments);
