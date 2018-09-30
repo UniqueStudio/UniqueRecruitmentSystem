@@ -4,8 +4,8 @@ import Column from '../../component/Column/Column';
 import {
     getResume,
     GetResume,
-    inputtingComment,
-    InputtingComment,
+    recordInputtingComment,
+    RecordInputtingComment,
     toggleModalOff,
     ToggleModalOff,
     toggleModalOn,
@@ -30,13 +30,13 @@ const mapStateToProps = ({ candidates, components }: StoreState, ownProps: OwnPr
 type DispatchType =
     Dispatch<ToggleModalOn
         | ToggleModalOff
-        | InputtingComment
+        | RecordInputtingComment
         | GetResume>
 
 const mapDispatchToProps = (dispatch: DispatchType) => ({
     toggleModalOn: (cid: string) => dispatch(toggleModalOn(cid)),
     toggleModalOff: () => dispatch(toggleModalOff()),
-    changeInputting: (comment: string, evaluation: string) => dispatch(inputtingComment(comment, evaluation)),
+    changeInputting: (comment: string, evaluation: string) => dispatch(recordInputtingComment(comment, evaluation)),
     downloadResume: (cid: string) => dispatch(getResume(cid))
 });
 

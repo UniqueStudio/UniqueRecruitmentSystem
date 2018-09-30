@@ -4,28 +4,13 @@ import { Theme } from "@material-ui/core/styles";
 const styles: StyleRulesCallback = (theme: Theme) => ({
     infoContainer: {
         display: 'flex',
-        justifyContent: 'space-around',
-        [theme.breakpoints.down('sm')]: {
-            flexDirection: 'column'
-        },
-        minWidth: 320
+        flexDirection: 'column',
     },
     paper: {
         margin: theme.spacing.unit * 2,
         padding: theme.spacing.unit * 2,
         display: 'flex',
         flexDirection: 'column',
-        alignItems: 'center'
-    },
-    membersPaper: {
-        [theme.breakpoints.up('md')]: {
-            width: '30%',
-        }
-    },
-    candidatesPaper: {
-        [theme.breakpoints.up('md')]: {
-            width: '60%',
-        }
     },
     buttonContainer: {
         display: 'flex',
@@ -35,8 +20,12 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
     button: {
         margin: theme.spacing.unit
     },
+    tableContainer: {
+        overflowX: 'auto'
+    },
     table: {
-        margin: theme.spacing.unit
+        minWidth: 800,
+        marginBottom: theme.spacing.unit
     },
     tableCell: {
         [theme.breakpoints.down('xs')]: {

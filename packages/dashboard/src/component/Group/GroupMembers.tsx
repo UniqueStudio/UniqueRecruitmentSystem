@@ -1,5 +1,4 @@
 import React, { PureComponent } from 'react';
-import classNames from 'classnames';
 import Paper from '@material-ui/core/Paper';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -12,6 +11,7 @@ import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 import styles from '../../style/group';
 import withRoot from "../../style/withRoot";
 import { User } from '../../lib/const';
+import titleConverter from "../../lib/titleConverter";
 
 interface Props extends WithStyles {
     group: User[];
@@ -21,42 +21,45 @@ class GroupMembers extends PureComponent<Props> {
     render() {
         const { classes, group } = this.props;
         return (
-            <Paper className={classNames(classes.paper, classes.membersPaper)}>
+            <Paper className={classes.paper}>
                 <div className={classes.title}>
                     <Typography variant="title">
                         小组成员信息
                     </Typography>
                 </div>
-                <Table className={classes.table}>
-                    <TableHead>
-                        <TableRow>
-                            <TableCell classes={{
-                                root: classes.tableCell
-                            }}>成员姓名</TableCell>
-                            <TableCell classes={{
-                                root: classes.tableCell
-                            }}>组长？</TableCell>
-                            <TableCell classes={{
-                                root: classes.tableCell
-                            }}>管理员？</TableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {Boolean(group.length) && group.map((i, j) => (
-                            <TableRow key={j}>
-                                <TableCell component="th" scope="row" classes={{
-                                    root: classes.tableCell
-                                }}>{i.username}</TableCell>
-                                <TableCell classes={{
-                                    root: classes.tableCell
-                                }}>{i.isCaptain ? '是' : '否'}</TableCell>
-                                <TableCell classes={{
-                                    root: classes.tableCell
-                                }}>{i.isAdmin ? '是' : '否'}</TableCell>
+                <div className={classes.tableContainer}>
+                    <Table className={classes.table}>
+                        <TableHead>
+                            <TableRow>
+                                <TableCell classes={{ root: classes.tableCell }}>成员姓名</TableCell>
+                                <TableCell classes={{ root: classes.tableCell }}>性别</TableCell>
+                                <TableCell classes={{ root: classes.tableCell }}>电话号码</TableCell>
+                                <TableCell classes={{ root: classes.tableCell }}>邮箱</TableCell>
+                                <TableCell classes={{ root: classes.tableCell }}>加入时间</TableCell>
+                                <TableCell classes={{ root: classes.tableCell }}>组长？</TableCell>
+                                <TableCell classes={{ root: classes.tableCell }}>管理员？</TableCell>
                             </TableRow>
-                        ))}
-                    </TableBody>
-                </Table>
+                        </TableHead>
+                        <TableBody>
+                            {Boolean(group.length) && group.map((i, j) => (
+                                <TableRow key={j}>
+                                    <TableCell component="th" scope="row" classes={{
+                                        root: classes.tableCell
+                                    }}>{i.username}</TableCell>
+                                    <TableCell
+                                        classes={{ root: classes.tableCell }}>{i.sex === 'Male' ? '男' : '女'}</TableCell>
+                                    <TableCell classes={{ root: classes.tableCell }}>{i.phone}</TableCell>
+                                    <TableCell classes={{ root: classes.tableCell }}>{i.mail}</TableCell>
+                                    <TableCell
+                                        classes={{ root: classes.tableCell }}>{titleConverter(i.joinTime)}</TableCell>
+                                    <TableCell
+                                        classes={{ root: classes.tableCell }}>{i.isCaptain ? '是' : '否'}</TableCell>
+                                    <TableCell classes={{ root: classes.tableCell }}>{i.isAdmin ? '是' : '否'}</TableCell>
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                    </Table>
+                </div>
             </Paper>
         )
     }

@@ -15,17 +15,18 @@ import Select from './AppBarSelect';
 import Anchor from '../Anchor';
 import { Redirect, RouteComponentProps } from 'react-router-dom';
 import { Header } from './Header';
-import { GROUPS, GROUPS_, PENDING_RECRUITMENT, STEPS } from '../../lib/const';
+import { GROUPS, GROUPS_, STEPS } from '../../lib/const';
 import titleConverter from "../../lib/titleConverter";
 import packageFile from '../../../package.json';
 
 interface Props extends WithStyles {
     open: boolean;
     loggedIn: boolean;
+    pendingRecruitment: string;
     group: string;
     toggleOpen: () => void;
     logout: () => void;
-    changeGroup: (group: string) => void;
+    getCandidates: (group: string, recruitmentName: string) => void;
 }
 
 class Bar extends PureComponent<Props & RouteComponentProps<{}>> {
@@ -47,23 +48,23 @@ class Bar extends PureComponent<Props & RouteComponentProps<{}>> {
     };
 
     handleChange = (event: React.ChangeEvent) => {
-        this.props.changeGroup(event.target['value']);
+        const { getCandidates, pendingRecruitment } = this.props;
+        getCandidates(event.target['value'], pendingRecruitment);
     };
 
     refresh = () => {
         sessionStorage.clear();
-        this.handleClose();
         window.location.reload();
     };
 
     render() {
-        const { classes, open, loggedIn, toggleOpen, location, group } = this.props;
+        const { classes, open, loggedIn, toggleOpen, location, group, pendingRecruitment } = this.props;
         const { pathname } = location;
         const pathToTitle = {
             '/': `联创团队招新管理系统 v${packageFile.version}`,
-            '/candidates': titleConverter(PENDING_RECRUITMENT),
+            '/candidates': titleConverter(pendingRecruitment),
             '/data': '历年数据展示',
-            '/massInterview': `${titleConverter(PENDING_RECRUITMENT)}・群面`,
+            '/massInterview': `${titleConverter(pendingRecruitment)}・群面`,
             '/myInfo': '个人信息管理',
             '/myGroup': '组员信息管理',
         };

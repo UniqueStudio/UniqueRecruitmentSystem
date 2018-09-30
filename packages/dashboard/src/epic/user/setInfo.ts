@@ -2,14 +2,14 @@ import { catchError, endWith, map, mergeMap, startWith, tap } from 'rxjs/operato
 import { ajax, AjaxResponse } from 'rxjs/ajax';
 import { Epic, ofType } from "redux-observable";
 import { Action, customError, Dependencies, errHandler, USER } from '../index';
-import { setUserInfo, toggleSnackbarOn, UPDATE_USER_INFO, UpdateUserInfo } from '../../action';
+import { SET_USER_INFO_START, SetUserInfoStart, toggleSnackbarOn, userInfoFulfilled } from '../../action';
 import { URL } from '../../lib/const';
 import { StoreState } from '../../reducer';
 
-export const updateInfoEpic: Epic<Action, Action, StoreState, Dependencies> = (action$, state$, { sessionStorage, localStorage }) =>
+export const setInfoEpic: Epic<Action, Action, StoreState, Dependencies> = (action$, state$, { sessionStorage, localStorage }) =>
     action$.pipe(
-        ofType(UPDATE_USER_INFO),
-        mergeMap((action: UpdateUserInfo) => {
+        ofType(SET_USER_INFO_START),
+        mergeMap((action: SetUserInfoStart) => {
             const token = localStorage.getItem('token');
             const formerInfo = localStorage.getItem('userInfo') || '{}';
             const { uid, info } = action;
@@ -23,7 +23,7 @@ export const updateInfoEpic: Epic<Action, Action, StoreState, Dependencies> = (a
                 map((response: AjaxResponse) => {
                     const res = response.response;
                     if (res.type === 'success') {
-                        return setUserInfo(info);
+                        return userInfoFulfilled(info);
                     }
                     throw customError(res);
                 }),

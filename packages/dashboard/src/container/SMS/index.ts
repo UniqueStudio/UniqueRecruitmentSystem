@@ -12,8 +12,9 @@ interface OwnProps {
     deselect: (cid: string) => void;
 }
 
-const mapStateToProps = ({ sms }: StoreState, ownProps: OwnProps) => ({
+const mapStateToProps = ({ sms, recruitments }: StoreState, ownProps: OwnProps) => ({
     status: sms.status,
+    pendingRecruitment: recruitments.pending
 });
 
 type DispatchType = Dispatch<ToggleSnackbarOn | SendSMS>

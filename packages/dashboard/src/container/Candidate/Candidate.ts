@@ -3,8 +3,8 @@ import { Dispatch } from 'redux';
 import {
     deselectCandidate,
     DeselectCandidate,
-    inputtingComment,
-    InputtingComment,
+    recordInputtingComment,
+    RecordInputtingComment,
     selectCandidate,
     SelectCandidate,
     toggleFabOn,
@@ -29,13 +29,13 @@ const mapStateToProps = ({ candidates, components }: StoreState, ownProps: OwnPr
     fabOn: components.fabOn
 });
 
-type DispatchType = Dispatch<SelectCandidate | DeselectCandidate | ToggleModalOn | InputtingComment | ToggleFabOn>
+type DispatchType = Dispatch<SelectCandidate | DeselectCandidate | ToggleModalOn | RecordInputtingComment | ToggleFabOn>
 
 const mapDispatchToProps = (dispatch: DispatchType) => ({
     select: (name: string) => dispatch(selectCandidate(name)),
     deselect: (name: string) => dispatch(deselectCandidate(name)),
     toggleModalOn: (cid: string) => dispatch(toggleModalOn(cid)),
-    changeInputting: (comment: string, evaluation: string) => dispatch(inputtingComment(comment, evaluation)),
+    changeInputting: (comment: string, evaluation: string) => dispatch(recordInputtingComment(comment, evaluation)),
     toggleFabOn: (step: number) => dispatch(toggleFabOn(step))
 });
 

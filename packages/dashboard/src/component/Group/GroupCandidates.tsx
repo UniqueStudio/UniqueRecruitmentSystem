@@ -1,5 +1,4 @@
 import React, { PureComponent } from 'react';
-import classNames from 'classnames';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -58,7 +57,7 @@ class Candidates extends PureComponent<Props> {
         const { classes, candidates, disabled, interviewStage, handleChange, toggleDialog, toggleModal } = this.props;
         const { dialogOpen, time } = this.state;
         return (
-            <Paper className={classNames(classes.paper, classes.candidatesPaper)}>
+            <Paper className={classes.paper}>
                 <div className={classes.title}>
                     <div/>
                     <Typography variant="title">
@@ -72,36 +71,38 @@ class Candidates extends PureComponent<Props> {
                         <MenuItem value={2}>群面</MenuItem>
                     </Select>
                 </div>
-                <Table className={classes.table}>
-                    <TableHead>
-                        <TableRow>
-                            <TableCell classes={{ root: classes.tableCell }}>姓名</TableCell>
-                            <TableCell classes={{ root: classes.tableCell }}>选择情况</TableCell>
-                            <TableCell classes={{ root: classes.tableCell }}>分配结果</TableCell>
-                            <TableCell classes={{ root: classes.tableCell }}/>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {Boolean(candidates.length) && candidates.map((i, j) => {
-                            const time = i[`time${interviewStage}`];
-                            const slot = i[`slot${interviewStage}`];
-                            const state = i.rejected ? '已淘汰' : i.abandon ? '已放弃' : time && time.length ? '已选择' : '未选择';
-                            return (
-                                <TableRow key={j}>
-                                    <TableCell component="th" scope="row"
-                                               classes={{ root: classes.tableCell }}>{i.name}</TableCell>
-                                    <TableCell classes={{ root: classes.tableCell }}>{state}</TableCell>
-                                    <TableCell
-                                        classes={{ root: classes.tableCell }}
-                                    >{slot && slot.length ? `${slot[0]}-${slot[2]}` : '未分配'}</TableCell>
-                                    <TableCell classes={{ root: classes.tableCell }}>
-                                        <Button color='primary' onClick={this.toggleDialog(i._id)}>设置</Button>
-                                    </TableCell>
-                                </TableRow>
-                            )
-                        })}
-                    </TableBody>
-                </Table>
+                <div className={classes.tableContainer}>
+                    <Table className={classes.table}>
+                        <TableHead>
+                            <TableRow>
+                                <TableCell classes={{ root: classes.tableCell }}>姓名</TableCell>
+                                <TableCell classes={{ root: classes.tableCell }}>选择情况</TableCell>
+                                <TableCell classes={{ root: classes.tableCell }}>分配结果</TableCell>
+                                <TableCell classes={{ root: classes.tableCell }}/>
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            {Boolean(candidates.length) && candidates.map((i, j) => {
+                                const time = i[`time${interviewStage}`];
+                                const slot = i[`slot${interviewStage}`];
+                                const state = i.rejected ? '已淘汰' : i.abandon ? '已放弃' : time && time.length ? '已选择' : '未选择';
+                                return (
+                                    <TableRow key={j}>
+                                        <TableCell component="th" scope="row"
+                                                   classes={{ root: classes.tableCell }}>{i.name}</TableCell>
+                                        <TableCell classes={{ root: classes.tableCell }}>{state}</TableCell>
+                                        <TableCell
+                                            classes={{ root: classes.tableCell }}
+                                        >{slot && slot.length ? `${slot[0]}-${slot[2]}` : '未分配'}</TableCell>
+                                        <TableCell classes={{ root: classes.tableCell }}>
+                                            <Button color='primary' onClick={this.toggleDialog(i._id)}>设置</Button>
+                                        </TableCell>
+                                    </TableRow>
+                                )
+                            })}
+                        </TableBody>
+                    </Table>
+                </div>
                 <div className={classes.buttonContainer}>
                     <Button
                         color='primary'
