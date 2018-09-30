@@ -3,12 +3,12 @@ import { Dispatch } from 'redux';
 import ChartIndex from '../../component/Chart/index';
 import { StoreState } from '../../reducer';
 import {
-    getRecruitments,
-    GetRecruitments,
+    getRecruitmentsStart,
+    GetRecruitmentsStart,
     launchRecruitment,
     LaunchRecruitment,
-    postRecruitment,
-    PostRecruitment,
+    setRecruitment,
+    SetRecruitment,
     toggleSnackbarOn,
     ToggleSnackbarOn
 } from '../../action';
@@ -21,13 +21,13 @@ const mapStateToProps = ({ recruitments, user }: StoreState) => ({
     userGroup: user.info.group
 });
 
-type DispatchType = Dispatch<ToggleSnackbarOn | GetRecruitments | LaunchRecruitment | PostRecruitment>;
+type DispatchType = Dispatch<ToggleSnackbarOn | GetRecruitmentsStart | LaunchRecruitment | SetRecruitment>;
 
 const mapDispatchToProps = (dispatch: DispatchType) => ({
-    fetchData: () => dispatch(getRecruitments()),
+    fetchData: () => dispatch(getRecruitmentsStart()),
     toggleSnackbarOn: (info: string, color: string = 'warning') => dispatch(toggleSnackbarOn(info, color)),
     launchRecruitment: (info: object) => dispatch(launchRecruitment(info)),
-    submitRecruitment: (data: object) => dispatch(postRecruitment(data))
+    setRecruitment: (data: object) => dispatch(setRecruitment(data))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ChartIndex);

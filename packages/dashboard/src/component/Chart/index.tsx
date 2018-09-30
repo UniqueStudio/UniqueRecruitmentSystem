@@ -15,7 +15,7 @@ interface Props extends WithStyles {
     fetchData: () => void;
     toggleSnackbarOn: (info: string, color?: string) => void;
     launchRecruitment: (info: object) => void;
-    submitRecruitment: (data: object) => void;
+    setRecruitment: (data: object) => void;
 }
 
 class Index extends PureComponent<Props> {
@@ -25,7 +25,7 @@ class Index extends PureComponent<Props> {
     };
 
     submit = (title: string, begin: number, end: number, time1: { [group: string]: Time[] }, time2: Time[]) => {
-        this.props.submitRecruitment({ title, begin, end, time1, time2 });
+        this.props.setRecruitment({ title, begin, end, time1, time2 });
     };
 
     componentDidMount() {

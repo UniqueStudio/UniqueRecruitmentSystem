@@ -2,21 +2,29 @@ import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { StoreState } from '../../reducer';
-import { GetCandidates, getCandidates, logout, Logout, toggleDrawerOpen, ToggleDrawerOpen } from '../../action';
+import {
+    GetCandidatesStart,
+    getCandidatesStart,
+    logout,
+    Logout,
+    toggleDrawerOpen,
+    ToggleDrawerOpen
+} from '../../action';
 import AppBar from '../../component/AppBar/AppBar';
 
-const mapStateToProps = ({ components, user, candidates }: StoreState, ownProps: RouteComponentProps<{}>) => ({
+const mapStateToProps = ({ components, user, candidates, recruitments }: StoreState, ownProps: RouteComponentProps<{}>) => ({
     open: components.drawerOpen,
     loggedIn: user.loggedIn,
-    group: candidates.group
+    group: candidates.group,
+    pendingRecruitment: recruitments.pending
 });
 
-type DispatchType = Dispatch<ToggleDrawerOpen | Logout | GetCandidates>
+type DispatchType = Dispatch<ToggleDrawerOpen | Logout | GetCandidatesStart>
 
 const mapDispatchToProps = (dispatch: DispatchType) => ({
     toggleOpen: () => dispatch(toggleDrawerOpen()),
     logout: () => dispatch(logout()),
-    changeGroup: (group: string) => dispatch(getCandidates(group))
+    getCandidates: (group: string, recruitmentName: string) => dispatch(getCandidatesStart(group, recruitmentName))
 });
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(AppBar));

@@ -3,12 +3,12 @@ import { Dispatch } from 'redux';
 import Users from '../../component/User';
 import { StoreState } from '../../reducer';
 import {
-    getUserInfo,
-    GetUserInfo,
+    getUserInfoStart,
+    GetUserInfoStart,
+    setUserInfoStart,
+    SetUserInfoStart,
     toggleSnackbarOn,
     ToggleSnackbarOn,
-    updateUserInfo,
-    UpdateUserInfo
 } from '../../action';
 import { User } from '../../lib/const';
 
@@ -18,11 +18,11 @@ const mapStateToProps = ({ user }: StoreState) => ({
     isLoading: user.isLoading
 });
 
-type DispatchType = Dispatch<ToggleSnackbarOn | GetUserInfo | UpdateUserInfo>
+type DispatchType = Dispatch<ToggleSnackbarOn | GetUserInfoStart | SetUserInfoStart>
 
 const mapDispatchToProps = (dispatch: DispatchType) => ({
-    fetchInfo: (uid: string) => dispatch(getUserInfo(uid)),
-    submitInfo: (uid: string, info: User) => dispatch(updateUserInfo(uid, info)),
+    fetchInfo: (uid: string) => dispatch(getUserInfoStart(uid)),
+    submitInfo: (uid: string, info: User) => dispatch(setUserInfoStart(uid, info)),
     toggleSnackbar: (info: string, color: string) => dispatch(toggleSnackbarOn(info, color)),
 });
 

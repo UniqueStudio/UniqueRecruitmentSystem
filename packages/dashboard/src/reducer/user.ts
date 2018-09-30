@@ -23,9 +23,9 @@ const init = {
 type Action =
     actions.Login
     | actions.Logout
-    | actions.SetQRCode
-    | actions.SetUserInfo
-    | actions.SetGroupInfo
+    | actions.GetQRCodeFulfilled
+    | actions.UserInfoFulfilled
+    | actions.GetGroupInfoFulfilled
     | actions.AddMessage
     | actions.AddImage;
 
@@ -64,7 +64,7 @@ export function user(state: User = init, action: Action): User {
         case USER.FAILURE:
         case USER.SUCCESS:
             return { ...state, isLoading: false };
-        case actions.SET_QR_CODE:
+        case actions.GET_QR_CODE_FULFILLED:
             return { ...state, key: action.key, isScanning: Boolean(action.key) };
         case actions.LOGIN:
             return { ...state, loggedIn: true, uid: action.uid };
@@ -73,9 +73,9 @@ export function user(state: User = init, action: Action): User {
             localStorage.removeItem('userInfo');
             localStorage.removeItem('token');
             return { ...state, loggedIn: false };
-        case actions.SET_USER_INFO:
+        case actions.USER_INFO_FULFILLED:
             return { ...state, info: action.info, shouldUpdateGroup: true };
-        case actions.SET_GROUP_INFO:
+        case actions.GET_GROUP_INFO_FULFILLED:
             return { ...state, group: action.info, shouldUpdateGroup: false };
         case actions.ADD_MESSAGE:
             return {

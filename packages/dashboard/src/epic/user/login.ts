@@ -2,19 +2,27 @@ import { catchError, endWith, filter, map, mergeMap, startWith, switchMap, tap }
 import { concat, of } from 'rxjs';
 import { ajax } from 'rxjs/ajax';
 import { Epic, ofType } from "redux-observable";
-import { GET_QR_CODE, getUserInfo, login, SET_QR_CODE, SetQRCode, setQRCode, toggleSnackbarOn } from '../../action';
+import {
+    GET_QR_CODE_FULFILLED,
+    GET_QR_CODE_START,
+    GetQRCodeFulfilled,
+    getQRCodeFulfilled,
+    getUserInfoStart,
+    login,
+    toggleSnackbarOn
+} from '../../action';
 import { URL } from '../../lib/const';
 import { Action, customError, Dependencies, errHandler, USER } from '../index';
 import { StoreState } from '../../reducer';
 
 export const getQRCodeEpic: Epic<Action> = action$ =>
     action$.pipe(
-        ofType(GET_QR_CODE),
+        ofType(GET_QR_CODE_START),
         mergeMap(() => ajax.getJSON(`${URL}/user`)
             .pipe(
                 map((res: { type: string, key: string }) => {
                     if (res.type === 'success') {
-                        return setQRCode(res.key);
+                        return getQRCodeFulfilled(res.key);
                     }
                     throw customError(res);
                 }),
@@ -32,9 +40,9 @@ export const getQRCodeEpic: Epic<Action> = action$ =>
 
 export const loginEpic: Epic<Action, Action, StoreState, Dependencies> = (action$, state$, { localStorage }) =>
     action$.pipe(
-        ofType(SET_QR_CODE),
-        filter((action: SetQRCode) => Boolean(action.key)),
-        switchMap((action: SetQRCode) => ajax.getJSON(`${URL}/user/${action.key}/status`).pipe(
+        ofType(GET_QR_CODE_FULFILLED),
+        filter((action: GetQRCodeFulfilled) => Boolean(action.key)),
+        switchMap((action: GetQRCodeFulfilled) => ajax.getJSON(`${URL}/user/${action.key}/status`).pipe(
             map((res: { uid: string, token: string, type: string }) => {
                 const { uid, token, type } = res;
                 if (type === 'success') {
@@ -47,13 +55,13 @@ export const loginEpic: Epic<Action, Action, StoreState, Dependencies> = (action
             }),
             mergeMap(data => concat(
                 of(login(data.uid)),
-                of(getUserInfo(data.uid))
+                of(getUserInfoStart(data.uid))
             )),
             endWith(
                 toggleSnackbarOn('已成功登录！', 'success'),
             ),
             catchError(err => of(
-                setQRCode(''),
+                getQRCodeFulfilled(''),
                 toggleSnackbarOn(`Error: ${err.message}`, err.type || 'danger'),
             ))
         ))
