@@ -17,6 +17,7 @@ export const sendInterview = (req: Request, res: Response) => {
             }
             const code = await getAsync(`userCode:${decoded['uid']}`);
             if (userCode === code) {
+                let errorMessage = '';
                 const results = candidates.map(async (i: string) => {
                     const candidateInfo = (await database.query('candidates', { _id: new ObjectId(i) }))[0];
                     const translator = { 'morning': '上午', 'afternoon': '下午', 'evening': '晚上' };
@@ -31,11 +32,12 @@ export const sendInterview = (req: Request, res: Response) => {
                         body: JSON.stringify({
                             phone: candidateInfo['phone'],
                             template: 96404,
-                            param_list: [candidateInfo['name'], time, place, interviewStage === 2 ? '群面' : `${candidateInfo['group']}组组面`]
+                            param_list: [candidateInfo['name'], time, place, interviewStage === 2 ? '团队群面' : `${candidateInfo['group']}组组面`]
                         })
                     });
                     const result = await response.json();
                     if (result.code !== 200) {
+                        errorMessage = result.message.replace('\n', '');
                         return candidateInfo['name'];
                     }
                 });
@@ -43,7 +45,7 @@ export const sendInterview = (req: Request, res: Response) => {
                     const failedNames = failed.filter(i => i);
                     failedNames.length === 0
                         ? res.send({ type: 'success' })
-                        : res.send({ type: 'info', message: `未能成功发送短信的有：${failedNames}` })
+                        : res.send({ type: 'info', message: `因${errorMessage}而未能成功发送短信的有：${failedNames}` })
                 });
                 redisClient.del(`userCode:${decoded['uid']}`);
             } else {

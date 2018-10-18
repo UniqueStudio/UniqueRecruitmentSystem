@@ -64,6 +64,7 @@ export const sendCommon = (req: Request, res: Response) => {
             }
             const code = await getAsync(`userCode:${decoded['uid']}`);
             if (userCode === code) {
+                let errorMessage = '';
                 const results = candidates.map(async (i: string) => {
                     const candidateInfo = (await database.query('candidates', { _id: new ObjectId(i) }))[0];
                     if (type === 'reject') {
@@ -83,6 +84,7 @@ export const sendCommon = (req: Request, res: Response) => {
                     });
                     const result = await response.json();
                     if (result.code !== 200) {
+                        errorMessage = result.message.replace('\n', '');
                         return candidateInfo['name'];
                     }
                 });
@@ -90,7 +92,7 @@ export const sendCommon = (req: Request, res: Response) => {
                     const failedNames = failed.filter(i => i);
                     failedNames.length === 0
                         ? res.send({ type: 'success' })
-                        : res.send({ type: 'info', message: `未能成功发送短信的有：${failedNames}` })
+                        : res.send({ type: 'info', message: `因${errorMessage}而未能成功发送短信的有：${failedNames}` })
                 });
             } else {
                 res.send({ message: '验证码不正确', type: 'warning' })
