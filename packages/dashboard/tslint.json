@@ -1,7 +1,7 @@
 {
   "extends": "tslint:recommended",
   "rulesDirectory": [
-    "./"
+    "./src"
   ],
   "rules": {
     "adjacent-overload-signatures": true,

@@ -89,6 +89,10 @@ class Messenger extends PureComponent<Props> {
             this.props.toggleSnackbar('你没有上传任何图片', 'info');
             return;
         }
+        if (!['jpg', 'jpeg', 'png'].includes(file.name.split('.')[-1])) {
+            this.props.toggleSnackbar('请上传jpg或png类型的图片', 'info');
+            return;
+        }
         if (file.size > 1024 * 1024 * 5) {
             this.props.toggleSnackbar('图片大小必须小于5MB', 'info');
             return;
