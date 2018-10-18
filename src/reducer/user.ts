@@ -2,22 +2,25 @@ import * as actions from '../action';
 import { USER } from '../epic';
 
 import { Message, User as UType } from '../lib/const';
+import jsonParser from '../lib/jsonParseHelper';
 
 const token = localStorage.getItem('token');
 const payload = token && token.split('.')[1];
 const time = payload && JSON.parse(atob(payload)).exp;
 const info = localStorage.getItem('userInfo');
 const group = sessionStorage.getItem('groupInfo');
+const loggedIn = info && time && time > +new Date() / 1000;
+!loggedIn && info && localStorage.removeItem('userInfo');
 
 const init = {
-    loggedIn: !!info && time && time > +new Date() / 1000,
-    uid: (info && JSON.parse(info)._id) || '',
+    loggedIn,
+    uid: jsonParser(info, { _id: '' })._id,
     isLoading: false,
     isScanning: false,
-    info: info ? JSON.parse(info) : {},
+    info: jsonParser(info, {}),
     key: '',
     messages: [],
-    group: group ? JSON.parse(group) : [],
+    group: jsonParser(group, []),
     shouldUpdateGroup: false,
 };
 
