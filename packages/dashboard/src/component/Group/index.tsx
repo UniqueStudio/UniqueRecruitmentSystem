@@ -155,7 +155,7 @@ class Group extends PureComponent<Props> {
         const { interviewStage, counts } = this.state;
         if (currentRecruitment && !counts.length) {
             const { time1, time2 } = currentRecruitment;
-            if (interviewStage === 1 && time1) {
+            if (interviewStage === 1 && time1 && time1[userGroup]) {
                 this.initTime(time1[userGroup]);
             } else if (interviewStage === 2 && time2) {
                 this.initTime(time2);
