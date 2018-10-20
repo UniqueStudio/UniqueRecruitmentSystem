@@ -82,6 +82,22 @@ class Messenger extends PureComponent<Props> {
     scrollToBottom = () => {
         this.end.scrollTop = this.end.scrollHeight;
     };
+    handlePaste = (event: React.ClipboardEvent) => {
+        const items = (event.clipboardData || event['originalEvent'].clipboardData).items;
+        let blob = null;
+        for (const i of Object.values(items)) {
+            if (i.type.indexOf('image') === 0) {
+                blob = i.getAsFile();
+            }
+        }
+        if (blob !== null) {
+            const reader = new FileReader();
+            reader.onload = () => {
+                this.props.sendImage(reader.result as string);
+            };
+            reader.readAsDataURL(blob);
+        }
+    };
     handleImage = (event: React.ChangeEvent) => {
         const file = event.target['files'][0];
         event.target['value'] = null;
@@ -165,11 +181,11 @@ class Messenger extends PureComponent<Props> {
                                     <div className={classes.message}>
                                         <div
                                             className={classNames({ [classes.rightAlign]: i.isSelf })}>{`${i.name} - ${time(i.time)}`}</div>
-                                        <Divider className={classNames({ [classes.myDivider]: i.isSelf })}/>
+                                        <Divider className={classNames({ [classes.myDivider]: i.isSelf })} />
                                         <div className={classes.messageContent}>
                                             {i.type === 'text'
-                                                ? i.message.split('\n').map((k, l) => <span key={l}>{k}<br/></span>)
-                                                : <EnlargeableImage src={i.message}/>
+                                                ? i.message.split('\n').map((k, l) => <span key={l}>{k}<br /></span>)
+                                                : <EnlargeableImage src={i.message} />
                                             }
                                         </div>
                                     </div>
@@ -199,6 +215,7 @@ class Messenger extends PureComponent<Props> {
                             margin='normal'
                             onChange={this.handleChange}
                             onKeyPress={this.handleKey}
+                            onPaste={this.handlePaste}
                         />
                         <Tooltip title='ctrl + Enter以输入回车' classes={{ popper: classes.tooltip }}>
                             <IconButton color='primary' component='span' onClick={this.send}
