@@ -1,5 +1,6 @@
 import { DraggableProvided } from 'react-beautiful-dnd';
 import { connect } from 'react-redux';
+import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { Dispatch } from 'redux';
 
 import {
@@ -27,7 +28,7 @@ interface OwnProps {
     provided: DraggableProvided;
 }
 
-const mapStateToProps = ({ candidates, components }: StoreState, ownProps: OwnProps) => ({
+const mapStateToProps = ({ candidates, components }: StoreState, ownProps: RouteComponentProps<OwnProps>) => ({
     selected: candidates.selected,
     isLoading: candidates.isLoading.comments,
     fabOn: components.fabOn,
@@ -44,4 +45,4 @@ const mapDispatchToProps = (dispatch: DispatchType) => ({
     toggleFabOn: (step: number) => dispatch(toggleFabOn(step)),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(Candidate);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Candidate));

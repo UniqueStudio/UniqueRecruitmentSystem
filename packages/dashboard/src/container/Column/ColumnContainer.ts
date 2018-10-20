@@ -1,4 +1,5 @@
 import { connect } from 'react-redux';
+import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { Dispatch } from 'redux';
 
 import ColumnContainer from '../../component/Column/ColumnContainer';
@@ -21,11 +22,7 @@ import {
 } from '../../action';
 import { StoreState } from '../../reducer';
 
-interface OwnProps {
-    type: string;
-}
-
-const mapStateToProps = ({ candidates, components, user, recruitments }: StoreState, ownProps: OwnProps) => ({
+const mapStateToProps = ({ candidates, components, user, recruitments }: StoreState, ownProps: RouteComponentProps<{}>) => ({
     group: candidates.group,
     selected: candidates.selected,
     fabOn: components.fabOn,
@@ -54,4 +51,4 @@ const mapDispatchToProps = (dispatch: DispatchType) => ({
     remove: (cid: string) => dispatch(removeCandidateStart(cid)),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(ColumnContainer);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(ColumnContainer));
