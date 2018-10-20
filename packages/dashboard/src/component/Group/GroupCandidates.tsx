@@ -19,6 +19,7 @@ import styles from '../../style/group';
 import withRoot from '../../style/withRoot';
 
 import { Candidate } from '../../lib/const';
+import { sortBySlot } from '../../lib/sortBySlot';
 import timeStampToString from '../../lib/timeStampToString';
 
 interface Props extends WithStyles {
@@ -59,6 +60,7 @@ class Candidates extends PureComponent<Props> {
     render() {
         const { classes, candidates, disabled, interviewStage, handleChange, toggleDialog, toggleModal } = this.props;
         const { dialogOpen, time } = this.state;
+        const sorted = candidates && candidates.sort(sortBySlot(interviewStage));
         return (
             <Paper className={classes.paper}>
                 <div className={classes.title}>
@@ -79,13 +81,14 @@ class Candidates extends PureComponent<Props> {
                         <TableHead>
                             <TableRow>
                                 <TableCell classes={{ root: classes.tableCell }}>姓名</TableCell>
+                                {interviewStage === 2 && <TableCell classes={{ root: classes.tableCell }}>组别</TableCell>}
                                 <TableCell classes={{ root: classes.tableCell }}>选择情况</TableCell>
                                 <TableCell classes={{ root: classes.tableCell }}>分配结果</TableCell>
                                 <TableCell classes={{ root: classes.tableCell }}/>
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {Boolean(candidates.length) && candidates.map((i, j) => {
+                            {sorted && sorted.map((i, j) => {
                                 const timeChosen = i[`time${interviewStage}`];
                                 const slot = i[`slot${interviewStage}`];
                                 const state = i.rejected ? '已淘汰' : i.abandon ? '已放弃' : timeChosen && timeChosen.length ? '已选择' : '未选择';
@@ -93,6 +96,7 @@ class Candidates extends PureComponent<Props> {
                                     <TableRow key={j}>
                                         <TableCell component='th' scope='row'
                                                    classes={{ root: classes.tableCell }}>{i.name}</TableCell>
+                                        {interviewStage === 2 && <TableCell classes={{ root: classes.tableCell }}>{i.group}</TableCell>}
                                         <TableCell classes={{ root: classes.tableCell }}>{state}</TableCell>
                                         <TableCell
                                             classes={{ root: classes.tableCell }}
