@@ -15,7 +15,8 @@ import {
 } from '../../action';
 import { StoreState } from '../../reducer';
 
-import { STEPS } from '../../lib/const';
+import { Candidate, STEPS } from '../../lib/const';
+import { sortBySlot } from '../../lib/sortBySlot';
 
 interface OwnProps {
     title: string;
@@ -24,13 +25,19 @@ interface OwnProps {
     shouldSort: boolean;
 }
 
-const mapStateToProps = ({ candidates, components }: StoreState, ownProps: OwnProps) => ({
-    selected: candidates.selected,
-    isLoading: candidates.isLoading.candidates,
-    modalOn: components.modalOn,
-    candidates: candidates.candidates[STEPS.indexOf(ownProps.title)] || new Map<string, object>(),
-    ...ownProps,
-});
+const mapStateToProps = ({ candidates, components }: StoreState, ownProps: OwnProps) => {
+    const candidatesData = candidates.candidates[STEPS.indexOf(ownProps.title)] || new Map<string, Candidate>();
+    const cidList = [...candidatesData.keys()];
+    const infoList = [...candidatesData.values()];
+    return {
+        selected: candidates.selected,
+        isLoading: candidates.isLoading.candidates,
+        modalOn: components.modalOn,
+        cidList,
+        infoList: ownProps.shouldSort ? infoList.sort(sortBySlot(2)) : infoList,
+        ...ownProps,
+    };
+};
 
 type DispatchType =
     Dispatch<ToggleModalOn
