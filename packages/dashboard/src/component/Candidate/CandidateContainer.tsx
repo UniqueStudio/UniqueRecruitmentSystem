@@ -19,8 +19,8 @@ import withRoot from '../../style/withRoot';
 import { Candidate as CType } from '../../lib/const';
 
 interface Props extends WithStyles {
-    i: [string, CType];
-    j: number;
+    candidate: CType;
+    index: number;
     step: number;
     disabled: boolean;
     modalOn: string;
@@ -34,26 +34,26 @@ interface Props extends WithStyles {
 class CandidateContainer extends PureComponent<Props> {
 
     render() {
-        const { classes, toggleModalOff, step, modalOn, disabled, direction, handleNext, handlePrev, downloadResume, i, j } = this.props;
+        const { classes, toggleModalOff, step, modalOn, disabled, direction, handleNext, handlePrev, downloadResume, candidate, index } = this.props;
         return (
             <>
-                <Draggable draggableId={i[0]} index={j} isDragDisabled={disabled}>
+                <Draggable draggableId={candidate._id} index={index} isDragDisabled={disabled}>
                     {(dragProvided: DraggableProvided) => (
                         <Candidate step={step}
-                                   cid={i[0]}
-                                   info={i[1]}
+                                   cid={candidate._id}
+                                   info={candidate}
                                    provided={dragProvided}
                         />
                     )}
                 </Draggable>
-                <Modal open={i[0] === modalOn} onClose={toggleModalOff} direction={direction} title='详细信息'>
+                <Modal open={candidate._id === modalOn} onClose={toggleModalOff} direction={direction} title='详细信息'>
                     <div className={classes.detailContent}>
                         <IconButton className={classes.leftButton} onClick={handlePrev}>
                             <ExpandMoreIcon/>
                         </IconButton>
                         <div className={classes.detailMain}>
-                            <Detail info={i[1]} downloadResume={() => downloadResume(i[0])}/>
-                            <Comments step={step} cid={i[0]} comments={i[1].comments}/>
+                            <Detail info={candidate} downloadResume={() => downloadResume(candidate._id)}/>
+                            <Comments step={step} cid={candidate._id} comments={candidate.comments}/>
                         </div>
                         <IconButton className={classes.rightButton} onClick={handleNext}>
                             <ExpandMoreIcon/>
