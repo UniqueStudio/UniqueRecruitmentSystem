@@ -8,7 +8,6 @@ import Typography from '@material-ui/core/Typography';
 import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 
 import { Candidate, STEPS } from '../../lib/const';
-import { sortBySlot } from '../../lib/sortBySlot';
 
 import styles from '../../style/column';
 import withRoot from '../../style/withRoot';
@@ -19,8 +18,8 @@ interface Props extends WithStyles {
     title: string;
     dropIndex: number;
     isDragging: boolean;
-    shouldSort: boolean;
-    candidates: Map<string, Candidate>;
+    cidList: string[];
+    infoList: Candidate[];
     selected: string[];
     modalOn: string;
     toggleModalOn: (cid: string) => void;
@@ -84,11 +83,8 @@ class Column extends Component<Props> {
     // }
 
     render() {
-        const { classes, title, candidates, selected, modalOn, toggleModalOff, dropIndex, downloadResume, shouldSort } = this.props;
-        const allCid = [...candidates.keys()];
-        const selectedCid = selected.filter((i) => allCid.includes(i));
-        let candidatesInfo = [...candidates.values()];
-        shouldSort && (candidatesInfo = candidatesInfo.sort(sortBySlot(2)));
+        const { classes, title, cidList, infoList, selected, modalOn, toggleModalOff, dropIndex, downloadResume } = this.props;
+        const selectedCid = selected.filter((i) => cidList.includes(i));
         const DropArea = (
             <Droppable droppableId={title} type='CANDIDATE'>
                 {(dropProvided: DroppableProvided) => (
@@ -96,7 +92,7 @@ class Column extends Component<Props> {
                          ref={(element) => dropProvided.innerRef(element)}
                          {...dropProvided.droppableProps}
                     >
-                        {candidatesInfo.map((i: Candidate, j: number) => (
+                        {infoList.map((i: Candidate, j: number) => (
                             <CandidateContainer
                                 candidate={i}
                                 index={j}
@@ -106,8 +102,8 @@ class Column extends Component<Props> {
                                 modalOn={modalOn}
                                 step={titleToStep(title)}
                                 direction={this.state.direction}
-                                handlePrev={this.handlePrev(allCid[j - 1])}
-                                handleNext={this.handleNext(allCid[j + 1])}
+                                handlePrev={this.handlePrev(cidList[j - 1])}
+                                handleNext={this.handleNext(cidList[j + 1])}
                                 downloadResume={downloadResume}
                             />
                         ))}
