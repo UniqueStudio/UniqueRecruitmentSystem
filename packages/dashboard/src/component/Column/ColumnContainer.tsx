@@ -114,11 +114,12 @@ class Container extends PureComponent<Props & RouteComponentProps<{}>> {
     }
 
     render() {
-        const { classes, selected, candidates, fabOn, snackbarOn, select, deselect, toggleFabOff, group, userGroup } = this.props;
+        const { classes, selected, candidates, fabOn, snackbarOn, select, deselect, toggleFabOff, group, userGroup, location } = this.props;
         const current = candidates[Math.max(fabOn, 0)] || new Map<string, Candidate>();
         const allCid = [...current.keys()];
         const selectedCid = selected.filter((i) => allCid.includes(i));
         const selectedInfo = selectedCid.map((i) => current.get(i) as Candidate);
+        const isMassInterview = location.pathname === '/massInterview';
 
         return (
             <>
@@ -138,9 +139,14 @@ class Container extends PureComponent<Props & RouteComponentProps<{}>> {
                                 ref={provided.innerRef}
                                 {...provided.droppableProps}
                             >
-                                {this.state.steps.map((i) => <Column title={i} key={i}
-                                                                     dropIndex={this.state.steps.indexOf(i)}
-                                                                     isDragging={this.state.flag} />)}
+                                {this.state.steps.map((i) =>
+                                    <Column title={i}
+                                            key={i}
+                                            dropIndex={this.state.steps.indexOf(i)}
+                                            isDragging={this.state.flag}
+                                            shouldSort={isMassInterview}
+                                    />)
+                                }
                                 {/*this div with a full-width-space is used to show right margin of the last element*/}
                                 <div style={{ visibility: 'hidden' }}>{'　'}</div>
                             </div>

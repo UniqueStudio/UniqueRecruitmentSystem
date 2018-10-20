@@ -21,6 +21,7 @@ interface OwnProps {
     title: string;
     dropIndex: number;
     isDragging: boolean;
+    shouldSort: boolean;
 }
 
 const mapStateToProps = ({ candidates, components }: StoreState, ownProps: OwnProps) => ({

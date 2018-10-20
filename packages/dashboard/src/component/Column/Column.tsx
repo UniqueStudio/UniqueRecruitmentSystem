@@ -8,6 +8,7 @@ import Typography from '@material-ui/core/Typography';
 import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 
 import { Candidate, STEPS } from '../../lib/const';
+import { sortBySlot } from '../../lib/sortBySlot';
 
 import styles from '../../style/column';
 import withRoot from '../../style/withRoot';
@@ -18,6 +19,7 @@ interface Props extends WithStyles {
     title: string;
     dropIndex: number;
     isDragging: boolean;
+    shouldSort: boolean;
     candidates: Map<string, Candidate>;
     selected: string[];
     modalOn: string;
@@ -82,10 +84,11 @@ class Column extends Component<Props> {
     // }
 
     render() {
-        const { classes, title, candidates, selected, modalOn, toggleModalOff, dropIndex, downloadResume } = this.props;
+        const { classes, title, candidates, selected, modalOn, toggleModalOff, dropIndex, downloadResume, shouldSort } = this.props;
         const allCid = [...candidates.keys()];
         const selectedCid = selected.filter((i) => allCid.includes(i));
-
+        let candidatesInfo = [...candidates.values()];
+        shouldSort && (candidatesInfo = candidatesInfo.sort(sortBySlot(2)));
         const DropArea = (
             <Droppable droppableId={title} type='CANDIDATE'>
                 {(dropProvided: DroppableProvided) => (
@@ -93,12 +96,12 @@ class Column extends Component<Props> {
                          ref={(element) => dropProvided.innerRef(element)}
                          {...dropProvided.droppableProps}
                     >
-                        {[...candidates.entries()].map((i: [string, Candidate], j: number) => (
+                        {candidatesInfo.map((i: Candidate, j: number) => (
                             <CandidateContainer
-                                i={i}
-                                j={j}
+                                candidate={i}
+                                index={j}
                                 key={j}
-                                disabled={i[1].abandon || i[1].rejected || selectedCid.includes(i[0])}
+                                disabled={i.abandon || i.rejected || selectedCid.includes(i._id)}
                                 toggleModalOff={toggleModalOff}
                                 modalOn={modalOn}
                                 step={titleToStep(title)}
