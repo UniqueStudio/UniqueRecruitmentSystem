@@ -5,7 +5,6 @@ import Dialog from '@material-ui/core/Dialog';
 import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 
 import styles from '../../style/massInterview';
-import withRoot from '../../style/withRoot';
 
 interface Props extends WithStyles {
     src: string;
@@ -42,4 +41,4 @@ class EnlargeableImage extends PureComponent<Props> {
     }
 }
 
-export default withRoot(withStyles(styles)(EnlargeableImage));
+export default withStyles(styles)(EnlargeableImage);

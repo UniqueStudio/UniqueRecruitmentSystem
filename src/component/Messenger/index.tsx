@@ -18,7 +18,6 @@ import SendIcon from '@material-ui/icons/Send';
 import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 
 import styles from '../../style/massInterview';
-import withRoot from '../../style/withRoot';
 
 import EnlargeableImage from '../EnlargeableImg';
 
@@ -230,4 +229,4 @@ class Messenger extends PureComponent<Props> {
     }
 }
 
-export default withRoot(withStyles(styles)(Messenger));
+export default withStyles(styles)(Messenger);

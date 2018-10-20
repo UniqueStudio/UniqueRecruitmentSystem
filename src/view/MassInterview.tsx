@@ -3,7 +3,6 @@ import React, { PureComponent } from 'react';
 import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 
 import styles from '../style/massInterview';
-import withRoot from '../style/withRoot';
 
 import ColumnContainer from '../container/Column/ColumnContainer';
 import Messenger from '../container/Messenger';
@@ -20,4 +19,4 @@ class MassInterview extends PureComponent<WithStyles> {
     }
 }
 
-export default withRoot(withStyles(styles)(MassInterview));
+export default withStyles(styles)(MassInterview);

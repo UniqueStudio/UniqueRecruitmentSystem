@@ -6,7 +6,6 @@ import TextField from '@material-ui/core/TextField';
 import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 
 import styles from '../../style/candidate';
-import withRoot from '../../style/withRoot';
 
 import Modal from '../Modal';
 
@@ -149,4 +148,4 @@ class CandidateDetail extends PureComponent<Props> {
     }
 }
 
-export default withRoot(withStyles(styles)(CandidateDetail));
+export default withStyles(styles)(CandidateDetail);

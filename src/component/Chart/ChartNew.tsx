@@ -12,7 +12,6 @@ import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 import AddIcon from '@material-ui/icons/Add';
 
 import styles from '../../style/chart';
-import withRoot from '../../style/withRoot';
 
 import Verify from '../../container/Verify';
 import Modal from '../Modal';
@@ -178,4 +177,4 @@ class ChartNew extends PureComponent<Props> {
     }
 }
 
-export default withRoot(withStyles(styles)(ChartNew));
+export default withStyles(styles)(ChartNew);

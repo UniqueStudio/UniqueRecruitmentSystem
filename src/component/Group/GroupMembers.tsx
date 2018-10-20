@@ -11,7 +11,6 @@ import Typography from '@material-ui/core/Typography';
 import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 
 import styles from '../../style/group';
-import withRoot from '../../style/withRoot';
 
 import { User } from '../../lib/const';
 
@@ -69,4 +68,4 @@ class GroupMembers extends PureComponent<Props> {
     }
 }
 
-export default withRoot(withStyles(styles)(GroupMembers));
+export default withStyles(styles)(GroupMembers);

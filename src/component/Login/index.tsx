@@ -5,7 +5,6 @@ import Button from '@material-ui/core/Button';
 import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 
 import styles from '../../style/login';
-import withRoot from '../../style/withRoot';
 
 import Modal from '../Modal';
 
@@ -70,4 +69,4 @@ class Login extends PureComponent<Props> {
     }
 }
 
-export default withRoot(withStyles(styles)(Login));
+export default withStyles(styles)(Login);

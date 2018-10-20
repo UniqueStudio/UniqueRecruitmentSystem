@@ -2,8 +2,6 @@ import React, { PureComponent } from 'react';
 
 import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 
-import withRoot from '../style/withRoot';
-
 import User from '../container/User';
 
 class MyInfo extends PureComponent<WithStyles> {
@@ -12,4 +10,4 @@ class MyInfo extends PureComponent<WithStyles> {
     }
 }
 
-export default withRoot(withStyles({})(MyInfo));
+export default withStyles({})(MyInfo);

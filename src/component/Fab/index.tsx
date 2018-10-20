@@ -12,7 +12,6 @@ import AddIcon from '@material-ui/icons/Add';
 import { Candidate as CType } from '../../lib/const';
 
 import styles from '../../style/column';
-import withRoot from '../../style/withRoot';
 
 interface Props extends WithStyles {
     candidates: Map<string, CType>;
@@ -138,4 +137,4 @@ class Fab extends PureComponent<Props> {
     }
 }
 
-export default withRoot(withStyles(styles)(Fab));
+export default withStyles(styles)(Fab);

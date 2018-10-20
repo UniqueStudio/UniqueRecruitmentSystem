@@ -6,7 +6,6 @@ import Select from '@material-ui/core/Select';
 import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 
 import styles from '../../style/appBar';
-import withRoot from '../../style/withRoot';
 
 interface Props extends WithStyles {
     data: string[];
@@ -31,4 +30,4 @@ class Selects extends PureComponent<Props> {
     }
 }
 
-export default withRoot(withStyles(styles)(Selects));
+export default withStyles(styles)(Selects);

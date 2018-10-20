@@ -9,8 +9,6 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 
 import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 
-import withRoot from '../../style/withRoot';
-
 interface Props extends WithStyles {
     open: boolean;
     toggleOpen: () => void;
@@ -45,4 +43,4 @@ class ColumnDialog extends PureComponent<Props> {
     }
 }
 
-export default withRoot(withStyles({})(ColumnDialog));
+export default withStyles({})(ColumnDialog);

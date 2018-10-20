@@ -14,7 +14,6 @@ import Modal from '../Modal/index';
 import Detail from './CandidateDetail';
 
 import styles from '../../style/column';
-import withRoot from '../../style/withRoot';
 
 import { Candidate as CType } from '../../lib/const';
 
@@ -65,4 +64,4 @@ class CandidateContainer extends PureComponent<Props> {
     }
 }
 
-export default withRoot(withStyles(styles)(CandidateContainer));
+export default withStyles(styles)(CandidateContainer);
