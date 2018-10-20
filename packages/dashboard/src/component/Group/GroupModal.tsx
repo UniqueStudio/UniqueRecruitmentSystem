@@ -8,7 +8,6 @@ import Typography from '@material-ui/core/Typography';
 import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 
 import styles from '../../style/group';
-import withRoot from '../../style/withRoot';
 
 import Modal from '../Modal';
 
@@ -73,4 +72,4 @@ class GroupModal extends PureComponent<Props> {
     }
 }
 
-export default withRoot(withStyles(styles)(GroupModal));
+export default withStyles(styles)(GroupModal);

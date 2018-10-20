@@ -20,7 +20,6 @@ import yellow from '@material-ui/core/colors/yellow';
 import { Doughnut } from 'react-chartjs-2';
 
 import styles from '../../style/chart';
-import withRoot from '../../style/withRoot';
 
 import { Data, GROUPS, STEPS } from '../../lib/const';
 
@@ -107,4 +106,4 @@ class Chart extends PureComponent<Props> {
     }
 }
 
-export default withRoot(withStyles(styles)(Chart));
+export default withStyles(styles)(Chart);

@@ -3,7 +3,6 @@ import React, { PureComponent } from 'react';
 import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 
 import styles from '../../style/group';
-import withRoot from '../../style/withRoot';
 
 import { Candidate, Recruitment, Time, User } from '../../lib/const';
 
@@ -213,4 +212,4 @@ class Group extends PureComponent<Props> {
     }
 }
 
-export default withRoot(withStyles(styles)(Group));
+export default withStyles(styles)(Group);

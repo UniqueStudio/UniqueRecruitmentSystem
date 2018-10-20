@@ -8,7 +8,6 @@ import ChartContainer from './ChartContainer';
 import ChartNew from './ChartNew';
 
 import styles from '../../style/chart';
-import withRoot from '../../style/withRoot';
 
 import { Recruitment, Time } from '../../lib/const';
 
@@ -71,4 +70,4 @@ class Index extends PureComponent<Props> {
     }
 }
 
-export default withRoot(withStyles(styles)(Index));
+export default withStyles(styles)(Index);

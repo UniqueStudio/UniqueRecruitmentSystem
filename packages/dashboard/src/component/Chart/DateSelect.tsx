@@ -11,7 +11,6 @@ import TextField from '@material-ui/core/TextField';
 import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 
 import styles from '../../style/chart';
-import withRoot from '../../style/withRoot';
 
 import { Time } from '../../lib/const';
 
@@ -87,4 +86,4 @@ class DateSelect extends PureComponent<Props> {
     }
 }
 
-export default withRoot(withStyles(styles)(DateSelect));
+export default withStyles(styles)(DateSelect);

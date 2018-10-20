@@ -16,7 +16,6 @@ import Chart from './Chart';
 import DateSelect from './DateSelect';
 
 import styles from '../../style/chart';
-import withRoot from '../../style/withRoot';
 
 import { Group, GROUPS, GROUPS_, Recruitment, Time } from '../../lib/const';
 import timeStampToString from '../../lib/timeStampToString';
@@ -228,4 +227,4 @@ class ChartContainer extends PureComponent<Props> {
     }
 }
 
-export default withRoot(withStyles(styles)(ChartContainer));
+export default withStyles(styles)(ChartContainer);

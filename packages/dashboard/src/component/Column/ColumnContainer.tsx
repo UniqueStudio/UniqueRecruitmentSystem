@@ -5,7 +5,6 @@ import { RouteComponentProps } from 'react-router-dom';
 import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 
 import styles from '../../style/column';
-import withRoot from '../../style/withRoot';
 
 import Column from '../../container/Column/Column';
 import Fab from '../Fab';
@@ -172,4 +171,4 @@ class Container extends PureComponent<Props & RouteComponentProps<{}>> {
     }
 }
 
-export default withRoot(withStyles(styles)(Container));
+export default withStyles(styles)(Container);

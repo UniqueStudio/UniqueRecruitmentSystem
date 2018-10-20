@@ -2,8 +2,6 @@ import React, { PureComponent } from 'react';
 
 import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 
-import withRoot from '../style/withRoot';
-
 import Group from '../container/Group';
 
 class MyGroup extends PureComponent<WithStyles> {
@@ -12,4 +10,4 @@ class MyGroup extends PureComponent<WithStyles> {
     }
 }
 
-export default withRoot(withStyles({})(MyGroup));
+export default withStyles({})(MyGroup);

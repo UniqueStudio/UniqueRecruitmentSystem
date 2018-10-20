@@ -8,7 +8,6 @@ import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 import CloseIcon from '@material-ui/icons/Close';
 
 import styles from '../../style/snackbar';
-import withRoot from '../../style/withRoot';
 
 interface Props extends WithStyles {
     on: boolean;
@@ -57,4 +56,4 @@ class Snack extends PureComponent<Props> {
     }
 }
 
-export default withRoot(withStyles(styles)(Snack));
+export default withStyles(styles)(Snack);
