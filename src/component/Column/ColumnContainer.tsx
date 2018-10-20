@@ -54,9 +54,9 @@ class Container extends PureComponent<Props & RouteComponentProps<{}>> {
             const destination: DraggableLocation = result.destination;
             const { droppableId, index } = destination;
 
-            if (source.droppableId === droppableId && source.index === index) return;
             switch (result.type) {
                 case 'COLUMN':
+                    if (source.droppableId === droppableId && source.index === index) return;
                     const preOrder = this.state.steps;
                     const ordered = [...preOrder];
                     const [removed] = ordered.splice(source.index, 1);
@@ -65,6 +65,7 @@ class Container extends PureComponent<Props & RouteComponentProps<{}>> {
                     this.setState(newState);
                     return;
                 case 'CANDIDATE':
+                    if (source.droppableId === droppableId) return;
                     this.setState(newState);
                     move(STEPS.indexOf(source.droppableId), STEPS.indexOf(droppableId), result.draggableId, index);
                     return;
