@@ -8,7 +8,7 @@ import ColumnContainer from '../container/Column/ColumnContainer';
 
 class Candidates extends PureComponent<WithStyles> {
     render() {
-        return <ColumnContainer type='common' />;
+        return <ColumnContainer />;
     }
 }
 

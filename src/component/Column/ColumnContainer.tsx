@@ -1,5 +1,6 @@
 import React, { PureComponent } from 'react';
 import { DragDropContext, DraggableLocation, Droppable, DroppableProvided, DropResult } from 'react-beautiful-dnd';
+import { RouteComponentProps } from 'react-router-dom';
 
 import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 
@@ -16,7 +17,6 @@ import { Candidate, STEPS } from '../../lib/const';
 interface Props extends WithStyles {
     group: string;
     userGroup: string;
-    type: string;
     candidates: Map<string, Candidate>[];
     selected: string[];
     fabOn: number;
@@ -31,13 +31,16 @@ interface Props extends WithStyles {
     toggleSnackbarOn: (info: string, color?: string) => void;
 }
 
-class Container extends PureComponent<Props> {
-    state = {
-        steps: this.props.type === 'massInterview' ? STEPS.slice(4) : STEPS,
-        flag: false,
-        dialog: false,
-        modal: false,
-    };
+class Container extends PureComponent<Props & RouteComponentProps<{}>> {
+    state = (() => {
+        const { pathname } = this.props.location;
+        return {
+            steps: pathname === '/massInterview' ? STEPS.slice(4) : STEPS,
+            flag: false,
+            dialog: false,
+            modal: false,
+        };
+    })();
 
     onDragEnd = (result: DropResult) => {
         const { move } = this.props;
@@ -94,15 +97,18 @@ class Container extends PureComponent<Props> {
     };
 
     componentDidMount() {
-        const { changeGroup, group, type, userGroup, pendingRecruitment } = this.props;
-        const changeTo = type === 'massInterview' ? 'interview' : group === 'interview' ? userGroup : group;
+        const { changeGroup, group, location, userGroup, pendingRecruitment } = this.props;
+        const { pathname } = location;
+        const changeTo = pathname === '/massInterview' ? 'interview' : group === 'interview' ? userGroup : group;
         changeGroup(changeTo, pendingRecruitment);
     }
 
     componentDidUpdate(prevProps: Props) {
-        if (prevProps.group !== this.props.group) {
+        const { group, location } = this.props;
+        const { pathname } = location;
+        if (prevProps.group !== group) {
             this.setState({
-                steps: this.props.type === 'massInterview' ? STEPS.slice(4) : STEPS,
+                steps: pathname === '/massInterview' ? STEPS.slice(4) : STEPS,
             });
         }
     }
@@ -134,7 +140,7 @@ class Container extends PureComponent<Props> {
                             >
                                 {this.state.steps.map((i) => <Column title={i} key={i}
                                                                      dropIndex={this.state.steps.indexOf(i)}
-                                                                     isDragging={this.state.flag}/>)}
+                                                                     isDragging={this.state.flag} />)}
                                 {/*this div with a full-width-space is used to show right margin of the last element*/}
                                 <div style={{ visibility: 'hidden' }}>{'　'}</div>
                             </div>
@@ -143,17 +149,17 @@ class Container extends PureComponent<Props> {
                 </DragDropContext>
                 <Fab selected={selected} deselect={deselect} fabOn={fabOn} snackbarOn={snackbarOn} select={select}
                      candidates={current} toggleFabOff={toggleFabOff}
-                     toggleOpen={this.toggleOpen} canOperate={userGroup === group}/>
+                     toggleOpen={this.toggleOpen} canOperate={userGroup === group} />
                 <ColumnDialog
                     open={this.state.dialog}
                     onClick={this.handleRemove(selectedCid)}
-                    toggleOpen={this.toggleOpen('dialog')}/>
+                    toggleOpen={this.toggleOpen('dialog')} />
                 <ColumnModal
                     open={this.state.modal}
                     toggleOpen={this.toggleOpen('modal')}
                     selected={selectedInfo}
                     deselect={deselect}
-                    group={group}/>
+                    group={group} />
             </>
         );
     }
