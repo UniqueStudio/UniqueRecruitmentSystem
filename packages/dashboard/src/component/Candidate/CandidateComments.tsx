@@ -9,7 +9,6 @@ import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 import CommentChip from './CommentChip';
 
 import styles from '../../style/candidate';
-import withRoot from '../../style/withRoot';
 
 import { Comment } from '../../lib/const';
 
@@ -119,4 +118,4 @@ class CandidateComments extends PureComponent<Props> {
     }
 }
 
-export default withRoot(withStyles(styles)(CandidateComments));
+export default withStyles(styles)(CandidateComments);

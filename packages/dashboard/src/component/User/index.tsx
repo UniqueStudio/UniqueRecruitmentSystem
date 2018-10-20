@@ -8,7 +8,6 @@ import TextField from '@material-ui/core/TextField';
 import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 
 import styles from '../../style/user';
-import withRoot from '../../style/withRoot';
 
 import { GROUPS, GROUPS_, User as UserType } from '../../lib/const';
 
@@ -170,4 +169,4 @@ class User extends PureComponent<Props> {
     }
 }
 
-export default withRoot(withStyles(styles)(User));
+export default withStyles(styles)(User);

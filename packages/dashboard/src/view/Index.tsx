@@ -3,7 +3,6 @@ import React, { PureComponent } from 'react';
 import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 
 import styles from '../style/welcome';
-import withRoot from '../style/withRoot';
 
 import Login from '../container/Login/index';
 
@@ -25,4 +24,4 @@ class Index extends PureComponent<WithStyles> {
     }
 }
 
-export default withRoot(withStyles(styles)(Index));
+export default withStyles(styles)(Index);

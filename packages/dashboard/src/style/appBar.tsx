@@ -49,6 +49,9 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
             background: 'none',
         },
     },
+    suggestion: {
+        padding: theme.spacing.unit * 2,
+    },
 });
 
 export default styles;

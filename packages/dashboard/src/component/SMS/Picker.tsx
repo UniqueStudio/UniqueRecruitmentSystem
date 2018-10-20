@@ -10,7 +10,6 @@ import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 import { Candidate } from '../../lib/const';
 
 import styles from '../../style/template';
-import withRoot from '../../style/withRoot';
 
 interface Props extends WithStyles {
     selected: Candidate[];
@@ -39,4 +38,4 @@ class Picker extends PureComponent<Props> {
     }
 }
 
-export default withRoot(withStyles(styles)(Picker));
+export default withStyles(styles)(Picker);

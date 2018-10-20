@@ -10,7 +10,6 @@ import Typography from '@material-ui/core/Typography';
 import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 
 import styles from '../../style/template';
-import withRoot from '../../style/withRoot';
 
 import { STEPS } from '../../lib/const';
 import generateModel from '../../lib/generateModel';
@@ -117,4 +116,4 @@ class SMSDetail extends PureComponent<Props> {
     }
 }
 
-export default withRoot(withStyles(styles)(SMSDetail));
+export default withStyles(styles)(SMSDetail);
