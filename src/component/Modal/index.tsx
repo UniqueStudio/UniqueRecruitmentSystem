@@ -7,7 +7,6 @@ import Typography from '@material-ui/core/Typography';
 import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 
 import styles from '../../style/modal';
-import withRoot from '../../style/withRoot';
 
 interface Props extends WithStyles {
     open: boolean;
@@ -38,4 +37,4 @@ class InfoModal extends PureComponent<Props> {
     }
 }
 
-export default withRoot(withStyles(styles)(InfoModal));
+export default withStyles(styles)(InfoModal);

@@ -25,7 +25,7 @@ const mapStateToProps = ({ components, user, candidates, recruitments }: StoreSt
 type DispatchType = Dispatch<ToggleDrawerOpen | Logout | GetCandidatesStart>;
 
 const mapDispatchToProps = (dispatch: DispatchType) => ({
-    toggleOpen: () => dispatch(toggleDrawerOpen()),
+    toggleDrawerOpen: () => dispatch(toggleDrawerOpen()),
     logout: () => dispatch(logout()),
     getCandidates: (group: string, recruitmentName: string) => dispatch(getCandidatesStart(group, recruitmentName)),
 });

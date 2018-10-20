@@ -10,7 +10,6 @@ import Stepper from '@material-ui/core/Stepper';
 import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 
 import styles from '../../style/template';
-import withRoot from '../../style/withRoot';
 
 import Verify from '../../container/Verify';
 import Picker from './Picker';
@@ -196,4 +195,4 @@ class Template extends PureComponent<Props> {
     }
 }
 
-export default withRoot(withStyles(styles)(Template));
+export default withStyles(styles)(Template);

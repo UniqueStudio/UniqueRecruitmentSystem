@@ -33,7 +33,6 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
             right: 'auto',
             left: 0,
             top: theme.spacing.unit * 8,
-
             width: 400,
         },
         [theme.breakpoints.down('xs')]: {

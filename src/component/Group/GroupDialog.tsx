@@ -9,7 +9,6 @@ import Typography from '@material-ui/core/Typography';
 import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 
 import styles from '../../style/group';
-import withRoot from '../../style/withRoot';
 
 import Verify from '../../container/Verify';
 
@@ -89,4 +88,4 @@ class GroupDialog extends PureComponent<Props> {
     }
 }
 
-export default withRoot(withStyles(styles)(GroupDialog));
+export default withStyles(styles)(GroupDialog);

@@ -8,7 +8,6 @@ import TextField from '@material-ui/core/TextField';
 import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 
 import styles from '../../style/template';
-import withRoot from '../../style/withRoot';
 
 interface Props extends WithStyles {
     code: string;
@@ -67,4 +66,4 @@ class Verify extends PureComponent<Props> {
     }
 }
 
-export default withRoot(withStyles(styles)(Verify));
+export default withStyles(styles)(Verify);

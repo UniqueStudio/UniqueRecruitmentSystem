@@ -21,7 +21,6 @@ import PersonIcon from '@material-ui/icons/Person';
 import PieChartIcon from '@material-ui/icons/PieChart';
 
 import styles from '../../style/menu';
-import withRoot from '../../style/withRoot';
 
 import Anchor from '../Anchor';
 
@@ -103,4 +102,4 @@ class Menu extends PureComponent<Props> {
     }
 }
 
-export default withRoot(withStyles(styles)(Menu));
+export default withStyles(styles)(Menu);

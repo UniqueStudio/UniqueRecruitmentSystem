@@ -14,7 +14,6 @@ import InfoIcon from '@material-ui/icons/InfoOutlined';
 
 import { colorToAlpha, dangerColor, successColor, warningColor } from '../../style';
 import styles from '../../style/candidate';
-import withRoot from '../../style/withRoot';
 
 import { Candidate as CType } from '../../lib/const';
 
@@ -143,4 +142,4 @@ class Candidate extends PureComponent<Props & RouteComponentProps<{}>> {
     }
 }
 
-export default withRoot(withStyles(styles)(Candidate));
+export default withStyles(styles)(Candidate);

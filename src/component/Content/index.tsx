@@ -6,7 +6,6 @@ import Snackbar from '../../container/Snackbar/index';
 import Progress from '../Progress';
 
 import styles from '../../style/main';
-import withRoot from '../../style/withRoot';
 
 interface Props extends WithStyles {
     open: boolean;
@@ -33,4 +32,4 @@ class Content extends PureComponent<Props> {
     }
 }
 
-export default withRoot(withStyles(styles)(Content));
+export default withStyles(styles)(Content);

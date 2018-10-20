@@ -5,8 +5,6 @@ import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 import Template from '../../container/SMS';
 import Modal from '../Modal';
 
-import withRoot from '../../style/withRoot';
-
 import { Candidate } from '../../lib/const';
 
 interface Props extends WithStyles {
@@ -43,4 +41,4 @@ class ColumnModal extends PureComponent<Props> {
     }
 }
 
-export default withRoot(withStyles({})(ColumnModal));
+export default withStyles({})(ColumnModal);

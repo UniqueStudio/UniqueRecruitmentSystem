@@ -10,7 +10,6 @@ import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 import { Candidate, STEPS } from '../../lib/const';
 
 import styles from '../../style/column';
-import withRoot from '../../style/withRoot';
 
 import CandidateContainer from '../Candidate/CandidateContainer';
 
@@ -135,4 +134,4 @@ class Column extends Component<Props> {
     }
 }
 
-export default withRoot(withStyles(styles)(Column));
+export default withStyles(styles)(Column);
