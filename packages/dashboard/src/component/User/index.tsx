@@ -111,7 +111,7 @@ class User extends PureComponent<Props> {
                     value={group || ''}
                     onChange={this.handleChange('group')}
                     margin='normal'
-                    disabled={!!group}
+                    disabled={true}
                 >
                     {GROUPS.map((i, j) => <MenuItem value={GROUPS_[j]} key={j}>{i}</MenuItem>)}
                 </TextField>
@@ -132,6 +132,7 @@ class User extends PureComponent<Props> {
                     value={isCaptain ? 1 : 0}
                     onChange={this.handleChange('isCaptain')}
                     margin='normal'
+                    disabled={true}
                 >
                     <MenuItem value={1}>是</MenuItem>
                     <MenuItem value={0}>否</MenuItem>
@@ -143,6 +144,7 @@ class User extends PureComponent<Props> {
                     value={isAdmin ? 1 : 0}
                     onChange={this.handleChange('isAdmin')}
                     margin='normal'
+                    disabled={true}
                 >
                     <MenuItem value={1}>是</MenuItem>
                     <MenuItem value={0}>否</MenuItem>
