@@ -1,5 +1,5 @@
 import fetch from 'node-fetch';
-import { accessTokenURL, scanningURL, secret, userIDURL, userInfoURL } from '../../lib/consts';
+import { accessTokenURL, /*ID_TO_GROUP,*/ scanningURL, secret, userIDURL, userInfoURL } from '../../lib/consts';
 import jwt from 'jsonwebtoken';
 import { Request, Response } from 'express';
 import { database } from '../../app';
@@ -24,7 +24,13 @@ export const handleScan = (req: Request, res: Response) => {
                     const userID = userIDResult.UserId;
                     const userInfoResponse = await fetch(userInfoURL(accessToken, userID));
                     const userInfoResult = await userInfoResponse.json();
-                    const { userid, /*name, mobile, avatar*/ } = userInfoResult;
+                    const { userid, /*name, mobile, avatar, isleader*/ } = userInfoResult;
+                    let { department } = userInfoResult;
+                    department = department.filter((i: number) => (i > 1 && i < 9) || (i > 14 && i < 26));
+                    if (!department.length) {
+                        res.send({ message: '请联系管理员登记组别', type: 'info' });
+                        return;
+                    }
                     const user = await database.query('users', {
                         weChatID: userid
                     });
@@ -37,6 +43,9 @@ export const handleScan = (req: Request, res: Response) => {
                         //     phone: mobile,
                         //     weChatID: userid,
                         //     avatar,
+                        //     isCaptain: Boolean(isleader),
+                        //     isAdmin: false,
+                        //     group: ID_TO_GROUP[department[0]]
                         // });
                     } else {
                         uid = user[0]['_id'];

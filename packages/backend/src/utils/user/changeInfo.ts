@@ -2,16 +2,15 @@ import { checkChinese, checkMail, checkPhone, verifyJWT } from '../../lib/checkD
 import { ObjectId } from 'mongodb';
 import { database } from '../../app';
 import { Request, Response } from 'express';
-import { GROUPS } from '../../lib/consts';
 
 export const changeInfo = (req: Request, res: Response) => {
     const body = req.body;
-    const { username, joinTime, isCaptain, isAdmin, phone, mail, sex, group } = body;
+    const { username, joinTime, phone, mail, sex } = body;
     (async () => {
         try {
             verifyJWT(req.get('Authorization'));
-            if ([username, joinTime, isCaptain, isAdmin, phone, mail, sex, group].includes('')
-                || [username, joinTime, isCaptain, isAdmin, phone, mail, sex, group].includes(undefined)) {
+            if ([username, joinTime, phone, mail, sex].includes('')
+                || [username, joinTime, phone, mail, sex].includes(undefined)) {
                 res.send({ message: '请完整填写信息', type: 'warning' });
                 return;
             }
@@ -23,10 +22,6 @@ export const changeInfo = (req: Request, res: Response) => {
                 res.send({ message: '手机号码格式不正确!', type: 'warning' });
                 return;
             }
-            if (!GROUPS.includes(group.toLowerCase())) {
-                res.send({ message: '组别不正确!', type: 'warning' });
-                return;
-            }
             if (!checkChinese(username)) {
                 res.send({ message: '姓名必须为中文!', type: 'warning' });
                 return;
@@ -35,23 +30,12 @@ export const changeInfo = (req: Request, res: Response) => {
                 res.send({ message: '性别不正确!', type: 'warning' });
                 return;
             }
-            if (typeof isCaptain !== 'boolean') {
-                res.send({ message: '是否组长不正确!', type: 'warning' });
-                return;
-            }
-            if (typeof isAdmin !== 'boolean') {
-                res.send({ message: '是否管理员不正确!', type: 'warning' });
-                return;
-            }
             await database.update('users', { _id: new ObjectId(req.params.uid) }, {
                 username,
                 joinTime,
-                isCaptain,
-                isAdmin,
                 phone,
                 mail,
                 sex,
-                group,
             });
             res.send({ type: 'success' });
         } catch (err) {
