@@ -24,18 +24,20 @@ export const handleScan = (req: Request, res: Response) => {
                     const userID = userIDResult.UserId;
                     const userInfoResponse = await fetch(userInfoURL(accessToken, userID));
                     const userInfoResult = await userInfoResponse.json();
-                    const { name, userid, mobile, avatar } = userInfoResult;
+                    const { userid, /*name, mobile, avatar*/ } = userInfoResult;
                     const user = await database.query('users', {
                         weChatID: userid
                     });
                     let uid;
                     if (!user.length) {
-                        uid = await database.insert('users', {
-                            username: name,
-                            phone: mobile,
-                            weChatID: userid,
-                            avatar,
-                        });
+                        res.send({ message: '登录失败', type: 'info' });
+                        return;
+                        // uid = await database.insert('users', {
+                        //     username: name,
+                        //     phone: mobile,
+                        //     weChatID: userid,
+                        //     avatar,
+                        // });
                     } else {
                         uid = user[0]['_id'];
                     }
