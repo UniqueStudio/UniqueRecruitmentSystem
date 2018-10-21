@@ -50,11 +50,11 @@ class GroupMembers extends PureComponent<Props> {
                                         root: classes.tableCell,
                                     }}>{i.username}</TableCell>
                                     <TableCell
-                                        classes={{ root: classes.tableCell }}>{i.sex === 'Male' ? '男' : '女'}</TableCell>
+                                        classes={{ root: classes.tableCell }}>{!i.sex ? '未知' : i.sex === 'Male' ? '男' : '女'}</TableCell>
                                     <TableCell classes={{ root: classes.tableCell }}>{i.phone}</TableCell>
-                                    <TableCell classes={{ root: classes.tableCell }}>{i.mail}</TableCell>
+                                    <TableCell classes={{ root: classes.tableCell }}>{i.mail || '未知'}</TableCell>
                                     <TableCell
-                                        classes={{ root: classes.tableCell }}>{titleConverter(i.joinTime)}</TableCell>
+                                        classes={{ root: classes.tableCell }}>{i.joinTime ? titleConverter(i.joinTime) : '未知'}</TableCell>
                                     <TableCell
                                         classes={{ root: classes.tableCell }}>{i.isCaptain ? '是' : '否'}</TableCell>
                                     <TableCell classes={{ root: classes.tableCell }}>{i.isAdmin ? '是' : '否'}</TableCell>
