@@ -83,13 +83,8 @@ class Bar extends PureComponent<Props & RouteComponentProps<{}>> {
         };
         return (
             <>
-                <AppBar
-                    position='absolute'
-                    className={classNames(classes.appBar, open && classes.appBarShift)}
-                >
-                    <Toolbar disableGutters={!open} classes={{
-                        gutters: classes.appBarGutters,
-                    }}>
+                <AppBar position='absolute' className={classNames(classes.appBar, open && classes.appBarShift)}>
+                    <Toolbar disableGutters={!open} classes={{ gutters: classes.appBarGutters }}>
                         <IconButton
                             color='inherit'
                             onClick={toggleDrawerOpen}
@@ -99,8 +94,7 @@ class Bar extends PureComponent<Props & RouteComponentProps<{}>> {
                         </IconButton>
                         <Header title={pathToTitle[pathname]}>
                             {pathname === '/candidates' && <>
-                                <Select data={GROUPS} values={GROUPS_} onChange={this.handleChange}
-                                        currentValue={group} />
+                                <Select data={GROUPS} values={GROUPS_} onChange={this.handleChange} currentValue={group} />
                                 <Select data={STEPS} values={STEPS} currentValue='' />
                             </>}
                         </Header>
@@ -140,9 +134,10 @@ class Bar extends PureComponent<Props & RouteComponentProps<{}>> {
                             </> : location.pathname !== '/' && <Redirect to='/' />}
                     </Toolbar>
                 </AppBar>
-                <Modal title='群面问题提示'
-                       open={this.state.modalOpen}
-                       onClose={this.toggleModalOpen}
+                <Modal
+                    title='群面问题提示'
+                    open={this.state.modalOpen}
+                    onClose={this.toggleModalOpen}
                 >
                     <div className={classes.suggestion}>
                         test

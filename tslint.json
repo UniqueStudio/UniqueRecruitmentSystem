@@ -179,7 +179,6 @@
     },
     "trailing-comma": {
       "options": {
-        "multiline": "always",
         "singleline": "never"
       }
     },

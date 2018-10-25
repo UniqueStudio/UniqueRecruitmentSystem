@@ -109,10 +109,17 @@ class CandidateComments extends PureComponent<Props> {
                         发表评论
                     </Button>
                 </div>
-                {Object.entries(comments).map((i) => (
-                    <CommentChip name={i[1].username} uid={i[0]} comment={i[1]} key={i[0]} currentUid={uid}
-                                 remove={this.handleRemove} handleCopy={this.handleCopy} />
-                ))}
+                {Object.entries(comments).map(([commentUid, comment]) =>
+                    <CommentChip
+                        name={comment.username}
+                        uid={commentUid}
+                        comment={comment}
+                        key={commentUid}
+                        currentUid={uid}
+                        remove={this.handleRemove}
+                        handleCopy={this.handleCopy}
+                    />
+                )}
             </div>
         );
     }

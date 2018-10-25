@@ -12,10 +12,13 @@ class Anchor extends PureComponent<Props> {
     render() {
         const { children, to } = this.props;
         return (
-            <Link to={to} style={{
-                textDecoration: 'none',
-                outline: 'none',
-            }}>
+            <Link
+                to={to}
+                style={{
+                    textDecoration: 'none',
+                    outline: 'none',
+                }}
+            >
                 {children}
             </Link>
         );

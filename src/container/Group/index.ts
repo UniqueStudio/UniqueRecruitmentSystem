@@ -24,7 +24,7 @@ import { StoreState } from '../../reducer';
 const mapStateToProps = ({ candidates, user, recruitments }: StoreState) => ({
     candidates: candidates.candidates || [],
     group: user.group,
-    currentRecruitment: recruitments.recruitments.filter((i) => i.title === recruitments.pending)[0],
+    currentRecruitment: recruitments.recruitments.filter(({ title }) => title === recruitments.pending)[0],
     userGroup: user.info.group,
     isLoading: candidates.isLoading.candidates,
     pendingRecruitment: recruitments.pending,
