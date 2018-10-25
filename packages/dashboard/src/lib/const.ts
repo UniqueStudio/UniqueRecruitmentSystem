@@ -1,5 +1,5 @@
 export const GROUPS = ['Web', 'Lab', 'AI', 'Game', 'Android', 'iOS', 'Design', 'PM'];
-export const GROUPS_ = GROUPS.map((i) => i.toLowerCase());
+export const GROUPS_ = GROUPS.map((group) => group.toLowerCase());
 export const STEPS = ['报名流程', '笔试流程', '面试流程', '熬测流程', '群面流程', '通过'];
 // export const STEPS_ = ['apply', 'writtenExam', 'groupInterview', 'stayUpExam', 'massInterview', 'passed'];
 // export const SCORES = ["前10%", "前25%", "前50%", "前100%", "暂无"];

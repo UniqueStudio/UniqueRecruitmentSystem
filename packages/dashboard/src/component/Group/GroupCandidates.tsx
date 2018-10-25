@@ -31,6 +31,8 @@ interface Props extends WithStyles {
     setTime: (id: string, time: string) => void;
 }
 
+const heads = ['姓名', '组别', '选择情况', '分配结果', '手动调整'];
+
 class Candidates extends PureComponent<Props> {
 
     state = {
@@ -63,7 +65,7 @@ class Candidates extends PureComponent<Props> {
         return (
             <Paper className={classes.paper}>
                 <div className={classes.title}>
-                    <div/>
+                    <div />
                     <Typography variant='title'>
                         候选人信息
                     </Typography>
@@ -79,30 +81,25 @@ class Candidates extends PureComponent<Props> {
                     <Table className={classes.table}>
                         <TableHead>
                             <TableRow>
-                                <TableCell classes={{ root: classes.tableCell }}>姓名</TableCell>
-                                {interviewStage === 2 && <TableCell classes={{ root: classes.tableCell }}>组别</TableCell>}
-                                <TableCell classes={{ root: classes.tableCell }}>选择情况</TableCell>
-                                <TableCell classes={{ root: classes.tableCell }}>分配结果</TableCell>
-                                <TableCell classes={{ root: classes.tableCell }}/>
+                                {heads.map((head, index) =>
+                                    <TableCell key={index} classes={{ root: classes.tableCell }}>{head}</TableCell>
+                                )}
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {sorted && sorted.map((i, j) => {
-                                const timeChosen = i[`time${interviewStage}`];
-                                const slot = i[`slot${interviewStage}`];
-                                const state = i.rejected ? '已淘汰' : i.abandon ? '已放弃' : timeChosen && timeChosen.length ? '已选择' : '未选择';
+                            {sorted && sorted.map((candidate, index) => {
+                                const { rejected, abandon, name, _id, group } = candidate;
+                                const timeChosen = candidate[`time${interviewStage}`];
+                                const slot = candidate[`slot${interviewStage}`];
+                                const slotInfo = slot && slot.length ? `${slot[0]}-${slot[2]}` : '未分配';
+                                const state = rejected ? '已淘汰' : abandon ? '已放弃' : timeChosen && timeChosen.length ? '已选择' : '未选择';
+                                const set = <Button color='primary' onClick={this.toggleDialog(_id)}>设置</Button>;
+                                const items = [name, group, state, slotInfo, set];
                                 return (
-                                    <TableRow key={j}>
-                                        <TableCell component='th' scope='row'
-                                                   classes={{ root: classes.tableCell }}>{i.name}</TableCell>
-                                        {interviewStage === 2 && <TableCell classes={{ root: classes.tableCell }}>{i.group}</TableCell>}
-                                        <TableCell classes={{ root: classes.tableCell }}>{state}</TableCell>
-                                        <TableCell
-                                            classes={{ root: classes.tableCell }}
-                                        >{slot && slot.length ? `${slot[0]}-${slot[2]}` : '未分配'}</TableCell>
-                                        <TableCell classes={{ root: classes.tableCell }}>
-                                            <Button color='primary' onClick={this.toggleDialog(i._id)}>设置</Button>
-                                        </TableCell>
+                                    <TableRow key={index}>
+                                        {items.map((item, idx) =>
+                                            <TableCell classes={{ root: classes.tableCell }} key={idx}>{item}</TableCell>
+                                        )}
                                     </TableRow>
                                 );
                             })}

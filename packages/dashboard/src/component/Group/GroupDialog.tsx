@@ -31,7 +31,7 @@ class GroupDialog extends PureComponent<Props> {
 
     handleDelete = (cid: string) => () => {
         this.setState({
-            candidates: this.state.candidates.filter((i) => i._id !== cid),
+            candidates: this.state.candidates.filter(({ _id }) => _id !== cid),
         });
     };
 
@@ -70,14 +70,14 @@ class GroupDialog extends PureComponent<Props> {
                             className={classes.placeInput}
                         />
                     </div>
-                    <Verify onChange={handleInput('code')} code={code}/>
+                    <Verify onChange={handleInput('code')} code={code} />
                     <div className={classes.buttonContainer}>
                         <Button
                             disabled={!(candidates.length && code && place)}
                             color='primary'
                             variant='contained'
                             className={classes.button}
-                            onClick={sendInterview(candidates.map((i) => i._id))}
+                            onClick={sendInterview(candidates.map(({ _id }) => _id))}
                         >确认发送</Button>
                         <Button color='primary' className={classes.button}
                                 onClick={toggleDialog}>取消</Button>

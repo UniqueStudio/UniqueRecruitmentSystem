@@ -12,3 +12,4 @@ export default (title: string) => {
     }
     throw new Error('parameter is not a valid title');
 };
+export const translator = [['春招', 'S'], ['夏令营', 'C'], ['秋招', 'A']];

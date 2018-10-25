@@ -11,10 +11,10 @@ import styles from '../../style/group';
 
 import Modal from '../Modal';
 
-import { Recruitment, Time } from '../../lib/const';
+import { Group, Recruitment } from '../../lib/const';
 
 interface Props extends WithStyles {
-    userGroup: string;
+    userGroup: Group;
     currentRecruitment: Recruitment;
     interviewStage: number;
     counts: number[][];
@@ -30,25 +30,27 @@ class GroupModal extends PureComponent<Props> {
         const { classes, currentRecruitment, userGroup, toggleModal, interviewStage, counts, modalOpen, handleSelect, submitAllocation } = this.props;
         const { time1, time2 } = currentRecruitment;
         const translator = { morning: '上午', afternoon: '下午', evening: '晚上' };
+        const time = interviewStage === 1 ? time1[userGroup] : time2;
         return (
             <Modal title='选定人数' open={modalOpen} onClose={toggleModal}>
                 <div className={classes.chooseContainer}>
-                    {(interviewStage === 1 ? time1[userGroup] : time2).map((i: Time, j: number) =>
-                        <div key={j} className={classes.choose}>
-                            <Chip color='primary' label={i.date} className={classes.chip}/>
-                            {Object.entries(i).filter((ii) => ii[0] !== 'date').map(
-                                (k, l) => <TextField
-                                    label={translator[k[0]]}
-                                    key={l}
-                                    value={Math.max(counts[j][l], 0)}
-                                    onChange={handleSelect(j, l)}
+                    {time.map(({ date, ...periods }, indexDate) =>
+                        <div key={indexDate} className={classes.choose}>
+                            <Chip color='primary' label={date} className={classes.chip} />
+                            {Object.entries(periods).map(([name, isSet], indexPeriod) =>
+                                <TextField
+                                    label={translator[name]}
+                                    key={indexPeriod}
+                                    value={Math.max(counts[indexDate][indexPeriod], 0)}
+                                    onChange={handleSelect(indexDate, indexPeriod)}
                                     className={classes.textField}
                                     type='number'
                                     InputLabelProps={{ shrink: true }}
                                     margin='normal'
-                                    disabled={!k[1]}
-                                />)}
-                        </div>,
+                                    disabled={!isSet}
+                                />
+                            )}
+                        </div>
                     )}
                     <Typography variant='caption' className={classes.notification}>
                         为了使自动分配更加高效，你可以尝试在能够接受的范围内给各时间段分配更多人数
