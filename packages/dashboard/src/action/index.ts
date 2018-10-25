@@ -527,7 +527,7 @@ export interface UserInfoFulfilled {
 export function userInfoFulfilled(info: User): UserInfoFulfilled {
     return {
         type: USER_INFO_FULFILLED,
-        info: { ...info, sex: info.sex || 'Male', isAdmin: info.isAdmin || false, isCaptain: info.isCaptain || false },
+        info: { sex: 'Male', isAdmin: false, isCaptain: false, ...info },
     };
 }
 

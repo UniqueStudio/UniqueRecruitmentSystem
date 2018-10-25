@@ -83,30 +83,30 @@ class Column extends Component<Props> {
 
     render() {
         const { classes, title, cidList, infoList, selected, modalOn, toggleModalOff, dropIndex, downloadResume } = this.props;
-        const selectedCid = selected.filter((i) => cidList.includes(i));
+        const selectedCid = selected.filter((cid) => cidList.includes(cid));
         const DropArea = (
             <Droppable droppableId={title} type='CANDIDATE'>
-                {(dropProvided: DroppableProvided) => (
+                {({ innerRef, droppableProps, placeholder }: DroppableProvided) => (
                     <div className={classes.columnBody}
-                         ref={(element) => dropProvided.innerRef(element)}
-                         {...dropProvided.droppableProps}
+                         ref={(element) => innerRef(element)}
+                         {...droppableProps}
                     >
-                        {infoList.map((i: Candidate, j: number) => (
+                        {infoList.map((candidate: Candidate, index: number) => (
                             <CandidateContainer
-                                candidate={i}
-                                index={j}
-                                key={j}
-                                disabled={i.abandon || i.rejected || selectedCid.includes(i._id)}
+                                candidate={candidate}
+                                index={index}
+                                key={index}
+                                disabled={candidate.abandon || candidate.rejected || selectedCid.includes(candidate._id)}
                                 toggleModalOff={toggleModalOff}
                                 modalOn={modalOn}
                                 step={titleToStep(title)}
                                 direction={this.state.direction}
-                                handlePrev={this.handlePrev(cidList[j - 1])}
-                                handleNext={this.handleNext(cidList[j + 1])}
+                                handlePrev={this.handlePrev(cidList[index - 1])}
+                                handleNext={this.handleNext(cidList[index + 1])}
                                 downloadResume={downloadResume}
                             />
                         ))}
-                        {dropProvided.placeholder}
+                        {placeholder}
                     </div>
                 )}
             </Droppable>
@@ -114,17 +114,17 @@ class Column extends Component<Props> {
 
         return (
             <Draggable draggableId={title} index={dropIndex}>
-                {(provided: DraggableProvided) => (
-                    <div ref={provided.innerRef} {...provided.draggableProps}>
+                {({ innerRef, dragHandleProps, draggableProps }: DraggableProvided) => (
+                    <div ref={innerRef} {...draggableProps}>
                         <Paper className={classes.column}>
                             <div className={classes.columnHeader}>
                                 <Typography
                                     variant='title'
                                     className={classes.columnTitle}
-                                    {...provided.dragHandleProps}
+                                    {...dragHandleProps}
                                 >{title}</Typography>
                             </div>
-                            <Divider/>
+                            <Divider />
                             {DropArea}
                         </Paper>
                     </div>

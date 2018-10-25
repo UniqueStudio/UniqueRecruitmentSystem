@@ -135,9 +135,9 @@ class CandidateDetail extends PureComponent<Props> {
                 </div>
                 <Modal open={this.state.modalOpen} onClose={this.toggleModalOpen} title='自我介绍'>
                     <div className={classes.introContent}>
-                        {intro.split('\n').filter((i) => i).map((i, j) => (
-                            <React.Fragment key={j}>
-                                {i}
+                        {intro.split('\n').filter((text) => text).map((text, index) => (
+                            <React.Fragment key={index}>
+                                {text}
                                 <br />
                             </React.Fragment>
                         ))}

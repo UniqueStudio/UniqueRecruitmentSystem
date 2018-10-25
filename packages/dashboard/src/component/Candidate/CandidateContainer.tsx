@@ -15,10 +15,10 @@ import Detail from './CandidateDetail';
 
 import styles from '../../style/column';
 
-import { Candidate as CType } from '../../lib/const';
+import { Candidate as CandidateType } from '../../lib/const';
 
 interface Props extends WithStyles {
-    candidate: CType;
+    candidate: CandidateType;
     index: number;
     step: number;
     disabled: boolean;

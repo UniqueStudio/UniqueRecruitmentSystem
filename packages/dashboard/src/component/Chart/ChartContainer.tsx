@@ -136,8 +136,8 @@ class ChartContainer extends PureComponent<Props> {
         const { data, classes, userGroup, canLaunch } = this.props;
         const { end, begin, time1, time2, modalOpen } = this.state;
         const chartData = data.data;
-        const totalData = chartData.map((i) => i.total || 0);
-        const stepData = [{}, ...chartData].reduce((i, j) => ({ ...i, [j['group']]: j['steps'] }));
+        const totalData = chartData.map(({ total }) => total || 0);
+        const stepData = [{}, ...chartData].reduce((acc, curr) => ({ ...acc, [curr['group']]: curr['steps'] }));
         const title = titleConverter(data.title);
         return (
             <div className={classes.chartContainer}>
@@ -168,34 +168,40 @@ class ChartContainer extends PureComponent<Props> {
                             />
                         </div>
                         <ExpansionPanel className={classes.expansion}>
-                            <ExpansionPanelSummary expandIcon={<ExpandMoreIcon/>}>组面时间</ExpansionPanelSummary>
+                            <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>组面时间</ExpansionPanelSummary>
                             <ExpansionPanelDetails>
                                 <div>
-                                    {GROUPS_.map((i: Group, j) => <div key={j}>
-                                        <Typography variant='caption' color='textSecondary'>{GROUPS[j]}</Typography>
-                                        {time1 && time1[i] ? time1[i].map((k, l) =>
-                                            <DateSelect
-                                                key={l}
-                                                dateInfo={k}
-                                                setDate={this.setDate(l, i)}
-                                                setTime={this.setTime(l, i)}
-                                                addDate={this.addDate(i)}
-                                                deleteDate={this.deleteDate(l, i)}
-                                                isLast={l === time1[i].length - 1}
-                                                disabled={userGroup !== i}
-                                            />) : userGroup === i
-                                            ? <Button
-                                                onClick={this.addDate(i)}
-                                                variant='contained'
-                                                color='primary'
-                                            >设置</Button>
-                                            : '未设置'}
-                                    </div>)}
+                                    {GROUPS_.map((group: Group, index) =>
+                                        <div key={index}>
+                                            <Typography variant='caption'
+                                                        color='textSecondary'>{GROUPS[index]}</Typography>
+                                            {time1 && time1[group]
+                                                ? time1[group].map((date, idx) =>
+                                                    <DateSelect
+                                                        key={idx}
+                                                        dateInfo={date}
+                                                        setDate={this.setDate(idx, group)}
+                                                        setTime={this.setTime(idx, group)}
+                                                        addDate={this.addDate(group)}
+                                                        deleteDate={this.deleteDate(idx, group)}
+                                                        isLast={idx === time1[group].length - 1}
+                                                        disabled={userGroup !== group}
+                                                    />)
+                                                : userGroup === group
+                                                    ? <Button
+                                                        onClick={this.addDate(group)}
+                                                        variant='contained'
+                                                        color='primary'
+                                                    >设置</Button>
+                                                    : '未设置'
+                                            }
+                                        </div>
+                                    )}
                                 </div>
                             </ExpansionPanelDetails>
                         </ExpansionPanel>
                         <ExpansionPanel className={classes.expansion}>
-                            <ExpansionPanelSummary expandIcon={<ExpandMoreIcon/>}>群面时间</ExpansionPanelSummary>
+                            <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>群面时间</ExpansionPanelSummary>
                             <ExpansionPanelDetails>
                                 <div>
                                     {time2 ? time2.map((k, l) =>

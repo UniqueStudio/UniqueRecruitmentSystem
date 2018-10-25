@@ -20,6 +20,17 @@ interface Props extends WithStyles {
     group: User[];
 }
 
+const heads = ['成员姓名', '性别', '电话号码', '邮箱', '加入时间', '组长？', '管理员？'];
+const memberDataConverter = ({ username, sex, phone, mail, joinTime, isCaptain, isAdmin }: User) => [
+    username,
+    !sex ? '未知' : sex === 'Male' ? '男' : '女',
+    phone,
+    mail || '未知',
+   joinTime ? titleConverter(joinTime) : '未知',
+    isCaptain ? '是' : '否',
+    isAdmin ? '是' : '否'
+];
+
 class GroupMembers extends PureComponent<Props> {
     render() {
         const { classes, group } = this.props;
@@ -34,32 +45,19 @@ class GroupMembers extends PureComponent<Props> {
                     <Table className={classes.table}>
                         <TableHead>
                             <TableRow>
-                                <TableCell classes={{ root: classes.tableCell }}>成员姓名</TableCell>
-                                <TableCell classes={{ root: classes.tableCell }}>性别</TableCell>
-                                <TableCell classes={{ root: classes.tableCell }}>电话号码</TableCell>
-                                <TableCell classes={{ root: classes.tableCell }}>邮箱</TableCell>
-                                <TableCell classes={{ root: classes.tableCell }}>加入时间</TableCell>
-                                <TableCell classes={{ root: classes.tableCell }}>组长？</TableCell>
-                                <TableCell classes={{ root: classes.tableCell }}>管理员？</TableCell>
+                                {heads.map((head, index) =>
+                                    <TableCell key={index} classes={{ root: classes.tableCell }}>{head}</TableCell>
+                                )}
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {Boolean(group.length) && group.map((i, j) => (
-                                <TableRow key={j}>
-                                    <TableCell component='th' scope='row' classes={{
-                                        root: classes.tableCell,
-                                    }}>{i.username}</TableCell>
-                                    <TableCell
-                                        classes={{ root: classes.tableCell }}>{!i.sex ? '未知' : i.sex === 'Male' ? '男' : '女'}</TableCell>
-                                    <TableCell classes={{ root: classes.tableCell }}>{i.phone}</TableCell>
-                                    <TableCell classes={{ root: classes.tableCell }}>{i.mail || '未知'}</TableCell>
-                                    <TableCell
-                                        classes={{ root: classes.tableCell }}>{i.joinTime ? titleConverter(i.joinTime) : '未知'}</TableCell>
-                                    <TableCell
-                                        classes={{ root: classes.tableCell }}>{i.isCaptain ? '是' : '否'}</TableCell>
-                                    <TableCell classes={{ root: classes.tableCell }}>{i.isAdmin ? '是' : '否'}</TableCell>
+                            {Boolean(group.length) && group.map(memberDataConverter).map((member, index) =>
+                                <TableRow key={index}>
+                                    {member.map((item, idx) =>
+                                        <TableCell classes={{ root: classes.tableCell }} key={idx}>{item}</TableCell>
+                                    )}
                                 </TableRow>
-                            ))}
+                            )}
                         </TableBody>
                     </Table>
                 </div>

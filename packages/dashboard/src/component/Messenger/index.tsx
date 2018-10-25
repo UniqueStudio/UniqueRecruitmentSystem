@@ -157,41 +157,43 @@ class Messenger extends PureComponent<Props> {
     render() {
         const { classes } = this.props;
         const { minimize, messages, content } = this.state;
-        const time = (i: number) => timeStampToString(i, -5).split('T')[1];
+        const timeConverter = (i: number) => timeStampToString(i, -5).split('T')[1];
+        const MessageChip = ({ isSelf, name, time, type, message }: Message) =>
+            <div className={classes.message}>
+                <div className={classNames({ [classes.rightAlign]: isSelf })}>{
+                    `${name} - ${timeConverter(time)}`
+                }</div>
+                <Divider className={classNames({ [classes.myDivider]: isSelf })} />
+                <div className={classes.messageContent}>
+                    {type === 'text'
+                        ? message.split('\n').map((text, index) => <span key={index}>{text}<br /></span>)
+                        : <EnlargeableImage src={message} />
+                    }
+                </div>
+            </div>;
+        const AvatarBox = ({ avatar, name }: Message) =>
+            avatar ? <Avatar alt={name} src={avatar} className={classes.avatar} />
+                : <Avatar className={classes.avatar}><FaceIcon /></Avatar>;
         return (
             <Paper className={classNames(classes.messenger, minimize && classes.minimize)}>
                 <IconButton color='primary' component='span' onClick={this.toggleMinimize}>
                     <RemoveIcon />
                 </IconButton>
-                <div className={classNames(classes.messages, minimize && classes.minimizeMessages)} ref={(el) => {
-                    el && (this.end = el);
-                }}>
-                    {messages.map((i, j) =>
-                        <div key={j}
-                             className={classNames(classes.messageContainer, { [classes.my]: i['isSelf'] })}
+                <div
+                    className={classNames(classes.messages, minimize && classes.minimizeMessages)}
+                    ref={(el) => el && (this.end = el)}
+                >
+                    {messages.map((message, index) =>
+                        <div
+                            key={index}
+                            className={classNames(classes.messageContainer, { [classes.my]: message.isSelf })}
                         >
-                            {i.avatar ? <Avatar
-                                alt={i.name}
-                                src={i.avatar}
-                                className={classes.avatar}
-                            /> : <Avatar className={classes.avatar}><FaceIcon /></Avatar>}
+                            {AvatarBox(message)}
                             <Chip
-                                label={
-                                    <div className={classes.message}>
-                                        <div
-                                            className={classNames({ [classes.rightAlign]: i.isSelf })}>{`${i.name} - ${time(i.time)}`}</div>
-                                        <Divider className={classNames({ [classes.myDivider]: i.isSelf })} />
-                                        <div className={classes.messageContent}>
-                                            {i.type === 'text'
-                                                ? i.message.split('\n').map((k, l) => <span key={l}>{k}<br /></span>)
-                                                : <EnlargeableImage src={i.message} />
-                                            }
-                                        </div>
-                                    </div>
-                                }
-                                classes={{ root: classNames(classes.chipRoot, { [classes.myChip]: i.isSelf }) }}
+                                label={MessageChip(message)}
+                                classes={{ root: classNames(classes.chipRoot, { [classes.myChip]: message.isSelf }) }}
                             />
-                        </div>,
+                        </div>
                     )}
                 </div>
                 <div className={classes.input}>

@@ -43,7 +43,13 @@ class SMSDetail extends PureComponent<Props> {
                         <MenuItem value='reject'>被刷</MenuItem>
                     </Select>
                     <Typography variant='subheading' className={classes.templateItem}>
-                        {generateModel(type === 'accept', '{{候选人姓名}}', '{{招新名称}}', '{{组别}}', step, time, place, rest)}
+                        {generateModel({
+                            accepted: type === 'accept',
+                            step,
+                            time,
+                            place,
+                            rest
+                        })}
                     </Typography>
                 </div>
                 <div
@@ -73,9 +79,9 @@ class SMSDetail extends PureComponent<Props> {
                         value={step}
                         onChange={handleChange('step')}
                     >
-                        {STEPS.slice(0, 5).map((i, j) => (
-                            <MenuItem key={j} value={i}>
-                                {i}
+                        {STEPS.slice(0, 5).map((stepName) => (
+                            <MenuItem key={stepName} value={stepName}>
+                                {stepName}
                             </MenuItem>
                         ))}
                     </TextField>

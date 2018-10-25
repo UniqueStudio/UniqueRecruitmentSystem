@@ -5,25 +5,26 @@ import mergeKV from '../lib/mergeKV';
 
 import { colorToAlpha, colorToShadow, dangerColor, infoColor, successColor, warningColor } from './index';
 
-const colorStyles = mergeKV(['info', 'success', 'warning', 'danger'],
-    [infoColor, successColor, warningColor, dangerColor].map((i) => ({
-        background: i,
+export const colorStyles = mergeKV(['info', 'success', 'warning', 'danger'],
+    [infoColor, successColor, warningColor, dangerColor].map((color) => ({
+        background: color,
         color: 'white',
-        boxShadow: colorToShadow(i),
+        boxShadow: colorToShadow(color),
     })));
 
 const rootColorStyles = mergeKV(['root-info', 'root-success', 'root-warning', 'root-danger'],
-    [infoColor, successColor, warningColor, dangerColor].map((i) => ({
+    [infoColor, successColor, warningColor, dangerColor].map((color) => ({
         '& span': {
             pointerEvents: 'none',
         },
         '&:hover': {
-            background: colorToAlpha(i, 0.6),
+            background: colorToAlpha(color, 0.6),
         },
         '&:focus, &:active': {
-            background: i,
+            background: color,
         },
-    })));
+    }))
+);
 
 const styles: StyleRulesCallback = (theme: Theme) => ({
     chip: {

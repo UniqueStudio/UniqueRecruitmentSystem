@@ -85,7 +85,7 @@ class Container extends PureComponent<Props & RouteComponentProps<{}>> {
             toggleSnackbarOn('你没有选中任何人');
             return;
         }
-        selected.map((i) => remove(i));
+        selected.map((cid) => remove(cid));
     };
 
     toggleOpen = (name: string) => () => {
@@ -115,10 +115,11 @@ class Container extends PureComponent<Props & RouteComponentProps<{}>> {
 
     render() {
         const { classes, selected, candidates, fabOn, snackbarOn, select, deselect, toggleFabOff, group, userGroup, location } = this.props;
+        const { steps, modal, dialog, flag } = this.state;
         const current = candidates[Math.max(fabOn, 0)] || new Map<string, Candidate>();
         const allCid = [...current.keys()];
-        const selectedCid = selected.filter((i) => allCid.includes(i));
-        const selectedInfo = selectedCid.map((i) => current.get(i) as Candidate);
+        const selectedCid = selected.filter((cid) => allCid.includes(cid));
+        const selectedInfo = selectedCid.map((cid) => current.get(cid) as Candidate);
         const isMassInterview = location.pathname === '/massInterview';
 
         return (
@@ -132,21 +133,22 @@ class Container extends PureComponent<Props & RouteComponentProps<{}>> {
                         type='COLUMN'
                         direction='horizontal'
                     >
-                        {(provided: DroppableProvided) => (
+                        {({ innerRef, droppableProps }: DroppableProvided) => (
                             <div
-                                key={provided.innerRef.toString()}
+                                key={innerRef.toString()}
                                 className={classes.columnContainer}
-                                ref={provided.innerRef}
-                                {...provided.droppableProps}
+                                ref={innerRef}
+                                {...droppableProps}
                             >
-                                {this.state.steps.map((i) =>
-                                    <Column title={i}
-                                            key={i}
-                                            dropIndex={this.state.steps.indexOf(i)}
-                                            isDragging={this.state.flag}
-                                            shouldSort={isMassInterview}
-                                    />)
-                                }
+                                {steps.map((step) =>
+                                    <Column
+                                        title={step}
+                                        key={step}
+                                        dropIndex={steps.indexOf(step)}
+                                        isDragging={flag}
+                                        shouldSort={isMassInterview}
+                                    />
+                                )}
                                 {/*this div with a full-width-space is used to show right margin of the last element*/}
                                 <div style={{ visibility: 'hidden' }}>{'　'}</div>
                             </div>
@@ -157,11 +159,11 @@ class Container extends PureComponent<Props & RouteComponentProps<{}>> {
                      candidates={current} toggleFabOff={toggleFabOff}
                      toggleOpen={this.toggleOpen} canOperate={userGroup === group} />
                 <ColumnDialog
-                    open={this.state.dialog}
+                    open={dialog}
                     onClick={this.handleRemove(selectedCid)}
                     toggleOpen={this.toggleOpen('dialog')} />
                 <ColumnModal
-                    open={this.state.modal}
+                    open={modal}
                     toggleOpen={this.toggleOpen('modal')}
                     selected={selectedInfo}
                     deselect={deselect}

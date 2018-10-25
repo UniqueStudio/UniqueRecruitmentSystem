@@ -19,12 +19,12 @@ import { StoreState } from '../../reducer';
 
 import Candidate from '../../component/Candidate/Candidate';
 
-import { Candidate as CType } from '../../lib/const';
+import { Candidate as CandidateType } from '../../lib/const';
 
 interface OwnProps {
     step: number;
     cid: string;
-    info: CType;
+    info: CandidateType;
     provided: DraggableProvided;
 }
 

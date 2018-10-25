@@ -4,7 +4,7 @@ import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 
 import styles from '../../style/group';
 
-import { Candidate, Recruitment, Time, User } from '../../lib/const';
+import { Candidate, Group as GroupType, Recruitment, Time, User } from '../../lib/const';
 
 import GroupCandidates from './GroupCandidates';
 import GroupDialog from './GroupDialog';
@@ -14,7 +14,7 @@ import GroupModal from './GroupModal';
 interface Props extends WithStyles {
     candidates: Map<string, Candidate>[];
     group: User[];
-    userGroup: string;
+    userGroup: GroupType;
     currentRecruitment: Recruitment;
     pendingRecruitment: string;
     requestCandidate: (group: string, recruitmentName: string) => void;
@@ -39,8 +39,8 @@ class Group extends PureComponent<Props> {
 
     initTime = (time: Time[]) => {
         this.setState({
-            counts: time.map((i) =>
-                [i.morning ? 0 : -1, i.afternoon ? 0 : -1, i.evening ? 0 : -1],
+            counts: time.map(({ morning, afternoon, evening }) =>
+                [morning ? 0 : -1, afternoon ? 0 : -1, evening ? 0 : -1],
             ),
         });
     };
@@ -88,7 +88,9 @@ class Group extends PureComponent<Props> {
     submitAllocation = () => {
         const { toggleSnackbar, candidates, currentRecruitment, setAllSlots, userGroup: group } = this.props;
         const { counts, interviewStage } = this.state;
-        const candidateNumbers = candidates.map((i) => [...i.values()])[interviewStage === 1 ? 2 : 4].filter((i) => !i.abandon).length;
+        const candidateNumbers = candidates.map((candidate) =>
+            [...candidate.values()]
+        )[interviewStage === 1 ? 2 : 4].filter(({ abandon }) => !abandon).length;
         let total = 0;
         let message = '';
         counts.map((i) => {
@@ -108,7 +110,7 @@ class Group extends PureComponent<Props> {
             toggleSnackbar(message, 'info');
             return;
         }
-        const slots = counts.reduce((i, j) => [...i, ...j]);
+        const slots = counts.reduce((acc, curr) => [...acc, ...curr]);
         setAllSlots(currentRecruitment.title, slots, interviewStage === 1 ? group : 'interview');
         this.toggleModal();
     };
@@ -118,10 +120,10 @@ class Group extends PureComponent<Props> {
         const { setOneSlot } = this.props;
         const key = `slot${interviewStage}`;
         const split = time.split('T');
-        const period = (t: string) => t <= '12:00' ? 'morning' : t <= '18:00' ? 'afternoon' : 'evening';
+        const getPeriod = (t: string) => t <= '12:00' ? 'morning' : t <= '18:00' ? 'afternoon' : 'evening';
         const value = [
             split[0],
-            period(split[1]),
+            getPeriod(split[1]),
             split[1],
         ];
         setOneSlot(id, { [key]: value });
@@ -171,8 +173,11 @@ class Group extends PureComponent<Props> {
         const disabled = interviewStage === 1
             ? !(candidates[2] && candidates[2].size && currentRecruitment && currentRecruitment.time1 && currentRecruitment.time1[userGroup] && counts.length)
             : !(candidates[4] && candidates[4].size && currentRecruitment && currentRecruitment.time2 && counts.length);
-        const currentCandidates = candidates.length ? candidates.map((i) => [...i.values()])[interviewStage * 2] : [];
-        const filter = (i: Candidate) => (!i.abandon && !i.rejected && i[`time${interviewStage}`] && i[`slot${interviewStage}`]);
+        const currentCandidates = candidates.length
+            ? candidates.map((candidate) => [...candidate.values()])[interviewStage * 2]
+            : [];
+        const filter = (candidate: Candidate) =>
+            (!candidate.abandon && !candidate.rejected && candidate[`time${interviewStage}`] && candidate[`slot${interviewStage}`]);
         const filteredCandidates = currentCandidates.filter(filter);
         return (
             <>
@@ -186,7 +191,7 @@ class Group extends PureComponent<Props> {
                         handleChange={this.handleChange}
                         setTime={this.setOneSlot}
                     />
-                    <GroupMembers group={group}/>
+                    <GroupMembers group={group} />
                     <GroupDialog
                         dialogOpen={dialogOpen}
                         toggleDialog={this.toggleDialog}

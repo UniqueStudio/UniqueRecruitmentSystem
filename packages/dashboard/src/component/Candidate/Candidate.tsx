@@ -15,14 +15,14 @@ import InfoIcon from '@material-ui/icons/InfoOutlined';
 import { colorToAlpha, dangerColor, successColor, warningColor } from '../../style';
 import styles from '../../style/candidate';
 
-import { Candidate as CType } from '../../lib/const';
+import { Candidate as CandidateType, Comment } from '../../lib/const';
 
 interface Props extends WithStyles {
     provided: DraggableProvided;
     fabOn: number;
     step: number;
     cid: string;
-    info: CType;
+    info: CandidateType;
     selected: string[];
     select: (cid: string) => void;
     deselect: (cid: string) => void;
@@ -30,6 +30,15 @@ interface Props extends WithStyles {
     changeInputting: (comment: string, evaluation: string) => void;
     toggleFabOn: (step: number) => void;
 }
+
+const generateStyle = (evaluations: Comment['evaluation'][]) => {
+    const red = colorToAlpha(dangerColor, 0.1);
+    const yellow = colorToAlpha(warningColor, 0.1);
+    const green = colorToAlpha(successColor, 0.1);
+    const G_Y = evaluations.filter((evaluation) => evaluation === 'good').length / evaluations.length * 100;
+    const Y_R = evaluations.filter((evaluation) => evaluation === 'so-so').length / evaluations.length * 100 + G_Y;
+    return `linear-gradient(to right, ${green}, ${green} ${G_Y}%, ${yellow} ${G_Y}%, ${yellow} ${Y_R}%, ${red} ${Y_R}%, ${red})`;
+};
 
 class Candidate extends PureComponent<Props & RouteComponentProps<{}>> {
     state = {
@@ -58,34 +67,34 @@ class Candidate extends PureComponent<Props & RouteComponentProps<{}>> {
         }
     };
 
+    handleToggle = () => {
+        const { cid, toggleModalOn, changeInputting } = this.props;
+        toggleModalOn(cid);
+        changeInputting('', '');
+    };
+
     render() {
-        const { cid, info, selected, classes, toggleModalOn, changeInputting, provided, fabOn, step, location } = this.props;
+        const { cid, info, selected, classes, provided, fabOn, step, location } = this.props;
+        const { innerRef, draggableProps, dragHandleProps } = provided;
         const { name, grade, institute, comments, abandon, rejected, sex, isQuick, group, slot2 } = info;
-        const evaluations = Object.values(comments).map((i) => i['evaluation']);
-        const red = colorToAlpha(dangerColor, 0.1);
-        const yellow = colorToAlpha(warningColor, 0.1);
-        const green = colorToAlpha(successColor, 0.1);
-        const greenP = evaluations.filter((i) => i === 'good').length / evaluations.length * 100;
-        const yellowP = evaluations.filter((i) => i === 'so-so').length / evaluations.length * 100 + greenP;
-        const style = `linear-gradient(to right, ${green}, ${green} ${greenP}%, ${yellow} ${greenP}%, ${yellow} ${yellowP}%, ${red} ${yellowP}%, ${red})`;
+        const evaluations = Object.values(comments).map((comment) => comment.evaluation);
+        const style = generateStyle(evaluations);
         const coloredPanelStyle = {
-            background: abandon ? 'rgba(0, 0, 0, 0.1)' : evaluations.length === 0 ? 'rgba(0, 0, 0, 0)' : style,
+            background: abandon ? 'rgba(0, 0, 0, 0.1)' : !evaluations.length ? 'rgba(0, 0, 0, 0)' : style,
         };
         const suffix = () => (sex === 'Male' ? '' : '👩') + (isQuick ? '⚡️' : '');
         const isMassInterview = location.pathname === '/massInterview';
 
         const card = (
-            <div onMouseOver={this.handleOpen}
-                 onMouseOut={this.handleClose}
-                 ref={provided.innerRef}
-                 className={classes.cardContainer}
-                 {...provided.draggableProps}
-                 {...provided.dragHandleProps}
+            <div
+                onMouseOver={this.handleOpen}
+                onMouseOut={this.handleClose}
+                ref={innerRef}
+                className={classes.cardContainer}
+                {...draggableProps}
+                {...dragHandleProps}
             >
-                <Card className={classes.card} style={coloredPanelStyle} onClick={() => {
-                    toggleModalOn(cid);
-                    changeInputting('', '');
-                }}>
+                <Card className={classes.card} style={coloredPanelStyle} onClick={this.handleToggle}>
                     <div className={classes.cardContent}>
                         <Checkbox
                             color='primary'
@@ -95,7 +104,8 @@ class Candidate extends PureComponent<Props & RouteComponentProps<{}>> {
                             disabled={abandon || rejected || (selected.length !== 0 && fabOn !== step)}
                         />
                         <span className={classes.cardTitle}>
-                            <Typography variant='title'>{(isMassInterview ? `${group} - ` : '') + name}{suffix()}</Typography>
+                            <Typography
+                                variant='title'>{(isMassInterview ? `${group} - ` : '') + name}{suffix()}</Typography>
                             <Typography color='textSecondary' variant='caption'>{
                                 `${grade} - ${institute}`
                             }</Typography>
@@ -103,11 +113,10 @@ class Candidate extends PureComponent<Props & RouteComponentProps<{}>> {
                                 `${slot2[0]} - ${slot2[2]}`
                             }</Typography>}
                         </span>
-                        <IconButton className={classes.iconButton}
-                                    onClick={() => {
-                                        toggleModalOn(cid);
-                                        changeInputting('', '');
-                                    }}>
+                        <IconButton
+                            className={classes.iconButton}
+                            onClick={this.handleToggle}
+                        >
                             <InfoIcon />
                         </IconButton>
                         {/* this div is used to get avoid of default style on :last-child */}
@@ -134,11 +143,7 @@ class Candidate extends PureComponent<Props & RouteComponentProps<{}>> {
                 disableRestoreFocus
             >{abandon ? '该选手已放弃' : rejected ? '该选手已被淘汰' : ''}</Popover>
         );
-        return (
-            <>
-                {abandon || rejected ? <>{card}{popover}</> : card}
-            </>
-        );
+        return abandon || rejected ? <>{card}{popover}</> : card;
     }
 }
 
