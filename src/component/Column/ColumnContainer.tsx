@@ -16,6 +16,7 @@ import { Candidate, STEPS } from '../../lib/const';
 interface Props extends WithStyles {
     group: string;
     userGroup: string;
+    userJoinTime: string;
     candidates: Map<string, Candidate>[];
     selected: string[];
     fabOn: number;
@@ -97,10 +98,12 @@ class Container extends PureComponent<Props & RouteComponentProps<{}>> {
     };
 
     componentDidMount() {
-        const { changeGroup, group, location, userGroup, pendingRecruitment } = this.props;
+        const { changeGroup, group, location, userGroup, pendingRecruitment, userJoinTime } = this.props;
         const { pathname } = location;
         const changeTo = pathname === '/massInterview' ? 'interview' : group === 'interview' ? userGroup : group;
-        changeGroup(changeTo, pendingRecruitment);
+        if (userJoinTime && userJoinTime !== pendingRecruitment) {
+            changeGroup(changeTo, pendingRecruitment);
+        }
     }
 
     componentDidUpdate(prevProps: Props) {

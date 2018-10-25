@@ -29,6 +29,7 @@ const mapStateToProps = ({ candidates, components, user, recruitments }: StoreSt
     snackbarOn: components.snackbar.on,
     candidates: candidates.candidates,
     userGroup: user.info.group,
+    userJoinTime: user.info.joinTime,
     pendingRecruitment: recruitments.pending,
     ...ownProps,
 });
