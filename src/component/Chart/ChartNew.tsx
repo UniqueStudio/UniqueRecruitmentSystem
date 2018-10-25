@@ -17,6 +17,7 @@ import Verify from '../../container/Verify';
 import Modal from '../Modal';
 
 import timeStampToString from '../../lib/timeStampToString';
+import { translator } from '../../lib/titleConverter';
 
 interface Props extends WithStyles {
     disabled: boolean;
@@ -125,9 +126,9 @@ class ChartNew extends PureComponent<Props> {
                                 onChange={this.handleChange('year')}
                                 margin='normal'
                             >
-                                {[...new Array(5)].map((i, j) => (
-                                    <MenuItem key={j} value={j + new Date().getFullYear()}>
-                                        {j + new Date().getFullYear()}
+                                {[...new Array(5)].map((_, index) => (
+                                    <MenuItem key={index} value={index + new Date().getFullYear()}>
+                                        {index + new Date().getFullYear()}
                                     </MenuItem>
                                 ))}
                             </TextField>
@@ -151,9 +152,9 @@ class ChartNew extends PureComponent<Props> {
                                 onChange={this.handleChange('type')}
                                 margin='normal'
                             >
-                                {[['春招', 'S'], ['夏令营', 'C'], ['秋招', 'A']].map((i) => (
-                                    <MenuItem key={i[1]} value={i[1]}>
-                                        {i[0]}
+                                {translator.map(([ch, en]) => (
+                                    <MenuItem key={en} value={en}>
+                                        {ch}
                                     </MenuItem>
                                 ))}
                             </TextField>

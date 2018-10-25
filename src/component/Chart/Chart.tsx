@@ -45,7 +45,11 @@ class Chart extends PureComponent<Props> {
         // magic function to reset legend
         const { /*end, */title, totalData, stepData } = this.props;
         // const expired = +new Date() > end;
-        if (e.length) e['0']._chart.data.datasets['0']._meta[e['0']._chart.id].data.map((i: object) => i['hidden'] = false);
+        if (e.length) {
+            e['0']._chart.data.datasets['0']._meta[e['0']._chart.id].data.map((data: object) =>
+                data['hidden'] = false
+            );
+        }
         if (!this.state.clicked && e.length) {
             const i = e['0']._index;
             this.setState({
@@ -98,7 +102,7 @@ class Chart extends PureComponent<Props> {
                 />
             </div>
             <Typography variant='body1' className={classes.centerText}>{
-                `总计：${this.state.data.reduce((i, j) => i + j)}人`
+                `总计：${this.state.data.reduce((acc, curr) => acc + curr)}人`
             }</Typography>
         </Paper>;
         return expired ? <Tooltip title='该招新报名已截止' classes={{ tooltip: classes.tooltip }}

@@ -10,6 +10,7 @@ import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 import styles from '../../style/user';
 
 import { GROUPS, GROUPS_, User as UserType } from '../../lib/const';
+import { translator } from '../../lib/titleConverter';
 
 interface Props extends WithStyles {
     uid: string;
@@ -80,9 +81,8 @@ class User extends PureComponent<Props> {
     render() {
         const { classes } = this.props;
         const { username, sex, group, isAdmin, isCaptain, phone, mail, joinTime } = this.state.info;
-        const year = new Date().getFullYear();
-        const years = [year - 3, year - 2, year - 1, year];
-        const translator = [['春招', 'S'], ['夏令营', 'C'], ['秋招', 'A']];
+        const yearNow = new Date().getFullYear();
+        const years = [yearNow - 3, yearNow - 2, yearNow - 1, yearNow];
         return sex !== undefined && (
             <Paper className={classes.container}>
                 <TextField
@@ -113,7 +113,9 @@ class User extends PureComponent<Props> {
                     margin='normal'
                     disabled={true}
                 >
-                    {GROUPS.map((i, j) => <MenuItem value={GROUPS_[j]} key={j}>{i}</MenuItem>)}
+                    {GROUPS.map((groupName, index) =>
+                        <MenuItem value={GROUPS_[index]} key={index}>{groupName}</MenuItem>
+                    )}
                 </TextField>
                 <TextField
                     select
@@ -123,7 +125,9 @@ class User extends PureComponent<Props> {
                     onChange={this.handleChange('joinTime')}
                     margin='normal'
                 >
-                    {years.map((i) => translator.map((j) => <MenuItem value={i + j[1]}>{i + j[0]}</MenuItem>))}
+                    {years.map((year) =>
+                        translator.map(([ch, en]) => <MenuItem value={year + en}>{year + ch}</MenuItem>)
+                    )}
                 </TextField>
                 <TextField
                     select

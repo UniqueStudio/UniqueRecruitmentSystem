@@ -82,7 +82,7 @@ class Template extends PureComponent<Props> {
             return;
         }
         const content = {
-            candidates: selected.map((i) => i._id),
+            candidates: selected.map((candidate) => candidate._id),
             type,
             step,
             code,
@@ -126,7 +126,7 @@ class Template extends PureComponent<Props> {
 
     handleDelete = (cid: string) => {
         this.setState({
-            selected: this.state.selected.filter((i) => i._id !== cid),
+            selected: this.state.selected.filter(({ _id }) => _id !== cid),
         });
         this.props.deselect(cid);
     };
@@ -142,7 +142,7 @@ class Template extends PureComponent<Props> {
         const { activeStep, selected, step, type, code, time, place, rest } = this.state;
         const steps = ['发送对象', '消息模板', '确认发送'];
         const stepContent = [
-            <Picker selected={selected} onDelete={this.handleDelete}/>,
+            <Picker selected={selected} onDelete={this.handleDelete} />,
             <SMSDetail
                 step={step}
                 type={type}
@@ -158,11 +158,11 @@ class Template extends PureComponent<Props> {
         return (
             <div className={classes.template}>
                 <Stepper activeStep={activeStep} classes={{ root: classes.stepper }} orientation='vertical'>
-                    {steps.map((i, j) => (
-                        <Step key={j}>
-                            <StepLabel>{i}</StepLabel>
+                    {steps.map((stepName, index) => (
+                        <Step key={index}>
+                            <StepLabel>{stepName}</StepLabel>
                             <StepContent classes={{ last: classes.verify }}>
-                                {stepContent[j]}
+                                {stepContent[index]}
                                 <div>
                                     <Button
                                         onClick={activeStep ? this.handleBack : toggleOpen}

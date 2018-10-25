@@ -1,15 +1,6 @@
 import { StyleRulesCallback } from '@material-ui/core/styles/withStyles';
 
-import { colorToShadow, dangerColor, infoColor, successColor, warningColor } from './index';
-
-import mergeKV from '../lib/mergeKV';
-
-const colorStyles = mergeKV(['info', 'success', 'warning', 'danger'],
-    [infoColor, successColor, warningColor, dangerColor].map((i) => ({
-        background: i,
-        color: 'white',
-        boxShadow: colorToShadow(i),
-    })));
+import { colorStyles } from './comment';
 
 const styles: StyleRulesCallback = () => ({
     ...colorStyles,

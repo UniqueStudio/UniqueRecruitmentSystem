@@ -24,7 +24,7 @@ class Selects extends PureComponent<Props> {
                 onChange={onChange}
                 className={classes.select}
             >
-                {data.map((i, j) => <MenuItem value={values[j]} key={j}>{i}</MenuItem>)}
+                {data.map((item, index) => <MenuItem value={values[index]} key={index}>{item}</MenuItem>)}
             </Select>
         );
     }
