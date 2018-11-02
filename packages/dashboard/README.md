@@ -17,7 +17,7 @@ the other is [Form](https://github.com/UniqueStudio/UniqueRecruitmentForm).
 
 ## Preview
 
-![Preview image](./src/image/preview.png)
+Visit [https://hr.hustunique.com](https://hr.hustunique.com) for more details
 
 ## Toolchain
 
