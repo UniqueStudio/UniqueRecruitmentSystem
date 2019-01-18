@@ -1,15 +1,16 @@
 {
   "compilerOptions": {
     "baseUrl": ".",
-    "module": "commonjs",
+    "module": "esnext",
     "outDir": "build",
     "target": "es6",
     "lib": [
-      "es2018"
+      "esnext"
     ],
     "sourceMap": true,
     "allowJs": true,
     "moduleResolution": "node",
+    "rootDir": "src",
     "typeRoots": [
       "node_modules/@types"
     ],
@@ -24,7 +25,12 @@
     "noUnusedLocals": true,
     "experimentalDecorators": true
   },
-  "include": [
-    "src/**/*"
+  "exclude": [
+    "node_modules",
+    "build",
+    "scripts",
+    "acceptance-tests",
+    "webpack",
+    "jest"
   ]
 }
