@@ -1,0 +1,32 @@
+import React, { PureComponent } from 'react';
+
+import ExpansionPanel from '@material-ui/core/ExpansionPanel';
+import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
+import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+
+import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
+
+import styles from 'Styles/accordion';
+
+interface Props extends WithStyles {
+    title: string;
+    classes: Record<string, string>;
+}
+
+class Accordion extends PureComponent<Props> {
+
+    render() {
+        const { title, classes, children } = this.props;
+        return (
+            <ExpansionPanel className={classes.expansion}>
+                <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>{title}</ExpansionPanelSummary>
+                <ExpansionPanelDetails>
+                    {children}
+                </ExpansionPanelDetails>
+            </ExpansionPanel>
+        );
+    }
+}
+
+export default withStyles(styles)(Accordion);
