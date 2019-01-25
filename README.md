@@ -11,7 +11,7 @@ the other is [Form](https://github.com/UniqueStudio/UniqueRecruitmentForm).
 ## Features
 
 1. Automatic interview / stay-up-test / rejected notification, time selection and so on.
-2. Data preserving and visualization
+2. Recruitment preserving and visualization
 3. Authority management
 4. ...
 
@@ -30,4 +30,7 @@ Visit [https://hr.hustunique.com](https://hr.hustunique.com) for more details
 
 ## TODOS
 
-1. none
+1. password login
+2. more messages in chat room
+3. beautify interface
+4. data migration
