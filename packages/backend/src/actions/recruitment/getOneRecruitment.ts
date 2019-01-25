@@ -1,24 +1,25 @@
 import { RequestHandler } from 'express';
 
-import { RecruitmentRepo, UserRepo } from '../../database/model';
+import { RecruitmentRepo/*, UserRepo*/ } from '../../database/model';
+import { errorRes } from '../../utils/errorRes';
 
 export const getOneRecruitment: RequestHandler = async (req, res, next) => {
     try {
-        const user = await UserRepo.queryById(res.locals.id);
-        if (!user) {
-            res.send({ message: 'User doesn\'t exist!', type: 'warning' });
-            return;
-        }
-        const { joinTime } = user;
+        // const user = await UserRepo.queryById(res.locals.id);
+        // if (!user) {
+        //     res.send(errorRes('User doesn\'t exist!', 'warning'));
+        //     return;
+        // }
+        // const { joinTime } = user;
         const title = req.params.title;
-        if (joinTime === title) {
-            return next({ message: 'You don\'t have permission to view this recruitment!', type: 'warning' });
-        }
+        // if (joinTime === title) {
+        //     return next(errorRes('You don\'t have permission to view this recruitment!', 'warning'));
+        // }
         const data = await RecruitmentRepo.query({ title });
         if (!data.length) {
-            return next({ message: 'Recruitment doesn\'t exist!', type: 'warning' });
+            return next(errorRes('Recruitment doesn\'t exist!', 'warning'));
         }
-        res.send({ data: data[0], type: 'success' });
+        res.json({ data: data[0], type: 'success' });
     } catch (error) {
         return next(error);
     }

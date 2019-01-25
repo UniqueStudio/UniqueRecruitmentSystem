@@ -10,4 +10,5 @@ export const moveFile = async (oldPath: string, newDirectory: string, name: stri
     await mkdir(newDirectory);
     const newPath = join(newDirectory, name);
     await rename(oldPath, newPath);
+    return newPath;
 };

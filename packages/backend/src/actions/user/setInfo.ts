@@ -1,23 +1,25 @@
 import { RequestHandler } from 'express';
 import { body, validationResult } from 'express-validator/check';
 import { UserRepo } from '../../database/model';
+import { errorRes } from '../../utils/errorRes';
 
 export const setInfo: RequestHandler = async (req, res, next) => {
     try {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
-            return next({ message: errors.array(), type: 'warning' });
+            return next(errorRes(errors.array({ onlyFirstError: true })[0]['msg'], 'warning'));
         }
-        const user = await UserRepo.queryById(res.locals.id);
+        const id = res.locals.id;
+        const user = await UserRepo.queryById(id);
         if (!user) {
-            return next({ message: 'User doesn\'t exist!', type: 'warning' });
+            return next(errorRes('User doesn\'t exist!', 'warning'));
         }
         const { phone, mail } = req.body;
-        await UserRepo.update({ _id: user._id }, {
+        await UserRepo.updateById(id, {
             phone,
             mail,
         });
-        res.send({ type: 'success' });
+        res.json({ type: 'success' });
     } catch (error) {
         return next(error);
     }

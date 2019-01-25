@@ -1,7 +1,8 @@
-import { connect, Document, Model, Schema, SchemaDefinition } from 'mongoose';
+import { connect, Document, Model, Schema, SchemaDefinition, set } from 'mongoose';
 
 import { dbURI } from '../config/consts';
 import { logger } from '../utils/logger';
+set('useFindAndModify', false);
 
 connect(dbURI, { useNewUrlParser: true })
     .then(() => logger.info('Connected to MongoDB'))
@@ -35,11 +36,19 @@ export class RepositoryBase<T extends Document> {
     }
 
     async update(condition: object, newItem: object, isRemove = false) {
-        return await this.model.findOneAndUpdate(condition, { [isRemove ? '$unset' : '$set']: newItem });
+        return await this.model.findOneAndUpdate(condition, { [isRemove ? '$unset' : '$set']: newItem }, { new: true });
     }
 
     async updateById(id: string, newItem: object, isRemove = false) {
-        return await this.model.findByIdAndUpdate(id, { [isRemove ? '$unset' : '$set']: newItem });
+        return await this.model.findByIdAndUpdate(id, { [isRemove ? '$unset' : '$set']: newItem }, { new: true });
+    }
+
+    async pushById(id: string, newItem: object) {
+        return await this.model.findByIdAndUpdate(id, { $push: newItem }, { new: true });
+    }
+
+    async pullById(id: string, deleteItem: object) {
+        return await this.model.findByIdAndUpdate(id, { $pull: deleteItem }, { new: true });
     }
 
     async delete(condition: object) {
@@ -51,7 +60,7 @@ export class RepositoryBase<T extends Document> {
     }
 
     async count(condition: object) {
-        return await this.model.count(condition);
+        return await this.model.countDocuments(condition);
     }
 }
 

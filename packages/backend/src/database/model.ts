@@ -1,5 +1,5 @@
 import { model } from 'mongoose';
-import { EVALUATIONS, GENDERS, GRADES, GROUPS_, PERIODS, RANKS, STEPS } from '../config/consts';
+import { EVALUATIONS, GENDERS, GRADES, GROUPS_, RANKS, STEPS } from '../config/consts';
 import { Candidate, Recruitment, User } from '../config/types';
 import { createSchema, RepositoryBase } from './index';
 
@@ -23,11 +23,11 @@ const commentSchema = createSchema({
         required: true,
         enum: arrayToIndex(EVALUATIONS)
     }
-}, false);
+});
 
 const timeSchema = createSchema({
     date: {
-        type: String,
+        type: Number,
         required: true
     },
     morning: {
@@ -44,28 +44,12 @@ const timeSchema = createSchema({
     }
 }, false);
 
-const allocationSchema = createSchema({
-    date: {
-        type: String,
-        required: true
-    },
-    period: {
-        type: Number,
-        required: true,
-        enum: arrayToIndex(PERIODS)
-    },
-    time: {
-        type: String,
-        required: true
-    },
-}, false);
-
 const interviewSchema = createSchema({
     selection: {
         type: [timeSchema],
     },
     allocation: {
-        type: allocationSchema,
+        type: Number,
     }
 }, false);
 
@@ -178,11 +162,11 @@ const userSchema = createSchema({
         required: true
     },
     isCaptain: {
-        type: String,
+        type: Boolean,
         required: true
     },
     isAdmin: {
-        type: String,
+        type: Boolean,
         required: true
     },
     phone: {
@@ -191,7 +175,7 @@ const userSchema = createSchema({
     },
     mail: {
         type: String,
-        required: true
+        default: ''
     },
     gender: {
         type: Number,
@@ -206,7 +190,8 @@ const userSchema = createSchema({
         enum: GROUPS_
     },
     avatar: {
-        type: String
+        type: String,
+        default: ''
     },
 });
 
@@ -239,11 +224,11 @@ const recruitmentSchema = createSchema({
         required: true
     },
     begin: {
-        type: String,
+        type: Number,
         required: true
     },
     end: {
-        type: String,
+        type: Number,
         required: true
     },
     total: {

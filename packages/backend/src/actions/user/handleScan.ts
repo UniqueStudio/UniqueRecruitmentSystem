@@ -2,6 +2,7 @@ import { RequestHandler } from 'express';
 import fetch from 'node-fetch';
 import { accessTokenURL, ID_TO_GROUP, scanningURL, userIDURL, userInfoURL } from '../../config/consts';
 import { UserRepo } from '../../database/model';
+import { errorRes } from '../../utils/errorRes';
 import { generateJWT } from '../../utils/generateJWT';
 
 interface Data {
@@ -37,6 +38,9 @@ const dataConverter = (data: Data) => {
     if (!groups[0]) {
         throw new Error('Please set group info in WeChat first!');
     }
+    if (!phone) {
+        throw new Error('Please set phone number in WeChat first!');
+    }
     const group = ID_TO_GROUP[groups[0]];
     const { attrs } = extattr;
     let joinTime;
@@ -70,14 +74,14 @@ export const handleScan: RequestHandler = async (req, res, next) => {
         const status = JSON.parse(scanResult.match(/{.+}/)![0]).status;
 
         if (status !== 'QRCODE_SCAN_ING') {
-            return next({ message: 'Time out, please login again', type: 'info' });
+            return next(errorRes('Time out, please login again', 'info'));
         } else {
             const loginResponse = await fetch(`${scanningURL}${req.params.key}&lastStatus=${status}`);
             const loginResult = await loginResponse.text();
             const loginObj = JSON.parse(loginResult.match(/{.+}/)![0]);
 
             if (loginObj.status !== 'QRCODE_SCAN_SUCC') {
-                return next({ message: 'Failed to login', type: 'warning' });
+                return next(errorRes('Failed to login', 'warning'));
             } else {
                 const auth_code = loginObj.auth_code;
 
@@ -95,7 +99,7 @@ export const handleScan: RequestHandler = async (req, res, next) => {
                 const users = await UserRepo.query({ weChatID: data.weChatID });
                 const user = users.length ? users[0] : await UserRepo.createAndInsert(data);
                 const token = generateJWT({ id: user._id }, 604800);
-                res.send({ uid: user._id, token, type: 'success' });
+                res.json({ token, type: 'success' });
             }
         }
     } catch (error) {

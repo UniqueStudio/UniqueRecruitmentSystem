@@ -1,5 +1,6 @@
 import express from 'express';
 import { getGroup, getInfo, handleLogin, handleScan, setInfo, setInfoVerify } from '../actions/user';
+import { authenticator } from '../middlewares/authenticator';
 
 const router = express.Router();
 
@@ -8,6 +9,8 @@ router.get('/login', handleLogin);
 
 // login: scan QR code
 router.get('/:key/status', handleScan);
+
+router.use(authenticator);
 
 // get one's info
 router.get('/', getInfo);

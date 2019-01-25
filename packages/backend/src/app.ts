@@ -1,6 +1,7 @@
 import express from 'express';
-import http from 'http';
-// import https from 'https';
+import fs from 'fs';
+// import http from 'http';
+import https from 'https';
 import { jsonParser, urlencodedParser } from './middlewares/bodyParser';
 import { cors } from './middlewares/cors';
 import { errorHandler } from './middlewares/errorHandler';
@@ -25,17 +26,17 @@ app.use(infoLogger);
 app.use(routes);
 
 app.use(errorHandler);
-// export const server = https.createServer({
-//     key: fs.readFileSync('uniqcert.key'),
-//     cert: fs.readFileSync('uniqcert.fullchain')
-// }, app);
-export const server = http.createServer(app);
+
+export const server = https.createServer({
+    key: fs.readFileSync('/etc/v2ray/v2ray.key'),
+    cert: fs.readFileSync('/etc/v2ray/v2ray.crt')
+}, app);
+// export const server = http.createServer(app);
 
 export const io = wsServer(server);
+
 wsHandler(io);
 
-if (process.env.NODE_ENV !== 'test') {
-    server.listen(5000);
-}
+server.listen(5000);
 
 task();

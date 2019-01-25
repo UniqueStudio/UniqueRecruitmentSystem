@@ -1,4 +1,3 @@
 export { sendCandidateCode, sendCandidateCodeVerify } from './sendCandidateCode';
-// export { sendNext } from './sendNext';
-// export { sendInterview } from './sendInterview';
+export { sendSMS, sendSMSVerify } from './sendSMS';
 export { sendUserCode } from './sendUserCode';

@@ -3,23 +3,46 @@ import { authenticator } from '../middlewares/authenticator';
 import { codeChecker } from '../middlewares/codeChecker';
 import { fileHandler } from '../middlewares/fileHandler';
 
-import { addCandidate, addCandidateVerify, getCandidates, getResume } from '../actions/candidate';
+import {
+    addCandidate,
+    addCandidateVerify,
+    allocateAll,
+    allocateAllVerify,
+    allocateOne,
+    allocateOneVerify,
+    getCandidates,
+    getCandidateVerify,
+    getForm,
+    getFormVerify,
+    getResume,
+    setCandidate,
+    setCandidateVerify
+} from '../actions/candidate';
 
 const router = express.Router();
 
 // add new candidate
 router.post('/', fileHandler.single('resume'), addCandidateVerify, codeChecker('candidate'), addCandidate);
 
+// generate form
+router.get('/:cid/form/:formId', getFormVerify, getForm);
+
 router.use(authenticator);
 
-// // set candidates data
-// router.put('/:cid', setCandidate);
-//
+// set candidates data
+router.put('/:formId', setCandidateVerify, setCandidate);
+
+// allocate one
+router.put('/:cid/interview/:type', allocateOneVerify, allocateOne);
+
+// allocate all
+router.put('/interview/:type', allocateAllVerify, allocateAll);
+
 // get all candidates in the latest recruitment
-router.get('/', getCandidates);
-router.get('/recruitment/:title', getCandidates);
+router.get('/:query', getCandidateVerify, getCandidates);
+// router.get('/recruitment/:title', getCandidates);
 
 // get resume of a candidate
-router.get('/resume/:cid', getResume);
+router.get('/:cid/resume', getResume);
 
 export const candidate = router;

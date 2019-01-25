@@ -5,37 +5,42 @@ export interface Payload {
 }
 
 export type Group = 'web' | 'lab' | 'ai' | 'game' | 'android' | 'ios' | 'design' | 'pm';
+export type Step = 0 | 1 | 2 | 3 | 4 | 5;       // 0-5: from 报名 to 通过
+export type Gender = 0 | 1 | 2;                 // 1: Male, 2: Female, 0: Other
+export type Grade = 0 | 1 | 2 | 3 | 4 | 5 | 6;  // 0-6: from 大一 to 研三
+export type Rank = 0 | 1 | 2 | 3 | 4;           // 1: 10%, 2: 25%, 3: 50%, 4: 100%, 0: null
+export type Evaluation = 0 | 1 | 2;             // 0: bad, 1: so-so, 2: good
 
 export interface Candidate extends Document {
     name: string;
-    gender: 0 | 1 | 2; // TODO: 1: Male, 2: Female, 0: Other, sex -> gender
-    grade: 0 | 1 | 2 | 3 | 4 | 5 | 6; // TODO
+    gender: Gender;
+    grade: Grade;
     institute: string;
     major: string;
-    rank: 0 | 1 | 2 | 3 | 4; // TODO: 1: 10%, 2: 25%, 3: 50%, 4: 100%, 0: null, score -> rank
+    rank: Rank;
     mail: string;
     phone: string;
     group: Group;
     title: string; // e.g. 2018A || 2018S (A: AUTUMN, S: SPRING, C: CAMP)
     intro: string;
     isQuick: boolean;
-    referrer: string; // TODO: new
+    referrer: string;
     resume: string; // file path
     abandon: boolean;
     rejected: boolean;
-    interviews: { // TODO
+    interviews: {
         group: Interview,
         team: Interview
     };
-    step: 0 | 1 | 2 | 3 | 4 | 5;
-    comments: Comment[]; // TODO: object -> array
+    step: Step;
+    comments: Comment[];
 }
 
-export interface Comment {
-    uid: string; // TODO: new
-    username: string; // TODO: new
-    content: string; // TODO: comment -> content
-    evaluation: 2 | 1 | 0; // TODO: 2: good, 1: so-so, 0: bad
+export interface Comment extends Document {
+    uid: string;
+    username: string;
+    content: string;
+    evaluation: Evaluation;
 }
 
 export interface User extends Document {
@@ -46,35 +51,29 @@ export interface User extends Document {
     isAdmin: boolean;
     phone: string;
     mail: string;
-    gender: 0 | 1 | 2; // TODO: 1: Male, 2: Female, 0: Other, sex -> gender
+    gender: Gender;
     group: Group;
-    avatar?: string;
+    avatar: string;
 }
 
 export interface Time {
-    date: string;
-    morning: number; // TODO: boolean to number
+    date: number;
+    morning: number;
     afternoon: number;
     evening: number;
 }
 
 export interface Interview {
     selection: Time[];
-    allocation: Allocation;
-}
-
-export interface Allocation {
-    date: string;
-    period: 0 | 1 | 2; // 0: morning, 1: afternoon, 2: evening
-    time: string;
+    allocation: number;
 }
 
 export interface Recruitment extends Document {
     title: string; // e.g. 2018A || 2018S (A: AUTUMN, S: SPRING, C: CAMP)
-    begin: string; // TODO: timestamp should be string
-    end: string; // TODO: timestamp should be string
+    begin: number;
+    end: number;
     total: number;
-    interview: Time[]; // TODO: Team Interview
+    interview: Time[];
     groups: GroupData[];
 }
 
@@ -82,14 +81,14 @@ export interface GroupData {
     name: Group;
     total: number;
     steps: number[];
-    interview: Time[]; // TODO: Group Interview
+    interview: Time[];
 }
 
 export interface Message {
     isSelf: boolean;
     name: string;
-    time: string; // TODO: timestamp should be string
-    type: string;
+    time: number;
+    isImage: boolean;
     avatar: string;
-    message: string;
+    content: string;
 }

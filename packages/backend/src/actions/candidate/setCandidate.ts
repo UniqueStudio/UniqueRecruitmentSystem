@@ -1,30 +1,78 @@
 import { RequestHandler } from 'express';
-import { ObjectId } from 'mongodb';
-import { database } from '../../app';
-import { verifyJWT } from '../../utils/verifyJWT';
+import { body, param, validationResult } from 'express-validator/check';
+import { CandidateRepo, RecruitmentRepo } from '../../database/model';
+import { checkInterview } from '../../utils/checkInterview';
+import { errorRes } from '../../utils/errorRes';
 
 export const setCandidate: RequestHandler = async (req, res, next) => {
-    const patch = req.body.patch;
-    if (!patch || Object.keys(patch).length !== 1 || !(patch.time1 || patch.time2 || patch.abandon || patch.slot1 || patch.slot2)) {
-        res.send({ message: '信息不正确', type: 'warning' });
-        return;
-    }
     try {
-        verifyJWT(req.get('Authorization'));
-        const candidateResult = (await database.query('candidates', { _id: new ObjectId(req.params.cid) }))[0];
-        if (!candidateResult) {
-            res.send({ message: '候选人不存在!', type: 'warning' });
-            return;
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return next(errorRes(errors.array({ onlyFirstError: true })[0]['msg'], 'warning'));
         }
-        if ((candidateResult.time1 && patch.time1)
-            || (candidateResult.time2 && patch.time2)
-            || candidateResult.abandon) {
-            res.send({ message: '不能重复提交时间!', type: 'warning' });
-            return;
+        const id = res.locals.id;
+        const candidate = await CandidateRepo.queryById(id);
+        if (!candidate) {
+            return next(errorRes('Candidate doesn\'t exist!', 'warning'));
         }
-        await database.update('candidates', { _id: new ObjectId(req.params.cid) }, patch);
-        res.send({ type: 'success' });
+        const { interviews: { group, team }, rejected } = candidate;
+        if (candidate.abandon) {
+            return next(errorRes('You have already abandoned!', 'warning'));
+        }
+        if (rejected) {
+            return next(errorRes('You are already rejected!', 'warning'));
+        }
+        const { teamInterview, groupInterview, abandon } = req.body;
+        const { formId } = req.params;
+        const type = formId.slice(-1);
+        switch (type) {
+            case '1': {
+                const recruitmentId = formId.slice(0, -2);
+                const recruitment = await RecruitmentRepo.queryById(recruitmentId);
+                if (!recruitment) {
+                    return next(errorRes('Recruitment doesn\'t exist！', 'warning'));
+                }
+                if (!groupInterview) {
+                    return next(errorRes('Interview time is invalid!', 'warning'));
+                }
+                if (group.selection) {
+                    return next(errorRes('You have already submitted!', 'warning'));
+                }
+                await CandidateRepo.updateById(id, {
+                    'interview.group.selection': groupInterview,
+                    abandon: abandon || false
+                });
+                return res.json({ type: 'success' });
+            }
+            case '2': {
+                const recruitmentId = formId.slice(0, -1);
+                const recruitment = await RecruitmentRepo.queryById(recruitmentId);
+                if (!recruitment) {
+                    return next(errorRes('Recruitment doesn\'t exist！', 'warning'));
+                }
+                if (!teamInterview) {
+                    return next(errorRes('Interview time is invalid!', 'warning'));
+                }
+                if (team.selection) {
+                    return next(errorRes('You have already submitted!', 'warning'));
+                }
+                await CandidateRepo.updateById(id, {
+                    'interview.team.selection': teamInterview,
+                    abandon: abandon || false
+                });
+                return res.json({ type: 'success' });
+            }
+            default: {
+                return next(errorRes('Failed to set!', 'warning'));
+            }
+        }
     } catch (error) {
         return next(error);
     }
 };
+
+export const setCandidateVerify = [
+    body('teamInterview').custom(checkInterview).withMessage('Interview time is invalid!'),
+    body('groupInterview').custom(checkInterview).withMessage('Interview time is invalid!'),
+    param('formId').isString().withMessage('URL is invalid!'),
+];

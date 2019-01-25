@@ -1,7 +1,6 @@
 import { Socket } from 'socket.io';
+import { Message } from '../../config/types';
 
-export const messenger = (socket: Socket) => (name: string, avatar: string, time: string, message: string, isImage: boolean) => {
-    isImage
-        ? socket.broadcast.emit('receiveImage', name, avatar, time, message)
-        : socket.broadcast.emit('receiveMessage', name, avatar, time, message);
+export const messenger = (socket: Socket) => ({ message }: { message: Message }) => {
+    socket.broadcast.emit('receiveMessage', { message });
 };

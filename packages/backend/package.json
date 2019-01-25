@@ -1,6 +1,6 @@
 {
   "name": "unique-recruitment-backend",
-  "version": "2.0.0-alpha.1",
+  "version": "2.0.0-beta",
   "description": "the backend for recruitment of Unique Studio",
   "author": "@winderica",
   "private": true,
@@ -52,8 +52,9 @@
     "typescript": "^3.2.2"
   },
   "scripts": {
-    "start": "node_modules/.bin/ts-node src/app.ts",
+    "start": "ts-node src/app.ts",
     "build": "tsc",
-    "test": "NODE_ENV=test jest --forceExit"
+    "test": "NODE_ENV=test jest --forceExit",
+    "testStart": "NODE_ENV=test ts-node src/app.ts"
   }
 }

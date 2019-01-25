@@ -2,13 +2,14 @@ import { RequestHandler } from 'express';
 import { param, validationResult } from 'express-validator/check';
 import { GROUPS_ } from '../../config/consts';
 import { RecruitmentRepo } from '../../database/model';
+import { errorRes } from '../../utils/errorRes';
 import { generateJWT } from '../../utils/generateJWT';
 
 export const getForm: RequestHandler = async (req, res, next) => {
     try {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
-            return next({ message: errors.array(), type: 'warning' });
+            return next(errorRes(errors.array({ onlyFirstError: true })[0]['msg'], 'warning'));
         }
         const formId = req.params.formId;
         const type = formId.slice(-1);
@@ -20,7 +21,7 @@ export const getForm: RequestHandler = async (req, res, next) => {
                 const recruitmentId = formId.slice(0, -2);
                 const recruitment = await RecruitmentRepo.queryById(recruitmentId);
                 if (!recruitment) {
-                    return next({ message: 'Recruitment doesn\'t exist！', type: 'warning' });
+                    return next(errorRes('Recruitment doesn\'t exist！', 'warning'));
                 }
                 const groupData = recruitment.groups.find((group) => group.name === GROUPS_[groupId]);
                 return res.json({ type: 'success', time: groupData!.interview, token });
@@ -29,12 +30,12 @@ export const getForm: RequestHandler = async (req, res, next) => {
                 const recruitmentId = formId.slice(0, -1);
                 const recruitment = await RecruitmentRepo.queryById(recruitmentId);
                 if (!recruitment) {
-                    return next({ message: 'Recruitment doesn\'t exist！', type: 'warning' });
+                    return next(errorRes('Recruitment doesn\'t exist！', 'warning'));
                 }
                 return res.json({ type: 'success', time: recruitment.interview, token });
             }
             default: {
-                return next({ message: 'Form doesn\'t exist！', type: 'warning' });
+                return next(errorRes('Form doesn\'t exist！', 'warning'));
             }
         }
     } catch (error) {

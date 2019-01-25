@@ -1,6 +1,6 @@
 import express from 'express';
 import {
-    getAllRecruitments, getOneRecruitment,
+    getAllRecruitments, getOneRecruitment, getPendingTitles,
     launchRecruitment, launchRecruitmentVerify,
     setRecruitment, setRecruitmentVerify
 } from '../actions/recruitment';
@@ -18,11 +18,14 @@ router.post('/', launchRecruitmentVerify, codeChecker('user'), launchRecruitment
 // get all history recruitments
 router.get('/', getAllRecruitments);
 
+// get title of pending recruitments
+router.get('/pending', getPendingTitles);
+
 // get a certain recruitment
-router.get('/:title', getOneRecruitment);
+router.get('/title/:title', getOneRecruitment);
 
 // set recruitment
-router.put('/:title', setRecruitmentVerify, setRecruitment);
+router.put('/title/:title', setRecruitmentVerify, setRecruitment);
 
 // // set slots for periods
 // router.post('/:title/slots', setSlots);
