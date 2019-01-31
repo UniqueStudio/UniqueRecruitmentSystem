@@ -2,10 +2,10 @@ import { Epic, ofType } from 'redux-observable';
 import { EMPTY } from 'rxjs';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 
-import { REMOVE_COMMENT_START, RemoveCommentStart } from 'Actions';
+import { REMOVE_COMMENT_START, RemoveCommentStart, toggleProgress } from 'Actions';
 import { StoreState } from 'Reducers';
 
-import { Action, checkToken, COMMENT, Dependencies, errHandler, Socket } from 'Epics';
+import { Action, checkToken, Dependencies, errHandler, Socket } from 'Epics';
 
 export const removeCommentEpic: Epic<Action, Action, StoreState, Dependencies> = (action$, state$, { socket$ }) =>
     socket$.pipe(
@@ -20,8 +20,8 @@ export const removeCommentEpic: Epic<Action, Action, StoreState, Dependencies> =
                     const token = checkToken();
                     socket.emit('removeComment', { cid, id, token });
                 }),
-                map(() => ({ type: COMMENT.START })),
-                catchError((err) => errHandler(err, COMMENT))
+                map(() => toggleProgress(true)),
+                catchError((err) => errHandler(err))
             );
         }),
     );

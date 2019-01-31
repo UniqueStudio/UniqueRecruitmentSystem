@@ -1,5 +1,4 @@
 import * as actions from 'Actions';
-import { CANDIDATE, COMMENT } from 'Epics';
 
 import { Candidate, Evaluation, Step } from 'Config/types';
 import { insertItem, removeItem, updateObjectInArray } from 'Utils/reducerHelper';
@@ -26,10 +25,6 @@ type Action =
 export interface CandidateStore {
     candidates: Candidate[];
     selected: string[];
-    isLoading: {
-        comments: boolean;
-        candidates: boolean;
-    };
     group: string;
     steps: Step[];
     inputtingComment: {
@@ -41,10 +36,6 @@ export interface CandidateStore {
 const init: CandidateStore = {
     candidates: [],
     selected: [],
-    isLoading: {
-        comments: false,
-        candidates: false,
-    },
     group: 'web',
     steps: [0, 1, 2, 3, 4, 5],
     inputtingComment: {
@@ -55,11 +46,6 @@ const init: CandidateStore = {
 
 export function candidateReducer(state = init, action: Action): CandidateStore {
     switch (action.type) {
-        case COMMENT.START:
-            return { ...state, isLoading: { ...state.isLoading, comments: true } };
-        case COMMENT.SUCCESS:
-        case COMMENT.FAILURE:
-            return { ...state, isLoading: { ...state.isLoading, comments: false } };
         case actions.ADD_COMMENT_FULFILLED: {
             const { candidates } = state;
             const index = candidates.findIndex(({ _id }) => _id === action.cid);
@@ -89,11 +75,6 @@ export function candidateReducer(state = init, action: Action): CandidateStore {
             update(updatedCandidates);
             return { ...state, candidates: updatedCandidates };
         }
-        case CANDIDATE.START:
-            return { ...state, isLoading: { ...state.isLoading, candidates: true } };
-        case CANDIDATE.SUCCESS:
-        case CANDIDATE.FAILURE:
-            return { ...state, isLoading: { ...state.isLoading, candidates: false } };
         case actions.GET_CANDIDATES_FULFILLED: {
             const { candidates } = action;
             update(candidates);

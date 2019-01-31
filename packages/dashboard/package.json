@@ -1,6 +1,6 @@
 {
   "name": "unique-recruitment-dashboard",
-  "version": "2.0.0-beta",
+  "version": "2.0.0-beta.1",
   "description": "the dashboard for recruitment of Unique Studio",
   "author": "@winderica",
   "private": true,
@@ -16,18 +16,18 @@
     }
   ],
   "dependencies": {
-    "@date-io/date-fns": "^1.0.1",
-    "@material-ui/core": "^3.9.0",
+    "@date-io/date-fns": "^1.0.2",
+    "@material-ui/core": "^3.9.1",
     "@material-ui/icons": "^3.0.2",
     "chart.js": "^2.7.3",
     "classnames": "^2.2.6",
     "date-fns": "^2.0.0-alpha.27",
     "history": "^4.7.2",
-    "material-ui-pickers": "^2.1.1",
-    "mdi-material-ui": "^5.8.0",
+    "material-ui-pickers": "^2.1.2",
+    "mdi-material-ui": "^5.9.0",
     "notistack": "^0.4.1",
     "react": "^16.8.0-alpha.1",
-    "react-beautiful-dnd": "^10.0.3",
+    "react-beautiful-dnd": "^10.0.4",
     "react-chartjs-2": "^2.7.4",
     "react-dom": "^16.8.0-alpha.1",
     "react-redux": "^6.0.0",
@@ -35,30 +35,36 @@
     "react-router-dom": "^4.3.1",
     "redux": "^4.0.1",
     "redux-observable": "^1.0.0",
-    "rxjs": "^6.3.3",
+    "rxjs": "^6.4.0",
     "socket.io-client": "^2.2.0",
     "source-map-explorer": "^1.6.0"
   },
   "devDependencies": {
-    "@types/chart.js": "^2.7.42",
+    "@types/chart.js": "^2.7.43",
     "@types/classnames": "^2.2.7",
     "@types/material-ui": "^0.21.5",
-    "@types/node": "^10.12.18",
-    "@types/react": "16.7.20",
+    "@types/node": "^10.12.20",
+    "@types/react": "^16.7.22",
     "@types/react-beautiful-dnd": "^10.0.1",
     "@types/react-dom": "^16.0.11",
-    "@types/react-redux": "7.0.0",
+    "@types/react-redux": "^7.0.1",
     "@types/react-router": "^4.4.3",
     "@types/react-router-dom": "^4.3.1",
     "@types/socket.io-client": "^1.4.32",
-    "react-scripts-ts": "^3.1.0",
+    "react-scripts-ts": "^4.0.8",
     "redux-devtools-extension": "^2.13.7",
-    "source-map-loader": "^0.2.4",
-    "typescript": "^3.2.2"
+    "tslint": "^5.12.1",
+    "typescript": "^3.2.4"
   },
   "scripts": {
     "analyze": "source-map-explorer build/static/js/main.*",
     "start": "react-scripts-ts start",
     "build": "react-scripts-ts build"
-  }
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ]
 }

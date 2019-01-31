@@ -1,7 +1,6 @@
 import * as actions from 'Actions';
 
 import { Message, User } from 'Config/types';
-import { USER } from 'Epics';
 
 import { updateStorage } from 'Utils/updateStorage';
 
@@ -58,11 +57,6 @@ const insert = (item: Message, arr: Message[]) => {
 
 export function userReducer(state = init, action: Action): UserStore {
     switch (action.type) {
-        case USER.START:
-            return { ...state, isLoading: true };
-        case USER.FAILURE:
-        case USER.SUCCESS:
-            return { ...state, isLoading: false };
         case actions.GET_QR_CODE_FULFILLED:
             return { ...state, key: action.key, isScanning: Boolean(action.key) };
         case actions.LOGIN:

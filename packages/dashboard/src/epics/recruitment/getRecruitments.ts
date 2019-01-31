@@ -1,15 +1,15 @@
 import { Epic, ofType } from 'redux-observable';
 import { of } from 'rxjs';
 import { ajax } from 'rxjs/ajax';
-import { catchError, endWith, map, mergeMap, startWith } from 'rxjs/operators';
+import { catchError, mergeMap, startWith } from 'rxjs/operators';
 
-import { GET_RECRUITMENTS_START, getRecruitmentsFulfilled, setViewingRecruitmentFulfilled } from 'Actions';
+import { GET_RECRUITMENTS_START, getRecruitmentsFulfilled, setViewingRecruitmentFulfilled, toggleProgress } from 'Actions';
 import { StoreState } from 'Reducers';
 
 import { API } from 'Config/consts';
 import { Recruitment } from 'Config/types';
 
-import { Action, checkToken, customError, Dependencies, errHandler, RECRUITMENT } from 'Epics';
+import { Action, checkToken, customError, Dependencies, errHandler } from 'Epics';
 
 export const getRecruitmentsEpic: Epic<Action, Action, StoreState, Dependencies> = (action$, state$, { sessionStorage }) =>
     action$.pipe(
@@ -26,24 +26,20 @@ export const getRecruitmentsEpic: Epic<Action, Action, StoreState, Dependencies>
             return ajax.getJSON(`${API}/recruitment/`, {
                 Authorization: `Bearer ${token}`,
             }).pipe(
-                map((res: { type: string, data: Recruitment[] }) => {
+                mergeMap((res: { type: string, data: Recruitment[] }) => {
                     if (res.type === 'success') {
-                        return res.data;
+                        const data = res.data;
+                        return of(
+                            getRecruitmentsFulfilled(data),
+                            setViewingRecruitmentFulfilled(viewing ? viewing : data.slice(-1)[0] ? data.slice(-1)[0].title : ''),
+                            toggleProgress()
+                        );
                     }
                     throw customError(res);
                 }),
-                mergeMap((data) => of(
-                    getRecruitmentsFulfilled(data),
-                    setViewingRecruitmentFulfilled(viewing ? viewing : data.slice(-1)[0] ? data.slice(-1)[0].title : ''),
-                )),
-                startWith(
-                    { type: RECRUITMENT.START },
-                ),
-                endWith(
-                    { type: RECRUITMENT.SUCCESS },
-                ),
-                catchError((err) => errHandler(err, RECRUITMENT)),
+                startWith(toggleProgress(true)),
+                catchError((err) => errHandler(err)),
             );
         }),
-        catchError((err) => errHandler(err, RECRUITMENT)),
+        catchError((err) => errHandler(err)),
     );

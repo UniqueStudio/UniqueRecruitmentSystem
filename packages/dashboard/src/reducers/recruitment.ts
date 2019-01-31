@@ -1,5 +1,4 @@
 import * as actions from 'Actions';
-import { RECRUITMENT } from 'Epics';
 
 import { Recruitment } from 'Config/types';
 import { updateStorage } from 'Utils/updateStorage';
@@ -26,12 +25,6 @@ const init: RecruitmentStore = {
 
 export function recruitmentReducer(state = init, action: Action): RecruitmentStore {
     switch (action.type) {
-        case RECRUITMENT.START:
-            return { ...state, isLoading: true };
-        case RECRUITMENT.FAILURE:
-            return { ...state, isLoading: false };
-        case RECRUITMENT.SUCCESS:
-            return { ...state, isLoading: false };
         case actions.GET_RECRUITMENTS_FULFILLED:
             const { recruitments } = action;
             updateStorage('recruitments')(recruitments);

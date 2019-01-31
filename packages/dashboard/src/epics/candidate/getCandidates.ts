@@ -2,14 +2,14 @@ import { Candidate } from 'Config/types';
 import { Epic, ofType } from 'redux-observable';
 import { of } from 'rxjs';
 import { ajax } from 'rxjs/ajax';
-import { catchError, endWith, map, mergeMap, startWith } from 'rxjs/operators';
+import { catchError, mergeMap, startWith } from 'rxjs/operators';
 
-import { GET_CANDIDATES_START, getCandidatesFulfilled, GetCandidatesStart } from 'Actions';
+import { GET_CANDIDATES_START, getCandidatesFulfilled, GetCandidatesStart, toggleProgress } from 'Actions';
 import { StoreState } from 'Reducers';
 
 import { API } from 'Config/consts';
 
-import { Action, CANDIDATE, checkToken, customError, Dependencies, errHandler } from 'Epics';
+import { Action, checkToken, customError, Dependencies, errHandler } from 'Epics';
 
 export const getCandidatesEpic: Epic<Action, Action, StoreState, Dependencies> = (action$, state$, { sessionStorage }) =>
     action$.pipe(
@@ -30,7 +30,7 @@ export const getCandidatesEpic: Epic<Action, Action, StoreState, Dependencies> =
             return ajax.getJSON(`${API}/candidate/${JSON.stringify({ title, step, group })}`, {
                 Authorization: `Bearer ${token}`,
             }).pipe(
-                map((res: { type: string, data: Candidate[] }) => {
+                mergeMap((res: { type: string, data: Candidate[] }) => {
                     if (res.type === 'success') {
                         const old = JSON.parse(candidates || '[]') as Candidate[];
                         res.data.forEach((newInfo) => {
@@ -41,19 +41,16 @@ export const getCandidatesEpic: Epic<Action, Action, StoreState, Dependencies> =
                                 old[index] = newInfo;
                             }
                         });
-                        return old;
+                        return of(
+                            getCandidatesFulfilled(old),
+                            toggleProgress()
+                        );
                     }
                     throw customError(res);
                 }),
-                map((data) => getCandidatesFulfilled(data)),
-                startWith(
-                    { type: CANDIDATE.START },
-                ),
-                endWith(
-                    { type: CANDIDATE.SUCCESS },
-                ),
-                catchError((err) => errHandler(err, CANDIDATE)),
+                startWith(toggleProgress(true)),
+                catchError((err) => errHandler(err)),
             );
         }),
-        catchError((err) => errHandler(err, CANDIDATE))
+        catchError((err) => errHandler(err))
     );

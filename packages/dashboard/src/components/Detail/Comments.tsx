@@ -17,23 +17,40 @@ interface Props extends WithStyles {
     uid: string;
     username: string;
     comments: Comment[];
-    savedComment: {
-        content: string;
-        evaluation: Evaluation;
-    };
+    savedComment: State;
     submit: (cid: string, comment: Partial<Comment>) => void;
     remove: (cid: string, id: string) => void;
     enqueueSnackbar: InjectedNotistackProps['enqueueSnackbar'];
     changeInputting: (content: string, evaluation: Evaluation) => void;
 }
 
+interface State {
+    content: string;
+    evaluation: Evaluation;
+}
+
 class Comments extends PureComponent<Props> {
+
     state = {
         evaluation: this.props.savedComment.evaluation,
         content: this.props.savedComment.content,
     };
 
-    handleChange = (name: string) => ({ target: { value } }: React.ChangeEvent<HTMLInputElement>) => {
+    handleKey = (event: React.KeyboardEvent) => {
+        const { ctrlKey, charCode } = event;
+        if (ctrlKey && charCode === 13) {
+            console.log('aaa');
+            this.setState(({ content }: State) => ({
+                content: content + '\n',
+            }));
+        }
+        if (!ctrlKey && charCode === 13) {
+            event.preventDefault();
+            this.handleSubmit();
+        }
+    };
+
+    handleChange = (name: 'content' | 'evaluation') => ({ target: { value } }: React.ChangeEvent<HTMLInputElement>) => {
         this.setState({
             [name]: value,
         });
@@ -91,6 +108,7 @@ class Comments extends PureComponent<Props> {
                         className={classes.comment}
                         value={this.state.content}
                         onChange={this.handleChange('content')}
+                        onKeyPress={this.handleKey}
                     />
                     <Button color='primary' size='large' onClick={this.handleSubmit}>发表评论</Button>
                 </div>

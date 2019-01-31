@@ -43,13 +43,8 @@ class Messenger extends PureComponent<Props, State> {
     end = document.body;
 
     handleKey = (event: React.KeyboardEvent) => {
-        const { ctrlKey, charCode } = event;
-        if (ctrlKey && charCode === 13) {
-            this.setState(({ content }) => ({
-                content: content + '\n',
-            }));
-        }
-        if (!ctrlKey && charCode === 13) {
+        const { charCode } = event;
+        if (charCode === 13) {
             event.preventDefault();
             const { content } = this.state;
             if (content && content.match(/\S+/)) {
