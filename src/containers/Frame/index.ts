@@ -10,30 +10,29 @@ import {
     GetRecruitmentsStart,
     getUserInfoStart,
     GetUserInfoStart,
-    toggleDrawerOpen,
-    ToggleDrawerOpen
+    toggleDrawer,
+    ToggleDrawer
 } from 'Actions';
 import { StoreState } from 'Reducers';
 
 import Frame from 'Components/Frame';
 
-const mapStateToProps = ({ user, candidate, recruitment, sms, component }: StoreState) => ({
-    open: component.drawerOpen,
-    loggedIn: Boolean(user.token),
-    userInfo: user.info,
-    loading: [...Object.values(candidate.isLoading), user.isLoading, recruitment.isLoading, sms.isLoading].includes(true),
-    viewingRecruitment: recruitment.viewing
+const mapStateToProps = ({ user: { token, info }, recruitment: { viewing }, component: { drawerOpen, progressOn } }: StoreState) => ({
+    open: drawerOpen,
+    loggedIn: Boolean(token),
+    userInfo: info,
+    loading: progressOn,
+    viewingRecruitment: viewing
 });
 
-type DispatchType = Dispatch<
-    | GetUserInfoStart
-    | ToggleDrawerOpen
+type DispatchType = Dispatch<| GetUserInfoStart
+    | ToggleDrawer
     | GetGroupInfoStart
     | GetRecruitmentsStart
     | GetCandidatesStart>;
 
 const mapDispatchToProps = (dispatch: DispatchType) => ({
-    toggleOpen: () => dispatch(toggleDrawerOpen()),
+    toggleOpen: () => dispatch(toggleDrawer()),
     getUserInfo: () => dispatch(getUserInfoStart()),
     getRecruitments: () => dispatch(getRecruitmentsStart()),
     getCandidates: (title: string) => dispatch(getCandidatesStart(title)),

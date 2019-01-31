@@ -14,9 +14,8 @@ interface OwnProps {
     toggleDetail: (index: number) => () => void;
 }
 
-const mapStateToProps = ({ candidate: { selected }, component: { modalOn } }: StoreState, ownProps: OwnProps) => ({
+const mapStateToProps = ({ candidate: { selected } }: StoreState, ownProps: OwnProps) => ({
     selected,
-    modalOn,
     ...ownProps
 });
 

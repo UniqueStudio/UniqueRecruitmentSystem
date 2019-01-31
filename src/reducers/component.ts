@@ -3,27 +3,30 @@ import * as actions from 'Actions';
 type Action =
     actions.EnqueueSnackbar
     | actions.RemoveSnackbar
-    | actions.ToggleDrawerOpen
+    | actions.ToggleDrawer
+    | actions.ToggleProgress
     | actions.ToggleFabOn
     | actions.ToggleFabOff;
 
 export interface ComponentStore {
     drawerOpen: boolean;
     snackbars: actions.EnqueueSnackbar['notification'][];
-    modalOn: string;
     fabOn: number;
+    progressOn: boolean;
 }
 
 const init: ComponentStore = {
+    progressOn: false,
     drawerOpen: false,
     snackbars: [],
-    modalOn: '',
     fabOn: -1,
 };
 
 export function componentReducer(state = init, action: Action): ComponentStore {
     switch (action.type) {
-        case actions.TOGGLE_DRAWER_OPEN:
+        case actions.TOGGLE_PROGRESS:
+            return { ...state, progressOn: action.on };
+        case actions.TOGGLE_DRAWER:
             return { ...state, drawerOpen: !state.drawerOpen };
         case actions.ENQUEUE_SNACKBAR:
             return { ...state, snackbars: [...state.snackbars, { ...action.notification }] };

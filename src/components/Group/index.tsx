@@ -14,7 +14,7 @@ import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 import { GENDERS } from 'Config/consts';
 import { /*Candidate, User as GroupType, Recruitment, Time, */User } from 'Config/types';
 import styles from 'Styles/group';
-import titleConverter from 'Utils/titleConverter';
+import { titleConverter } from 'Utils/titleConverter';
 
 // import GroupCandidates from './GroupCandidates';
 // import GroupDialog from './GroupDialog';

@@ -2,12 +2,12 @@ import { Epic, ofType } from 'redux-observable';
 import { from } from 'rxjs';
 import { catchError, map, mergeMap, startWith } from 'rxjs/operators';
 
-import { GET_RESUME, GetResume } from 'Actions';
+import { GET_RESUME, GetResume, toggleProgress } from 'Actions';
 import { StoreState } from 'Reducers';
 
 import { API } from 'Config/consts';
 
-import { Action, CANDIDATE, checkToken, customError, Dependencies, errHandler } from 'Epics';
+import { Action, checkToken, customError, Dependencies, errHandler } from 'Epics';
 
 const downloadResume = (res: Response) => {
     if (!res.ok) {
@@ -40,7 +40,7 @@ const downloadResume = (res: Response) => {
             a.click();
             document.body.removeChild(a);
             window.URL.revokeObjectURL(url);
-            return { type: CANDIDATE.SUCCESS };
+            return toggleProgress();
         }),
     );
 };
@@ -57,11 +57,9 @@ export const getResumeEpic: Epic<Action, Action, StoreState, Dependencies> = (ac
                 },
             })).pipe(
                 mergeMap(downloadResume),
-                startWith(
-                    { type: CANDIDATE.START },
-                ),
-                catchError((err) => errHandler(err, CANDIDATE)),
+                startWith(toggleProgress(true)),
+                catchError((err) => errHandler(err)),
             );
         }),
-        catchError((err) => errHandler(err, CANDIDATE)),
+        catchError((err) => errHandler(err)),
     );

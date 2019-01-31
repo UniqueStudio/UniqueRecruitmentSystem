@@ -1,13 +1,14 @@
 import { Epic, ofType } from 'redux-observable';
+import { of } from 'rxjs';
 import { ajax } from 'rxjs/ajax';
-import { catchError, endWith, map, mergeMap, startWith } from 'rxjs/operators';
+import { catchError, mergeMap, startWith } from 'rxjs/operators';
 
-import { enqueueSnackbar, GET_VERIFY_CODE } from 'Actions';
+import { enqueueSnackbar, GET_VERIFY_CODE, toggleProgress } from 'Actions';
 import { StoreState } from 'Reducers';
 
 import { API } from 'Config/consts';
 
-import { Action, checkToken, customError, Dependencies, errHandler, SMS } from 'Epics';
+import { Action, checkToken, customError, Dependencies, errHandler } from 'Epics';
 
 export const getCodeEpic: Epic<Action, Action, StoreState, Dependencies> = (action$) =>
     action$.pipe(
@@ -17,20 +18,18 @@ export const getCodeEpic: Epic<Action, Action, StoreState, Dependencies> = (acti
             return ajax.getJSON(`${API}/sms/verification/user`, {
                 Authorization: `Bearer ${token}`,
             }).pipe(
-                map((res: { type: string }) => {
+                mergeMap((res: { type: string }) => {
                     if (res.type === 'success') {
-                        return enqueueSnackbar('验证码已发送！', { variant: 'success' });
+                        return of(
+                            enqueueSnackbar('验证码已发送！', { variant: 'success' }),
+                            toggleProgress(),
+                        );
                     }
                     throw customError(res);
                 }),
-                startWith(
-                    { type: SMS.START },
-                ),
-                endWith(
-                    { type: SMS.SUCCESS },
-                ),
-                catchError((err) => errHandler(err, SMS)),
+                startWith(toggleProgress(true)),
+                catchError((err) => errHandler(err)),
             );
         }),
-        catchError((err) => errHandler(err, SMS))
+        catchError((err) => errHandler(err))
     );

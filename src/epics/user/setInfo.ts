@@ -1,13 +1,14 @@
 import { Epic, ofType } from 'redux-observable';
+import { of } from 'rxjs';
 import { ajax, AjaxResponse } from 'rxjs/ajax';
-import { catchError, endWith, map, mergeMap, startWith } from 'rxjs/operators';
+import { catchError, mergeMap, startWith } from 'rxjs/operators';
 
-import { enqueueSnackbar, SET_USER_INFO_START, SetUserInfoStart, userInfoFulfilled } from 'Actions';
+import { enqueueSnackbar, SET_USER_INFO_START, SetUserInfoStart, toggleProgress, userInfoFulfilled } from 'Actions';
 import { StoreState } from 'Reducers';
 
 import { API } from 'Config/consts';
 
-import { Action, checkToken, customError, Dependencies, errHandler, USER } from 'Epics';
+import { Action, checkToken, customError, Dependencies, errHandler } from 'Epics';
 
 export const setInfoEpic: Epic<Action, Action, StoreState, Dependencies> = (action$) =>
     action$.pipe(
@@ -19,23 +20,19 @@ export const setInfoEpic: Epic<Action, Action, StoreState, Dependencies> = (acti
                 'Authorization': `Bearer ${token}`,
                 'Content-Type': 'application/json',
             }).pipe(
-                map(({ response: res }: AjaxResponse) => {
+                mergeMap(({ response: res }: AjaxResponse) => {
                     if (res.type === 'success') {
-                        return userInfoFulfilled(info);
+                        return of(
+                            userInfoFulfilled(info),
+                            toggleProgress(),
+                            enqueueSnackbar('已成功修改信息！', { variant: 'success' }),
+                        );
                     }
                     throw customError(res);
                 }),
-                startWith(
-                    { type: USER.START },
-                ),
-                endWith(
-                    { type: USER.SUCCESS },
-                    enqueueSnackbar('已成功修改信息！', {
-                        variant: 'success'
-                    }),
-                ),
-                catchError((err) => errHandler(err, USER)),
+                startWith(toggleProgress(true)),
+                catchError((err) => errHandler(err)),
             );
         }),
-        catchError((err) => errHandler(err, USER)),
+        catchError((err) => errHandler(err)),
     );

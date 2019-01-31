@@ -12,8 +12,8 @@ import {
     setGroup,
     SetSteps,
     setSteps,
-    ToggleDrawerOpen,
-    toggleDrawerOpen
+    ToggleDrawer,
+    toggleDrawer
 } from 'Actions';
 import { StoreState } from 'Reducers';
 
@@ -30,10 +30,10 @@ const mapStateToProps =
         ...ownProps,
     });
 
-type DispatchType = Dispatch<ToggleDrawerOpen | Logout | GetCandidatesStart | SetGroup | SetSteps>;
+type DispatchType = Dispatch<ToggleDrawer | Logout | GetCandidatesStart | SetGroup | SetSteps>;
 
 const mapDispatchToProps = (dispatch: DispatchType) => ({
-    toggleDrawerOpen: () => dispatch(toggleDrawerOpen()),
+    toggleDrawer: () => dispatch(toggleDrawer()),
     logout: () => dispatch(logout()),
     setGroup: (group: Group) => dispatch(setGroup(group)),
     setSteps: (stepType: number) => dispatch(setSteps(stepType)),

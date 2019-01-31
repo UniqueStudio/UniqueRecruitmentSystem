@@ -1,13 +1,14 @@
 import { Epic, ofType } from 'redux-observable';
+import { of } from 'rxjs';
 import { ajax, AjaxResponse } from 'rxjs/ajax';
-import { catchError, endWith, map, mergeMap, startWith } from 'rxjs/operators';
+import { catchError, mergeMap, startWith } from 'rxjs/operators';
 
-import { enqueueSnackbar, getRecruitmentsStart, LAUNCH_RECRUITMENT, LaunchRecruitment, setShouldUpdateRecruitment } from 'Actions';
+import { enqueueSnackbar, getRecruitmentsStart, LAUNCH_RECRUITMENT, LaunchRecruitment, setShouldUpdateRecruitment, toggleProgress } from 'Actions';
 import { StoreState } from 'Reducers';
 
 import { API } from 'Config/consts';
 
-import { Action, checkToken, customError, Dependencies, errHandler, RECRUITMENT } from 'Epics';
+import { Action, checkToken, customError, Dependencies, errHandler } from 'Epics';
 
 export const launchRecruitmentsEpic: Epic<Action, Action, StoreState, Dependencies> = (action$) =>
     action$.pipe(
@@ -18,22 +19,20 @@ export const launchRecruitmentsEpic: Epic<Action, Action, StoreState, Dependenci
                 'Authorization': `Bearer ${token}`,
                 'Content-Type': 'application/json',
             }).pipe(
-                map(({ response: res }: AjaxResponse) => {
+                mergeMap(({ response: res }: AjaxResponse) => {
                     if (res.type === 'success') {
-                        return setShouldUpdateRecruitment();
+                        return of(
+                            setShouldUpdateRecruitment(),
+                            enqueueSnackbar('已成功发起招新！', { variant: 'success' }),
+                            getRecruitmentsStart(),
+                            toggleProgress(),
+                        );
                     }
                     throw customError(res);
                 }),
-                startWith(
-                    { type: RECRUITMENT.START },
-                ),
-                endWith(
-                    enqueueSnackbar('已成功发起招新！', { variant: 'success' }),
-                    getRecruitmentsStart(),
-                    { type: RECRUITMENT.SUCCESS },
-                ),
-                catchError((err) => errHandler(err, RECRUITMENT)),
+                startWith(toggleProgress(true)),
+                catchError((err) => errHandler(err)),
             );
         }),
-        catchError((err) => errHandler(err, RECRUITMENT)),
+        catchError((err) => errHandler(err)),
     );

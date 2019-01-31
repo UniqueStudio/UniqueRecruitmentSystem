@@ -5,7 +5,7 @@ import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { addMessage, SEND_MESSAGE, SendMessage } from 'Actions';
 import { StoreState } from 'Reducers';
 
-import { Action, checkToken, Dependencies, errHandler, Socket, USER } from 'Epics';
+import { Action, checkToken, Dependencies, errHandler, Socket } from 'Epics';
 
 export const sendMessageEpic: Epic<Action, Action, StoreState, Dependencies> = (action$, state$, { socket$ }) =>
     socket$.pipe(
@@ -22,8 +22,8 @@ export const sendMessageEpic: Epic<Action, Action, StoreState, Dependencies> = (
                 map(({ message }) => {
                     return addMessage(message);
                 }),
-                catchError((err) => errHandler(err, USER))
+                catchError((err) => errHandler(err))
             );
         }),
-        catchError((err) => errHandler(err, USER))
+        catchError((err) => errHandler(err))
     );
