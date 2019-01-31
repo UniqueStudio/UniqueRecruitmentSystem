@@ -8,7 +8,7 @@ import Table from 'Components/Table';
 import { Candidate, Group, Recruitment as RecruitmentType } from 'Config/types';
 
 import styles from 'Styles/data';
-import sortBySlot from 'Utils/sortBySlot';
+import { sortBySlot } from 'Utils/sortBySlot';
 
 interface Props extends WithStyles {
     candidates: Candidate[];

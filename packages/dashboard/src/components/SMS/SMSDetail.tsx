@@ -12,7 +12,7 @@ import styles from 'Styles/template';
 
 import { STEPS } from 'Config/consts';
 import { Step } from 'Config/types';
-import generateModel from 'Utils/generateModel';
+import { generateModel } from 'Utils/generateModel';
 
 export interface MainInfo extends WithStyles {
     type: string;

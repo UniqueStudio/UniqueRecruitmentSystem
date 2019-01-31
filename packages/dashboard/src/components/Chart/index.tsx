@@ -15,7 +15,7 @@ import { Recruitment } from 'Config/types';
 
 import styles from 'Styles/dashboard';
 import { getColors } from 'Styles/index';
-import titleConverter from 'Utils/titleConverter';
+import { titleConverter } from 'Utils/titleConverter';
 
 interface Props extends WithStyles {
     data: Recruitment;

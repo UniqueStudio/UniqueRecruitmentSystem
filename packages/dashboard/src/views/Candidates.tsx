@@ -10,7 +10,7 @@ import { STEPS } from 'Config/consts';
 import { Candidate, Step, User } from 'Config/types';
 import Detail from 'Containers/Detail';
 import Template from 'Containers/SMS';
-import sortBySlot from 'Utils/sortBySlot';
+import { sortBySlot } from 'Utils/sortBySlot';
 
 interface Props {
     group: string;
@@ -37,6 +37,16 @@ class Candidates extends PureComponent<Props> {
         direction: 'left' as 'left',
         todo: () => undefined
     };
+
+    componentDidUpdate(prevProps: Props) {
+        const prev = prevProps.candidates.filter(({ step }) => step === this.state.step);
+        const now = this.props.candidates.filter(({ step }) => step === this.state.step);
+        if (prev.length !== now.length) {
+            this.setState({
+                index: -1
+            });
+        }
+    }
 
     divideSteps = (candidates: Candidate[], shouldSpread = false) => {
         let candidateInSteps = STEPS.map((_, i) => candidates.filter(({ step }) => step === i));
@@ -108,9 +118,6 @@ class Candidates extends PureComponent<Props> {
         const { state, props, toggleOpen, handleRemove, handleNext, handlePrev, toggleDetail, divideSteps, handleTodo } = this;
         const { selected, candidates, fabOn, select, deselect, toggleFabOff, group, userInfo, move, steps } = props;
         const { modal, dialog, step, index, direction } = state;
-        if (!candidates) {
-            return null;
-        }
         const candidatesInGroup = candidates.filter((candidate) => candidate.group === group);
         const selectedInfo = selected.map((id) => candidatesInGroup.find(({ _id }) => id === _id)) as Candidate[];
         const candidatesInSteps = divideSteps(candidatesInGroup);

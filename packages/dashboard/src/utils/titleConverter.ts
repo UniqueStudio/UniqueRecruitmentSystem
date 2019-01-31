@@ -1,4 +1,4 @@
-export default (title: string) => {
+export const titleConverter = (title: string) => {
     try {
         const last = title.slice(4);
         const abbr = ['S', 'C', 'A'];

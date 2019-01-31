@@ -3,12 +3,12 @@ import { of } from 'rxjs';
 import { ajax, AjaxResponse } from 'rxjs/ajax';
 import { catchError, mergeMap, startWith } from 'rxjs/operators';
 
-import { enqueueSnackbar, SEND_SMS, SendSMS } from 'Actions';
+import { enqueueSnackbar, SEND_SMS, SendSMS, toggleProgress } from 'Actions';
 import { StoreState } from 'Reducers';
 
 import { API } from 'Config/consts';
 
-import { Action, checkToken, customError, Dependencies, errHandler, SMS } from 'Epics';
+import { Action, checkToken, customError, Dependencies, errHandler } from 'Epics';
 
 export const sendSMSEpic: Epic<Action, Action, StoreState, Dependencies> = (action$) =>
     action$.pipe(
@@ -23,21 +23,19 @@ export const sendSMSEpic: Epic<Action, Action, StoreState, Dependencies> = (acti
                     if (res.type === 'success') {
                         return of(
                             enqueueSnackbar('已成功发送短信', { variant: 'success' }),
-                            { type: SMS.SUCCESS },
+                            toggleProgress(),
                         );
                     } else if (res.messages) {
                         return of(
                             ...res.messages.map((message: string) => enqueueSnackbar(message, { variant: res.type })),
-                            { type: SMS.FAILURE },
+                            toggleProgress(),
                         );
                     }
                     throw customError(res);
                 }),
-                startWith(
-                    { type: SMS.START },
-                ),
-                catchError((err) => errHandler(err, SMS)),
+                startWith(toggleProgress(true)),
+                catchError((err) => errHandler(err)),
             );
         }),
-        catchError((err) => errHandler(err, SMS)),
+        catchError((err) => errHandler(err)),
     );
