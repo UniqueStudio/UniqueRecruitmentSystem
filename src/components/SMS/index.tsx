@@ -50,28 +50,11 @@ class Template extends PureComponent<Props> {
         place: '',
         rest: '',
         code: '',
-        sent: false,
     };
-
-    // static getDerivedStateFromProps(nextProps: Props, prevState: State) {
-    //     if (nextProps.selected !== prevState.selected) {
-    //         return {
-    //             selected: nextProps.selected,
-    //         };
-    //     }
-    //     if (nextProps.status === 'success' && prevState.sent) {
-    //         return {
-    //             activeStep: prevState.activeStep + 1,
-    //             sent: false,
-    //         };
-    //     }
-    //     return null;
-    // }
 
     handleBack = () => {
         this.setState(({ activeStep }: State) => ({
             activeStep: activeStep - 1,
-            sent: false,
         }));
     };
 
@@ -93,7 +76,6 @@ class Template extends PureComponent<Props> {
         };
         this.setState({
             code: '',
-            sent: true,
         });
         sendSMS(content);
     };

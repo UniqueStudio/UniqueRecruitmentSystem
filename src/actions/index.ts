@@ -14,16 +14,31 @@ export function socketStart(): SocketStart {
     };
 }
 
-export const TOGGLE_DRAWER_OPEN = 'TOGGLE_DRAWER_OPEN';
-export type TOGGLE_DRAWER_OPEN = typeof TOGGLE_DRAWER_OPEN;
+export const TOGGLE_PROGRESS = 'TOGGLE_PROGRESS';
+export type TOGGLE_PROGRESS = typeof TOGGLE_PROGRESS;
 
-export interface ToggleDrawerOpen {
-    type: TOGGLE_DRAWER_OPEN;
+export interface ToggleProgress {
+    type: TOGGLE_PROGRESS;
+    on: boolean;
 }
 
-export function toggleDrawerOpen(): ToggleDrawerOpen {
+export function toggleProgress(on = false): ToggleProgress {
     return {
-        type: TOGGLE_DRAWER_OPEN,
+        type: TOGGLE_PROGRESS,
+        on
+    };
+}
+
+export const TOGGLE_DRAWER = 'TOGGLE_DRAWER';
+export type TOGGLE_DRAWER = typeof TOGGLE_DRAWER;
+
+export interface ToggleDrawer {
+    type: TOGGLE_DRAWER;
+}
+
+export function toggleDrawer(): ToggleDrawer {
+    return {
+        type: TOGGLE_DRAWER,
     };
 }
 

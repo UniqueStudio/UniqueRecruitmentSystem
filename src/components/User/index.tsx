@@ -11,7 +11,7 @@ import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 import { GENDERS, GROUPS, GROUPS_ } from 'Config/consts';
 import { User as UserType } from 'Config/types';
 import styles from 'Styles/user';
-import titleConverter from 'Utils/titleConverter';
+import { titleConverter } from 'Utils/titleConverter';
 
 interface Props extends WithStyles {
     userInfo: UserType;

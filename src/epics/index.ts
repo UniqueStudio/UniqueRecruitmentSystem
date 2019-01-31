@@ -5,7 +5,7 @@ import io from 'socket.io-client';
 
 import { VariantType } from 'notistack';
 
-import { enqueueSnackbar } from 'Actions';
+import { enqueueSnackbar, toggleProgress } from 'Actions';
 import { StoreState } from 'Reducers';
 import { store } from '../App';
 
@@ -22,12 +22,6 @@ export interface Action {
     type: string;
 }
 
-interface ActionType {
-    START: string;
-    SUCCESS: string;
-    FAILURE: string;
-}
-
 interface CustomError extends Error {
     message: string;
     type?: VariantType;
@@ -39,24 +33,14 @@ export const customError = (error: object) => {
     return err as CustomError;
 };
 
-function actionTypeCreator(action: string) {
-    return {
-        START: `${action}_START`,
-        SUCCESS: `${action}_SUCCESS`,
-        FAILURE: `${action}_FAILURE`,
-    };
-}
-
-export const USER = actionTypeCreator('USER');
-export const CANDIDATE = actionTypeCreator('CANDIDATE');
-export const COMMENT = actionTypeCreator('COMMENT');
-export const RECRUITMENT = actionTypeCreator('RECRUITMENT');
-export const SMS = actionTypeCreator('SMS');
-
-export const errHandler = (err: CustomError, action: ActionType, customAction?: Action) => of(...[
+export const errHandler = (err: CustomError, customAction?: Action) => customAction ? of(
     enqueueSnackbar(`ERROR: ${err.message}`, { variant: err.type || 'error' }),
-    { type: action.FAILURE },
-].concat(customAction || []));
+    toggleProgress(),
+    customAction
+) : of(
+    enqueueSnackbar(`ERROR: ${err.message}`, { variant: err.type || 'error' }),
+    toggleProgress(),
+);
 
 export const checkToken = () => {
     const token = store.getState().user.token;

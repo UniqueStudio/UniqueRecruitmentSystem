@@ -24,7 +24,7 @@ import { version } from 'package.json';
 import { GROUPS, GROUPS_ } from 'Config/consts';
 import { Group, Step } from 'Config/types';
 import styles from 'Styles/appBar';
-import titleConverter from 'Utils/titleConverter';
+import { titleConverter } from 'Utils/titleConverter';
 
 import Messenger from 'Containers/Messenger';
 import Modal from '../Modal';
@@ -35,7 +35,7 @@ interface Props extends WithStyles {
     viewingRecruitment: string;
     group: string;
     steps: Step[];
-    toggleDrawerOpen: () => void;
+    toggleDrawer: () => void;
     logout: () => void;
     setGroup: (group: Group) => void;
     setSteps: (stepType: number) => void;
@@ -77,7 +77,7 @@ class Bar extends PureComponent<Props & RouteComponentProps> {
     };
 
     render() {
-        const { classes, open, toggleDrawerOpen, location: { pathname }, group, viewingRecruitment, steps } = this.props;
+        const { classes, open, toggleDrawer, location: { pathname }, group, viewingRecruitment, steps } = this.props;
         const { messenger, modal, anchorEl } = this.state;
         const title = titleConverter(viewingRecruitment);
         const pathToTitle = {
@@ -92,7 +92,7 @@ class Bar extends PureComponent<Props & RouteComponentProps> {
                     <Toolbar disableGutters={!open} classes={{ gutters: classes.appBarGutters, regular: classes.regular }}>
                         <IconButton
                             color='inherit'
-                            onClick={toggleDrawerOpen}
+                            onClick={toggleDrawer}
                             className={classNames(classes.menuButton, open && classes.hide)}
                         >
                             <MenuIcon />

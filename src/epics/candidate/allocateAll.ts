@@ -3,12 +3,12 @@ import { of } from 'rxjs';
 import { ajax, AjaxResponse } from 'rxjs/ajax';
 import { catchError, mergeMap, startWith } from 'rxjs/operators';
 
-import { ALLOCATE_ALL_START, allocateAllFulfilled, AllocateAllFulfilled, AllocateAllStart, enqueueSnackbar } from 'Actions';
+import { ALLOCATE_ALL_START, allocateAllFulfilled, AllocateAllFulfilled, AllocateAllStart, enqueueSnackbar, toggleProgress } from 'Actions';
 import { StoreState } from 'Reducers';
 
 import { API } from 'Config/consts';
 
-import { Action, CANDIDATE, checkToken, customError, Dependencies, errHandler } from 'Epics';
+import { Action, checkToken, customError, Dependencies, errHandler } from 'Epics';
 
 export const allocateAllEpic: Epic<Action, Action, StoreState, Dependencies> = (action$, state$) =>
     action$.pipe(
@@ -29,16 +29,14 @@ export const allocateAllEpic: Epic<Action, Action, StoreState, Dependencies> = (
                         return of(
                             allocateAllFulfilled(allocations, interviewType),
                             enqueueSnackbar(message, { variant: failed ? 'info' : 'success' }),
-                            { type: CANDIDATE.SUCCESS },
+                            toggleProgress(),
                         );
                     }
                     throw customError(res);
                 }),
-                startWith(
-                    { type: CANDIDATE.START },
-                ),
-                catchError((err) => errHandler(err, CANDIDATE)),
+                startWith(toggleProgress(true)),
+                catchError((err) => errHandler(err)),
             );
         }),
-        catchError((err) => errHandler(err, CANDIDATE)),
+        catchError((err) => errHandler(err)),
     );

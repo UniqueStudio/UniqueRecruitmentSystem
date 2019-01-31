@@ -13,7 +13,7 @@ import AddIcon from '@material-ui/icons/Add';
 
 import Verify from 'Containers/Verify';
 import styles from 'Styles/addOne';
-import titleConverter from 'Utils/titleConverter';
+import { titleConverter } from 'Utils/titleConverter';
 import BeginEnd from '../BeginEnd';
 import Modal from '../Modal';
 
