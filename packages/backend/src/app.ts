@@ -29,8 +29,8 @@ app.use(routes);
 app.use(errorHandler);
 
 export const server = https.createServer({
-    key: fs.readFileSync('/etc/v2ray/v2ray.key'),
-    cert: fs.readFileSync('/etc/v2ray/v2ray.crt')
+    key: fs.readFileSync('uniqcert.key'),
+    cert: fs.readFileSync('uniqcert.fullchain')
 }, app);
 // export const server = http.createServer(app);
 

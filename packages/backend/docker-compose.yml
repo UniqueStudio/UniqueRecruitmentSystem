@@ -6,25 +6,18 @@ services:
     image: mongo:latest
     environment:
     - MONGO_DATA_DIR=/data/database
-    - MONGO_LOG_DIR=/dev/null
     ports:
     - 38324:38324
-    command:
-    - mongod --port 38324
+    command: mongod --port 38324
   backend:
     build: .
     environment:
     - NODE_ENV=production
-    - MONGO_DATABASE=mongodb://mongodb/recruitment
     ports:
     - 5000:5000
     links:
     - mongodb
     - redis
-    depends_on:
-    - mongodb
-    - redis
     volumes:
-      - /etc/pki/tls/private/uniqcert.key:/etc/pki/tls/private/uniqcert.key
-      - /etc/pki/tls/uniqcert.fullchain:/etc/pki/tls/uniqcert.fullchain
-      - /home/bbs/backup/resumes:/www/resumes
+      - /etc/pki/tls/private/uniqcert.key:/usr/src/backend/uniqcert.key
+      - /etc/pki/tls/uniqcert.fullchain:/usr/src/backend/uniqcert.fullchain

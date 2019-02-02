@@ -1,6 +1,6 @@
 {
   "name": "unique-recruitment-backend",
-  "version": "2.0.0-beta.3",
+  "version": "2.0.0-rc.1",
   "description": "the backend for recruitment of Unique Studio",
   "author": "@winderica",
   "private": true,
