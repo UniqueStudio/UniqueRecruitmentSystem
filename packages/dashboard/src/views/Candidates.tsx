@@ -49,6 +49,7 @@ class Candidates extends PureComponent<Props> {
     }
 
     divideSteps = (candidates: Candidate[], shouldSpread = false) => {
+        candidates = candidates.filter((candidate) => candidate.group === this.props.group);
         let candidateInSteps = STEPS.map((_, i) => candidates.filter(({ step }) => step === i));
         if (candidateInSteps.length === 2) {
             candidateInSteps = candidateInSteps.map((toSort) => toSort.sort(sortBySlot));
@@ -119,9 +120,9 @@ class Candidates extends PureComponent<Props> {
         const { selected, candidates, fabOn, select, deselect, toggleFabOff, group, userInfo, move, steps } = props;
         const { modal, dialog, step, index, direction } = state;
         const { group: userGroup, isAdmin } = userInfo;
+        const candidatesInSteps = divideSteps(candidates);
         const candidatesInGroup = candidates.filter((candidate) => candidate.group === group);
         const selectedInfo = selected.map((id) => candidatesInGroup.find(({ _id }) => id === _id)) as Candidate[];
-        const candidatesInSteps = divideSteps(candidatesInGroup);
         return (
             <>
                 <Board move={move} steps={steps} candidates={candidatesInSteps} toggleDetail={toggleDetail} />
