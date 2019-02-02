@@ -2,6 +2,7 @@ import * as actions from '../actions';
 
 import { Message, User } from '../config/types';
 
+import { updateObjectInArray } from '../utils/reducerHelper';
 import { updateStorage } from '../utils/updateStorage';
 
 type Action =
@@ -67,9 +68,13 @@ export function userReducer(state = init, action: Action): UserStore {
             localStorage.removeItem('token');
             return { ...state, token: '' };
         case actions.USER_INFO_FULFILLED: {
-            const info = { ...state.info, ...action.info };
-            updateStorage('user')(info);
-            return { ...state, info };
+            const { info, groupInfo } = state;
+            const updatedInfo = { ...state.info, ...action.info };
+            const index = groupInfo.findIndex(({ _id }) => _id === info._id);
+            const updatedGroupInfo = updateObjectInArray(state.groupInfo, index, updatedInfo);
+            updateStorage('user')(updatedInfo);
+            updateStorage('group')(updatedGroupInfo);
+            return { ...state, info: updatedInfo, groupInfo: updatedGroupInfo };
         }
         case actions.GET_GROUP_INFO_FULFILLED: {
             const info = action.info;

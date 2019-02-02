@@ -127,7 +127,7 @@ export function candidateReducer(state = init, action: Action): CandidateStore {
             const { data, interviewType } = action;
             const { candidates } = state;
             const updatedCandidates = candidates.map((candidate) => {
-                const result = data.find(({cid}) => cid === candidate._id);
+                const result = data.find(({ id }) => id === candidate._id);
                 if (!result) {
                     return candidate;
                 }
