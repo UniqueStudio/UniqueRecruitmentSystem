@@ -8,6 +8,7 @@ $primaryLightest: #EBF0F4;
 $secondary: #F57E82;
 $secondaryLight: #F58086;
 $secondaryLighter: #FAF1F2;
+
 @font-face {
   font-family: 'Hiragino';
   src: url("../asset/font/Hiragino.ttf");
@@ -15,7 +16,7 @@ $secondaryLighter: #FAF1F2;
 
 * {
   box-sizing: border-box;
-  font-family: 'Hiragino';
+  font-family: Hiragino, 'Microsoft YaHei', 'Open Sans', Arial, sans-serif;
 }
 
 ::-webkit-scrollbar {
@@ -42,6 +43,11 @@ html {
 
 body {
   margin: 0;
+}
+
+input {
+  min-width: 0; // firefox && edge
+  -webkit-appearance: none; // mobile safari
 }
 
 .main {
@@ -102,10 +108,6 @@ body {
 .center {
   @media screen and (max-width: 1440px) {
     flex: 4;
-    margin: {
-      top: $spacing * 2;
-      bottom: $spacing;
-    }
   }
   @media screen and (max-width: 1024px) {
     flex: 6;
@@ -116,7 +118,7 @@ body {
   align-items: center;
   justify-content: center;
   margin: {
-    top: $spacing * 3;
+    top: $spacing * 2;
     bottom: $spacing * 2;
   }
 }
@@ -198,10 +200,8 @@ body {
   @media screen and (max-width: 800px) {
     font-size: 2.3rem;
   }
-  @media screen and (max-width: 640px) {
-    font-size: 2rem;
-  }
   @media screen and (max-width: 500px) {
+    font-size: 2rem;
     margin: $spacing 0 0;
   }
   margin: -$spacing * 2 0 0;
@@ -234,7 +234,7 @@ body {
   }
   @media screen and (max-width: 1280px) {
     width: 100%;
-    padding: $spacing * 6 $spacing * 5;
+    padding: $spacing * 4 $spacing * 5;
     flex: 0 1 30vw;
   }
   @media screen and (max-width: 1024px) {
@@ -296,11 +296,11 @@ body {
   @media screen and (max-width: 1440px) {
     border-radius: 8px;
   }
+  @media screen and (max-width: 1024px) {
+    border-width: 2px;
+  }
   @media screen and (max-width: 500px) {
-    border: {
-      radius: 12px;
-      width: 2px;
-    }
+    border-radius: 12px;
   }
 }
 
@@ -352,88 +352,14 @@ body {
     margin: 16px 20px;
     font-weight: normal;
   }
-  @media screen and (max-width: 400px) {
-    margin: 12px 16px;
-    font-weight: normal;
-  }
-  @media screen and (max-width: 320px) {
-    margin: 8px 12px;
-    font-weight: normal;
-  }
   margin: 16px 20px;
   @extend .fontSize;
   font-weight: bold;
   user-select: none;
 }
 
-@mixin getInputWidth($type) {
+.widthFull {
   width: 100%;
-  //@if $type == 'lg' {
-  //  width: 185px;
-  //  @media screen and (max-width: 1600px) {
-  //    width: 170px;
-  //  }
-  //  @media screen and (max-width: 1440px) {
-  //    width: 160px;
-  //  }
-  //  @media screen and (max-width: 1280px) {
-  //    width: 150px;
-  //  }
-  //  @media screen and (max-width: 1024px) {
-  //    width: 140px;
-  //  }
-  //}
-  //@if $type == 'ml' {
-  //  width: 145px;
-  //  @media screen and (max-width: 1600px) {
-  //    width: 130px;
-  //  }
-  //  @media screen and (max-width: 1440px) {
-  //    width: 115px;
-  //  }
-  //  @media screen and (max-width: 1280px) {
-  //    width: 105px;
-  //  }
-  //  @media screen and (max-width: 1024px) {
-  //    width: 95px;
-  //  }
-  //  @media screen and (max-width: 900px) {
-  //    width: 85px;
-  //  }
-  //}
-  //@if $type == 'md' {
-  //  width: 110px;
-  //  @media screen and (max-width: 1600px) {
-  //    width: 94px;
-  //  }
-  //  @media screen and (max-width: 1440px) {
-  //    width: 74px;
-  //  }
-  //  @media screen and (max-width: 1280px) {
-  //    width: 64px;
-  //  }
-  //  @media screen and (max-width: 1024px) {
-  //    width: 60px;
-  //  }
-  //  @media screen and (max-width: 900px) {
-  //    width: 54px;
-  //  }
-  //}
-  //@if $type == 'sm' {
-  //  width: 95px;
-  //  @media screen and (max-width: 1600px) {
-  //    width: 75px;
-  //  }
-  //  @media screen and (max-width: 1440px) {
-  //    width: 55px;
-  //  }
-  //  @media screen and (max-width: 1280px) {
-  //    width: 45px;
-  //  }
-  //  @media screen and (max-width: 1024px) {
-  //    width: 40px;
-  //  }
-  //}
 }
 
 .inputContent {
@@ -452,26 +378,6 @@ body {
   @media screen and (max-width: 1024px) {
     padding-left: $spacing / 2;
   }
-}
-
-.lg {
-  @include getInputWidth('lg')
-}
-
-.ml {
-  @include getInputWidth('ml')
-}
-
-.md {
-  @include getInputWidth('md')
-}
-
-.sm {
-  @include getInputWidth('sm')
-}
-
-.xs {
-  @include getInputWidth('xs')
 }
 
 .mobile_sm {
@@ -574,65 +480,6 @@ body {
   border: 0;
 }
 
-.formColumn {
-  display: inline-block;
-  width: 50%;
-  @media screen and (max-width: 500px) {
-    width: 90%;
-  }
-}
-
-.formColumn:first-child {
-  @media screen and (max-width: 1120px) {
-    padding-right: $spacing;
-  }
-  padding-right: $spacing * 2;
-}
-
-.formColumn:last-child {
-  @media screen and (max-width: 1120px) {
-    padding-left: $spacing;
-  }
-  padding-left: $spacing * 2;
-}
-
-.codeBox {
-  display: flex;
-  margin: 3px;
-  align-items: flex-end;
-}
-
-.codeButton {
-  margin: 0 $spacing 0 $spacing * 2.5;
-  @media screen and (max-width: 1440px) {
-    margin: 0 $spacing 0 $spacing * 2;
-  }
-  @media screen and (max-width: 1280px) {
-    margin: 0 $spacing;
-  }
-  @media screen and (max-width: 900px) {
-    margin: 0 $spacing / 2;
-  }
-  & > div {
-    margin: 0;
-  }
-}
-
-.rowItem {
-  justify-content: start;
-  align-items: center;
-  & > :first-child {
-    margin-right: 15%;
-  }
-}
-
-.rowItem:first-child {
-  margin-bottom: $spacing * 4;
-  @media screen and (max-width: 1440px) {
-    margin-bottom: $spacing * 3;
-  }
-}
-
 .submit {
   position: absolute;
   bottom: $spacing;
@@ -649,11 +496,13 @@ body {
     flex-direction: column;
     align-items: center;
   }
+
   button {
     border-radius: 8px;
     @media screen and (max-width: 500px) {
       width: auto;
     }
+
     div {
       font-size: 1.5rem;
       margin: $spacing $spacing * 4;
@@ -675,19 +524,6 @@ body {
 
 .disabled {
   cursor: auto;
-}
-
-.choose {
-  @media screen and (max-width: 500px) {
-    width: 80%;
-  }
-  @media screen and (max-width: 400px) {
-    width: 90%;
-  }
-}
-
-.selects {
-  width: 60%
 }
 
 .selectContainer {
@@ -758,10 +594,6 @@ body {
   transform: rotate(-90deg);
 }
 
-.up {
-  transition: transform 0.2s;
-}
-
 .contentPadding {
   @media screen and (max-width: 1600px) {
     padding: 15px 19px;
@@ -788,15 +620,16 @@ body {
   background: white;
   z-index: 1;
   @extend .border;
-  border-top: 0;
-  border-top-left-radius: 0;
-  border-top-right-radius: 0;
   max-height: 150px;
   @media screen and (max-width: 500px) {
     max-height: 300px;
+    border-top: 0;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
   }
   overflow-y: auto;
   transform: translateY(-4px);
+
   div {
     text-align: center;
     color: $primary;
@@ -837,31 +670,34 @@ body {
 
 .textAreaLabel {
   border-top-left-radius: 0;
+  @media screen and (min-width: 1024.1px) {
+    margin-left: -3px;
+  }
   @media screen and (min-width: 500.1px) {
     border-bottom-left-radius: 0;
     margin-top: $spacing * 2;
-    margin-left: -3px;
+    margin-left: -2px;
   }
   @media screen and (max-width: 500px) {
     border-top-right-radius: 0;
     margin-top: -2px;
     & > div {
-      margin: $spacing;
+      margin: $spacing * 2;
     }
   }
 }
 
 .textAreaContainer {
   height: 100%;
-  @media screen and (max-width: 500px) {
-    height: 200px;
-    flex-direction: column;
-    align-items: center;
-  }
   @extend .border;
   display: flex;
   align-items: flex-start;
-  overflow-x: visible;
+  @media screen and (max-width: 500px) {
+    height: 250px;
+    width: 90%;
+    flex-direction: column;
+    align-items: center;
+  }
 }
 
 .timeContainer {
@@ -971,11 +807,13 @@ body {
     display: block;
     margin-top: $spacing * 2;
   }
+
   & > button {
     @media screen and (max-width: 500px) {
       margin: $spacing * 3 0;
     }
   }
+
   @media screen and (max-width: 1280px) {
     margin-right: -$spacing * 2;
   }
@@ -1039,11 +877,13 @@ body {
     align-items: center;
   }
   justify-content: space-around;
+
   button {
     @media screen and (max-width: 360px) {
       margin: $spacing * 2 0;
     }
   }
+
   button div {
     margin: $spacing $spacing * 2;
     @media screen and (max-width: 1024px) {
@@ -1182,12 +1022,10 @@ body {
   grid-template-columns: repeat(8, 1fr);
   height: 100%;
   grid-row-gap: $spacing * 2;
-  grid-template-areas: "nm nm ml ml is is mj mj" "sx sx sx ph ph ph cd cd" "gd gd gp gp it it it it" "sc sc rs rs it it it it";
+  grid-template-areas: "nm nm is is mj mj rf rf" "ml ml ml ph ph cb cd cd" "gn gn gp gp it it it it" "gr gr sc sc it it it it" "rs rs qc qc it it it it";
+
   & > div {
     align-self: center;
-    &:last-child {
-      height: 100%;
-    }
   }
 }
 
@@ -1198,64 +1036,81 @@ body {
 
 .mail {
   grid-area: ml;
-  width: 110%;
-  margin-left: -5%;
+  width: 85%;
 }
 
 .institute {
   grid-area: is;
-  justify-self: flex-end;
-  width: 80%;
+  margin-left: -15%;
 }
 
 .major {
   grid-area: mj;
-  justify-self: flex-end;
-  width: 80%;
-}
-
-.sex {
-  grid-area: sx;
-  width: 90%;
+  margin-right: -15%;
+  margin-left: 5%;
 }
 
 .phone {
   grid-area: ph;
-  width: 115%;
-  @media screen and (max-width: 1440px) {
-    width: 120%;
-  }
-  .input {
-    width: 60%;
-  }
+  margin-left: -10%;
+  margin-right: 10%;
+}
+
+.codeButton {
+  grid-area: cb;
+  margin-left: -10%;
+  width: max-content;
 }
 
 .code {
   grid-area: cd;
   justify-self: flex-end;
-  @media screen and (max-width: 1440px) {
-    width: 70%;
-  }
   width: 80%;
 }
 
-.grade {
-  grid-area: gd;
-  width: 75%;
+.gender {
+  grid-area: gn;
+  width: 90%;
+
+  .selectMenu {
+    @extend .selectMenu;
+    border-top: 0;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+  }
 }
 
 .group {
   grid-area: gp;
-  width: 75%;
+  width: 90%;
+
+  .selectMenu {
+    @extend .selectMenu;
+    border-top: 0;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+  }
+}
+
+.grade {
+  grid-area: gr;
+  width: 90%;
+
+  .selectMenu {
+    @extend .selectMenu;
+    bottom: -50px;
+    max-height: 200px;
+  }
 }
 
 .score {
   grid-area: sc;
-  width: 75%;
+  width: 90%;
+
   .selectMenu {
+    @extend .selectMenu;
     bottom: -50px;
-    @extend .border;
-    max-height: 250px;
+    max-height: 200px;
   }
 }
 
@@ -1265,7 +1120,14 @@ body {
 }
 
 .intro {
-  grid-area: it
+  grid-area: it;
+  height: 100%;
+}
+
+.referrer {
+  grid-area: rf;
+  width: 80%;
+  justify-self: end;
 }
 
 .popover {
@@ -1284,9 +1146,11 @@ body {
   border-color: $primaryLightLittle;
   text-align: left;
   font-weight: normal;
+
   p {
     margin: $spacing / 2;
   }
+
   @media screen and (max-width: 1280px) {
     bottom: $spacing * 2;
   }
@@ -1302,58 +1166,56 @@ body {
 }
 
 .quick {
-  @extend .fontSize;
-  color: $primary;
-  font-weight: bold;
-  text-align: right;
-  margin-top: $spacing;
-  user-select: none;
-  position: relative;
-  -webkit-tap-highlight-color: transparent;
-  @media screen and (max-width: 900px) {
-    margin-top: 0;
-  }
-  @media screen and (max-width: 500px) {
-    margin-top: $spacing * 2;
-    font-size: 1.2rem;
-  }
-  @media screen and (max-width: 350px) {
-    font-size: 1rem;
-  }
-  input {
-    display: none;
-  }
-  label {
-    .checker {
-      height: 10px;
-      width: 10px;
-      @media screen and (max-width: 500px) {
-        height: 12px;
-        width: 12px;
-      }
-      margin-right: $spacing / 2;
-      background-color: #eee;
-      transition: background-color 300ms;
-      display: inline-block;
-      vertical-align: baseline;
-    }
-    cursor: pointer;
-  }
-  input:checked ~ label .checker {
-    background-color: $primary;
-  }
-  @media screen and (min-width: 500.1px) {
-    label:hover .checker {
-      background-color: $primaryLight;
-    }
-    label:hover .popover {
-      opacity: 1;
-      visibility: visible;
-    }
-  }
-}
-
-input {
-  min-width: 0; // firefox && edge
-  -webkit-appearance: none; // mobile safari
+  grid-area: qc;
+  width: 90%;
+  //@extend .fontSize;
+  //color: $primary;
+  //font-weight: bold;
+  //text-align: right;
+  //margin-top: $spacing;
+  //user-select: none;
+  //position: relative;
+  //-webkit-tap-highlight-color: transparent;
+  //@media screen and (max-width: 900px) {
+  //  margin-top: 0;
+  //}
+  //@media screen and (max-width: 500px) {
+  //  margin-top: $spacing * 2;
+  //  font-size: 1.2rem;
+  //}
+  //@media screen and (max-width: 350px) {
+  //  font-size: 1rem;
+  //}
+  //
+  //input {
+  //  display: none;
+  //}
+  //
+  //label {
+  //  .checker {
+  //    height: 10px;
+  //    width: 10px;
+  //    @media screen and (max-width: 500px) {
+  //      height: 12px;
+  //      width: 12px;
+  //    }
+  //    margin-right: $spacing / 2;
+  //    background-color: #eee;
+  //    transition: background-color 300ms;
+  //    display: inline-block;
+  //    vertical-align: baseline;
+  //  }
+  //
+  //  cursor: pointer;
+  //}
+  //
+  //input:checked ~ label .checker {
+  //  background-color: $primary;
+  //}
+  //
+  //@media screen and (min-width: 500.1px) {
+  //  label:hover .checker {
+  //    background-color: $primaryLight;
+  //  }
+  //}
 }

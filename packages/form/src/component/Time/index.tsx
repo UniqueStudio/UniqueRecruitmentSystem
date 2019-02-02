@@ -1,81 +1,82 @@
-import * as React from 'react';
+import React, { PureComponent } from 'react';
+
 import classNames from 'classnames';
+import { URL } from '../../config/const';
 import Button from '../Button';
 import Modal from '../Modal';
 import Submitted from '../Submitted';
-import SnackBar from '../SnackBar';
-import { URL } from '../../const';
 
 interface Date {
-    date: string;
-    morning: boolean;
-    afternoon: boolean;
-    evening: boolean;
+    date: number;
+    morning: number;
+    afternoon: number;
+    evening: number;
 }
 
 interface Props {
-    isMobile: boolean
+    isMobile: boolean;
+    toggleSnackbar: (content: string) => void;
 }
 
-class Time extends React.Component<Props> {
+const getDate = (timestamp: number) => {
+    const date = new Date(timestamp);
+    return `${date.getMonth() + 1}月${date.getDate()}日`;
+};
+
+class Time extends PureComponent<Props> {
 
     state = {
         modal: '',
         clicked: [] as number[],
         confirmed: '',
-        content: '',
-        snackBarOn: false,
         cid: '',
         step: '',
         time: [] as Date[]
     };
 
-    componentDidMount() {
+    async componentDidMount() {
         const params = window.location.pathname.split('/').splice(1);
         const cid = params[1];
         const formId = params[0];
-        this.getForm(cid, formId);
+        await this.getForm(cid, formId);
     }
 
     getForm = async (cid: string, formId: string) => {
+        const { toggleSnackbar } = this.props;
         try {
-            const response = await fetch(`${URL}/form/${formId}/${cid}`);
+            const response = await fetch(`${URL}/candidate/${cid}/form/${formId}`);
             const result = await response.json();
             if (result.type === 'success') {
                 sessionStorage.setItem('token', result.token);
                 this.setState({
                     time: result.time,
                     step: formId[formId.length - 1],
-                    cid: cid
-                })
+                    cid
+                });
             } else {
-                this.setState({
-                    snackBarOn: true,
-                    content: '获取表单出了问题，请尝试重新加载'
-                })
+                return toggleSnackbar('获取表单出了问题，请尝试重新加载');
             }
         } catch (err) {
-            this.setState({
-                snackBarOn: true,
-                content: '获取表单出了问题，请尝试重新加载'
-            })
+            return toggleSnackbar('获取表单出了问题，请尝试重新加载');
         }
     };
 
     submitForm = async (time: object[], type: string, token: string) => {
+        const { toggleSnackbar } = this.props;
+        const { cid, modal, step } = this.state;
         try {
-            const response = await fetch(`${URL}/candidates/${this.state.cid}`, {
+            const response = await fetch(`${URL}/candidates/${cid}`, {
                 method: 'PUT',
                 headers: {
                     'content-type': 'application/json',
                     'Authorization': `Bearer ${token}`
                 },
                 body: JSON.stringify({
-                    patch: this.state.modal === 'abandon'
+                    patch: modal === 'abandon'
                         ? { abandon: true }
-                        : this.state.step === '1'
-                            ? { time1: time }
-                            : { time2: time }
+                        : step === '1'
+                            ? { groupInterview: time }
+                            : { teamInterview: time }
                 })
             });
             const result = await response.json();
@@ -83,55 +84,46 @@ class Time extends React.Component<Props> {
                 this.setState({
                     modal: '',
                     confirmed: type
-                })
+                });
             } else {
-                this.setState({
-                    snackBarOn: true,
-                    content: result.message
-                })
+                return toggleSnackbar(result.message);
             }
         } catch (err) {
-            this.setState({
-                snackBarOn: true,
-                content: '提交出现了问题，请尝试重新提交'
-            })
+            return toggleSnackbar('提交出现了问题，请尝试重新提交');
         }
     };
 
     handleClick = (action: string) => () => {
         this.setState({
             modal: action
-        })
+        });
     };
 
     handleSelect = (t: number) => () => {
         if (this.state.clicked.includes(t)) {
             this.setState({
-                clicked: this.state.clicked.filter(i => i !== t)
-            })
+                clicked: this.state.clicked.filter((i) => i !== t)
+            });
         } else {
             this.setState({
                 clicked: [...this.state.clicked, t]
-            })
+            });
         }
     };
 
-    handleConfirm = () => (type: string) => {
-        const time = this.state.time.map(i => ({ date: i.date, morning: false, afternoon: false, evening: false }));
-        this.state.clicked.map(i => {
+    handleConfirm = (type: string) => async () => {
+        const { toggleSnackbar } = this.props;
+        const time = this.state.time.map((i) => ({ date: i.date, morning: false, afternoon: false, evening: false }));
+        this.state.clicked.map((i) => {
             const int = Math.floor(i / 3);
             const res = i - int * 3;
             time[int][['morning', 'afternoon', 'evening'][res]] = true;
         });
         const token = sessionStorage.getItem('token');
         if (!token) {
-            this.setState({
-                snackBarOn: true,
-                content: 'token不存在'
-            });
-            return;
+            return toggleSnackbar('token不存在');
         }
-        this.submitForm(time, type, token)
+        await this.submitForm(time, type, token);
     };
 
     handleDeny = () => {
@@ -140,24 +132,19 @@ class Time extends React.Component<Props> {
         });
     };
 
-    handleClose = () => {
-        this.setState({
-            snackBarOn: false,
-            content: ''
-        })
-    };
-
-    public render() {
-        const { time, confirmed } = this.state;
+    render() {
+        const { time, confirmed, modal, clicked } = this.state;
         const { isMobile } = this.props;
-        const Buttons = (i: object, j: number) => ['上午', '下午', '晚上'].map((k, l) => {
-            const disabled = !i[['morning', 'afternoon', 'evening'][l]];
-            return <Button name={k} key={l}
-                           bgColor={disabled ? 'grey' : this.state.clicked.includes(j * 3 + l) ? 'primaryLight' : 'white'}
-                           textColor={disabled ? 'white' : 'primary'}
-                           onClick={(disabled || this.state.modal) ? undefined : this.handleSelect(j * 3 + l)}
-                           className={classNames({ disabled: disabled })}
-            />
+        const Buttons = (date: Date, j: number) => ['上午', '下午', '晚上'].map((k, l) => {
+            const disabled = !date[['morning', 'afternoon', 'evening'][l]];
+            return <Button
+                name={k}
+                key={l}
+                bgColor={disabled ? 'grey' : clicked.includes(j * 3 + l) ? 'primaryLight' : 'white'}
+                textColor={disabled ? 'white' : 'primary'}
+                onClick={disabled || modal ? undefined : this.handleSelect(j * 3 + l)}
+                className={classNames({ disabled })}
+            />;
         });
 
         return time.length !== 0 && (
@@ -178,45 +165,49 @@ class Time extends React.Component<Props> {
                             </h3>}
                         </div>
                         {confirmed === '' && <>
-                            {time.map((i, j) =>
-                                <div key={j} className='timeContent'>
-                                    <Button name={`${i.date.split('-')[1]}月${i.date.split('-')[2]}日`}
+                            {time.map((date, index) =>
+                                <div key={index} className='timeContent'>
+                                    <Button name={getDate(date.date)}
                                             bgColor='primary'
                                             textColor='white'
                                             className='disabled'
                                     />
                                     {isMobile ? <div className='timeButtons'>
-                                        {Buttons(i, j)}
-                                    </div> : Buttons(i, j)}
+                                        {Buttons(date, index)}
+                                    </div> : Buttons(date, index)}
                                 </div>
                             )}
                             <div className={classNames('submit', 'timeSubmit')}>
-                                {this.state.modal &&
-                                <Modal type={this.state.modal} onConfirm={this.handleConfirm()}
-                                       onDeny={this.handleDeny} />}
-                                <Button name='无法到场'
-                                        bgColor='primaryLightLittleMore'
-                                        textColor='white'
-                                        onClick={this.handleClick('abandon')}
+                                {modal && <Modal
+                                    type={modal}
+                                    onConfirm={this.handleConfirm(modal)}
+                                    onDeny={this.handleDeny}
+                                />}
+                                <Button
+                                    name='无法到场'
+                                    bgColor='primaryLightLittleMore'
+                                    textColor='white'
+                                    onClick={this.handleClick('abandon')}
                                 />
-                                <Button name='提交' bgColor='secondary' textColor='white'
-                                        onClick={this.state.clicked.length ? this.handleClick('submit') : undefined}
-                                        className={classNames({ 'disabled': this.state.clicked.length === 0 })}
+                                <Button
+                                    name='提交'
+                                    bgColor='secondary'
+                                    textColor='white'
+                                    onClick={clicked.length ? this.handleClick('submit') : undefined}
+                                    className={classNames({ 'disabled': !clicked.length })}
                                 />
                             </div>
                         </>}
-                        {
-                            this.state.confirmed !== '' &&
-                            <Submitted title='你的决定已提交' description={this.state.confirmed === 'abandon'
+                        {confirmed !== '' && <Submitted
+                            title='你的决定已提交'
+                            description={confirmed === 'abandon'
                                 ? '我们非常惋惜，希望下次招新能够与你相遇，再见！'
                                 : '你已成功提交面试时间，请等待我们的短信通知！'
-                            } />
-                        }
+                            }
+                        />}
                     </div>
                 </div>
-                <div
-                    className={classNames('layer', { none: this.state.modal === '' }, this.state.modal === 'submit' ? 'layerSecondary' : 'layerPrimary')} />
-                {this.state.snackBarOn && <SnackBar content={this.state.content} onClose={this.handleClose} />}
+                <div className={classNames('layer', { none: modal === '' }, modal === 'submit' ? 'layerSecondary' : 'layerPrimary')} />
             </>
         );
     }

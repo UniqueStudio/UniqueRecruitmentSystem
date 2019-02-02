@@ -1,4 +1,5 @@
-import * as React from 'react';
+import React, { PureComponent } from 'react';
+
 import classNames from 'classnames';
 
 interface Props {
@@ -10,9 +11,9 @@ interface Props {
     onClick?: () => void;
 }
 
-class Button extends React.Component<Props> {
+class Button extends PureComponent<Props> {
 
-    public render() {
+    render() {
         const { name, textColor, bgColor, id, className, onClick } = this.props;
         return (
             <button id={id}

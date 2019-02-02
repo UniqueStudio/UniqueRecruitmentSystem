@@ -1,45 +1,33 @@
-import * as React from 'react';
+import React, { PureComponent } from 'react';
+
 import classNames from 'classnames';
-import arrow from '../../asset/img/arrow.svg'
+import arrow from '../../asset/img/arrow.svg';
 
 interface Props {
     selections: string[];
-    name: string;
-    onChange: (e: React.ChangeEvent) => void;
+    value: string;
+    defaultValue: string;
+    handleSelect: (value: string | number) => () => void;
     onToggle: () => void;
     open: boolean;
 }
 
-class Select extends React.Component<Props> {
-    state = {
-        value: this.props.name,
-    };
+class Select extends PureComponent<Props> {
 
-    handleChange = (event: React.MouseEvent) => {
-        this.setState({
-            value: event.target['innerHTML']
-        });
-        const e = {target: {value: event.target['innerHTML']}} as any;
-        this.props.onChange(e as React.ChangeEvent);
-    };
-
-
-    public render() {
-        const { selections, name, open, onToggle } = this.props;
-        const { value } = this.state;
+    render() {
+        const { selections, defaultValue, open, onToggle, handleSelect, value } = this.props;
         return (
             <div className='selectContainer' onClick={onToggle}>
-                <div className={classNames('select', {'selectClicked': open})}>
-                    <div className={classNames('selectValue', {'hidden': value === name})}>{value}</div>
-                    <div className={classNames({'hidden': value !== name})}>{name}</div>
-                    <img src={arrow} className={classNames('selectArrow', {'selectArrowRotate': open})} />
+                <div className={classNames('select', { 'selectClicked': open })}>
+                    <div className={classNames('selectValue', { 'hidden': !value })}>{value}</div>
+                    <div className={classNames({ 'hidden': value })}>{defaultValue}</div>
+                    <img src={arrow} className={classNames('selectArrow', { 'selectArrowRotate': open })} alt='arrow' />
                 </div>
                 {open && <div className='selectMenu'>
                     {selections.map((i, j) =>
-                        <div key={j} onClick={this.handleChange}>{i}</div>
+                        <div key={j} onClick={handleSelect(j)}>{i}</div>
                     )}
                 </div>}
-
             </div>
         );
     }

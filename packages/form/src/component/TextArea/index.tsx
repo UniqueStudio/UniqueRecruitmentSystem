@@ -1,12 +1,13 @@
-import * as React from 'react';
+import React, { PureComponent } from 'react';
 import Button from '../Button';
 
 interface Props {
     onChange: (e: React.ChangeEvent) => void;
 }
 
-class TextArea extends React.Component<Props> {
-    public render() {
+class TextArea extends PureComponent<Props> {
+
+    render() {
         return (
             <div className='textAreaContainer'>
                 <Button name='自我介绍'

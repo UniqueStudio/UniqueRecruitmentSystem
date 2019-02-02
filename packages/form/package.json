@@ -1,33 +1,47 @@
 {
   "name": "unique-recruitment-form",
-  "version": "0.1.0",
+  "version": "2.0.0-beta.1",
+  "description": "the form for recruitment of Unique Studio",
+  "author": "@winderica",
   "private": true,
-  "homepage": "/",
+  "homepage": ".",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/UniqueStudio/UniqueRecruitmentForm.git"
+  },
+  "contributors": [
+    {
+      "name": "winderica",
+      "email": "winderica@gmail.com"
+    }
+  ],
   "dependencies": {
     "classnames": "^2.2.6",
-    "node-sass-chokidar": "^1.3.3",
-    "npm-run-all": "^4.1.3",
-    "react": "^16.4.1",
-    "react-dom": "^16.4.1",
-    "react-scripts-ts": "2.16.0"
+    "node-sass": "^4.11.0",
+    "react": "^16.8.0-alpha.1",
+    "react-dom": "^16.8.0-alpha.1",
+    "react-scripts": "^2.1.3"
   },
   "devDependencies": {
-    "@types/classnames": "^2.2.6",
-    "@types/jest": "^23.3.0",
-    "@types/node": "^10.5.2",
-    "@types/react": "^16.4.6",
-    "@types/react-dom": "^16.0.6",
-    "redux-devtools-extension": "latest",
-    "typescript": "^2.9.2"
+    "@types/classnames": "^2.2.7",
+    "@types/node": "^10.12.20",
+    "@types/react": "^16.7.22",
+    "@types/react-dom": "^16.0.11",
+    "font-spider": "^1.3.4",
+    "redux-devtools-extension": "^2.13.7",
+    "tslint": "^5.12.1",
+    "typescript": "^3.2.4"
   },
   "scripts": {
-    "build-css": "node-sass-chokidar src/ -o src/",
-    "watch-css": "npm run build-css && node-sass-chokidar src/ -o src/ --watch --recursive",
-    "start-js": "react-scripts-ts start",
-    "start": "npm-run-all -p watch-css start-js",
-    "build-js": "react-scripts-ts build",
-    "build": "npm-run-all build-css build-js",
-    "test": "react-scripts-ts test --env=jsdom",
-    "eject": "react-scripts-ts eject"
-  }
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ]
 }

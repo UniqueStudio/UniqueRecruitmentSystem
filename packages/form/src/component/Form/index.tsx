@@ -1,94 +1,49 @@
-import * as React from 'react';
+import React, { PureComponent } from 'react';
+
 import classNames from 'classnames';
+
+import { GENDERS, GRADES, GROUPS, RANKS, URL } from '../../config/const';
+import { Candidate } from '../../config/types';
+import { titleConverter } from '../../utils/titleConverter';
+import { upload } from '../../utils/upload';
+import { checkMail, checkPhone } from '../../utils/validators';
 import Button from '../Button';
 import Input from '../Input';
-import Choose from '../Choose';
+// import Popover from '../Popover';
 import Select from '../Select';
-import { GRADES, GROUPS, SCORES, URL } from '../../const';
-import TextArea from '../TextArea';
 import Submitted from '../Submitted';
-import SnackBar from '../SnackBar';
-import Popover from '../Popover';
+import TextArea from '../TextArea';
 
 interface Props {
     isMobile: boolean;
     submit: () => void;
+    toggleSnackbar: (content: string) => void;
+    title: string;
 }
 
-interface XHRTarget extends EventTarget {
-    responseText?: string;
-}
-
-interface XHREvent extends Event {
-    target: XHRTarget;
-}
-
-function upload(url: string, opts: RequestInit = {}, onProgress: (a: ProgressEvent) => any) {
-    return new Promise((res, rej) => {
-        const xhr = new XMLHttpRequest();
-        xhr.open(opts.method || 'get', url);
-        for (var k in opts.headers || {})
-            xhr.setRequestHeader(k, opts.headers![k]);
-        xhr.onload = (e: XHREvent) => res(e.target.responseText);
-        xhr.onerror = rej;
-        if (xhr.upload && onProgress)
-            xhr.upload.onprogress = onProgress;
-        xhr.send(opts.body);
-    });
-}
-
-class Form extends React.Component<Props> {
+class Form extends PureComponent<Props> {
     state = {
-        info: {
-            name: '',
-            mail: '',
-            institute: '',
-            major: '',
-            sex: '',
-            grade: '',
-            group: '',
-            score: '',
-            phone: '',
-            code: '',
-            intro: '',
-            resume: '',
-            isQuick: false
-        },
+        info: { referrer: '', resume: '', isQuick: false } as Candidate,
         submitted: false,
-        snackBarOn: false,
-        content: '',
-        open: '',
+        selecting: '',
         sent: false,
         popoverOn: false,
         time: 0,
         progress: 0
     };
 
-    interval = NaN;
+    interval = undefined as unknown as number;
 
-    checkMail = (mail: string) => {
-        const re = /^(([^<>()\[\].,;:\s@"]+(\.[^<>()\[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/i;
-        return re.test(mail);
-    };
-
-    checkPhone = (phone: string) => {
-        const re = /^((13[0-9])|(14[57])|(15[0-3,5-9])|166|(17[035678])|(18[0-9])|(19[89]))\d{8}$/i;
-        return re.test(phone);
-    };
-
-    checkChinese = (data: string) => {
-        const re = /^([\u4E00-\u9FCC\u3400-\u4DB5\uFA0E\uFA0F\uFA11\uFA13\uFA14\uFA1F\uFA21\uFA23\uFA24\uFA27-\uFA29]|[\ud840-\ud868][\udc00-\udfff]|\ud869[\udc00-\uded6\udf00-\udfff]|[\ud86a-\ud86c][\udc00-\udfff]|\ud86d[\udc00-\udf34\udf40-\udfff]|\ud86e[\udc00-\udc1d])+$/;
-        return re.test(data);
-    };
-
-    handleClick = () => {
-        const info = { title: '2018A', ...this.state.info };
+    handleSubmit = async () => {
+        const { info: stateInfo } = this.state;
+        const { title, toggleSnackbar } = this.props;
+        const info = { ...stateInfo, group: (GROUPS[stateInfo.group] || '').toLowerCase(), title };
         const translator = {
             name: '姓名',
             mail: '邮箱',
             institute: '学院',
             major: '专业',
-            sex: '性别',
+            gender: '性别',
             grade: '年级',
             group: '组别',
             score: '成绩排名',
@@ -96,191 +51,119 @@ class Form extends React.Component<Props> {
             code: '验证码',
             intro: '自我介绍',
         };
-        for (const i of Object.entries(info)) {
-            if (i[1] === '' && i[0] !== 'resume') {
-                this.setState({
-                    snackBarOn: true,
-                    content: `请填写${translator[i[0]]}`
-                });
-                return;
+        for (const [key, value] of Object.entries(info)) {
+            if (value === undefined) {
+                return toggleSnackbar(`请填写${translator[key]}`);
             }
         }
-        if (!this.checkChinese(info.name)) {
-            this.setState({
-                snackBarOn: true,
-                content: '姓名必须为中文!'
-            });
-            return;
+        if (!checkMail(info.mail)) {
+            return toggleSnackbar('邮箱格式不正确!');
         }
-        if (!this.checkChinese(info.institute)) {
-            this.setState({
-                snackBarOn: true,
-                content: '学院必须为中文!'
-            });
-            return;
+        if (!checkPhone(info.phone)) {
+            return toggleSnackbar('手机号码格式不正确!');
         }
-        if (!this.checkChinese(info.major)) {
-            this.setState({
-                snackBarOn: true,
-                content: '专业必须为中文!'
-            });
-            return;
-        }
-        if (!this.checkMail(info.mail)) {
-            this.setState({
-                snackBarOn: true,
-                content: '邮箱格式不正确!'
-            });
-            return;
-        }
-        if (!this.checkPhone(info.phone)) {
-            this.setState({
-                snackBarOn: true,
-                content: '手机号码格式不正确!'
-            });
-            return;
-        }
-        info.group = info.group.toLowerCase();
         const formData = new FormData();
-        Object.entries(info).map(i => formData.append(i[0], i[0] === 'isQuick' ? (i[1] ? '1' : '0') : i[1] as string));
-        (async () => {
-            try {
-                info.resume && this.setState({
-                    snackBarOn: true,
-                    content: '开始上传，请耐心等待'
-                });
-                const response = await upload(`${URL}/candidates`, {
-                    method: 'POST',
-                    body: formData,
-                }, e => {
-                    this.setState({
-                        progress: (e.loaded / e.total * 100).toFixed(1)
-                    })
-                }) as string;
-                const result = JSON.parse(response);
-                if (result.type === 'success') {
-                    // localStorage.setItem('info', JSON.stringify(info));
-                    this.setState({
-                        submitted: true,
-                        progress: 0
-                    });
-                    this.props.submit();
-                } else {
-                    this.setState({
-                        snackBarOn: true,
-                        content: result.message,
-                        progress: 0
-                    });
-                    return;
-                }
-            } catch (err) {
+        Object.entries(info).map(([key, value]) => formData.append(key, value));
+        try {
+            info.resume && toggleSnackbar('开始上传，请耐心等待');
+            const response = await upload(`${URL}/candidate`, { method: 'POST', body: formData }, ({ loaded, total }) =>
                 this.setState({
-                    snackBarOn: true,
-                    content: err.message,
+                    progress: (loaded / total * 100).toFixed(1)
+                })
+            );
+            const result = JSON.parse(response);
+            if (result.type === 'success') {
+                toggleSnackbar('提交成功');
+                this.setState({
+                    submitted: true,
+                    progress: 0
+                });
+                this.props.submit();
+            } else {
+                toggleSnackbar(result.message);
+                this.setState({
                     progress: 0
                 });
             }
-        })();
+        } catch ({ message }) {
+            toggleSnackbar(message);
+            this.setState({
+                progress: 0
+            });
+        }
     };
 
     handleChange = (name: string) => (e: React.ChangeEvent) => {
         this.setState({ info: { ...this.state.info, [name]: e.target['value'] } });
     };
 
+    handleSelect = (name: string) => (value: string | number) => () => {
+        this.setState({ info: { ...this.state.info, [name]: value } });
+    };
+
     handleCheck = () => {
         this.setState({ info: { ...this.state.info, isQuick: !this.state.info.isQuick } });
     };
 
-    handleFile = (event: React.ChangeEvent) => {
-        const file = event.target['files'][0];
-        event.target['value'] = null;
-        if (!file) {
-            this.setState({
-                snackBarOn: true,
-                content: '你没有上传任何文件'
-            });
-            return;
+    resetInput = ({ currentTarget }: React.MouseEvent<HTMLInputElement>) => {
+        currentTarget.value = '';
+    };
+
+    handleFile = ({ target: { files } }: React.ChangeEvent<HTMLInputElement>) => {
+        const { toggleSnackbar } = this.props;
+        if (!files) {
+            return toggleSnackbar('你没有上传任何文件');
         }
+        const file = files[0];
         if (file.size > 1024 * 1024 * 100) {
-            this.setState({
-                snackBarOn: true,
-                content: '文件大小必须小于100MB'
-            });
-            return;
+            return toggleSnackbar('文件大小必须小于100MB');
         }
         this.setState({
             info: { ...this.state.info, resume: file }
-        })
+        });
     };
 
-    handleClose = () => {
-        this.setState({
-            snackBarOn: false,
-            content: ''
-        })
-    };
-
-    getVerification = () => {
-        (async () => {
-            try {
-                const phone = this.state.info.phone;
-                if (!phone) {
-                    this.setState({
-                        snackBarOn: true,
-                        content: '请填写手机号码!'
-                    });
-                    return;
-                }
-                if (!this.checkPhone(phone)) {
-                    this.setState({
-                        snackBarOn: true,
-                        content: '手机号码格式不正确!'
-                    });
-                    return;
-                }
-                const response = await fetch(`${URL}/verification/candidate/${phone}`);
-                const result = await response.json();
-                if (result.type === 'success') {
-                    this.setState({
-                        snackBarOn: true,
-                        content: '验证码已发送'
-                    });
-                    this.setState({
-                        sent: true,
-                        time: 60
-                    });
-                    this.interval = window.setInterval(() => {
-                        if (this.state.time === 0) {
-                            this.setState({
-                                sent: false,
-                            });
-                            clearInterval(this.interval);
-                            return;
-                        }
-                        this.setState({
-                            time: this.state.time - 1
-                        });
-                    }, 1000);
-                } else {
-                    this.setState({
-                        snackBarOn: true,
-                        content: '获取验证码失败'
-                    });
-                }
-            } catch (err) {
-                this.setState({
-                    snackBarOn: true,
-                    content: '无法预知的错误'
-                });
+    getVerification = async () => {
+        const { toggleSnackbar } = this.props;
+        try {
+            const { phone } = this.state.info;
+            if (!phone) {
+                return toggleSnackbar('请填写手机号码!');
             }
-        })()
-
+            if (!checkPhone(phone)) {
+                return toggleSnackbar('手机号码格式不正确!');
+            }
+            const response = await fetch(`${URL}/sms/verification/candidate/${phone}`);
+            const result = await response.json();
+            if (result.type !== 'success') {
+                return toggleSnackbar('获取验证码失败!');
+            }
+            toggleSnackbar('验证码已发送!');
+            this.setState({
+                sent: true,
+                time: 60
+            });
+            this.interval = window.setInterval(() => {
+                if (this.state.time === 0) {
+                    this.setState({
+                        sent: false,
+                    });
+                    clearInterval(this.interval);
+                    return;
+                }
+                this.setState({
+                    time: this.state.time - 1
+                });
+            }, 1000);
+        } catch ({ message }) {
+            toggleSnackbar(`无法预知的错误: ${message}`);
+        }
     };
 
-    handleToggle = (name: string) => {
+    handleToggle = (name: string) => () => {
         this.setState({
-            open: this.state.open === name ? '' : name
-        })
+            selecting: this.state.selecting === name ? '' : name
+        });
     };
 
     handlePop = () => {
@@ -293,38 +176,71 @@ class Form extends React.Component<Props> {
         window.clearInterval(this.interval);
     }
 
-    public render() {
-        const { submitted, content, snackBarOn, info, sent, time, popoverOn, progress } = this.state;
-        const { isMobile } = this.props;
-        const canGetCode = this.checkPhone(info.phone);
-        const Name = <Input for='name' size='md' name='姓名' onChange={this.handleChange}
-                            className={classNames({ mobile_sm: isMobile })} />;
-        const Mail = <Input for='mail' size='md' name='邮箱' onChange={this.handleChange} />;
-        const Institute = <Input for='institute' size='md' name='学院' onChange={this.handleChange} />;
-        const Major = <Input for='major' size='md' name='专业' onChange={this.handleChange} />;
-        const Sex = (
-            <div className='formRow choose'>
-                <Choose onChange={this.handleChange('sex')} />
-            </div>
+    render() {
+        const { submitted, info, sent, time, /*popoverOn,*/ progress, selecting } = this.state;
+        const { gender, phone, group, grade, rank, isQuick } = info;
+        const { isMobile, title } = this.props;
+        const canGetCode = checkPhone(phone);
+        const Name = <Input for='name' name='姓名' onChange={this.handleChange('name')} className={classNames({ mobile_sm: isMobile })} />;
+        const Mail = <Input for='mail' name='邮箱' onChange={this.handleChange('mail')} />;
+        const Institute = <Input for='institute' name='学院' onChange={this.handleChange('institute')} />;
+        const Major = <Input for='major' name='专业' onChange={this.handleChange('major')} />;
+        const Gender = (
+            <Select
+                selections={GENDERS}
+                value={GENDERS[gender]}
+                defaultValue='性别选择'
+                handleSelect={this.handleSelect('gender')}
+                onToggle={this.handleToggle('gender')}
+                open={selecting === 'gender'}
+            />
         );
-        const Grade = <Select selections={GRADES} name='所属年级' onChange={this.handleChange('grade')}
-                              onToggle={() => this.handleToggle('grade')} open={this.state.open === 'grade'} />;
-        const Group = <Select selections={GROUPS} name='组别选择' onChange={this.handleChange('group')}
-                              onToggle={() => this.handleToggle('group')} open={this.state.open === 'group'} />;
-        const Score = <Select selections={SCORES} name='成绩排名' onChange={this.handleChange('score')}
-                              onToggle={() => this.handleToggle('score')} open={this.state.open === 'score'} />;
-        const Phone = <Input for='phone' size='ml' name='电话' onChange={this.handleChange} />;
-        const CodeButton = <Button name={sent ? `${time}秒后${isMobile ? '重新获取' : '重获'}` : '接收验证码'}
-                                   bgColor={canGetCode ? 'primary' : 'primaryLighter'}
-                                   textColor={canGetCode ? 'white' : 'primary'}
-                                   onClick={sent || !canGetCode ? undefined : this.getVerification}
-                                   className={classNames({ disabled: sent || !canGetCode }, { codeButton: !isMobile })} />;
-        const Code = <Input for='code' size='sm' name='验证码' onChange={this.handleChange}
+        const Grade = (
+            <Select
+                selections={GRADES}
+                value={GRADES[grade]}
+                defaultValue='所属年级'
+                handleSelect={this.handleSelect('grade')}
+                onToggle={this.handleToggle('grade')}
+                open={selecting === 'grade'}
+            />
+        );
+        const Group = (
+            <Select
+                selections={GROUPS}
+                value={GROUPS[group]}
+                defaultValue='组别选择'
+                handleSelect={this.handleSelect('group')}
+                onToggle={this.handleToggle('group')}
+                open={selecting === 'group'}
+            />
+        );
+        const Rank = (
+            <Select
+                selections={RANKS}
+                value={RANKS[rank]}
+                defaultValue='成绩排名'
+                handleSelect={this.handleSelect('rank')}
+                onToggle={this.handleToggle('rank')}
+                open={selecting === 'rank'}
+            />
+        );
+        const Phone = <Input for='phone' name='电话' onChange={this.handleChange('phone')} />;
+        const CodeButton = (
+            <Button
+                name={sent ? `${time}秒后${isMobile ? '重新获取' : '重获'}` : '接收验证码'}
+                bgColor='primaryLighter'
+                textColor='primary'
+                onClick={sent || !canGetCode ? undefined : this.getVerification}
+                className={classNames({ disabled: sent || !canGetCode })}
+            />
+        );
+        const Code = <Input for='code' name='验证码' onChange={this.handleChange('code')}
                             className={classNames({ mobile_sm: isMobile })} />;
         const Resume = (
             <>
                 <input id='resume' name='resume' type='file' className='none'
-                       onChange={this.handleFile} />
+                       onChange={this.handleFile} onClick={this.resetInput} />
                 <label htmlFor='resume'>
                     <span className={classNames(
                         info.resume ? 'background_primary' : 'background_primaryLighter',
@@ -339,19 +255,27 @@ class Form extends React.Component<Props> {
                 </label>
             </>
         );
+        const Referrer = (
+            <Input
+                for='referrer'
+                name='推荐人'
+                placeholder='无'
+                onChange={this.handleChange('referrer')}
+                className={classNames({ mobile_sm: isMobile })}
+            />
+        );
         const Quick = (
-            <div className='quick'>
-                <input type="checkbox" id="quick" name="quick" checked={info.isQuick} />
-                <label onClick={!isMobile ? this.handleCheck : undefined}>
-                    <Popover on={popoverOn} />
-                    <div className='checker' onClick={isMobile ? this.handleCheck : undefined} />
-                    <span onClick={isMobile ? this.handlePop : undefined}>{isMobile ? '' : '我想走'}快速通道(要求很高，请慎重勾选)</span>
-                </label>
-            </div>
+            <Button
+                name='快速通道'
+                bgColor={isQuick ? 'primary' : 'primaryLighter'}
+                textColor={isQuick ? 'white' : 'primary'}
+                onClick={this.handleCheck}
+                className={classNames({ widthFull: !isMobile })}
+            />
         );
         const Submit = (
             <div className='submit'>
-                <Button name='提交' bgColor='secondary' textColor='white' onClick={this.handleClick} />
+                <Button name='提交' bgColor='secondary' textColor='white' onClick={this.handleSubmit} />
             </div>
         );
         const Intro = <TextArea onChange={this.handleChange('intro')} />;
@@ -359,21 +283,20 @@ class Form extends React.Component<Props> {
             <>
                 <div className='gridWrapper'>
                     <div className='name'>{Name}</div>
-                    <div className='mail'>{Mail}</div>
                     <div className='institute'>{Institute}</div>
                     <div className='major'>{Major}</div>
-                    <div className='sex'>{Sex}</div>
-                    <div className='phone'>
-                        <div className='codeBox'>
-                            {Phone}{CodeButton}
-                        </div>
-                    </div>
+                    <div className='referrer'>{Referrer}</div>
+                    <div className='mail'>{Mail}</div>
+                    <div className='phone'>{Phone}</div>
+                    <div className='codeButton'>{CodeButton}</div>
                     <div className='code'>{Code}</div>
-                    <div className='grade'>{Grade}</div>
+                    <div className='gender'>{Gender}</div>
                     <div className='group'>{Group}</div>
-                    <div className='score'>{Score}</div>
+                    <div className='grade'>{Grade}</div>
+                    <div className='score'>{Rank}</div>
                     <div className='resume'>{Resume}</div>
-                    <div className='intro'>{Intro}{Quick}</div>
+                    <div className='quick'>{Quick}</div>
+                    <div className='intro'>{Intro}</div>
                 </div>
                 {Submit}
             </>
@@ -383,25 +306,24 @@ class Form extends React.Component<Props> {
             <>
                 <div className='titleContainer'>
                     <h1 className='title'>Unique Studio</h1>
-                    <h1 className='title'>秋季招新</h1>
+                    <h1 className='title'>{titleConverter(title)}</h1>
                 </div>
                 <div className='form'>
                     {Name}
-                    {Sex}
-                    {Mail}
+                    {Gender}
+                    {Group}
+                    {Grade}
+                    {Rank}
                     {Institute}
                     {Major}
-                    {Grade}
-                    {Group}
-                    {Score}
+                    {Mail}
                     {Phone}
                     {CodeButton}
                     {Code}
-                    <div className='formColumn'>
-                        {Intro}
-                    </div>
+                    {Referrer}
                     {Resume}
                     {Quick}
+                    {Intro}
                     {Submit}
                 </div>
             </>
@@ -412,7 +334,6 @@ class Form extends React.Component<Props> {
                 {!submitted && (!isMobile ? PCInterface : MobileInterface)}
                 {submitted &&
                 <Submitted title='报名成功' description='请等待我们的短信通知，有问题可在招新群联系我们' className='fullHeight' />}
-                {snackBarOn && <SnackBar content={content} onClose={this.handleClose} />}
             </div>
         );
     }

@@ -1,15 +1,14 @@
-import * as React from 'react';
+import React, { PureComponent } from 'react';
 
-import './style/index.css';
-import Container from './view/Apply';
+import './style/index.scss';
+import Container from './view';
 
-
-class App extends React.Component {
+class App extends PureComponent {
     componentDidMount() {
-        import('./lib/logger').then(({ logger }) => logger());
+        import('./utils/logger').then(({ logger }) => logger());
     }
 
-    public render() {
+    render() {
         return (
             <div className='main'>
                 <Container />
