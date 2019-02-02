@@ -5,9 +5,6 @@ services:
       context: nginx
     ports:
     - 7341:7341
-    - 6655:6655
     volumes:
-    - ./dashboard/build:/usr/share/nginx/dashboard
-    - ./form/build:/usr/share/nginx/form
-    - /etc/pki/tls:/etc/nginx/certs
+    - ./build:/usr/share/nginx/dashboard
 
