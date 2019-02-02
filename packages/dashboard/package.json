@@ -1,6 +1,6 @@
 {
   "name": "unique-recruitment-dashboard",
-  "version": "2.0.0-beta.3",
+  "version": "2.0.0-rc.1",
   "description": "the dashboard for recruitment of Unique Studio",
   "author": "@winderica",
   "private": true,
