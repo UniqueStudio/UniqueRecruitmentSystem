@@ -6,11 +6,18 @@ import { enqueueSnackbar, SET_VIEWING_RECRUITMENT_START, setViewingRecruitmentFu
 
 import { Epic } from '../';
 
-export const setViewingEpic: Epic<SetViewingRecruitmentStart> = (action$) =>
+export const setViewingEpic: Epic<SetViewingRecruitmentStart> = (action$, { value: { user: { info: { joinTime } } } }) =>
     action$.pipe(
         ofType(SET_VIEWING_RECRUITMENT_START),
-        mergeMap(({ title }) => of(
-            setViewingRecruitmentFulfilled(title),
-            enqueueSnackbar('设置成功！', { variant: 'success' })
-        )),
+        mergeMap(({ title }) => {
+            if (joinTime && joinTime !== title) {
+                return of(
+                    setViewingRecruitmentFulfilled(title),
+                    enqueueSnackbar('设置成功！', { variant: 'success' })
+                );
+            }
+            return of(
+                enqueueSnackbar('你不能查看本次招新！', { variant: 'info' })
+            );
+        }),
     );

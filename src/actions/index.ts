@@ -420,7 +420,7 @@ export type ALLOCATE_ALL_FULFILLED = typeof ALLOCATE_ALL_FULFILLED;
 export interface AllocateAllFulfilled {
     type: ALLOCATE_ALL_FULFILLED;
     data: {
-        cid: string;
+        id: string;
         time: number;
     }[];
     interviewType: 'group' | 'team';
@@ -646,6 +646,7 @@ export interface SetRecruitment {
         title: string,
         begin: number,
         end: number,
+        group?: Group,
         groupInterview?: Time[],
         teamInterview?: Time[]
     };
