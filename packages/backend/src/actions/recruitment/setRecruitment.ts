@@ -3,6 +3,7 @@ import { body, param, validationResult } from 'express-validator/check';
 import { RecruitmentRepo, UserRepo } from '../../database/model';
 import { checkInterview } from '../../utils/checkInterview';
 import { errorRes } from '../../utils/errorRes';
+import { io } from "../../app";
 
 export const setRecruitment: RequestHandler = async (req, res, next) => {
     try {
@@ -14,12 +15,12 @@ export const setRecruitment: RequestHandler = async (req, res, next) => {
         if (!user) {
             return next(errorRes('User doesn\'t exist!', 'warning'));
         }
-        const { isAdmin, isCaptain, group } = user;
+        const { isAdmin, isCaptain, group: userGroup } = user;
         if (!isAdmin && !isCaptain) {
             return next(errorRes('Permission denied', 'warning'));
         }
         const title = req.params.title;
-        const { begin, end, groupInterview, teamInterview } = req.body;
+        const { begin, end, groupInterview, teamInterview, group } = req.body;
         if (teamInterview && teamInterview.length) {
             await RecruitmentRepo.update({ title }, {
                 begin,
@@ -28,6 +29,12 @@ export const setRecruitment: RequestHandler = async (req, res, next) => {
             });
         }
         if (groupInterview && groupInterview.length) {
+            if (!group) {
+                return next(errorRes('Group isn\'t specified!', 'warning'));
+            }
+            if (!isAdmin && group !== userGroup) {
+                return next(errorRes('Permission denied', 'warning'));
+            }
             await RecruitmentRepo.update({
                 title,
                 'groups.name': group,
@@ -37,6 +44,7 @@ export const setRecruitment: RequestHandler = async (req, res, next) => {
                 'groups.$.interview': groupInterview
             });
         }
+        io.emit('updateRecruitment');
         return res.json({ type: 'success' });
     } catch (error) {
         return next(error);

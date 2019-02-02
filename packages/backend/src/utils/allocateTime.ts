@@ -1,7 +1,9 @@
+import moment from 'moment';
 import { Candidate, Time } from '../config/types';
 
-const getDate = (time: number) => {
-    return new Date(time).toISOString().split('T')[0];
+const getDate = (timestamp: number) => {
+    const date = moment(timestamp).utcOffset(8);
+    return `${date.year()}-${date.month() + 1}-${date.date()}`;
 };
 
 export const allocateTime = (interviewTime: Time[], candidates: Candidate[], type: 'group' | 'team') => {

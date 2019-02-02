@@ -30,7 +30,7 @@ router.get('/:cid/form/:formId', getFormVerify, getForm);
 router.use(authenticator);
 
 // set candidates data
-router.put('/:formId', setCandidateVerify, setCandidate);
+router.put('/:cid/form/:formId', setCandidateVerify, setCandidate);
 
 // allocate one
 router.put('/:cid/interview/:type', allocateOneVerify, allocateOne);

@@ -11,6 +11,11 @@ export const setCandidate: RequestHandler = async (req, res, next) => {
             return next(errorRes(errors.array({ onlyFirstError: true })[0]['msg'], 'warning'));
         }
         const { id } = res.locals;
+        const { teamInterview, groupInterview, abandon } = req.body;
+        const { formId, cid } = req.params;
+        if (id !== cid) {
+            return next(errorRes('Candidate id is incorrect!', 'warning'));
+        }
         const candidate = await CandidateRepo.queryById(id);
         if (!candidate) {
             return next(errorRes('Candidate doesn\'t exist!', 'warning'));
@@ -22,11 +27,12 @@ export const setCandidate: RequestHandler = async (req, res, next) => {
         if (rejected) {
             return next(errorRes('You are already rejected!', 'warning'));
         }
-        const { teamInterview, groupInterview, abandon } = req.body;
-        await CandidateRepo.updateById(id, {
-            abandon: abandon || false
-        });
-        const { formId } = req.params;
+        if (abandon) {
+            await CandidateRepo.updateById(id, {
+                abandon
+            });
+            return res.json({ type: 'success' });
+        }
         const type = formId.slice(-1);
         switch (type) {
             case '1': {
@@ -38,11 +44,11 @@ export const setCandidate: RequestHandler = async (req, res, next) => {
                 if (!groupInterview) {
                     return next(errorRes('Interview time is invalid!', 'warning'));
                 }
-                if (group.selection) {
+                if (group.selection.length) {
                     return next(errorRes('You have already submitted!', 'warning'));
                 }
                 await CandidateRepo.updateById(id, {
-                    'interview.group.selection': groupInterview,
+                    'interviews.group.selection': groupInterview,
                 });
                 return res.json({ type: 'success' });
             }
@@ -55,11 +61,11 @@ export const setCandidate: RequestHandler = async (req, res, next) => {
                 if (!teamInterview) {
                     return next(errorRes('Interview time is invalid!', 'warning'));
                 }
-                if (team.selection) {
+                if (team.selection.length) {
                     return next(errorRes('You have already submitted!', 'warning'));
                 }
                 await CandidateRepo.updateById(id, {
-                    'interview.team.selection': teamInterview,
+                    'interviews.team.selection': teamInterview,
                 });
                 return res.json({ type: 'success' });
             }
@@ -76,4 +82,5 @@ export const setCandidateVerify = [
     body('teamInterview').custom(checkInterview).withMessage('Interview time is invalid!'),
     body('groupInterview').custom(checkInterview).withMessage('Interview time is invalid!'),
     param('formId').isString().withMessage('URL is invalid!'),
+    param('cid').isString().withMessage('URL is invalid!'),
 ];

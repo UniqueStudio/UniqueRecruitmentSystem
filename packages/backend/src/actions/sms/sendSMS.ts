@@ -1,5 +1,6 @@
 import { RequestHandler } from 'express';
 import { body, validationResult } from 'express-validator/check';
+import moment from 'moment';
 import fetch from 'node-fetch';
 import { formURL, GROUPS_, smsAPI, STEPS, token } from '../../config/consts';
 import { CandidateRepo, RecruitmentRepo } from '../../database/model';
@@ -18,11 +19,13 @@ interface Model {
     url: string;
 }
 
-const dateTranslator = (date: Date) =>
-    `${date.getFullYear()}年${date.getMonth() + 1}月${date.getDate()}日${date.getHours()}:${date.getMinutes()}`;
+const dateTranslator = (timestamp: number) => {
+    const date = moment(timestamp).utcOffset(8);
+    return `${date.month() + 1}月${date.date()}日${date.hour()}:${date.minute()}`;
+};
 
 const generateSMS = ({ name, title, step, type, group, time, place, rest, url }: Model) => {
-    const suffix = '(请勿回复本短信)';
+    const suffix = ' (请勿回复本短信)';
     if (!name) throw new Error('Name not provided!');
     switch (type) {
         case 'accept': {
@@ -110,7 +113,7 @@ export const sendSMS: RequestHandler = async (req, res, next) => {
                     await CandidateRepo.updateById(id, { rejected: true });
                 }
                 const url = formId ? `${formURL}/${formId}/${id}` : '';
-                let allocated = '';
+                let allocated;
                 if (type === 'group' || type === 'team') {
                     allocated = interviews[type].allocation;
                 }
@@ -122,7 +125,7 @@ export const sendSMS: RequestHandler = async (req, res, next) => {
                     group,
                     rest,
                     url,
-                    time: type === 'accept' ? time : allocated && dateTranslator(new Date(allocated)),
+                    time: type === 'accept' ? time : allocated && dateTranslator(allocated),
                     place
                 });
                 const response = await fetch(smsAPI, {
