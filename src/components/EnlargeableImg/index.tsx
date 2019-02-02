@@ -4,7 +4,7 @@ import Dialog from '@material-ui/core/Dialog';
 
 import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 
-import styles from 'Styles/messenger';
+import styles from '../../styles/messenger';
 
 interface Props extends WithStyles {
     src: string;

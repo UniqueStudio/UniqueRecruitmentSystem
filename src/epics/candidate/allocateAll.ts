@@ -1,19 +1,18 @@
-import { Epic, ofType } from 'redux-observable';
+import { ofType } from 'redux-observable';
 import { of } from 'rxjs';
-import { ajax, AjaxResponse } from 'rxjs/ajax';
+import { ajax } from 'rxjs/ajax';
 import { catchError, mergeMap, startWith } from 'rxjs/operators';
 
-import { ALLOCATE_ALL_START, allocateAllFulfilled, AllocateAllFulfilled, AllocateAllStart, enqueueSnackbar, toggleProgress } from 'Actions';
-import { StoreState } from 'Reducers';
+import { ALLOCATE_ALL_START, allocateAllFulfilled, AllocateAllFulfilled, AllocateAllStart, enqueueSnackbar, toggleProgress } from '../../actions';
 
-import { API } from 'Config/consts';
+import { API } from '../../config/consts';
 
-import { Action, checkToken, customError, Dependencies, errHandler } from 'Epics';
+import { checkToken, customError, Epic, errHandler } from '../';
 
-export const allocateAllEpic: Epic<Action, Action, StoreState, Dependencies> = (action$, state$) =>
+export const allocateAllEpic: Epic<AllocateAllStart> = (action$, state$) =>
     action$.pipe(
         ofType(ALLOCATE_ALL_START),
-        mergeMap((action: AllocateAllStart) => {
+        mergeMap((action) => {
             const token = checkToken();
             const { interviewType } = action;
             const { viewing } = state$.value.recruitment;
@@ -21,7 +20,7 @@ export const allocateAllEpic: Epic<Action, Action, StoreState, Dependencies> = (
                 'Authorization': `Bearer ${token}`,
                 'Content-Type': 'application/json',
             }).pipe(
-                mergeMap(({ response: res }: AjaxResponse) => {
+                mergeMap(({ response: res }) => {
                     if (res.type === 'success') {
                         const allocations = res.allocations as AllocateAllFulfilled['data'];
                         const failed = allocations.filter(({ time }) => !time).length;

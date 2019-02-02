@@ -1,21 +1,20 @@
-import { Epic, ofType } from 'redux-observable';
+import { ofType } from 'redux-observable';
 import { EMPTY } from 'rxjs';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 
-import { addMessage, SEND_MESSAGE, SendMessage } from 'Actions';
-import { StoreState } from 'Reducers';
+import { addMessage, SEND_MESSAGE, SendMessage } from '../../actions';
 
-import { Action, checkToken, Dependencies, errHandler, Socket } from 'Epics';
+import { checkToken, Epic, errHandler } from '../';
 
-export const sendMessageEpic: Epic<Action, Action, StoreState, Dependencies> = (action$, state$, { socket$ }) =>
+export const sendMessageEpic: Epic<SendMessage> = (action$, state$, { socket$ }) =>
     socket$.pipe(
-        switchMap((socket: Socket) => {
+        switchMap((socket) => {
             if (!socket) {
                 return EMPTY;
             }
             return action$.pipe(
                 ofType(SEND_MESSAGE),
-                tap(({ message }: SendMessage) => {
+                tap(({ message }) => {
                     checkToken();
                     socket.emit('sendMessage', { message });
                 }),

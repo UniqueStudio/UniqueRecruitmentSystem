@@ -1,13 +1,12 @@
-import { Epic, ofType } from 'redux-observable';
+import { ofType } from 'redux-observable';
 import { from } from 'rxjs';
 import { catchError, map, mergeMap, startWith } from 'rxjs/operators';
 
-import { GET_RESUME, GetResume, toggleProgress } from 'Actions';
-import { StoreState } from 'Reducers';
+import { GET_RESUME, GetResume, toggleProgress } from '../../actions';
 
-import { API } from 'Config/consts';
+import { API } from '../../config/consts';
 
-import { Action, checkToken, customError, Dependencies, errHandler } from 'Epics';
+import { checkToken, customError, Epic, errHandler } from '../';
 
 const downloadResume = (res: Response) => {
     if (!res.ok) {
@@ -22,7 +21,7 @@ const downloadResume = (res: Response) => {
     }
     let filename = 'resume';
     return from(res.blob()).pipe(
-        map((blob: Blob) => {
+        map((blob) => {
             const disposition = res.headers.get('Content-Disposition');
             if (disposition && disposition.indexOf('attachment') !== -1) {
                 const filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
@@ -45,10 +44,10 @@ const downloadResume = (res: Response) => {
     );
 };
 
-export const getResumeEpic: Epic<Action, Action, StoreState, Dependencies> = (action$) =>
+export const getResumeEpic: Epic<GetResume> = (action$) =>
     action$.pipe(
         ofType(GET_RESUME),
-        mergeMap((action: GetResume) => {
+        mergeMap((action) => {
             const token = checkToken();
             const { cid } = action;
             return from(fetch(`${API}/candidate/${cid}/resume`, {

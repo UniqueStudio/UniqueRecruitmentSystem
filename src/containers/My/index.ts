@@ -20,10 +20,10 @@ import {
     // SetAllSlotsStart,
     // setOneSlotStart,
     // SetOneSlotStart,
-} from 'Actions';
-import { StoreState } from 'Reducers';
+} from '../../actions';
+import { StoreState } from '../../reducers';
 
-import My from 'Views/My';
+import My from '../../views/My';
 
 const mapStateToProps = ({ /*candidate, */user: { groupInfo, info }/*, recruitments*/ }: StoreState) => ({
     // candidate: candidate.candidate || [],

@@ -1,4 +1,3 @@
-import { Candidate, Step } from 'Config/types';
 import React, { PureComponent } from 'react';
 import {
     DragDropContext,
@@ -8,17 +7,18 @@ import {
 
 import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 
-import styles from 'Styles/column';
+import styles from '../../styles/column';
 
-import Column from 'Containers/Column';
+import Column from '../../containers/Column';
 
-import { STEPS } from 'Config/consts';
+import { STEPS } from '../../config/consts';
+import { Candidate, Step } from '../../config/types';
 
 interface Props extends WithStyles {
     steps: Step[];
     candidates: Candidate[][];
     toggleDetail: (detail: number) => (index: number) => () => void;
-    move: (from: number, to: number, cid: string, position: number) => void;
+    move: (from: Step, to: Step, cid: string, position: number) => void;
 }
 
 interface State {
@@ -57,7 +57,7 @@ class Board extends PureComponent<Props, State> {
                     return;
                 case 'CANDIDATE':
                     if (source.droppableId === droppableId) return;
-                    this.props.move(STEPS.indexOf(source.droppableId), STEPS.indexOf(droppableId), result.draggableId, index);
+                    this.props.move(STEPS.indexOf(source.droppableId) as Step, STEPS.indexOf(droppableId) as Step, result.draggableId, index);
                     return;
             }
         }

@@ -20,10 +20,10 @@ import Female from 'mdi-material-ui/GenderFemale';
 import Male from 'mdi-material-ui/GenderMale';
 import TransGender from 'mdi-material-ui/GenderTransgender';
 
-import { GRADES } from 'Config/consts';
-import { Candidate as CandidateType, Evaluation } from 'Config/types';
-import styles from 'Styles/candidate';
-import { colorToAlpha, dangerColor, successColor, warningColor } from 'Styles/index';
+import { GRADES } from '../../config/consts';
+import { Candidate as CandidateType, Evaluation } from '../../config/types';
+import { colorToAlpha, dangerColor, successColor, warningColor } from '../../styles';
+import styles from '../../styles/candidate';
 
 interface Props extends WithStyles {
     candidate: CandidateType;

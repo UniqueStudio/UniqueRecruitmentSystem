@@ -20,10 +20,11 @@ import DateFnsUtils from '@date-io/date-fns';
 import DateTimePicker from 'material-ui-pickers/DateTimePicker/DateTimePickerInline';
 import MuiPickersUtilsProvider from 'material-ui-pickers/MuiPickersUtilsProvider';
 
-import Modal from 'Components/Modal';
-import { Candidate } from 'Config/types';
-import Template from 'Containers/SMS';
-import styles from 'Styles/data';
+import Modal from '../Modal';
+
+import { Candidate } from '../../config/types';
+import Template from '../../containers/SMS';
+import styles from '../../styles/data';
 
 interface Props extends WithStyles {
     candidates: Candidate[];

@@ -1,4 +1,3 @@
-import { Recruitment } from 'Config/types';
 import React, { PureComponent } from 'react';
 
 import Button from '@material-ui/core/Button';
@@ -11,11 +10,13 @@ import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 
 import AddIcon from '@material-ui/icons/Add';
 
-import Verify from 'Containers/Verify';
-import styles from 'Styles/addOne';
-import { titleConverter } from 'Utils/titleConverter';
 import BeginEnd from '../BeginEnd';
 import Modal from '../Modal';
+
+import { Recruitment } from '../../config/types';
+import Verify from '../../containers/Verify';
+import styles from '../../styles/addOne';
+import { titleConverter } from '../../utils/titleConverter';
 
 interface Props extends WithStyles {
     disabled: boolean;

@@ -6,9 +6,9 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
 import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 
-import { Candidate, Comment, Evaluation, User } from 'Config/types';
+import { Candidate, Comment, Evaluation, User } from '../../config/types';
 
-import styles from 'Styles/column';
+import styles from '../../styles/column';
 
 import Comments from './Comments';
 import Info from './Info';

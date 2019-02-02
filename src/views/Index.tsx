@@ -1,41 +1,41 @@
-import React, { ComponentType, LazyExoticComponent, PureComponent, Suspense } from 'react';
+import React, { lazy, PureComponent, Suspense } from 'react';
 import { Route, RouteComponentProps, Switch, withRouter } from 'react-router';
 
-const Candidates = React.lazy(() => import('Containers/Candidates'));
-const Dashboard = React.lazy(() => import('Containers/Dashboard'));
-const Data = React.lazy(() => import('Containers/Data'));
-const My = React.lazy(() => import('Containers/My'));
-const NoMatch = React.lazy(() => import('./NoMatch'));
+const Candidates = lazy(() => import('../containers/Candidates'));
+const Dashboard = lazy(() => import('../containers/Dashboard'));
+const Data = lazy(() => import('../containers/Data'));
+const My = lazy(() => import('../containers/My'));
+const NoMatch = lazy(() => import('./NoMatch'));
 
-import PageFrame from 'Containers/Frame';
+import PageFrame from '../containers/Frame';
 import Login from './Login';
 
-import Progress from 'Components/Progress';
-import Snackbar from 'Components/Snackbar';
-import Notifier from 'Containers/Notifier';
+import Progress from '../components/Progress';
+import Snackbar from '../components/Snackbar';
+import Notifier from '../containers/Notifier';
 
-import withRoot from 'Styles/withRoot';
+import withRoot from '../styles/withRoot';
 
 class Index extends PureComponent {
 
-    routeRender = (Component: LazyExoticComponent<ComponentType>) => (props: RouteComponentProps) =>
+    routeRender = (Component: JSX.Element) => (props: RouteComponentProps) =>
         <PageFrame {...props}>
-            <Suspense fallback={<Progress />}>
-                <Component />
+            <Suspense fallback={<Progress/>}>
+                {Component}
             </Suspense>
         </PageFrame>;
 
     render() {
         return (
             <Snackbar>
-                <Notifier />
+                <Notifier/>
                 <Switch>
-                    <Route path='/login' component={Login} />
-                    <Route path='/' exact render={this.routeRender(Dashboard)} />
-                    <Route path='/data' render={this.routeRender(Data)} />
-                    <Route path='/candidates' render={this.routeRender(Candidates)} />
-                    <Route path='/my' render={this.routeRender(My)} />
-                    <Route render={this.routeRender(NoMatch)} />
+                    <Route path='/login' component={Login}/>
+                    <Route path='/' exact render={this.routeRender(<Dashboard/>)}/>
+                    <Route path='/data' render={this.routeRender(<Data/>)}/>
+                    <Route path='/candidates' render={this.routeRender(<Candidates/>)}/>
+                    <Route path='/my' render={this.routeRender(<My/>)}/>
+                    <Route render={this.routeRender(<NoMatch/>)}/>
                 </Switch>
             </Snackbar>
         );

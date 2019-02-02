@@ -5,9 +5,9 @@ import TextField from '@material-ui/core/TextField';
 
 import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 
-import { GENDERS, GRADES, RANKS } from 'Config/consts';
-import { Candidate } from 'Config/types';
-import styles from 'Styles/candidate';
+import { GENDERS, GRADES, RANKS } from '../../config/consts';
+import { Candidate } from '../../config/types';
+import styles from '../../styles/candidate';
 
 import Modal from '../Modal';
 

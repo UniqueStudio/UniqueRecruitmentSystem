@@ -4,10 +4,10 @@ import Button from '@material-ui/core/Button';
 
 import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 
-import { SetRecruitment } from 'Actions';
-import { GROUPS, GROUPS_ } from 'Config/consts';
-import { Group, Recruitment as RecruitmentType, Time } from 'Config/types';
-import styles from 'Styles/data';
+import { SetRecruitment } from '../../actions';
+import { GROUPS, GROUPS_ } from '../../config/consts';
+import { Group, Recruitment as RecruitmentType, Time } from '../../config/types';
+import styles from '../../styles/data';
 import Accordion from '../Accordion';
 import BeginEnd from '../BeginEnd';
 import Dates from '../Dates';
@@ -64,7 +64,7 @@ class Recruitment extends PureComponent<Props> {
                 </div>
                 {groups.map(({ name, interview }, index) =>
                     <Accordion title={`${GROUPS[GROUPS_.indexOf(name)]}组组面时间/人数`} key={index}>
-                        <Dates dates={interview} disabled={!canLaunch || userGroup !== name} setRecruitment={this.setInterview('group')} />
+                        <Dates dates={interview} disabled={!canLaunch && userGroup !== name} setRecruitment={this.setInterview('group')} />
                     </Accordion>
                 )}
                 <Accordion title='群面时间/人数'>`

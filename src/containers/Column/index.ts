@@ -1,10 +1,10 @@
 import { connect } from 'react-redux';
 
-import { StoreState } from 'Reducers';
+import { StoreState } from '../../reducers';
 
-import Column from 'Components/Column';
+import Column from '../../components/Column';
 
-import { Candidate, Step } from 'Config/types';
+import { Candidate, Step } from '../../config/types';
 
 interface OwnProps {
     step: Step;

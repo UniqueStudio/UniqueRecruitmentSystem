@@ -1,4 +1,5 @@
 import React, { PureComponent } from 'react';
+import { Redirect } from 'react-router';
 
 import Divider from '@material-ui/core/Divider';
 import Paper from '@material-ui/core/Paper';
@@ -7,11 +8,10 @@ import Typography from '@material-ui/core/Typography';
 import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 import { InjectedNotistackProps } from 'notistack';
 
-import AddOne from 'Components/AddOne';
-import Chart from 'Components/Chart';
-import { Recruitment } from 'Config/types';
-import { Redirect } from 'react-router';
-import styles from 'Styles/dashboard';
+import AddOne from '../components/AddOne';
+import Chart from '../components/Chart';
+import { Recruitment } from '../config/types';
+import styles from '../styles/dashboard';
 
 interface Props extends WithStyles {
     data: Recruitment[];

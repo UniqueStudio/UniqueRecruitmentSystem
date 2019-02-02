@@ -9,9 +9,9 @@ import AddIcon from '@material-ui/icons/Add';
 
 import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 
-import styles from 'Styles/column';
+import styles from '../../styles/column';
 
-import { Candidate } from 'Config/types';
+import { Candidate } from '../../config/types';
 
 interface Props extends WithStyles {
     candidates: Candidate[];

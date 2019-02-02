@@ -1,9 +1,9 @@
-import * as actions from 'Actions';
+import * as actions from '../actions';
 
-import { Candidate, Evaluation, Step } from 'Config/types';
-import { insertItem, removeItem, updateObjectInArray } from 'Utils/reducerHelper';
+import { Candidate, Evaluation, Step } from '../config/types';
+import { insertItem, removeItem, updateObjectInArray } from '../utils/reducerHelper';
 
-import { updateStorage } from 'Utils/updateStorage';
+import { updateStorage } from '../utils/updateStorage';
 
 const update = updateStorage('candidates');
 
