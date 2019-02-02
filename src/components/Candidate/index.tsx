@@ -124,7 +124,7 @@ class Candidate extends PureComponent<Props> {
                                 `${GRADES[grade]} - ${institute}`
                             }</Typography>
                             {allocation && isTeamInterview && <Typography color='textSecondary' variant='caption'>{
-                                new Date(allocation).toISOString().slice(0, 16).split('T').join(' ')
+                                new Date(allocation).toLocaleString('zh-CN', { hour12: false })
                             }</Typography>}
                         </span>
                         <IconButton

@@ -30,8 +30,7 @@ const socketConnectEpic: Epic = (action$, state$, { io, socket$ }) =>
             new Observable<Socket>((o) => {
                 const socket = io(API);
                 socket.on('connect', () => o.next(socket));
-                socket.on('disconnect', o.complete);
-                return socket.close;
+                socket.on('disconnect', socket.close);
             }),
         ),
         tap(socket$),

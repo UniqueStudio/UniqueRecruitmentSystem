@@ -89,7 +89,7 @@ class CandidateTable extends PureComponent<Props, State> {
             <Paper className={classes.paper}>
                 <div className={classes.data}>
                     <div className={classes.title}>
-                        <div />
+                        <div/>
                         <Typography variant='h6'>
                             {`${interviewType === 'group' ? '组面' : '群面'}阶段候选人信息`}
                         </Typography>
@@ -113,7 +113,7 @@ class CandidateTable extends PureComponent<Props, State> {
                             <TableBody>
                                 {candidates.map(({ rejected, abandon, name, group, _id, interviews }) => {
                                     const { selection, allocation } = interviews[interviewType];
-                                    const slotInfo = allocation ? new Date(allocation).toISOString().slice(0, 16).split('T').join(' ') : '未分配';
+                                    const slotInfo = allocation ? new Date(allocation).toLocaleString('zh-CN', { hour12: false }) : '未分配';
                                     const state = rejected ? '已淘汰' : abandon ? '已放弃' : selection && selection.length ? '已选择' : '未选择';
                                     const button = <Button color='primary' onClick={this.toggleDialog(_id)}>设置</Button>;
                                     const items = [name, group, state, slotInfo, button];

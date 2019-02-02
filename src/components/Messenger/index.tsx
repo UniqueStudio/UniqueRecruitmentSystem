@@ -149,7 +149,7 @@ class Messenger extends PureComponent<Props, State> {
         const MessageChip = ({ isSelf, name, time, isImage, content: message }: Message) =>
             <div className={classes.message}>
                 <div className={classNames({ [classes.rightAlign]: isSelf })}>
-                    {`${name} - ${new Date().toISOString().split('T')[1].split('.')[0]}`}
+                    {`${name} - ${new Date(time).toLocaleTimeString('zh-CN', { hour12: false })}`}
                 </div>
                 <Divider className={classNames({ [classes.myDivider]: isSelf })} />
                 <div className={classes.messageContent}>
