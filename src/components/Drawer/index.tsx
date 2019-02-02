@@ -17,7 +17,7 @@ import PieChartIcon from '@material-ui/icons/PieChart';
 
 import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 
-import styles from 'Styles/drawer';
+import styles from '../../styles/drawer';
 
 import Anchor from '../Anchor';
 

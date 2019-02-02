@@ -1,6 +1,6 @@
 import { Theme } from '@material-ui/core/styles/createMuiTheme';
 import createStyles from '@material-ui/core/styles/createStyles';
-import { colorToAlpha } from 'Styles/index';
+import { colorToAlpha } from './index';
 
 const styles = ({ spacing: { unit }, palette, typography, breakpoints }: Theme) => createStyles({
     left: {
@@ -17,6 +17,7 @@ const styles = ({ spacing: { unit }, palette, typography, breakpoints }: Theme) 
         [breakpoints.down('xs')]: {
             flexDirection: 'column',
         },
+        margin: `0 ${unit * 2}px`
     },
     blocksContainer: {
         marginTop: unit

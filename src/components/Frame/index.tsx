@@ -3,11 +3,12 @@ import { Redirect } from 'react-router';
 
 import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 
-import Progress from 'Components/Progress';
-import { User } from 'Config/types';
-import AppBar from 'Containers/AppBar';
-import Drawer from 'Containers/Drawer';
-import styles from 'Styles/main';
+import Progress from '../Progress';
+
+import { User } from '../../config/types';
+import AppBar from '../../containers/AppBar';
+import Drawer from '../../containers/Drawer';
+import styles from '../../styles/main';
 
 interface Props extends WithStyles {
     open: boolean;

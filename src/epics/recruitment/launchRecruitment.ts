@@ -1,25 +1,24 @@
-import { Epic, ofType } from 'redux-observable';
+import { ofType } from 'redux-observable';
 import { of } from 'rxjs';
-import { ajax, AjaxResponse } from 'rxjs/ajax';
+import { ajax } from 'rxjs/ajax';
 import { catchError, mergeMap, startWith } from 'rxjs/operators';
 
-import { enqueueSnackbar, getRecruitmentsStart, LAUNCH_RECRUITMENT, LaunchRecruitment, setShouldUpdateRecruitment, toggleProgress } from 'Actions';
-import { StoreState } from 'Reducers';
+import { enqueueSnackbar, getRecruitmentsStart, LAUNCH_RECRUITMENT, LaunchRecruitment, setShouldUpdateRecruitment, toggleProgress } from '../../actions';
 
-import { API } from 'Config/consts';
+import { API } from '../../config/consts';
 
-import { Action, checkToken, customError, Dependencies, errHandler } from 'Epics';
+import { checkToken, customError, Epic, errHandler } from '../';
 
-export const launchRecruitmentsEpic: Epic<Action, Action, StoreState, Dependencies> = (action$) =>
+export const launchRecruitmentsEpic: Epic<LaunchRecruitment> = (action$) =>
     action$.pipe(
         ofType(LAUNCH_RECRUITMENT),
-        mergeMap((action: LaunchRecruitment) => {
+        mergeMap(({ info }) => {
             const token = checkToken();
-            return ajax.post(`${API}/recruitment/`, JSON.stringify(action.info), {
+            return ajax.post(`${API}/recruitment/`, JSON.stringify(info), {
                 'Authorization': `Bearer ${token}`,
                 'Content-Type': 'application/json',
             }).pipe(
-                mergeMap(({ response: res }: AjaxResponse) => {
+                mergeMap(({ response: res }) => {
                     if (res.type === 'success') {
                         return of(
                             setShouldUpdateRecruitment(),

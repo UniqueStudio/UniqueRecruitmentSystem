@@ -1,17 +1,21 @@
-import { Epic, ofType } from 'redux-observable';
+import { ofType } from 'redux-observable';
 import { of } from 'rxjs';
 import { ajax } from 'rxjs/ajax';
 import { catchError, mergeMap, startWith } from 'rxjs/operators';
 
-import { GET_RECRUITMENTS_START, getRecruitmentsFulfilled, setViewingRecruitmentFulfilled, toggleProgress } from 'Actions';
-import { StoreState } from 'Reducers';
+import {
+    GET_RECRUITMENTS_START,
+    getRecruitmentsFulfilled,
+    setViewingRecruitmentFulfilled,
+    toggleProgress
+} from '../../actions';
 
-import { API } from 'Config/consts';
-import { Recruitment } from 'Config/types';
+import { API } from '../../config/consts';
+import { Recruitment } from '../../config/types';
 
-import { Action, checkToken, customError, Dependencies, errHandler } from 'Epics';
+import { checkToken, customError, Epic, errHandler } from '../';
 
-export const getRecruitmentsEpic: Epic<Action, Action, StoreState, Dependencies> = (action$, state$, { sessionStorage }) =>
+export const getRecruitmentsEpic: Epic = (action$, state$, { sessionStorage }) =>
     action$.pipe(
         ofType(GET_RECRUITMENTS_START),
         mergeMap(() => {
@@ -23,15 +27,16 @@ export const getRecruitmentsEpic: Epic<Action, Action, StoreState, Dependencies>
                     getRecruitmentsFulfilled(JSON.parse(recruitments)),
                 );
             }
-            return ajax.getJSON(`${API}/recruitment/`, {
+            return ajax.getJSON<{ type: string, data: Recruitment[] }>(`${API}/recruitment/`, {
                 Authorization: `Bearer ${token}`,
             }).pipe(
-                mergeMap((res: { type: string, data: Recruitment[] }) => {
+                mergeMap((res) => {
                     if (res.type === 'success') {
                         const data = res.data;
+                        const newViewing = viewing ? viewing : data.slice(-1)[0] ? data.slice(-1)[0].title : '';
                         return of(
                             getRecruitmentsFulfilled(data),
-                            setViewingRecruitmentFulfilled(viewing ? viewing : data.slice(-1)[0] ? data.slice(-1)[0].title : ''),
+                            setViewingRecruitmentFulfilled(newViewing),
                             toggleProgress()
                         );
                     }

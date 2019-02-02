@@ -5,9 +5,9 @@ import { BrowserRouter as Router } from 'react-router-dom';
 import { applyMiddleware, createStore } from 'redux';
 import { composeWithDevTools } from 'redux-devtools-extension';
 
-import { epicMiddleware, epics } from 'Epics';
-import { reducers } from 'Reducers';
-import Index from 'Views/Index';
+import { epicMiddleware, epics } from './epics';
+import { reducers } from './reducers';
+import Index from './views/Index';
 
 export const history = createHistory();
 
@@ -19,7 +19,7 @@ epicMiddleware.run(epics);
 
 class App extends PureComponent {
     componentDidMount() {
-        import('Utils/console').then(({ logger }) => logger());
+        import('./utils/console').then(({ logger }) => logger());
     }
 
     render() {

@@ -1,24 +1,23 @@
-import { Epic, ofType } from 'redux-observable';
+import { ofType } from 'redux-observable';
 import { EMPTY, of } from 'rxjs';
 import { catchError, mergeMap, switchMap, tap } from 'rxjs/operators';
 
-import { MOVE_CANDIDATE_START, moveCandidateFulfilled, MoveCandidateStart, toggleProgress } from 'Actions';
-import { StoreState } from 'Reducers';
+import { MOVE_CANDIDATE_START, moveCandidateFulfilled, MoveCandidateStart, toggleProgress } from '../../actions';
 
-import { Action, checkToken, Dependencies, errHandler, Socket } from 'Epics';
+import { checkToken, Epic, errHandler } from '../';
 
-export const moveCandidateEpic: Epic<Action, Action, StoreState, Dependencies> = (action$, state$, { socket$ }) =>
+export const moveCandidateEpic: Epic<MoveCandidateStart> = (action$, state$, { socket$ }) =>
     socket$.pipe(
-        switchMap((socket: Socket) => {
+        switchMap((socket) => {
             if (socket) {
                 return action$.pipe(
                     ofType(MOVE_CANDIDATE_START),
-                    tap((action: MoveCandidateStart) => {
+                    tap((action) => {
                         const { cid, from, to } = action;
                         const token = checkToken();
                         socket.emit('moveCandidate', { cid, from, to, token });
                     }),
-                    mergeMap((action: MoveCandidateStart) => {
+                    mergeMap((action) => {
                         const { cid, from, position, to } = action;
                         return of(
                             // Try to move, move back if failed

@@ -1,5 +1,5 @@
-import { Candidate, Comment, Evaluation, Group, Message, Recruitment, Step, Time, User } from 'Config/types';
 import { OptionsObject } from 'notistack';
+import { Candidate, Comment, Evaluation, Group, Message, Recruitment, Step, Time, User } from '../config/types';
 
 export const SOCKET_START = 'SOCKET_START';
 export type SOCKET_START = typeof SOCKET_START;

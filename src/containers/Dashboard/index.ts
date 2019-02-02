@@ -1,6 +1,7 @@
-import { Recruitment } from 'Config/types';
-import { OptionsObject } from 'notistack';
 import { connect } from 'react-redux';
+import { Dispatch } from 'redux';
+
+import { OptionsObject } from 'notistack';
 
 import {
     enqueueSnackbar,
@@ -9,12 +10,12 @@ import {
     LaunchRecruitment,
     setViewingRecruitmentStart,
     SetViewingRecruitmentStart
-} from 'Actions';
+} from '../../actions';
+import { Recruitment } from '../../config/types';
 
-import { StoreState } from 'Reducers';
-import { Dispatch } from 'redux';
+import { StoreState } from '../../reducers';
 
-import Dashboard from 'Views/Dashboard';
+import Dashboard from '../../views/Dashboard';
 
 const mapStateToProps = ({ recruitment: { recruitments: data, viewing }, user: { info: { isAdmin, isCaptain } } }: StoreState) => ({
     data,

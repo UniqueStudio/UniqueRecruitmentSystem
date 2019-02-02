@@ -1,10 +1,10 @@
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 
-import { getQRCodeStart } from 'Actions';
-import { StoreState } from 'Reducers';
+import { getQRCodeStart } from '../../actions';
+import { StoreState } from '../../reducers';
 
-import LoginComponent from 'Components/Login';
+import LoginComponent from '../../components/Login';
 
 const mapStateToProps = ({ user: { token, key: weChatKey, isScanning } }: StoreState) => ({
     loggedIn: Boolean(token),

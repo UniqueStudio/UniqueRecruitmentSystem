@@ -2,7 +2,7 @@ import { Component } from 'react';
 
 import { InjectedNotistackProps } from 'notistack';
 
-import { EnqueueSnackbar } from 'Actions';
+import { EnqueueSnackbar } from '../../actions';
 
 interface Props extends InjectedNotistackProps {
     notifications: EnqueueSnackbar['notification'][];

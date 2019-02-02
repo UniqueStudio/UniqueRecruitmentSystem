@@ -5,13 +5,13 @@ import Select from '@material-ui/core/Select';
 
 import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 
-import styles from 'Styles/select';
+import styles from '../../styles/select';
 
 interface Props extends WithStyles {
     data: (string | number)[];
     values: (string | number)[];
     currentValue: string | number;
-    onChange: (event: React.ChangeEvent) => void;
+    onChange: (event: React.ChangeEvent<HTMLSelectElement>) => void;
 }
 
 class CustomSelect extends PureComponent<Props> {

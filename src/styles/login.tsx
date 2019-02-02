@@ -1,6 +1,6 @@
 import { Theme } from '@material-ui/core/styles/createMuiTheme';
 import createStyles from '@material-ui/core/styles/createStyles';
-import { getColors } from 'Styles/index';
+import { getColors } from './index';
 
 const colors = (i: number) => {
     const colorArray = getColors(i);

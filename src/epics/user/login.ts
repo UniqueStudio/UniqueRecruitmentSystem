@@ -1,4 +1,4 @@
-import { Epic, ofType } from 'redux-observable';
+import { ofType } from 'redux-observable';
 import { of } from 'rxjs';
 import { ajax } from 'rxjs/ajax';
 import { catchError, filter, mergeMap, startWith, switchMap } from 'rxjs/operators';
@@ -9,53 +9,56 @@ import {
     GET_QR_CODE_START,
     GetQRCodeFulfilled,
     getQRCodeFulfilled,
-    getUserInfoStart,
-    login, toggleProgress,
-} from 'Actions';
-import { StoreState } from 'Reducers';
+    login,
+    toggleProgress,
+} from '../../actions';
 
-import { API } from 'Config/consts';
+import { API } from '../../config/consts';
 
-import { Action, customError, Dependencies, errHandler } from 'Epics';
+import { customError, Epic, errHandler } from '../';
 
-export const getQRCodeEpic: Epic<Action> = (action$) =>
+export const getQRCodeEpic: Epic = (action$) =>
     action$.pipe(
         ofType(GET_QR_CODE_START),
-        mergeMap(() => ajax.getJSON(`${API}/user/login`)
-            .pipe(
-                mergeMap((res: { type: string, key: string }) => {
-                    if (res.type === 'success') {
+        mergeMap(() =>
+            ajax.getJSON<{ type: string, key: string }>(`${API}/user/login`)
+                .pipe(
+                    mergeMap((res) => {
+                        if (res.type === 'success') {
+                            return of(
+                                getQRCodeFulfilled(res.key),
+                                enqueueSnackbar('请尽快用企业微信扫描二维码！', { variant: 'info' }),
+                                toggleProgress(),
+                            );
+                        }
+                        throw customError(res);
+                    }),
+                    startWith(toggleProgress(true)),
+                    catchError((err) => errHandler(err)),
+                ),
+        ),
+        catchError((err) => errHandler(err)),
+    );
+
+export const loginEpic: Epic<GetQRCodeFulfilled> = (action$) =>
+    action$.pipe(
+        ofType(GET_QR_CODE_FULFILLED),
+        filter(({ key }) => !!key),
+        switchMap((action) =>
+            ajax.getJSON<{ token: string, type: string }>(`${API}/user/${action.key}/status`).pipe(
+                mergeMap((res) => {
+                    const { token, type } = res;
+                    if (type === 'success') {
                         return of(
-                            getQRCodeFulfilled(res.key),
-                            enqueueSnackbar('请尽快用企业微信扫描二维码！', { variant: 'info' }),
+                            login(token),
+                            enqueueSnackbar('已成功登录！', { variant: 'success' }),
                             toggleProgress(),
                         );
                     }
                     throw customError(res);
                 }),
-                startWith(toggleProgress(true)),
-                catchError((err) => errHandler(err)),
-            ),
+                catchError((err) => errHandler(err, getQRCodeFulfilled(''))),
+            )
         ),
-    );
-
-export const loginEpic: Epic<Action, Action, StoreState, Dependencies> = (action$) =>
-    action$.pipe(
-        ofType(GET_QR_CODE_FULFILLED),
-        filter(({ key }: GetQRCodeFulfilled) => !!key),
-        switchMap((action: GetQRCodeFulfilled) => ajax.getJSON(`${API}/user/${action.key}/status`).pipe(
-            mergeMap((res: { token: string, type: string }) => {
-                const { token, type } = res;
-                if (type === 'success') {
-                    return of(
-                        login(token),
-                        getUserInfoStart(),
-                        enqueueSnackbar('已成功登录！', { variant: 'success' }),
-                        toggleProgress(),
-                    );
-                }
-                throw customError(res);
-            }),
-            catchError((err) => errHandler(err, getQRCodeFulfilled(''))),
-        )),
+        catchError((err) => errHandler(err, getQRCodeFulfilled(''))),
     );

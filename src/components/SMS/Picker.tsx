@@ -7,9 +7,9 @@ import Typography from '@material-ui/core/Typography';
 
 import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 
-import { GRADES } from 'Config/consts';
-import { Candidate } from 'Config/types';
-import styles from 'Styles/template';
+import { GRADES } from '../../config/consts';
+import { Candidate } from '../../config/types';
+import styles from '../../styles/template';
 
 interface Props extends WithStyles {
     selected: Candidate[];

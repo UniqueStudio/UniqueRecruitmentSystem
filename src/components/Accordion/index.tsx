@@ -7,7 +7,7 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
 import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 
-import styles from 'Styles/accordion';
+import styles from '../../styles/accordion';
 
 interface Props extends WithStyles {
     title: string;

@@ -11,12 +11,12 @@ import {
     SelectCandidate,
     toggleFabOn,
     ToggleFabOn,
-} from 'Actions';
-import { StoreState } from 'Reducers';
+} from '../../actions';
+import { StoreState } from '../../reducers';
 
-import Candidate from 'Components/Candidate';
+import Candidate from '../../components/Candidate';
 
-import { Candidate as CandidateType, Evaluation } from 'Config/types';
+import { Candidate as CandidateType, Evaluation } from '../../config/types';
 
 interface OwnProps {
     candidate: CandidateType;

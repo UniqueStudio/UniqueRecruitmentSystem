@@ -8,8 +8,9 @@ import { InjectedNotistackProps } from 'notistack';
 
 import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 
-import { Comment, Evaluation } from 'Config/types';
-import styles from 'Styles/candidate';
+import { Comment, Evaluation } from '../../config/types';
+import styles from '../../styles/candidate';
+
 import Chip from '../Chip';
 
 interface Props extends WithStyles {
