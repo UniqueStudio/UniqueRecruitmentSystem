@@ -2,9 +2,9 @@ import React, { PureComponent } from 'react';
 
 import { InjectedNotistackProps } from 'notistack';
 
-import Group from 'Components/Group';
-import User from 'Components/User';
-import { User as UserType } from 'Config/types';
+import Group from '../components/Group';
+import User from '../components/User';
+import { User as UserType } from '../config/types';
 
 interface Props {
     userInfo: UserType;

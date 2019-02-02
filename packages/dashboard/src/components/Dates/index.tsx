@@ -5,8 +5,8 @@ import TextField from '@material-ui/core/TextField';
 
 import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 
-import { Time } from 'Config/types';
-import styles from 'Styles/data';
+import { Time } from '../../config/types';
+import styles from '../../styles/data';
 import DatePicker from '../DatePicker';
 
 interface Props extends WithStyles {

@@ -1,18 +1,18 @@
-import { SetRecruitment } from 'Actions';
 import React, { PureComponent } from 'react';
 
 import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 
-import Recruitment from 'Components/Recruitment';
-import Table from 'Components/Table';
-import { Candidate, Group, Recruitment as RecruitmentType } from 'Config/types';
+import { SetRecruitment } from '../actions';
+import Recruitment from '../components/Recruitment';
+import Table from '../components/Table';
+import { Candidate, Group, Recruitment as RecruitmentType } from '../config/types';
 
-import styles from 'Styles/data';
-import { sortBySlot } from 'Utils/sortBySlot';
+import styles from '../styles/data';
+import { sortBySlot } from '../utils/sortBySlot';
 
 interface Props extends WithStyles {
     candidates: Candidate[];
-    recruitment: RecruitmentType;
+    recruitment?: RecruitmentType;
     canLaunch: boolean;
     userGroup: Group;
     setRecruitment: (data: SetRecruitment['data']) => void;

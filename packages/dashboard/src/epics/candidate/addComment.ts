@@ -1,21 +1,20 @@
-import { Epic, ofType } from 'redux-observable';
+import { ofType } from 'redux-observable';
 import { EMPTY } from 'rxjs';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 
-import { ADD_COMMENT_START, AddCommentStart, toggleProgress } from 'Actions';
-import { StoreState } from 'Reducers';
+import { ADD_COMMENT_START, AddCommentStart, toggleProgress } from '../../actions';
 
-import { Action, checkToken, Dependencies, errHandler, Socket } from 'Epics';
+import { checkToken, Epic, errHandler } from '../';
 
-export const addCommentEpic: Epic<Action, Action, StoreState, Dependencies> = (action$, state$, { socket$ }) =>
+export const addCommentEpic: Epic<AddCommentStart> = (action$, state$, { socket$ }) =>
     socket$.pipe(
-        switchMap((socket: Socket) => {
+        switchMap((socket) => {
             if (!socket) {
                 return EMPTY;
             }
             return action$.pipe(
                 ofType(ADD_COMMENT_START),
-                tap((action: AddCommentStart) => {
+                tap((action) => {
                     const { cid, comment } = action;
                     const token = checkToken();
                     socket.emit('addComment', { cid, comment, token });

@@ -2,10 +2,10 @@ import React, { PureComponent } from 'react';
 
 import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 
-import styles from 'Styles/noMatch';
+import styles from '../styles/noMatch';
 
-import fourOFour from 'Images/404.webp';
-import logo from 'Images/logo.webp';
+import fourOFour from '../images/404.webp';
+import logo from '../images/logo.webp';
 
 class Index extends PureComponent<WithStyles> {
     render() {

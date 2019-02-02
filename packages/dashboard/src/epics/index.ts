@@ -1,13 +1,15 @@
-import { combineEpics, createEpicMiddleware, EpicMiddleware } from 'redux-observable';
-import { BehaviorSubject, of } from 'rxjs';
+import { Action, AnyAction } from 'redux';
+import { ActionsObservable, combineEpics, createEpicMiddleware, EpicMiddleware, StateObservable } from 'redux-observable';
+import { BehaviorSubject, Observable, of } from 'rxjs';
 
 import io from 'socket.io-client';
 
 import { VariantType } from 'notistack';
 
-import { enqueueSnackbar, toggleProgress } from 'Actions';
-import { StoreState } from 'Reducers';
 import { store } from '../App';
+
+import { enqueueSnackbar, toggleProgress } from '../actions';
+import { StoreState } from '../reducers';
 
 import candidateEpic from './candidate';
 import chatEpic from './chat';
@@ -17,10 +19,6 @@ import userEpic from './user';
 import websocketEpic from './websocket';
 
 export type Socket = typeof io.Socket;
-
-export interface Action {
-    type: string;
-}
 
 interface CustomError extends Error {
     message: string;
@@ -33,7 +31,7 @@ export const customError = (error: object) => {
     return err as CustomError;
 };
 
-export const errHandler = (err: CustomError, customAction?: Action) => customAction ? of(
+export const errHandler = (err: CustomError, customAction?: AnyAction) => customAction ? of(
     enqueueSnackbar(`ERROR: ${err.message}`, { variant: err.type || 'error' }),
     toggleProgress(),
     customAction
@@ -53,6 +51,9 @@ export const checkToken = () => {
 const dependencies = { io, socket$: new BehaviorSubject(null as unknown as Socket), sessionStorage };
 
 export type Dependencies = typeof dependencies;
+
+export type Epic<T extends Action = Action> =
+    (action$: ActionsObservable<T>, state$: StateObservable<StoreState>, dependencies: Dependencies) => Observable<AnyAction>;
 
 export const epicMiddleware: EpicMiddleware<Action, Action, StoreState> = createEpicMiddleware({
     dependencies,

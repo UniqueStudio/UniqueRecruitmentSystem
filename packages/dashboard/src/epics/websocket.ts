@@ -1,5 +1,6 @@
-import { Epic, ofType } from 'redux-observable';
-import { EMPTY, Observable, Subscriber } from 'rxjs';
+import { Action } from 'redux';
+import { ofType } from 'redux-observable';
+import { EMPTY, Observable } from 'rxjs';
 import { ignoreElements, switchMap, tap } from 'rxjs/operators';
 
 import { VariantType } from 'notistack';
@@ -13,20 +14,20 @@ import {
     removeCandidateFulfilled,
     removeCommentFulfilled,
     setShouldUpdateRecruitment,
+    SOCKET_START,
     toggleProgress,
-} from 'Actions';
-import { StoreState } from 'Reducers';
+} from '../actions';
 
-import { API } from 'Config/consts';
-import { Candidate, Comment, Group, Message, Step } from 'Config/types';
+import { API } from '../config/consts';
+import { Candidate, Comment, Group, Message, Step } from '../config/types';
 
-import { Action, Dependencies, Socket } from 'Epics';
+import { Epic, Socket } from './';
 
-const socketConnectEpic: Epic<Action, Action, StoreState, Dependencies> = (action$, state$, { io, socket$ }) =>
+const socketConnectEpic: Epic = (action$, state$, { io, socket$ }) =>
     action$.pipe(
-        ofType('SOCKET_START'),
+        ofType(SOCKET_START),
         switchMap(() =>
-            new Observable((o: Subscriber<Socket>) => {
+            new Observable<Socket>((o) => {
                 const socket = io(API);
                 socket.on('connect', () => o.next(socket));
                 socket.on('disconnect', o.complete);
@@ -37,10 +38,10 @@ const socketConnectEpic: Epic<Action, Action, StoreState, Dependencies> = (actio
         ignoreElements(),
     );
 
-const socketReceiveEpic: Epic<Action, Action, StoreState, Dependencies> = (action$, state$, { socket$ }) =>
+const socketReceiveEpic: Epic = (action$, state$, { socket$ }) =>
     socket$.pipe(
-        switchMap((socket: Socket) => !socket ? EMPTY :
-            new Observable((o: Subscriber<Action>) => {
+        switchMap((socket) => !socket ? EMPTY :
+            new Observable<Action>((o) => {
                 socket.on('removeCandidate', ({ cid }: { cid: string }) => {
                     o.next(toggleProgress(true));
                     o.next(removeCandidateFulfilled(cid));

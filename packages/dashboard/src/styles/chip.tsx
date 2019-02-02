@@ -1,7 +1,7 @@
 import { Theme } from '@material-ui/core/styles/createMuiTheme';
 import createStyles from '@material-ui/core/styles/createStyles';
 
-import { mergeKV } from 'Utils/mergeKV';
+import { mergeKV } from '../utils/mergeKV';
 
 import { colorToAlpha, colorToShadow, dangerColor, infoColor, successColor, warningColor } from './index';
 

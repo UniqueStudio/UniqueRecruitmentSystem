@@ -19,14 +19,14 @@ import MenuIcon from '@material-ui/icons/Menu';
 import PersonIcon from '@material-ui/icons/Person';
 import RefreshIcon from '@material-ui/icons/Refresh';
 
-import { version } from 'package.json';
+import { version } from '../../../package.json';
 
-import { GROUPS, GROUPS_ } from 'Config/consts';
-import { Group, Step } from 'Config/types';
-import styles from 'Styles/appBar';
-import { titleConverter } from 'Utils/titleConverter';
+import { GROUPS, GROUPS_ } from '../../config/consts';
+import { Group, Step } from '../../config/types';
+import styles from '../../styles/appBar';
+import { titleConverter } from '../../utils/titleConverter';
 
-import Messenger from 'Containers/Messenger';
+import Messenger from '../../containers/Messenger';
 import Modal from '../Modal';
 import Select from '../Select';
 
@@ -61,7 +61,7 @@ class Bar extends PureComponent<Props & RouteComponentProps> {
         this.props.logout();
     };
 
-    handleChange = (type: 'group' | 'step') => ({ target: { value } }: React.ChangeEvent<HTMLInputElement>) => {
+    handleChange = (type: 'group' | 'step') => ({ target: { value } }: React.ChangeEvent<HTMLSelectElement>) => {
         const { setGroup, setSteps } = this.props;
         type === 'group' && setGroup(value as Group);
         type === 'step' && setSteps(+value);

@@ -15,11 +15,11 @@ import {
     SelectCandidate,
     toggleFabOff,
     ToggleFabOff,
-} from 'Actions';
-import { StoreState } from 'Reducers';
+} from '../../actions';
+import { StoreState } from '../../reducers';
 
-import { Step } from 'Config/types';
-import Candidates from 'Views/Candidates';
+import { Step } from '../../config/types';
+import Candidates from '../../views/Candidates';
 
 const mapStateToProps =
     ({ candidate: { group, selected, candidates, steps }, component: { fabOn }, user: { info } }: StoreState) => ({
@@ -41,7 +41,7 @@ type DispatchType =
 
 const mapDispatchToProps = (dispatch: DispatchType) => ({
     move: (from: Step, to: Step, cid: string, position: number) => dispatch(moveCandidateStart(from, to, cid, position)),
-    deselect: (name: string[]) => dispatch(deselectCandidate(name)),
+    deselect: (name: string[] | string) => dispatch(deselectCandidate(name)),
     select: (name: string[]) => dispatch(selectCandidate(name)),
     toggleFabOff: () => dispatch(toggleFabOff()),
     enqueueSnackbar: (message: string, options: OptionsObject = { variant: 'info' }) => dispatch(enqueueSnackbar(message, options)),

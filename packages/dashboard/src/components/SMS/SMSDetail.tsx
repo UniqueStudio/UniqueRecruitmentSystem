@@ -8,11 +8,11 @@ import Typography from '@material-ui/core/Typography';
 
 import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 
-import styles from 'Styles/template';
+import styles from '../../styles/template';
 
-import { STEPS } from 'Config/consts';
-import { Step } from 'Config/types';
-import { generateModel } from 'Utils/generateModel';
+import { STEPS } from '../../config/consts';
+import { Step } from '../../config/types';
+import { generateModel } from '../../utils/generateModel';
 
 export interface MainInfo extends WithStyles {
     type: string;
@@ -23,7 +23,7 @@ export interface MainInfo extends WithStyles {
 }
 
 interface Props extends MainInfo {
-    handleChange: (name: string) => (event: React.ChangeEvent) => void;
+    handleChange: (name: string) => (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 class SMSDetail extends PureComponent<Props> {

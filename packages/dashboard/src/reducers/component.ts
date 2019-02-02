@@ -1,4 +1,4 @@
-import * as actions from 'Actions';
+import * as actions from '../actions';
 
 type Action =
     actions.EnqueueSnackbar

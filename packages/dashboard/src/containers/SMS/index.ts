@@ -1,13 +1,14 @@
-import { OptionsObject } from 'notistack';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 
-import { enqueueSnackbar, EnqueueSnackbar, sendSMS, SendSMS } from 'Actions';
-import { StoreState } from 'Reducers';
+import { OptionsObject } from 'notistack';
 
-import Template from 'Components/SMS';
+import { enqueueSnackbar, EnqueueSnackbar, sendSMS, SendSMS } from '../../actions';
+import { StoreState } from '../../reducers';
 
-import { Candidate } from 'Config/types';
+import Template from '../../components/SMS';
+
+import { Candidate } from '../../config/types';
 
 interface OwnProps {
     selected: Candidate[];

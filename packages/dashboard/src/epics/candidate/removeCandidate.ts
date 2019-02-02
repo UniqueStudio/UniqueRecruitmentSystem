@@ -1,19 +1,18 @@
-import { Epic, ofType } from 'redux-observable';
+import { ofType } from 'redux-observable';
 import { EMPTY } from 'rxjs';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 
-import { REMOVE_CANDIDATE_START, RemoveCandidateStart, toggleProgress } from 'Actions';
-import { StoreState } from 'Reducers';
+import { REMOVE_CANDIDATE_START, RemoveCandidateStart, toggleProgress } from '../../actions';
 
-import { Action, checkToken, Dependencies, errHandler, Socket } from 'Epics';
+import { checkToken, Epic, errHandler } from '../';
 
-export const removeCandidateEpic: Epic<Action, Action, StoreState, Dependencies> = (action$, state$, { socket$ }) =>
+export const removeCandidateEpic: Epic<RemoveCandidateStart> = (action$, state$, { socket$ }) =>
     socket$.pipe(
-        switchMap((socket: Socket) => {
+        switchMap((socket) => {
             if (socket) {
                 return action$.pipe(
                     ofType(REMOVE_CANDIDATE_START),
-                    tap(({ cid }: RemoveCandidateStart) => {
+                    tap(({ cid }) => {
                         const token = checkToken();
                         socket.emit('removeCandidate', { cid, token });
                     }),

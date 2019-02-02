@@ -2,15 +2,15 @@ import React, { PureComponent } from 'react';
 
 import { InjectedNotistackProps } from 'notistack';
 
-import Board from 'Components/Board';
-import Dialog from 'Components/Dialog';
-import Fab from 'Components/Fab';
-import Modal from 'Components/Modal';
-import { STEPS } from 'Config/consts';
-import { Candidate, Step, User } from 'Config/types';
-import Detail from 'Containers/Detail';
-import Template from 'Containers/SMS';
-import { sortBySlot } from 'Utils/sortBySlot';
+import Board from '../components/Board';
+import Dialog from '../components/Dialog';
+import Fab from '../components/Fab';
+import Modal from '../components/Modal';
+import { STEPS } from '../config/consts';
+import { Candidate, Step, User } from '../config/types';
+import Detail from '../containers/Detail';
+import Template from '../containers/SMS';
+import { sortBySlot } from '../utils/sortBySlot';
 
 interface Props {
     group: string;
@@ -22,7 +22,7 @@ interface Props {
     select: (cid: string[]) => void;
     deselect: (cid: string[] | string) => void;
     toggleFabOff: () => void;
-    move: (from: number, to: number, cid: string, position: number) => void;
+    move: (from: Step, to: Step, cid: string, position: number) => void;
     remove: (cid: string) => void;
     enqueueSnackbar: InjectedNotistackProps['enqueueSnackbar'];
 }
@@ -118,6 +118,7 @@ class Candidates extends PureComponent<Props> {
         const { state, props, toggleOpen, handleRemove, handleNext, handlePrev, toggleDetail, divideSteps, handleTodo } = this;
         const { selected, candidates, fabOn, select, deselect, toggleFabOff, group, userInfo, move, steps } = props;
         const { modal, dialog, step, index, direction } = state;
+        const { group: userGroup, isAdmin } = userInfo;
         const candidatesInGroup = candidates.filter((candidate) => candidate.group === group);
         const selectedInfo = selected.map((id) => candidatesInGroup.find(({ _id }) => id === _id)) as Candidate[];
         const candidatesInSteps = divideSteps(candidatesInGroup);
@@ -126,7 +127,7 @@ class Candidates extends PureComponent<Props> {
                 <Board move={move} steps={steps} candidates={candidatesInSteps} toggleDetail={toggleDetail} />
                 <Fab selected={selected} deselect={deselect} fabOn={fabOn} select={select}
                      candidates={candidatesInSteps[fabOn] || []} toggleFabOff={toggleFabOff}
-                     toggleOpen={toggleOpen} canOperate={userInfo.group === group} />
+                     toggleOpen={toggleOpen} canOperate={userGroup === group || isAdmin} />
                 <Dialog
                     open={dialog}
                     onClick={handleRemove(selected)}

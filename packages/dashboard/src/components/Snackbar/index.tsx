@@ -3,7 +3,7 @@ import React, { PureComponent } from 'react';
 import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 import { SnackbarProvider } from 'notistack';
 
-import styles from 'Styles/snackbar';
+import styles from '../../styles/snackbar';
 
 class Snackbar extends PureComponent<WithStyles> {
 

@@ -18,9 +18,9 @@ import { InjectedNotistackProps } from 'notistack';
 
 import EnlargeableImage from '../EnlargeableImg';
 
-import { Message } from 'Config/types';
+import { Message } from '../../config/types';
 
-import styles from 'Styles/messenger';
+import styles from '../../styles/messenger';
 
 interface Props extends WithStyles {
     messages: Message[];

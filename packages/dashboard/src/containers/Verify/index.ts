@@ -2,12 +2,12 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 
-import { getVerifyCode, GetVerifyCode } from 'Actions';
+import { getVerifyCode, GetVerifyCode } from '../../actions';
 
-import Verify from 'Components/Verify';
+import Verify from '../../components/Verify';
 
 interface OwnProps {
-    onChange: (event: React.ChangeEvent) => void;
+    onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 type DispatchType = Dispatch<GetVerifyCode>;

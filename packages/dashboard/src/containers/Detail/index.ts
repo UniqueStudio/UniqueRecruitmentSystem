@@ -13,12 +13,12 @@ import {
     RecordInputtingComment,
     removeCommentStart,
     RemoveCommentStart
-} from 'Actions';
-import { StoreState } from 'Reducers';
+} from '../../actions';
+import { StoreState } from '../../reducers';
 
-import Detail from 'Components/Detail';
+import Detail from '../../components/Detail';
 
-import { Candidate, Comment, Evaluation } from 'Config/types';
+import { Candidate, Comment, Evaluation } from '../../config/types';
 
 interface OwnProps {
     candidate: Candidate;

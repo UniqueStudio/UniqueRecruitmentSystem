@@ -10,13 +10,13 @@ import Stepper from '@material-ui/core/Stepper';
 
 import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 
-import styles from 'Styles/template';
+import styles from '../../styles/template';
 
-import Verify from 'Containers/Verify';
+import Verify from '../../containers/Verify';
 import Picker from './Picker';
 import SMSDetail from './SMSDetail';
 
-import { Candidate } from 'Config/types';
+import { Candidate } from '../../config/types';
 
 interface Props extends WithStyles {
     status: string;
