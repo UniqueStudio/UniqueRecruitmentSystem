@@ -6,10 +6,11 @@ import { enqueueSnackbar, SET_VIEWING_RECRUITMENT_START, setViewingRecruitmentFu
 
 import { Epic } from '../';
 
-export const setViewingEpic: Epic<SetViewingRecruitmentStart> = (action$, { value: { user: { info: { joinTime } } } }) =>
+export const setViewingEpic: Epic<SetViewingRecruitmentStart> = (action$, state$) =>
     action$.pipe(
         ofType(SET_VIEWING_RECRUITMENT_START),
         mergeMap(({ title }) => {
+            const joinTime = state$.value.user.info.joinTime;
             if (joinTime && joinTime !== title) {
                 return of(
                     setViewingRecruitmentFulfilled(title),

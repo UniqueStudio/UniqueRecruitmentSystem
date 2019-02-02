@@ -33,4 +33,5 @@ Visit [https://hr.hustunique.com](https://hr.hustunique.com) for more details
 1. password login
 2. more messages in chat room
 3. beautify interface
-4. data migration
+4. disable modifying past recruitments
+
