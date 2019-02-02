@@ -32,10 +32,10 @@ class Recruitment extends PureComponent<Props> {
         });
     };
 
-    setInterview = (type: 'team' | 'group') => (interview: Time[]) => {
+    setInterview = (type: 'team' | 'group', groupName?: Group) => (interview: Time[]) => {
         const { begin, end } = this.state;
         const { data: { title }, setRecruitment } = this.props;
-        setRecruitment({ title, begin: +begin, end: +end, [`${type}Interview`]: interview });
+        setRecruitment({ title, group: groupName, begin: +begin, end: +end, [`${type}Interview`]: interview });
     };
 
     setTime = () => {
@@ -64,10 +64,10 @@ class Recruitment extends PureComponent<Props> {
                 </div>
                 {groups.map(({ name, interview }, index) =>
                     <Accordion title={`${GROUPS[GROUPS_.indexOf(name)]}组组面时间/人数`} key={index}>
-                        <Dates dates={interview} disabled={!canLaunch && userGroup !== name} setRecruitment={this.setInterview('group')} />
+                        <Dates dates={interview} disabled={!canLaunch && userGroup !== name} setRecruitment={this.setInterview('group', name)} />
                     </Accordion>
                 )}
-                <Accordion title='群面时间/人数'>`
+                <Accordion title='群面时间/人数'>
                     <Dates dates={teamInterview} disabled={!canLaunch} setRecruitment={this.setInterview('team')} />
                 </Accordion>
             </div>
