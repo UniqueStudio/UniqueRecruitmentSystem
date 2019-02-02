@@ -29,7 +29,6 @@ class Time extends PureComponent<Props> {
         modal: '',
         clicked: [] as number[],
         confirmed: '',
-        cid: '',
         step: '',
         time: [] as Date[]
     };
@@ -51,7 +50,6 @@ class Time extends PureComponent<Props> {
                 this.setState({
                     time: result.time,
                     step: formId[formId.length - 1],
-                    cid
                 });
             } else {
                 return toggleSnackbar('获取表单出了问题，请尝试重新加载');
@@ -63,21 +61,23 @@ class Time extends PureComponent<Props> {
 
     submitForm = async (time: object[], type: string, token: string) => {
         const { toggleSnackbar } = this.props;
-        const { cid, modal, step } = this.state;
+        const { modal, step } = this.state;
+        const params = window.location.pathname.split('/').splice(1);
+        const cid = params[1];
+        const formId = params[0];
         try {
-            const response = await fetch(`${URL}/candidates/${cid}`, {
+            const response = await fetch(`${URL}/candidate/${cid}/form/${formId}`, {
                 method: 'PUT',
                 headers: {
                     'content-type': 'application/json',
                     'Authorization': `Bearer ${token}`
                 },
-                body: JSON.stringify({
-                    patch: modal === 'abandon'
-                        ? { abandon: true }
-                        : step === '1'
-                            ? { groupInterview: time }
-                            : { teamInterview: time }
-                })
+                body: JSON.stringify(modal === 'abandon'
+                    ? { abandon: true }
+                    : step === '1'
+                        ? { groupInterview: time }
+                        : { teamInterview: time }
+                )
             });
             const result = await response.json();
             if (result.type === 'success') {
@@ -113,11 +113,11 @@ class Time extends PureComponent<Props> {
 
     handleConfirm = (type: string) => async () => {
         const { toggleSnackbar } = this.props;
-        const time = this.state.time.map((i) => ({ date: i.date, morning: false, afternoon: false, evening: false }));
+        const time = this.state.time.map((i) => ({ date: i.date, morning: 0, afternoon: 0, evening: 0 }));
         this.state.clicked.map((i) => {
             const int = Math.floor(i / 3);
             const res = i - int * 3;
-            time[int][['morning', 'afternoon', 'evening'][res]] = true;
+            time[int][['morning', 'afternoon', 'evening'][res]] = 1;
         });
         const token = sessionStorage.getItem('token');
         if (!token) {
@@ -207,7 +207,7 @@ class Time extends PureComponent<Props> {
                         />}
                     </div>
                 </div>
-                <div className={classNames('layer', { none: modal === '' }, modal === 'submit' ? 'layerSecondary' : 'layerPrimary')} />
+                <div className={classNames('layer', { none: modal === '' }, modal === 'submit' ? 'layerSecondary' : 'layerPrimary')}/>
             </>
         );
     }
