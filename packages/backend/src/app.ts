@@ -9,6 +9,7 @@ import { infoLogger } from './middlewares/infoLogger';
 import { validator } from './middlewares/validator';
 import { routes } from './routes';
 import { task } from './task';
+import { logger } from './utils/logger';
 import { wsHandler, wsServer } from './websocket';
 
 export const app = express();
@@ -39,4 +40,4 @@ wsHandler(io);
 
 server.listen(5000);
 
-task();
+task().then(() => logger.info('Task started'));

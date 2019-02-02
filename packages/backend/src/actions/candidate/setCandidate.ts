@@ -10,7 +10,7 @@ export const setCandidate: RequestHandler = async (req, res, next) => {
         if (!errors.isEmpty()) {
             return next(errorRes(errors.array({ onlyFirstError: true })[0]['msg'], 'warning'));
         }
-        const id = res.locals.id;
+        const { id } = res.locals;
         const candidate = await CandidateRepo.queryById(id);
         if (!candidate) {
             return next(errorRes('Candidate doesn\'t exist!', 'warning'));
@@ -23,6 +23,9 @@ export const setCandidate: RequestHandler = async (req, res, next) => {
             return next(errorRes('You are already rejected!', 'warning'));
         }
         const { teamInterview, groupInterview, abandon } = req.body;
+        await CandidateRepo.updateById(id, {
+            abandon: abandon || false
+        });
         const { formId } = req.params;
         const type = formId.slice(-1);
         switch (type) {
@@ -40,7 +43,6 @@ export const setCandidate: RequestHandler = async (req, res, next) => {
                 }
                 await CandidateRepo.updateById(id, {
                     'interview.group.selection': groupInterview,
-                    abandon: abandon || false
                 });
                 return res.json({ type: 'success' });
             }
@@ -58,7 +60,6 @@ export const setCandidate: RequestHandler = async (req, res, next) => {
                 }
                 await CandidateRepo.updateById(id, {
                     'interview.team.selection': teamInterview,
-                    abandon: abandon || false
                 });
                 return res.json({ type: 'success' });
             }

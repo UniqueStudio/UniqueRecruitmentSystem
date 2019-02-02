@@ -1,6 +1,6 @@
 {
   "name": "unique-recruitment-backend",
-  "version": "2.0.0-beta",
+  "version": "2.0.0-beta.2",
   "description": "the backend for recruitment of Unique Studio",
   "author": "@winderica",
   "private": true,
@@ -49,7 +49,8 @@
     "supertest": "^3.3.0",
     "ts-jest": "^23.10.5",
     "ts-node": "^7.0.1",
-    "typescript": "^3.2.2"
+    "tslint": "^5.12.1",
+    "typescript": "^3.3.1"
   },
   "scripts": {
     "start": "ts-node src/app.ts",

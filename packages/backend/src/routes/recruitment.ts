@@ -10,6 +10,10 @@ import { codeChecker } from '../middlewares/codeChecker';
 // import { setSlots } from '../actions/recruitment/setSlots';
 
 const router = express.Router();
+
+// get title of pending recruitments
+router.get('/pending', getPendingTitles);
+
 router.use(authenticator);
 
 // launch a new recruitment
@@ -17,9 +21,6 @@ router.post('/', launchRecruitmentVerify, codeChecker('user'), launchRecruitment
 
 // get all history recruitments
 router.get('/', getAllRecruitments);
-
-// get title of pending recruitments
-router.get('/pending', getPendingTitles);
 
 // get a certain recruitment
 router.get('/title/:title', getOneRecruitment);
