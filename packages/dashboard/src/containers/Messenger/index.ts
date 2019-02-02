@@ -1,12 +1,13 @@
-import { Message } from 'Config/types';
-import { OptionsObject } from 'notistack';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 
-import { enqueueSnackbar, EnqueueSnackbar, sendMessage, SendMessage } from 'Actions';
-import { StoreState } from 'Reducers';
+import { OptionsObject } from 'notistack';
 
-import Messenger from 'Components/Messenger';
+import { enqueueSnackbar, EnqueueSnackbar, sendMessage, SendMessage } from '../../actions';
+import { Message } from '../../config/types';
+import { StoreState } from '../../reducers';
+
+import Messenger from '../../components/Messenger';
 
 const mapStateToProps = ({ user: { messages, info: { username, avatar } } }: StoreState) => ({
     messages,

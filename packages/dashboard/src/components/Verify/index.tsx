@@ -7,11 +7,11 @@ import TextField from '@material-ui/core/TextField';
 
 import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 
-import styles from 'Styles/template';
+import styles from '../../styles/template';
 
 interface Props extends WithStyles {
     code: string;
-    onChange: (event: React.ChangeEvent) => void;
+    onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
     getVerifyCode: () => void;
 }
 

@@ -1,8 +1,8 @@
-import * as actions from 'Actions';
+import * as actions from '../actions';
 
-import { Message, User } from 'Config/types';
+import { Message, User } from '../config/types';
 
-import { updateStorage } from 'Utils/updateStorage';
+import { updateStorage } from '../utils/updateStorage';
 
 type Action =
     actions.Login

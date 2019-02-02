@@ -7,10 +7,10 @@ import Typography from '@material-ui/core/Typography';
 
 import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 
-import { STEPS } from 'Config/consts';
-import { Candidate as CandidateType, Step } from 'Config/types';
-import Candidate from 'Containers/Candidate';
-import styles from 'Styles/column';
+import { STEPS } from '../../config/consts';
+import { Candidate as CandidateType, Step } from '../../config/types';
+import Candidate from '../../containers/Candidate';
+import styles from '../../styles/column';
 
 interface Props extends WithStyles {
     step: Step;

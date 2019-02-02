@@ -8,9 +8,9 @@ import Popover from '@material-ui/core/Popover';
 
 import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 
-import { Comment } from 'Config/types';
+import { Comment } from '../../config/types';
 
-import styles from 'Styles/chip';
+import styles from '../../styles/chip';
 
 interface Props extends WithStyles {
     comment: Comment;

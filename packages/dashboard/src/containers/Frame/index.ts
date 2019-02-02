@@ -12,10 +12,10 @@ import {
     GetUserInfoStart,
     toggleDrawer,
     ToggleDrawer
-} from 'Actions';
-import { StoreState } from 'Reducers';
+} from '../../actions';
+import { StoreState } from '../../reducers';
 
-import Frame from 'Components/Frame';
+import Frame from '../../components/Frame';
 
 const mapStateToProps = ({ user: { token, info }, recruitment: { viewing }, component: { drawerOpen, progressOn } }: StoreState) => ({
     open: drawerOpen,

@@ -10,14 +10,14 @@ import {
     GetRecruitmentsStart,
     setRecruitment,
     SetRecruitment,
-} from 'Actions';
-import { StoreState } from 'Reducers';
+} from '../../actions';
+import { StoreState } from '../../reducers';
 
-import Data from 'Views/Data';
+import Data from '../../views/Data';
 
 const mapStateToProps =
     ({ recruitment: { recruitments, viewing }, user: { info: { group: userGroup, isAdmin, isCaptain } }, candidate: { candidates } }: StoreState) => ({
-        recruitment: recruitments.find((recruitment) => recruitment.title === viewing) || null,
+        recruitment: recruitments.find((recruitment) => recruitment.title === viewing),
         canLaunch: isCaptain || isAdmin,
         userGroup,
         candidates

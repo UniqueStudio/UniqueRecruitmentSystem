@@ -6,9 +6,10 @@ import TextField from '@material-ui/core/TextField';
 
 import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 
-import { QR_CODE_URL } from 'Config/consts';
-import logo from 'Images/logo.webp';
-import styles from 'Styles/login';
+import { QR_CODE_URL } from '../../config/consts';
+import logo from '../../images/logo.webp';
+import styles from '../../styles/login';
+
 import Modal from '../Modal';
 
 interface Props extends WithStyles {

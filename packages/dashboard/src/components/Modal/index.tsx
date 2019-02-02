@@ -6,7 +6,7 @@ import Typography from '@material-ui/core/Typography';
 
 import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 
-import styles from 'Styles/modal';
+import styles from '../../styles/modal';
 
 interface Props extends WithStyles {
     open: boolean;

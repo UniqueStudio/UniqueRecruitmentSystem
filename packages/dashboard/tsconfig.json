@@ -1,6 +1,5 @@
 {
   "compilerOptions": {
-    "baseUrl": ".",
     "outDir": "dist",
     "module": "esnext",
     "target": "es6",
@@ -8,21 +7,9 @@
       "esnext",
       "dom"
     ],
-    "paths": {
-      "Actions": ["src/actions"],
-      "Components/*": ["src/components/*"],
-      "Containers/*": ["src/containers/*"],
-      "Config/*": ["src/config/*"],
-      "Epics": ["src/epics"],
-      "Images/*": ["src/images/*"],
-      "Utils/*": ["src/utils/*"],
-      "Reducers": ["src/reducers"],
-      "Styles/*": ["src/styles/*"],
-      "Views/*": ["src/views/*"]
-    },
     "sourceMap": true,
     "allowJs": true,
-    "jsx": "react",
+    "jsx": "preserve",
     "moduleResolution": "node",
     "rootDir": "src",
     "typeRoots": [
@@ -37,7 +24,13 @@
     "strictNullChecks": true,
     "suppressImplicitAnyIndexErrors": true,
     "noUnusedLocals": true,
-    "experimentalDecorators": true
+    "experimentalDecorators": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "strict": true
   },
   "exclude": [
     "node_modules",

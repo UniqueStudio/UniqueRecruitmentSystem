@@ -1,6 +1,6 @@
 {
   "name": "unique-recruitment-dashboard",
-  "version": "2.0.0-beta.1",
+  "version": "2.0.0-beta.2",
   "description": "the dashboard for recruitment of Unique Studio",
   "author": "@winderica",
   "private": true,
@@ -51,15 +51,15 @@
     "@types/react-router": "^4.4.3",
     "@types/react-router-dom": "^4.3.1",
     "@types/socket.io-client": "^1.4.32",
-    "react-scripts-ts": "^4.0.8",
+    "react-scripts": "^2.1.3",
     "redux-devtools-extension": "^2.13.7",
     "tslint": "^5.12.1",
-    "typescript": "^3.2.4"
+    "typescript": "^3.3.1"
   },
   "scripts": {
     "analyze": "source-map-explorer build/static/js/main.*",
-    "start": "react-scripts-ts start",
-    "build": "react-scripts-ts build"
+    "start": "PORT=4896 react-scripts start",
+    "build": "react-scripts build"
   },
   "browserslist": [
     ">0.2%",

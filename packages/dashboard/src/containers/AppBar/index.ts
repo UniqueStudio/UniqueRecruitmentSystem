@@ -1,4 +1,3 @@
-import { Group } from 'Config/types';
 import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router';
 import { Dispatch } from 'redux';
@@ -14,10 +13,11 @@ import {
     setSteps,
     ToggleDrawer,
     toggleDrawer
-} from 'Actions';
-import { StoreState } from 'Reducers';
+} from '../../actions';
+import { Group } from '../../config/types';
+import { StoreState } from '../../reducers';
 
-import AppBar from 'Components/AppBar';
+import AppBar from '../../components/AppBar';
 
 const mapStateToProps =
     ({ component: { drawerOpen }, user: { token }, candidate: { group, steps }, recruitment: { viewing } }: StoreState,

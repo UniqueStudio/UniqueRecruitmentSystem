@@ -10,12 +10,12 @@ import Typography from '@material-ui/core/Typography';
 
 import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 
-import { GROUPS, GROUPS_, STEPS } from 'Config/consts';
-import { Recruitment } from 'Config/types';
+import { GROUPS, GROUPS_, STEPS } from '../../config/consts';
+import { Recruitment } from '../../config/types';
 
-import styles from 'Styles/dashboard';
-import { getColors } from 'Styles/index';
-import { titleConverter } from 'Utils/titleConverter';
+import styles from '../../styles/dashboard';
+import { getColors } from '../../styles';
+import { titleConverter } from '../../utils/titleConverter';
 
 interface Props extends WithStyles {
     data: Recruitment;

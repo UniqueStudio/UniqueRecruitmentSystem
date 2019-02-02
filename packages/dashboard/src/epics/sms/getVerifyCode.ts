@@ -1,24 +1,23 @@
-import { Epic, ofType } from 'redux-observable';
+import { ofType } from 'redux-observable';
 import { of } from 'rxjs';
 import { ajax } from 'rxjs/ajax';
 import { catchError, mergeMap, startWith } from 'rxjs/operators';
 
-import { enqueueSnackbar, GET_VERIFY_CODE, toggleProgress } from 'Actions';
-import { StoreState } from 'Reducers';
+import { enqueueSnackbar, GET_VERIFY_CODE, toggleProgress } from '../../actions';
 
-import { API } from 'Config/consts';
+import { API } from '../../config/consts';
 
-import { Action, checkToken, customError, Dependencies, errHandler } from 'Epics';
+import { checkToken, customError, Epic, errHandler } from '../';
 
-export const getCodeEpic: Epic<Action, Action, StoreState, Dependencies> = (action$) =>
+export const getCodeEpic: Epic = (action$) =>
     action$.pipe(
         ofType(GET_VERIFY_CODE),
         mergeMap(() => {
             const token = checkToken();
-            return ajax.getJSON(`${API}/sms/verification/user`, {
+            return ajax.getJSON<{ type: string }>(`${API}/sms/verification/user`, {
                 Authorization: `Bearer ${token}`,
             }).pipe(
-                mergeMap((res: { type: string }) => {
+                mergeMap((res) => {
                     if (res.type === 'success') {
                         return of(
                             enqueueSnackbar('验证码已发送！', { variant: 'success' }),

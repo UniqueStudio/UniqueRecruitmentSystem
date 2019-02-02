@@ -1,26 +1,24 @@
-import { Epic, ofType } from 'redux-observable';
+import { ofType } from 'redux-observable';
 import { of } from 'rxjs';
-import { ajax, AjaxResponse } from 'rxjs/ajax';
+import { ajax } from 'rxjs/ajax';
 import { catchError, mergeMap, startWith } from 'rxjs/operators';
 
-import { enqueueSnackbar, getRecruitmentsStart, SET_RECRUITMENT, SetRecruitment, setShouldUpdateRecruitment, toggleProgress } from 'Actions';
-import { StoreState } from 'Reducers';
+import { enqueueSnackbar, getRecruitmentsStart, SET_RECRUITMENT, SetRecruitment, setShouldUpdateRecruitment, toggleProgress } from '../../actions';
 
-import { API } from 'Config/consts';
+import { API } from '../../config/consts';
 
-import { Action, checkToken, customError, Dependencies, errHandler } from 'Epics';
+import { checkToken, customError, Epic, errHandler } from '../';
 
-export const setRecruitmentEpic: Epic<Action, Action, StoreState, Dependencies> = (action$) =>
+export const setRecruitmentEpic: Epic<SetRecruitment> = (action$) =>
     action$.pipe(
         ofType(SET_RECRUITMENT),
-        mergeMap((action: SetRecruitment) => {
+        mergeMap(({ data }) => {
             const token = checkToken();
-            const { data } = action;
             return ajax.put(`${API}/recruitment/title/${data.title}`, JSON.stringify(data), {
                 'Authorization': `Bearer ${token}`,
                 'Content-Type': 'application/json',
             }).pipe(
-                mergeMap(({ response: res }: AjaxResponse) => {
+                mergeMap(({ response: res }) => {
                     if (res.type === 'success') {
                         return of(
                             setShouldUpdateRecruitment(),

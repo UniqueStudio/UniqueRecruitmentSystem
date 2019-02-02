@@ -1,20 +1,19 @@
-import { Candidate } from 'Config/types';
-import { Epic, ofType } from 'redux-observable';
+import { ofType } from 'redux-observable';
 import { of } from 'rxjs';
 import { ajax } from 'rxjs/ajax';
 import { catchError, mergeMap, startWith } from 'rxjs/operators';
 
-import { GET_CANDIDATES_START, getCandidatesFulfilled, GetCandidatesStart, toggleProgress } from 'Actions';
-import { StoreState } from 'Reducers';
+import { GET_CANDIDATES_START, getCandidatesFulfilled, GetCandidatesStart, toggleProgress } from '../../actions';
 
-import { API } from 'Config/consts';
+import { API } from '../../config/consts';
+import { Candidate } from '../../config/types';
 
-import { Action, checkToken, customError, Dependencies, errHandler } from 'Epics';
+import { checkToken, customError, Epic, errHandler } from '../';
 
-export const getCandidatesEpic: Epic<Action, Action, StoreState, Dependencies> = (action$, state$, { sessionStorage }) =>
+export const getCandidatesEpic: Epic<GetCandidatesStart> = (action$, state$, { sessionStorage }) =>
     action$.pipe(
         ofType(GET_CANDIDATES_START),
-        mergeMap((action: GetCandidatesStart) => {
+        mergeMap((action) => {
             const token = checkToken();
             const { title, step, group } = action;
             const candidates = sessionStorage.getItem('candidates');
@@ -27,10 +26,13 @@ export const getCandidatesEpic: Epic<Action, Action, StoreState, Dependencies> =
                     getCandidatesFulfilled(data),
                 );
             }
-            return ajax.getJSON(`${API}/candidate/${JSON.stringify({ title, step, group })}`, {
-                Authorization: `Bearer ${token}`,
-            }).pipe(
-                mergeMap((res: { type: string, data: Candidate[] }) => {
+            return ajax.getJSON<{ type: string, data: Candidate[] }>(
+                `${API}/candidate/${JSON.stringify({ title, step, group })}`,
+                {
+                    Authorization: `Bearer ${token}`,
+                }
+            ).pipe(
+                mergeMap((res) => {
                     if (res.type === 'success') {
                         const old = JSON.parse(candidates || '[]') as Candidate[];
                         res.data.forEach((newInfo) => {

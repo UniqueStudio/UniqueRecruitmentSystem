@@ -1,17 +1,16 @@
-import { Epic, ofType } from 'redux-observable';
+import { ofType } from 'redux-observable';
 import { of } from 'rxjs';
 import { ajax } from 'rxjs/ajax';
 import { catchError, mergeMap, startWith } from 'rxjs/operators';
 
-import { GET_GROUP_INFO_START, getGroupInfoFulfilled, toggleProgress } from 'Actions';
-import { StoreState } from 'Reducers';
+import { GET_GROUP_INFO_START, getGroupInfoFulfilled, toggleProgress } from '../../actions';
 
-import { API } from 'Config/consts';
-import { User } from 'Config/types';
+import { API } from '../../config/consts';
+import { User } from '../../config/types';
 
-import { Action, checkToken, customError, Dependencies, errHandler } from 'Epics';
+import { checkToken, customError, Epic, errHandler } from '../';
 
-export const getGroupEpic: Epic<Action, Action, StoreState, Dependencies> = (action$, state$, { sessionStorage }) =>
+export const getGroupEpic: Epic = (action$, state$, { sessionStorage }) =>
     action$.pipe(
         ofType(GET_GROUP_INFO_START),
         mergeMap(() => {
@@ -22,10 +21,10 @@ export const getGroupEpic: Epic<Action, Action, StoreState, Dependencies> = (act
                     getGroupInfoFulfilled(JSON.parse(groupInfo)),
                 );
             }
-            return ajax.getJSON(`${API}/user/group/`, {
+            return ajax.getJSON<{ type: string, data: User[] }>(`${API}/user/group/`, {
                 Authorization: `Bearer ${token}`,
             }).pipe(
-                mergeMap((res: { type: string, data: User[] }) => {
+                mergeMap((res) => {
                     if (res.type === 'success') {
                         return of(
                             getGroupInfoFulfilled(res.data),

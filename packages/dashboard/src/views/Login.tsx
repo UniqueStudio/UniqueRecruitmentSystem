@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 
-import Login from 'Containers/Login';
+import Login from '../containers/Login';
 
 class LoginView extends PureComponent {
     render() {
