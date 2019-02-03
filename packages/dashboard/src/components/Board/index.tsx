@@ -12,10 +12,11 @@ import styles from '../../styles/column';
 import Column from '../../containers/Column';
 
 import { STEPS } from '../../config/consts';
-import { Candidate, Step } from '../../config/types';
+import { Candidate, Group, Step } from '../../config/types';
 
 interface Props extends WithStyles {
     steps: Step[];
+    group: Group;
     candidates: Candidate[][];
     toggleDetail: (detail: number) => (index: number) => () => void;
     move: (from: Step, to: Step, cid: string, position: number) => void;
@@ -31,14 +32,13 @@ class Board extends PureComponent<Props, State> {
         steps: this.props.steps,
     };
 
-    componentDidUpdate() {
-        this.setState((prevState, { steps }) => ({
-            steps: steps.length !== prevState.steps.length ? steps : prevState.steps
+    componentDidUpdate(prevProps: Props) {
+        this.setState((prevState, { steps, group }) => ({
+            steps: steps.length !== prevState.steps.length || group !== prevProps.group ? steps : prevState.steps
         }));
     }
 
     onDragEnd = (result: DropResult) => {
-
         if (result.destination) {
             const source = result.source;
             const destination = result.destination;
@@ -69,22 +69,24 @@ class Board extends PureComponent<Props, State> {
 
         return (
             <DragDropContext onDragEnd={this.onDragEnd}>
-                <Droppable droppableId='column' type='COLUMN' direction='horizontal'>
-                    {({ innerRef, droppableProps }) => (
-                        <div className={classes.columnContainer} ref={innerRef} {...droppableProps}>
-                            {steps.map((step, index) =>
-                                <Column
-                                    step={step}
-                                    key={step}
-                                    candidates={candidates[step]}
-                                    dropIndex={index}
-                                    isTeamInterview={steps.length === 2}
-                                    toggleDetail={toggleDetail(step)}
-                                />
-                            )}
-                        </div>
-                    )}
-                </Droppable>
+                <div className={classes.div}>
+                    <Droppable droppableId='board' type='COLUMN' direction='horizontal'>
+                        {({ innerRef, droppableProps }) => (
+                            <div className={classes.columnContainer} ref={innerRef} {...droppableProps}>
+                                {steps.map((step, index) =>
+                                    <Column
+                                        step={step}
+                                        key={index}
+                                        candidates={candidates[step]}
+                                        dropIndex={index}
+                                        isTeamInterview={steps.length === 2}
+                                        toggleDetail={toggleDetail(step)}
+                                    />
+                                )}
+                            </div>
+                        )}
+                    </Droppable>
+                </div>
             </DragDropContext>
         );
     }

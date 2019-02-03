@@ -21,7 +21,7 @@ class Picker extends PureComponent<Props> {
     render() {
         const { classes, onDelete, selected } = this.props;
         return (
-            <div className={classNames(classes.templateContent, classes.templateItem)}>
+            <div className={classNames(classes.templateContent, classes.templateItem, classes.picker)}>
                 {selected.length === 0
                     ? <Typography variant='h6' className={classes.templateItem}>你未选中任何人!</Typography>
                     : selected.map(

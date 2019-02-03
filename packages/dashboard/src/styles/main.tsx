@@ -20,7 +20,6 @@ const styles = ({ palette, spacing, breakpoints }: Theme) => createStyles({
     content: {
         flexGrow: 1,
         backgroundColor: colorToAlpha(palette.secondary.light, 0.2),
-        paddingTop: spacing.unit * 3,
         marginTop: spacing.unit * 8,
         height: 'calc(100vh - 64px)',
         overflowX: 'auto',

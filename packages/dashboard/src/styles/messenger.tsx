@@ -90,9 +90,6 @@ const styles = ({ spacing, transitions, breakpoints, palette, zIndex }: Theme) =
     imageRoot: {
         zIndex: zIndex.snackbar * 4,
     },
-    tooltip: {
-        zIndex: zIndex.snackbar * 4,
-    },
     closeButton: {
         marginLeft: 'auto'
     }

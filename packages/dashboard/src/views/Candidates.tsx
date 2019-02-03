@@ -7,13 +7,13 @@ import Dialog from '../components/Dialog';
 import Fab from '../components/Fab';
 import Modal from '../components/Modal';
 import { STEPS } from '../config/consts';
-import { Candidate, Step, User } from '../config/types';
+import { Candidate, Group, Step, User } from '../config/types';
 import Detail from '../containers/Detail';
 import Template from '../containers/SMS';
 import { sortBySlot } from '../utils/sortBySlot';
 
 interface Props {
-    group: string;
+    group: Group;
     userInfo: User;
     candidates: Candidate[];
     selected: string[];
@@ -49,9 +49,14 @@ class Candidates extends PureComponent<Props> {
     }
 
     divideSteps = (candidates: Candidate[], shouldSpread = false) => {
-        candidates = candidates.filter((candidate) => candidate.group === this.props.group);
+        const { group, steps } = this.props;
+        if (steps.length !== 2) {
+            candidates = candidates.filter((candidate) => candidate.group === group);
+        } else {
+            candidates = candidates.filter((candidate) => steps.includes(candidate.step));
+        }
         let candidateInSteps = STEPS.map((_, i) => candidates.filter(({ step }) => step === i));
-        if (candidateInSteps.length === 2) {
+        if (steps.length === 2) {
             candidateInSteps = candidateInSteps.map((toSort) => toSort.sort(sortBySlot));
         }
         if (shouldSpread) {
@@ -119,16 +124,16 @@ class Candidates extends PureComponent<Props> {
         const { state, props, toggleOpen, handleRemove, handleNext, handlePrev, toggleDetail, divideSteps, handleTodo } = this;
         const { selected, candidates, fabOn, select, deselect, toggleFabOff, group, userInfo, move, steps } = props;
         const { modal, dialog, step, index, direction } = state;
-        const { group: userGroup, isAdmin } = userInfo;
+        const { isAdmin, group: userGroup, isCaptain } = userInfo;
         const candidatesInSteps = divideSteps(candidates);
-        const candidatesInGroup = candidates.filter((candidate) => candidate.group === group);
-        const selectedInfo = selected.map((id) => candidatesInGroup.find(({ _id }) => id === _id)) as Candidate[];
+        const selectedInfo = selected.map((id) => candidates.find(({ _id }) => id === _id)) as Candidate[];
+        const canOperate = isAdmin || (steps.length === 2 ? isCaptain : group === userGroup);
         return (
             <>
-                <Board move={move} steps={steps} candidates={candidatesInSteps} toggleDetail={toggleDetail} />
+                <Board move={move} group={group} steps={steps} candidates={candidatesInSteps} toggleDetail={toggleDetail}/>
                 <Fab selected={selected} deselect={deselect} fabOn={fabOn} select={select}
                      candidates={candidatesInSteps[fabOn] || []} toggleFabOff={toggleFabOff}
-                     toggleOpen={toggleOpen} canOperate={userGroup === group || isAdmin} />
+                     toggleOpen={toggleOpen} canOperate={canOperate} group={group} steps={steps}/>
                 <Dialog
                     open={dialog}
                     onClick={handleRemove(selected)}

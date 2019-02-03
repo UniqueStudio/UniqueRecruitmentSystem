@@ -68,7 +68,9 @@ class Dashboard extends PureComponent<Props> {
                     <Typography variant='h4' className={classes.title}>Notifications</Typography>
                     <Divider variant='middle' />
                     <Paper className={classes.paper}>
-                        123
+                        顶部工具栏有聊天室、面试问题、刷新及退出<br />
+                        shift + 滚轮 可以横向滚动<br />
+                        栏与栏内项目均可拖动<br />
                     </Paper>
                 </div>
             </div>
