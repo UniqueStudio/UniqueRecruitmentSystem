@@ -1,6 +1,6 @@
 import * as actions from '../actions';
 
-import { Candidate, Evaluation, Step } from '../config/types';
+import { Candidate, Evaluation, Group, Step } from '../config/types';
 import { insertItem, removeItem, updateObjectInArray } from '../utils/reducerHelper';
 
 import { updateStorage } from '../utils/updateStorage';
@@ -25,7 +25,7 @@ type Action =
 export interface CandidateStore {
     candidates: Candidate[];
     selected: string[];
-    group: string;
+    group: Group;
     steps: Step[];
     inputtingComment: {
         content: string;

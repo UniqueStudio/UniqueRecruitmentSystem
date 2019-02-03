@@ -41,9 +41,6 @@ const styles = ({ zIndex, palette, transitions, spacing: { unit }, breakpoints }
         marginLeft: 'auto',
         display: 'flex',
     },
-    options: {
-        zIndex: 5000,
-    },
     hide: {
         display: 'none',
     },
@@ -51,7 +48,7 @@ const styles = ({ zIndex, palette, transitions, spacing: { unit }, breakpoints }
         padding: unit * 2,
     },
     collapse: {
-        zIndex: 5000,
+        zIndex: zIndex.drawer + 1,
         position: 'fixed',
         top: unit * 8,
         right: 0,

@@ -102,8 +102,8 @@ class Bar extends PureComponent<Props & RouteComponentProps> {
                             <Select
                                 data={GROUPS}
                                 values={GROUPS_}
-                                onChange={this.handleChange('group')}
-                                currentValue={group}
+                                onChange={steps.length === 6 ? this.handleChange('group') : undefined}
+                                currentValue={steps.length === 6 ? group : ''}
                             />
                             <Select
                                 data={['全部', '群面']}
@@ -130,7 +130,6 @@ class Bar extends PureComponent<Props & RouteComponentProps> {
                             anchorEl={anchorEl}
                             open={Boolean(anchorEl)}
                             onClose={this.handleClose}
-                            className={classes.options}
                         >
                             <MenuItem onClick={this.handleLogout}>退出</MenuItem>
                         </Menu>

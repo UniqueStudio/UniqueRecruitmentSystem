@@ -17,7 +17,7 @@ const styles = ({ spacing: { unit }, palette, typography, breakpoints }: Theme) 
         [breakpoints.down('xs')]: {
             flexDirection: 'column',
         },
-        margin: `0 ${unit * 2}px`
+        margin: `${unit * 3}px ${unit * 2}px 0`
     },
     blocksContainer: {
         marginTop: unit

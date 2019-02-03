@@ -83,9 +83,13 @@ class AddOne extends PureComponent<Props> {
 
     handleChangeDate = (name: string) => (date: Date) => {
         this.setState({
-            [name]: date,
-            title: generateTitle(date)
+            [name]: date
         });
+        if (name === 'begin') {
+            this.setState({
+                title: generateTitle(date)
+            });
+        }
     };
 
     toggleModalOpen = () => {

@@ -4,24 +4,26 @@ import createStyles from '@material-ui/core/styles/createStyles';
 import { colorToShadow } from './index';
 
 const styles = ({ spacing: { unit }, palette, breakpoints, zIndex, transitions }: Theme) => createStyles({
+    div: {
+        overflow: 'auto',
+        height: '100%'
+    },
     columnContainer: {
-        display: 'flex',
-        width: 'fit-content',
-        padding: `0 ${unit * 3}px`,
+        height: '100%',
+        minWidth: '100vw',
+        display: 'inline-flex',
+        padding: `${unit * 3}px ${unit * 3}px 0`,
         [breakpoints.down('xs')]: {
-            padding: `0 ${unit}px`,
+            padding: `${unit * 3}px ${unit}px 0`,
         },
     },
     column: {
         margin: unit,
         padding: unit,
-        borderRadius: 6,
         color: 'rgba(0, 0, 0, 0.87)',
-        boxShadow: '0 1px 4px 0 rgba(0, 0, 0, 0.14)',
         position: 'relative',
         display: 'flex',
         flexDirection: 'column',
-        height: '100%',
     },
     columnHeader: {
         background: palette.primary.light,
@@ -55,7 +57,7 @@ const styles = ({ spacing: { unit }, palette, breakpoints, zIndex, transitions }
             right: unit * 2,
             bottom: unit * 2,
         },
-        zIndex: zIndex.snackbar * 4,
+        zIndex: zIndex.modal + 1,
     },
     fabMoveUp: {
         [breakpoints.down('sm')]: {
@@ -86,7 +88,7 @@ const styles = ({ spacing: { unit }, palette, breakpoints, zIndex, transitions }
             right: unit,
             bottom: unit * 9,
         },
-        zIndex: zIndex.snackbar * 4,
+        zIndex: zIndex.modal + 1,
     },
     fabButtonsContainer: {
         display: 'flex',
