@@ -1,9 +1,9 @@
 import { RequestHandler } from 'express';
 import { body, param, validationResult } from 'express-validator/check';
+import { io } from '../../app';
 import { RecruitmentRepo, UserRepo } from '../../database/model';
 import { checkInterview } from '../../utils/checkInterview';
 import { errorRes } from '../../utils/errorRes';
-import { io } from "../../app";
 
 export const setRecruitment: RequestHandler = async (req, res, next) => {
     try {
@@ -21,10 +21,12 @@ export const setRecruitment: RequestHandler = async (req, res, next) => {
         }
         const title = req.params.title;
         const { begin, end, groupInterview, teamInterview, group } = req.body;
+        await RecruitmentRepo.update({ title }, {
+            begin,
+            end,
+        });
         if (teamInterview && teamInterview.length) {
             await RecruitmentRepo.update({ title }, {
-                begin,
-                end,
                 interview: teamInterview
             });
         }
@@ -39,8 +41,6 @@ export const setRecruitment: RequestHandler = async (req, res, next) => {
                 title,
                 'groups.name': group,
             }, {
-                begin,
-                end,
                 'groups.$.interview': groupInterview
             });
         }
