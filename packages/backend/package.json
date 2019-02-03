@@ -55,8 +55,8 @@
   },
   "scripts": {
     "build": "tsc",
-    "test": "NODE_ENV=test jest --forceExit",
+    "test": "jest --forceExit",
     "startProd": "node build/app.js",
-    "startDev": "NODE_ENV=test ts-node src/app.ts"
+    "startDev": "ts-node src/app.ts"
   }
 }
