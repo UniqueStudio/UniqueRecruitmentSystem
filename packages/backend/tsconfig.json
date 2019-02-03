@@ -5,7 +5,8 @@
     "outDir": "build",
     "target": "esnext",
     "lib": [
-      "esnext"
+      "esnext",
+      "dom"
     ],
     "sourceMap": true,
     "allowJs": true,
@@ -31,6 +32,7 @@
     "scripts",
     "acceptance-tests",
     "webpack",
-    "jest"
+    "test",
+    "jest.config.js"
   ]
 }

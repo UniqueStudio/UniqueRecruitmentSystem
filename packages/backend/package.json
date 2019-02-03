@@ -54,9 +54,9 @@
     "typescript": "^3.3.1"
   },
   "scripts": {
-    "start": "ts-node src/app.ts",
     "build": "tsc",
     "test": "NODE_ENV=test jest --forceExit",
-    "testStart": "NODE_ENV=test ts-node src/app.ts"
+    "startProd": "node build/app.js",
+    "startDev": "NODE_ENV=test ts-node src/app.ts"
   }
 }
