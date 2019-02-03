@@ -7,7 +7,7 @@ import TextField from '@material-ui/core/TextField';
 
 import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 
-import styles from '../../styles/template';
+import styles from '../../styles/verify';
 
 interface Props extends WithStyles {
     code: string;
@@ -51,12 +51,12 @@ class Verify extends PureComponent<Props> {
         const { classes, onChange, code } = this.props;
 
         return (
-            <div className={classNames(classes.templateContent, classes.templateItem)}>
+            <div className={classNames(classes.content, classes.item)}>
                 <Button color='primary' onClick={this.getCode}
                         disabled={this.state.sent}>{this.state.sent ? `${this.state.time}秒后重新获取` : '获取验证码'}</Button>
                 <TextField
                     label='输入验证码'
-                    className={classNames(classes.templateItem, classes.input)}
+                    className={classNames(classes.item, classes.input)}
                     onChange={onChange}
                     value={code}
                 />

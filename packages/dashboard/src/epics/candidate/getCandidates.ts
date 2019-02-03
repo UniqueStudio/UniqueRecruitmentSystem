@@ -3,7 +3,7 @@ import { of } from 'rxjs';
 import { ajax } from 'rxjs/ajax';
 import { catchError, mergeMap, startWith } from 'rxjs/operators';
 
-import { GET_CANDIDATES_START, getCandidatesFulfilled, GetCandidatesStart, toggleProgress } from '../../actions';
+import { GET_CANDIDATES_START, getCandidatesFulfilled, GetCandidatesStart, setViewingRecruitmentFulfilled, toggleProgress } from '../../actions';
 
 import { API } from '../../config/consts';
 import { Candidate } from '../../config/types';
@@ -34,18 +34,10 @@ export const getCandidatesEpic: Epic<GetCandidatesStart> = (action$, state$, { s
             ).pipe(
                 mergeMap((res) => {
                     if (res.type === 'success') {
-                        const old = JSON.parse(candidates || '[]') as Candidate[];
-                        res.data.forEach((newInfo) => {
-                            const index = old.findIndex((oldInfo) => oldInfo._id === newInfo._id);
-                            if (index === -1) {
-                                old.push(newInfo);
-                            } else {
-                                old[index] = newInfo;
-                            }
-                        });
                         return of(
-                            getCandidatesFulfilled(old),
-                            toggleProgress()
+                            getCandidatesFulfilled(res.data),
+                            toggleProgress(),
+                            setViewingRecruitmentFulfilled(title),
                         );
                     }
                     throw customError(res);

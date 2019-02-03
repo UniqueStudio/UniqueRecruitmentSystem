@@ -11,7 +11,7 @@ interface Props extends WithStyles {
     data: (string | number)[];
     values: (string | number)[];
     currentValue: string | number;
-    onChange: (event: React.ChangeEvent<HTMLSelectElement>) => void;
+    onChange?: (event: React.ChangeEvent<HTMLSelectElement>) => void;
 }
 
 class CustomSelect extends PureComponent<Props> {
