@@ -22,5 +22,5 @@ services:
       - /etc/pki/tls/private/uniqcert.key:/usr/src/backend/uniqcert.key
       - /etc/pki/tls/uniqcert.fullchain:/usr/src/backend/uniqcert.fullchain
       - ../resumes:/usr/src/resumes
-      - ./stderr.log:/usr/src/backend/stderr.log
-      - ./stdout.log:/usr/src/backend/stdout.log
+      - ${PWD}/stderr.log:/usr/src/backend/stderr.log
+      - ${PWD}/stdout.log:/usr/src/backend/stdout.log
