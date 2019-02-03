@@ -61,9 +61,9 @@ export const setRecruitmentVerify = [
             // if (Date.now() < recruitment.begin) {
             //     throw new Error('Current recruitment is not started!');
             // }
-            // if (Date.now() > recruitment.end) {
-            //     throw new Error('Current recruitment has ended!');
-            // }
+            if (Date.now() > recruitment.end) {
+                throw new Error('Current recruitment has ended!');
+            }
         }),
     body('begin').isInt().withMessage('Begin time is invalid!')
         .custom((begin, { req }) => begin < req.body.end).withMessage('End time should be earlier than begin time'),

@@ -1,6 +1,6 @@
 import { RequestHandler } from 'express';
 import { body, param, validationResult } from 'express-validator/check';
-import { CandidateRepo } from '../../database/model';
+import { CandidateRepo, RecruitmentRepo } from '../../database/model';
 import { errorRes } from '../../utils/errorRes';
 
 export const allocateOne: RequestHandler = async (req, res, next) => {
@@ -14,6 +14,14 @@ export const allocateOne: RequestHandler = async (req, res, next) => {
         const candidate = await CandidateRepo.queryById(cid);
         if (!candidate) {
             return next(errorRes('Candidate doesn\'t exist!', 'warning'));
+        }
+        const { title } = candidate;
+        const recruitment = (await RecruitmentRepo.query({ title }))[0];
+        if (!recruitment) {
+            return next(errorRes('Recruitment doesn\'t exist', 'warning'));
+        }
+        if (recruitment.end < Date.now()) {
+            return next(errorRes('This recruitment has already ended!', 'warning'));
         }
         await CandidateRepo.updateById(cid, { [`interviews.${type}.allocation`]: time });
         return res.json({ type: 'success' });

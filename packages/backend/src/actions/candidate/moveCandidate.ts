@@ -14,6 +14,10 @@ export const onMoveCandidate = (socket: Socket) => async (req: { cid: string, fr
             return socket.emit('moveCandidateError', errorRes('Candidate doesn\'t exist!', 'warning', { cid, to, from }));
         }
         const { step, title, group } = candidate;
+        const recruitment = (await RecruitmentRepo.query({ title }))[0];
+        if (recruitment.end < Date.now()) {
+            return socket.emit('moveCandidateError', errorRes('This recruitment has already ended!', 'warning', { cid, to, from }));
+        }
         if (step !== from) {
             return socket.emit('moveCandidateError', errorRes('Candidate has been moved by others', 'warning', { cid, to, from: step }));
         }

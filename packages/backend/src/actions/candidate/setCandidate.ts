@@ -41,6 +41,9 @@ export const setCandidate: RequestHandler = async (req, res, next) => {
                 if (!recruitment) {
                     return next(errorRes('Recruitment doesn\'t exist！', 'warning'));
                 }
+                if (recruitment.end < Date.now()) {
+                    return next(errorRes('This recruitment has already ended!', 'warning'));
+                }
                 if (!groupInterview) {
                     return next(errorRes('Interview time is invalid!', 'warning'));
                 }
@@ -57,6 +60,9 @@ export const setCandidate: RequestHandler = async (req, res, next) => {
                 const recruitment = await RecruitmentRepo.queryById(recruitmentId);
                 if (!recruitment) {
                     return next(errorRes('Recruitment doesn\'t exist！', 'warning'));
+                }
+                if (recruitment.end < Date.now()) {
+                    return next(errorRes('This recruitment has already ended!', 'warning'));
                 }
                 if (!teamInterview) {
                     return next(errorRes('Interview time is invalid!', 'warning'));

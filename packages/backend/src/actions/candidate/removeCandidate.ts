@@ -14,6 +14,13 @@ export const onRemoveCandidate = (socket: Socket) => async ({ cid, token }: { ci
             return socket.emit('removeCandidateError', errorRes('Candidate doesn\'t exist!', 'warning'));
         }
         const { resume, group, title, step } = candidate;
+        const recruitment = (await RecruitmentRepo.query({ title }))[0];
+        if (!recruitment) {
+            return socket.emit('removeCandidateError', errorRes('Recruitment doesn\'t exist!', 'warning'));
+        }
+        if (recruitment.end < Date.now()) {
+            return socket.emit('removeCandidateError', errorRes('This recruitment has already ended!', 'warning'));
+        }
         await deleteFile(resume);
         await CandidateRepo.deleteById(cid);
         await RecruitmentRepo.update({ title, 'groups.name': group }, {

@@ -93,6 +93,9 @@ export const sendSMS: RequestHandler = async (req, res, next) => {
             try {
                 if (type === 'accept' && !formId) {
                     const recruitment = (await RecruitmentRepo.query({ title }))[0];
+                    if (recruitment.end < Date.now()) {
+                        return new Error('This recruitment has already ended!');
+                    }
                     if (step === 1) {
                         const data = recruitment.groups.find((groupData) => groupData.name === group);
                         if (!data) {
