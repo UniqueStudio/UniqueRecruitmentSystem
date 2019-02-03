@@ -4,6 +4,7 @@ import createStyles from '@material-ui/core/styles/createStyles';
 const styles = ({ spacing: { unit }, palette, typography, breakpoints }: Theme) => createStyles({
     container: {
         minWidth: 400,
+        marginTop: unit * 3,
         padding: `0 ${unit * 3}px`,
         [breakpoints.up('md')]: {
             justifyContent: 'space-around',

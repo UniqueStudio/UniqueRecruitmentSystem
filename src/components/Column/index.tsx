@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { Draggable, DraggableProvided, Droppable } from 'react-beautiful-dnd';
+import { Draggable, Droppable } from 'react-beautiful-dnd';
 
 import Divider from '@material-ui/core/Divider';
 import Paper from '@material-ui/core/Paper';
@@ -37,7 +37,7 @@ class Column extends PureComponent<Props> {
                                 index={index}
                                 isDragDisabled={candidate.abandon || candidate.rejected || selectedCid.includes(candidate._id)}
                             >
-                                {(dragProvided: DraggableProvided) => (
+                                {(dragProvided) => (
                                     <Candidate
                                         candidate={candidate}
                                         provided={dragProvided}

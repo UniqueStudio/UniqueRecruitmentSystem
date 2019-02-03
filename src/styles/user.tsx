@@ -5,10 +5,10 @@ const styles = ({ breakpoints, spacing: { unit } }: Theme) => createStyles({
     container: {
         minWidth: 300,
         maxWidth: 900,
-        margin: `0 ${unit * 3}px`,
+        margin: `${unit * 3}px ${unit * 3}px 0`,
         [breakpoints.down('xs')]: {
             padding: unit,
-            margin: `0 ${unit}px`,
+            margin: `${unit * 3}px ${unit}px 0`,
         },
         padding: unit * 2,
     },

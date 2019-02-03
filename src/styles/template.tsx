@@ -61,6 +61,9 @@ const styles = ({ breakpoints, spacing }: Theme) => createStyles({
         },
         width: 150,
     },
+    picker: {
+        display: 'block'
+    }
 });
 
 export default styles;

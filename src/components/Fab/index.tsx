@@ -11,12 +11,14 @@ import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 
 import styles from '../../styles/column';
 
-import { Candidate } from '../../config/types';
+import { Candidate, Group, Step } from '../../config/types';
 
 interface Props extends WithStyles {
     candidates: Candidate[];
     selected: string[];
     fabOn: number;
+    group: Group;
+    steps: Step[];
     canOperate: boolean;
     select: (cid: string[]) => void;
     deselect: (cid: string[] | string) => void;
@@ -31,12 +33,15 @@ class FabButton extends PureComponent<Props> {
     };
 
     componentDidUpdate(prevProps: Props) {
-        const { selected, toggleFabOff } = this.props;
+        const { selected, toggleFabOff, group, steps } = this.props;
         if (prevProps.selected.length !== 0 && selected.length === 0) {
             toggleFabOff();
             this.setState({
                 buttons: false
             });
+        }
+        if (prevProps.group !== group || prevProps.steps.length !== steps.length) {
+            this.hideFab();
         }
     }
 
@@ -58,7 +63,6 @@ class FabButton extends PureComponent<Props> {
 
     hideFab = () => {
         const { deselect, selected } = this.props;
-        this.toggleButtons();
         deselect(selected);
     };
 
