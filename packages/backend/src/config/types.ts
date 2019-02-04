@@ -46,6 +46,10 @@ export interface Comment extends Document {
 export interface User extends Document {
     weChatID: string;
     username: string;
+    password: {
+        salt: string;
+        hash: string;
+    };
     joinTime: string; // e.g. 2018A || 2018S (A: AUTUMN, S: SPRING, C: CAMP)
     isCaptain: boolean;
     isAdmin: boolean;

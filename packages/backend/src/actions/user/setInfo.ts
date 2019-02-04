@@ -1,3 +1,4 @@
+import crypto from 'crypto';
 import { RequestHandler } from 'express';
 import { body, validationResult } from 'express-validator/check';
 import { UserRepo } from '../../database/model';
@@ -14,7 +15,17 @@ export const setInfo: RequestHandler = async (req, res, next) => {
         if (!user) {
             return next(errorRes('User doesn\'t exist!', 'warning'));
         }
-        const { phone, mail } = req.body;
+        const { phone, mail, password } = req.body;
+        if (password && typeof password === 'string') {
+            const salt = crypto.randomBytes(16).toString('base64');
+            const hash = crypto.scryptSync(password, salt, 64).toString();
+            await UserRepo.updateById(id, {
+                password: {
+                    salt,
+                    hash
+                }
+            });
+        }
         await UserRepo.updateById(id, {
             phone,
             mail,

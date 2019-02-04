@@ -1,14 +1,17 @@
 import express from 'express';
-import { getGroup, getInfo, handleLogin, handleScan, setInfo, setInfoVerify } from '../actions/user';
+import { getGroup, getInfo, handleLogin, handleLoginVerify, handleQR, handleScan, setInfo, setInfoVerify } from '../actions/user';
 import { authenticator } from '../middlewares/authenticator';
 
 const router = express.Router();
 
 // login: get QR code
-router.get('/login', handleLogin);
+router.get('/qrCode', handleQR);
 
 // login: scan QR code
-router.get('/:key/status', handleScan);
+router.get('/qrCode/:key', handleScan);
+
+// login: password
+router.post('/login', handleLoginVerify, handleLogin);
 
 router.use(authenticator);
 

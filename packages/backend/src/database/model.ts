@@ -153,6 +153,10 @@ const userSchema = createSchema({
         type: String,
         required: true
     },
+    password: {
+        hash: String,
+        salt: String,
+    },
     username: {
         type: String,
         required: true

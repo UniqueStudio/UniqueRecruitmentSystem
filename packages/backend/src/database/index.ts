@@ -2,6 +2,7 @@ import { connect, Document, Model, Schema, SchemaDefinition, set } from 'mongoos
 
 import { dbURI } from '../config/consts';
 import { logger } from '../utils/logger';
+
 set('useFindAndModify', false);
 
 connect(dbURI, { useNewUrlParser: true })
@@ -33,6 +34,14 @@ export class RepositoryBase<T extends Document> {
 
     async queryById(id: string) {
         return await this.model.findById(id);
+    }
+
+    async queryProtected(condition: object, field: string) {
+        return await this.model.find(condition).populate(field);
+    }
+
+    async queryProtectedById(id: string, field: string) {
+        return await this.model.findById(id).populate(field);
     }
 
     async update(condition: object, newItem: object, isRemove = false) {
