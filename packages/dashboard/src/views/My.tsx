@@ -10,7 +10,7 @@ interface Props {
     userInfo: UserType;
     groupInfo: UserType[];
     enqueueSnackbar: InjectedNotistackProps['enqueueSnackbar'];
-    submitInfo: (info: { phone: string, mail: string }) => void;
+    submitInfo: (info: { phone: string, mail: string, password?: string }) => void;
 }
 
 class My extends PureComponent<Props> {

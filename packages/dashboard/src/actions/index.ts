@@ -520,6 +520,22 @@ export function getQRCodeFulfilled(key: string): GetQRCodeFulfilled {
     };
 }
 
+export const LOGIN_START = 'LOGIN_START';
+export type LOGIN_START = typeof LOGIN_START;
+export interface LoginStart {
+    type: LOGIN_START;
+    phone: string;
+    password: string;
+}
+
+export function loginStart(phone: string, password: string): LoginStart {
+    return {
+        type: LOGIN_START,
+        password,
+        phone
+    };
+}
+
 export const GET_USER_INFO_START = 'GET_USER_INFO_START';
 export type GET_USER_INFO_START = typeof GET_USER_INFO_START;
 
@@ -539,12 +555,13 @@ export type SET_USER_INFO_START = typeof SET_USER_INFO_START;
 export interface SetUserInfoStart {
     type: SET_USER_INFO_START;
     info: {
-        phone: string,
-        mail: string
+        phone: string;
+        mail: string;
+        password?: string;
     };
 }
 
-export function setUserInfoStart(info: { phone: string, mail: string }): SetUserInfoStart {
+export function setUserInfoStart(info: { phone: string, mail: string, password?: string }): SetUserInfoStart {
     return {
         type: SET_USER_INFO_START,
         info,
@@ -556,10 +573,10 @@ export type USER_INFO_FULFILLED = typeof USER_INFO_FULFILLED;
 
 export interface UserInfoFulfilled {
     type: USER_INFO_FULFILLED;
-    info: object;
+    info: Partial<User>;
 }
 
-export function userInfoFulfilled(info: object): UserInfoFulfilled {
+export function userInfoFulfilled(info: Partial<User>): UserInfoFulfilled {
     return {
         type: USER_INFO_FULFILLED,
         info,

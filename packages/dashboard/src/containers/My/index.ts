@@ -8,49 +8,22 @@ import {
     enqueueSnackbar,
     setUserInfoStart,
     SetUserInfoStart
-    // getCandidatesStart,
-    // GetCandidatesStart,
-    // GetGroupInfoStart,
-    // getGroupInfoStart,
-    // getRecruitmentsStart,
-    // GetRecruitmentsStart,
-    // sendInterview,
-    // SendInterview,
-    // setAllSlotsStart,
-    // SetAllSlotsStart,
-    // setOneSlotStart,
-    // SetOneSlotStart,
 } from '../../actions';
 import { StoreState } from '../../reducers';
 
 import My from '../../views/My';
 
-const mapStateToProps = ({ /*candidate, */user: { groupInfo, info }/*, recruitments*/ }: StoreState) => ({
-    // candidate: candidate.candidate || [],
+const mapStateToProps = ({ user: { groupInfo, info } }: StoreState) => ({
     groupInfo,
-    // currentRecruitment: recruitments.recruitments.filter(({ title }) => title === recruitments.pending)[0],
     userInfo: info,
-    // pendingRecruitment: recruitments.pending,
 });
 
 type DispatchType =
     Dispatch<EnqueueSnackbar | SetUserInfoStart>;
-// | GetGroupInfoStart
-// | GetCandidatesStart
-// | GetRecruitmentsStart
-// | SendInterview
-// | SetAllSlotsStart
-// | SetOneSlotStart>;
 
 const mapDispatchToProps = (dispatch: DispatchType) => ({
-    // requestCandidate: (group: string, recruitmentName: string) => dispatch(getCandidatesStart(group, recruitmentName)),
-    // requestGroup: () => dispatch(getGroupInfoStart()),
-    // requestRecruitments: () => dispatch(getRecruitmentsStart()),
-    // sendInterview: (content: object) => dispatch(sendInterview(content)),
     enqueueSnackbar: (message: string, options?: OptionsObject) => dispatch(enqueueSnackbar(message, options)),
-    submitInfo: (info: { phone: string, mail: string }) => dispatch(setUserInfoStart(info)),
-    // setAllSlots: (title: string, slots: number[], group: string) => dispatch(setAllSlotsStart(title, slots, group)),
-    // setOneSlot: (id: string, time: object) => dispatch(setOneSlotStart(id, time)),
+    submitInfo: (info: { phone: string, mail: string, password?: string }) => dispatch(setUserInfoStart(info)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(My);

@@ -68,9 +68,15 @@ class Dashboard extends PureComponent<Props> {
                     <Typography variant='h4' className={classes.title}>Notifications</Typography>
                     <Divider variant='middle' />
                     <Paper className={classes.paper}>
-                        顶部工具栏有聊天室、面试问题、刷新及退出<br />
-                        shift + 滚轮 可以横向滚动<br />
-                        栏与栏内项目均可拖动<br />
+                        <ul>
+                            <li>顶部工具栏有聊天室、面试问题、刷新及退出</li>
+                            <li>shift + 滚轮 可以横向滚动</li>
+                            <li>栏与栏内项目均可拖动（牺牲了各栏高度的统一）</li>
+                            <li>不能查看自己这届的候选人</li>
+                            <li>左侧甜甜圈图划掉组别，中间的人数并不会减少</li>
+                            <li>简历不存在时按钮是禁用的，但是速度仍然很慢</li>
+                            <li><del>通知是写死的，面试问题也是</del></li>
+                        </ul>
                     </Paper>
                 </div>
             </div>
