@@ -17,13 +17,14 @@ const styles = ({ breakpoints, spacing: { unit } }: Theme) => createStyles({
         justifyContent: 'space-around',
     },
     userInfo: {
-        padding: unit,
+        margin: unit * 2,
         width: '25%',
         [breakpoints.down('sm')]: {
-            width: '50%',
+            width: '45%',
+            margin: unit,
         },
         [breakpoints.down('xs')]: {
-            width: '100%',
+            width: '95%',
         },
     },
 });
