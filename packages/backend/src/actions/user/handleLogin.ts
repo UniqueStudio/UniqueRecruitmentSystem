@@ -16,10 +16,10 @@ export const handleLogin: RequestHandler = async (req, res, next) => {
         if (!user) {
             return next(errorRes('User doesn\'t exist!', 'warning'));
         }
-        if (!user.password) {
+        const { hash, salt } = user.password;
+        if (!hash || !salt) {
             return next(errorRes('Please set password first!', 'warning'));
         }
-        const { hash, salt } = user.password;
         if (hash !== crypto.scryptSync(password, salt, 64).toString()) {
             return next(errorRes('Password is incorrect!', 'warning'));
         }
