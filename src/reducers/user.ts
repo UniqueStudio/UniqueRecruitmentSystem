@@ -69,7 +69,8 @@ export function userReducer(state = init, action: Action): UserStore {
             return { ...state, token: '' };
         case actions.USER_INFO_FULFILLED: {
             const { info, groupInfo } = state;
-            const updatedInfo = { ...state.info, ...action.info };
+            const { password, ...infoWithoutPassword } = action.info;
+            const updatedInfo = { ...state.info, ...infoWithoutPassword };
             const index = groupInfo.findIndex(({ _id }) => _id === info._id);
             const updatedGroupInfo = updateObjectInArray(state.groupInfo, index, updatedInfo);
             updateStorage('user')(updatedInfo);

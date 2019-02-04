@@ -16,13 +16,14 @@ import { titleConverter } from '../../utils/titleConverter';
 interface Props extends WithStyles {
     userInfo: UserType;
     enqueueSnackbar: InjectedNotistackProps['enqueueSnackbar'];
-    submitInfo: (info: { phone: string, mail: string }) => void;
+    submitInfo: (info: { phone: string, mail: string, password?: string }) => void;
 }
 
 class User extends PureComponent<Props> {
     state = {
         phone: '',
-        mail: ''
+        mail: '',
+        password: undefined
     };
 
     handleChange = (name: string) => ({ target: { value } }: React.ChangeEvent<HTMLInputElement>) => {
@@ -45,7 +46,8 @@ class User extends PureComponent<Props> {
         const { userInfo, enqueueSnackbar } = this.props;
         const mail = this.state.mail || userInfo.mail;
         const phone = this.state.phone || userInfo.phone;
-        if (!this.state.mail && !this.state.phone) {
+        const password = this.state.password;
+        if (!this.state.mail && !this.state.phone && !password) {
             enqueueSnackbar('你没有做任何更改！', { variant: 'info' });
             return;
         }
@@ -57,7 +59,7 @@ class User extends PureComponent<Props> {
             enqueueSnackbar('手机号码格式不正确！', { variant: 'warning' });
             return;
         }
-        this.props.submitInfo({ phone, mail });
+        this.props.submitInfo({ phone, mail, password });
     };
 
     render() {
@@ -126,6 +128,13 @@ class User extends PureComponent<Props> {
                     label='邮箱'
                     defaultValue={mail}
                     onChange={this.handleChange('mail')}
+                    className={classes.userInfo}
+                    margin='normal'
+                />
+                <TextField
+                    label='密码'
+                    type='password'
+                    onChange={this.handleChange('password')}
                     className={classes.userInfo}
                     margin='normal'
                 />

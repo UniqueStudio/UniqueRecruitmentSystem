@@ -43,6 +43,7 @@ export interface User {
     _id: string;
     weChatID: string;
     username: string;
+    password?: string;
     joinTime: string; // e.g. 2018A || 2018S (A: AUTUMN, S: SPRING, C: CAMP)
     isCaptain: boolean;
     isAdmin: boolean;
