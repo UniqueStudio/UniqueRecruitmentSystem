@@ -54,7 +54,7 @@ class Frame extends PureComponent<Props> {
                 <AppBar />
                 <Drawer />
                 <main className={classes.content} onClick={this.handleClick}>
-                    {userInfo ? children : null}
+                    {userInfo && children}
                 </main>
                 {loading && <Progress />}
             </div> : <Redirect to='/login' />

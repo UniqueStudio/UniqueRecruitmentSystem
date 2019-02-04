@@ -1,12 +1,6 @@
 import React, { lazy, PureComponent, Suspense } from 'react';
 import { Route, RouteComponentProps, Switch, withRouter } from 'react-router';
 
-const Candidates = lazy(() => import('../containers/Candidates'));
-const Dashboard = lazy(() => import('../containers/Dashboard'));
-const Data = lazy(() => import('../containers/Data'));
-const My = lazy(() => import('../containers/My'));
-const NoMatch = lazy(() => import('./NoMatch'));
-
 import PageFrame from '../containers/Frame';
 import Login from './Login';
 
@@ -15,6 +9,12 @@ import Snackbar from '../components/Snackbar';
 import Notifier from '../containers/Notifier';
 
 import withRoot from '../styles/withRoot';
+
+const Candidates = lazy(() => import('../containers/Candidates'));
+const Dashboard = lazy(() => import('../containers/Dashboard'));
+const Data = lazy(() => import('../containers/Data'));
+const My = lazy(() => import('../containers/My'));
+const NoMatch = lazy(() => import('./NoMatch'));
 
 class Index extends PureComponent {
 

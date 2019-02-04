@@ -11,20 +11,20 @@ import logo from '../../images/logo.webp';
 import styles from '../../styles/login';
 
 import Modal from '../Modal';
+import Progress from '../Progress';
 
 interface Props extends WithStyles {
     loggedIn: boolean;
-    // login: (username: string) => void;
-    getQRCode: () => void;
+    isLoading: boolean;
     weChatKey: string;
     isScanning: boolean;
+    getQRCode: () => void;
+    login: (phone: string, password: string) => void;
 }
 
 class Login extends PureComponent<Props> {
 
     state = {
-        // modal: true,
-        // name: '',
         src: '',
         method: 0,
         phone: '',
@@ -39,7 +39,8 @@ class Login extends PureComponent<Props> {
     }
 
     login = () => {
-        // TODO
+        const { phone, password } = this.state;
+        this.props.login(phone, password);
     };
 
     setMethod = (method: 1 | 2) => () => {
@@ -55,7 +56,7 @@ class Login extends PureComponent<Props> {
     };
 
     render() {
-        const { classes, loggedIn, isScanning, getQRCode } = this.props;
+        const { classes, loggedIn, isScanning, getQRCode, isLoading } = this.props;
         const { src, method, phone, password } = this.state;
         return (
             !loggedIn ? <div className={classes.container}>
@@ -66,8 +67,9 @@ class Login extends PureComponent<Props> {
                             <Button color='primary' size='large' onClick={this.setMethod(1)}>企业微信登录</Button>
                             <Button color='primary' size='large' onClick={this.setMethod(2)}>账号密码登录</Button>
                         </> : method === 1 ? <>
-                            {this.state.src && <img src={src} alt='This is QRCode' />}
+                            {src && <img src={src} alt='This is QRCode' />}
                             <Button color='primary' size='large' onClick={getQRCode} disabled={isScanning}>获取二维码</Button>
+                            <Button color='primary' size='large' onClick={this.setMethod(2)}>账号密码登录</Button>
                         </> : method === 2 ? <>
                             <TextField
                                 label='手机号'
@@ -78,13 +80,16 @@ class Login extends PureComponent<Props> {
                             <TextField
                                 label='密码'
                                 value={password}
+                                type='password'
                                 onChange={this.handleChange('password')}
                                 margin='normal'
                             />
-                            <Button color='primary' size='large' onClick={this.login}>登录</Button>
+                            <Button color='primary' size='large' onClick={this.login} disabled={!phone || !password}>登录</Button>
+                            <Button color='primary' size='large' onClick={this.setMethod(1)}>企业微信登录</Button>
                         </> : null}
                     </div>
                 </Modal>
+                {isLoading && <Progress />}
             </div> : <Redirect to='/' />
         );
     }

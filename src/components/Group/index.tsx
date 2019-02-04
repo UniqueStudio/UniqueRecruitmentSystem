@@ -12,28 +12,13 @@ import { InjectedNotistackProps } from 'notistack';
 import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 
 import { GENDERS } from '../../config/consts';
-import { /*Candidate, User as GroupType, Recruitment, Time, */User } from '../../config/types';
+import { User } from '../../config/types';
 import styles from '../../styles/group';
 import { titleConverter } from '../../utils/titleConverter';
 
-// import GroupCandidates from './GroupCandidates';
-// import GroupDialog from './GroupDialog';
-// import GroupModal from './GroupModal';
-
 interface Props extends WithStyles {
-    // candidate: Map<string, Candidate>[];
     groupInfo: User[];
     enqueueSnackbar: InjectedNotistackProps['enqueueSnackbar'];
-
-    // currentRecruitment: Recruitment;
-    // pendingRecruitment: string;
-    // requestCandidate: (group: string, recruitmentName: string) => void;
-    // requestGroup: (group: string) => void;
-    // requestRecruitments: () => void;
-    // sendInterview: (content: object) => void;
-    // toggleSnackbar: (message: string, color: string) => void;
-    // setAllSlots: (title: string, slots: number[], group: string) => void;
-    // setOneSlot: (id: string, time: object) => void;
 }
 
 const heads = ['成员姓名', '性别', '电话号码', '邮箱', '加入时间', '组长？', '管理员？'];
@@ -50,33 +35,13 @@ const memberDataConverter = ({ username, gender, phone, mail, joinTime, isCaptai
 class Group extends PureComponent<Props> {
 
     render() {
-        const { classes, /*candidate, group, currentRecruitment,*/ groupInfo } = this.props;
-        // const { interviewStage, counts, modalOpen, code, dialogOpen, place } = this.state;
-
+        const { classes, groupInfo } = this.props;
         if (!groupInfo) {
             return null;
         }
-        // const disabled = interviewStage === 1
-        //     ? !(candidate[2] && candidate[2].size && currentRecruitment && currentRecruitment.time1[userGroup] && counts.length)
-        //     : !(candidate[4] && candidate[4].size && currentRecruitment && currentRecruitment.time2 && counts.length);
-        // const currentCandidates = candidate.length
-        //     ? candidate.map((candidate) => [...candidate.values()])[interviewStage * 2]
-        //     : [];
-        // const filter = (candidate: Candidate) =>
-        //     (!candidate.abandon && !candidate.rejected && candidate[`time${interviewStage}`] && candidate[`slot${interviewStage}`]);
-        // const filteredCandidates = currentCandidates.filter(filter);
         return (
             <>
                 <div className={classes.infoContainer}>
-                    {/*<GroupCandidates*/}
-                    {/*candidate={currentCandidates}*/}
-                    {/*interviewStage={interviewStage}*/}
-                    {/*disabled={disabled}*/}
-                    {/*toggleModal={this.toggleModal}*/}
-                    {/*toggleDialog={this.toggleDialog}*/}
-                    {/*handleChange={this.handleChange}*/}
-                    {/*setTime={this.setOneSlot}*/}
-                    {/*/>*/}
                     <Paper className={classes.paper}>
                         <div className={classes.title}>
                             <Typography variant='h6'>
@@ -104,20 +69,6 @@ class Group extends PureComponent<Props> {
                             </Table>
                         </div>
                     </Paper>
-                    {/*<GroupDialog*/}
-                    {/*dialogOpen={dialogOpen}*/}
-                    {/*toggleDialog={this.toggleDialog}*/}
-                    {/*handleInput={this.handleInput}*/}
-                    {/*code={code}*/}
-                    {/*place={place}*/}
-                    {/*sendInterview={this.sendInterview}*/}
-                    {/*candidate={filteredCandidates}*/}
-                    {/*/>*/}
-                    {/*{!disabled && <GroupModal*/}
-                    {/*modalOpen={modalOpen}*/}
-                    {/*submitAllocation={this.submitAllocation}*/}
-                    {/*toggleModal={this.toggleModal}*/}
-                    {/*/>}*/}
                 </div>
             </>
         );
