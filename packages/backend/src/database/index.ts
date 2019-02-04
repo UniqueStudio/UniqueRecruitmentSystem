@@ -20,56 +20,48 @@ export class RepositoryBase<T extends Document> {
         return new this.model(item);
     }
 
-    async insert(item: T) {
-        return await this.model.create(item);
+    insert(item: T) {
+        return this.model.create(item);
     }
 
-    async createAndInsert(item: object) {
-        return await this.insert(this.create(item));
+    createAndInsert(item: object) {
+        return this.insert(this.create(item));
     }
 
-    async query(condition: object) {
-        return await this.model.find(condition);
+    query(condition: object) {
+        return this.model.find(condition);
     }
 
-    async queryById(id: string) {
-        return await this.model.findById(id);
+    queryById(id: string) {
+        return this.model.findById(id);
     }
 
-    async queryProtected(condition: object, field: string) {
-        return await this.model.find(condition).populate(field);
+    update(condition: object, newItem: object, isRemove = false) {
+        return this.model.findOneAndUpdate(condition, { [isRemove ? '$unset' : '$set']: newItem }, { new: true });
     }
 
-    async queryProtectedById(id: string, field: string) {
-        return await this.model.findById(id).populate(field);
+    updateById(id: string, newItem: object, isRemove = false) {
+        return this.model.findByIdAndUpdate(id, { [isRemove ? '$unset' : '$set']: newItem }, { new: true });
     }
 
-    async update(condition: object, newItem: object, isRemove = false) {
-        return await this.model.findOneAndUpdate(condition, { [isRemove ? '$unset' : '$set']: newItem }, { new: true });
+    pushById(id: string, newItem: object) {
+        return this.model.findByIdAndUpdate(id, { $push: newItem }, { new: true });
     }
 
-    async updateById(id: string, newItem: object, isRemove = false) {
-        return await this.model.findByIdAndUpdate(id, { [isRemove ? '$unset' : '$set']: newItem }, { new: true });
+    pullById(id: string, deleteItem: object) {
+        return this.model.findByIdAndUpdate(id, { $pull: deleteItem }, { new: true });
     }
 
-    async pushById(id: string, newItem: object) {
-        return await this.model.findByIdAndUpdate(id, { $push: newItem }, { new: true });
+    delete(condition: object) {
+        return this.model.findOneAndDelete(condition);
     }
 
-    async pullById(id: string, deleteItem: object) {
-        return await this.model.findByIdAndUpdate(id, { $pull: deleteItem }, { new: true });
+    deleteById(id: string) {
+        return this.model.findByIdAndDelete(id);
     }
 
-    async delete(condition: object) {
-        return await this.model.findOneAndDelete(condition);
-    }
-
-    async deleteById(id: string) {
-        return await this.model.findByIdAndDelete(id);
-    }
-
-    async count(condition: object) {
-        return await this.model.countDocuments(condition);
+    count(condition: object) {
+        return this.model.countDocuments(condition);
     }
 }
 

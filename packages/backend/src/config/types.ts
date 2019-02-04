@@ -46,7 +46,7 @@ export interface Comment extends Document {
 export interface User extends Document {
     weChatID: string;
     username: string;
-    password: {
+    password?: {
         salt: string;
         hash: string;
     };

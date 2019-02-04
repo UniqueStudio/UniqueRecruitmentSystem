@@ -16,6 +16,9 @@ export const handleLogin: RequestHandler = async (req, res, next) => {
         if (!user) {
             return next(errorRes('User doesn\'t exist!', 'warning'));
         }
+        if (!user.password) {
+            return next(errorRes('Please set password first!', 'warning'));
+        }
         const { hash, salt } = user.password;
         if (!hash || !salt) {
             return next(errorRes('Please set password first!', 'warning'));
