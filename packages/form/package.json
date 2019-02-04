@@ -1,10 +1,10 @@
 {
   "name": "unique-recruitment-form",
-  "version": "2.0.0-rc.1",
+  "version": "2.0.0-rc.2",
   "description": "the form for recruitment of Unique Studio",
   "author": "@winderica",
   "private": true,
-  "homepage": ".",
+  "homepage": "/",
   "repository": {
     "type": "git",
     "url": "https://github.com/UniqueStudio/UniqueRecruitmentForm.git"
