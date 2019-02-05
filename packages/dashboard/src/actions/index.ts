@@ -247,14 +247,12 @@ export type ADD_CANDIDATE_FULFILLED = typeof ADD_CANDIDATE_FULFILLED;
 
 export interface AddCandidateFulfilled {
     type: ADD_CANDIDATE_FULFILLED;
-    group: Group;
     candidate: Candidate;
 }
 
-export function addCandidateFulfilled(group: Group, candidate: Candidate): AddCandidateFulfilled {
+export function addCandidateFulfilled(candidate: Candidate): AddCandidateFulfilled {
     return {
         type: ADD_CANDIDATE_FULFILLED,
-        group,
         candidate
     };
 }
