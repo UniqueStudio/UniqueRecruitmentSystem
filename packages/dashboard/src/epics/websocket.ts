@@ -19,7 +19,7 @@ import {
 } from '../actions';
 
 import { API } from '../config/consts';
-import { Candidate, Comment, Group, Message, Step } from '../config/types';
+import { Candidate, Comment, Message, Step } from '../config/types';
 
 import { Epic, Socket } from './';
 
@@ -41,12 +41,15 @@ const socketReceiveEpic: Epic = (action$, state$, { socket$ }) =>
     socket$.pipe(
         switchMap((socket) => !socket ? EMPTY :
             new Observable<Action>((o) => {
-                socket.on('removeCandidate', ({ cid }: { cid: string }) => {
-                    o.next(toggleProgress(true));
-                    o.next(removeCandidateFulfilled(cid));
-                    o.next(setShouldUpdateRecruitment());
-                    o.next(enqueueSnackbar('有候选人被移除了！', { variant: 'info' }));
-                    o.next(toggleProgress());
+                socket.on('removeCandidate', (res: { cid: string, title: string }) => {
+                    const { cid, title } = res;
+                    if (title === state$.value.recruitment.viewing) {
+                        o.next(toggleProgress(true));
+                        o.next(removeCandidateFulfilled(cid));
+                        o.next(setShouldUpdateRecruitment());
+                        o.next(enqueueSnackbar('有候选人被移除了！', { variant: 'info' }));
+                        o.next(toggleProgress());
+                    }
                 });
                 socket.on('removeCandidateError', (res: { message: string, type: VariantType }) => {
                     const { message, type } = res;
@@ -54,13 +57,15 @@ const socketReceiveEpic: Epic = (action$, state$, { socket$ }) =>
                     o.next(toggleProgress());
                 });
 
-                socket.on('moveCandidate', (res: { cid: string, from: Step, to: Step }) => {
-                    const { cid, from, to } = res;
+                socket.on('moveCandidate', (res: { cid: string, from: Step, to: Step, title: string }) => {
+                    const { cid, from, to, title } = res;
                     o.next(toggleProgress(true));
-                    o.next(moveCandidateFulfilled(from, to, cid));
-                    o.next(setShouldUpdateRecruitment());
-                    o.next(enqueueSnackbar('有候选人被移动了！', { variant: 'info' }));
-                    o.next(toggleProgress());
+                    if (title === state$.value.recruitment.viewing) {
+                        o.next(moveCandidateFulfilled(from, to, cid));
+                        o.next(setShouldUpdateRecruitment());
+                        o.next(enqueueSnackbar('有候选人被移动了！', { variant: 'info' }));
+                        o.next(toggleProgress());
+                    }
                 });
                 socket.on('moveCandidateSuccess', () => {
                     o.next(setShouldUpdateRecruitment());
@@ -73,11 +78,13 @@ const socketReceiveEpic: Epic = (action$, state$, { socket$ }) =>
                     o.next(toggleProgress());
                 });
 
-                socket.on('addComment', (res: { cid: string, comment: Comment }) => {
-                    const { cid, comment } = res;
-                    o.next(toggleProgress(true));
-                    o.next(addCommentFulfilled(cid, comment));
-                    o.next(toggleProgress());
+                socket.on('addComment', (res: { cid: string, comment: Comment, title: string }) => {
+                    const { cid, comment, title } = res;
+                    if (title === state$.value.recruitment.viewing) {
+                        o.next(toggleProgress(true));
+                        o.next(addCommentFulfilled(cid, comment));
+                        o.next(toggleProgress());
+                    }
                 });
                 socket.on('addCommentError', (res: { message: string, type: VariantType }) => {
                     const { message, type } = res;
@@ -85,11 +92,13 @@ const socketReceiveEpic: Epic = (action$, state$, { socket$ }) =>
                     o.next(toggleProgress());
                 });
 
-                socket.on('removeComment', (res: { cid: string, id: string }) => {
-                    const { cid, id } = res;
-                    o.next(toggleProgress(true));
-                    o.next(removeCommentFulfilled(cid, id));
-                    o.next(toggleProgress());
+                socket.on('removeComment', (res: { cid: string, id: string, title: string }) => {
+                    const { cid, id, title } = res;
+                    if (title === state$.value.recruitment.viewing) {
+                        o.next(toggleProgress(true));
+                        o.next(removeCommentFulfilled(cid, id));
+                        o.next(toggleProgress());
+                    }
                 });
                 socket.on('removeCommentError', (res: { message: string, type: VariantType }) => {
                     const { message, type } = res;
@@ -97,13 +106,15 @@ const socketReceiveEpic: Epic = (action$, state$, { socket$ }) =>
                     o.next(toggleProgress());
                 });
 
-                socket.on('addCandidate', (res: { group: Group, candidate: Candidate }) => {
-                    const { group, candidate } = res;
-                    o.next(toggleProgress(true));
-                    o.next(addCandidateFulfilled(group, candidate));
-                    o.next(setShouldUpdateRecruitment());
-                    o.next(enqueueSnackbar(`${group}组多了一名报名选手！`, { variant: 'info' }));
-                    o.next(toggleProgress());
+                socket.on('addCandidate', (res: { candidate: Candidate }) => {
+                    const { candidate } = res;
+                    const { title, group } = candidate;
+                    if (title === state$.value.recruitment.viewing) {
+                        o.next(toggleProgress(true));
+                        o.next(addCandidateFulfilled(candidate));
+                        o.next(enqueueSnackbar(`${group}组多了一名报名选手！`, { variant: 'info' }));
+                        o.next(toggleProgress());
+                    }
                 });
 
                 socket.on('updateRecruitment', () => {
