@@ -11,7 +11,7 @@ export const getOneRecruitment: RequestHandler = async (req, res, next) => {
         //     return;
         // }
         // const { joinTime } = user;
-        const title = req.params.title;
+        const { title } = req.params;
         // if (joinTime === title) {
         //     return next(errorRes('You don\'t have permission to view this recruitment!', 'warning'));
         // }

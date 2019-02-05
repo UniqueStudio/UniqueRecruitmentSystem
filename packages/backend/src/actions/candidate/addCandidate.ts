@@ -43,7 +43,7 @@ export const addCandidate: RequestHandler = async (req, res, next) => {
             'total': await CandidateRepo.count({ title })
         });
         res.json({ type: 'success' });
-        io.emit('addCandidate', { group, candidate: info });
+        io.emit('addCandidate', { candidate: info });
         io.emit('updateRecruitment');
     } catch (err) {
         return next(err);

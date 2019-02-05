@@ -12,17 +12,18 @@ export const onRemoveComment = (socket: Socket) => async (req: { cid: string, id
         const uid = verifyJWT(token);
         const candidate = await CandidateRepo.queryById(cid);
         if (!candidate) {
-            return socket.emit('addCommentError', errorRes('Candidate doesn\'t exist!', 'warning'));
+            return socket.emit('removeCommentError', errorRes('Candidate doesn\'t exist!', 'warning'));
         }
-        const comment = candidate.comments.find(({ _id }) => _id.toString() === id);
+        const { title } = candidate;
+        const comment = candidate.comments.find(({ _id }) => _id && _id.toString() === id);
         if (!comment) {
-            return socket.emit('addCommentError', errorRes('Comment doesn\'t exist!', 'warning'));
+            return socket.emit('removeCommentError', errorRes('Comment doesn\'t exist!', 'warning'));
         }
         if (comment.uid !== uid) {
-            return socket.emit('addCommentError', errorRes('You don\'t have permission to do this!', 'warning'));
+            return socket.emit('removeCommentError', errorRes('You don\'t have permission to do this!', 'warning'));
         }
         await CandidateRepo.pullById(cid, { comments: { _id: new Types.ObjectId(id) } });
-        return io.emit('removeComment', { cid, id });
+        return io.emit('removeComment', { cid, id, title });
     } catch ({ message }) {
         logger.error(message);
         return socket.emit('removeCommentError', errorRes(message, 'error'));

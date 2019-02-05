@@ -19,7 +19,7 @@ export const setRecruitment: RequestHandler = async (req, res, next) => {
         if (!isAdmin && !isCaptain) {
             return next(errorRes('Permission denied', 'warning'));
         }
-        const title = req.params.title;
+        const { title } = req.params;
         const { begin, end, groupInterview, teamInterview, group } = req.body;
         await RecruitmentRepo.update({ title }, {
             begin,

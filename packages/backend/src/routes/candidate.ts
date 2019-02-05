@@ -38,9 +38,8 @@ router.put('/:cid/interview/:type', allocateOneVerify, allocateOne);
 // allocate all
 router.put('/interview/:type', allocateAllVerify, allocateAll);
 
-// get all candidates in the latest recruitment
+// get all candidates
 router.get('/:query', getCandidateVerify, getCandidates);
-// router.get('/recruitment/:title', getCandidates);
 
 // get resume of a candidate
 router.get('/:cid/resume', getResume);

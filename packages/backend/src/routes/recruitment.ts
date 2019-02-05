@@ -7,7 +7,6 @@ import {
 
 import { authenticator } from '../middlewares/authenticator';
 import { codeChecker } from '../middlewares/codeChecker';
-// import { setSlots } from '../actions/recruitment/setSlots';
 
 const router = express.Router();
 
@@ -27,8 +26,5 @@ router.get('/title/:title', getOneRecruitment);
 
 // set recruitment
 router.put('/title/:title', setRecruitmentVerify, setRecruitment);
-
-// // set slots for periods
-// router.post('/:title/slots', setSlots);
 
 export const recruitment = router;

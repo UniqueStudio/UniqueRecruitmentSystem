@@ -28,7 +28,7 @@ export const onRemoveCandidate = (socket: Socket) => async ({ cid, token }: { ci
             [`groups.$.steps.${step}`]: await CandidateRepo.count({ title, group, step }),
             'total': await CandidateRepo.count({ title })
         });
-        io.emit('removeCandidate', { cid });
+        io.emit('removeCandidate', { cid, title });
         io.emit('updateRecruitment');
         return;
     } catch ({ message }) {

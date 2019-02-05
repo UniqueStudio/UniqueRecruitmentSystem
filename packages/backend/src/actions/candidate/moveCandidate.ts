@@ -22,7 +22,7 @@ export const onMoveCandidate = (socket: Socket) => async (req: { cid: string, fr
             return socket.emit('moveCandidateError', errorRes('Candidate has been moved by others', 'warning', { cid, to, from: step }));
         }
         await CandidateRepo.updateById(cid, { step: to });
-        socket.broadcast.emit('moveCandidate', { cid, from, to });
+        socket.broadcast.emit('moveCandidate', { cid, from, to, title });
         socket.emit('moveCandidateSuccess');
         await RecruitmentRepo.update({ title, 'groups.name': group }, {
             [`groups.$.steps.${from}`]: await CandidateRepo.count({ title, group, step: from }),

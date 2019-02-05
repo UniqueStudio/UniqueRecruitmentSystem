@@ -18,6 +18,7 @@ export const onAddComment = (socket: Socket) => async (req: { cid: string, comme
         if (!comment) {
             return socket.emit('addCommentError', errorRes('No comment provided!', 'warning'));
         }
+        const { title } = candidate;
         const { uid, content, evaluation, username } = comment;
         if (uid !== id || !content || !username || ![0, 1, 2].includes(evaluation)) {
             return socket.emit('addCommentError', errorRes('Comment is invalid!', 'warning'));
@@ -26,7 +27,7 @@ export const onAddComment = (socket: Socket) => async (req: { cid: string, comme
         if (!updated) {
             return socket.emit('addCommentError', errorRes('Failed to add comment!', 'warning'));
         }
-        return io.emit('addComment', { cid, comment: updated.comments.slice(-1)[0] });
+        return io.emit('addComment', { cid, title, comment: updated.comments.slice(-1)[0] });
     } catch ({ message }) {
         logger.error(message);
         return socket.emit('addCommentError', errorRes(message, 'error'));
