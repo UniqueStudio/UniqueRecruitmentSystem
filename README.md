@@ -28,10 +28,3 @@ Visit [https://hr.hustunique.com](https://hr.hustunique.com) for more details
 5. `Create-react-app`
 6. `RxJS` && `redux-observable`
 
-## TODOS
-
-1. password login
-2. more messages in chat room
-3. beautify interface
-4. disable modifying past recruitments
-
