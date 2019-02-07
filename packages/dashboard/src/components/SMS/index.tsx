@@ -1,4 +1,3 @@
-import { InjectedNotistackProps } from 'notistack';
 import React, { PureComponent } from 'react';
 
 import Button from '@material-ui/core/Button';
@@ -9,6 +8,7 @@ import StepLabel from '@material-ui/core/StepLabel';
 import Stepper from '@material-ui/core/Stepper';
 
 import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
+import { OptionsObject } from 'notistack';
 
 import styles from '../../styles/template';
 
@@ -21,7 +21,7 @@ import { Candidate } from '../../config/types';
 interface Props extends WithStyles {
     status: string;
     selected: Candidate[];
-    enqueueSnackbar: InjectedNotistackProps['enqueueSnackbar'];
+    enqueueSnackbar: (message: string, options?: OptionsObject) => void;
     toggleOpen: () => void;
     deselect?: (cid: string) => void;
     sendSMS: (content: object) => void;

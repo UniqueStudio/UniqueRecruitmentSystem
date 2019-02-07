@@ -14,7 +14,7 @@ import InsertPhotoIcon from '@material-ui/icons/InsertPhoto';
 import SendIcon from '@material-ui/icons/Send';
 
 import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
-import { InjectedNotistackProps } from 'notistack';
+import { OptionsObject } from 'notistack';
 
 import EnlargeableImage from '../EnlargeableImg';
 
@@ -27,7 +27,7 @@ interface Props extends WithStyles {
     username: string;
     avatar: string;
     sendMessage: (message: Message) => void;
-    enqueueSnackbar: InjectedNotistackProps['enqueueSnackbar'];
+    enqueueSnackbar: (message: string, options?: OptionsObject) => void;
 }
 
 interface State {

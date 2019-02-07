@@ -4,7 +4,7 @@ import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
-import { InjectedNotistackProps } from 'notistack';
+import { OptionsObject } from 'notistack';
 
 import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 
@@ -15,7 +15,7 @@ import { titleConverter } from '../../utils/titleConverter';
 
 interface Props extends WithStyles {
     userInfo: UserType;
-    enqueueSnackbar: InjectedNotistackProps['enqueueSnackbar'];
+    enqueueSnackbar: (message: string, options?: OptionsObject) => void;
     submitInfo: (info: { phone: string, mail: string, password?: string }) => void;
 }
 
