@@ -6,7 +6,7 @@ import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 
 import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
-import { InjectedNotistackProps } from 'notistack';
+import { OptionsObject } from 'notistack';
 
 import AddOne from '../components/AddOne';
 import Chart from '../components/Chart';
@@ -17,7 +17,7 @@ interface Props extends WithStyles {
     data: Recruitment[];
     canLaunch: boolean;
     viewing: string;
-    enqueueSnackbar: InjectedNotistackProps['enqueueSnackbar'];
+    enqueueSnackbar: (message: string, options?: OptionsObject) => void;
     launchRecruitment: (info: Partial<Recruitment>) => void;
     setViewing: (title: string) => void;
 }
