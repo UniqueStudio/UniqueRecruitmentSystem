@@ -4,7 +4,7 @@ import Button from '@material-ui/core/Button';
 import MenuItem from '@material-ui/core/MenuItem';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
-import { InjectedNotistackProps } from 'notistack';
+import { OptionsObject } from 'notistack';
 
 import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 
@@ -21,7 +21,7 @@ interface Props extends WithStyles {
     savedComment: State;
     submit: (cid: string, comment: Partial<Comment>) => void;
     remove: (cid: string, id: string) => void;
-    enqueueSnackbar: InjectedNotistackProps['enqueueSnackbar'];
+    enqueueSnackbar: (message: string, options?: OptionsObject) => void;
     changeInputting: (content: string, evaluation: Evaluation) => void;
 }
 

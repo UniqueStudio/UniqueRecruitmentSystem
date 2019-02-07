@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 
-import { InjectedNotistackProps } from 'notistack';
+import { OptionsObject } from 'notistack';
 
 import Board from '../components/Board';
 import Dialog from '../components/Dialog';
@@ -24,7 +24,7 @@ interface Props {
     toggleFabOff: () => void;
     move: (from: Step, to: Step, cid: string, position: number) => void;
     remove: (cid: string) => void;
-    enqueueSnackbar: InjectedNotistackProps['enqueueSnackbar'];
+    enqueueSnackbar: (message: string, options?: OptionsObject) => void;
 }
 
 class Candidates extends PureComponent<Props> {

@@ -1,6 +1,7 @@
-import { OptionsObject } from 'notistack';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
+
+import { OptionsObject } from 'notistack';
 
 import {
     deselectCandidate,

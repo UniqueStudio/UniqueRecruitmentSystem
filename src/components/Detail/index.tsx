@@ -1,10 +1,10 @@
-import { InjectedNotistackProps } from 'notistack';
 import React, { PureComponent } from 'react';
 
 import IconButton from '@material-ui/core/IconButton';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
 import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
+import { OptionsObject } from 'notistack';
 
 import { Candidate, Comment, Evaluation, User } from '../../config/types';
 
@@ -25,7 +25,7 @@ interface Props extends WithStyles {
     handleNext: (index: number) => void;
     submit: (cid: string, comment: Partial<Comment>) => void;
     remove: (cid: string, id: string) => void;
-    enqueueSnackbar: InjectedNotistackProps['enqueueSnackbar'];
+    enqueueSnackbar: (message: string, options?: OptionsObject) => void;
     changeInputting: (content: string, evaluation: Evaluation) => void;
     getResume: (cid: string) => void;
     handleTodo: () => void;
