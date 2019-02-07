@@ -7,7 +7,7 @@ import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Typography from '@material-ui/core/Typography';
-import { InjectedNotistackProps } from 'notistack';
+import { OptionsObject } from 'notistack';
 
 import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 
@@ -18,7 +18,7 @@ import { titleConverter } from '../../utils/titleConverter';
 
 interface Props extends WithStyles {
     groupInfo: User[];
-    enqueueSnackbar: InjectedNotistackProps['enqueueSnackbar'];
+    enqueueSnackbar: (message: string, options?: OptionsObject) => void;
 }
 
 const heads = ['成员姓名', '性别', '电话号码', '邮箱', '加入时间', '组长？', '管理员？'];

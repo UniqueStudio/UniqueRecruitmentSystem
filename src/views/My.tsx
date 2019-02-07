@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 
-import { InjectedNotistackProps } from 'notistack';
+import { OptionsObject } from 'notistack';
 
 import Group from '../components/Group';
 import User from '../components/User';
@@ -9,7 +9,7 @@ import { User as UserType } from '../config/types';
 interface Props {
     userInfo: UserType;
     groupInfo: UserType[];
-    enqueueSnackbar: InjectedNotistackProps['enqueueSnackbar'];
+    enqueueSnackbar: (message: string, options?: OptionsObject) => void;
     submitInfo: (info: { phone: string, mail: string, password?: string }) => void;
 }
 
