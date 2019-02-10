@@ -10,7 +10,10 @@ class Progress extends PureComponent<WithStyles> {
     render() {
         const { classes } = this.props;
         return (
-            <LinearProgress className={classes.progress} color='primary' />
+            <LinearProgress className={classes.progress} color='primary' classes={{
+                colorPrimary: classes.color,
+                barColorPrimary: classes.barColor
+            }} />
         );
     }
 }
