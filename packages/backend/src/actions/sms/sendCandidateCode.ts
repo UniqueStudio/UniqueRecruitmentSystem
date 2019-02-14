@@ -3,7 +3,6 @@ import { param, validationResult } from 'express-validator/check';
 import fetch from 'node-fetch';
 
 import { smsAPI, token } from '../../config/consts';
-import { CandidateRepo } from '../../database/model';
 import { redisAsync } from '../../redis';
 import { errorRes } from '../../utils/errorRes';
 import { getRandom } from '../../utils/getRandom';
@@ -40,8 +39,5 @@ export const sendCandidateCode: RequestHandler = async (req, res, next) => {
 };
 
 export const sendCandidateCodeVerify = [
-    param('phone').isMobilePhone('zh-CN').withMessage('Phone is invalid!'),
-    param('phone').custom(async (phone) =>
-        (await CandidateRepo.query({ phone })).length === 0
-    ).withMessage('You have already applied!'),
+    param('phone').isMobilePhone('zh-CN').withMessage('Phone is invalid!')
 ];

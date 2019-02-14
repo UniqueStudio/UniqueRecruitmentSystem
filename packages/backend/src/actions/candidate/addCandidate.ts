@@ -59,8 +59,8 @@ export const addCandidateVerify = [
     body('gender').isInt({ lt: GENDERS.length, gt: -1 }).withMessage('Gender is invalid!'),
     body('isQuick').isBoolean().withMessage('IsQuick is invalid!'),
     body('phone').isMobilePhone('zh-CN').withMessage('Phone is invalid!'),
-    body('phone').custom(async (phone) =>
-        (await CandidateRepo.query({ phone })).length === 0
+    body('phone').custom(async (phone, { req }) =>
+        (await CandidateRepo.query({ phone, title: req.body.title })).length === 0
     ).withMessage('You have already applied!'),
     body('group').isIn(GROUPS_).withMessage('Group is invalid!'),
     body('rank').isInt({ lt: RANKS.length, gt: -1 }).withMessage('Rank is invalid!'),
