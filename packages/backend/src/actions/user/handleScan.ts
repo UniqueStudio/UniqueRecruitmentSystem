@@ -54,7 +54,7 @@ const dataConverter = (data: Data) => {
             username,
             joinTime,
             phone,
-            avatar,
+            avatar: avatar ? avatar.replace('http://', 'https://') : '',
             mail,
             isCaptain,
             isAdmin: false,
