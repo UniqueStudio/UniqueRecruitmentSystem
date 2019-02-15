@@ -7,7 +7,7 @@ import TextField from '@material-ui/core/TextField';
 import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 
 import { QR_CODE_URL } from '../../config/consts';
-import logo from '../../images/logo.webp';
+import logo from '../../images/logo.png';
 import styles from '../../styles/login';
 
 import Modal from '../Modal';
