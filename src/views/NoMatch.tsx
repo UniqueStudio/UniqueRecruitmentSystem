@@ -4,8 +4,8 @@ import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 
 import styles from '../styles/noMatch';
 
-import fourOFour from '../images/404.webp';
-import logo from '../images/logo.webp';
+import fourOFour from '../images/404.png';
+import logo from '../images/logo.png';
 
 class Index extends PureComponent<WithStyles> {
     render() {
