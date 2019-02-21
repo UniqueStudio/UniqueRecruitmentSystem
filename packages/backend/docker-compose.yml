@@ -7,7 +7,7 @@ services:
     environment:
     - MONGO_DATA_DIR=/data/database
     ports:
-    - 38324:38324
+    - 127.0.0.1:38324:38324
     command: mongod --port 38324
   backend:
     build: .
@@ -19,8 +19,8 @@ services:
     - mongodb
     - redis
     volumes:
-      - /etc/pki/tls/private/uniqcert.key:/usr/src/backend/uniqcert.key
-      - /etc/pki/tls/uniqcert.fullchain:/usr/src/backend/uniqcert.fullchain
+      - ./server.key:/usr/src/backend/uniqcert.key
+      - ./server.crt:/usr/src/backend/uniqcert.fullchain
       - ../resumes:/usr/src/resumes
-      - ${PWD}/stderr.log:/usr/src/backend/stderr.log
-      - ${PWD}/stdout.log:/usr/src/backend/stdout.log
+      - ./stderr.log:/usr/src/backend/stderr.log
+      - ./stdout.log:/usr/src/backend/stdout.log
