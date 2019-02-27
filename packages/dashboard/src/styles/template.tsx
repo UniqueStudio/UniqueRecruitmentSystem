@@ -16,7 +16,6 @@ const styles = ({ breakpoints, spacing }: Theme) => createStyles({
     },
     templateContent: {
         minHeight: spacing.unit * 3,
-        width: 700,
         display: 'flex',
         alignItems: 'baseline',
     },
@@ -59,7 +58,7 @@ const styles = ({ breakpoints, spacing }: Theme) => createStyles({
         [breakpoints.down('xs')]: {
             width: 100,
         },
-        width: 150,
+        width: 120,
     },
     picker: {
         display: 'block'

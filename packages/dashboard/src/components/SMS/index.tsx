@@ -46,6 +46,7 @@ class Template extends PureComponent<Props> {
         activeStep: 0,
         type: 'accept',
         step: -1 as -1,
+        next: -1 as -1,
         time: '',
         place: '',
         rest: '',
@@ -59,7 +60,7 @@ class Template extends PureComponent<Props> {
     };
 
     sendSMS = () => {
-        const { selected, type, step, code, time, place, rest } = this.state;
+        const { selected, type, step, code, time, place, rest, next } = this.state;
         const { enqueueSnackbar, sendSMS } = this.props;
         if (code === '') {
             enqueueSnackbar('请填写验证码！');
@@ -69,6 +70,7 @@ class Template extends PureComponent<Props> {
             candidates: selected.map(({ _id }) => _id),
             type,
             step,
+            next,
             code,
             rest,
             time,
@@ -81,7 +83,7 @@ class Template extends PureComponent<Props> {
     };
 
     handleNext = () => {
-        const { activeStep, step, type, time, place, rest } = this.state;
+        const { activeStep, step, type, time, place, rest, next } = this.state;
         const { enqueueSnackbar } = this.props;
         if (activeStep === 1) {
             if (type === 'group' || type === 'team') {
@@ -91,6 +93,9 @@ class Template extends PureComponent<Props> {
                 }
             } else if (step === -1) {
                 enqueueSnackbar('请选择流程！');
+                return;
+            } else if (next === -1) {
+                enqueueSnackbar('请选择下一轮！');
                 return;
             } else if ((step === 0 || step === 2) && type === 'accept' && !rest) {
                 if (!time) {
@@ -124,12 +129,13 @@ class Template extends PureComponent<Props> {
 
     render() {
         const { classes, toggleOpen } = this.props;
-        const { activeStep, selected, step, type, code, time, place, rest } = this.state;
+        const { activeStep, selected, step, type, code, time, place, rest, next } = this.state;
         const steps = ['发送对象', '消息模板', '确认发送'];
         const stepContent = [
             <Picker selected={selected} onDelete={this.handleDelete} />,
             <SMSDetail
                 step={step}
+                next={next}
                 type={type}
                 time={time}
                 place={place}
