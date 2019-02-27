@@ -97,7 +97,7 @@ class Template extends PureComponent<Props> {
             } else if (next === -1) {
                 enqueueSnackbar('请选择下一轮！');
                 return;
-            } else if ((next === 1 || step === 3) && type === 'accept' && !rest) {
+            } else if ((next === 1 || next === 3) && type === 'accept' && !rest) {
                 if (!time) {
                     enqueueSnackbar('请填写时间！');
                     return;
