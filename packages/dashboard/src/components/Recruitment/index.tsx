@@ -19,6 +19,13 @@ interface Props extends WithStyles {
     setRecruitment: (data: SetRecruitment['data']) => void;
 }
 
+const getMidnight = (date: Date) => {
+    date.setHours(0);
+    date.setMinutes(0);
+    date.setSeconds(0);
+    return +date;
+};
+
 class Recruitment extends PureComponent<Props> {
 
     state = {
@@ -35,13 +42,13 @@ class Recruitment extends PureComponent<Props> {
     setInterview = (type: 'team' | 'group', groupName?: Group) => (interview: Time[]) => {
         const { begin, end } = this.state;
         const { data: { title }, setRecruitment } = this.props;
-        setRecruitment({ title, group: groupName, begin: +begin, end: +end, [`${type}Interview`]: interview });
+        setRecruitment({ title, group: groupName, begin: getMidnight(begin), end: getMidnight(end), [`${type}Interview`]: interview });
     };
 
     setTime = () => {
         const { begin, end } = this.state;
         const { data: { title }, setRecruitment } = this.props;
-        setRecruitment({ title, begin: +begin, end: +end });
+        setRecruitment({ title, begin: getMidnight(begin), end: getMidnight(end) });
     };
 
     render() {
