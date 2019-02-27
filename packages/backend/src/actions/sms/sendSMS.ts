@@ -13,6 +13,7 @@ interface Model {
     group: string;
     title: string;
     step: number;
+    nextStep: number;
     time: string;
     place: string;
     rest: string;
@@ -24,7 +25,7 @@ const dateTranslator = (timestamp: number) => {
     return `${date.month() + 1}月${date.date()}日${date.hour()}:${date.minute()}`;
 };
 
-const generateSMS = ({ name, title, step, type, group, time, place, rest, url }: Model) => {
+const generateSMS = ({ name, title, step, type, group, time, place, rest, url, nextStep }: Model) => {
     const suffix = ' (请勿回复本短信)';
     if (!name) throw new Error('Name not provided!');
     switch (type) {
@@ -32,22 +33,22 @@ const generateSMS = ({ name, title, step, type, group, time, place, rest, url }:
             if (!group) throw new Error('Group not provided!');
             if (!title) throw new Error('Title not provided!');
             let defaultRest = '';
-            switch (step) {
-                case 1:
-                case 3:
+            switch (nextStep) {
+                case 2:
+                case 4:
                     if (!url) throw new Error('URL not provided!');
                     defaultRest = `，请进入以下链接选择面试时间：${url}`;
                     break;
-                case 0:
-                case 2:
+                case 1:
+                case 3:
                     if (!time || !place) throw new Error('Time or place not provided!');
-                    defaultRest = `，请于${time}在${place}参加${STEPS[step + 1]}，请务必准时到场`;
+                    defaultRest = `，请于${time}在${place}参加${STEPS[nextStep]}，请务必准时到场`;
                     break;
-                case 4:
+                case 5:
                     defaultRest = `，你已成功加入${group}组`;
                     break;
                 default:
-                    throw new Error('Step is invalid!');
+                    throw new Error('Next step is invalid!');
             }
             rest = `${rest || defaultRest}${suffix}`;
             return { template: 185990, param_list: [name, title, group, STEPS[step], rest] };
@@ -82,7 +83,7 @@ export const sendSMS: RequestHandler = async (req, res, next) => {
         if (!validationErrors.isEmpty()) {
             return next(errorRes(validationErrors.array({ onlyFirstError: true })[0]['msg'], 'warning'));
         }
-        const { step, type, time, place, rest, candidates } = req.body;
+        const { step, type, time, place, rest, next: nextStep, candidates } = req.body;
         let formId = '';
         const promises = candidates.map(async (id: string) => {
             const candidateInfo = await CandidateRepo.queryById(id);
@@ -96,7 +97,7 @@ export const sendSMS: RequestHandler = async (req, res, next) => {
                     if (recruitment.end < Date.now()) {
                         return new Error('This recruitment has already ended!');
                     }
-                    if (step === 1) {
+                    if (nextStep === 2) {
                         const data = recruitment.groups.find((groupData) => groupData.name === group);
                         if (!data) {
                             return new Error('Group doesn\'t exist!');
@@ -105,7 +106,7 @@ export const sendSMS: RequestHandler = async (req, res, next) => {
                             return new Error('Please set group interview time first!');
                         }
                         formId = `${recruitment._id}${GROUPS_.indexOf(group)}1`;
-                    } else if (step === 3) {
+                    } else if (nextStep === 4) {
                         if (!recruitment.interview.length) {
                             return new Error('Please set team interview time first!');
                         }
@@ -127,6 +128,7 @@ export const sendSMS: RequestHandler = async (req, res, next) => {
                     type,
                     group,
                     rest,
+                    nextStep,
                     url,
                     time: type === 'accept' ? time : allocated && dateTranslator(allocated),
                     place
