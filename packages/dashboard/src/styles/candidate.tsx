@@ -65,7 +65,7 @@ const styles = ({ breakpoints, spacing, zIndex }: Theme) => createStyles({
     introContent: {
         display: 'flex',
         [breakpoints.down('sm')]: {
-            'margin': `${spacing.unit}px 0`,
+            'margin': `${spacing.unit}px`,
             '& button': {
                 width: 'auto',
                 height: 'auto',
