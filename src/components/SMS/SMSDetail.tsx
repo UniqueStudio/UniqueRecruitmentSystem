@@ -17,6 +17,7 @@ import { generateModel } from '../../utils/generateModel';
 export interface MainInfo extends WithStyles {
     type: string;
     step: Step | -1;
+    next: Step | -1;
     time: string;
     place: string;
     rest: string;
@@ -29,16 +30,16 @@ interface Props extends MainInfo {
 class SMSDetail extends PureComponent<Props> {
 
     render() {
-        const { classes, type, step, handleChange, time, place, rest } = this.props;
+        const { classes, type, step, handleChange, time, place, rest, next } = this.props;
         const withRest = type === 'accept';
-        const withTime = withRest && (step === 0 || step === 2);
+        const withTime = withRest && (next === 1 || next === 3);
         const withStep = !['group', 'team'].includes(type);
         const withPlace = withTime || !withStep;
         return (
             <>
                 <div className={classNames(classes.templateContent, classes.templateItem)}>
                     <Typography variant='subtitle2' className={classes.templateItem}>
-                        {generateModel({ type, step, time, place, rest })}
+                        {generateModel({ type, step, time, place, rest, next })}
                     </Typography>
                 </div>
                 <div className={classNames(classes.templateContent, classes.templateItem, classes.templateParams, classes.inputContainer)}>
@@ -62,6 +63,17 @@ class SMSDetail extends PureComponent<Props> {
                         onChange={handleChange('step')}
                     >
                         {STEPS.slice(0, 5).map((stepName, index) => (
+                            <MenuItem key={stepName} value={index}>{stepName}</MenuItem>
+                        ))}
+                    </TextField>}
+                    {withStep && <TextField
+                        select
+                        label='下一轮'
+                        className={classNames(classes.templateItem, classes.input)}
+                        value={next}
+                        onChange={handleChange('next')}
+                    >
+                        {STEPS.map((stepName, index) => (
                             <MenuItem key={stepName} value={index}>{stepName}</MenuItem>
                         ))}
                     </TextField>}
