@@ -75,7 +75,7 @@ export const addCandidateVerify = [
             if (Date.now() < recruitment.begin) {
                 throw new Error('Current recruitment is not started!');
             }
-            if (Date.now() > recruitment.end) {
+            if (Date.now() > recruitment.stop) {
                 throw new Error('Current recruitment has ended!');
             }
         }),
