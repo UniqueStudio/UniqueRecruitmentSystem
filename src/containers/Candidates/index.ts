@@ -23,13 +23,14 @@ import { Step } from '../../config/types';
 import Candidates from '../../views/Candidates';
 
 const mapStateToProps =
-    ({ candidate: { group, selected, candidates, steps }, component: { fabOn }, user: { info } }: StoreState) => ({
+    ({ candidate: { group, selected, candidates, steps }, component: { fabOn, snackbars }, user: { info } }: StoreState) => ({
         group,
         selected,
         fabOn,
         steps,
         candidates,
         userInfo: info,
+        snackbars
     });
 
 type DispatchType =
