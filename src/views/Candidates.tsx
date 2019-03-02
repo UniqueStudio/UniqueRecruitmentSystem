@@ -2,6 +2,7 @@ import React, { PureComponent } from 'react';
 
 import { OptionsObject } from 'notistack';
 
+import { EnqueueSnackbar } from '../actions';
 import Board from '../components/Board';
 import Dialog from '../components/Dialog';
 import Fab from '../components/Fab';
@@ -19,6 +20,7 @@ interface Props {
     selected: string[];
     fabOn: number;
     steps: Step[];
+    snackbars: EnqueueSnackbar['notification'][];
     select: (cid: string[]) => void;
     deselect: (cid: string[] | string) => void;
     toggleFabOff: () => void;
@@ -122,7 +124,7 @@ class Candidates extends PureComponent<Props> {
 
     render() {
         const { state, props, toggleOpen, handleRemove, handleNext, handlePrev, toggleDetail, divideSteps, handleTodo } = this;
-        const { selected, candidates, fabOn, select, deselect, toggleFabOff, group, userInfo, move, steps } = props;
+        const { selected, candidates, fabOn, select, deselect, toggleFabOff, group, userInfo, move, steps, snackbars } = props;
         const { modal, dialog, step, index, direction } = state;
         const { isAdmin, group: userGroup, isCaptain } = userInfo;
         const candidatesInSteps = divideSteps(candidates);
@@ -131,7 +133,7 @@ class Candidates extends PureComponent<Props> {
         return (
             <>
                 <Board move={move} group={group} steps={steps} candidates={candidatesInSteps} toggleDetail={toggleDetail}/>
-                <Fab selected={selected} deselect={deselect} fabOn={fabOn} select={select}
+                <Fab selected={selected} deselect={deselect} fabOn={fabOn} select={select} snackbars={snackbars}
                      candidates={candidatesInSteps[fabOn] || []} toggleFabOff={toggleFabOff}
                      toggleOpen={toggleOpen} canOperate={canOperate} group={group} steps={steps}/>
                 <Dialog
