@@ -12,7 +12,7 @@ import { Candidate as CandidateType, Step } from '../../config/types';
 import Candidate from '../../containers/Candidate';
 import styles from '../../styles/column';
 
-interface Props extends WithStyles {
+interface Props extends WithStyles<typeof styles> {
     step: Step;
     dropIndex: number;
     isTeamInterview: boolean;

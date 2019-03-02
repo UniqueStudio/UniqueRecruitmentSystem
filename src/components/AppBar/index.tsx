@@ -30,7 +30,7 @@ import Messenger from '../../containers/Messenger';
 import Modal from '../Modal';
 import Select from '../Select';
 
-interface Props extends WithStyles {
+interface Props extends WithStyles<typeof styles> {
     open: boolean;
     viewingRecruitment: string;
     group: string;

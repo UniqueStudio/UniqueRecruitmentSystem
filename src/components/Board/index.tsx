@@ -14,7 +14,7 @@ import Column from '../../containers/Column';
 import { STEPS } from '../../config/consts';
 import { Candidate, Group, Step } from '../../config/types';
 
-interface Props extends WithStyles {
+interface Props extends WithStyles<typeof styles> {
     steps: Step[];
     group: Group;
     candidates: Candidate[][];

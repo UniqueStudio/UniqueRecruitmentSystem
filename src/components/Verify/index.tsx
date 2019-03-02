@@ -9,7 +9,7 @@ import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 
 import styles from '../../styles/verify';
 
-interface Props extends WithStyles {
+interface Props extends WithStyles<typeof styles> {
     code: string;
     onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
     getVerifyCode: () => void;

@@ -13,11 +13,11 @@ import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 import { GROUPS, GROUPS_, STEPS } from '../../config/consts';
 import { Recruitment } from '../../config/types';
 
-import styles from '../../styles/dashboard';
 import { getColors } from '../../styles';
+import styles from '../../styles/dashboard';
 import { titleConverter } from '../../utils/titleConverter';
 
-interface Props extends WithStyles {
+interface Props extends WithStyles<typeof styles> {
     data: Recruitment;
     onClick: () => void;
 }
@@ -111,7 +111,7 @@ class Chart extends PureComponent<Props> {
                 <Button onClick={onClick} variant='contained' color='primary'>浏览本次招新</Button>
                 {!expired ? ChartBox :
                     <Tooltip
-                        title='该招新报名已截止'
+                        title='该招新已结束'
                         classes={{ tooltip: classes.tooltip }}
                         placement='top'
                     >

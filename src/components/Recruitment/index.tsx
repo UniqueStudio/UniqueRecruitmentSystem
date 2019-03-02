@@ -8,29 +8,25 @@ import { SetRecruitment } from '../../actions';
 import { GROUPS, GROUPS_ } from '../../config/consts';
 import { Group, Recruitment as RecruitmentType, Time } from '../../config/types';
 import styles from '../../styles/data';
+import { getMidnight } from '../../utils/getMidnight';
 import Accordion from '../Accordion';
-import BeginEnd from '../BeginEnd';
 import Dates from '../Dates';
+import Schedule from '../Schedule';
 
-interface Props extends WithStyles {
+interface Props extends WithStyles<typeof styles> {
     data: RecruitmentType;
     canLaunch: boolean;
     userGroup: Group;
     setRecruitment: (data: SetRecruitment['data']) => void;
+    enqueueSnackbar: (info: string) => void;
 }
-
-const getMidnight = (date: Date) => {
-    date.setHours(0);
-    date.setMinutes(0);
-    date.setSeconds(0);
-    return +date;
-};
 
 class Recruitment extends PureComponent<Props> {
 
     state = {
         begin: new Date(this.props.data.begin),
         end: new Date(this.props.data.end),
+        stop: new Date(this.props.data.stop)
     };
 
     handleChange = (name: string) => (date: Date) => {
@@ -40,28 +36,57 @@ class Recruitment extends PureComponent<Props> {
     };
 
     setInterview = (type: 'team' | 'group', groupName?: Group) => (interview: Time[]) => {
-        const { begin, end } = this.state;
-        const { data: { title }, setRecruitment } = this.props;
-        setRecruitment({ title, group: groupName, begin: getMidnight(begin), end: getMidnight(end), [`${type}Interview`]: interview });
+        const { begin, end, stop } = this.state;
+        const { data: { title }, setRecruitment, enqueueSnackbar } = this.props;
+        if (begin >= end) {
+            enqueueSnackbar('结束时间必须大于开始时间！');
+            return;
+        }
+        if (stop >= end) {
+            enqueueSnackbar('截止时间必须大于开始时间！');
+            return;
+        }
+        setRecruitment({
+            title,
+            group: groupName,
+            begin: getMidnight(begin),
+            end: getMidnight(end),
+            stop: getMidnight(stop),
+            [`${type}Interview`]: interview
+        });
     };
 
     setTime = () => {
-        const { begin, end } = this.state;
-        const { data: { title }, setRecruitment } = this.props;
-        setRecruitment({ title, begin: getMidnight(begin), end: getMidnight(end) });
+        const { begin, end, stop } = this.state;
+        const { data: { title }, setRecruitment, enqueueSnackbar } = this.props;
+        if (begin >= end) {
+            enqueueSnackbar('结束时间必须大于开始时间！');
+            return;
+        }
+        if (stop >= end) {
+            enqueueSnackbar('截止时间必须大于开始时间！');
+            return;
+        }
+        setRecruitment({
+            title,
+            begin: getMidnight(begin),
+            stop: getMidnight(stop),
+            end: getMidnight(end)
+        });
     };
 
     render() {
         const { data, classes, userGroup, canLaunch } = this.props;
         const { interview: teamInterview, groups } = data;
 
-        const { begin, end } = this.state;
+        const { begin, end, stop } = this.state;
         return (
             <div className={classes.paper}>
                 <div className={classes.textFieldContainer}>
-                    <BeginEnd
+                    <Schedule
                         begin={begin}
                         end={end}
+                        stop={stop}
                         onChange={this.handleChange}
                         disabled={!canLaunch}
                         disablePast={false}

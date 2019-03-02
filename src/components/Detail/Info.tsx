@@ -11,7 +11,7 @@ import styles from '../../styles/candidate';
 
 import Modal from '../Modal';
 
-interface Props extends WithStyles {
+interface Props extends WithStyles<typeof styles> {
     info: Candidate;
     getResume: (cid: string) => void;
 }

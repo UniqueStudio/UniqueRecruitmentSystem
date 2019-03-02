@@ -13,7 +13,7 @@ import styles from '../../styles/candidate';
 
 import Chip from '../Chip';
 
-interface Props extends WithStyles {
+interface Props extends WithStyles<typeof styles> {
     cid: string;
     uid: string;
     username: string;

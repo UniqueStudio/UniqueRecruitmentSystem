@@ -13,7 +13,7 @@ import styles from '../../styles/column';
 import Comments from './Comments';
 import Info from './Info';
 
-interface Props extends WithStyles {
+interface Props extends WithStyles<typeof styles> {
     index: number;
     candidate: Candidate;
     user: User;

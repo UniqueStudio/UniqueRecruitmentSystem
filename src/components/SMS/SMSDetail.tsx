@@ -14,16 +14,13 @@ import { STEPS } from '../../config/consts';
 import { Step } from '../../config/types';
 import { generateModel } from '../../utils/generateModel';
 
-export interface MainInfo extends WithStyles {
+interface Props extends WithStyles<typeof styles> {
     type: string;
     step: Step | -1;
     next: Step | -1;
     time: string;
     place: string;
     rest: string;
-}
-
-interface Props extends MainInfo {
     handleChange: (name: string) => (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
 

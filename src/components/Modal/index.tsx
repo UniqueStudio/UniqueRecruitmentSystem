@@ -8,7 +8,7 @@ import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 
 import styles from '../../styles/modal';
 
-interface Props extends WithStyles {
+interface Props extends WithStyles<typeof styles> {
     open: boolean;
     direction?: 'left' | 'right' | 'up' | 'down';
     hideBackdrop?: boolean;

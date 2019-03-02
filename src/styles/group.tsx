@@ -9,6 +9,7 @@ const styles = ({ spacing: { unit }, breakpoints }: Theme) => createStyles({
         [breakpoints.down('xs')]: {
             padding: `0 ${unit}px ${unit * 2}px`,
         },
+        marginBottom: unit * 3
     },
     paper: {
         marginTop: unit * 2,
@@ -17,14 +18,6 @@ const styles = ({ spacing: { unit }, breakpoints }: Theme) => createStyles({
         flexDirection: 'column',
         minWidth: 300,
         maxWidth: 900,
-    },
-    buttonContainer: {
-        display: 'flex',
-        justifyContent: 'flex-end',
-        width: '100%',
-    },
-    button: {
-        margin: unit,
     },
     tableContainer: {
         overflowX: 'auto',
@@ -40,46 +33,7 @@ const styles = ({ spacing: { unit }, breakpoints }: Theme) => createStyles({
     title: {
         display: 'flex',
         justifyContent: 'space-around',
-    },
-    chooseContainer: {
-        margin: unit * 2,
-        display: 'flex',
-        flexDirection: 'column',
-    },
-    choose: {
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'baseline',
-    },
-    chip: {
-        margin: unit,
-    },
-    textField: {
-        width: 100,
-        margin: unit,
-        [breakpoints.down('sm')]: {
-            width: 70,
-        },
-        [breakpoints.down('xs')]: {
-            width: 50,
-            margin: unit / 2,
-        },
-    },
-    notification: {
-        margin: unit,
-    },
-    dialog: {
-        margin: unit * 2,
-    },
-    smsDetail: {
-        margin: unit * 2,
-    },
-    placeInput: {
-        marginTop: unit,
-    },
-    timeSelect: {
-        marginRight: unit,
-    },
+    }
 });
 
 export default styles;

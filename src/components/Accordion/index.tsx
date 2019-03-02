@@ -9,7 +9,7 @@ import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 
 import styles from '../../styles/accordion';
 
-interface Props extends WithStyles {
+interface Props extends WithStyles<typeof styles> {
     title: string;
     classes: Record<string, string>;
 }

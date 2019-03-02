@@ -10,7 +10,7 @@ import AppBar from '../../containers/AppBar';
 import Drawer from '../../containers/Drawer';
 import styles from '../../styles/main';
 
-interface Props extends WithStyles {
+interface Props extends WithStyles<typeof styles> {
     open: boolean;
     loggedIn: boolean;
     viewingRecruitment: string;
