@@ -9,7 +9,7 @@ import { Time } from '../../config/types';
 import styles from '../../styles/data';
 import DatePicker from '../DatePicker';
 
-interface Props extends WithStyles {
+interface Props extends WithStyles<typeof styles> {
     dates: Time[];
     disabled: boolean;
     setRecruitment: (interview: Time[]) => void;

@@ -6,7 +6,7 @@ import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 
 import styles from '../../styles/messenger';
 
-interface Props extends WithStyles {
+interface Props extends WithStyles<typeof styles> {
     src: string;
 }
 

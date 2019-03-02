@@ -5,22 +5,31 @@ import DatePicker from '../DatePicker';
 interface Props {
     begin: Date;
     end: Date;
+    stop: Date;
     classes: Record<string, string>;
     disabled?: boolean;
     disablePast?: boolean;
     onChange: (name: string) => (date: Date) => void;
 }
 
-class BeginEnd extends PureComponent<Props> {
+class Schedule extends PureComponent<Props> {
 
     render() {
-        const { onChange, disablePast, disabled, begin, end, classes } = this.props;
+        const { onChange, disablePast, disabled, begin, end, stop, classes } = this.props;
         return (
             <>
                 <DatePicker
                     label='开始时间'
                     value={begin}
                     onChange={onChange('begin')}
+                    disablePast={disablePast}
+                    disabled={disabled}
+                    classes={classes}
+                />
+                <DatePicker
+                    label='报名截止'
+                    value={stop}
+                    onChange={onChange('stop')}
                     disablePast={disablePast}
                     disabled={disabled}
                     classes={classes}
@@ -38,4 +47,4 @@ class BeginEnd extends PureComponent<Props> {
     }
 }
 
-export default BeginEnd;
+export default Schedule;

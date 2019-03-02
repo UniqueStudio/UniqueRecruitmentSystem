@@ -25,7 +25,7 @@ import { Candidate as CandidateType, Evaluation } from '../../config/types';
 import { colorToAlpha, dangerColor, successColor, warningColor } from '../../styles';
 import styles from '../../styles/candidate';
 
-interface Props extends WithStyles {
+interface Props extends WithStyles<typeof styles> {
     candidate: CandidateType;
     provided: DraggableProvided;
     isTeamInterview: boolean;

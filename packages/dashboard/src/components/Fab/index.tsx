@@ -13,7 +13,7 @@ import styles from '../../styles/column';
 
 import { Candidate, Group, Step } from '../../config/types';
 
-interface Props extends WithStyles {
+interface Props extends WithStyles<typeof styles> {
     candidates: Candidate[];
     selected: string[];
     fabOn: number;
