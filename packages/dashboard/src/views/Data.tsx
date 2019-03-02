@@ -10,7 +10,7 @@ import { Candidate, Group, Recruitment as RecruitmentType } from '../config/type
 import styles from '../styles/data';
 import { sortBySlot } from '../utils/sortBySlot';
 
-interface Props extends WithStyles {
+interface Props extends WithStyles<typeof styles> {
     candidates: Candidate[];
     recruitment?: RecruitmentType;
     canLaunch: boolean;
@@ -18,6 +18,7 @@ interface Props extends WithStyles {
     setRecruitment: (data: SetRecruitment['data']) => void;
     allocateOne: (cid: string, time: number, type: 'group' | 'team') => void;
     allocateAll: (type: 'group' | 'team') => void;
+    enqueueSnackbar: (info: string) => void;
 }
 
 class Data extends PureComponent<Props> {
@@ -33,7 +34,7 @@ class Data extends PureComponent<Props> {
     };
 
     render() {
-        const { classes, recruitment, userGroup, canLaunch, setRecruitment, candidates, allocateOne, allocateAll } = this.props;
+        const { classes, recruitment, userGroup, canLaunch, setRecruitment, candidates, allocateOne, allocateAll, enqueueSnackbar } = this.props;
         const { interviewType } = this.state;
         const sorted = (interviewType === 'group'
                 ? candidates.filter(({ group, step }) => group === userGroup && step === 2)
@@ -46,6 +47,7 @@ class Data extends PureComponent<Props> {
                     data={recruitment}
                     setRecruitment={setRecruitment}
                     userGroup={userGroup}
+                    enqueueSnackbar={enqueueSnackbar}
                 />
                 <Table
                     candidates={sorted}

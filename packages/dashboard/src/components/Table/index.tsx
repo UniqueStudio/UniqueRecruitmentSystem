@@ -26,7 +26,7 @@ import { Candidate } from '../../config/types';
 import Template from '../../containers/SMS';
 import styles from '../../styles/data';
 
-interface Props extends WithStyles {
+interface Props extends WithStyles<typeof styles> {
     candidates: Candidate[];
     interviewType: 'group' | 'team';
     changeType: (event: React.ChangeEvent<HTMLSelectElement>) => void;

@@ -16,7 +16,7 @@ import { User } from '../../config/types';
 import styles from '../../styles/group';
 import { titleConverter } from '../../utils/titleConverter';
 
-interface Props extends WithStyles {
+interface Props extends WithStyles<typeof styles> {
     groupInfo: User[];
     enqueueSnackbar: (message: string, options?: OptionsObject) => void;
 }

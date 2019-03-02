@@ -18,7 +18,7 @@ import SMSDetail from './SMSDetail';
 
 import { Candidate } from '../../config/types';
 
-interface Props extends WithStyles {
+interface Props extends WithStyles<typeof styles> {
     status: string;
     selected: Candidate[];
     enqueueSnackbar: (message: string, options?: OptionsObject) => void;

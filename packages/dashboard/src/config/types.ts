@@ -71,6 +71,7 @@ export interface Recruitment {
     title: string; // e.g. 2018A || 2018S (A: AUTUMN, S: SPRING, C: CAMP)
     begin: number;
     end: number;
+    stop: number; // stop applying
     total: number;
     interview: Time[];
     groups: GroupData[];

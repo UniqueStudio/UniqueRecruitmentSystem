@@ -13,7 +13,7 @@ import { User as UserType } from '../../config/types';
 import styles from '../../styles/user';
 import { titleConverter } from '../../utils/titleConverter';
 
-interface Props extends WithStyles {
+interface Props extends WithStyles<typeof styles> {
     userInfo: UserType;
     enqueueSnackbar: (message: string, options?: OptionsObject) => void;
     submitInfo: (info: { phone: string, mail: string, password?: string }) => void;
@@ -69,79 +69,82 @@ class User extends PureComponent<Props> {
             return null;
         }
         return (
-            <Paper className={classes.container}>
-                <div className={classes.title}>
-                    <Typography variant='h6'>
-                        我的信息
-                    </Typography>
-                </div>
-                <TextField
-                    label='姓名'
-                    value={username}
-                    margin='normal'
-                    className={classes.userInfo}
-                    disabled
-                />
-                <TextField
-                    label='性别'
-                    className={classes.userInfo}
-                    value={GENDERS[gender]}
-                    margin='normal'
-                    disabled
-                />
-                <TextField
-                    label='组别'
-                    className={classes.userInfo}
-                    value={GROUPS[GROUPS_.indexOf(group)]}
-                    margin='normal'
-                    disabled
-                />
-                <TextField
-                    label='加入时间'
-                    className={classes.userInfo}
-                    value={titleConverter(joinTime)}
-                    margin='normal'
-                    disabled
-                />
-                <TextField
-                    label='组长?'
-                    className={classes.userInfo}
-                    value={isCaptain ? '是' : '否'}
-                    margin='normal'
-                    disabled
-                />
-                <TextField
-                    label='管理员?'
-                    className={classes.userInfo}
-                    value={isAdmin ? '是' : '否'}
-                    margin='normal'
-                    disabled
-                />
-                <TextField
-                    label='手机号'
-                    defaultValue={phone}
-                    onChange={this.handleChange('phone')}
-                    margin='normal'
-                    className={classes.userInfo}
-                />
-                <TextField
-                    label='邮箱'
-                    defaultValue={mail}
-                    onChange={this.handleChange('mail')}
-                    className={classes.userInfo}
-                    margin='normal'
-                />
-                <TextField
-                    label='密码'
-                    type='password'
-                    onChange={this.handleChange('password')}
-                    className={classes.userInfo}
-                    margin='normal'
-                />
-                <div>
-                    <Button size='large' onClick={this.submitChange} color='primary'>修改</Button>
-                </div>
-            </Paper>
+            <form>
+                <Paper className={classes.container}>
+                    <div className={classes.title}>
+                        <Typography variant='h6'>
+                            我的信息
+                        </Typography>
+                    </div>
+
+                    <TextField
+                        label='姓名'
+                        value={username}
+                        margin='normal'
+                        className={classes.userInfo}
+                        disabled
+                    />
+                    <TextField
+                        label='性别'
+                        className={classes.userInfo}
+                        value={GENDERS[gender]}
+                        margin='normal'
+                        disabled
+                    />
+                    <TextField
+                        label='组别'
+                        className={classes.userInfo}
+                        value={GROUPS[GROUPS_.indexOf(group)]}
+                        margin='normal'
+                        disabled
+                    />
+                    <TextField
+                        label='加入时间'
+                        className={classes.userInfo}
+                        value={titleConverter(joinTime)}
+                        margin='normal'
+                        disabled
+                    />
+                    <TextField
+                        label='组长?'
+                        className={classes.userInfo}
+                        value={isCaptain ? '是' : '否'}
+                        margin='normal'
+                        disabled
+                    />
+                    <TextField
+                        label='管理员?'
+                        className={classes.userInfo}
+                        value={isAdmin ? '是' : '否'}
+                        margin='normal'
+                        disabled
+                    />
+                    <TextField
+                        label='手机号'
+                        defaultValue={phone}
+                        onChange={this.handleChange('phone')}
+                        margin='normal'
+                        className={classes.userInfo}
+                    />
+                    <TextField
+                        label='邮箱'
+                        defaultValue={mail}
+                        onChange={this.handleChange('mail')}
+                        className={classes.userInfo}
+                        margin='normal'
+                    />
+                    <TextField
+                        label='密码'
+                        type='password'
+                        onChange={this.handleChange('password')}
+                        className={classes.userInfo}
+                        margin='normal'
+                    />
+                    <div>
+                        <Button size='large' onClick={this.submitChange} color='primary'>修改</Button>
+                    </div>
+                </Paper>
+            </form>
         );
     }
 }

@@ -661,6 +661,7 @@ export interface SetRecruitment {
         title: string,
         begin: number,
         end: number,
+        stop: number,
         group?: Group,
         groupInterview?: Time[],
         teamInterview?: Time[]

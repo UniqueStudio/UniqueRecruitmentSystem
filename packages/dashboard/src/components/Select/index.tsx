@@ -7,7 +7,7 @@ import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 
 import styles from '../../styles/select';
 
-interface Props extends WithStyles {
+interface Props extends WithStyles<typeof styles> {
     data: (string | number)[];
     values: (string | number)[];
     currentValue: string | number;
