@@ -20,12 +20,13 @@ export const launchRecruitment: RequestHandler = async (req, res, next) => {
         if (!isAdmin && !isCaptain) {
             return next(errorRes('Permission denied', 'warning'));
         }
-        const { title, begin, end } = req.body;
+        const { title, begin, end, stop } = req.body;
 
         await RecruitmentRepo.createAndInsert({
             title,
             begin,
             end,
+            stop,
             groups: GROUPS_.map((name) => ({ name })),
         });
         res.json({ type: 'success' });
@@ -40,7 +41,9 @@ export const launchRecruitmentVerify = [
         !(await RecruitmentRepo.query({ title })).length
     ).withMessage('Current recruitment has already been launched!'),
     body('begin').isInt().withMessage('Begin time is invalid!')
-        .custom((begin, { req }) => begin < req.body.end).withMessage('End time should be earlier than begin time'),
+        .custom((begin, { req }) => begin < req.body.stop).withMessage('Stop applying time should be later than begin time'),
+    body('stop').isInt().withMessage('Stop applying time is invalid!')
+        .custom((stop, { req }) => stop < req.body.end).withMessage('End time should be later than stop applying time'),
     body('end').isInt().withMessage('End time is invalid!')
-        .custom((end, { req }) => end > req.body.begin).withMessage('End time should be earlier than begin time'),
+        .custom((end, { req }) => end > req.body.begin).withMessage('End time should be later than begin time'),
 ];

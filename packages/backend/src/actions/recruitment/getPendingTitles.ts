@@ -5,7 +5,7 @@ import { errorRes } from '../../utils/errorRes';
 
 export const getPendingTitles: RequestHandler = async (req, res, next) => {
     try {
-        const pending = await RecruitmentRepo.query({ end: { $gt: Date.now() }, begin: { $lt: Date.now() } });
+        const pending = await RecruitmentRepo.query({ stop: { $gt: Date.now() }, begin: { $lt: Date.now() } });
         if (pending.length === 0) {
             return next(errorRes('No pending recruitment!', 'info'));
         }

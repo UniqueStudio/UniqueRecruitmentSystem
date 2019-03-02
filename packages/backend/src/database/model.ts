@@ -235,6 +235,10 @@ const recruitmentSchema = createSchema({
         type: Number,
         required: true
     },
+    stop: {
+        type: Number,
+        required: true
+    },
     total: {
         type: Number,
         default: 0

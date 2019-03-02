@@ -20,10 +20,11 @@ export const setRecruitment: RequestHandler = async (req, res, next) => {
             return next(errorRes('Permission denied', 'warning'));
         }
         const { title } = req.params;
-        const { begin, end, groupInterview, teamInterview, group } = req.body;
+        const { begin, end, stop, groupInterview, teamInterview, group } = req.body;
         await RecruitmentRepo.update({ title }, {
             begin,
             end,
+            stop
         });
         if (teamInterview && teamInterview.length) {
             await RecruitmentRepo.update({ title }, {
@@ -66,9 +67,11 @@ export const setRecruitmentVerify = [
             }
         }),
     body('begin').isInt().withMessage('Begin time is invalid!')
-        .custom((begin, { req }) => begin < req.body.end).withMessage('End time should be earlier than begin time'),
+        .custom((begin, { req }) => begin < req.body.stop).withMessage('Stop applying time should be later than begin time'),
+    body('stop').isInt().withMessage('Stop applying time is invalid!')
+        .custom((stop, { req }) => stop < req.body.end).withMessage('End time should be later than stop applying time'),
     body('end').isInt().withMessage('End time is invalid!')
-        .custom((end, { req }) => end > req.body.begin).withMessage('End time should be earlier than begin time'),
+        .custom((end, { req }) => end > req.body.begin).withMessage('End time should be later than begin time'),
     body('teamInterview').custom(checkInterview).withMessage('Interview time is invalid!'),
     body('groupInterview').custom(checkInterview).withMessage('Interview time is invalid!'),
 ];
