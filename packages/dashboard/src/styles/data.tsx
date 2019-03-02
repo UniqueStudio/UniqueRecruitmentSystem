@@ -59,7 +59,7 @@ const styles = ({ spacing: { unit }, palette, typography, breakpoints }: Theme) 
         width: 150,
         [breakpoints.down('md')]: {
             margin: unit / 2,
-            width: 100,
+            width: 90,
         },
     },
     buttonContainer: {

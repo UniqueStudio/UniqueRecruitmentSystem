@@ -9,9 +9,9 @@ import AddIcon from '@material-ui/icons/Add';
 
 import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 
-import styles from '../../styles/column';
-
+import { EnqueueSnackbar } from '../../actions';
 import { Candidate, Group, Step } from '../../config/types';
+import styles from '../../styles/column';
 
 interface Props extends WithStyles<typeof styles> {
     candidates: Candidate[];
@@ -19,6 +19,7 @@ interface Props extends WithStyles<typeof styles> {
     fabOn: number;
     group: Group;
     steps: Step[];
+    snackbars: EnqueueSnackbar['notification'][];
     canOperate: boolean;
     select: (cid: string[]) => void;
     deselect: (cid: string[] | string) => void;
@@ -83,10 +84,10 @@ class FabButton extends PureComponent<Props> {
     };
 
     render() {
-        const { classes, candidates, selected, fabOn, canOperate } = this.props;
+        const { classes, candidates, selected, fabOn, canOperate, snackbars } = this.props;
         const all = candidates.map(({ _id }) => _id);
         const selectedInColumn = selected.filter((cid) => all.includes(cid));
-        const ButtonGenerator = (onClick: () => void, content: string, disabled: boolean = false) =>
+        const ButtonGenerator = (onClick: () => void, content: string, disabled = false) =>
             <Button
                 color='primary'
                 size='small'
@@ -100,7 +101,7 @@ class FabButton extends PureComponent<Props> {
                 <Zoom in={fabOn !== -1}>
                     <div className={classes.fab}>
                         <Fab
-                            className={true ? classes.fabMoveUp : classes.fabMoveDown} // TODO: fab move up when snackbar on
+                            className={snackbars.length ? classes.fabMoveUp : classes.fabMoveDown} // TODO: fab move up when snackbar on
                             color='primary'
                             onClick={this.toggleButtons}
                         >
@@ -111,7 +112,8 @@ class FabButton extends PureComponent<Props> {
                 <Zoom in={this.state.buttons}>
                     <div className={classes.fabButtonsZoom}>
                         <div
-                            className={classNames(classes.fabButtonsContainer, true ? classes.fabMoveUp : classes.fabMoveDown)}>
+                            className={classNames(classes.fabButtonsContainer, snackbars.length ? classes.fabMoveUp : classes.fabMoveDown)}
+                        >
                             {ButtonGenerator(this.handleSelectAll(all), '全选')}
                             {ButtonGenerator(this.handleInverse(all, selectedInColumn), '反选')}
                             {ButtonGenerator(this.sendNotification, '发送通知', !selectedInColumn.length || !canOperate)}
