@@ -1,11 +1,15 @@
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 
+import { OptionsObject } from 'notistack';
+
 import {
     allocateAllStart,
     AllocateAllStart,
     allocateOneStart,
     AllocateOneStart,
+    enqueueSnackbar,
+    EnqueueSnackbar,
     getRecruitmentsStart,
     GetRecruitmentsStart,
     setRecruitment,
@@ -23,13 +27,14 @@ const mapStateToProps =
         candidates
     });
 
-type DispatchType = Dispatch<GetRecruitmentsStart | SetRecruitment | AllocateOneStart | AllocateAllStart>;
+type DispatchType = Dispatch<GetRecruitmentsStart | SetRecruitment | AllocateOneStart | AllocateAllStart | EnqueueSnackbar>;
 
 const mapDispatchToProps = (dispatch: DispatchType) => ({
     fetchData: () => dispatch(getRecruitmentsStart()),
     setRecruitment: (data: SetRecruitment['data']) => dispatch(setRecruitment(data)),
     allocateOne: (cid: string, time: number, type: 'group' | 'team') => dispatch(allocateOneStart(cid, time, type)),
     allocateAll: (type: 'group' | 'team') => dispatch(allocateAllStart(type)),
+    enqueueSnackbar: (message: string, options: OptionsObject = { variant: 'warning' }) => dispatch(enqueueSnackbar(message, options)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Data);

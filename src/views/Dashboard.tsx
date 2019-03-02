@@ -13,7 +13,7 @@ import Chart from '../components/Chart';
 import { Recruitment } from '../config/types';
 import styles from '../styles/dashboard';
 
-interface Props extends WithStyles {
+interface Props extends WithStyles<typeof styles> {
     data: Recruitment[];
     canLaunch: boolean;
     viewing: string;

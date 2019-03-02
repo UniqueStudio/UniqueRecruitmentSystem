@@ -12,7 +12,7 @@ import { Comment } from '../../config/types';
 
 import styles from '../../styles/chip';
 
-interface Props extends WithStyles {
+interface Props extends WithStyles<typeof styles> {
     comment: Comment;
     onRemove?: () => void;
     onCopy?: () => void;

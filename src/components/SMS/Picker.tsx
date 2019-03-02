@@ -11,7 +11,7 @@ import { GRADES } from '../../config/consts';
 import { Candidate } from '../../config/types';
 import styles from '../../styles/template';
 
-interface Props extends WithStyles {
+interface Props extends WithStyles<typeof styles> {
     selected: Candidate[];
     onDelete: (name: string) => () => void;
 }

@@ -22,7 +22,7 @@ import { Message } from '../../config/types';
 
 import styles from '../../styles/messenger';
 
-interface Props extends WithStyles {
+interface Props extends WithStyles<typeof styles> {
     messages: Message[];
     username: string;
     avatar: string;

@@ -13,7 +13,7 @@ import styles from '../../styles/login';
 import Modal from '../Modal';
 import Progress from '../Progress';
 
-interface Props extends WithStyles {
+interface Props extends WithStyles<typeof styles> {
     loggedIn: boolean;
     isLoading: boolean;
     weChatKey: string;

@@ -21,7 +21,7 @@ import styles from '../../styles/drawer';
 
 import Anchor from '../Anchor';
 
-interface Props extends WithStyles {
+interface Props extends WithStyles<typeof styles> {
     open: boolean;
     toggleOpen: () => void;
 }

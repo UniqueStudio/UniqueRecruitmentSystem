@@ -10,15 +10,16 @@ import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 
 import AddIcon from '@material-ui/icons/Add';
 
-import BeginEnd from '../BeginEnd';
 import Modal from '../Modal';
+import Schedule from '../Schedule';
 
 import { Recruitment } from '../../config/types';
 import Verify from '../../containers/Verify';
 import styles from '../../styles/addOne';
+import { getMidnight } from '../../utils/getMidnight';
 import { titleConverter } from '../../utils/titleConverter';
 
-interface Props extends WithStyles {
+interface Props extends WithStyles<typeof styles> {
     disabled: boolean;
     enqueueSnackbar: (info: string) => void;
     launchRecruitment: (info: Partial<Recruitment & { code: string }>) => void;
@@ -39,6 +40,7 @@ const initial = () => {
         title: generateTitle(date),
         begin: date,
         end: date,
+        stop: date,
         code: '',
         launched: false,
     };
@@ -55,19 +57,25 @@ class AddOne extends PureComponent<Props> {
     }
 
     launchRecruitment = () => {
-        const { code, begin, end, title } = this.state;
-        if (!code || !begin || !end || !title) {
-            this.props.enqueueSnackbar('请完整填写信息！');
+        const { code, begin, end, stop, title } = this.state;
+        const { enqueueSnackbar, launchRecruitment } = this.props;
+        if (!code || !begin || !end || !stop || !title) {
+            enqueueSnackbar('请完整填写信息！');
             return;
         }
-        if (begin >= end) {
-            this.props.enqueueSnackbar('结束时间必须大于开始时间！');
+        if (begin >= stop) {
+            enqueueSnackbar('截止时间必须大于开始时间！');
             return;
         }
-        this.props.launchRecruitment({
+        if (stop >= end) {
+            enqueueSnackbar('结束时间必须大于截止时间！');
+            return;
+        }
+        launchRecruitment({
             title,
-            begin: +begin,
-            end: +end,
+            begin: getMidnight(begin),
+            end: getMidnight(end),
+            stop: getMidnight(stop),
             code,
         });
         this.setState({
@@ -98,7 +106,7 @@ class AddOne extends PureComponent<Props> {
 
     render() {
         const { classes, disabled } = this.props;
-        const { code, begin, end, modalOpen, title } = this.state;
+        const { code, begin, end, stop, modalOpen, title } = this.state;
         return (
             <>
                 <Tooltip title={disabled ? '只有组长或管理员能发起招新' : '发起招新'} classes={{ tooltip: classes.tooltip }} placement='top'>
@@ -126,7 +134,7 @@ class AddOne extends PureComponent<Props> {
                             margin='normal'
                             disabled
                         />
-                        <BeginEnd onChange={this.handleChangeDate} begin={begin} end={end} classes={classes} />
+                        <Schedule onChange={this.handleChangeDate} begin={begin} end={end} stop={stop} classes={classes} />
                         <Verify onChange={this.handleChange('code')} code={code} />
                         <Button color='primary' variant='contained' onClick={this.launchRecruitment}>确定</Button>
                     </div>
