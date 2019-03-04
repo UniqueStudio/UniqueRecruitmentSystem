@@ -46,24 +46,30 @@ const dataConverter = (data: Data) => {
     let joinTime;
     try {
         joinTime = attrs.filter((attr: { name: string, value: string }) => attr.name === '加入时间')[0].value;
-        joinTime = joinTime.replace(/春.*/g, 'S')
-            .replace(/秋.*/g, 'A')
-            .replace(/夏.*/g, 'C');
-        return {
-            weChatID,
-            username,
-            joinTime,
-            phone,
-            avatar: avatar ? avatar.replace('http://', 'https://') : '',
-            mail,
-            isCaptain,
-            isAdmin: false,
-            gender: +gender,
-            group
-        };
     } catch (error) {
         throw new Error('Please set join time in WeChat first!');
     }
+    if (joinTime.includes('春')) {
+        joinTime = joinTime.replace(/春.*/g, 'S');
+    } else if (joinTime.includes('秋')) {
+        joinTime = joinTime.replace(/秋.*/g, 'A');
+    } else if (joinTime.includes('夏')) {
+        joinTime = joinTime.replace(/夏.*/g, 'C');
+    } else {
+        throw new Error('Format of join time is not correct!');
+    }
+    return {
+        weChatID,
+        username,
+        joinTime,
+        phone,
+        avatar: avatar ? avatar.replace('http://', 'https://') : '',
+        mail,
+        isCaptain,
+        isAdmin: false,
+        gender: +gender,
+        group
+    };
 };
 
 // API of WeChat is a shit
