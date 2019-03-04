@@ -1,11 +1,11 @@
 self.__precacheManifest = [
   {
-    "revision": "3c95fd124accb853fb8c",
+    "revision": "4348b77c737c76eefed9",
     "url": "/static/css/main.b27bc43c.chunk.css"
   },
   {
-    "revision": "3c95fd124accb853fb8c",
-    "url": "/static/js/main.3c95fd12.chunk.js"
+    "revision": "4348b77c737c76eefed9",
+    "url": "/static/js/main.4348b77c.chunk.js"
   },
   {
     "revision": "f05f79257a02b6ddf491",
@@ -32,7 +32,7 @@ self.__precacheManifest = [
     "url": "/static/media/Hiragino.597780bb.ttf"
   },
   {
-    "revision": "57c0d322e05b0e9d2cc81270c6dbca89",
+    "revision": "317578130b70f42281306edb99b7648e",
     "url": "/index.html"
   }
 ];

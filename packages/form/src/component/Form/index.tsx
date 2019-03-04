@@ -136,7 +136,7 @@ class Form extends PureComponent<Props> {
             const response = await fetch(`${URL}/sms/verification/candidate/${phone}`);
             const result = await response.json();
             if (result.type !== 'success') {
-                return toggleSnackbar('获取验证码失败!');
+                return toggleSnackbar(result.message || '获取验证码失败!');
             }
             toggleSnackbar('验证码已发送!');
             this.setState({

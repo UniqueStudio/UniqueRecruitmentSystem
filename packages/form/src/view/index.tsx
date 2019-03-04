@@ -33,9 +33,11 @@ class Container extends PureComponent {
     async componentDidMount() {
         window.addEventListener('resize', this.checkMobile);
         const result = await fetch(`${URL}/recruitment/pending`);
-        const { type, data } = await result.json();
+        const { type, data, message } = await result.json();
         if (type === 'success') {
             this.setState({ title: data[0] });
+        } else {
+            this.toggleSnackbar(message);
         }
     }
 
