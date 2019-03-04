@@ -34,7 +34,7 @@ const dataConverter = (data: Data) => {
         department
     } = data;
     const isCaptain = isleader === 1 || is_leader_in_dept.includes(1);
-    const groups = department.filter((i: number) => (i > 1 && i < 9) || (i > 14 && i < 26));
+    const groups = department.filter((i: number) => ID_TO_GROUP[i] !== undefined);
     if (!groups[0]) {
         throw new Error('Please set group info in WeChat first!');
     }
