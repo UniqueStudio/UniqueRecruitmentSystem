@@ -1,10 +1,10 @@
 import { Component } from 'react';
 
-import { InjectedNotistackProps } from 'notistack';
+import { withSnackbarProps } from 'notistack';
 
 import { EnqueueSnackbar } from '../../actions';
 
-interface Props extends InjectedNotistackProps {
+interface Props extends withSnackbarProps {
     notifications: EnqueueSnackbar['notification'][];
     removeSnackbar: (key: number) => void;
 }
@@ -27,13 +27,13 @@ class Notifier extends Component<Props> {
     }
 
     componentDidUpdate() {
-        const { notifications = [] } = this.props;
+        const { notifications = [], enqueueSnackbar, removeSnackbar } = this.props;
 
         notifications.forEach((notification) => {
             if (this.displayed.includes(notification.key)) return;
-            this.props.enqueueSnackbar(notification.message, notification.options);
+            enqueueSnackbar(notification.message, notification.options);
             this.storeDisplayed(notification.key);
-            this.props.removeSnackbar(notification.key);
+            removeSnackbar(notification.key);
         });
     }
 
