@@ -7200,10 +7200,10 @@ normalize-url@^3.0.0:
   resolved "https://registry.yarnpkg.com/normalize-url/-/normalize-url-3.3.0.tgz#b2e1c4dc4f7c6d57743df733a4f5978d18650559"
   integrity sha512-U+JJi7duF1o+u2pynbp2zXDW2/PADgC30f0GsHZtRh+HOcXHnw137TrNlyxxRvWW5fjKd3bcLHPxofWuCjaeZg==
 
-notistack@^0.4.3:
-  version "0.4.3"
-  resolved "https://registry.yarnpkg.com/notistack/-/notistack-0.4.3.tgz#0387f2d2b399474339c7de8552e4090e432baa99"
-  integrity sha512-YVG4IqA7+eCmMRH42UE+KZOIXTPg/3HEWU+pE1S+Tc8mUNSTQlZMdLy7XwDF1+WimyLiA7Glm+y+ClSu/4t+WA==
+notistack@^0.5.0:
+  version "0.5.0"
+  resolved "https://registry.yarnpkg.com/notistack/-/notistack-0.5.0.tgz#4fece949c973cad6d1d4a9d34da8024ef3158b5e"
+  integrity sha512-DYAix/jnN/Qv/AHwgbNFcQ2d6HjeQ8duEge6OJr5rn0pmxUutQjuGpZ+3dJ/4FBJtfRbnv0BX59ZtHrn2tE+Jw==
   dependencies:
     classnames "^2.2.6"
     prop-types "^15.6.2"
