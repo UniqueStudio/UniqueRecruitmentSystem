@@ -10,12 +10,17 @@ class Snackbar extends PureComponent<WithStyles> {
     render() {
         const { children, classes } = this.props;
         return (
-            <SnackbarProvider maxSnack={5} classes={{
-                variantSuccess: classes.success,
-                variantError: classes.error,
-                variantWarning: classes.warning,
-                variantInfo: classes.info,
-            }}>
+            <SnackbarProvider
+                maxSnack={5}
+                classes={{
+                    variantSuccess: classes.success,
+                    variantError: classes.error,
+                    variantWarning: classes.warning,
+                    variantInfo: classes.info,
+                }}
+                dense
+                preventDuplicate
+            >
                 <>
                     {children}
                 </>

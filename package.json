@@ -25,7 +25,7 @@
     "history": "^4.7.2",
     "material-ui-pickers": "^2.2.2",
     "mdi-material-ui": "^5.9.0",
-    "notistack": "^0.4.3",
+    "notistack": "^0.5.0",
     "react": "^16.8.1",
     "react-beautiful-dnd": "^10.0.4",
     "react-chartjs-2": "^2.7.4",
