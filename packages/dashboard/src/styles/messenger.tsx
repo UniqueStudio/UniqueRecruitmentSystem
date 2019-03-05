@@ -13,6 +13,9 @@ const styles = ({ spacing, transitions, breakpoints, palette, zIndex }: Theme) =
         [breakpoints.up('sm')]: {
             width: 400,
         },
+        [breakpoints.down('xs')]: {
+            height: '75vh',
+        },
         flex: '1',
     },
     messages: {

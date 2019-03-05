@@ -119,10 +119,18 @@ const styles = ({ spacing: { unit }, palette, breakpoints, zIndex, transitions }
     leftButton: {
         transform: 'rotate(90deg)',
         alignSelf: 'center',
+        padding: unit,
+        [breakpoints.down('sm')]: {
+            padding: 0
+        },
     },
     rightButton: {
         transform: 'rotate(-90deg)',
         alignSelf: 'center',
+        padding: unit,
+        [breakpoints.down('sm')]: {
+            padding: 0
+        },
     },
 });
 

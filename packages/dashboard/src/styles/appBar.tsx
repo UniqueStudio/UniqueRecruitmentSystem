@@ -33,13 +33,19 @@ const styles = ({ zIndex, palette, transitions, spacing: { unit }, breakpoints }
         marginLeft: unit * 2,
         marginRight: unit * 4,
         [breakpoints.down('xs')]: {
-            marginLeft: unit,
-            marginRight: unit,
+            marginLeft: 0,
+            marginRight: 0,
+            padding: unit
         },
     },
     rightButtons: {
         marginLeft: 'auto',
         display: 'flex',
+        '& button': {
+            [breakpoints.down('xs')]: {
+                padding: unit
+            },
+        }
     },
     hide: {
         display: 'none',
@@ -51,6 +57,9 @@ const styles = ({ zIndex, palette, transitions, spacing: { unit }, breakpoints }
         zIndex: zIndex.drawer + 1,
         position: 'fixed',
         top: unit * 8,
+        [breakpoints.down('xs')]: {
+            top: unit * 6,
+        },
         right: 0,
     }
 });
