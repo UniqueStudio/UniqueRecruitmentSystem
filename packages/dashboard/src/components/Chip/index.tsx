@@ -35,8 +35,7 @@ class CommentChip extends PureComponent<Props> {
     render() {
         const { comment, classes, onCopy, onRemove } = this.props;
         const { content, evaluation, username } = comment;
-        let text = `${username}： ${content}`;
-        text = text.length > 15 ? text.slice(0, 15) + '…' : text;
+        const text = `${username}： ${content}`;
         const color = ['danger', 'warning', 'success'][evaluation];
         return (
             <>
