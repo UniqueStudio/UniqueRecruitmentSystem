@@ -50,6 +50,7 @@ export default function register() {
                 });
             } else {
                 // Is not local host. Just register service worker
+                console.log('Registering...');
                 registerValidSW(swUrl);
             }
         });
