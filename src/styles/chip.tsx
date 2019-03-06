@@ -16,6 +16,9 @@ const rootColorStyles = mergeKV(['root-info', 'root-success', 'root-warning', 'r
     [infoColor, successColor, warningColor, dangerColor].map((color) => ({
         '& span': {
             pointerEvents: 'none',
+            textOverflow: 'ellipsis',
+            overflow: 'hidden',
+            display: 'inline-block',
         },
         '&:hover': {
             background: colorToAlpha(color, 0.6),
@@ -26,17 +29,18 @@ const rootColorStyles = mergeKV(['root-info', 'root-success', 'root-warning', 'r
     }))
 );
 
-const styles = ({ spacing }: Theme) => createStyles({
+const styles = ({ spacing: { unit } }: Theme) => createStyles({
     chip: {
-        margin: spacing.unit,
+        margin: unit,
         cursor: 'pointer',
+        maxWidth: 250
     },
     popover: {
         pointerEvents: 'none',
     },
     content: {
         maxWidth: 400,
-        padding: spacing.unit * 2,
+        padding: unit * 2,
         wordWrap: 'break-word',
     },
     ...colorStyles,
