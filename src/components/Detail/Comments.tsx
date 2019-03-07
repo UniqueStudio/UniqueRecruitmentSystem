@@ -40,7 +40,6 @@ class Comments extends PureComponent<Props> {
     handleKey = (event: React.KeyboardEvent) => {
         const { ctrlKey, charCode } = event;
         if (ctrlKey && charCode === 13) {
-            console.log('aaa');
             this.setState(({ content }: State) => ({
                 content: content + '\n',
             }));

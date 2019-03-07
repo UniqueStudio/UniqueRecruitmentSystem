@@ -26,9 +26,10 @@ interface OwnProps {
     handleNext: (index: number) => void;
 }
 
-const mapStateToProps = ({ candidate: { inputtingComment }, user: { info } }: StoreState, ownProps: OwnProps) => ({
+const mapStateToProps = ({ candidate: { inputtingComment }, user: { info }, component: { resumeProgress } }: StoreState, ownProps: OwnProps) => ({
     savedComment: inputtingComment,
     user: info,
+    progress: resumeProgress,
     ...ownProps,
 });
 
