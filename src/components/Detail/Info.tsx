@@ -14,6 +14,7 @@ import Modal from '../Modal';
 interface Props extends WithStyles<typeof styles> {
     info: Candidate;
     getResume: (cid: string) => void;
+    progress: number;
 }
 
 class Info extends PureComponent<Props> {
@@ -30,7 +31,7 @@ class Info extends PureComponent<Props> {
     };
 
     render() {
-        const { classes, info } = this.props;
+        const { classes, info, progress } = this.props;
         const { name, group, gender, grade, institute, intro, mail, major, phone, rank, isQuick, referrer, resume } = info;
         const inputProps = { readOnly: true };
         return (
@@ -116,8 +117,8 @@ class Info extends PureComponent<Props> {
                         <Button size='large' color='primary' onClick={this.toggleModalOpen}>
                             自我介绍
                         </Button>
-                        <Button size='large' color='primary' onClick={this.downloadResume} disabled={!resume}>
-                            简历下载
+                        <Button size='large' color='primary' onClick={this.downloadResume} disabled={!resume || !!progress}>
+                            {progress ? `${(progress * 100).toFixed(2)}%` : `简历下载`}
                         </Button>
                     </div>
                     <div className={classes.detailRow}>
