@@ -73,7 +73,7 @@ function registerValidSW(swUrl: string) {
                                 // the fresh content will have been added to the cache.
                                 // It's the perfect time to display a 'New content is
                                 // available; please refresh.' message in your web app.
-                                store.dispatch(enqueueSnackbar('页面有新的版本，请刷新页面', { variant: 'info' }));
+                                store.dispatch(enqueueSnackbar('页面有新的版本，请按ctrl+F5刷新页面', { variant: 'info' }));
                                 console.log('New content is available; please refresh.');
                             } else {
                                 // At this point, everything has been precached.
