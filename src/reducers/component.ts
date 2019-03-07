@@ -14,7 +14,10 @@ export interface ComponentStore {
     snackbars: actions.EnqueueSnackbar['notification'][];
     fabOn: number;
     progressOn: boolean;
-    resumeProgress: number;
+    resume: {
+        progress: number;
+        cid: string;
+    };
 }
 
 const init: ComponentStore = {
@@ -22,7 +25,10 @@ const init: ComponentStore = {
     drawerOpen: false,
     snackbars: [],
     fabOn: -1,
-    resumeProgress: 0
+    resume: {
+        progress: 0,
+        cid: '',
+    }
 };
 
 export function componentReducer(state = init, action: Action): ComponentStore {
@@ -40,7 +46,8 @@ export function componentReducer(state = init, action: Action): ComponentStore {
         case actions.TOGGLE_FAB_OFF:
             return { ...state, fabOn: -1 };
         case actions.RESUME_PROGRESS:
-            return { ...state, resumeProgress: action.progress };
+            const { progress, cid } = action;
+            return { ...state, resume: { progress, cid } };
     }
     return state;
 }
