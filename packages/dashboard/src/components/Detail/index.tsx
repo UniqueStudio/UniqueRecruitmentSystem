@@ -17,6 +17,7 @@ interface Props extends WithStyles<typeof styles> {
     index: number;
     candidate: Candidate;
     user: User;
+    progress: number;
     savedComment: {
         content: string;
         evaluation: Evaluation
@@ -58,7 +59,7 @@ class Detail extends PureComponent<Props, State> {
     }
 
     render() {
-        const { classes, getResume, user, enqueueSnackbar, remove, changeInputting, savedComment, submit } = this.props;
+        const { classes, getResume, user, enqueueSnackbar, remove, changeInputting, savedComment, submit, progress } = this.props;
         const { candidate } = this.state;
         const { _id: cid, comments } = candidate;
         const { _id: uid, username } = user;
@@ -68,7 +69,7 @@ class Detail extends PureComponent<Props, State> {
                     <ExpandMoreIcon />
                 </IconButton>
                 <div className={classes.detailMain}>
-                    <Info info={candidate} getResume={getResume} />
+                    <Info info={candidate} getResume={getResume} progress={progress} />
                     <Comments
                         cid={cid}
                         comments={comments}

@@ -2,11 +2,12 @@ import { ofType } from 'redux-observable';
 import { from } from 'rxjs';
 import { catchError, mergeMap, startWith } from 'rxjs/operators';
 
-import { GET_RESUME, GetResume, toggleProgress } from '../../actions';
+import { GET_RESUME, GetResume, resumeProgress, toggleProgress } from '../../actions';
 
 import { API } from '../../config/consts';
 
 import { checkToken, customError, Epic, errHandler } from '../';
+import { store } from '../../App';
 
 const download = async (res: Response) => {
     if (!res.ok) {
@@ -28,7 +29,7 @@ const download = async (res: Response) => {
             while (!result.done) {
                 const value = result.value;
                 loaded += value.byteLength;
-                console.log(loaded / +total);
+                store.dispatch(resumeProgress(loaded / +total));
                 controller.enqueue(value);
                 result = await reader.read();
             }
@@ -52,6 +53,7 @@ const download = async (res: Response) => {
     a.click();
     document.body.removeChild(a);
     window.URL.revokeObjectURL(url);
+    store.dispatch(resumeProgress(0));
     return toggleProgress();
 };
 

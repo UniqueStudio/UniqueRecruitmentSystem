@@ -6,13 +6,15 @@ type Action =
     | actions.ToggleDrawer
     | actions.ToggleProgress
     | actions.ToggleFabOn
-    | actions.ToggleFabOff;
+    | actions.ToggleFabOff
+    | actions.ResumeProgress;
 
 export interface ComponentStore {
     drawerOpen: boolean;
     snackbars: actions.EnqueueSnackbar['notification'][];
     fabOn: number;
     progressOn: boolean;
+    resumeProgress: number;
 }
 
 const init: ComponentStore = {
@@ -20,6 +22,7 @@ const init: ComponentStore = {
     drawerOpen: false,
     snackbars: [],
     fabOn: -1,
+    resumeProgress: 0
 };
 
 export function componentReducer(state = init, action: Action): ComponentStore {
@@ -36,6 +39,8 @@ export function componentReducer(state = init, action: Action): ComponentStore {
             return { ...state, fabOn: action.step };
         case actions.TOGGLE_FAB_OFF:
             return { ...state, fabOn: -1 };
+        case actions.RESUME_PROGRESS:
+            return { ...state, resumeProgress: action.progress };
     }
     return state;
 }
