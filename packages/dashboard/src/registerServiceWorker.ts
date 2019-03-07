@@ -10,6 +10,7 @@
 // This link also includes instructions on opting out of this behavior.
 
 import { enqueueSnackbar } from './actions';
+import { store } from './App';
 
 const isLocalhost = Boolean(
     window.location.hostname === 'localhost' ||
@@ -72,7 +73,7 @@ function registerValidSW(swUrl: string) {
                                 // the fresh content will have been added to the cache.
                                 // It's the perfect time to display a 'New content is
                                 // available; please refresh.' message in your web app.
-                                enqueueSnackbar('页面有新的版本，请刷新页面', { variant: 'info' });
+                                store.dispatch(enqueueSnackbar('页面有新的版本，请刷新页面', { variant: 'info' }));
                                 console.log('New content is available; please refresh.');
                             } else {
                                 // At this point, everything has been precached.
@@ -86,7 +87,7 @@ function registerValidSW(swUrl: string) {
             };
         })
         .catch((error) => {
-            enqueueSnackbar(`Error during service worker registration: ${error}`, { variant: 'error' });
+            store.dispatch(enqueueSnackbar(`Error during service worker registration: ${error}`, { variant: 'error' }));
             console.error('Error during service worker registration:', error);
         });
 }

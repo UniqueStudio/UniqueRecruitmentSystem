@@ -775,3 +775,18 @@ export function getVerifyCode(): GetVerifyCode {
         type: GET_VERIFY_CODE,
     };
 }
+
+export const RESUME_PROGRESS = 'RESUME_PROGRESS';
+export type RESUME_PROGRESS = typeof RESUME_PROGRESS;
+
+export interface ResumeProgress {
+    type: RESUME_PROGRESS;
+    progress: number;
+}
+
+export function resumeProgress(progress: number): ResumeProgress {
+    return {
+        type: RESUME_PROGRESS,
+        progress,
+    };
+}
