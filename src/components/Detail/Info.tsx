@@ -5,7 +5,7 @@ import TextField from '@material-ui/core/TextField';
 
 import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 
-import { GENDERS, GRADES, RANKS } from '../../config/consts';
+import { GENDERS, GRADES, GROUPS, GROUPS_, RANKS } from '../../config/consts';
 import { Candidate } from '../../config/types';
 import styles from '../../styles/candidate';
 
@@ -14,7 +14,10 @@ import Modal from '../Modal';
 interface Props extends WithStyles<typeof styles> {
     info: Candidate;
     getResume: (cid: string) => void;
-    progress: number;
+    downloadingResume: {
+        progress: number;
+        cid: string;
+    };
 }
 
 class Info extends PureComponent<Props> {
@@ -27,12 +30,14 @@ class Info extends PureComponent<Props> {
     };
 
     downloadResume = () => {
-        this.props.getResume(this.props.info._id);
+        const { getResume, info: { _id } } = this.props;
+        getResume(_id);
     };
 
     render() {
-        const { classes, info, progress } = this.props;
-        const { name, group, gender, grade, institute, intro, mail, major, phone, rank, isQuick, referrer, resume } = info;
+        const { classes, info, downloadingResume } = this.props;
+        const { cid, progress } = downloadingResume;
+        const { _id, name, group, gender, grade, institute, intro, mail, major, phone, rank, isQuick, referrer, resume } = info;
         const inputProps = { readOnly: true };
         return (
             <>
@@ -46,7 +51,7 @@ class Info extends PureComponent<Props> {
                         />
                         <TextField
                             label='组别'
-                            value={group}
+                            value={GROUPS[GROUPS_.indexOf(group)]}
                             margin='normal'
                             InputProps={{ inputProps }}
                         />
@@ -118,7 +123,7 @@ class Info extends PureComponent<Props> {
                             自我介绍
                         </Button>
                         <Button size='large' color='primary' onClick={this.downloadResume} disabled={!resume || !!progress}>
-                            {progress ? `${(progress * 100).toFixed(2)}%` : `简历下载`}
+                            {progress ? cid === _id ? `${(progress * 100).toFixed(2)}%` : '下载中' : '简历下载'}
                         </Button>
                     </div>
                     <div className={classes.detailRow}>

@@ -9,7 +9,7 @@ import { API } from '../../config/consts';
 import { checkToken, customError, Epic, errHandler } from '../';
 import { store } from '../../App';
 
-const download = async (res: Response) => {
+const download = (cid: string) =>  async (res: Response) => {
     if (!res.ok) {
         if (res.status === 404) {
             throw customError({ message: '简历不存在', type: 'info' });
@@ -29,7 +29,7 @@ const download = async (res: Response) => {
             while (!result.done) {
                 const value = result.value;
                 loaded += value.byteLength;
-                store.dispatch(resumeProgress(loaded / +total));
+                store.dispatch(resumeProgress(loaded / +total, cid));
                 controller.enqueue(value);
                 result = await reader.read();
             }
@@ -53,7 +53,7 @@ const download = async (res: Response) => {
     a.click();
     document.body.removeChild(a);
     window.URL.revokeObjectURL(url);
-    store.dispatch(resumeProgress(0));
+    store.dispatch(resumeProgress(0, ''));
     return toggleProgress();
 };
 
@@ -68,7 +68,7 @@ export const getResumeEpic: Epic<GetResume> = (action$) =>
                     Authorization: `Bearer ${token}`,
                 },
             })).pipe(
-                mergeMap(download),
+                mergeMap(download(cid)),
                 startWith(toggleProgress(true)),
                 catchError((err) => errHandler(err)),
             );
