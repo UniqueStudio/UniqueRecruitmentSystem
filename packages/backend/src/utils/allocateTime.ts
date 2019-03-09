@@ -69,7 +69,7 @@ export const allocateTime = (interviewTime: Time[], candidates: Candidate[], typ
                 }
                 allocations.push({
                     id: selection.id,
-                    time: +new Date(`${getDate(item.date)} ${time}`)
+                    time: +moment(`${getDate(item.date)} ${time}`).utcOffset(8)
                 });
                 hasPlaced = true;
             }

@@ -20,9 +20,11 @@ interface Model {
     url: string;
 }
 
+const padZero = (toPad: number) => toPad.toString().padStart(2, '0');
+
 const dateTranslator = (timestamp: number) => {
     const date = moment(timestamp).utcOffset(8);
-    return `${date.month() + 1}月${date.date()}日${date.hour()}:${date.minute()}`;
+    return `${padZero(date.month() + 1)}月${padZero(date.date())}日${padZero(date.hour())}:${padZero(date.minute())}`;
 };
 
 const generateSMS = ({ name, title, step, type, group, time, place, rest, url, nextStep }: Model) => {
