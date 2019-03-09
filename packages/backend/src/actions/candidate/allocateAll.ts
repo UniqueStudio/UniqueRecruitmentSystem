@@ -28,6 +28,7 @@ export const allocateAll: RequestHandler = async (req, res, next) => {
             }
             const candidates = await CandidateRepo.query({
                 title,
+                group,
                 step: 2, // group interview
                 abandon: false,
                 rejected: false,

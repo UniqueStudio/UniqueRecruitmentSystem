@@ -1,10 +1,11 @@
 import moment from 'moment';
 import { Candidate, Time } from '../config/types';
-import { logger } from './logger';
+
+const padZero = (toPad: number) => toPad.toString().padStart(2, '0');
 
 const getDate = (timestamp: number) => {
     const date = moment(timestamp).utcOffset(8);
-    return `${date.year()}-${date.month() + 1}-${date.date()}`;
+    return `${padZero(date.year())}-${padZero(date.month() + 1)}-${padZero(date.date())}`;
 };
 
 export const allocateTime = (interviewTime: Time[], candidates: Candidate[], type: 'group' | 'team') => {
@@ -49,9 +50,7 @@ export const allocateTime = (interviewTime: Time[], candidates: Candidate[], typ
                 if (hasPlaced) {
                     break;
                 }
-                logger.info(JSON.stringify(slots));
-                const slotTime = slots.find(({ date }) =>
-                    getDate(date) === getDate(item.date));
+                const slotTime = slots.find(({ date }) => getDate(date) === getDate(item.date));
                 if (!slotTime) {
                     throw new Error('Candidate selected a not exist time!');
                 }
@@ -71,7 +70,7 @@ export const allocateTime = (interviewTime: Time[], candidates: Candidate[], typ
                 }
                 allocations.push({
                     id: selection.id,
-                    time: +moment(`${getDate(item.date)} ${time}`).utcOffset(8)
+                    time: moment(`${getDate(item.date)}T${time}+08:00`).valueOf()
                 });
                 hasPlaced = true;
             }
