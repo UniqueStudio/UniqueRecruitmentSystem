@@ -31,7 +31,7 @@ export const allocateAll: RequestHandler = async (req, res, next) => {
                 step: 2, // group interview
                 abandon: false,
                 rejected: false,
-                'interviews.group.allocation': { $exists: false }, // not allocated
+                // 'interviews.group.allocation': { $exists: false }, // not allocated
                 'interviews.group.selection.0': { $exists: true }, // selected
             });
             const allocations = allocateTime(groupData.interview, candidates, 'group');
@@ -51,7 +51,7 @@ export const allocateAll: RequestHandler = async (req, res, next) => {
                 step: 4, // team interview
                 abandon: false,
                 rejected: false,
-                'interviews.team.allocation': { $exists: false }, // not allocated
+                // 'interviews.team.allocation': { $exists: false }, // not allocated
                 'interviews.team.selection.0': { $exists: true }, // selected
             });
             const allocations = allocateTime(recruitment.interview, candidates, 'team');
