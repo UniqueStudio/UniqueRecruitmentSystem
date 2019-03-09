@@ -1,5 +1,6 @@
 import moment from 'moment';
 import { Candidate, Time } from '../config/types';
+import { logger } from './logger';
 
 const getDate = (timestamp: number) => {
     const date = moment(timestamp).utcOffset(8);
@@ -48,7 +49,9 @@ export const allocateTime = (interviewTime: Time[], candidates: Candidate[], typ
                 if (hasPlaced) {
                     break;
                 }
-                const slotTime = slots.find(({ date }) => date === item.date);
+                logger.info(JSON.stringify(slots));
+                const slotTime = slots.find(({ date }) =>
+                    getDate(date) === getDate(item.date));
                 if (!slotTime) {
                     throw new Error('Candidate selected a not exist time!');
                 }
