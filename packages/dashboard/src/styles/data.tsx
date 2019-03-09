@@ -62,6 +62,10 @@ const styles = ({ spacing: { unit }, palette, typography, breakpoints }: Theme) 
             width: 90,
         },
     },
+    dateSelection: {
+        margin: unit,
+        width: 150,
+    },
     buttonContainer: {
         '& button': {
             margin: unit
