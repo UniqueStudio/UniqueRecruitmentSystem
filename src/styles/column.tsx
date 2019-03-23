@@ -112,6 +112,7 @@ const styles = ({ spacing: { unit }, palette, breakpoints, zIndex, transitions }
     detailMain: {
         display: 'flex',
         flexDirection: 'column',
+        height: '100%',
         [breakpoints.up('lg')]: {
             flexDirection: 'row',
         },
