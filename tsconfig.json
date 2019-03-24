@@ -1,21 +1,14 @@
 {
   "compilerOptions": {
-    "outDir": "dist",
     "module": "esnext",
     "target": "es6",
     "lib": [
       "esnext",
       "dom"
     ],
-    "sourceMap": true,
     "allowJs": true,
     "jsx": "preserve",
     "moduleResolution": "node",
-    "rootDir": "src",
-    "typeRoots": [
-      "node_modules/@types",
-      "typings"
-    ],
     "allowSyntheticDefaultImports": true,
     "forceConsistentCasingInFileNames": true,
     "noImplicitReturns": true,
