@@ -20,7 +20,7 @@ import Female from 'mdi-material-ui/GenderFemale';
 import Male from 'mdi-material-ui/GenderMale';
 import TransGender from 'mdi-material-ui/GenderTransgender';
 
-import { GRADES } from '../../config/consts';
+import { GRADES, GROUPS, GROUPS_ } from '../../config/consts';
 import { Candidate as CandidateType, Evaluation } from '../../config/types';
 import { colorToAlpha, dangerColor, successColor, warningColor } from '../../styles';
 import styles from '../../styles/candidate';
@@ -39,6 +39,9 @@ interface Props extends WithStyles<typeof styles> {
 }
 
 const generateStyle = (evaluations: Evaluation[]) => {
+    if (!evaluations.length) {
+        return 'rgba(0, 0, 0, 0)';
+    }
     const red = colorToAlpha(dangerColor, 0.1);
     const yellow = colorToAlpha(warningColor, 0.1);
     const green = colorToAlpha(successColor, 0.1);
@@ -86,14 +89,14 @@ class Candidate extends PureComponent<Props> {
 
     render() {
         const { candidate, selected, classes, provided, fabOn, isTeamInterview } = this.props;
-        const { name, grade, institute, comments, abandon, rejected, gender, group, interviews, step, _id, isQuick } = candidate;
-        const { allocation } = interviews.team;
+        const { name, grade, institute, comments, abandon, rejected, gender, group, interviews: { team: { allocation } }, step, _id, isQuick } = candidate;
         const { innerRef, draggableProps, dragHandleProps } = provided;
-        const evaluations = comments.map((comment) => comment.evaluation);
+        const evaluations = comments.map(({ evaluation }) => evaluation);
         const style = generateStyle(evaluations);
         const coloredPanelStyle = {
-            background: abandon ? 'rgba(0, 0, 0, 0.1)' : !evaluations.length ? 'rgba(0, 0, 0, 0)' : style,
+            background: abandon ? 'rgba(0, 0, 0, 0.1)' : style,
         };
+        const genderIcons = [<TransGender nativeColor={orange[500]} />, <Male nativeColor={blue[500]} />, <Female nativeColor={pink[500]} />];
         const card = (
             <div
                 onMouseOver={this.handleOpen}
@@ -114,9 +117,9 @@ class Candidate extends PureComponent<Props> {
                         />
                         <span className={classes.cardTitle}>
                             <Typography variant='h6'>
-                                {(isTeamInterview ? `${group} - ` : '') + name}
+                                {isTeamInterview ? `${GROUPS[GROUPS_.indexOf(group)]} - ${name}` : name}
                                 <span className={classes.svg}>
-                                    {[<TransGender nativeColor={orange[500]} />, <Male nativeColor={blue[500]} />, <Female nativeColor={pink[500]} />][gender]}
+                                    {genderIcons[gender]}
                                     {isQuick && <FlashOn nativeColor={amber[500]} />}
                                 </span>
                             </Typography>
@@ -133,8 +136,6 @@ class Candidate extends PureComponent<Props> {
                         >
                             <InfoIcon />
                         </IconButton>
-                        {/* this div is used to get avoid of default style on :last-child */}
-                        <div style={{ position: 'absolute' }} />
                     </div>
                 </Card>
             </div>
