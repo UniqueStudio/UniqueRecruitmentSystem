@@ -52,6 +52,7 @@ const styles = ({ zIndex, palette, transitions, spacing: { unit }, breakpoints }
     },
     suggestion: {
         padding: unit * 2,
+        overflowY: 'auto'
     },
     collapse: {
         zIndex: zIndex.drawer + 1,
