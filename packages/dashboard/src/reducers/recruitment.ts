@@ -6,7 +6,6 @@ import { updateStorage } from '../utils/updateStorage';
 type Action =
     | actions.GetRecruitmentsFulfilled
     | actions.SetViewingRecruitmentFulfilled
-    // | actions.UpdateRecruitment
     | actions.SetShouldUpdateRecruitment;
 
 export interface RecruitmentStore {

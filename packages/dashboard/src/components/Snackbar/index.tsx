@@ -18,7 +18,6 @@ class Snackbar extends PureComponent<WithStyles> {
                     variantWarning: classes.warning,
                     variantInfo: classes.info,
                 }}
-                preventDuplicate
             >
                 <>
                     {children}
