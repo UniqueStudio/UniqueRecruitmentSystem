@@ -31,12 +31,12 @@ export const customError = (error: object) => {
     return err as CustomError;
 };
 
-export const errHandler = (err: CustomError, customAction?: AnyAction) => customAction ? of(
-    enqueueSnackbar(`ERROR: ${err.message}`, { variant: err.type || 'error' }),
+export const errHandler = ({ message, type }: CustomError, customAction?: AnyAction) => customAction ? of(
+    enqueueSnackbar(`ERROR: ${message}`, { variant: type || 'error' }),
     toggleProgress(),
     customAction
 ) : of(
-    enqueueSnackbar(`ERROR: ${err.message}`, { variant: err.type || 'error' }),
+    enqueueSnackbar(`ERROR: ${message}`, { variant: type || 'error' }),
     toggleProgress(),
 );
 
