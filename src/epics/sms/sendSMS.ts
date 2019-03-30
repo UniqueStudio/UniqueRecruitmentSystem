@@ -19,14 +19,15 @@ export const sendSMSEpic: Epic<SendSMS> = (action$) =>
                 'Content-Type': 'application/json',
             }).pipe(
                 mergeMap(({ response: res }) => {
-                    if (res.type === 'success') {
+                    const { type, messages } = res;
+                    if (type === 'success') {
                         return of(
                             enqueueSnackbar('已成功发送短信', { variant: 'success' }),
                             toggleProgress(),
                         );
-                    } else if (res.messages) {
+                    } else if (messages) {
                         return of(
-                            ...res.messages.map((message: string) => enqueueSnackbar(message, { variant: res.type })),
+                            ...messages.map((message: string) => enqueueSnackbar(message, { variant: type })),
                             toggleProgress(),
                         );
                     }

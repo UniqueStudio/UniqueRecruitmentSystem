@@ -3,7 +3,14 @@ import { of } from 'rxjs';
 import { ajax } from 'rxjs/ajax';
 import { catchError, mergeMap, startWith } from 'rxjs/operators';
 
-import { GET_CANDIDATES_START, getCandidatesFulfilled, GetCandidatesStart, setViewingRecruitmentFulfilled, toggleProgress } from '../../actions';
+import {
+    enqueueSnackbar,
+    GET_CANDIDATES_START,
+    getCandidatesFulfilled,
+    GetCandidatesStart,
+    setViewingRecruitmentFulfilled,
+    toggleProgress
+} from '../../actions';
 
 import { API } from '../../config/consts';
 import { Candidate } from '../../config/types';
@@ -24,6 +31,7 @@ export const getCandidatesEpic: Epic<GetCandidatesStart> = (action$, state$, { s
                 if (group) data = data.filter((candidate: Candidate) => candidate.group === group);
                 return of(
                     getCandidatesFulfilled(data),
+                    enqueueSnackbar('成功获取候选人信息', { variant: 'success' }),
                 );
             }
             return ajax.getJSON<{ type: string, data: Candidate[] }>(
@@ -36,8 +44,9 @@ export const getCandidatesEpic: Epic<GetCandidatesStart> = (action$, state$, { s
                     if (res.type === 'success') {
                         return of(
                             getCandidatesFulfilled(res.data),
-                            toggleProgress(),
                             setViewingRecruitmentFulfilled(title),
+                            enqueueSnackbar('成功获取候选人信息', { variant: 'success' }),
+                            toggleProgress(),
                         );
                     }
                     throw customError(res);

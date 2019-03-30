@@ -7,7 +7,7 @@ import styles from '../styles/noMatch';
 import fourOFour from '../images/404.png';
 import logo from '../images/logo.png';
 
-class Index extends PureComponent<WithStyles> {
+class NoMatch extends PureComponent<WithStyles> {
     render() {
         const { classes } = this.props;
         return (
@@ -21,4 +21,4 @@ class Index extends PureComponent<WithStyles> {
     }
 }
 
-export default withStyles(styles)(Index);
+export default withStyles(styles)(NoMatch);

@@ -4,7 +4,6 @@ import { Dispatch } from 'redux';
 import { OptionsObject } from 'notistack';
 
 import { enqueueSnackbar, EnqueueSnackbar, sendSMS, SendSMS } from '../../actions';
-import { StoreState } from '../../reducers';
 
 import Template from '../../components/SMS';
 
@@ -16,16 +15,12 @@ interface OwnProps {
     deselect?: (cid: string) => void;
 }
 
-const mapStateToProps = ({ sms: { status } }: StoreState, ownProps: OwnProps) => ({
-    status,
+type DispatchType = Dispatch<EnqueueSnackbar | SendSMS>;
+
+const mapDispatchToProps = (dispatch: DispatchType, ownProps: OwnProps) => ({
+    enqueueSnackbar: (message: string, options: OptionsObject = { variant: 'info' }) => dispatch(enqueueSnackbar(message, options)),
+    sendSMS: (content: object) => dispatch(sendSMS(content)),
     ...ownProps,
 });
 
-type DispatchType = Dispatch<EnqueueSnackbar | SendSMS>;
-
-const mapDispatchToProps = (dispatch: DispatchType) => ({
-    enqueueSnackbar: (message: string, options: OptionsObject = { variant: 'info' }) => dispatch(enqueueSnackbar(message, options)),
-    sendSMS: (content: object) => dispatch(sendSMS(content)),
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(Template);
+export default connect(null, mapDispatchToProps)(Template);
