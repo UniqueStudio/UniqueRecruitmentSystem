@@ -20,6 +20,7 @@ import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 import DateFnsUtils from '@date-io/date-fns';
 import DateTimePicker from 'material-ui-pickers/DateTimePicker/DateTimePickerInline';
 import MuiPickersUtilsProvider from 'material-ui-pickers/MuiPickersUtilsProvider';
+import { GROUPS, GROUPS_ } from '../../config/consts';
 
 import Modal from '../Modal';
 
@@ -58,7 +59,7 @@ class CandidateTable extends PureComponent<Props, State> {
     allocateOne = () => {
         const { cid, time } = this.state;
         const { allocateOne, interviewType } = this.props;
-        allocateOne(cid, +time, interviewType);
+        allocateOne(cid, time.setMilliseconds(0), interviewType);
     };
 
     allocateAll = () => {
@@ -158,7 +159,7 @@ class CandidateTable extends PureComponent<Props, State> {
                                         </Modal>
                                     </>;
                                     const button = <Button color='primary' onClick={this.toggleDialog(_id)}>设置</Button>;
-                                    const items = [name, group, state, slotInfo, button];
+                                    const items = [name, GROUPS[GROUPS_.indexOf(group)], state, slotInfo, button];
                                     return (
                                         <TableRow key={_id}>
                                             {items.map((item, index) =>
