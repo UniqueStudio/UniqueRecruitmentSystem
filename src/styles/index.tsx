@@ -8,7 +8,7 @@ import purple from '@material-ui/core/colors/purple';
 import red from '@material-ui/core/colors/red';
 import yellow from '@material-ui/core/colors/yellow';
 
-export const getColors = (i: number) => [red[i], purple[i], indigo[i], blue[i], cyan[i], green[i], yellow[i], amber[i], orange[i]];
+export const getColors = (i: number) => [red, purple, indigo, blue, cyan, green, yellow, amber, orange].map((color) => color[i]);
 
 export const warningColor = amber[700];
 export const dangerColor = red[700];

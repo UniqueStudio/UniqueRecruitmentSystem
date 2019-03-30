@@ -1,7 +1,7 @@
 import { Theme } from '@material-ui/core/styles/createMuiTheme';
 import createStyles from '@material-ui/core/styles/createStyles';
 
-const styles = ({ spacing: { unit }, palette, typography, breakpoints }: Theme) => createStyles({
+const styles = ({ spacing: { unit }, breakpoints }: Theme) => createStyles({
     container: {
         minWidth: 400,
         marginTop: unit * 3,

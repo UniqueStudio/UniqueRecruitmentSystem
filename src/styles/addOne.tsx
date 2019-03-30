@@ -1,7 +1,7 @@
 import { Theme } from '@material-ui/core/styles/createMuiTheme';
 import createStyles from '@material-ui/core/styles/createStyles';
 
-const styles = ({ spacing, palette, typography, breakpoints }: Theme) => createStyles({
+const styles = ({ spacing, typography, breakpoints }: Theme) => createStyles({
     paper: {
         display: 'flex',
         margin: spacing.unit,

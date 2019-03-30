@@ -15,15 +15,21 @@ export const setViewingEpic: Epic<SetViewingRecruitmentStart> = (action$, state$
     action$.pipe(
         ofType(SET_VIEWING_RECRUITMENT_START),
         mergeMap(({ title }) => {
-            const joinTime = state$.value.user.info.joinTime;
-            if (joinTime && joinTime !== title) {
+            const { info: { joinTime } } = state$.value.user;
+            const { viewing } = state$.value.recruitment;
+            if (!joinTime || joinTime === title) {
                 return of(
-                    getCandidatesStart(title),
-                    enqueueSnackbar('设置成功！', { variant: 'success' }),
+                    enqueueSnackbar('你不能查看本次招新！', { variant: 'info' })
+                );
+            }
+            if (viewing === title) {
+                return of(
+                    enqueueSnackbar('设置成功', { variant: 'success' }),
                 );
             }
             return of(
-                enqueueSnackbar('你不能查看本次招新！', { variant: 'info' })
+                getCandidatesStart(title),
+                enqueueSnackbar('设置成功，正在获取候选人信息', { variant: 'success' }),
             );
         }),
     );
