@@ -31,18 +31,6 @@ const styles = ({ breakpoints, spacing, zIndex }: Theme) => createStyles({
     cardTitle: {
         userSelect: 'none',
     },
-    // cardTitleQuick: {
-    //     '&:after': {
-    //         content: '" ★"',
-    //         color: yellow['700']
-    //     }
-    // },
-    // cardTitleMale: {
-    //     color: blue.A400,
-    // },
-    // cardTitleFemale: {
-    //     color: pink.A400
-    // },
     popper: {
         pointerEvents: 'none',
     },

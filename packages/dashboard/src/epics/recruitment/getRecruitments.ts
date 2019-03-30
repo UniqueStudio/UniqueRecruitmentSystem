@@ -4,6 +4,7 @@ import { ajax } from 'rxjs/ajax';
 import { catchError, mergeMap, startWith } from 'rxjs/operators';
 
 import {
+    enqueueSnackbar,
     GET_RECRUITMENTS_START,
     getRecruitmentsFulfilled,
     setViewingRecruitmentFulfilled,
@@ -22,9 +23,11 @@ export const getRecruitmentsEpic: Epic = (action$, state$, { sessionStorage }) =
             const token = checkToken();
             const recruitments = sessionStorage.getItem('recruitments');
             const viewing = sessionStorage.getItem('viewing');
-            if (recruitments && !state$.value.recruitment.shouldUpdateRecruitment) {
+            const { shouldUpdateRecruitment } = state$.value.recruitment;
+            if (recruitments && !shouldUpdateRecruitment) {
                 return of(
                     getRecruitmentsFulfilled(JSON.parse(recruitments)),
+                    enqueueSnackbar('成功获取招新信息', { variant: 'success' }),
                 );
             }
             return ajax.getJSON<{ type: string, data: Recruitment[] }>(`${API}/recruitment/`, {
@@ -37,6 +40,7 @@ export const getRecruitmentsEpic: Epic = (action$, state$, { sessionStorage }) =
                         return of(
                             getRecruitmentsFulfilled(data),
                             setViewingRecruitmentFulfilled(newViewing),
+                            enqueueSnackbar('成功获取招新信息', { variant: 'success' }),
                             toggleProgress()
                         );
                     }

@@ -2,7 +2,7 @@ import pink from '@material-ui/core/colors/pink';
 import { Theme } from '@material-ui/core/styles/createMuiTheme';
 import createStyles from '@material-ui/core/styles/createStyles';
 
-const styles = ({zIndex}: Theme) => createStyles({
+const styles = ({ zIndex }: Theme) => createStyles({
     progress: {
         position: 'fixed',
         zIndex: zIndex.modal + 1,
