@@ -10,7 +10,6 @@ const styles = ({ spacing: { unit }, palette, breakpoints, zIndex, transitions }
     },
     columnContainer: {
         height: '100%',
-        minWidth: '100vw',
         display: 'inline-flex',
         padding: `${unit * 3}px ${unit * 3}px 0`,
         [breakpoints.down('xs')]: {
