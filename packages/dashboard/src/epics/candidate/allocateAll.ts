@@ -21,17 +21,17 @@ export const allocateAllEpic: Epic<AllocateAllStart> = (action$, state$) =>
                 'Content-Type': 'application/json',
             }).pipe(
                 mergeMap(({ response: res }) => {
-                    if (res.type === 'success') {
-                        const allocations = res.allocations as AllocateAllFulfilled['data'];
-                        const failed = allocations.filter(({ time }) => !time).length;
-                        const message = failed ? `有${failed}位候选人没有分配到时间！(不包括未选择时间的)` : '所有候选人均分配了时间！(不包括未选择时间的)';
-                        return of(
-                            allocateAllFulfilled(allocations, interviewType),
-                            enqueueSnackbar(message, { variant: failed ? 'info' : 'success' }),
-                            toggleProgress(),
-                        );
+                    if (res.type !== 'success') {
+                        throw customError(res);
                     }
-                    throw customError(res);
+                    const allocations = res.allocations as AllocateAllFulfilled['data'];
+                    const failed = allocations.filter(({ time }) => !time).length;
+                    const message = failed ? `有${failed}位候选人没有分配到时间！(不包括未选择时间的)` : '所有候选人均分配了时间！(不包括未选择时间的)';
+                    return of(
+                        allocateAllFulfilled(allocations, interviewType),
+                        enqueueSnackbar(message, { variant: failed ? 'info' : 'success' }),
+                        toggleProgress(),
+                    );
                 }),
                 startWith(toggleProgress(true)),
                 catchError((err) => errHandler(err)),
