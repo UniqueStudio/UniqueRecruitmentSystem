@@ -32,30 +32,32 @@ class Board extends PureComponent<Props, State> {
         steps: this.props.steps,
     };
 
-    componentDidUpdate({ group: prevGroup, steps: prevSteps }: Props) {
+    componentDidUpdate(prevProps: Props) {
         this.setState((prevState, { steps, group }) => ({
-            steps: steps.length !== prevState.steps.length || group !== prevGroup ? steps : prevSteps
+            steps: steps.length !== prevState.steps.length || group !== prevProps.group ? steps : prevState.steps
         }));
     }
 
-    onDragEnd = ({ destination, source, draggableId, type }: DropResult) => {
-        if (destination) {
-            const { droppableId: destDroppableId, index: destIndex } = destination;
-            const { droppableId: sourceDroppableId, index: sourceIndex } = source;
-            switch (type) {
+    onDragEnd = (result: DropResult) => {
+        if (result.destination) {
+            const source = result.source;
+            const destination = result.destination;
+            const { droppableId, index } = destination;
+
+            switch (result.type) {
                 case 'COLUMN':
-                    if (sourceDroppableId === destDroppableId && sourceIndex === destIndex) return;
+                    if (source.droppableId === droppableId && source.index === index) return;
                     const preOrder = this.state.steps;
                     const ordered = [...preOrder];
                     const [removed] = ordered.splice(source.index, 1);
-                    ordered.splice(destIndex, 0, removed);
+                    ordered.splice(index, 0, removed);
                     this.setState({
                         steps: ordered
                     });
                     return;
                 case 'CANDIDATE':
-                    if (sourceDroppableId === destDroppableId) return;
-                    this.props.move(STEPS.indexOf(source.droppableId) as Step, STEPS.indexOf(destDroppableId) as Step, draggableId, destIndex);
+                    if (source.droppableId === droppableId) return;
+                    this.props.move(STEPS.indexOf(source.droppableId) as Step, STEPS.indexOf(droppableId) as Step, result.draggableId, index);
                     return;
             }
         }
