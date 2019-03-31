@@ -30,12 +30,16 @@ class Menu extends PureComponent<Props> {
 
     render() {
         const { classes, open, toggleOpen } = this.props;
+        const listItems = [
+            { to: '/', text: 'Dashboard', icon: <HomeIcon /> },
+            { to: '/data', text: '招新数据', icon: <PieChartIcon /> },
+            { to: '/candidates', text: '选手信息', icon: <DashboardIcon /> },
+            { to: '/my', text: '组员信息', icon: <PeopleIcon /> },
+        ];
         return (
             <Drawer
                 variant='permanent'
-                classes={{
-                    paper: classNames(classes.drawerPaper, !open && classes.drawerPaperClose),
-                }}
+                classes={{ paper: classNames(classes.drawerPaper, !open && classes.drawerPaperClose) }}
                 open={open}
             >
                 <div className={classes.toolbar}>
@@ -45,38 +49,16 @@ class Menu extends PureComponent<Props> {
                 </div>
                 <Divider />
                 <List>
-                    <Anchor to='/'>
-                        <ListItem button onClick={open ? toggleOpen : undefined}>
-                            <ListItemIcon className={classes.icon}>
-                                <HomeIcon />
-                            </ListItemIcon>
-                            <ListItemText primary='Dashboard' />
-                        </ListItem>
-                    </Anchor>
-                    <Anchor to='/data'>
-                        <ListItem button onClick={open ? toggleOpen : undefined}>
-                            <ListItemIcon className={classes.icon}>
-                                <PieChartIcon />
-                            </ListItemIcon>
-                            <ListItemText primary='招新数据' />
-                        </ListItem>
-                    </Anchor>
-                    <Anchor to='/candidates'>
-                        <ListItem button onClick={open ? toggleOpen : undefined}>
-                            <ListItemIcon className={classes.icon}>
-                                <DashboardIcon />
-                            </ListItemIcon>
-                            <ListItemText primary='选手信息' />
-                        </ListItem>
-                    </Anchor>
-                    <Anchor to='/my'>
-                        <ListItem button onClick={open ? toggleOpen : undefined}>
-                            <ListItemIcon className={classes.icon}>
-                                <PeopleIcon />
-                            </ListItemIcon>
-                            <ListItemText primary='组员信息' />
-                        </ListItem>
-                    </Anchor>
+                    {listItems.map(({ to, text, icon }, index) =>
+                        <Anchor to={to} key={index}>
+                            <ListItem button onClick={open ? toggleOpen : undefined}>
+                                <ListItemIcon className={classes.icon}>
+                                    {icon}
+                                </ListItemIcon>
+                                <ListItemText primary={text} />
+                            </ListItem>
+                        </Anchor>
+                    )}
                 </List>
             </Drawer>
         );

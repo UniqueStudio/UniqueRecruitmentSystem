@@ -1,10 +1,10 @@
 import { Theme } from '@material-ui/core/styles/createMuiTheme';
 import createStyles from '@material-ui/core/styles/createStyles';
 
-const styles = ({ spacing, typography, breakpoints }: Theme) => createStyles({
+const styles = ({ spacing: { unit }, typography, breakpoints }: Theme) => createStyles({
     paper: {
         display: 'flex',
-        margin: spacing.unit,
+        margin: unit,
         width: 300,
         height: 300,
         verticalAlign: 'top',
@@ -29,21 +29,21 @@ const styles = ({ spacing, typography, breakpoints }: Theme) => createStyles({
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-        padding: `0 ${spacing.unit * 2}px ${spacing.unit * 2}px`,
+        padding: `0 ${unit * 2}px ${unit * 2}px`,
     },
     textField: {
         width: 200,
         [breakpoints.down('xs')]: {
             width: 150,
         },
-        margin: spacing.unit,
+        margin: unit,
     },
     datePicker: {
         width: 200,
         [breakpoints.down('xs')]: {
             width: 150,
         },
-        margin: spacing.unit,
+        margin: unit,
     }
 });
 

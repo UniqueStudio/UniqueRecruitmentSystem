@@ -3,7 +3,7 @@ import createStyles from '@material-ui/core/styles/createStyles';
 
 import { drawerWidth } from './index';
 
-const styles = ({ transitions, mixins, spacing, breakpoints }: Theme) => createStyles({
+const styles = ({ transitions, mixins, spacing: { unit }, breakpoints }: Theme) => createStyles({
     drawerPaper: {
         position: 'sticky',
         top: 0,
@@ -20,7 +20,7 @@ const styles = ({ transitions, mixins, spacing, breakpoints }: Theme) => createS
             easing: transitions.easing.sharp,
             duration: transitions.duration.leavingScreen,
         }),
-        width: spacing.unit * 9,
+        width: unit * 9,
         [breakpoints.down('sm')]: {
             width: '1px', // bugs in 0px, iOS
         },
@@ -29,11 +29,11 @@ const styles = ({ transitions, mixins, spacing, breakpoints }: Theme) => createS
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'flex-end',
-        padding: `0 ${spacing.unit}px`,
+        padding: `0 ${unit}px`,
         ...mixins.toolbar,
     },
     icon: {
-        margin: `0 ${spacing.unit}px`
+        margin: `0 ${unit}px`
     }
 });
 

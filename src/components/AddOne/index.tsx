@@ -33,7 +33,7 @@ const generateTitle = (date: Date) => {
     return year + type;
 };
 
-const initial = () => {
+const initialState = () => {
     const date = new Date();
     return {
         modalOpen: false,
@@ -48,11 +48,11 @@ const initial = () => {
 
 class AddOne extends PureComponent<Props> {
 
-    state = initial();
+    state = initialState();
 
     componentDidUpdate() {
         if (this.props.shouldClear) {
-            this.setState(initial());
+            this.setState(initialState());
         }
     }
 
