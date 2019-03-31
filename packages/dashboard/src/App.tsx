@@ -9,7 +9,7 @@ import { epicMiddleware, epics } from './epics';
 import { reducers } from './reducers';
 import Index from './views/Index';
 
-export const history = createHistory();
+createHistory();
 
 const middleware = [epicMiddleware];
 

@@ -1,12 +1,12 @@
 import { Theme } from '@material-ui/core/styles/createMuiTheme';
 import createStyles from '@material-ui/core/styles/createStyles';
 
-const styles = ({ breakpoints, spacing }: Theme) => createStyles({
+const styles = ({ breakpoints, spacing: { unit } }: Theme) => createStyles({
     template: {
         [breakpoints.down('xs')]: {
-            margin: spacing.unit,
+            margin: unit,
         },
-        margin: spacing.unit * 2,
+        margin: unit * 2,
         overflowY: 'auto',
     },
     stepper: {
@@ -15,7 +15,7 @@ const styles = ({ breakpoints, spacing }: Theme) => createStyles({
         },
     },
     templateContent: {
-        minHeight: spacing.unit * 3,
+        minHeight: unit * 3,
         display: 'flex',
         alignItems: 'baseline',
     },
@@ -24,9 +24,9 @@ const styles = ({ breakpoints, spacing }: Theme) => createStyles({
     },
     templateItem: {
         [breakpoints.down('xs')]: {
-            margin: spacing.unit / 2,
+            margin: unit / 2,
         },
-        margin: spacing.unit,
+        margin: unit,
     },
     templateColumn: {
         flexDirection: 'column',
@@ -44,7 +44,7 @@ const styles = ({ breakpoints, spacing }: Theme) => createStyles({
         alignItems: 'center',
         flexWrap: 'wrap',
         [breakpoints.down('xs')]: {
-            marginTop: spacing.unit,
+            marginTop: unit,
         },
     },
     verify: {

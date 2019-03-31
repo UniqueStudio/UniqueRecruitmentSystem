@@ -100,15 +100,15 @@ class CandidateTable extends PureComponent<Props, State> {
                 <div className={classes.data}>
                     <div className={classes.title}>
                         <Typography variant='h6'>
-                            {`${interviewType === 'group' ? '组面' : '群面'}阶段候选人信息`}
+                            <Select
+                                value={interviewType}
+                                onChange={changeType}
+                            >
+                                <MenuItem value='group'>组面</MenuItem>
+                                <MenuItem value='team'>群面</MenuItem>
+                            </Select>
+                            阶段候选人信息
                         </Typography>
-                        <Select
-                            value={interviewType}
-                            onChange={changeType}
-                        >
-                            <MenuItem value='group'>组面</MenuItem>
-                            <MenuItem value='team'>群面</MenuItem>
-                        </Select>
                     </div>
                     <div className={classes.tableContainer}>
                         <Table className={classes.table}>

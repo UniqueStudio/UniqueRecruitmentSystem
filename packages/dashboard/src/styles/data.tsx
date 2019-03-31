@@ -88,8 +88,6 @@ const styles = ({ spacing: { unit }, breakpoints }: Theme) => createStyles({
     },
     title: {
         display: 'flex',
-        width: '100%',
-        alignItems: 'flex-end',
         justifyContent: 'space-around',
     },
     dialog: {

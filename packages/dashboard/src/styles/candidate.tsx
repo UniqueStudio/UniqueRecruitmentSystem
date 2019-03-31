@@ -1,9 +1,9 @@
 import { Theme } from '@material-ui/core/styles/createMuiTheme';
 import createStyles from '@material-ui/core/styles/createStyles';
 
-const styles = ({ breakpoints, spacing, zIndex }: Theme) => createStyles({
+const styles = ({ breakpoints, spacing: { unit }, zIndex }: Theme) => createStyles({
     cardContainer: {
-        padding: `${spacing.unit / 2}px ${spacing.unit}px`,
+        padding: `${unit / 2}px ${unit}px`,
     },
     card: {
         position: 'relative',
@@ -15,15 +15,15 @@ const styles = ({ breakpoints, spacing, zIndex }: Theme) => createStyles({
         alignItems: 'center',
         display: 'flex',
         [breakpoints.down('sm')]: {
-            'margin': `${spacing.unit}px 0`,
+            'margin': `${unit}px 0`,
             '& button': {
-                padding: spacing.unit,
+                padding: unit,
                 minWidth: 80,
             },
         },
     },
     cardContent: {
-        margin: spacing.unit,
+        margin: unit,
         display: 'flex',
         flexGrow: 1,
         alignItems: 'center',
@@ -35,14 +35,14 @@ const styles = ({ breakpoints, spacing, zIndex }: Theme) => createStyles({
         pointerEvents: 'none',
     },
     popperRoot: {
-        padding: spacing.unit,
+        padding: unit,
     },
     iconButton: {
         marginLeft: 'auto',
     },
     comment: {
         width: '50%',
-        margin: spacing.unit,
+        margin: unit,
     },
     comments: {
         [breakpoints.up('md')]: {
@@ -53,20 +53,20 @@ const styles = ({ breakpoints, spacing, zIndex }: Theme) => createStyles({
     introContent: {
         display: 'flex',
         [breakpoints.down('sm')]: {
-            'margin': `${spacing.unit}px`,
+            'margin': `${unit}px`,
             '& button': {
                 width: 'auto',
                 height: 'auto',
             },
         },
         overflowY: 'auto',
-        margin: spacing.unit * 2,
+        margin: unit * 2,
     },
     detail: {
         display: 'flex',
         flexDirection: 'column',
         [breakpoints.up('md')]: {
-            marginRight: spacing.unit * 2,
+            marginRight: unit * 2,
         },
         minHeight: 450,
         justifyContent: 'space-around',
@@ -78,8 +78,8 @@ const styles = ({ breakpoints, spacing, zIndex }: Theme) => createStyles({
         },
         'width': 250,
         '& *': {
-            marginLeft: spacing.unit / 2,
-            marginRight: spacing.unit / 2,
+            marginLeft: unit / 2,
+            marginRight: unit / 2,
         },
         '& button': {
             marginLeft: 'auto',
