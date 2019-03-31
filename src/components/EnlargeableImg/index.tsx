@@ -32,8 +32,12 @@ class EnlargeableImage extends PureComponent<Props> {
         return (
             <>
                 <img src={src} onClick={this.handleImageClick} className={classes.image} alt='image' />
-                <Dialog open={this.state.open} onClose={this.handleClose} maxWidth={false}
-                        classes={{ paper: classes.imageLayer, root: classes.imageRoot }}>
+                <Dialog
+                    open={this.state.open}
+                    onClose={this.handleClose}
+                    maxWidth={false}
+                    classes={{ paper: classes.imageLayer, root: classes.imageRoot }}
+                >
                     <img src={src} onClick={this.handleClose} className={classes.image} alt='original image' />
                 </Dialog>
             </>

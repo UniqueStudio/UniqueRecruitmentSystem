@@ -102,21 +102,18 @@ class Chart extends PureComponent<Props> {
                         height={300}
                     />
                 </div>
-                <Typography variant='body1' className={classes.centerText}>{
-                    `总计：${group ? group.total : total}人`
-                }</Typography>
+                <Typography variant='body1' className={classes.centerText}>
+                    {`总计：${group ? group.total : total}人`}
+                </Typography>
             </Paper>;
         return (
             <div className={classes.block}>
                 <Button onClick={onClick} variant='contained' color='primary'>浏览本次招新</Button>
-                {!expired ? ChartBox :
-                    <Tooltip
-                        title='该招新已结束'
-                        classes={{ tooltip: classes.tooltip }}
-                        placement='top'
-                    >
+                {expired
+                    ? <Tooltip title='该招新已结束' classes={{ tooltip: classes.tooltip }} placement='top'>
                         {ChartBox}
                     </Tooltip>
+                    : ChartBox
                 }
             </div>
         );

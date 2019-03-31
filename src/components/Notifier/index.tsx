@@ -29,11 +29,11 @@ class Notifier extends Component<Props> {
     componentDidUpdate() {
         const { notifications = [], enqueueSnackbar, removeSnackbar } = this.props;
 
-        notifications.forEach((notification) => {
-            if (this.displayed.includes(notification.key)) return;
-            enqueueSnackbar(notification.message, notification.options);
-            this.storeDisplayed(notification.key);
-            removeSnackbar(notification.key);
+        notifications.forEach(({ key, message, options }) => {
+            if (this.displayed.includes(key)) return;
+            enqueueSnackbar(message, options);
+            this.storeDisplayed(key);
+            removeSnackbar(key);
         });
     }
 

@@ -126,9 +126,9 @@ class Candidate extends PureComponent<Props> {
                             <Typography color='textSecondary' variant='caption'>{
                                 `${GRADES[grade]} - ${institute}`
                             }</Typography>
-                            {allocation && isTeamInterview && <Typography color='textSecondary' variant='caption'>{
-                                new Date(allocation).toLocaleString('zh-CN', { hour12: false })
-                            }</Typography>}
+                            {allocation && isTeamInterview && <Typography color='textSecondary' variant='caption'>
+                                {new Date(allocation).toLocaleString('zh-CN', { hour12: false })}
+                            </Typography>}
                         </span>
                         <IconButton
                             className={classes.iconButton}
@@ -140,18 +140,18 @@ class Candidate extends PureComponent<Props> {
                 </Card>
             </div>
         );
-        const popover = (
-            <Popover
-                className={classes.popper}
-                classes={{ paper: classes.popperRoot }}
-                open={Boolean(this.state.anchorEl)}
-                anchorEl={this.state.anchorEl}
-                anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
-                transformOrigin={{ vertical: 'top', horizontal: 'center' }}
-                onClose={this.handleClose}
-                disableRestoreFocus
-            >{abandon ? '该选手已放弃' : rejected ? '该选手已被淘汰' : ''}</Popover>
-        );
+        const popover = <Popover
+            className={classes.popper}
+            classes={{ paper: classes.popperRoot }}
+            open={Boolean(this.state.anchorEl)}
+            anchorEl={this.state.anchorEl}
+            anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+            transformOrigin={{ vertical: 'top', horizontal: 'center' }}
+            onClose={this.handleClose}
+            disableRestoreFocus
+        >
+            {abandon ? '该选手已放弃' : rejected ? '该选手已被淘汰' : ''}
+        </Popover>;
         return <>
             {card}
             {abandon || rejected ? popover : null}
