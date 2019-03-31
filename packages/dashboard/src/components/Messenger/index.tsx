@@ -159,7 +159,8 @@ class Messenger extends PureComponent<Props, State> {
                     }
                 </div>
             </div>;
-        const AvatarBox = ({ avatar, name }: Message) => <Avatar alt={name} src={avatar} className={classes.avatar} children={<FaceIcon />} />;
+        const AvatarBox = ({ avatar, name }: Message) =>
+            <Avatar alt={name} src={avatar} className={classes.avatar} children={<FaceIcon />} />;
         return (
             <Paper className={classes.messenger}>
                 <div
