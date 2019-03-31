@@ -57,11 +57,13 @@ class Dashboard extends PureComponent<Props> {
                                 shouldClear={shouldClear}
                             />
                         </div>
-                        {!data.length ? null : data.map((recruitment) => <Chart
-                            key={recruitment._id}
-                            data={recruitment}
-                            onClick={this.setViewing(recruitment.title)}
-                        />)}
+                        {data.length ? data.map((recruitment) =>
+                            <Chart
+                                key={recruitment._id}
+                                data={recruitment}
+                                onClick={this.setViewing(recruitment.title)}
+                            />
+                        ) : null}
                     </div>
                 </div>
                 <div className={classes.right}>
@@ -75,7 +77,9 @@ class Dashboard extends PureComponent<Props> {
                             <li>不能查看自己这届的候选人</li>
                             <li>左侧甜甜圈图划掉组别，中间的人数并不会减少</li>
                             <li>简历不存在时按钮是禁用的，但是速度仍然很慢</li>
-                            <li><del>通知是写死的，面试问题也是</del></li>
+                            <li>
+                                <del>通知是写死的，面试问题也是</del>
+                            </li>
                         </ul>
                     </Paper>
                 </div>

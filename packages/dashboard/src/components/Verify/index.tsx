@@ -49,11 +49,16 @@ class Verify extends PureComponent<Props> {
 
     render() {
         const { classes, onChange, code } = this.props;
-
+        const { sent, time } = this.state;
         return (
             <div className={classNames(classes.content, classes.item)}>
-                <Button color='primary' onClick={this.getCode}
-                        disabled={this.state.sent}>{this.state.sent ? `${this.state.time}秒后重新获取` : '获取验证码'}</Button>
+                <Button
+                    color='primary'
+                    onClick={this.getCode}
+                    disabled={sent}
+                >
+                    {sent ? `${time}秒后重新获取` : '获取验证码'}
+                </Button>
                 <TextField
                     label='输入验证码'
                     className={classNames(classes.item, classes.input)}

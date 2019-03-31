@@ -77,13 +77,14 @@ class Dates extends PureComponent<Props> {
         const { dates } = this.state;
         return (
             <div className={classes.dates}>
-                {!dates.length ? <Button onClick={this.addDate} variant='contained' color='primary' disabled={disabled}>设置</Button> : (
-                    <div className={classes.buttonContainer}>
+                {dates.length
+                    ? <div className={classes.buttonContainer}>
                         <Button onClick={this.addDate} color='primary' variant='contained' disabled={disabled}>增加</Button>
                         <Button onClick={this.cancel} color='primary' variant='contained' disabled={disabled}>取消</Button>
-                        <Button onClick={this.submit} variant='contained' color='primary' disabled={disabled}>提交</Button>
+                        <Button onClick={this.submit} color='primary' variant='contained' disabled={disabled}>提交</Button>
                     </div>
-                )}
+                    : <Button onClick={this.addDate} color='primary' variant='contained' disabled={disabled}>设置</Button>
+                }
                 {dates.map(({ morning, afternoon, evening, date }, index) =>
                     <div className={classes.textFieldContainer} key={index}>
                         <DatePicker

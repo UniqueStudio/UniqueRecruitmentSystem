@@ -16,32 +16,24 @@ class Schedule extends PureComponent<Props> {
 
     render() {
         const { onChange, disablePast, disabled, begin, end, stop, classes } = this.props;
+        const pickers = [
+            { label: '开始时间', name: 'begin', value: begin },
+            { label: '报名截止', name: 'stop', value: stop },
+            { label: '结束时间', name: 'end', value: end },
+        ];
         return (
             <>
-                <DatePicker
-                    label='开始时间'
-                    value={begin}
-                    onChange={onChange('begin')}
-                    disablePast={disablePast}
-                    disabled={disabled}
-                    classes={classes}
-                />
-                <DatePicker
-                    label='报名截止'
-                    value={stop}
-                    onChange={onChange('stop')}
-                    disablePast={disablePast}
-                    disabled={disabled}
-                    classes={classes}
-                />
-                <DatePicker
-                    label='结束时间'
-                    value={end}
-                    onChange={onChange('end')}
-                    disablePast={disablePast}
-                    disabled={disabled}
-                    classes={classes}
-                />
+                {pickers.map(({ label, name, value }, index) =>
+                    <DatePicker
+                        label={label}
+                        value={value}
+                        onChange={onChange(name)}
+                        disablePast={disablePast}
+                        disabled={disabled}
+                        classes={classes}
+                        key={index}
+                    />
+                )}
             </>
         );
     }

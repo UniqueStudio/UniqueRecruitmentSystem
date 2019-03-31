@@ -132,7 +132,13 @@ class Candidates extends PureComponent<Props> {
         const canOperate = isAdmin || (steps.length === 2 ? isCaptain : group === userGroup);
         return (
             <>
-                <Board move={move} group={group} steps={steps} candidates={candidatesInSteps} toggleDetail={toggleDetail}/>
+                <Board
+                    move={move}
+                    group={group}
+                    steps={steps}
+                    candidates={candidatesInSteps}
+                    toggleDetail={toggleDetail}
+                />
                 <Fab selected={selected} deselect={deselect} fabOn={fabOn} select={select} snackbars={snackbars}
                      candidates={candidatesInSteps[fabOn] || []} toggleFabOff={toggleFabOff}
                      toggleOpen={toggleOpen} canOperate={canOperate} group={group} steps={steps}/>

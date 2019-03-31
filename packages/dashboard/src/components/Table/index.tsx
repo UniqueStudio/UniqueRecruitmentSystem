@@ -124,13 +124,12 @@ class CandidateTable extends PureComponent<Props, State> {
                                     const { selection, allocation } = interviews[interviewType];
                                     const slotInfo = allocation ? new Date(allocation).toLocaleString('zh-CN', { hour12: false }) : '未分配';
                                     const state = <>
-                                        <div>{
-                                            rejected ? '已淘汰'
+                                        <div>
+                                            {rejected ? '已淘汰'
                                                 : abandon ? '已放弃'
-                                                : selection && selection.length ?
-                                                    <Button color='primary' onClick={this.toggleViewing(_id)}>查看</Button>
-                                                    : '未选择'
-                                        }</div>
+                                                    : selection && selection.length ? <Button color='primary' onClick={this.toggleViewing(_id)}>查看</Button>
+                                                        : '未选择'}
+                                        </div>
                                         <Modal open={viewing === _id} onClose={this.toggleViewing('')} title='选择情况'>
                                             {selection.map(({ date, afternoon, morning, evening }, index) =>
                                                 <div className={classes.textFieldContainer} key={index}>
