@@ -24,14 +24,15 @@ class Picker extends PureComponent<Props> {
             <div className={classNames(classes.templateContent, classes.templateItem, classes.picker)}>
                 {selected.length === 0
                     ? <Typography variant='h6' className={classes.templateItem}>你未选中任何人!</Typography>
-                    : selected.map(
-                        ({ _id, name, grade, institute }) => <Chip
+                    : selected.map(({ _id, name, grade, institute }) =>
+                        <Chip
                             key={_id}
                             label={`${name} ${GRADES[grade]} ${institute}`}
                             onDelete={onDelete(_id)}
                             className={classes.templateItem}
                             color='primary'
-                        />)
+                        />
+                    )
                 }
             </div>
         );
