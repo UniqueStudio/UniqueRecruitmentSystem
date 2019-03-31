@@ -1,18 +1,18 @@
 import { Theme } from '@material-ui/core/styles/createMuiTheme';
 import createStyles from '@material-ui/core/styles/createStyles';
 
-const styles = ({ breakpoints, spacing }: Theme) => createStyles({
+const styles = ({ breakpoints, spacing: { unit } }: Theme) => createStyles({
     content: {
-        minHeight: spacing.unit * 3,
+        minHeight: unit * 3,
         maxWidth: 700,
         display: 'flex',
         alignItems: 'baseline',
     },
     item: {
         [breakpoints.down('xs')]: {
-            margin: spacing.unit / 2,
+            margin: unit / 2,
         },
-        margin: spacing.unit,
+        margin: unit,
     },
     input: {
         [breakpoints.down('xs')]: {

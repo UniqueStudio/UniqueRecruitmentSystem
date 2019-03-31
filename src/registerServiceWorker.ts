@@ -12,6 +12,8 @@
 import { enqueueSnackbar } from './actions';
 import { store } from './App';
 
+declare const self: ServiceWorkerGlobalScope;
+
 const isLocalhost = Boolean(
     window.location.hostname === 'localhost' ||
     // [::1] is the IPv6 localhost address.
@@ -21,6 +23,11 @@ const isLocalhost = Boolean(
         /^127(?:\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}$/,
     ),
 );
+
+self.addEventListener('install', async () => {
+    console.log('Service worker is forced to be active.');
+    await self.skipWaiting();
+});
 
 export default function register() {
     if (process.env.NODE_ENV === 'production' && 'serviceWorker' in navigator) {
@@ -87,8 +94,9 @@ function registerValidSW(swUrl: string) {
             };
         })
         .catch((error) => {
-            store.dispatch(enqueueSnackbar(`Error during service worker registration: ${error}`, { variant: 'error' }));
-            console.error('Error during service worker registration:', error);
+            const errorMessage = `Error during service worker registration: ${error}`;
+            store.dispatch(enqueueSnackbar(errorMessage, { variant: 'error' }));
+            console.error(errorMessage);
         });
 }
 
@@ -99,7 +107,7 @@ function checkValidServiceWorker(swUrl: string) {
             // Ensure service worker exists, and that we really are getting a JS file.
             if (
                 response.status === 404 ||
-                response.headers.get('content-type')!.indexOf('javascript') === -1
+                !response.headers.get('content-type')!.includes('javascript')
             ) {
                 // No service worker found. Probably a different app. Reload the page.
                 navigator.serviceWorker.ready.then((registration) => {
@@ -113,16 +121,14 @@ function checkValidServiceWorker(swUrl: string) {
             }
         })
         .catch(() => {
-            console.log(
-                'No internet connection found. App is running in offline mode.',
-            );
+            console.log('No internet connection found. App is running in offline mode.');
         });
 }
 
 export function unregister() {
     if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.ready.then((registration) => {
-            registration.unregister();
+        navigator.serviceWorker.ready.then(async (registration) => {
+            await registration.unregister();
         });
     }
 }

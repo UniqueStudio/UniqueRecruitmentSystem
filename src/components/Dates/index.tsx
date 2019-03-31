@@ -26,6 +26,7 @@ class Dates extends PureComponent<Props> {
             dates: this.props.dates.map((date) => ({ ...date, date: new Date(date.date) }))
         });
     };
+
     getDefaultDate = () => ({
         date: new Date(),
         morning: 0,

@@ -45,9 +45,9 @@ const generateStyle = (evaluations: Evaluation[]) => {
     const red = colorToAlpha(dangerColor, 0.1);
     const yellow = colorToAlpha(warningColor, 0.1);
     const green = colorToAlpha(successColor, 0.1);
-    const G_Y = evaluations.filter((evaluation) => evaluation === 2).length / evaluations.length * 100; // good
-    const Y_R = evaluations.filter((evaluation) => evaluation === 1).length / evaluations.length * 100 + G_Y; // so-so
-    return `linear-gradient(to right, ${green}, ${green} ${G_Y}%, ${yellow} ${G_Y}%, ${yellow} ${Y_R}%, ${red} ${Y_R}%, ${red})`;
+    const good = evaluations.filter((evaluation) => evaluation === 2).length / evaluations.length * 100;
+    const soSo = evaluations.filter((evaluation) => evaluation === 1).length / evaluations.length * 100 + good;
+    return `linear-gradient(to right, ${green}, ${green} ${good}%, ${yellow} ${good}%, ${yellow} ${soSo}%, ${red} ${soSo}%, ${red})`;
 };
 
 class Candidate extends PureComponent<Props> {

@@ -3,12 +3,12 @@ import createStyles from '@material-ui/core/styles/createStyles';
 
 import { colorToAlpha } from './index';
 
-const styles = ({ spacing, transitions, breakpoints, palette, zIndex }: Theme) => createStyles({
+const styles = ({ spacing: { unit }, transitions, breakpoints, palette, zIndex }: Theme) => createStyles({
     messenger: {
         display: 'flex',
         flexDirection: 'column',
-        margin: spacing.unit,
-        padding: spacing.unit,
+        margin: unit,
+        padding: unit,
         height: '80vh',
         [breakpoints.up('sm')]: {
             width: 400,
@@ -21,8 +21,8 @@ const styles = ({ spacing, transitions, breakpoints, palette, zIndex }: Theme) =
     messages: {
         flex: '1',
         overflowY: 'auto',
-        padding: spacing.unit,
-        marginBottom: spacing.unit,
+        padding: unit,
+        marginBottom: unit,
         transition: transitions.create(['padding'], {
             easing: transitions.easing.sharp,
             duration: transitions.duration.enteringScreen,
@@ -30,7 +30,7 @@ const styles = ({ spacing, transitions, breakpoints, palette, zIndex }: Theme) =
     },
     messageContainer: {
         display: 'flex',
-        margin: `${spacing.unit}px 0`,
+        margin: `${unit}px 0`,
     },
     input: {
         marginTop: 'auto',
@@ -44,7 +44,7 @@ const styles = ({ spacing, transitions, breakpoints, palette, zIndex }: Theme) =
     },
     chipRoot: {
         height: 'auto',
-        padding: spacing.unit,
+        padding: unit,
         whiteSpace: 'normal',
         background: colorToAlpha(palette.secondary.light, 0.3),
         '& > *': {
@@ -63,10 +63,10 @@ const styles = ({ spacing, transitions, breakpoints, palette, zIndex }: Theme) =
         maxWidth: 200,
         userSelect: 'text',
         cursor: 'text',
-        marginTop: spacing.unit,
+        marginTop: unit,
     },
     avatar: {
-        margin: spacing.unit,
+        margin: unit,
     },
     my: {
         flexDirection: 'row-reverse',

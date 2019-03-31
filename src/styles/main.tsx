@@ -3,7 +3,7 @@ import createStyles from '@material-ui/core/styles/createStyles';
 
 import { colorToAlpha } from './index';
 
-const styles = ({ palette, spacing, breakpoints }: Theme) => createStyles({
+const styles = ({ palette, spacing: { unit }, breakpoints }: Theme) => createStyles({
     '@global': {
         '::-webkit-scrollbar': {
             width: 3,
@@ -20,11 +20,11 @@ const styles = ({ palette, spacing, breakpoints }: Theme) => createStyles({
     content: {
         flexGrow: 1,
         backgroundColor: colorToAlpha(palette.secondary.light, 0.2),
-        marginTop: spacing.unit * 8,
+        marginTop: unit * 8,
         height: 'calc(100vh - 64px)',
         overflowX: 'auto',
         [breakpoints.down('xs')]: {
-            marginTop: spacing.unit * 6,
+            marginTop: unit * 6,
             height: 'calc(100vh - 48px)',
         },
     },

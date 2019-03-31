@@ -106,9 +106,9 @@ export function candidateReducer(state = init, action: Action): CandidateStore {
         case actions.SET_STEPS:
             return { ...state, steps: action.stepType === 1 ? [4, 5] : [0, 1, 2, 3, 4, 5] };
         case actions.ALLOCATE_ONE_FULFILLED: {
-            const { cid, interviewType, time } = action;
+            const { interviewType, time, cid: candidateId } = action;
             const { candidates } = state;
-            const index = candidates.findIndex(({ _id }) => _id === cid);
+            const index = candidates.findIndex(({ _id }) => _id === candidateId);
             if (index === -1) return state;
             const { interviews } = candidates[index];
             const updatedCandidates = updateObjectInArray(candidates, index, {
