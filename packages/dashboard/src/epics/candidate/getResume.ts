@@ -9,7 +9,7 @@ import { API } from '../../config/consts';
 import { checkToken, customError, Epic, errHandler } from '../';
 import { store } from '../../App';
 
-const download = (cid: string) =>  async (res: Response) => {
+const download = (cid: string) => async (res: Response) => {
     if (!res.ok) {
         if (res.status === 404) {
             throw customError({ message: '简历不存在', type: 'info' });
@@ -23,7 +23,7 @@ const download = (cid: string) =>  async (res: Response) => {
     }
     let loaded = 0;
     const response = new Response(new ReadableStream({
-        async start(controller) {
+        async start(controller: ReadableStreamDefaultController) {
             const reader = res.body!.getReader();
             let result = await reader.read();
             while (!result.done) {

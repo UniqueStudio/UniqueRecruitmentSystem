@@ -72,7 +72,7 @@ class Bar extends PureComponent<Props & RouteComponentProps> {
     };
 
     refresh = () => {
-        sessionStorage.clear();
+        window.sessionStorage.clear();
         window.location.reload();
     };
 

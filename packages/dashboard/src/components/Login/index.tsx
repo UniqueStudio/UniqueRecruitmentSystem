@@ -58,35 +58,38 @@ class Login extends PureComponent<Props> {
     render() {
         const { classes, loggedIn, isScanning, getQRCode, isLoading } = this.props;
         const { src, method, phone, password } = this.state;
+        const ChooseMethod = <>
+            <Button color='primary' size='large' onClick={this.setMethod(1)}>企业微信登录</Button>
+            <Button color='primary' size='large' onClick={this.setMethod(2)}>账号密码登录</Button>
+        </>;
+        const ByQRCode = <>
+            {src && <img src={src} alt='This is QRCode' />}
+            <Button color='primary' size='large' onClick={getQRCode} disabled={isScanning}>获取二维码</Button>
+            <Button color='primary' size='large' onClick={this.setMethod(2)}>账号密码登录</Button>
+        </>;
+        const ByPassword = <>
+            <TextField
+                label='手机号'
+                value={phone}
+                onChange={this.handleChange('phone')}
+                margin='normal'
+            />
+            <TextField
+                label='密码'
+                value={password}
+                type='password'
+                onChange={this.handleChange('password')}
+                margin='normal'
+            />
+            <Button color='primary' size='large' onClick={this.login} disabled={!phone || !password}>登录</Button>
+            <Button color='primary' size='large' onClick={this.setMethod(1)}>企业微信登录</Button>
+        </>;
         return (
             !loggedIn ? <div className={classes.container}>
                 <img src={logo} className={classes.logoImage} alt='UNIQUE STUDIO' />
                 <Modal open title='登录' hideBackdrop>
                     <div className={classes.login}>
-                        {method === 0 ? <>
-                            <Button color='primary' size='large' onClick={this.setMethod(1)}>企业微信登录</Button>
-                            <Button color='primary' size='large' onClick={this.setMethod(2)}>账号密码登录</Button>
-                        </> : method === 1 ? <>
-                            {src && <img src={src} alt='This is QRCode' />}
-                            <Button color='primary' size='large' onClick={getQRCode} disabled={isScanning}>获取二维码</Button>
-                            <Button color='primary' size='large' onClick={this.setMethod(2)}>账号密码登录</Button>
-                        </> : method === 2 ? <>
-                            <TextField
-                                label='手机号'
-                                value={phone}
-                                onChange={this.handleChange('phone')}
-                                margin='normal'
-                            />
-                            <TextField
-                                label='密码'
-                                value={password}
-                                type='password'
-                                onChange={this.handleChange('password')}
-                                margin='normal'
-                            />
-                            <Button color='primary' size='large' onClick={this.login} disabled={!phone || !password}>登录</Button>
-                            <Button color='primary' size='large' onClick={this.setMethod(1)}>企业微信登录</Button>
-                        </> : null}
+                        {[ChooseMethod, ByQRCode, ByPassword][method]}
                     </div>
                 </Modal>
                 {isLoading && <Progress />}
