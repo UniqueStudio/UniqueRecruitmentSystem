@@ -10,7 +10,7 @@ services:
     - 127.0.0.1:38324:38324
     command: mongod --port 38324
     volumes:
-      - ../data:/data/database
+      - mongodb:/data/database
   backend:
     build: .
     environment:
@@ -26,3 +26,5 @@ services:
       - ../resumes:/usr/src/resumes
       - ./stderr.log:/usr/src/backend/stderr.log
       - ./stdout.log:/usr/src/backend/stdout.log
+  volumes:
+    mongodb:
