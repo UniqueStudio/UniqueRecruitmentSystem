@@ -4,13 +4,11 @@ services:
     image: redis:alpine
   mongodb:
     image: mongo:latest
-    environment:
-    - MONGO_DATA_DIR=/data/database
     ports:
     - 127.0.0.1:38324:38324
     command: mongod --port 38324
     volumes:
-      - mongodb:/data/database
+      - mongodb:/data/db
   backend:
     build: .
     environment:
