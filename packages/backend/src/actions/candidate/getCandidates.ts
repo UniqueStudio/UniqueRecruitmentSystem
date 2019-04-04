@@ -1,6 +1,7 @@
 import { RequestHandler } from 'express';
 import { param, validationResult } from 'express-validator/check';
 import { CandidateRepo, RecruitmentRepo, UserRepo } from '../../database/model';
+import { compareTitle } from '../../utils/compareTitle';
 import { errorRes } from '../../utils/errorRes';
 
 export const getCandidates: RequestHandler = async (req, res, next) => {
@@ -16,7 +17,7 @@ export const getCandidates: RequestHandler = async (req, res, next) => {
         const { joinTime } = user;
         const query = JSON.parse(req.params.query);
         const { title } = query;
-        if (title === joinTime) {
+        if (compareTitle(joinTime, title) >= 0) {
             return next(errorRes('You don\'t have permission to view this recruitment!', 'warning'));
         }
         const recruitment = await RecruitmentRepo.query({ title });
