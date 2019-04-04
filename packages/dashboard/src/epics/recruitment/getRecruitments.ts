@@ -35,7 +35,7 @@ export const getRecruitmentsEpic: Epic = (action$, state$, { sessionStorage }) =
             }).pipe(
                 mergeMap((res) => {
                     if (res.type === 'success') {
-                        const data = res.data;
+                        const data = res.data.sort((prev, next) => prev.begin - next.begin);
                         const newViewing = viewing ? viewing : data.slice(-1)[0] ? data.slice(-1)[0].title : '';
                         return of(
                             getRecruitmentsFulfilled(data),
