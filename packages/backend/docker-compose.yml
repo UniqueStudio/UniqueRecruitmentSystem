@@ -9,6 +9,8 @@ services:
     ports:
     - 127.0.0.1:38324:38324
     command: mongod --port 38324
+    volumes:
+      - ../data:/data/database
   backend:
     build: .
     environment:
