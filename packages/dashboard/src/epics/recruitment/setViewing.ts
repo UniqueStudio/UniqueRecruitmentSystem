@@ -10,6 +10,7 @@ import {
 } from '../../actions';
 
 import { Epic } from '../';
+import { compareTitle } from '../../utils/compareTitle';
 
 export const setViewingEpic: Epic<SetViewingRecruitmentStart> = (action$, state$) =>
     action$.pipe(
@@ -17,7 +18,7 @@ export const setViewingEpic: Epic<SetViewingRecruitmentStart> = (action$, state$
         mergeMap(({ title }) => {
             const { info: { joinTime } } = state$.value.user;
             const { viewing } = state$.value.recruitment;
-            if (!joinTime || joinTime === title) {
+            if (compareTitle(joinTime, title) >= 0) {
                 return of(
                     enqueueSnackbar('你不能查看本次招新！', { variant: 'info' })
                 );
