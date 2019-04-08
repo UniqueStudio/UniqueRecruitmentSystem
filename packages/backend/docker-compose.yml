@@ -5,14 +5,14 @@ services:
   mongodb:
     image: mongo:latest
     ports:
-    - 127.0.0.1:38324:38324
-    command: mongod --port 38324
+    - "127.0.0.1:${DB_PORT}:${DB_PORT}"
+    command: "mongod --port ${DB_PORT}"
     volumes:
       - mongodb:/data/db
   backend:
     build: .
-    environment:
-    - NODE_ENV=production
+    env_file:
+      - config.env
     ports:
     - 5000:5000
     links:
