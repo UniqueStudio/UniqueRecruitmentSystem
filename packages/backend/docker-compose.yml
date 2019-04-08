@@ -12,7 +12,7 @@ services:
   backend:
     build: .
     env_file:
-      - config.env
+      - .env
     ports:
     - 5000:5000
     links:
