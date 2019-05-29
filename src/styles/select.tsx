@@ -1,9 +1,9 @@
 import { Theme } from '@material-ui/core/styles/createMuiTheme';
-import createStyles from '@material-ui/core/styles/createStyles';
+import { createStyles } from '@material-ui/styles';
 
-const styles = ({ spacing: { unit }, breakpoints }: Theme) => createStyles({
+const styles = ({ spacing, breakpoints }: Theme) => createStyles({
     select: {
-        marginLeft: unit * 4,
+        marginLeft: spacing(4),
         '& *': {
             color: 'white !important',
         },

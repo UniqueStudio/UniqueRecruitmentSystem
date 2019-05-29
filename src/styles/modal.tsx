@@ -1,9 +1,9 @@
 import { Theme } from '@material-ui/core/styles/createMuiTheme';
-import createStyles from '@material-ui/core/styles/createStyles';
+import { createStyles } from '@material-ui/styles';
 
 import { colorToShadow } from './index';
 
-const styles = ({ palette, shadows, spacing: { unit }, breakpoints }: Theme) => createStyles({
+const styles = ({ palette, shadows, spacing, breakpoints }: Theme) => createStyles({
     modalContainer: {
         display: 'flex',
         alignItems: 'center',
@@ -16,7 +16,7 @@ const styles = ({ palette, shadows, spacing: { unit }, breakpoints }: Theme) => 
         borderRadius: 6,
         backgroundColor: palette.background.paper,
         boxShadow: shadows[5],
-        padding: unit,
+        padding: spacing(1),
         outline: 'none',
         [breakpoints.down('xs')]: {
             maxWidth: '100%',
@@ -27,17 +27,17 @@ const styles = ({ palette, shadows, spacing: { unit }, breakpoints }: Theme) => 
     modalHeader: {
         background: palette.primary.light,
         borderRadius: 3,
-        marginTop: -unit * 3,
-        marginLeft: unit * 5,
-        marginRight: unit * 5,
-        marginBottom: unit,
+        marginTop: -spacing(3),
+        marginLeft: spacing(5),
+        marginRight: spacing(5),
+        marginBottom: spacing(1),
         boxShadow: colorToShadow(palette.primary.light),
         userSelect: 'none',
     },
     modalTitle: {
         color: palette.secondary.contrastText,
         textAlign: 'center',
-        margin: unit,
+        margin: spacing(1),
     },
     backdrop: {
         background: palette.primary.main

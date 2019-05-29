@@ -4,7 +4,7 @@ import { Redirect } from 'react-router';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 
-import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
+import withStyles, { WithStyles } from '@material-ui/styles/withStyles';
 
 import { QR_CODE_URL } from '../../config/consts';
 import logo from '../../images/logo.png';

@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 
 import Dialog from '@material-ui/core/Dialog';
 
-import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
+import withStyles, { WithStyles } from '@material-ui/styles/withStyles';
 
 import styles from '../../styles/messenger';
 
@@ -31,14 +31,14 @@ class EnlargeableImage extends PureComponent<Props> {
         const { classes, src } = this.props;
         return (
             <>
-                <img src={src} onClick={this.handleImageClick} className={classes.image} alt='image' />
+                <img src={src} onClick={this.handleImageClick} className={classes.image} alt='small' />
                 <Dialog
                     open={this.state.open}
                     onClose={this.handleClose}
                     maxWidth={false}
                     classes={{ paper: classes.imageLayer, root: classes.imageRoot }}
                 >
-                    <img src={src} onClick={this.handleClose} className={classes.image} alt='original image' />
+                    <img src={src} onClick={this.handleClose} className={classes.image} alt='original' />
                 </Dialog>
             </>
         );

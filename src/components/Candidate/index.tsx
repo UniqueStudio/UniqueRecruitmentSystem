@@ -7,7 +7,7 @@ import IconButton from '@material-ui/core/IconButton';
 import Popover from '@material-ui/core/Popover';
 import Typography from '@material-ui/core/Typography';
 
-import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
+import withStyles, { WithStyles } from '@material-ui/styles/withStyles';
 
 import amber from '@material-ui/core/colors/amber';
 import blue from '@material-ui/core/colors/blue';
@@ -96,7 +96,7 @@ class Candidate extends PureComponent<Props> {
         const coloredPanelStyle = {
             background: abandon ? 'rgba(0, 0, 0, 0.1)' : style,
         };
-        const genderIcons = [<TransGender nativeColor={orange[500]} />, <Male nativeColor={blue[500]} />, <Female nativeColor={pink[500]} />];
+        const genderIcons = [<TransGender htmlColor={orange[500]} />, <Male htmlColor={blue[500]} />, <Female htmlColor={pink[500]} />];
         const card = (
             <div
                 onMouseOver={this.handleOpen}
@@ -120,7 +120,7 @@ class Candidate extends PureComponent<Props> {
                                 {isTeamInterview ? `${GROUPS[GROUPS_.indexOf(group)]} - ${name}` : name}
                                 <span className={classes.svg}>
                                     {genderIcons[gender]}
-                                    {isQuick && <FlashOn nativeColor={amber[500]} />}
+                                    {isQuick && <FlashOn htmlColor={amber[500]} />}
                                 </span>
                             </Typography>
                             <Typography color='textSecondary' variant='caption'>{

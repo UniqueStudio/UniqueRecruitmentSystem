@@ -15,7 +15,7 @@ import HomeIcon from '@material-ui/icons/Home';
 import PeopleIcon from '@material-ui/icons/People';
 import PieChartIcon from '@material-ui/icons/PieChart';
 
-import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
+import withStyles, { WithStyles } from '@material-ui/styles/withStyles';
 
 import styles from '../../styles/drawer';
 

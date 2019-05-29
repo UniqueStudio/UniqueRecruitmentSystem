@@ -1,9 +1,9 @@
 import { Theme } from '@material-ui/core/styles/createMuiTheme';
-import createStyles from '@material-ui/core/styles/createStyles';
+import { createStyles } from '@material-ui/styles';
 
 import { colorToShadow } from './index';
 
-const styles = ({ spacing: { unit }, palette, breakpoints, zIndex, transitions }: Theme) => createStyles({
+const styles = ({ spacing, palette, breakpoints, zIndex, transitions }: Theme) => createStyles({
     div: {
         overflow: 'auto',
         height: '100%'
@@ -11,14 +11,14 @@ const styles = ({ spacing: { unit }, palette, breakpoints, zIndex, transitions }
     columnContainer: {
         height: '100%',
         display: 'inline-flex',
-        padding: `${unit * 3}px ${unit * 3}px 0`,
+        padding: `${spacing(3)}px ${spacing(3)}px 0`,
         [breakpoints.down('xs')]: {
-            padding: `${unit * 3}px ${unit}px 0`,
+            padding: `${spacing(3)}px ${spacing(1)}px 0`,
         },
     },
     column: {
-        margin: unit,
-        padding: unit,
+        margin: spacing(1),
+        padding: spacing(1),
         color: 'rgba(0, 0, 0, 0.87)',
         position: 'relative',
         display: 'flex',
@@ -27,34 +27,34 @@ const styles = ({ spacing: { unit }, palette, breakpoints, zIndex, transitions }
     columnHeader: {
         background: palette.primary.light,
         borderRadius: 3,
-        marginTop: -unit * 3,
-        marginLeft: unit * 5,
-        marginRight: unit * 5,
-        marginBottom: unit,
+        marginTop: -spacing(3),
+        marginLeft: spacing(5),
+        marginRight: spacing(5),
+        marginBottom: spacing(1),
         boxShadow: colorToShadow(palette.primary.light),
         userSelect: 'none',
     },
     columnTitle: {
         color: palette.secondary.contrastText,
         textAlign: 'center',
-        margin: unit,
+        margin: spacing(1),
     },
     columnBody: {
         height: 'calc(100% - 40px)',
-        marginBottom: unit,
+        marginBottom: spacing(1),
         [breakpoints.down('xs')]: {
             width: 300,
         },
         width: 360,
-        paddingTop: unit,
+        paddingTop: spacing(1),
     },
     fab: {
         position: 'fixed',
-        right: unit * 5,
-        bottom: unit * 5,
+        right: spacing(5),
+        bottom: spacing(5),
         [breakpoints.down('xs')]: {
-            right: unit * 2,
-            bottom: unit * 2,
+            right: spacing(2),
+            bottom: spacing(2),
         },
         zIndex: zIndex.modal + 1,
     },
@@ -81,11 +81,11 @@ const styles = ({ spacing: { unit }, palette, breakpoints, zIndex, transitions }
     },
     fabButtonsZoom: {
         position: 'fixed',
-        right: unit * 15,
-        bottom: unit * 8,
+        right: spacing(15),
+        bottom: spacing(8),
         [breakpoints.down('xs')]: {
-            right: unit,
-            bottom: unit * 9,
+            right: spacing(1),
+            bottom: spacing(9),
         },
         zIndex: zIndex.modal + 1,
     },
@@ -94,19 +94,19 @@ const styles = ({ spacing: { unit }, palette, breakpoints, zIndex, transitions }
         flexDirection: 'column',
     },
     fabButton: {
-        margin: unit,
+        margin: spacing(1),
     },
     detailContent: {
         display: 'flex',
         [breakpoints.down('sm')]: {
-            'margin': `${unit}px 0`,
+            'margin': `${spacing(1)}px 0`,
             '& button': {
                 width: 'auto',
                 height: 'auto',
             },
         },
         overflowY: 'auto',
-        margin: unit * 2,
+        margin: spacing(2),
     },
     detailMain: {
         display: 'flex',
@@ -119,7 +119,7 @@ const styles = ({ spacing: { unit }, palette, breakpoints, zIndex, transitions }
     leftButton: {
         transform: 'rotate(90deg)',
         alignSelf: 'center',
-        padding: unit,
+        padding: spacing(1),
         [breakpoints.down('sm')]: {
             padding: 0
         },
@@ -127,7 +127,7 @@ const styles = ({ spacing: { unit }, palette, breakpoints, zIndex, transitions }
     rightButton: {
         transform: 'rotate(-90deg)',
         alignSelf: 'center',
-        padding: unit,
+        padding: spacing(1),
         [breakpoints.down('sm')]: {
             padding: 0
         },

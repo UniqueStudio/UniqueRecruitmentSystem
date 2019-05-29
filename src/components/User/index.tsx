@@ -6,7 +6,7 @@ import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import { OptionsObject } from 'notistack';
 
-import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
+import withStyles, { WithStyles } from '@material-ui/styles/withStyles';
 
 import { GENDERS, GROUPS, GROUPS_ } from '../../config/consts';
 import { User as UserType } from '../../config/types';
@@ -33,7 +33,7 @@ class User extends PureComponent<Props> {
     };
 
     checkMail = (mail: string) => {
-        const re = /^(([^<>()\[\].,;:\s@"]+(\.[^<>()\[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/i;
+        const re = /^(([^<>()[\].,;:\s@"]+(\.[^<>()[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/i;
         return re.test(mail);
     };
 
@@ -106,6 +106,7 @@ class User extends PureComponent<Props> {
                             margin='normal'
                             className={classes.userInfo}
                             key={index}
+                            autoComplete='off'
                         />
                     )}
                     <TextField

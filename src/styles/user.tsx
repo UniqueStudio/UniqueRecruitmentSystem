@@ -1,27 +1,27 @@
 import { Theme } from '@material-ui/core/styles/createMuiTheme';
-import createStyles from '@material-ui/core/styles/createStyles';
+import { createStyles } from '@material-ui/styles';
 
-const styles = ({ breakpoints, spacing: { unit } }: Theme) => createStyles({
+const styles = ({ breakpoints, spacing }: Theme) => createStyles({
     container: {
         minWidth: 300,
         maxWidth: 900,
-        margin: `${unit * 3}px ${unit * 3}px 0`,
+        margin: `${spacing(3)}px ${spacing(3)}px 0`,
         [breakpoints.down('xs')]: {
-            padding: unit,
-            margin: `${unit * 3}px ${unit}px 0`,
+            padding: spacing(1),
+            margin: `${spacing(3)}px ${spacing(1)}px 0`,
         },
-        padding: unit * 2,
+        padding: spacing(2),
     },
     title: {
         display: 'flex',
         justifyContent: 'space-around',
     },
     userInfo: {
-        margin: unit * 2,
+        margin: spacing(2),
         width: '25%',
         [breakpoints.down('sm')]: {
             width: '45%',
-            margin: unit,
+            margin: spacing(1),
         },
         [breakpoints.down('xs')]: {
             width: '95%',
