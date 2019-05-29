@@ -15,11 +15,10 @@ import TableRow from '@material-ui/core/TableRow';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 
-import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
+import withStyles, { WithStyles } from '@material-ui/styles/withStyles';
 
 import DateFnsUtils from '@date-io/date-fns';
-import DateTimePicker from 'material-ui-pickers/DateTimePicker/DateTimePickerInline';
-import MuiPickersUtilsProvider from 'material-ui-pickers/MuiPickersUtilsProvider';
+import { DateTimePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 import { GROUPS, GROUPS_ } from '../../config/consts';
 
 import Modal from '../Modal';
@@ -31,7 +30,7 @@ import styles from '../../styles/data';
 interface Props extends WithStyles<typeof styles> {
     candidates: Candidate[];
     interviewType: 'group' | 'team';
-    changeType: (event: React.ChangeEvent<HTMLSelectElement>) => void;
+    changeType: (event: React.ChangeEvent<{ name?: string; value: unknown }>) => void;
     allocateOne: (cid: string, time: number, type: 'group' | 'team') => void;
     allocateAll: (type: 'group' | 'team') => void;
 }
@@ -86,10 +85,12 @@ class CandidateTable extends PureComponent<Props, State> {
         });
     };
 
-    handleChange = (value: Date) => {
-        this.setState({
-            time: value,
-        });
+    handleChange = (value: Date | null) => {
+        if (value) {
+            this.setState({
+                time: value,
+            });
+        }
     };
 
     render() {

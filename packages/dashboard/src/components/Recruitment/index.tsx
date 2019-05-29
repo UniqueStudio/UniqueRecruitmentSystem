@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 
 import Button from '@material-ui/core/Button';
 
-import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
+import withStyles, { WithStyles } from '@material-ui/styles/withStyles';
 
 import { SetRecruitment } from '../../actions';
 import { GROUPS, GROUPS_ } from '../../config/consts';
@@ -29,7 +29,7 @@ class Recruitment extends PureComponent<Props> {
         stop: new Date(this.props.data.stop)
     };
 
-    handleChange = (name: string) => (date: Date) => {
+    handleChange = (name: string) => (date: Date | null) => {
         this.setState({
             [name]: date,
         });

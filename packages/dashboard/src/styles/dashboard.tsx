@@ -1,15 +1,15 @@
 import { Theme } from '@material-ui/core/styles/createMuiTheme';
-import createStyles from '@material-ui/core/styles/createStyles';
+import { createStyles } from '@material-ui/styles';
 import { colorToAlpha } from './index';
 
-const styles = ({ spacing: { unit }, palette, typography, breakpoints }: Theme) => createStyles({
+const styles = ({ spacing, palette, typography: { button }, breakpoints }: Theme) => createStyles({
     left: {
         width: '70%',
-        margin: unit
+        margin: spacing(1)
     },
     right: {
         flexGrow: 1,
-        margin: unit
+        margin: spacing(1)
     },
     root: {
         display: 'flex',
@@ -17,10 +17,10 @@ const styles = ({ spacing: { unit }, palette, typography, breakpoints }: Theme) 
         [breakpoints.down('xs')]: {
             flexDirection: 'column',
         },
-        margin: `${unit * 3}px ${unit * 2}px 0`
+        margin: `${spacing(3)}px ${spacing(2)}px 0`
     },
     blocksContainer: {
-        marginTop: unit
+        marginTop: spacing(1)
     },
     block: {
         display: 'inline-flex',
@@ -30,7 +30,7 @@ const styles = ({ spacing: { unit }, palette, typography, breakpoints }: Theme) 
     },
     chart: {
         display: 'flex',
-        margin: unit,
+        margin: spacing(1),
         width: 300,
         height: 300,
         verticalAlign: 'top',
@@ -40,7 +40,7 @@ const styles = ({ spacing: { unit }, palette, typography, breakpoints }: Theme) 
         background: colorToAlpha(palette.secondary.light, 0.1),
     },
     tooltip: {
-        fontSize: typography.button.fontSize,
+        fontSize: button.fontSize,
     },
     doughnut: {
         position: 'absolute',
@@ -52,8 +52,8 @@ const styles = ({ spacing: { unit }, palette, typography, breakpoints }: Theme) 
         userSelect: 'none',
     },
     paper: {
-        marginTop: unit * 3,
-        padding: unit * 2,
+        marginTop: spacing(3),
+        padding: spacing(2),
         minHeight: 300,
         minWidth: 300,
     },

@@ -1,5 +1,5 @@
 import { Theme } from '@material-ui/core/styles/createMuiTheme';
-import createStyles from '@material-ui/core/styles/createStyles';
+import { createStyles } from '@material-ui/styles';
 
 import { mergeKV } from '../utils/mergeKV';
 
@@ -29,9 +29,9 @@ const rootColorStyles = mergeKV(['root-info', 'root-success', 'root-warning', 'r
     }))
 );
 
-const styles = ({ spacing: { unit } }: Theme) => createStyles({
+const styles = (({ spacing }: Theme) => createStyles({
     chip: {
-        margin: unit,
+        margin: spacing(1),
         cursor: 'pointer',
         maxWidth: 250
     },
@@ -40,11 +40,11 @@ const styles = ({ spacing: { unit } }: Theme) => createStyles({
     },
     content: {
         maxWidth: 400,
-        padding: unit * 2,
+        padding: spacing(2),
         wordWrap: 'break-word',
     },
     ...colorStyles,
     ...rootColorStyles,
-});
+}));
 
 export default styles;

@@ -1,19 +1,19 @@
 import { Theme } from '@material-ui/core/styles/createMuiTheme';
-import createStyles from '@material-ui/core/styles/createStyles';
+import { createStyles } from '@material-ui/styles';
 
-const styles = ({ spacing: { unit }, breakpoints }: Theme) => createStyles({
+const styles = ({ spacing, breakpoints }: Theme) => createStyles({
     infoContainer: {
         display: 'flex',
         flexDirection: 'column',
-        padding: `0 ${unit * 3}px`,
+        padding: `0 ${spacing(3)}px`,
         [breakpoints.down('xs')]: {
-            padding: `0 ${unit}px ${unit * 2}px`,
+            padding: `0 ${spacing(1)}px ${spacing(2)}px`,
         },
-        marginBottom: unit * 3
+        marginBottom: spacing(3)
     },
     paper: {
-        marginTop: unit * 2,
-        padding: unit * 2,
+        marginTop: spacing(2),
+        padding: spacing(2),
         display: 'flex',
         flexDirection: 'column',
         minWidth: 300,
@@ -24,10 +24,9 @@ const styles = ({ spacing: { unit }, breakpoints }: Theme) => createStyles({
     },
     table: {
         minWidth: 500,
-        marginBottom: unit,
+        marginBottom: spacing(1),
     },
     tableCell: {
-        padding: unit,
         textAlign: 'center',
     },
     title: {

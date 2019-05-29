@@ -1,4 +1,4 @@
-import createStyles from '@material-ui/core/styles/createStyles';
+import { createStyles } from '@material-ui/styles';
 
 import { dangerColor, infoColor, successColor, warningColor } from './index';
 

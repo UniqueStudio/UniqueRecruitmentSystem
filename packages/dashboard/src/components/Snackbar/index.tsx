@@ -1,11 +1,11 @@
 import React, { PureComponent } from 'react';
 
-import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
+import withStyles, { WithStyles } from '@material-ui/styles/withStyles';
 import { SnackbarProvider } from 'notistack';
 
 import styles from '../../styles/snackbar';
 
-class Snackbar extends PureComponent<WithStyles> {
+class Snackbar extends PureComponent<WithStyles<typeof styles>> {
 
     render() {
         const { children, classes } = this.props;

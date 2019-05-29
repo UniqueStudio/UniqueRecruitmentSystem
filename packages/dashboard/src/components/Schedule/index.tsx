@@ -9,7 +9,7 @@ interface Props {
     classes: Record<string, string>;
     disabled?: boolean;
     disablePast?: boolean;
-    onChange: (name: string) => (date: Date) => void;
+    onChange: (name: string) => (date: Date | null) => void;
 }
 
 class Schedule extends PureComponent<Props> {

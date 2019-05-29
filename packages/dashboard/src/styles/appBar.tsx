@@ -1,9 +1,9 @@
 import { Theme } from '@material-ui/core/styles/createMuiTheme';
-import createStyles from '@material-ui/core/styles/createStyles';
+import { createStyles } from '@material-ui/styles';
 
 import { drawerWidth } from './index';
 
-const styles = ({ zIndex, palette, transitions, spacing: { unit }, breakpoints }: Theme) => createStyles({
+const styles = ({ zIndex, palette, transitions, spacing, breakpoints }: Theme) => createStyles({
     appBar: {
         zIndex: zIndex.drawer + 1,
         background: `linear-gradient(60deg, ${palette.primary.main}, ${palette.primary.dark})`,
@@ -24,18 +24,18 @@ const styles = ({ zIndex, palette, transitions, spacing: { unit }, breakpoints }
         paddingRight: 0,
     },
     regular: {
-        minHeight: unit * 8,
+        minHeight: spacing(8),
         [breakpoints.down('xs')]: {
-            minHeight: unit * 6,
+            minHeight: spacing(6),
         },
     },
     menuButton: {
-        marginLeft: unit * 2,
-        marginRight: unit * 4,
+        marginLeft: spacing(2),
+        marginRight: spacing(4),
         [breakpoints.down('xs')]: {
             marginLeft: 0,
             marginRight: 0,
-            padding: unit
+            padding: spacing(1)
         },
     },
     rightButtons: {
@@ -43,7 +43,7 @@ const styles = ({ zIndex, palette, transitions, spacing: { unit }, breakpoints }
         display: 'flex',
         '& button': {
             [breakpoints.down('xs')]: {
-                padding: unit
+                padding: spacing(1)
             },
         }
     },
@@ -51,15 +51,15 @@ const styles = ({ zIndex, palette, transitions, spacing: { unit }, breakpoints }
         display: 'none',
     },
     suggestion: {
-        padding: unit * 2,
+        padding: spacing(2),
         overflowY: 'auto'
     },
     collapse: {
         zIndex: zIndex.drawer + 1,
         position: 'fixed',
-        top: unit * 8,
+        top: spacing(8),
         [breakpoints.down('xs')]: {
-            top: unit * 6,
+            top: spacing(6),
         },
         right: 0,
     }
