@@ -4,5 +4,5 @@ export const STEPS = ['报名流程', '笔试流程', '面试流程', '熬测流
 export const RANKS = ['暂无', '前10%', '前25%', '前50%', '前100%'];
 export const GRADES = ['大一', '大二', '大三', '大四', '研一', '研二', '研三'];
 export const GENDERS = ['其他', '男', '女'];
-export const API = 'https://hustunique.com:5000';
+export const API = 'https://hr.hustunique.com:5000';
 export const QR_CODE_URL = 'https://open.work.weixin.qq.com/wwopen/sso/qrImg?key=';
