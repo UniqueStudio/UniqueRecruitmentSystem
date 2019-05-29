@@ -3,7 +3,7 @@ import React, { PureComponent } from 'react';
 import IconButton from '@material-ui/core/IconButton';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
-import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
+import withStyles, { WithStyles } from '@material-ui/styles/withStyles';
 import { OptionsObject } from 'notistack';
 
 import { Candidate, Comment, Evaluation, User } from '../../config/types';

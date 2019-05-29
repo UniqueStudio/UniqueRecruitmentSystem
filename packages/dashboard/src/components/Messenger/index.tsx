@@ -13,7 +13,7 @@ import FaceIcon from '@material-ui/icons/Face';
 import InsertPhotoIcon from '@material-ui/icons/InsertPhoto';
 import SendIcon from '@material-ui/icons/Send';
 
-import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
+import withStyles, { WithStyles } from '@material-ui/styles/withStyles';
 import { OptionsObject } from 'notistack';
 
 import EnlargeableImage from '../EnlargeableImg';

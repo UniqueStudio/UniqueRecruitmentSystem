@@ -1,14 +1,14 @@
 import { Theme } from '@material-ui/core/styles/createMuiTheme';
-import createStyles from '@material-ui/core/styles/createStyles';
+import { createStyles } from '@material-ui/styles';
 
 import { colorToAlpha } from './index';
 
-const styles = ({ spacing: { unit }, transitions, breakpoints, palette, zIndex }: Theme) => createStyles({
+const styles = ({ spacing, transitions, breakpoints, palette, zIndex }: Theme) => createStyles({
     messenger: {
         display: 'flex',
         flexDirection: 'column',
-        margin: unit,
-        padding: unit,
+        margin: spacing(1),
+        padding: spacing(1),
         height: '80vh',
         [breakpoints.up('sm')]: {
             width: 400,
@@ -21,8 +21,8 @@ const styles = ({ spacing: { unit }, transitions, breakpoints, palette, zIndex }
     messages: {
         flex: '1',
         overflowY: 'auto',
-        padding: unit,
-        marginBottom: unit,
+        padding: spacing(1),
+        marginBottom: spacing(1),
         transition: transitions.create(['padding'], {
             easing: transitions.easing.sharp,
             duration: transitions.duration.enteringScreen,
@@ -30,7 +30,7 @@ const styles = ({ spacing: { unit }, transitions, breakpoints, palette, zIndex }
     },
     messageContainer: {
         display: 'flex',
-        margin: `${unit}px 0`,
+        margin: `${spacing(1)}px 0`,
     },
     input: {
         marginTop: 'auto',
@@ -44,7 +44,7 @@ const styles = ({ spacing: { unit }, transitions, breakpoints, palette, zIndex }
     },
     chipRoot: {
         height: 'auto',
-        padding: unit,
+        padding: spacing(1),
         whiteSpace: 'normal',
         background: colorToAlpha(palette.secondary.light, 0.3),
         '& > *': {
@@ -63,10 +63,10 @@ const styles = ({ spacing: { unit }, transitions, breakpoints, palette, zIndex }
         maxWidth: 200,
         userSelect: 'text',
         cursor: 'text',
-        marginTop: unit,
+        marginTop: spacing(1),
     },
     avatar: {
-        margin: unit,
+        margin: spacing(1),
     },
     my: {
         flexDirection: 'row-reverse',

@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 
-import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
+import withStyles, { WithStyles } from '@material-ui/styles/withStyles';
 
 import { SetRecruitment } from '../actions';
 import Recruitment from '../components/Recruitment';
@@ -27,7 +27,7 @@ class Data extends PureComponent<Props> {
         interviewType: 'group' as 'group',
     };
 
-    changeType = ({ target: { value } }: React.ChangeEvent<HTMLSelectElement>) => {
+    changeType = ({ target: { value } }: React.ChangeEvent<{ name?: string; value: unknown}>) => {
         this.setState({
             interviewType: value
         });

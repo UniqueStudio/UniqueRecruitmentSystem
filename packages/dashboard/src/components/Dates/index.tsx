@@ -3,7 +3,7 @@ import React, { PureComponent } from 'react';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 
-import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
+import withStyles, { WithStyles } from '@material-ui/styles/withStyles';
 
 import { Time } from '../../config/types';
 import styles from '../../styles/data';
@@ -50,10 +50,12 @@ class Dates extends PureComponent<Props> {
         this.setTime(time);
     };
 
-    setDate = (id: number) => (date: Date) => {
+    setDate = (id: number) => (date: Date | null) => {
         const time = this.getTime();
-        time[id].date = date;
-        this.setTime(time);
+        if (date) {
+            time[id].date = date;
+            this.setTime(time);
+        }
     };
 
     deleteDate = (id: number) => () => {

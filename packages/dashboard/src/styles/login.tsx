@@ -1,5 +1,5 @@
 import { Theme } from '@material-ui/core/styles/createMuiTheme';
-import createStyles from '@material-ui/core/styles/createStyles';
+import { createStyles } from '@material-ui/styles';
 import { getColors } from './index';
 
 const colors = (i: number) => {
@@ -8,7 +8,7 @@ const colors = (i: number) => {
     return colorArray.slice(start).concat(colorArray.slice(0, start));
 };
 
-const styles = ({ breakpoints, spacing: { unit } }: Theme) => createStyles({
+const styles = ({ breakpoints, spacing }: Theme) => createStyles({
     '@keyframes rainbow': {
         '0%': { backgroundPosition: '0% 80%' },
         '50%': { backgroundPosition: '100% 20%' },
@@ -35,7 +35,7 @@ const styles = ({ breakpoints, spacing: { unit } }: Theme) => createStyles({
         width: '10%',
         minWidth: 100,
         height: 'auto',
-        margin: unit,
+        margin: spacing(1),
         userSelect: 'none',
     },
 });

@@ -1,8 +1,7 @@
 import React, { PureComponent } from 'react';
 
 import DateFnsUtils from '@date-io/date-fns';
-import DatePicker from 'material-ui-pickers/DatePicker/DatePickerInline';
-import MuiPickersUtilsProvider from 'material-ui-pickers/MuiPickersUtilsProvider';
+import { DatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 
 interface Props {
     value: Date;
@@ -10,7 +9,7 @@ interface Props {
     label: string;
     disabled?: boolean;
     disablePast?: boolean;
-    onChange: (date: Date) => void;
+    onChange: (date: Date | null) => void;
 }
 
 class Picker extends PureComponent<Props> {

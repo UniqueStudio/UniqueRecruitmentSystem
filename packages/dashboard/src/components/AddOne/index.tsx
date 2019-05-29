@@ -6,7 +6,7 @@ import Paper from '@material-ui/core/Paper';
 import TextField from '@material-ui/core/TextField';
 import Tooltip from '@material-ui/core/Tooltip';
 
-import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
+import withStyles, { WithStyles } from '@material-ui/styles/withStyles';
 
 import AddIcon from '@material-ui/icons/Add';
 
@@ -89,14 +89,16 @@ class AddOne extends PureComponent<Props> {
         });
     };
 
-    handleChangeDate = (name: string) => (date: Date) => {
-        this.setState({
-            [name]: date
-        });
-        if (name === 'begin') {
+    handleChangeDate = (name: string) => (date: Date | null) => {
+        if (date) {
             this.setState({
-                title: generateTitle(date)
+                [name]: date
             });
+            if (name === 'begin') {
+                this.setState({
+                    title: generateTitle(date)
+                });
+            }
         }
     };
 
