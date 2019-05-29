@@ -1,10 +1,10 @@
 import { Component } from 'react';
 
-import { withSnackbarProps } from 'notistack';
+import { WithSnackbarProps } from 'notistack';
 
 import { EnqueueSnackbar } from '../../actions';
 
-interface Props extends withSnackbarProps {
+interface Props extends WithSnackbarProps {
     notifications: EnqueueSnackbar['notification'][];
     removeSnackbar: (key: number) => void;
 }

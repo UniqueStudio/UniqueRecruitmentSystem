@@ -5,7 +5,7 @@ import classNames from 'classnames';
 import Chip from '@material-ui/core/Chip';
 import Typography from '@material-ui/core/Typography';
 
-import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
+import withStyles, { WithStyles } from '@material-ui/styles/withStyles';
 
 import { GRADES } from '../../config/consts';
 import { Candidate } from '../../config/types';

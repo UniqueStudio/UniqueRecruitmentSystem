@@ -11,7 +11,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 
-import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
+import withStyles, { WithStyles } from '@material-ui/styles/withStyles';
 
 import ChatIcon from '@material-ui/icons/Chat';
 import HelpIcon from '@material-ui/icons/HelpOutline';
@@ -61,10 +61,10 @@ class Bar extends PureComponent<Props & RouteComponentProps> {
         this.props.logout();
     };
 
-    handleChange = (type: 'group' | 'step') => ({ target: { value } }: React.ChangeEvent<HTMLSelectElement>) => {
+    handleChange = (type: 'group' | 'step') => ({ target: { value } }: React.ChangeEvent<{ name?: string; value: unknown }>) => {
         const { setGroup, setSteps } = this.props;
         type === 'group' && setGroup(value as Group);
-        type === 'step' && setSteps(+value);
+        type === 'step' && setSteps(+(value as string));
     };
 
     toggleOpen = (name: string) => () => {

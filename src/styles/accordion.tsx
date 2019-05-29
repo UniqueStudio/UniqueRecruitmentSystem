@@ -1,9 +1,9 @@
 import { Theme } from '@material-ui/core/styles/createMuiTheme';
-import createStyles from '@material-ui/core/styles/createStyles';
+import { createStyles } from '@material-ui/styles';
 
-const styles = ({ spacing: { unit } }: Theme) => createStyles({
+const styles = ({ spacing }: Theme) => createStyles({
     expansion: {
-        margin: unit,
+        margin: `${spacing(1)}px !important`,
     },
 });
 

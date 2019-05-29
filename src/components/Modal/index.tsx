@@ -4,7 +4,7 @@ import Modal from '@material-ui/core/Modal/Modal';
 import Slide from '@material-ui/core/Slide';
 import Typography from '@material-ui/core/Typography';
 
-import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
+import withStyles, { WithStyles } from '@material-ui/styles/withStyles';
 
 import styles from '../../styles/modal';
 

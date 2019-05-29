@@ -7,7 +7,7 @@ import Fab from '@material-ui/core/Fab';
 import Zoom from '@material-ui/core/Zoom';
 import AddIcon from '@material-ui/icons/Add';
 
-import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
+import withStyles, { WithStyles } from '@material-ui/styles/withStyles';
 
 import { EnqueueSnackbar } from '../../actions';
 import { Candidate, Group, Step } from '../../config/types';
