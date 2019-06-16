@@ -81,7 +81,7 @@ const generateSMS = ({ name, title, step, type, group, time, place, rest, url, n
 
 export const sendSMS: RequestHandler = async (req, res, next) => {
     try {
-        const validationErrors = validationResult(req);
+        const validationErrors = validationResult<{ msg: string }>(req);
         if (!validationErrors.isEmpty()) {
             return next(errorRes(validationErrors.array({ onlyFirstError: true })[0]['msg'], 'warning'));
         }

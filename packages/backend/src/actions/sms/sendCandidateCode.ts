@@ -9,7 +9,7 @@ import { getRandom } from '../../utils/getRandom';
 
 export const sendCandidateCode: RequestHandler = async (req, res, next) => {
     try {
-        const errors = validationResult(req);
+        const errors = validationResult<{ msg: string }>(req);
         if (!errors.isEmpty()) {
             return next(errorRes(errors.array({ onlyFirstError: true })[0]['msg'], 'warning'));
         }
