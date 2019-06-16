@@ -7,7 +7,7 @@ import { errorRes } from '../../utils/errorRes';
 
 export const setRecruitment: RequestHandler = async (req, res, next) => {
     try {
-        const errors = validationResult(req);
+        const errors = validationResult<{ msg: string }>(req);
         if (!errors.isEmpty()) {
             return next(errorRes(errors.array({ onlyFirstError: true })[0]['msg'], 'warning'));
         }
@@ -42,8 +42,8 @@ export const setRecruitment: RequestHandler = async (req, res, next) => {
                 title,
                 'groups.name': group,
             }, {
-                'groups.$.interview': groupInterview
-            });
+                    'groups.$.interview': groupInterview
+                });
         }
         io.emit('updateRecruitment');
         return res.json({ type: 'success' });
