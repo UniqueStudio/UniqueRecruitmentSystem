@@ -1,16 +1,10 @@
-import express from 'express';
+import { Router } from 'express';
 import { authenticator } from '../middlewares/authenticator';
 
-import {
-    sendCandidateCode,
-    sendCandidateCodeVerify,
-    sendSMS,
-    sendSMSVerify,
-    sendUserCode
-} from '../actions/sms';
+import { sendCandidateCode, sendCandidateCodeVerify, sendSMS, sendSMSVerify, sendUserCode } from '../actions/sms';
 import { codeChecker } from '../middlewares/codeChecker';
 
-const router = express.Router();
+const router = Router();
 
 // request for verification code
 router.get('/verification/candidate/:phone', sendCandidateCodeVerify, sendCandidateCode);

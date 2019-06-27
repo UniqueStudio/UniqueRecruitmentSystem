@@ -10,7 +10,7 @@ import { errorRes } from '../../utils/errorRes';
 
 export const addCandidate: RequestHandler = async (req, res, next) => {
     try {
-        const errors = validationResult<{ msg: string }>(req);
+        const errors = validationResult(req);
         if (!errors.isEmpty()) {
             return next(errorRes(errors.array({ onlyFirstError: true })[0]['msg'], 'warning'));
         }
@@ -50,6 +50,20 @@ export const addCandidate: RequestHandler = async (req, res, next) => {
     }
 };
 
+export const verifyTitle = body('title').matches(/\d{4}[ASC]/, 'g').withMessage('Title is invalid!')
+    .custom(async (title) => {
+        const recruitment = (await RecruitmentRepo.query({ title }))[0];
+        if (!recruitment) {
+            throw new Error('Current recruitment doesn\'t exist!');
+        }
+        if (Date.now() < recruitment.begin) {
+            throw new Error('Current recruitment is not started!');
+        }
+        if (Date.now() > recruitment.stop) {
+            throw new Error('Current recruitment has ended!');
+        }
+    });
+
 export const addCandidateVerify = [
     body('name').isString().withMessage('Name is invalid!'),
     body('mail').isEmail().withMessage('Mail is invalid!'),
@@ -66,17 +80,5 @@ export const addCandidateVerify = [
     body('rank').isInt({ lt: RANKS.length, gt: -1 }).withMessage('Rank is invalid!'),
     body('intro').isString().withMessage('Intro is invalid!'),
     body('referrer').isString().withMessage('Referrer is invalid!'),
-    body('title').matches(/\d{4}[ASC]/, 'g').withMessage('Title is invalid!')
-        .custom(async (title) => {
-            const recruitment = (await RecruitmentRepo.query({ title }))[0];
-            if (!recruitment) {
-                throw new Error('Current recruitment doesn\'t exist!');
-            }
-            if (Date.now() < recruitment.begin) {
-                throw new Error('Current recruitment is not started!');
-            }
-            if (Date.now() > recruitment.stop) {
-                throw new Error('Current recruitment has ended!');
-            }
-        }),
+    verifyTitle
 ];

@@ -1,8 +1,8 @@
-import express from 'express';
+import { Router } from 'express';
 import { getGroup, getInfo, handleLogin, handleLoginVerify, handleQR, handleScan, setInfo, setInfoVerify } from '../actions/user';
 import { authenticator } from '../middlewares/authenticator';
 
-const router = express.Router();
+const router = Router();
 
 // login: get QR code
 router.get('/qrCode', handleQR);

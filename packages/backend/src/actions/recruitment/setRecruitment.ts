@@ -7,7 +7,7 @@ import { errorRes } from '../../utils/errorRes';
 
 export const setRecruitment: RequestHandler = async (req, res, next) => {
     try {
-        const errors = validationResult<{ msg: string }>(req);
+        const errors = validationResult(req);
         if (!errors.isEmpty()) {
             return next(errorRes(errors.array({ onlyFirstError: true })[0]['msg'], 'warning'));
         }

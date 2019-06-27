@@ -1,5 +1,5 @@
-import bodyParser from 'body-parser';
+import { json, urlencoded } from 'express'; // doesn't need body-parser anymore
 
-export const jsonParser = bodyParser.json({ limit: '1mb' });
+export const jsonParser = json({ limit: '1mb' });
 
-export const urlencodedParser = bodyParser.urlencoded({ extended: true });
+export const urlencodedParser = urlencoded({ extended: true });

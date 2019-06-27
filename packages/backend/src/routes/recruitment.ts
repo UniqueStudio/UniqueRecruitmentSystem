@@ -1,4 +1,4 @@
-import express from 'express';
+import { Router } from 'express';
 import {
     getAllRecruitments, getOneRecruitment, getPendingTitles,
     launchRecruitment, launchRecruitmentVerify,
@@ -8,7 +8,7 @@ import {
 import { authenticator } from '../middlewares/authenticator';
 import { codeChecker } from '../middlewares/codeChecker';
 
-const router = express.Router();
+const router = Router();
 
 // get title of pending recruitments
 router.get('/pending', getPendingTitles);

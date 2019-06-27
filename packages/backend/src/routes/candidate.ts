@@ -1,4 +1,4 @@
-import express from 'express';
+import { Router } from 'express';
 import { authenticator } from '../middlewares/authenticator';
 import { codeChecker } from '../middlewares/codeChecker';
 import { fileHandler } from '../middlewares/fileHandler';
@@ -19,7 +19,7 @@ import {
     setCandidateVerify
 } from '../actions/candidate';
 
-const router = express.Router();
+const router = Router();
 
 // add new candidate
 router.post('/', fileHandler.single('resume'), addCandidateVerify, codeChecker('candidate'), addCandidate);

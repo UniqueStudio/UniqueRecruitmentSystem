@@ -3,6 +3,7 @@ import { candidate } from './candidate';
 import { recruitment } from './recruitment';
 import { sms } from './sms';
 import { user } from './user';
+
 const app = express();
 
 app.use('/candidate', candidate);

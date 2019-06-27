@@ -6,7 +6,6 @@ import { jsonParser, urlencodedParser } from './middlewares/bodyParser';
 import { cors } from './middlewares/cors';
 import { errorHandler } from './middlewares/errorHandler';
 import { infoLogger } from './middlewares/infoLogger';
-import { validator } from './middlewares/validator';
 import { routes } from './routes';
 import { task } from './task';
 import { logger } from './utils/logger';
@@ -17,8 +16,6 @@ export const app = express();
 app.use(urlencodedParser);
 
 app.use(jsonParser);
-
-app.use(validator);
 
 app.use(cors);
 
