@@ -7,7 +7,7 @@ import header from '../asset/img/header.png';
 import logo from '../asset/img/logo.png';
 import Form from '../component/Form';
 import SnackBar from '../component/SnackBar';
-import Time from '../component/Time';
+import Time from '../component/NewTime/old';
 import { URL } from '../config/const';
 import { titleConverter } from '../utils/titleConverter';
 
