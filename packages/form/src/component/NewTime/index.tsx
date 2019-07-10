@@ -2,18 +2,16 @@ import React from "react";
 import { ThemeProvider } from "@material-ui/styles";
 
 import { UniqueTheme } from "../../style";
-import Header from "./Header";
+import Times from "./Times"
 
-interface ITimeProps {
-
+interface ITimeRootProps {
+    isMobile: boolean
 }
 
-export const NewTime = (props: ITimeProps): React.ReactElement => {
+export const NewTime = (props: ITimeRootProps): React.ReactElement => {
     return (
-        <>
-            <ThemeProvider theme={UniqueTheme}>
-                <Header />
-            </ThemeProvider>
-        </>
+        <ThemeProvider theme={UniqueTheme}>
+            <Times isMobile={props.isMobile} />
+        </ThemeProvider>
     )
 }

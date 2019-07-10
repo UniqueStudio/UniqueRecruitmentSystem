@@ -16,12 +16,13 @@ const useStyles = makeStyles((theme: Theme) =>
         },
         subTitle: {
             fontSize: "2.5rem",
-            fontWeight: "bold"
+            fontWeight: "bold",
+            paddingBottom: theme.spacing(1)
         },
         description: {
             fontSize: "1.4rem",
             fontWeight: "bold",
-            color:theme.palette.primary.light
+            color: theme.palette.primary.light
         },
         emphasize: {
             fontStyle: "italic",

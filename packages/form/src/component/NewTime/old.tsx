@@ -6,14 +6,17 @@ import Button from '../Button';
 import Modal from '../Modal';
 import Submitted from '../Submitted';
 
-interface Date {
+import { NewTime } from "./index";
+
+
+export interface SelectDate {
     date: number;
     morning: number;
     afternoon: number;
     evening: number;
 }
 
-const MokeDates: Date[] = [
+export const MokeDates: SelectDate[] = [
     {
         date: 2,
         morning: 1,
@@ -22,9 +25,9 @@ const MokeDates: Date[] = [
     },
     {
         date: 2,
-        morning: 1,
+        morning: 0,
         afternoon: 1,
-        evening: 1,
+        evening: 0,
     },
     {
         date: 2,
@@ -58,7 +61,7 @@ class Time extends PureComponent<Props> {
         clicked: [] as number[],
         confirmed: '',
         step: '',
-        time: [] as Date[]
+        time: [] as SelectDate[]
     };
 
     async componentDidMount() {
@@ -151,7 +154,11 @@ class Time extends PureComponent<Props> {
     render() {
         const { time, confirmed, modal, clicked } = this.state;
         const { isMobile } = this.props;
-        const Buttons = (date: Date, j: number) => ['上午', '下午', '晚上'].map((k, l) => {
+
+        // j is the line number 
+        // k is '上午' '下午' '晚上'
+        // l is the order in a line. eg:1,2,3
+        const Buttons = (date: SelectDate, j: number) => ['上午', '下午', '晚上'].map((k, l) => {
             const disabled = !date[['morning', 'afternoon', 'evening'][l]];
             return <Button
                 name={k}
@@ -224,6 +231,7 @@ class Time extends PureComponent<Props> {
                     </div>
                 </div>
                 <div className={classNames('layer', { none: modal === '' }, modal === 'submit' ? 'layerSecondary' : 'layerPrimary')} />
+                <NewTime isMobile={isMobile} />
             </>
         );
     }
