@@ -2,6 +2,7 @@ import React, { PureComponent } from 'react';
 
 import classNames from 'classnames';
 import { URL } from '../../config/const';
+import { Variant } from '../../config/types';
 import Button from '../Button';
 import Modal from '../Modal';
 import Submitted from '../Submitted';
@@ -15,7 +16,7 @@ interface Date {
 
 interface Props {
     isMobile: boolean;
-    toggleSnackbar: (content: string) => void;
+    toggleSnackbar: (content: string, variant: Variant) => void;
 }
 
 const getDate = (timestamp: number) => {
@@ -24,7 +25,6 @@ const getDate = (timestamp: number) => {
 };
 
 class Time extends PureComponent<Props> {
-
     state = {
         modal: '',
         clicked: [] as number[],
@@ -49,13 +49,13 @@ class Time extends PureComponent<Props> {
                 sessionStorage.setItem('token', result.token);
                 this.setState({
                     time: result.time,
-                    step: formId[formId.length - 1],
+                    step: formId[formId.length - 1]
                 });
             } else {
-                return toggleSnackbar('获取表单出了问题，请尝试重新加载');
+                return toggleSnackbar('获取表单出了问题，请尝试重新加载', 'error');
             }
         } catch (err) {
-            return toggleSnackbar('获取表单出了问题，请尝试重新加载');
+            return toggleSnackbar('获取表单出了问题，请尝试重新加载', 'error');
         }
     };
 
@@ -70,11 +70,12 @@ class Time extends PureComponent<Props> {
                 method: 'PUT',
                 headers: {
                     'content-type': 'application/json',
-                    'Authorization': `Bearer ${token}`
+                    Authorization: `Bearer ${token}`
                 },
-                body: JSON.stringify(modal === 'abandon'
-                    ? { abandon: true }
-                    : step === '1'
+                body: JSON.stringify(
+                    modal === 'abandon'
+                        ? { abandon: true }
+                        : step === '1'
                         ? { groupInterview: time }
                         : { teamInterview: time }
                 )
@@ -86,10 +87,10 @@ class Time extends PureComponent<Props> {
                     confirmed: type
                 });
             } else {
-                return toggleSnackbar(result.message);
+                return toggleSnackbar(result.message, 'error');
             }
         } catch (err) {
-            return toggleSnackbar('提交出现了问题，请尝试重新提交');
+            return toggleSnackbar('提交出现了问题，请尝试重新提交', 'error');
         }
     };
 
@@ -121,7 +122,7 @@ class Time extends PureComponent<Props> {
         });
         const token = sessionStorage.getItem('token');
         if (!token) {
-            return toggleSnackbar('token不存在');
+            return toggleSnackbar('token不存在', 'warning');
         }
         await this.submitForm(time, type, token);
     };
@@ -135,80 +136,105 @@ class Time extends PureComponent<Props> {
     render() {
         const { time, confirmed, modal, clicked } = this.state;
         const { isMobile } = this.props;
-        const Buttons = (date: Date, j: number) => ['上午', '下午', '晚上'].map((k, l) => {
-            const disabled = !date[['morning', 'afternoon', 'evening'][l]];
-            return <Button
-                name={k}
-                key={l}
-                bgColor={disabled ? 'grey' : clicked.includes(j * 3 + l) ? 'primaryLight' : 'white'}
-                textColor={disabled ? 'white' : 'primary'}
-                onClick={disabled || modal ? undefined : this.handleSelect(j * 3 + l)}
-                className={classNames({ disabled })}
-            />;
-        });
+        const Buttons = (date: Date, j: number) =>
+            ['上午', '下午', '晚上'].map((k, l) => {
+                const disabled = !date[['morning', 'afternoon', 'evening'][l]];
+                return (
+                    <Button
+                        name={k}
+                        key={l}
+                        bgColor={disabled ? 'grey' : clicked.includes(j * 3 + l) ? 'primaryLight' : 'white'}
+                        textColor={disabled ? 'white' : 'primary'}
+                        onClick={disabled || modal ? undefined : this.handleSelect(j * 3 + l)}
+                        className={classNames({ disabled })}
+                    />
+                );
+            });
 
-        return time.length !== 0 && (
-            <>
-                <div className='timeContainer'>
-                    <div className='time'>
-                        <div className='timeHeader'>
-                            <h2 className='subtitle'>面试时间选择</h2>
-                            {isMobile ? <>
-                                <h3 className={classNames('description', { 'none': confirmed })}>
-                                    请选择以下你有空的<em className='emphasize'>全部</em>时间段，
-                                </h3>
-                                <h3 className={classNames('description', { 'none': confirmed })}>
-                                    一旦确定无法更改。
-                                </h3>
-                            </> : <h3 className={classNames('description', { 'none': confirmed })}>
-                                请选择以下你有空的<em className='emphasize'>全部</em>时间段，一旦确定无法更改。
-                            </h3>}
-                        </div>
-                        {confirmed === '' && <>
-                            {time.map((date, index) =>
-                                <div key={index} className='timeContent'>
-                                    <Button name={getDate(date.date)}
-                                            bgColor='primary'
-                                            textColor='white'
-                                            className='disabled'
-                                    />
-                                    {isMobile ? <div className='timeButtons'>
-                                        {Buttons(date, index)}
-                                    </div> : Buttons(date, index)}
-                                </div>
-                            )}
-                            <div className={classNames('submit', 'timeSubmit')}>
-                                {modal && <Modal
-                                    type={modal}
-                                    onConfirm={this.handleConfirm(modal)}
-                                    onDeny={this.handleDeny}
-                                />}
-                                <Button
-                                    name='无法到场'
-                                    bgColor='primaryLightLittleMore'
-                                    textColor='white'
-                                    onClick={this.handleClick('abandon')}
-                                />
-                                <Button
-                                    name='提交'
-                                    bgColor='secondary'
-                                    textColor='white'
-                                    onClick={clicked.length ? this.handleClick('submit') : undefined}
-                                    className={classNames({ 'disabled': !clicked.length })}
-                                />
+        return (
+            time.length !== 0 && (
+                <>
+                    <div className='timeContainer'>
+                        <div className='time'>
+                            <div className='timeHeader'>
+                                <h2 className='subtitle'>面试时间选择</h2>
+                                {isMobile ? (
+                                    <>
+                                        <h3 className={classNames('description', { none: confirmed })}>
+                                            请选择以下你有空的<em className='emphasize'>全部</em>时间段，
+                                        </h3>
+                                        <h3 className={classNames('description', { none: confirmed })}>
+                                            一旦确定无法更改。
+                                        </h3>
+                                    </>
+                                ) : (
+                                    <h3 className={classNames('description', { none: confirmed })}>
+                                        请选择以下你有空的<em className='emphasize'>全部</em>时间段，一旦确定无法更改。
+                                    </h3>
+                                )}
                             </div>
-                        </>}
-                        {confirmed !== '' && <Submitted
-                            title='你的决定已提交'
-                            description={confirmed === 'abandon'
-                                ? '我们非常惋惜，希望下次招新能够与你相遇，再见！'
-                                : '你已成功提交面试时间，请等待我们的短信通知！'
-                            }
-                        />}
+                            {confirmed === '' && (
+                                <>
+                                    {time.map((date, index) => (
+                                        <div key={index} className='timeContent'>
+                                            <Button
+                                                name={getDate(date.date)}
+                                                bgColor='primary'
+                                                textColor='white'
+                                                className='disabled'
+                                            />
+                                            {isMobile ? (
+                                                <div className='timeButtons'>{Buttons(date, index)}</div>
+                                            ) : (
+                                                Buttons(date, index)
+                                            )}
+                                        </div>
+                                    ))}
+                                    <div className={classNames('submit', 'timeSubmit')}>
+                                        {modal && (
+                                            <Modal
+                                                type={modal}
+                                                onConfirm={this.handleConfirm(modal)}
+                                                onDeny={this.handleDeny}
+                                            />
+                                        )}
+                                        <Button
+                                            name='无法到场'
+                                            bgColor='primaryLightLittleMore'
+                                            textColor='white'
+                                            onClick={this.handleClick('abandon')}
+                                        />
+                                        <Button
+                                            name='提交'
+                                            bgColor='secondary'
+                                            textColor='white'
+                                            onClick={clicked.length ? this.handleClick('submit') : undefined}
+                                            className={classNames({ disabled: !clicked.length })}
+                                        />
+                                    </div>
+                                </>
+                            )}
+                            {confirmed !== '' && (
+                                <Submitted
+                                    title='你的决定已提交'
+                                    description={
+                                        confirmed === 'abandon'
+                                            ? '我们非常惋惜，希望下次招新能够与你相遇，再见！'
+                                            : '你已成功提交面试时间，请等待我们的短信通知！'
+                                    }
+                                />
+                            )}
+                        </div>
                     </div>
-                </div>
-                <div className={classNames('layer', { none: modal === '' }, modal === 'submit' ? 'layerSecondary' : 'layerPrimary')}/>
-            </>
+                    <div
+                        className={classNames(
+                            'layer',
+                            { none: modal === '' },
+                            modal === 'submit' ? 'layerSecondary' : 'layerPrimary'
+                        )}
+                    />
+                </>
+            )
         );
     }
 }

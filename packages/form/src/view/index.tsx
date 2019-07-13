@@ -6,28 +6,30 @@ import borderTop from '../asset/img/borderTop.png';
 import header from '../asset/img/header.png';
 import logo from '../asset/img/logo.png';
 import Form from '../component/Form';
-import SnackBar from '../component/SnackBar';
+import Snackbar from '../component/SnackBar';
 import Time from '../component/Time';
-import { URL } from '../config/const';
+import { MEDIA, URL } from '../config/const';
+import { Variant } from '../config/types';
 import { titleConverter } from '../utils/titleConverter';
 
 class Container extends PureComponent {
-
     state = {
-        isMobile: document.body.clientWidth < 500,
+        media: window.innerWidth < 500 ? MEDIA.Mobile : window.innerWidth < 1200 ? MEDIA.Pad : MEDIA.PC,
         submit: false,
         snackBarOn: '',
-        title: ''
+        title: '',
+        variant: 'info' as Variant
     };
 
-    toggleSnackbar = (content: string) => {
+    toggleSnackbar = (content: string, variant: Variant) => {
         this.setState({
-            snackBarOn: content
+            snackBarOn: content,
+            variant
         });
     };
 
     handleClose = () => {
-        this.toggleSnackbar('');
+        this.toggleSnackbar('', this.state.variant);
     };
 
     async componentDidMount() {
@@ -37,7 +39,7 @@ class Container extends PureComponent {
         if (type === 'success') {
             this.setState({ title: data[0] });
         } else {
-            this.toggleSnackbar(message);
+            this.toggleSnackbar(message, 'error');
         }
     }
 
@@ -47,7 +49,7 @@ class Container extends PureComponent {
 
     checkMobile = () => {
         this.setState({
-            isMobile: window.innerWidth <= 500
+            media: window.innerWidth < 500 ? MEDIA.Mobile : window.innerWidth < 1200 ? MEDIA.Pad : MEDIA.PC
         });
     };
 
@@ -58,26 +60,34 @@ class Container extends PureComponent {
     };
 
     render() {
-        const { isMobile, submit, title, snackBarOn } = this.state;
+        const { media, submit, title, snackBarOn, variant } = this.state;
         const params = window.location.pathname.split('/').splice(1);
         const titleName = titleConverter(title);
         /* http://join.hustunique.com/:formId/:candidateId */
         /* formId: recruitmentId + groupId(if type === 1) + type(0: apply, 1: interview1, 2: interview2) */
-        const main = params.length === 2
-            ? <Time isMobile={isMobile} toggleSnackbar={this.toggleSnackbar} />
-            : <Form submit={this.submit} isMobile={isMobile} title={title} toggleSnackbar={this.toggleSnackbar} />;
+        const main =
+            params.length === 2 ? (
+                <Time isMobile={media === MEDIA.Mobile} toggleSnackbar={this.toggleSnackbar} />
+            ) : (
+                <Form
+                    submit={this.submit}
+                    isMobile={media === MEDIA.Mobile}
+                    title={title}
+                    toggleSnackbar={this.toggleSnackbar}
+                />
+            );
         const MobileInterface = (
             <>
-                {params.length === 2 && <div className='titleContainer'>
-                    <h1 className='title'>Unique Studio</h1>
-                    <h1 className='title'>{titleName}</h1>
-                </div>}
-                <img src={borderTop} className={classNames('borderTop', { 'borderTopSubmitted': submit })} alt='border' />
+                {params.length === 2 && (
+                    <div className='titleContainer'>
+                        <h1 className='title'>Unique Studio</h1>
+                        <h1 className='title'>{titleName}</h1>
+                    </div>
+                )}
+                <img src={borderTop} className={classNames('borderTop', { borderTopSubmitted: submit })} alt='border' />
                 <div className='fakeBorderContainer'>
                     <div className='borderVertical borderLeft' />
-                    <div className='content'>
-                        {main}
-                    </div>
+                    <div className='content'>{main}</div>
                     <div className='borderVertical borderRight' />
                 </div>
                 <img src={borderTop} className='borderBottom' alt='border' />
@@ -95,10 +105,10 @@ class Container extends PureComponent {
                 <div className='background' id='bgLeft' />
                 <div className='center'>
                     <img src={header} className='header' alt='header' />
-                    {isMobile ? MobileInterface : PCInterface}
+                    {media === MEDIA.Mobile ? MobileInterface : PCInterface}
                 </div>
                 <div className='background' id='bgRight' />
-                {snackBarOn && <SnackBar content={snackBarOn} onClose={this.handleClose} />}
+                <Snackbar open={snackBarOn !== ''} onClose={this.handleClose} content={snackBarOn} variant={variant} />
             </div>
         );
     }
