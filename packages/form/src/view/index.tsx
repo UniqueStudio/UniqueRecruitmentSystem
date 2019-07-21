@@ -1,24 +1,28 @@
-import React, { PureComponent } from 'react';
-
+import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 import classNames from 'classnames';
-
-import borderTop from '../asset/img/borderTop.png';
+import React, { PureComponent } from 'react';
+// import borderTop from '../asset/img/borderTop.png';
 import header from '../asset/img/header.png';
 import logo from '../asset/img/logo.png';
 import Form from '../component/Form';
+import Loading from '../component/Loading';
 import Snackbar from '../component/SnackBar';
 import Time from '../component/Time';
 import { MEDIA, URL } from '../config/const';
 import { Variant } from '../config/types';
+import styles from '../style/view';
 import { titleConverter } from '../utils/titleConverter';
 
-class Container extends PureComponent {
+interface Props extends WithStyles<typeof styles> {}
+
+class Container extends PureComponent<Props> {
     state = {
-        media: window.innerWidth < 500 ? MEDIA.Mobile : window.innerWidth < 1200 ? MEDIA.Pad : MEDIA.PC,
+        media: window.innerWidth < 600 ? MEDIA.Mobile : window.innerWidth < 1280 ? MEDIA.Pad : MEDIA.PC,
         submit: false,
         snackBarOn: '',
         title: '',
-        variant: 'info' as Variant
+        variant: 'info' as Variant,
+        loading: true
     };
 
     toggleSnackbar = (content: string, variant: Variant) => {
@@ -39,8 +43,9 @@ class Container extends PureComponent {
         if (type === 'success') {
             this.setState({ title: data[0] });
         } else {
-            this.toggleSnackbar(message, 'error');
+            this.toggleSnackbar(message, type);
         }
+        this.setState({ loading: false });
     }
 
     componentWillUnmount() {
@@ -49,7 +54,7 @@ class Container extends PureComponent {
 
     checkMobile = () => {
         this.setState({
-            media: window.innerWidth < 500 ? MEDIA.Mobile : window.innerWidth < 1200 ? MEDIA.Pad : MEDIA.PC
+            media: window.innerWidth < 600 ? MEDIA.Mobile : window.innerWidth < 1280 ? MEDIA.Pad : MEDIA.PC
         });
     };
 
@@ -60,22 +65,25 @@ class Container extends PureComponent {
     };
 
     render() {
-        const { media, submit, title, snackBarOn, variant } = this.state;
+        const classes = this.props.classes;
+        const { media, title, snackBarOn, variant, loading } = this.state;
         const params = window.location.pathname.split('/').splice(1);
         const titleName = titleConverter(title);
         /* http://join.hustunique.com/:formId/:candidateId */
         /* formId: recruitmentId + groupId(if type === 1) + type(0: apply, 1: interview1, 2: interview2) */
         const main =
             params.length === 2 ? (
-                <Time isMobile={media === MEDIA.Mobile} toggleSnackbar={this.toggleSnackbar} />
+                <Time media={media} isMobile={media === MEDIA.Mobile} toggleSnackbar={this.toggleSnackbar} />
             ) : (
                 <Form
+                    media={media}
                     submit={this.submit}
                     isMobile={media === MEDIA.Mobile}
                     title={title}
                     toggleSnackbar={this.toggleSnackbar}
                 />
             );
+
         const MobileInterface = (
             <>
                 {params.length === 2 && (
@@ -84,13 +92,7 @@ class Container extends PureComponent {
                         <h1 className='title'>{titleName}</h1>
                     </div>
                 )}
-                <img src={borderTop} className={classNames('borderTop', { borderTopSubmitted: submit })} alt='border' />
-                <div className='fakeBorderContainer'>
-                    <div className='borderVertical borderLeft' />
-                    <div className='content'>{main}</div>
-                    <div className='borderVertical borderRight' />
-                </div>
-                <img src={borderTop} className='borderBottom' alt='border' />
+                {main}
             </>
         );
         const PCInterface = (
@@ -100,18 +102,19 @@ class Container extends PureComponent {
             </>
         );
         return (
-            <div className='container'>
-                <img src={logo} className='logo' alt='logo' />
-                <div className='background' id='bgLeft' />
-                <div className='center'>
-                    <img src={header} className='header' alt='header' />
-                    {media === MEDIA.Mobile ? MobileInterface : PCInterface}
+            <div className={classes.root}>
+                <img src={logo} className={classes.logo} alt='logo' />
+                <div className={classNames(classes.background, classes.bgLeft)} />
+                <div className={classes.center}>
+                    <img src={header} className={classes.header} alt='header' />
+                    <div>{media === MEDIA.Mobile ? MobileInterface : PCInterface}</div>
                 </div>
-                <div className='background' id='bgRight' />
+                <div className={classNames(classes.background, classes.bgRight)} />
                 <Snackbar open={snackBarOn !== ''} onClose={this.handleClose} content={snackBarOn} variant={variant} />
+                <Loading open={loading} />
             </div>
         );
     }
 }
 
-export default Container;
+export default withStyles(styles)(Container);

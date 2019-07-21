@@ -1,12 +1,13 @@
 import React, { PureComponent } from 'react';
 
 import classNames from 'classnames';
-
-import { GENDERS, GRADES, GROUPS, RANKS, URL } from '../../config/const';
+import { GENDERS, GRADES, GROUPS, MEDIA, RANKS, URL } from '../../config/const';
+import { Departments } from '../../config/department';
 import { Candidate, Variant } from '../../config/types';
 import { titleConverter } from '../../utils/titleConverter';
 import { upload } from '../../utils/upload';
 import { checkMail, checkPhone } from '../../utils/validators';
+import AutoSuggest from '../AutoSuggest';
 import Button from '../Button';
 import Input from '../Input';
 // import Popover from '../Popover';
@@ -15,6 +16,7 @@ import Submitted from '../Submitted';
 import TextArea from '../TextArea';
 
 interface Props {
+    media: MEDIA;
     isMobile: boolean;
     submit: () => void;
     toggleSnackbar: (content: string, variant: Variant) => void;
@@ -23,7 +25,7 @@ interface Props {
 
 class Form extends PureComponent<Props> {
     state = {
-        info: { referrer: '', resume: '', isQuick: false } as Candidate,
+        info: { referrer: '', resume: '', isQuick: false, institute: '', major: '' } as Candidate,
         submitted: false,
         selecting: '',
         sent: false,
@@ -73,14 +75,14 @@ class Form extends PureComponent<Props> {
             );
             const result = JSON.parse(response);
             if (result.type === 'success') {
-                toggleSnackbar('提交成功', 'success');
+                toggleSnackbar('提交成功', result.type);
                 this.setState({
                     submitted: true,
                     progress: 0
                 });
                 this.props.submit();
             } else {
-                toggleSnackbar(result.message, 'error');
+                toggleSnackbar(result.message, result.type);
                 this.setState({
                     progress: 0
                 });
@@ -136,9 +138,9 @@ class Form extends PureComponent<Props> {
             const response = await fetch(`${URL}/sms/verification/candidate/${phone}`);
             const result = await response.json();
             if (result.type !== 'success') {
-                return toggleSnackbar(result.message || '获取验证码失败!', 'error');
+                return toggleSnackbar(result.message || '获取验证码失败!', result.type);
             }
-            toggleSnackbar('验证码已发送!', 'info');
+            toggleSnackbar('验证码已发送!', result.type);
             this.setState({
                 sent: true,
                 time: 60
@@ -178,9 +180,32 @@ class Form extends PureComponent<Props> {
 
     render() {
         const { submitted, info, sent, time, /*popoverOn,*/ progress, selecting } = this.state;
-        const { gender, phone, group, grade, rank, isQuick } = info;
+        const { gender, phone, group, grade, rank, isQuick, institute, major } = info;
         const { isMobile, title } = this.props;
         const canGetCode = checkPhone(phone);
+
+        const Institute = (
+            <AutoSuggest
+                id='学院'
+                items={Object.keys(Departments)}
+                value={institute}
+                getItemValue={(value) => value as string}
+                onChange={this.handleChange('institute')}
+                onSelect={(value) => this.setState({ info: { ...this.state.info, institute: value } })}
+            />
+        );
+
+        const Major = (
+            <AutoSuggest
+                id='专业'
+                items={Departments[institute] || []}
+                value={major}
+                getItemValue={(value) => value as string}
+                onChange={this.handleChange('major')}
+                onSelect={(value) => this.setState({ info: { ...this.state.info, major: value } })}
+            />
+        );
+
         const Name = (
             <Input
                 for='name'
@@ -190,8 +215,8 @@ class Form extends PureComponent<Props> {
             />
         );
         const Mail = <Input for='mail' name='邮箱' onChange={this.handleChange('mail')} />;
-        const Institute = <Input for='institute' name='学院' onChange={this.handleChange('institute')} />;
-        const Major = <Input for='major' name='专业' onChange={this.handleChange('major')} />;
+        // const Institute = <Input for='institute' name='学院' onChange={this.handleChange('institute')} />;
+        // const Major = <Input for='major' name='专业' onChange={this.handleChange('major')} />;
         const Gender = (
             <Select
                 selections={GENDERS}

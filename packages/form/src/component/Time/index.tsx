@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 
 import classNames from 'classnames';
-import { URL } from '../../config/const';
+import { MEDIA, URL } from '../../config/const';
 import { Variant } from '../../config/types';
 import Button from '../Button';
 import Modal from '../Modal';
@@ -15,6 +15,7 @@ interface Date {
 }
 
 interface Props {
+    media: MEDIA;
     isMobile: boolean;
     toggleSnackbar: (content: string, variant: Variant) => void;
 }
@@ -52,7 +53,7 @@ class Time extends PureComponent<Props> {
                     step: formId[formId.length - 1]
                 });
             } else {
-                return toggleSnackbar('获取表单出了问题，请尝试重新加载', 'error');
+                return toggleSnackbar('获取表单出了问题，请尝试重新加载', result.type);
             }
         } catch (err) {
             return toggleSnackbar('获取表单出了问题，请尝试重新加载', 'error');
@@ -87,7 +88,7 @@ class Time extends PureComponent<Props> {
                     confirmed: type
                 });
             } else {
-                return toggleSnackbar(result.message, 'error');
+                return toggleSnackbar(result.message, result.type);
             }
         } catch (err) {
             return toggleSnackbar('提交出现了问题，请尝试重新提交', 'error');
