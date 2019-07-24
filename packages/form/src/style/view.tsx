@@ -85,6 +85,22 @@ const styles = ({ spacing, breakpoints }: Theme) =>
             [breakpoints.down('sm')]: {
                 width: '70%'
             }
+        },
+        msg: {
+            fontFamily: MyTheme.font.family,
+            fontSize: '1.2rem',
+            margin: `${spacing(1)}px 0`,
+            fontWeight: 500,
+            '& .sp': {
+                fontSize: '1.5rem',
+                fontWeight: 'bold'
+            },
+            '& .sp1': {
+                color: MyTheme.palette.primary.main
+            },
+            '& .sp2': {
+                color: MyTheme.palette.secondary.main
+            }
         }
     });
 

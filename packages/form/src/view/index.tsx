@@ -4,6 +4,7 @@ import React, { PureComponent } from 'react';
 // import borderTop from '../asset/img/borderTop.png';
 import header from '../asset/img/header.png';
 import logo from '../asset/img/logo.png';
+import Dialog from '../component/Dialog';
 import Form from '../component/Form';
 import Loading from '../component/Loading';
 import Snackbar from '../component/SnackBar';
@@ -22,7 +23,8 @@ class Container extends PureComponent<Props> {
         snackBarOn: '',
         title: '',
         variant: 'info' as Variant,
-        loading: true
+        loading: true,
+        openDialog: true
     };
 
     toggleSnackbar = (content: string, variant: Variant) => {
@@ -66,7 +68,7 @@ class Container extends PureComponent<Props> {
 
     render() {
         const classes = this.props.classes;
-        const { media, title, snackBarOn, variant, loading } = this.state;
+        const { media, title, snackBarOn, variant, loading, openDialog } = this.state;
         const params = window.location.pathname.split('/').splice(1);
         const titleName = titleConverter(title);
         /* http://join.hustunique.com/:formId/:candidateId */
@@ -95,12 +97,30 @@ class Container extends PureComponent<Props> {
                 {main}
             </>
         );
+
         const PCInterface = (
             <>
                 <h1 className='title'>Unique Studio - {titleName}</h1>
                 {main}
             </>
         );
+
+        const msg = (
+            <>
+                <span className={classes.msg}>
+                    <span className={classNames('sp', 'sp2')}>很抱歉</span>，目前团队招新通道暂未开启。
+                </span>
+                <br />
+                <span className={classes.msg}>
+                    如有意向加入或咨询详细信息，可邮件团队
+                    <a className={classNames('sp', 'sp1')} href='mailto:hr@hustunique.com'>
+                        邮箱
+                    </a>
+                    。我们会及时作出答复。
+                </span>
+            </>
+        );
+
         return (
             <div className={classes.root}>
                 <img src={logo} className={classes.logo} alt='logo' />
@@ -112,6 +132,12 @@ class Container extends PureComponent<Props> {
                 <div className={classNames(classes.background, classes.bgRight)} />
                 <Snackbar open={snackBarOn !== ''} onClose={this.handleClose} content={snackBarOn} variant={variant} />
                 <Loading open={loading} />
+                <Dialog
+                    open={!loading && title === '' && params.length !== 2 && openDialog}
+                    content={msg}
+                    title=''
+                    action={[{ name: 'OK', handler: () => this.setState({ openDialog: false }) }]}
+                />
             </div>
         );
     }
