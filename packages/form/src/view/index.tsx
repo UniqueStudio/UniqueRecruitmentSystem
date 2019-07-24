@@ -86,23 +86,20 @@ class Container extends PureComponent<Props> {
                 />
             );
 
-        const MobileInterface = (
-            <>
-                {params.length === 2 && (
-                    <div className='titleContainer'>
-                        <h1 className='title'>Unique Studio</h1>
-                        <h1 className='title'>{titleName}</h1>
-                    </div>
-                )}
-                {main}
-            </>
-        );
-
-        const PCInterface = (
-            <>
-                <h1 className='title'>Unique Studio - {titleName}</h1>
-                {main}
-            </>
+        const MainInterface = (
+            <div>
+                <div className={classes.title}>
+                    {media === MEDIA.Mobile ? (
+                        <>
+                            <h1>Unique Studio</h1>
+                            <h1>{titleName}</h1>
+                        </>
+                    ) : (
+                        <h1>Unique Studio{titleName === '' ? '' : ` - ${titleName}`}</h1>
+                        )}
+                    {main}
+                </div>
+            </div>
         );
 
         const msg = (
@@ -127,7 +124,7 @@ class Container extends PureComponent<Props> {
                 <div className={classNames(classes.background, classes.bgLeft)} />
                 <div className={classes.center}>
                     <img src={header} className={classes.header} alt='header' />
-                    <div>{media === MEDIA.Mobile ? MobileInterface : PCInterface}</div>
+                    {MainInterface}
                 </div>
                 <div className={classNames(classes.background, classes.bgRight)} />
                 <Snackbar open={snackBarOn !== ''} onClose={this.handleClose} content={snackBarOn} variant={variant} />

@@ -4,7 +4,6 @@ import classNames from 'classnames';
 import { GENDERS, GRADES, GROUPS, MEDIA, RANKS, URL } from '../../config/const';
 import { Departments } from '../../config/department';
 import { Candidate, Variant } from '../../config/types';
-import { titleConverter } from '../../utils/titleConverter';
 import { upload } from '../../utils/upload';
 import { checkMail, checkPhone } from '../../utils/validators';
 import AutoSuggest from '../AutoSuggest';
@@ -25,7 +24,7 @@ interface Props {
 
 class Form extends PureComponent<Props> {
     state = {
-        info: { referrer: '', resume: '', isQuick: false, institute: '', major: '' } as Candidate,
+        info: { referrer: '', resume: '', isQuick: false } as Candidate,
         submitted: false,
         selecting: '',
         sent: false,
@@ -181,14 +180,14 @@ class Form extends PureComponent<Props> {
     render() {
         const { submitted, info, sent, time, /*popoverOn,*/ progress, selecting } = this.state;
         const { gender, phone, group, grade, rank, isQuick, institute, major } = info;
-        const { isMobile, title } = this.props;
+        const { isMobile } = this.props;
         const canGetCode = checkPhone(phone);
 
         const Institute = (
             <AutoSuggest
                 id='学院'
                 items={Object.keys(Departments)}
-                value={institute}
+                value={institute || ''}
                 getItemValue={(value) => value as string}
                 onChange={this.handleChange('institute')}
                 onSelect={(value) => this.setState({ info: { ...this.state.info, institute: value } })}
@@ -199,7 +198,7 @@ class Form extends PureComponent<Props> {
             <AutoSuggest
                 id='专业'
                 items={Departments[institute] || []}
-                value={major}
+                value={major || ''}
                 getItemValue={(value) => value as string}
                 onChange={this.handleChange('major')}
                 onSelect={(value) => this.setState({ info: { ...this.state.info, major: value } })}
@@ -350,10 +349,6 @@ class Form extends PureComponent<Props> {
 
         const MobileInterface = (
             <>
-                <div className='titleContainer'>
-                    <h1 className='title'>Unique Studio</h1>
-                    <h1 className='title'>{titleConverter(title)}</h1>
-                </div>
                 <div className='form'>
                     {Name}
                     {Gender}

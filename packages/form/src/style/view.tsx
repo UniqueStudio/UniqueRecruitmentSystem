@@ -11,13 +11,6 @@ const styles = ({ spacing, breakpoints }: Theme) =>
             boxSizing: 'border-box',
             minHeight: '100vh',
             fontFamily: MyTheme.font.family,
-            '::-webkit-scrollbar': {
-                width: '3px',
-                height: '3px'
-            },
-            '::-webkit-scrollbar-thumb': {
-                background: MyTheme.palette.primary.main
-            },
             [breakpoints.down('xs')]: {
                 flexDirection: 'column',
                 alignItems: 'center'
@@ -27,9 +20,9 @@ const styles = ({ spacing, breakpoints }: Theme) =>
             userSelect: 'none',
             [breakpoints.between('sm', 'md')]: {
                 position: 'absolute',
-                top: spacing(4),
-                left: spacing(6),
-                width: '30%'
+                top: spacing(3),
+                left: spacing(5),
+                width: '25%'
             },
             [breakpoints.up('lg')]: {
                 position: 'absolute',
@@ -63,8 +56,7 @@ const styles = ({ spacing, breakpoints }: Theme) =>
         center: {
             flex: 3,
             [breakpoints.down('xs')]: {
-                flex: 6,
-                width: '90%'
+                flex: 6
             },
             [breakpoints.down('md')]: {
                 flex: 4
@@ -81,9 +73,9 @@ const styles = ({ spacing, breakpoints }: Theme) =>
             }
         },
         header: {
-            width: '80%',
+            width: '70%',
             [breakpoints.down('sm')]: {
-                width: '70%'
+                width: '80%'
             }
         },
         msg: {
@@ -100,6 +92,25 @@ const styles = ({ spacing, breakpoints }: Theme) =>
             },
             '& .sp2': {
                 color: MyTheme.palette.secondary.main
+            }
+        },
+        title: {
+            textAlign: 'center',
+            '& h1': {
+                color: MyTheme.palette.secondary.light,
+                userSelect: 'none',
+                whiteSpace: 'nowrap',
+                fontSize: '2.5vw',
+                marginTop: spacing(-2),
+                marginBottom: 0,
+                [breakpoints.between('sm', 'md')]: {
+                    fontSize: '3vw',
+                    marginTop: spacing(1)
+                },
+                [breakpoints.down('xs')]: {
+                    fontSize: '8vw',
+                    marginTop: spacing(2)
+                }
             }
         }
     });
