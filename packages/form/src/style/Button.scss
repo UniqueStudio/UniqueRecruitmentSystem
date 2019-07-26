@@ -5,6 +5,8 @@
 }
 
 .button {
+    padding: 0;
+    line-height: unset;
     border-radius: 12px;
     outline: none;
     cursor: pointer;
@@ -25,6 +27,7 @@
     .buttonName {
         font-weight: bold;
         font-size: 0.5vw;
+        height: auto;
     }
 }
 
