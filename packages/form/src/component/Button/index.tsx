@@ -1,6 +1,7 @@
+import classNames from 'classnames';
 import React, { PureComponent } from 'react';
 
-import classNames from 'classnames';
+import '../../style/Button.scss';
 
 interface Props {
     name: string;
@@ -12,13 +13,13 @@ interface Props {
 }
 
 class Button extends PureComponent<Props> {
-
     render() {
         const { name, textColor, bgColor, id, className, onClick } = this.props;
         return (
-            <button id={id}
-                    className={classNames('button', `text_${textColor}`, `background_${bgColor}`, className)}
-                    onClick={onClick}
+            <button
+                id={id}
+                className={classNames('button', `text_${textColor}`, `background_${bgColor}`, className)}
+                onClick={onClick}
             >
                 <div className='buttonName'>{name}</div>
             </button>

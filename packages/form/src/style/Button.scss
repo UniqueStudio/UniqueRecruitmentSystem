@@ -1,0 +1,150 @@
+@import "./palette";
+
+.colorTransition {
+    transition: 225ms;
+}
+
+.button {
+    border-radius: 12px;
+    outline: none;
+    cursor: pointer;
+    transition: color 225ms, background 225ms;
+    @media screen and (max-width: 1600px) {
+        border-radius: 10px;
+    }
+    @media screen and (max-width: 1440px) {
+        border-radius: 8px;
+    }
+    @media screen and (max-width: 500px) {
+        border-radius: 12px;
+    }
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    user-select: none;
+    .buttonName {
+        font-weight: bold;
+        font-size: 0.5vw;
+    }
+}
+
+.text_primary {
+    color: $primary;
+}
+
+.text_white {
+    color: white;
+}
+
+.text_secondary {
+    color: $secondary;
+}
+
+.colorTransition {
+    transition: 225ms;
+}
+
+.background_white {
+    background: none;
+    border-width: 3px;
+    @media screen and (max-width: 500px) {
+        border-width: 2px;
+    }
+    @media screen and (min-width: 500.1px) {
+        &:hover {
+            background: $primaryLight;
+        }
+    }
+}
+
+.background_grey {
+    background: #ddd;
+    border: {
+        width: 3px;
+        color: #ddd;
+    }
+}
+
+.background_pureWhite {
+    background: white;
+    border-width: 0;
+}
+
+.background_primary {
+    background: $primary;
+    border: {
+        width: 0;
+    }
+}
+
+.background_primaryLightLittleMore {
+    background: $primaryLightLittleMore;
+    border: 0;
+}
+
+.background_primaryLight {
+    @extend .background_white;
+    background: $primaryLight;
+}
+
+.background_primaryLighter {
+    background: $primaryLighter;
+    border: 0;
+    @media screen and (min-width: 500.1px) {
+        &:hover {
+            background: $primaryLight;
+        }
+    }
+}
+
+.background_secondary {
+    background: $secondary;
+    width: 100%;
+    border: 0;
+}
+
+.submit {
+    position: absolute;
+    bottom: $spacing;
+    right: -$spacing * 24;
+    @media screen and (max-width: 1280px) {
+        right: -$spacing * 18;
+    }
+    @media screen and (max-width: 1024px) {
+        right: -$spacing * 12;
+    }
+    @media screen and (max-width: 500px) {
+        position: static;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    button {
+        border-radius: 8px;
+        @media screen and (max-width: 500px) {
+            width: auto;
+        }
+
+        div {
+            font-size: 1.5rem;
+            margin: $spacing $spacing * 4;
+            @media screen and (max-width: 1280px) {
+                margin: $spacing $spacing * 2;
+                font-size: 1.2rem;
+            }
+            @media screen and (max-width: 1024px) {
+                right: $spacing * 4;
+                font-size: 1rem;
+            }
+            @media screen and (max-width: 500px) {
+                margin: $spacing $spacing * 4;
+                font-size: 1.5rem;
+            }
+        }
+    }
+}
+
+.disabled {
+    cursor: auto;
+}

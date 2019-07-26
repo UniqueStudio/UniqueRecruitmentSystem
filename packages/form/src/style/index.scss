@@ -1,13 +1,4 @@
-$spacing: 8px;
-$primary: #3FA9F5;
-$primaryLightLittle: #7AC3F8;
-$primaryLightLittleMore: #93CEFA;
-$primaryLight: #C5E5FC;
-$primaryLighter: #E5F1FD;
-$primaryLightest: #EBF0F4;
-$secondary: #F57E82;
-$secondaryLight: #F58086;
-$secondaryLighter: #FAF1F2;
+@import './palette';
 
 @font-face {
   font-family: 'Hiragino';
