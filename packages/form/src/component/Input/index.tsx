@@ -5,7 +5,11 @@ import InputBase from '@material-ui/core/InputBase';
 import InputLabel from '@material-ui/core/InputLabel';
 import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 import classNames from 'classnames';
-import styles from '../../style/Input';
+import borderStyles from '../../style/Border';
+import inputStyles from '../../style/Input';
+import combindStyles from '../../utils/combindStyles';
+
+const styles = combindStyles(inputStyles, borderStyles);
 
 interface Props extends WithStyles<typeof styles> {
     name: string;

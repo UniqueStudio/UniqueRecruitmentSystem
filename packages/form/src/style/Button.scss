@@ -5,21 +5,12 @@
 }
 
 .button {
+    border-width: 0 !important;
     padding: 0;
     line-height: unset;
-    border-radius: 12px;
     outline: none;
     cursor: pointer;
     transition: color 225ms, background 225ms;
-    @media screen and (max-width: 1600px) {
-        border-radius: 10px;
-    }
-    @media screen and (max-width: 1440px) {
-        border-radius: 8px;
-    }
-    @media screen and (max-width: 500px) {
-        border-radius: 12px;
-    }
     display: flex;
     justify-content: center;
     align-items: center;

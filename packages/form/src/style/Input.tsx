@@ -45,16 +45,6 @@ const styles = ({ breakpoints }: Theme) =>
             }
         },
         inputText: {},
-        border: {
-            borderRadius: '12px',
-            border: `3px ${primary.light} solid`,
-            [breakpoints.between('sm', 'md')]: {
-                borderRadius: '8px'
-            },
-            [breakpoints.down('xs')]: {
-                borderWidth: '2px'
-            }
-        },
         font: {
             fontFamily: font.family,
             [breakpoints.up('lg')]: {
