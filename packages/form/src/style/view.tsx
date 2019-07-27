@@ -1,5 +1,4 @@
-import { Theme } from '@material-ui/core/styles';
-import { createStyles } from '@material-ui/core/styles';
+import { createStyles, Theme } from '@material-ui/core/styles';
 import bgLeft from '../asset/img/bgLeft.png';
 import bgRight from '../asset/img/bgRight.png';
 // import borderImg from '../asset/img/test.png';
@@ -80,12 +79,18 @@ const styles = ({ spacing, breakpoints }: Theme) =>
         },
         msg: {
             fontFamily: MyTheme.font.family,
-            fontSize: '1.2rem',
+            fontSize: '1.5vw',
             margin: `${spacing(1)}px 0`,
             fontWeight: 500,
+            [breakpoints.down('xs')]: {
+                fontSize: '3vw'
+            },
             '& .sp': {
-                fontSize: '1.5rem',
-                fontWeight: 'bold'
+                fontSize: '2vw',
+                fontWeight: 'bold',
+                [breakpoints.down('xs')]: {
+                    fontSize: '4vw'
+                }
             },
             '& .sp1': {
                 color: MyTheme.palette.primary.main
