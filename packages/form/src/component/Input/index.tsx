@@ -7,22 +7,23 @@ import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 import classNames from 'classnames';
 import borderStyles from '../../style/Border';
 import inputStyles from '../../style/Input';
-import combindStyles from '../../utils/combindStyles';
+import combineStyles from '../../utils/combindStyles';
 
-const styles = combindStyles(inputStyles, borderStyles);
+const styles = combineStyles(inputStyles, borderStyles);
 
 interface Props extends WithStyles<typeof styles> {
     name: string;
     for: string;
     placeholder?: string;
     className?: string;
-    onChange: (e: React.ChangeEvent) => void;
+    onChange?: (e: React.ChangeEvent) => void;
     size?: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12;
+    inputProps?: object;
 }
 
 class Input extends PureComponent<Props> {
     render() {
-        const { for: htmlFor, name, onChange, placeholder, size, classes } = this.props;
+        const { for: htmlFor, name, onChange, placeholder, size, classes, inputProps } = this.props;
 
         return (
             <Grid classes={{ container: classes.root }} container spacing={0} alignItems='center'>
@@ -41,6 +42,7 @@ class Input extends PureComponent<Props> {
                         id={htmlFor}
                         placeholder={placeholder}
                         onChange={onChange}
+                        inputProps={inputProps}
                     />
                 </Grid>
             </Grid>

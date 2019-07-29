@@ -190,7 +190,9 @@ class Form extends PureComponent<Props> {
                 value={institute || ''}
                 getItemValue={(value) => value as string}
                 onChange={this.handleChange('institute')}
-                onSelect={(value) => this.setState({ info: { ...this.state.info, institute: value } })}
+                onSelect={(event, { suggestionValue }) =>
+                    this.setState({ info: { ...this.state.info, institute: suggestionValue } })
+                }
             />
         );
 
@@ -201,7 +203,9 @@ class Form extends PureComponent<Props> {
                 value={major || ''}
                 getItemValue={(value) => value as string}
                 onChange={this.handleChange('major')}
-                onSelect={(value) => this.setState({ info: { ...this.state.info, major: value } })}
+                onSelect={(event, { suggestionValue }) =>
+                    this.setState({ info: { ...this.state.info, major: suggestionValue } })
+                }
             />
         );
 
