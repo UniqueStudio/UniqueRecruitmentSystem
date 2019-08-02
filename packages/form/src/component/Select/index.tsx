@@ -5,11 +5,7 @@ import classNames from 'classnames';
 import arrow from '../../asset/img/arrow.svg';
 
 import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
-import border from '../../style/Border';
-import select from '../../style/Select';
-import combineStyles from '../../utils/combindStyles';
-
-const styles = combineStyles(border, select);
+import styles from '../../style/Select';
 
 interface Props extends WithStyles<typeof styles> {
     selections: string[];

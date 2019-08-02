@@ -5,12 +5,8 @@ import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 import classNames from 'classnames';
 import Autosuggest from 'react-autosuggest';
 
-import autoSuggestStyles from '../../style/AutoSuggest';
-import borderStyle from '../../style/Border';
-import combineStyles from '../../utils/combindStyles';
+import styles from '../../style/AutoSuggest';
 import Input from '../Input';
-
-const styles = combineStyles(borderStyle, autoSuggestStyles);
 
 interface Props extends WithStyles<typeof styles> {
     id: string;

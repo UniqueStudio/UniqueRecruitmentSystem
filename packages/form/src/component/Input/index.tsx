@@ -3,11 +3,7 @@ import React, { PureComponent } from 'react';
 import { Grid, InputBase, InputLabel } from '@material-ui/core';
 import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 import classNames from 'classnames';
-import borderStyles from '../../style/Border';
-import inputStyles from '../../style/Input';
-import combineStyles from '../../utils/combindStyles';
-
-const styles = combineStyles(inputStyles, borderStyles);
+import styles from '../../style/Input';
 
 interface Props extends WithStyles<typeof styles> {
     name: string;

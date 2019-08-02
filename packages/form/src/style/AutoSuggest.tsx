@@ -1,11 +1,13 @@
 import { createStyles, Theme } from '@material-ui/core/styles';
+import combindStyles from '../utils/combindStyles';
+import borderStyles from './Border';
 import CustomTheme from './theme';
 
 const {
     palette: { primary }
 } = CustomTheme;
 
-const styles = ({ spacing }: Theme) =>
+const style = ({ spacing }: Theme) =>
     createStyles({
         menuItem: {
             fontSize: '10px',
@@ -18,14 +20,6 @@ const styles = ({ spacing }: Theme) =>
             fontWeight: 'bold',
             backgroundColor: primary.lighter
         },
-        // menu: {
-        //     position: 'absolute',
-        //     top: 0,
-        //     left: '8.4%',
-        //     maxHeight: '30vh',
-        //     overflowY: 'auto',
-        //     zIndex: 999
-        // },
         container: {
             position: 'relative'
         },
@@ -43,5 +37,7 @@ const styles = ({ spacing }: Theme) =>
             listStyleType: 'none'
         }
     });
+
+const styles = combindStyles(style, borderStyles);
 
 export default styles;

@@ -188,7 +188,6 @@ class Form extends PureComponent<Props> {
                 }
             />
         );
-
         const Major = (
             <AutoSuggest
                 id='专业'
@@ -202,17 +201,14 @@ class Form extends PureComponent<Props> {
             />
         );
 
-        const Name = (
-            <Input
-                for='name'
-                name='姓名'
-                onChange={this.handleChange('name')}
-                className={classNames({ mobile_sm: isMobile })}
-            />
-        );
+        const Name = <Input for='name' name='姓名' onChange={this.handleChange('name')} />;
         const Mail = <Input for='mail' name='邮箱' onChange={this.handleChange('mail')} />;
-        // const Institute = <Input for='institute' name='学院' onChange={this.handleChange('institute')} />;
-        // const Major = <Input for='major' name='专业' onChange={this.handleChange('major')} />;
+        const Phone = <Input for='phone' name='电话' onChange={this.handleChange('phone')} />;
+        const Code = <Input for='code' name='验证码' onChange={this.handleChange('code')} />;
+        const Referrer = (
+            <Input for='referrer' name='推荐人' placeholder='无' onChange={this.handleChange('referrer')} />
+        );
+
         const Gender = (
             <Select
                 selections={GENDERS}
@@ -245,7 +241,6 @@ class Form extends PureComponent<Props> {
                 handleSelect={this.handleSelect('rank')}
             />
         );
-        const Phone = <Input for='phone' name='电话' onChange={this.handleChange('phone')} />;
         const CodeButton = (
             <Button
                 name={sent ? `${time}秒后${isMobile ? '重新获取' : '重获'}` : '接收验证码'}
@@ -255,14 +250,23 @@ class Form extends PureComponent<Props> {
                 className={classNames({ disabled: sent || !canGetCode })}
             />
         );
-        const Code = (
-            <Input
-                for='code'
-                name='验证码'
-                onChange={this.handleChange('code')}
-                className={classNames({ mobile_sm: isMobile })}
+
+        const Quick = (
+            <Button
+                name='快速通道'
+                bgColor={isQuick ? 'primary' : 'primaryLighter'}
+                textColor={isQuick ? 'white' : 'primary'}
+                onClick={this.handleCheck}
+                className={classNames({ widthFull: !isMobile })}
             />
         );
+        const Submit = (
+            <div className='submit'>
+                <Button name='提交' bgColor='secondary' textColor='white' onClick={this.handleSubmit} />
+            </div>
+        );
+        const Intro = <TextArea onChange={this.handleChange('intro')} />;
+
         const Resume = (
             <>
                 <input
@@ -289,30 +293,7 @@ class Form extends PureComponent<Props> {
                 </label>
             </>
         );
-        const Referrer = (
-            <Input
-                for='referrer'
-                name='推荐人'
-                placeholder='无'
-                onChange={this.handleChange('referrer')}
-                className={classNames({ mobile_sm: isMobile })}
-            />
-        );
-        const Quick = (
-            <Button
-                name='快速通道'
-                bgColor={isQuick ? 'primary' : 'primaryLighter'}
-                textColor={isQuick ? 'white' : 'primary'}
-                onClick={this.handleCheck}
-                className={classNames({ widthFull: !isMobile })}
-            />
-        );
-        const Submit = (
-            <div className='submit'>
-                <Button name='提交' bgColor='secondary' textColor='white' onClick={this.handleSubmit} />
-            </div>
-        );
-        const Intro = <TextArea onChange={this.handleChange('intro')} />;
+
         const PCInterface = (
             <>
                 <div className='gridWrapper'>
