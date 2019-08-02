@@ -26,7 +26,6 @@ class Form extends PureComponent<Props> {
     state = {
         info: { referrer: '', resume: '', isQuick: false } as Candidate,
         submitted: false,
-        selecting: '',
         sent: false,
         popoverOn: false,
         time: 0,
@@ -161,12 +160,6 @@ class Form extends PureComponent<Props> {
         }
     };
 
-    handleToggle = (name: string) => () => {
-        this.setState({
-            selecting: this.state.selecting === name ? '' : name
-        });
-    };
-
     handlePop = () => {
         this.setState({
             popoverOn: !this.state.popoverOn
@@ -178,7 +171,7 @@ class Form extends PureComponent<Props> {
     }
 
     render() {
-        const { submitted, info, sent, time, /*popoverOn,*/ progress, selecting } = this.state;
+        const { submitted, info, sent, time, /*popoverOn,*/ progress } = this.state;
         const { gender, phone, group, grade, rank, isQuick, institute, major } = info;
         const { isMobile } = this.props;
         const canGetCode = checkPhone(phone);
@@ -223,41 +216,33 @@ class Form extends PureComponent<Props> {
         const Gender = (
             <Select
                 selections={GENDERS}
-                value={GENDERS[gender]}
+                value={GENDERS[gender] || ''}
                 defaultValue='性别选择'
                 handleSelect={this.handleSelect('gender')}
-                onToggle={this.handleToggle('gender')}
-                open={selecting === 'gender'}
             />
         );
         const Grade = (
             <Select
                 selections={GRADES}
-                value={GRADES[grade]}
+                value={GRADES[grade] || ''}
                 defaultValue='所属年级'
                 handleSelect={this.handleSelect('grade')}
-                onToggle={this.handleToggle('grade')}
-                open={selecting === 'grade'}
             />
         );
         const Group = (
             <Select
                 selections={GROUPS}
-                value={GROUPS[group]}
+                value={GROUPS[group] || ''}
                 defaultValue='组别选择'
                 handleSelect={this.handleSelect('group')}
-                onToggle={this.handleToggle('group')}
-                open={selecting === 'group'}
             />
         );
         const Rank = (
             <Select
                 selections={RANKS}
-                value={RANKS[rank]}
+                value={RANKS[rank] || ''}
                 defaultValue='成绩排名'
                 handleSelect={this.handleSelect('rank')}
-                onToggle={this.handleToggle('rank')}
-                open={selecting === 'rank'}
             />
         );
         const Phone = <Input for='phone' name='电话' onChange={this.handleChange('phone')} />;

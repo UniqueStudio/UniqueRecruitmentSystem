@@ -1,36 +1,76 @@
 import React, { PureComponent } from 'react';
 
+import { InputBase, MenuItem, Select } from '@material-ui/core';
 import classNames from 'classnames';
 import arrow from '../../asset/img/arrow.svg';
 
-interface Props {
+import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
+import border from '../../style/Border';
+import select from '../../style/Select';
+import combineStyles from '../../utils/combindStyles';
+
+const styles = combineStyles(border, select);
+
+interface Props extends WithStyles<typeof styles> {
     selections: string[];
     value: string;
     defaultValue: string;
     handleSelect: (value: string | number) => () => void;
-    onToggle: () => void;
-    open: boolean;
 }
 
-class Select extends PureComponent<Props> {
+class CustomSelect extends PureComponent<Props> {
+    state = {
+        open: false
+    };
+
+    onOpen = () => {
+        this.setState({ open: true });
+    };
+
+    onClose = () => {
+        this.setState({ open: false });
+    };
+
+    renderIcon = () => {
+        const { svg, rotateSvg } = this.props.classes;
+        return <img src={arrow} className={classNames('MuiSvgIcon-root', svg, { [rotateSvg]: this.state.open })} />;
+    };
+
+    renderValue = (value: any) => {
+        if (!value) return this.props.defaultValue;
+        return value;
+    };
 
     render() {
-        const { selections, defaultValue, open, onToggle, handleSelect, value } = this.props;
+        const { selections, value, handleSelect, classes } = this.props;
         return (
-            <div className='selectContainer' onClick={onToggle}>
-                <div className={classNames('select', { 'selectClicked': open })}>
-                    <div className={classNames('selectValue', { 'hidden': !value })}>{value}</div>
-                    <div className={classNames({ 'hidden': value })}>{defaultValue}</div>
-                    <img src={arrow} className={classNames('selectArrow', { 'selectArrowRotate': open })} alt='arrow' />
-                </div>
-                {open && <div className='selectMenu'>
-                    {selections.map((i, j) =>
-                        <div key={j} onClick={handleSelect(j)}>{i}</div>
-                    )}
-                </div>}
-            </div>
+            <Select
+                value={value}
+                IconComponent={this.renderIcon}
+                onChange={(event: React.ChangeEvent<{ value: unknown }>) => {
+                    handleSelect(event.target.value as string | number)();
+                }}
+                displayEmpty
+                renderValue={this.renderValue}
+                open={this.state.open}
+                onOpen={this.onOpen}
+                onClose={this.onClose}
+                classes={{
+                    select: classes.select
+                }}
+                className={classNames(classes.border, classes.root)}
+                variant='standard'
+                input={<InputBase classes={{ input: classes.input }} />}
+                MenuProps={{ classes: { paper: classNames(classes.menu, classes.border) } }}
+            >
+                {selections.map((v, i) => (
+                    <MenuItem dense key={i} value={i} classes={{ root: classes.menuItem }}>
+                        {v}
+                    </MenuItem>
+                ))}
+            </Select>
         );
     }
 }
 
-export default Select;
+export default withStyles(styles)(CustomSelect);
