@@ -1,8 +1,6 @@
 import React, { PureComponent } from 'react';
 
-import MenuItem from '@material-ui/core/MenuItem';
-import MenuList from '@material-ui/core/MenuList';
-import Paper from '@material-ui/core/Paper';
+import { MenuItem, MenuList, Paper } from '@material-ui/core';
 import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 import classNames from 'classnames';
 import Autosuggest from 'react-autosuggest';

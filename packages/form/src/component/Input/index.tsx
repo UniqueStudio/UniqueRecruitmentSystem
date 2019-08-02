@@ -1,8 +1,6 @@
 import React, { PureComponent } from 'react';
 
-import Grid from '@material-ui/core/Grid';
-import InputBase from '@material-ui/core/InputBase';
-import InputLabel from '@material-ui/core/InputLabel';
+import { Grid, InputBase, InputLabel } from '@material-ui/core';
 import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 import classNames from 'classnames';
 import borderStyles from '../../style/Border';

@@ -1,12 +1,8 @@
-import Button from '@material-ui/core/Button';
-import Dialog from '@material-ui/core/Dialog';
-import DialogAction from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
+import React from 'react';
+
+import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@material-ui/core';
 import { TransitionProps } from '@material-ui/core/transitions';
 import Zoom from '@material-ui/core/Zoom';
-import React from 'react';
 
 interface ActionButton {
     name: string;
@@ -34,7 +30,7 @@ export default function MyDialog(props: Props) {
             <DialogContent>
                 <DialogContentText>{content}</DialogContentText>
             </DialogContent>
-            <DialogAction>
+            <DialogActions>
                 {act.map((v: ActionButton) => {
                     return (
                         <Button key={v.name} onClick={v.handler} className={v.className} color='primary'>
@@ -42,7 +38,7 @@ export default function MyDialog(props: Props) {
                         </Button>
                     );
                 })}
-            </DialogAction>
+            </DialogActions>
         </Dialog>
     );
 }
