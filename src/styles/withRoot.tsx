@@ -4,7 +4,7 @@ import blue from '@material-ui/core/colors/blue';
 import grey from '@material-ui/core/colors/grey';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import createMuiTheme from '@material-ui/core/styles/createMuiTheme';
-import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider';
+import ThemeProvider from '@material-ui/styles/ThemeProvider/ThemeProvider';
 
 const theme = createMuiTheme({
     palette: {
@@ -16,10 +16,10 @@ const theme = createMuiTheme({
 // https://github.com/mui-org/material-ui/blob/master/examples/create-react-app-with-typescript/src/withRoot.tsx
 function withRoot<T>(Component: ComponentType<T>) {
     return (props: T) => (
-        <MuiThemeProvider theme={theme}>
+        <ThemeProvider theme={theme}>
             <CssBaseline />
             <Component {...props} />
-        </MuiThemeProvider>
+        </ThemeProvider>
     );
 }
 

@@ -1,130 +1,115 @@
-import React, { PureComponent } from 'react';
+import React, { FC, memo, useEffect, useState } from 'react';
 
-import classNames from 'classnames';
+import SpeedDial from '@material-ui/lab/SpeedDial';
+import SpeedDialAction from '@material-ui/lab/SpeedDialAction';
+import SpeedDialIcon from '@material-ui/lab/SpeedDialIcon';
 
-import Button from '@material-ui/core/Button';
-import Fab from '@material-ui/core/Fab';
-import Zoom from '@material-ui/core/Zoom';
-import AddIcon from '@material-ui/icons/Add';
+import RemoveIcon from 'mdi-material-ui/AccountRemove';
+import CloseIcon from 'mdi-material-ui/EyeOff';
+import SelectAllIcon from 'mdi-material-ui/SelectAll';
+import SelectInverseIcon from 'mdi-material-ui/SelectInverse';
+import SendIcon from 'mdi-material-ui/Send';
 
-import withStyles, { WithStyles } from '@material-ui/styles/withStyles';
+import { Props } from '../../containers/Fab';
 
-import { EnqueueSnackbar } from '../../actions';
-import { Candidate, Group, Step } from '../../config/types';
-import styles from '../../styles/column';
+import { usePrevious } from '../../hooks/usePrevious';
 
-interface Props extends WithStyles<typeof styles> {
-    candidates: Candidate[];
-    selected: string[];
-    fabOn: number;
-    group: Group;
-    steps: Step[];
-    snackbars: EnqueueSnackbar['notification'][];
-    canOperate: boolean;
-    select: (cid: string[]) => void;
-    deselect: (cid: string[] | string) => void;
-    toggleFabOff: () => void;
-    toggleOpen: (component: string) => () => void;
-}
+import useStyles from '../../styles/fab';
 
-class FabButton extends PureComponent<Props> {
+const ButtonGenerator = (content: string, icon: JSX.Element, onClick: () => void, disabled = false) => (
+    <SpeedDialAction
+        icon={icon}
+        ButtonProps={{ disabled }}
+        tooltipTitle={content}
+        onClick={onClick}
+    />
+);
 
-    state = {
-        buttons: false,
+const FabButton: FC<Props> = memo(({ candidates, selected, fabOn, canOperate, deselect, toggleFabOff, group, steps, select, toggleOpen }) => {
+    const classes = useStyles();
+    const [fabOpen, setFabOpen] = useState(false);
+
+    const prevGroup = usePrevious(group);
+    const prevSelected = usePrevious(selected);
+    const prevSteps = usePrevious(steps);
+
+    const handleSelectAll = (all: string[]) => () => {
+        select(all.filter((cid) => selectable(cid)));
     };
 
-    componentDidUpdate(prevProps: Props) {
-        const { selected, toggleFabOff, group, steps } = this.props;
-        if (prevProps.selected.length !== 0 && selected.length === 0) {
-            toggleFabOff();
-            this.setState({
-                buttons: false
-            });
-        }
-        if (prevProps.group !== group || prevProps.steps.length !== steps.length) {
-            this.hideFab();
-        }
-    }
-
-    handleSelectAll = (all: string[]) => () => {
-        const { select, candidates } = this.props;
-        select(all.filter((cid) => this.selectable(candidates, cid)));
+    const handleInverse = (all: string[], toDeselect: string[]) => () => {
+        deselect(toDeselect.filter((cid) => selectable(cid)));
+        select(all.filter((cid) => !toDeselect.includes(cid) && selectable(cid)));
     };
 
-    handleInverse = (all: string[], selected: string[]) => () => {
-        const { select, deselect, candidates } = this.props;
-        deselect(selected.filter((cid) => this.selectable(candidates, cid)));
-        select(all.filter((cid) => !selected.includes(cid) && this.selectable(candidates, cid)));
-    };
-
-    selectable = (candidates: Candidate[], cid: string) => {
+    const selectable = (cid: string) => {
         const candidate = candidates.find(({ _id }) => _id === cid);
         return candidate && !(candidate.abandon || candidate.rejected);
     };
 
-    hideFab = () => {
-        const { deselect, selected } = this.props;
+    const hideFab = () => {
         deselect(selected);
     };
 
-    sendNotification = () => {
-        this.props.toggleOpen('modal')();
-        this.toggleButtons();
+    const sendNotification = () => {
+        toggleOpen('modal')();
+        toggleFabButtons();
     };
 
-    confirmRemove = () => {
-        this.props.toggleOpen('dialog')();
-        this.toggleButtons();
+    const confirmRemove = () => {
+        toggleOpen('dialog')();
+        toggleFabButtons();
     };
 
-    toggleButtons = () => {
-        this.setState(({ buttons }: { buttons: boolean }) => ({
-            buttons: !buttons,
-        }));
+    const toggleFabButtons = () => {
+        setFabOpen((prevFabOpen) => !prevFabOpen);
     };
 
-    render() {
-        const { classes, candidates, selected, fabOn, canOperate, snackbars } = this.props;
-        const all = candidates.map(({ _id }) => _id);
-        const selectedInColumn = selected.filter((cid) => all.includes(cid));
-        const ButtonGenerator = (onClick: () => void, content: string, disabled = false) =>
-            <Button
-                color='primary'
-                size='small'
-                variant='contained'
-                className={classes.fabButton}
-                onClick={onClick}
-                disabled={disabled}
-            >{content}</Button>;
-        return (
-            <>
-                <Zoom in={fabOn !== -1}>
-                    <div className={classes.fab}>
-                        <Fab
-                            className={snackbars.length ? classes.fabMoveUp : classes.fabMoveDown} // TODO: fab move up when snackbar on
-                            color='primary'
-                            onClick={this.toggleButtons}
-                        >
-                            <AddIcon />
-                        </Fab>
-                    </div>
-                </Zoom>
-                <Zoom in={this.state.buttons}>
-                    <div className={classes.fabButtonsZoom}>
-                        <div
-                            className={classNames(classes.fabButtonsContainer, snackbars.length ? classes.fabMoveUp : classes.fabMoveDown)}
-                        >
-                            {ButtonGenerator(this.handleSelectAll(all), '全选')}
-                            {ButtonGenerator(this.handleInverse(all, selectedInColumn), '反选')}
-                            {ButtonGenerator(this.sendNotification, '发送通知', !selectedInColumn.length || !canOperate)}
-                            {ButtonGenerator(this.confirmRemove, '移除', !selectedInColumn.length || !canOperate)}
-                            {ButtonGenerator(this.hideFab, '隐藏Fab')}
-                        </div>
-                    </div>
-                </Zoom>
-            </>
-        );
-    }
-}
+    const openFab = () => {
+        setFabOpen(true);
+    };
 
-export default withStyles(styles)(FabButton);
+    const closeFab = () => {
+        setFabOpen(false);
+    };
+
+    useEffect(() => {
+        if (prevSelected !== undefined && prevSteps !== undefined && prevGroup !== undefined) {
+            if (prevSelected.length !== 0 && selected.length === 0) {
+                toggleFabOff();
+                closeFab();
+            }
+            if (prevGroup !== group || prevSteps.length !== steps.length) {
+                hideFab();
+            }
+        }
+        // eslint-disable-next-line
+    }, [prevGroup, prevSteps, prevSelected, steps, group, selected, toggleFabOff]);
+
+    const ids = candidates.map(({ _id }) => _id);
+    const selectedInColumn = selected.filter((cid) => ids.includes(cid));
+    const disabled = !selectedInColumn.length || !canOperate;
+    return (
+        <SpeedDial
+            ariaLabel='fab'
+            className={classes.fab}
+            hidden={fabOn === -1}
+            icon={<SpeedDialIcon />}
+            onBlur={closeFab}
+            onClick={toggleFabButtons}
+            onClose={closeFab}
+            onFocus={openFab}
+            onMouseEnter={openFab}
+            onMouseLeave={closeFab}
+            open={fabOpen}
+        >
+            {ButtonGenerator('隐藏Fab', <CloseIcon />, hideFab)}
+            {ButtonGenerator('移除', <RemoveIcon />, confirmRemove, disabled)}
+            {ButtonGenerator('发送通知', <SendIcon />, sendNotification, disabled)}
+            {ButtonGenerator('反选', <SelectInverseIcon />, handleInverse(ids, selectedInColumn))}
+            {ButtonGenerator('全选', <SelectAllIcon />, handleSelectAll(ids))}
+        </SpeedDial>
+    );
+});
+
+export default FabButton;

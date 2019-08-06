@@ -9,7 +9,8 @@ import {
     getCandidatesFulfilled,
     GetCandidatesStart,
     setViewingRecruitmentFulfilled,
-    toggleProgress
+    toggleFabOff,
+    toggleProgress,
 } from '../../actions';
 
 import { API } from '../../config/consts';
@@ -31,6 +32,7 @@ export const getCandidatesEpic: Epic<GetCandidatesStart> = (action$, state$, { s
                 if (group) data = data.filter((candidate: Candidate) => candidate.group === group);
                 return of(
                     getCandidatesFulfilled(data),
+                    toggleFabOff(),
                     enqueueSnackbar('成功获取候选人信息', { variant: 'success' }),
                 );
             }
@@ -38,13 +40,14 @@ export const getCandidatesEpic: Epic<GetCandidatesStart> = (action$, state$, { s
                 `${API}/candidate/${JSON.stringify({ title, step, group })}`,
                 {
                     Authorization: `Bearer ${token}`,
-                }
+                },
             ).pipe(
                 mergeMap((res) => {
                     if (res.type === 'success') {
                         return of(
                             getCandidatesFulfilled(res.data),
                             setViewingRecruitmentFulfilled(title),
+                            toggleFabOff(),
                             enqueueSnackbar('成功获取候选人信息', { variant: 'success' }),
                             toggleProgress(),
                         );
@@ -55,5 +58,5 @@ export const getCandidatesEpic: Epic<GetCandidatesStart> = (action$, state$, { s
                 catchError((err) => errHandler(err)),
             );
         }),
-        catchError((err) => errHandler(err))
+        catchError((err) => errHandler(err)),
     );

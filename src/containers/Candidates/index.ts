@@ -1,53 +1,58 @@
 import { connect } from 'react-redux';
-import { Dispatch } from 'redux';
+import { bindActionCreators, Dispatch } from 'redux';
 
-import { OptionsObject } from 'notistack';
+import { deselectCandidate, enqueueSnackbar, removeCandidateStart } from '../../actions';
 
-import {
-    deselectCandidate,
-    DeselectCandidate,
-    enqueueSnackbar,
-    EnqueueSnackbar,
-    MoveCandidateStart,
-    moveCandidateStart,
-    removeCandidateStart,
-    RemoveCandidateStart,
-    selectCandidate,
-    SelectCandidate,
-    toggleFabOff,
-    ToggleFabOff,
-} from '../../actions';
+import { STEPS } from '../../config/consts';
+import { Candidate } from '../../config/types';
+
 import { StoreState } from '../../reducers';
 
-import { Step } from '../../config/types';
+import { sortBySlot } from '../../utils/sortBySlot';
+
 import Candidates from '../../views/Candidates';
 
-const mapStateToProps =
-    ({ candidate: { group, selected, candidates, steps }, component: { fabOn, snackbars }, user: { info } }: StoreState) => ({
-        group,
+const mapStateToProps = ({ candidate: { group: viewingGroup, selected, candidates, steps }, component: { fabOn } }: StoreState) => {
+    let candidateInSteps: Candidate[][] = [...new Array(STEPS.length)].map(() => []);
+    const selectedInfo: Candidate[] = [];
+    if (steps.length !== 2) {
+        for (const candidate of candidates) {
+            if (candidate.group === viewingGroup) {
+                candidateInSteps[candidate.step].push(candidate);
+            }
+            if (selected.includes(candidate._id)) {
+                selectedInfo.push(candidate);
+            }
+        }
+    } else {
+        for (const candidate of candidates) {
+            if (candidate.step === steps[0] || candidate.step === steps[1]) {
+                candidateInSteps[candidate.step].push(candidate);
+            }
+            if (selected.includes(candidate._id)) {
+                selectedInfo.push(candidate);
+            }
+        }
+        candidateInSteps = candidateInSteps.map((toSort) => toSort.sort(sortBySlot));
+    }
+    return {
+        viewingGroup,
+        selectedInfo,
         selected,
-        fabOn,
+        candidates: candidateInSteps,
         steps,
-        candidates,
-        userInfo: info,
-        snackbars
-    });
+        fabOn,
+    };
+};
 
-type DispatchType =
-    Dispatch<MoveCandidateStart
-        | DeselectCandidate
-        | SelectCandidate
-        | ToggleFabOff
-        | EnqueueSnackbar
-        | RemoveCandidateStart>;
+const mapDispatchToProps = (dispatch: Dispatch) => bindActionCreators({
+    deselect: deselectCandidate,
+    enqueueSnackbar,
+    remove: removeCandidateStart,
+}, dispatch);
 
-const mapDispatchToProps = (dispatch: DispatchType) => ({
-    move: (from: Step, to: Step, cid: string, position: number) => dispatch(moveCandidateStart(from, to, cid, position)),
-    deselect: (name: string[] | string) => dispatch(deselectCandidate(name)),
-    select: (name: string[]) => dispatch(selectCandidate(name)),
-    toggleFabOff: () => dispatch(toggleFabOff()),
-    enqueueSnackbar: (message: string, options: OptionsObject = { variant: 'info' }) => dispatch(enqueueSnackbar(message, options)),
-    remove: (cid: string) => dispatch(removeCandidateStart(cid)),
-});
+type StateProps = ReturnType<typeof mapStateToProps>;
+type DispatchProps = ReturnType<typeof mapDispatchToProps>;
 
-export default connect(mapStateToProps, mapDispatchToProps)(Candidates);
+export type Props = StateProps & DispatchProps;
+export default connect<StateProps, DispatchProps, {}, StoreState>(mapStateToProps, mapDispatchToProps)(Candidates);

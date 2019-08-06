@@ -1,33 +1,28 @@
-import React, { PureComponent } from 'react';
+import React, { ChangeEventHandler, FC, memo } from 'react';
 
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 
-import withStyles, { WithStyles } from '@material-ui/styles/withStyles';
+import useStyles from '../../styles/select';
 
-import styles from '../../styles/select';
-
-interface Props extends WithStyles<typeof styles> {
+interface Props {
     data: (string | number)[];
     values: (string | number)[];
     currentValue: string | number;
-    onChange?: (event: React.ChangeEvent<{ name?: string; value: unknown }>) => void;
+    onChange?: ChangeEventHandler<{ name?: string; value: unknown }>;
 }
 
-class CustomSelect extends PureComponent<Props> {
+const CustomSelect: FC<Props> = memo(({ data, values, onChange, currentValue }) => {
+    const classes = useStyles();
+    return (
+        <Select
+            value={currentValue}
+            onChange={onChange}
+            className={classes.select}
+        >
+            {data.map((item, index) => <MenuItem value={values[index]} key={index}>{item}</MenuItem>)}
+        </Select>
+    );
+});
 
-    render() {
-        const { classes, data, values, onChange, currentValue } = this.props;
-        return (
-            <Select
-                value={currentValue}
-                onChange={onChange}
-                className={classes.select}
-            >
-                {data.map((item, index) => <MenuItem value={values[index]} key={index}>{item}</MenuItem>)}
-            </Select>
-        );
-    }
-}
-
-export default withStyles(styles)(CustomSelect);
+export default CustomSelect;

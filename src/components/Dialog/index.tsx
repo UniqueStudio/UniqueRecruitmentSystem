@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react';
+import React, { FC, memo } from 'react';
 
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
@@ -17,23 +17,17 @@ interface Props {
     onClick: () => void;
 }
 
-class CustomDialog extends PureComponent<Props> {
-
-    render() {
-        const { open, toggleOpen, onClick, content, title, yes = '是', no = '否' } = this.props;
-        return (
-            <Dialog open={open} onClose={toggleOpen}>
-                <DialogTitle>{title}</DialogTitle>
-                <DialogContent>
-                    <DialogContentText>{content}</DialogContentText>
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={toggleOpen} color='primary' autoFocus>{no}</Button>
-                    <Button onClick={onClick} color='primary'>{yes}</Button>
-                </DialogActions>
-            </Dialog>
-        );
-    }
-}
+const CustomDialog: FC<Props> = memo(({ open, toggleOpen, onClick, content, title, yes = '是', no = '否' }) => (
+    <Dialog open={open} onClose={toggleOpen}>
+        <DialogTitle>{title}</DialogTitle>
+        <DialogContent>
+            <DialogContentText>{content}</DialogContentText>
+        </DialogContent>
+        <DialogActions>
+            <Button onClick={toggleOpen} color='primary' autoFocus>{no}</Button>
+            <Button onClick={onClick} color='primary'>{yes}</Button>
+        </DialogActions>
+    </Dialog>
+));
 
 export default CustomDialog;

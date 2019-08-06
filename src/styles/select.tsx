@@ -1,7 +1,8 @@
 import { Theme } from '@material-ui/core/styles/createMuiTheme';
-import { createStyles } from '@material-ui/styles';
+import createStyles from '@material-ui/styles/createStyles/createStyles';
+import makeStyles from '@material-ui/styles/makeStyles/makeStyles';
 
-const styles = ({ spacing, breakpoints }: Theme) => createStyles({
+const useStyles = makeStyles(({ spacing, breakpoints }: Theme) => createStyles({
     select: {
         marginLeft: spacing(4),
         '& *': {
@@ -17,6 +18,6 @@ const styles = ({ spacing, breakpoints }: Theme) => createStyles({
             marginLeft: 0
         }
     },
-});
+}));
 
-export default styles;
+export default useStyles;

@@ -1,5 +1,5 @@
 import { createBrowserHistory as createHistory } from 'history';
-import React, { PureComponent } from 'react';
+import React, { FC, memo, useEffect } from 'react';
 import { Provider } from 'react-redux';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { applyMiddleware, createStore } from 'redux';
@@ -17,20 +17,19 @@ export const store = createStore(reducers, composeWithDevTools(applyMiddleware(.
 
 epicMiddleware.run(epics);
 
-class App extends PureComponent {
-    componentDidMount() {
-        import('./utils/console').then(({ logger }) => logger());
-    }
+const App: FC = memo(() => {
 
-    render() {
-        return (
-            <Provider store={store}>
-                <Router>
-                    <Index />
-                </Router>
-            </Provider>
-        );
-    }
-}
+    useEffect(() => {
+        import('./utils/console').then(({ logger }) => logger());
+    }, []);
+
+    return (
+        <Provider store={store}>
+            <Router>
+                <Index />
+            </Router>
+        </Provider>
+    );
+});
 
 export default App;

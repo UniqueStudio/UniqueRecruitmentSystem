@@ -1,8 +1,9 @@
 import pink from '@material-ui/core/colors/pink';
 import { Theme } from '@material-ui/core/styles/createMuiTheme';
-import { createStyles } from '@material-ui/styles';
+import createStyles from '@material-ui/styles/createStyles/createStyles';
+import makeStyles from '@material-ui/styles/makeStyles/makeStyles';
 
-const styles = ({ zIndex }: Theme) => createStyles({
+const useStyles = makeStyles(({ zIndex }: Theme) => createStyles({
     progress: {
         position: 'fixed',
         zIndex: zIndex.modal + 1,
@@ -16,6 +17,6 @@ const styles = ({ zIndex }: Theme) => createStyles({
     barColor: {
         backgroundColor: pink[100]
     }
-});
+}));
 
-export default styles;
+export default useStyles;
