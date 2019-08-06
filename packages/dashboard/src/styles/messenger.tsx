@@ -1,15 +1,16 @@
 import { Theme } from '@material-ui/core/styles/createMuiTheme';
-import { createStyles } from '@material-ui/styles';
+import createStyles from '@material-ui/styles/createStyles/createStyles';
+import makeStyles from '@material-ui/styles/makeStyles/makeStyles';
 
 import { colorToAlpha } from './index';
 
-const styles = ({ spacing, transitions, breakpoints, palette, zIndex }: Theme) => createStyles({
+const useStyles = makeStyles(({ spacing, transitions, breakpoints, palette, zIndex }: Theme) => createStyles({
     messenger: {
         display: 'flex',
         flexDirection: 'column',
         margin: spacing(1),
         padding: spacing(1),
-        height: '80vh',
+        height: 'calc(100vh - 96px)',
         [breakpoints.up('sm')]: {
             width: 400,
         },
@@ -94,8 +95,8 @@ const styles = ({ spacing, transitions, breakpoints, palette, zIndex }: Theme) =
         zIndex: zIndex.snackbar * 4,
     },
     closeButton: {
-        marginLeft: 'auto'
-    }
-});
+        marginLeft: 'auto',
+    },
+}));
 
-export default styles;
+export default useStyles;

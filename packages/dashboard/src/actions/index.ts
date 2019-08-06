@@ -642,10 +642,10 @@ export type LAUNCH_RECRUITMENT = typeof LAUNCH_RECRUITMENT;
 
 export interface LaunchRecruitment {
     type: LAUNCH_RECRUITMENT;
-    info: Partial<Recruitment>;
+    info: Partial<Recruitment & { code: string }>;
 }
 
-export function launchRecruitment(info: Partial<Recruitment>): LaunchRecruitment {
+export function launchRecruitment(info: Partial<Recruitment & { code: string }>): LaunchRecruitment {
     return {
         type: LAUNCH_RECRUITMENT,
         info,

@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react';
+import React, { FC } from 'react';
 
 import classNames from 'classnames';
 
@@ -15,54 +15,48 @@ import HomeIcon from '@material-ui/icons/Home';
 import PeopleIcon from '@material-ui/icons/People';
 import PieChartIcon from '@material-ui/icons/PieChart';
 
-import withStyles, { WithStyles } from '@material-ui/styles/withStyles';
+import { Props } from '../../containers/Drawer';
 
-import styles from '../../styles/drawer';
+import useStyles from '../../styles/drawer';
 
 import Anchor from '../Anchor';
 
-interface Props extends WithStyles<typeof styles> {
-    open: boolean;
-    toggleOpen: () => void;
-}
+const listItems = [
+    { to: '/', text: 'Dashboard', icon: <HomeIcon /> },
+    { to: '/data', text: '招新数据', icon: <PieChartIcon /> },
+    { to: '/candidates', text: '选手信息', icon: <DashboardIcon /> },
+    { to: '/my', text: '组员信息', icon: <PeopleIcon /> },
+];
 
-class Menu extends PureComponent<Props> {
+const Menu: FC<Props> = ({ open, toggleOpen }) => {
+    const classes = useStyles();
 
-    render() {
-        const { classes, open, toggleOpen } = this.props;
-        const listItems = [
-            { to: '/', text: 'Dashboard', icon: <HomeIcon /> },
-            { to: '/data', text: '招新数据', icon: <PieChartIcon /> },
-            { to: '/candidates', text: '选手信息', icon: <DashboardIcon /> },
-            { to: '/my', text: '组员信息', icon: <PeopleIcon /> },
-        ];
-        return (
-            <Drawer
-                variant='permanent'
-                classes={{ paper: classNames(classes.drawerPaper, !open && classes.drawerPaperClose) }}
-                open={open}
-            >
-                <div className={classes.toolbar}>
-                    <IconButton onClick={toggleOpen}>
-                        <ChevronLeftIcon />
-                    </IconButton>
-                </div>
-                <Divider />
-                <List>
-                    {listItems.map(({ to, text, icon }, index) =>
-                        <Anchor to={to} key={index}>
-                            <ListItem button onClick={open ? toggleOpen : undefined}>
-                                <ListItemIcon className={classes.icon}>
-                                    {icon}
-                                </ListItemIcon>
-                                <ListItemText primary={text} />
-                            </ListItem>
-                        </Anchor>
-                    )}
-                </List>
-            </Drawer>
-        );
-    }
-}
+    return (
+        <Drawer
+            variant='permanent'
+            classes={{ paper: classNames(classes.drawerPaper, !open && classes.drawerPaperClose) }}
+            open={open}
+        >
+            <div className={classes.toolbar}>
+                <IconButton onClick={toggleOpen}>
+                    <ChevronLeftIcon />
+                </IconButton>
+            </div>
+            <Divider />
+            <List>
+                {listItems.map(({ to, text, icon }, index) =>
+                    <Anchor to={to} key={index}>
+                        <ListItem button onClick={open ? toggleOpen : undefined}>
+                            <ListItemIcon className={classes.icon}>
+                                {icon}
+                            </ListItemIcon>
+                            <ListItemText primary={text} />
+                        </ListItem>
+                    </Anchor>,
+                )}
+            </List>
+        </Drawer>
+    );
+};
 
-export default withStyles(styles)(Menu);
+export default Menu;

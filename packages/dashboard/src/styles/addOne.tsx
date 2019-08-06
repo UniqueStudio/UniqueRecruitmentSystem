@@ -1,7 +1,8 @@
 import { Theme } from '@material-ui/core/styles/createMuiTheme';
-import { createStyles } from '@material-ui/styles';
+import createStyles from '@material-ui/styles/createStyles/createStyles';
+import makeStyles from '@material-ui/styles/makeStyles/makeStyles';
 
-const styles = ({ spacing, typography: { button }, breakpoints }: Theme) => createStyles({
+const useStyles = makeStyles(({ spacing, typography: { button }, breakpoints }: Theme) => createStyles({
     paper: {
         display: 'flex',
         margin: spacing(1),
@@ -45,6 +46,6 @@ const styles = ({ spacing, typography: { button }, breakpoints }: Theme) => crea
         },
         margin: spacing(1),
     }
-});
+}));
 
-export default styles;
+export default useStyles;

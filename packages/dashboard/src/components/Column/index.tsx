@@ -1,75 +1,51 @@
-import React, { PureComponent } from 'react';
+import React, { FC, memo } from 'react';
 import { Draggable, Droppable } from 'react-beautiful-dnd';
 
 import Divider from '@material-ui/core/Divider';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 
-import withStyles, { WithStyles } from '@material-ui/styles/withStyles';
+import useTheme from '@material-ui/core/styles/useTheme';
+import useMediaQuery from '@material-ui/core/useMediaQuery/useMediaQuery';
 
-import { STEPS } from '../../config/consts';
-import { Candidate as CandidateType, Step } from '../../config/types';
-import Candidate from '../../containers/Candidate';
-import styles from '../../styles/column';
+import useStyles from '../../styles/column';
 
-interface Props extends WithStyles<typeof styles> {
-    step: Step;
+interface Props {
+    title: string;
     dropIndex: number;
-    isTeamInterview: boolean;
-    candidates: CandidateType[];
-    selected: string[];
-    toggleDetail: (index: number) => () => void;
 }
 
-class Column extends PureComponent<Props> {
+const Column: FC<Props> = memo(({ title, children, dropIndex }) => {
+    const classes = useStyles();
+    const theme = useTheme();
+    const isMobile = useMediaQuery(theme.breakpoints.down('xs'));
 
-    render() {
-        const { classes, step, candidates, selected, dropIndex, isTeamInterview, toggleDetail } = this.props;
-        const selectedCid = selected.filter((cid) => candidates.find(({ _id }) => cid === _id));
-        const DropArea = (
-            <Droppable droppableId={STEPS[step]} type='CANDIDATE'>
-                {({ innerRef, droppableProps, placeholder }) => (
-                    <div className={classes.columnBody} ref={(element) => innerRef(element)} {...droppableProps}>
-                        {candidates.map((candidate, index) => (
-                            <Draggable
-                                draggableId={candidate._id}
-                                key={candidate._id}
-                                index={index}
-                                isDragDisabled={candidate.abandon || candidate.rejected || selectedCid.includes(candidate._id)}
-                            >
-                                {(dragProvided) => (
-                                    <Candidate
-                                        candidate={candidate}
-                                        provided={dragProvided}
-                                        selected={selected}
-                                        isTeamInterview={isTeamInterview}
-                                        toggleDetail={toggleDetail(index)}
-                                    />
-                                )}
-                            </Draggable>
-                        ))}
-                        {placeholder}
-                    </div>
-                )}
-            </Droppable>
-        );
+    const ColumnBody = (
+        <Droppable droppableId={title} type='CANDIDATE' isDropDisabled={isMobile}>
+            {({ innerRef, droppableProps, placeholder }) => (
+                <div className={classes.columnBody} ref={innerRef} {...droppableProps}>
+                    {children}
+                    {placeholder}
+                </div>
+            )}
+        </Droppable>
+    );
 
-        return (
-            <Draggable draggableId={STEPS[step]} index={dropIndex}>
-                {({ innerRef, dragHandleProps, draggableProps }) => (
-                    <div ref={innerRef} {...draggableProps}>
-                        <Paper className={classes.column}>
-                            <div className={classes.columnHeader}>
-                                <Typography variant='h6' className={classes.columnTitle} {...dragHandleProps}>{STEPS[step]}</Typography>
-                            </div>
-                            <Divider />
-                            {DropArea}
-                        </Paper>
-                    </div>
-                )}
-            </Draggable>
-        );
-    }
-}
+    return (
+        <Draggable draggableId={title} index={dropIndex} isDragDisabled={isMobile}>
+            {({ innerRef, dragHandleProps, draggableProps }) => (
+                <div ref={innerRef} {...draggableProps}>
+                    <Paper className={classes.column}>
+                        <div className={classes.columnHeader}>
+                            <Typography variant='h6' className={classes.columnTitle} {...dragHandleProps}>{title}</Typography>
+                        </div>
+                        <Divider />
+                        {ColumnBody}
+                    </Paper>
+                </div>
+            )}
+        </Draggable>
+    );
+});
 
-export default withStyles(styles)(Column);
+export default Column;

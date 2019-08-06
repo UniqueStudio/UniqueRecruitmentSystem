@@ -1,45 +1,46 @@
-import React, { lazy, PureComponent, Suspense } from 'react';
+import React, { FC, lazy, memo, Suspense } from 'react';
 import { Route, RouteComponentProps, Switch, withRouter } from 'react-router';
 
-import PageFrame from '../containers/Frame';
-import Login from './Login';
-
 import Progress from '../components/Progress';
-import Snackbar from '../components/Snackbar';
-import Notifier from '../containers/Notifier';
 
+import PageFrame from '../containers/Frame';
+import Login from '../containers/Login';
+import Notifier from '../containers/Notifier';
+import Snackbar from '../containers/Snackbar';
+
+import useStyles from '../styles/global';
 import withRoot from '../styles/withRoot';
 
 const Candidates = lazy(() => import('../containers/Candidates'));
 const Dashboard = lazy(() => import('../containers/Dashboard'));
 const Data = lazy(() => import('../containers/Data'));
-const My = lazy(() => import('../containers/My'));
+const My = lazy(() => import('./My'));
 const NoMatch = lazy(() => import('./NoMatch'));
 
-class Index extends PureComponent {
-
-    routeRender = (Component: JSX.Element) => (props: RouteComponentProps) =>
+const Index: FC = memo(() => {
+    useStyles();
+    const routeRender = (Component: JSX.Element) => (props: RouteComponentProps) => (
         <PageFrame {...props}>
-            <Suspense fallback={<Progress/>}>
+            <Suspense fallback={<Progress />}>
                 {Component}
             </Suspense>
-        </PageFrame>;
-
-    render() {
-        return (
+        </PageFrame>
+    );
+    return (
+        <>
             <Snackbar>
-                <Notifier/>
-                <Switch>
-                    <Route path='/login' component={Login}/>
-                    <Route path='/' exact render={this.routeRender(<Dashboard/>)}/>
-                    <Route path='/data' render={this.routeRender(<Data/>)}/>
-                    <Route path='/candidates' render={this.routeRender(<Candidates/>)}/>
-                    <Route path='/my' render={this.routeRender(<My/>)}/>
-                    <Route render={this.routeRender(<NoMatch/>)}/>
-                </Switch>
+                <Notifier />
             </Snackbar>
-        );
-    }
-}
+            <Switch>
+                <Route path='/login' component={Login} />
+                <Route path='/' exact render={routeRender(<Dashboard />)} />
+                <Route path='/data' render={routeRender(<Data />)} />
+                <Route path='/candidates' render={routeRender(<Candidates />)} />
+                <Route path='/my' render={routeRender(<My />)} />
+                <Route render={routeRender(<NoMatch />)} />
+            </Switch>
+        </>
+    );
+});
 
 export default withRouter(withRoot(Index));

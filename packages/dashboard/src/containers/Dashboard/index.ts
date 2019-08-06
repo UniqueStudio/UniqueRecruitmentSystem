@@ -1,34 +1,23 @@
 import { connect } from 'react-redux';
-import { Dispatch } from 'redux';
+import { bindActionCreators, Dispatch } from 'redux';
 
-import { OptionsObject } from 'notistack';
-
-import {
-    enqueueSnackbar,
-    EnqueueSnackbar,
-    launchRecruitment,
-    LaunchRecruitment,
-    setViewingRecruitmentStart,
-    SetViewingRecruitmentStart
-} from '../../actions';
-import { Recruitment } from '../../config/types';
+import { setViewingRecruitmentStart } from '../../actions';
 
 import { StoreState } from '../../reducers';
 
 import Dashboard from '../../views/Dashboard';
 
-const mapStateToProps = ({ recruitment: { recruitments: data, viewing }, user: { info: { isAdmin, isCaptain } } }: StoreState) => ({
+const mapStateToProps = ({ recruitment: { recruitments: data, viewing } }: StoreState) => ({
     data,
-    canLaunch: isCaptain || isAdmin,
-    viewing
+    viewing,
 });
 
-type DispatchType = Dispatch<SetViewingRecruitmentStart | EnqueueSnackbar | LaunchRecruitment>;
+const mapDispatchToProps = (dispatch: Dispatch) => bindActionCreators({
+    setViewing: setViewingRecruitmentStart,
+}, dispatch);
 
-const mapDispatchToProps = (dispatch: DispatchType) => ({
-    setViewing: (title: string) => dispatch(setViewingRecruitmentStart(title)),
-    enqueueSnackbar: (message: string, options: OptionsObject = { variant: 'warning' }) => dispatch(enqueueSnackbar(message, options)),
-    launchRecruitment: (info: Partial<Recruitment>) => dispatch(launchRecruitment(info)),
-});
+type StateProps = ReturnType<typeof mapStateToProps>;
+type DispatchProps = ReturnType<typeof mapDispatchToProps>;
 
-export default connect(mapStateToProps, mapDispatchToProps)(Dashboard);
+export type Props = StateProps & DispatchProps;
+export default connect<StateProps, DispatchProps, {}, StoreState>(mapStateToProps, mapDispatchToProps)(Dashboard);

@@ -60,7 +60,7 @@ export function candidateReducer(state = init, action: Action): CandidateStore {
                 inputtingComment: {
                     content: '',
                     evaluation: 2,
-                }
+                },
             };
         }
         case actions.REMOVE_COMMENT_FULFILLED: {
@@ -78,7 +78,7 @@ export function candidateReducer(state = init, action: Action): CandidateStore {
         case actions.GET_CANDIDATES_FULFILLED: {
             const { candidates } = action;
             update(candidates);
-            return { ...state, candidates };
+            return { ...state, candidates, selected: [] };
         }
         case actions.ADD_CANDIDATE_FULFILLED: {
             const { candidates } = state;
@@ -117,8 +117,8 @@ export function candidateReducer(state = init, action: Action): CandidateStore {
                     [interviewType]: {
                         ...interviews[interviewType],
                         allocation: time,
-                    }
-                }
+                    },
+                },
             });
             update(updatedCandidates);
             return { ...state, candidates: updatedCandidates };
@@ -139,13 +139,17 @@ export function candidateReducer(state = init, action: Action): CandidateStore {
                         [interviewType]: {
                             ...interviews[interviewType],
                             allocation: result.time,
-                        }
-                    }
+                        },
+                    },
                 };
             });
 
             update(updatedCandidates);
             return { ...state, candidates: updatedCandidates };
+        }
+        case actions.RECORD_INPUTTING_COMMENT: {
+            const { evaluation, content } = action;
+            return { ...state, inputtingComment: { evaluation, content } };
         }
     }
     return state;

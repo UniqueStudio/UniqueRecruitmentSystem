@@ -1,30 +1,37 @@
-import React, { PureComponent } from 'react';
+import React, { FC, memo } from 'react';
 
-import withStyles, { WithStyles } from '@material-ui/styles/withStyles';
+import classNames from 'classnames';
+
 import { SnackbarProvider } from 'notistack';
 
-import styles from '../../styles/snackbar';
+import useTheme from '@material-ui/core/styles/useTheme';
+import useMediaQuery from '@material-ui/core/useMediaQuery/useMediaQuery';
 
-class Snackbar extends PureComponent<WithStyles<typeof styles>> {
+import { Props } from '../../containers/Snackbar';
 
-    render() {
-        const { children, classes } = this.props;
-        return (
-            <SnackbarProvider
-                maxSnack={5}
-                classes={{
-                    variantSuccess: classes.success,
-                    variantError: classes.error,
-                    variantWarning: classes.warning,
-                    variantInfo: classes.info,
-                }}
-            >
-                <>
-                    {children}
-                </>
-            </SnackbarProvider>
-        );
-    }
-}
+import useStyles from '../../styles/snackbar';
 
-export default withStyles(styles)(Snackbar);
+const Snackbar: FC<Props> = memo(({ children, fabOn }) => {
+    const classes = useStyles();
+    const theme = useTheme();
+    const isMobile = useMediaQuery(theme.breakpoints.down('xs'));
+    return (
+        <SnackbarProvider
+            maxSnack={5}
+            classes={{
+                variantSuccess: classes.success,
+                variantError: classes.error,
+                variantWarning: classes.warning,
+                variantInfo: classes.info,
+            }}
+            autoHideDuration={3000}
+            className={classNames(classes.snackBar, { [classes.shrink]: fabOn !== -1 && isMobile })}
+        >
+            <>
+                {children}
+            </>
+        </SnackbarProvider>
+    );
+});
+
+export default Snackbar;

@@ -1,95 +1,103 @@
-import React, { PureComponent } from 'react';
-import {
-    DragDropContext,
-    Droppable,
-    DropResult
-} from 'react-beautiful-dnd';
+import React, { FC, memo, useCallback, useEffect, useState } from 'react';
+import { DragDropContext, Droppable, DropResult } from 'react-beautiful-dnd';
+import SwipeableViews from 'react-swipeable-views';
 
-import withStyles, { WithStyles } from '@material-ui/styles/withStyles';
+import useTheme from '@material-ui/core/styles/useTheme';
+import useMediaQuery from '@material-ui/core/useMediaQuery/useMediaQuery';
 
-import styles from '../../styles/column';
-
-import Column from '../../containers/Column';
+import Column from '../../components/Column';
 
 import { STEPS } from '../../config/consts';
-import { Candidate, Group, Step } from '../../config/types';
+import { Step } from '../../config/types';
 
-interface Props extends WithStyles<typeof styles> {
-    steps: Step[];
-    group: Group;
-    candidates: Candidate[][];
-    toggleDetail: (detail: number) => (index: number) => () => void;
-    move: (from: Step, to: Step, cid: string, position: number) => void;
-}
+import { Props } from '../../containers/Board';
+import Card from '../../containers/Card';
 
-interface State {
-    steps: Step[];
-}
+import useStyles from '../../styles/board';
 
-class Board extends PureComponent<Props, State> {
+const Board: FC<Props> = memo(({ candidates, toggleDetail, steps: stepsP, move }) => {
+    const classes = useStyles();
+    const [steps, setSteps] = useState(stepsP);
+    const [column, setColumn] = useState(0);
+    const theme = useTheme();
+    const isMobile = useMediaQuery(theme.breakpoints.down('xs'));
 
-    state = {
-        steps: this.props.steps,
-    };
+    useEffect(() => {
+        setSteps(stepsP);
+        setColumn(0);
+    }, [stepsP]);
 
-    componentDidUpdate(prevProps: Props) {
-        this.setState((prevState, { steps, group }) => ({
-            steps: steps.length !== prevState.steps.length || group !== prevProps.group ? steps : prevState.steps
-        }));
-    }
-
-    onDragEnd = (result: DropResult) => {
-        if (result.destination) {
-            const source = result.source;
-            const destination = result.destination;
+    const onDragEnd = useCallback(({ destination, source, type, draggableId }: DropResult) => {
+        if (destination) {
             const { droppableId, index } = destination;
 
-            switch (result.type) {
+            switch (type) {
                 case 'COLUMN':
                     if (source.droppableId === droppableId && source.index === index) return;
-                    const preOrder = this.state.steps;
-                    const ordered = [...preOrder];
+                    const ordered = [...steps];
                     const [removed] = ordered.splice(source.index, 1);
                     ordered.splice(index, 0, removed);
-                    this.setState({
-                        steps: ordered
-                    });
+                    setSteps(ordered);
                     return;
                 case 'CANDIDATE':
                     if (source.droppableId === droppableId) return;
-                    this.props.move(STEPS.indexOf(source.droppableId) as Step, STEPS.indexOf(droppableId) as Step, result.draggableId, index);
+                    move(STEPS.indexOf(source.droppableId) as Step, STEPS.indexOf(droppableId) as Step, draggableId, index);
                     return;
             }
         }
-    };
+    }, [move, steps]);
 
-    render() {
-        const { classes, candidates, toggleDetail } = this.props;
-        const { steps } = this.state;
+    const Columns = steps.map((step, i) => (
+        <Column
+            title={STEPS[step]}
+            key={STEPS[step]}
+            dropIndex={i}
+        >
+            {candidates[step].map((candidate, j) => (
+                <Card
+                    candidate={candidate}
+                    index={j}
+                    key={candidate._id}
+                    isTeamInterview={steps.length === 2}
+                    toggleDetail={toggleDetail(step)(j)}
+                />
+            ))}
+        </Column>
+    ));
 
-        return (
-            <DragDropContext onDragEnd={this.onDragEnd}>
-                <div className={classes.div}>
-                    <Droppable droppableId='board' type='COLUMN' direction='horizontal'>
-                        {({ innerRef, droppableProps }) => (
-                            <div className={classes.columnContainer} ref={innerRef} {...droppableProps}>
-                                {steps.map((step, index) =>
-                                    <Column
-                                        step={step}
-                                        key={index}
-                                        candidates={candidates[step]}
-                                        dropIndex={index}
-                                        isTeamInterview={steps.length === 2}
-                                        toggleDetail={toggleDetail(step)}
-                                    />
-                                )}
-                            </div>
-                        )}
-                    </Droppable>
-                </div>
-            </DragDropContext>
-        );
+    return (
+        <DragDropContext onDragEnd={onDragEnd}>
+            <div className={classes.board}>
+                <Droppable droppableId='board' type='COLUMN' direction='horizontal' isDropDisabled={isMobile}>
+                    {({ innerRef, placeholder, droppableProps }) => (
+                        <div className={classes.columnsContainer} ref={innerRef} {...droppableProps}>
+                            {isMobile ? <SwipeableViews index={column} onChangeIndex={(index) => setColumn(index)}>
+                                {Columns}
+                            </SwipeableViews> : Columns}
+                            {placeholder}
+                        </div>
+                    )}
+                </Droppable>
+            </div>
+        </DragDropContext>
+    );
+}, (prev, next) => {
+    if (prev.steps.length !== next.steps.length) return false;
+    const candidatesP = prev.candidates;
+    const candidatesN = next.candidates;
+    for (let i = 0; i < STEPS.length; i++) {
+        if (candidatesP[i].length !== candidatesN[i].length) return false;
+        for (let j = 0; j < candidatesP[i].length; j++) {
+            const candidateP = candidatesP[i][j];
+            const candidateN = candidatesN[i][j];
+            if (candidateP._id !== candidateN._id) return false;
+            if (candidateP.abandon !== candidateN.abandon) return false;
+            if (candidateP.rejected !== candidateN.rejected) return false;
+            if (candidateP.interviews.team.allocation !== candidateN.interviews.team.allocation) return false;
+            if (candidateP.comments.length !== candidateN.comments.length) return false;
+        }
     }
-}
+    return true;
+});
 
-export default withStyles(styles)(Board);
+export default Board;
