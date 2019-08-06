@@ -1,26 +1,21 @@
-import React, { PureComponent } from 'react';
+import React, { FC, memo } from 'react';
 import { Link } from 'react-router-dom';
 
 interface Props {
     to: string;
 }
 
-class Anchor extends PureComponent<Props> {
-
-    render() {
-        const { children, to } = this.props;
-        return (
-            <Link
-                to={to}
-                style={{
-                    textDecoration: 'none',
-                    outline: 'none',
-                }}
-            >
-                {children}
-            </Link>
-        );
-    }
-}
+const Anchor: FC<Props> = memo(({ to, children }) => (
+    <Link
+        to={to}
+        style={{
+            textDecoration: 'none',
+            outline: 'none',
+            color: 'inherit',
+        }}
+    >
+        {children}
+    </Link>
+));
 
 export default Anchor;

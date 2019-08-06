@@ -1,10 +1,7 @@
 import { connect } from 'react-redux';
-import { Dispatch } from 'redux';
+import { bindActionCreators, Dispatch } from 'redux';
 
-import { OptionsObject } from 'notistack';
-
-import { enqueueSnackbar, EnqueueSnackbar, sendMessage, SendMessage } from '../../actions';
-import { Message } from '../../config/types';
+import { enqueueSnackbar, sendMessage } from '../../actions';
 import { StoreState } from '../../reducers';
 
 import Messenger from '../../components/Messenger';
@@ -12,14 +9,16 @@ import Messenger from '../../components/Messenger';
 const mapStateToProps = ({ user: { messages, info: { username, avatar } } }: StoreState) => ({
     messages,
     username,
-    avatar
+    avatar,
 });
 
-type DispatchType = Dispatch<EnqueueSnackbar | SendMessage>;
+const mapDispatchToProps = (dispatch: Dispatch) => bindActionCreators({
+    sendMessage,
+    enqueueSnackbar,
+}, dispatch);
 
-const mapDispatchToProps = (dispatch: DispatchType) => ({
-    sendMessage: (message: Message) => dispatch(sendMessage(message)),
-    enqueueSnackbar: (message: string, options?: OptionsObject) => dispatch(enqueueSnackbar(message, options)),
-});
+type StateProps = ReturnType<typeof mapStateToProps>;
+type DispatchProps = ReturnType<typeof mapDispatchToProps>;
 
-export default connect(mapStateToProps, mapDispatchToProps)(Messenger);
+export type Props = StateProps & DispatchProps;
+export default connect<StateProps, DispatchProps, {}, StoreState>(mapStateToProps, mapDispatchToProps)(Messenger);

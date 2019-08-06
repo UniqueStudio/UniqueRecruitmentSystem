@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react';
+import React, { FC, memo, MouseEventHandler, useState } from 'react';
 
 import classNames from 'classnames';
 
@@ -6,64 +6,57 @@ import Chip from '@material-ui/core/Chip';
 import Paper from '@material-ui/core/Paper';
 import Popover from '@material-ui/core/Popover';
 
-import withStyles, { WithStyles } from '@material-ui/styles/withStyles';
-
 import { Comment } from '../../config/types';
 
-import styles from '../../styles/chip';
+import useStyles from '../../styles/chip';
 
-interface Props extends WithStyles<typeof styles> {
+interface Props {
     comment: Comment;
     onRemove?: () => void;
     onCopy?: () => void;
 }
 
-class CommentChip extends PureComponent<Props> {
+const CommentChip: FC<Props> = memo(({ comment: { content, evaluation, username }, onCopy, onRemove }) => {
+    const classes = useStyles();
+    const [anchorEl, setAnchorEl] = useState<Element | null>(null);
 
-    state = {
-        anchorEl: undefined,
+    const handleOpen: MouseEventHandler = ({ currentTarget }) => {
+        setAnchorEl(currentTarget);
     };
 
-    handleOpen = ({ currentTarget }: React.MouseEvent) => {
-        this.setState({ anchorEl: currentTarget });
+    const handleClose = () => {
+        setAnchorEl(null);
     };
 
-    handleClose = () => {
-        this.setState({ anchorEl: undefined });
-    };
+    const text = `${username}： ${content}`;
+    const color = ['danger', 'warning', 'success'][evaluation];
+    return (
+        <>
+            <Chip
+                label={text}
+                className={classes.chip}
+                classes={{
+                    root: classNames(classes[color], classes[`root-${color}`]),
+                }}
+                onMouseOver={handleOpen}
+                onMouseOut={handleClose}
+                onClick={onCopy}
+                onDelete={onRemove}
+            />
+            <Popover
+                className={classes.popover}
+                open={Boolean(anchorEl)}
+                anchorEl={anchorEl}
+                anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+                transformOrigin={{ vertical: 'top', horizontal: 'center' }}
+                onClose={handleClose}
+                disableRestoreFocus
+                disableEnforceFocus
+            >
+                <Paper className={classNames(classes.content, classes[color])}>{content}</Paper>
+            </Popover>
+        </>
+    );
+});
 
-    render() {
-        const { comment, classes, onCopy, onRemove } = this.props;
-        const { content, evaluation, username } = comment;
-        const text = `${username}： ${content}`;
-        const color = ['danger', 'warning', 'success'][evaluation];
-        return (
-            <>
-                <Chip
-                    label={text}
-                    className={classes.chip}
-                    classes={{
-                        root: classNames(classes[color], classes[`root-${color}`]),
-                    }}
-                    onMouseOver={this.handleOpen}
-                    onMouseOut={this.handleClose}
-                    onClick={onCopy}
-                    onDelete={onRemove}
-                />
-                <Popover
-                    className={classes.popover}
-                    open={Boolean(this.state.anchorEl)}
-                    anchorEl={this.state.anchorEl}
-                    anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
-                    transformOrigin={{ vertical: 'top', horizontal: 'center' }}
-                    onClose={this.handleClose}
-                    disableRestoreFocus
-                >
-                    <Paper className={classNames(classes.content, classes[color])}>{content}</Paper>
-                </Popover>
-            </>
-        );
-    }
-}
-
-export default withStyles(styles)(CommentChip);
+export default CommentChip;

@@ -1,7 +1,8 @@
 import { Theme } from '@material-ui/core/styles/createMuiTheme';
-import { createStyles } from '@material-ui/styles';
+import createStyles from '@material-ui/styles/createStyles/createStyles';
+import makeStyles from '@material-ui/styles/makeStyles/makeStyles';
 
-const styles = ({ breakpoints }: Theme) => createStyles({
+const useStyles = makeStyles(({ breakpoints }: Theme) => createStyles({
     container: {
         display: 'flex',
         flexDirection: 'column',
@@ -21,6 +22,6 @@ const styles = ({ breakpoints }: Theme) => createStyles({
         width: '100%',
         userSelect: 'none'
     },
-});
+}));
 
-export default styles;
+export default useStyles;

@@ -1,55 +1,78 @@
 import { Theme } from '@material-ui/core/styles/createMuiTheme';
-import { createStyles } from '@material-ui/styles';
+import createStyles from '@material-ui/styles/createStyles/createStyles';
+import makeStyles from '@material-ui/styles/makeStyles/makeStyles';
 
-const styles = ({ spacing, breakpoints }: Theme) => createStyles({
+const useStyles = makeStyles(({ spacing, breakpoints }: Theme) => createStyles({
     container: {
-        minWidth: 400,
+        minWidth: 300,
         marginTop: spacing(3),
         padding: `0 ${spacing(3)}px`,
         [breakpoints.up('md')]: {
+            display: 'flex',
             justifyContent: 'space-around',
             minWidth: 0,
         },
         [breakpoints.down('md')]: {
             padding: `0 ${spacing(2)}px`,
-            width: '100%'
+            width: '100%',
         },
         [breakpoints.down('xs')]: {
             padding: `0 ${spacing(1)}px`,
         },
     },
-    paper: {
-        flexDirection: 'column',
-        margin: `${spacing(2)}px 0`,
-        width: '45%',
-        [breakpoints.down('md')]: {
-            width: '100%',
-            minWidth: 400
+    recruitmentContainer: {
+        margin: spacing(2),
+        flex: '1 1 0',
+        [breakpoints.down('sm')]: {
+            margin: `${spacing(2)}px 0`,
         },
-        display: 'inline-block',
+    },
+    paper: {
+        margin: `${spacing(2)}px 0`,
+        padding: spacing(2),
         height: '100%',
-        verticalAlign: 'top'
+        width: '50%',
+        [breakpoints.down('sm')]: {
+            margin: `${spacing(2)}px ${spacing(1)}px`,
+            padding: spacing(1),
+            width: 'auto',
+            flex: '1 1 0',
+        },
     },
     data: {
-        margin: spacing(2),
         display: 'flex',
-        flexDirection: 'column'
+        flexDirection: 'column',
     },
     textFieldContainer: {
         display: 'flex',
         flexDirection: 'row',
         alignItems: 'baseline',
         justifyContent: 'space-around',
-        [breakpoints.down('md')]: {
-            maxWidth: 500
+        maxWidth: 600,
+        [breakpoints.down('xs')]: {
+            display: 'block',
+            padding: `0 ${spacing(1)}px`
         },
     },
     textField: {
         width: 50,
         margin: spacing(1),
         [breakpoints.down('xs')]: {
+            width: 36,
             margin: spacing(0.5),
         },
+    },
+    expansion: {
+        margin: `${spacing(1)}px !important`,
+    },
+    expansionDetails: {
+        padding: `0 ${spacing(3)}px`,
+        [breakpoints.down('xs')]: {
+            padding: `0 ${spacing(1.5)}px`,
+        },
+    },
+    expansionActions: {
+        padding: `0 ${spacing(2)}px`,
     },
     dates: {
         flexDirection: 'row',
@@ -57,19 +80,35 @@ const styles = ({ spacing, breakpoints }: Theme) => createStyles({
     datePicker: {
         margin: spacing(1),
         width: 150,
+        [breakpoints.down('lg')]: {
+            width: 120,
+        },
         [breakpoints.down('md')]: {
+            width: 80,
+        },
+        [breakpoints.down('xs')]: {
             margin: spacing(0.5),
-            width: 90,
         },
     },
     dateSelection: {
         margin: spacing(1),
         width: 150,
+        [breakpoints.down('xs')]: {
+            margin: spacing(0.5),
+        },
     },
     buttonContainer: {
+        display: 'inline-flex',
+        margin: spacing(1),
+        [breakpoints.down('md')]: {
+            margin: spacing(0.5),
+        },
         '& button': {
-            margin: spacing(1)
-        }
+            margin: spacing(1),
+            [breakpoints.down('md')]: {
+                margin: spacing(0.5),
+            },
+        },
     },
     tableButtons: {
         display: 'inline-block',
@@ -80,11 +119,15 @@ const styles = ({ spacing, breakpoints }: Theme) => createStyles({
     },
     table: {
         marginBottom: spacing(1),
-        minWidth: 400
+        minWidth: 350
     },
     tableCell: {
         padding: spacing(1),
         textAlign: 'center',
+        [breakpoints.down('xs')]: {
+            padding: spacing(0.5),
+            width: spacing(7)
+        },
     },
     title: {
         display: 'flex',
@@ -92,9 +135,12 @@ const styles = ({ spacing, breakpoints }: Theme) => createStyles({
     },
     dialog: {
         margin: spacing(2),
+        [breakpoints.down('xs')]: {
+            margin: spacing(1),
+        },
         display: 'flex',
-        alignItems: 'baseline'
+        alignItems: 'baseline',
     },
-});
+}));
 
-export default styles;
+export default useStyles;

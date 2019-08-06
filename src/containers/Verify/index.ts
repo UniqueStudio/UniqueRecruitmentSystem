@@ -1,20 +1,28 @@
-import React from 'react';
+import { ChangeEventHandler } from 'react';
 import { connect } from 'react-redux';
-import { Dispatch } from 'redux';
+import { bindActionCreators, Dispatch } from 'redux';
 
-import { getVerifyCode, GetVerifyCode } from '../../actions';
+import { getVerifyCode } from '../../actions';
+
+import { StoreState } from '../../reducers';
 
 import Verify from '../../components/Verify';
 
 interface OwnProps {
-    onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+    code: string;
+    onChange: ChangeEventHandler<HTMLInputElement>;
 }
 
-type DispatchType = Dispatch<GetVerifyCode>;
-
-const mapDispatchToProps = (dispatch: DispatchType, ownProps: OwnProps) => ({
-    getVerifyCode: () => dispatch(getVerifyCode()),
+const mapStateToProps = (storeState: StoreState, ownProps: OwnProps) => ({
     ...ownProps,
 });
 
-export default connect(null, mapDispatchToProps)(Verify);
+const mapDispatchToProps = (dispatch: Dispatch) => bindActionCreators({
+    getVerifyCode,
+}, dispatch);
+
+type StateProps = ReturnType<typeof mapStateToProps>;
+type DispatchProps = ReturnType<typeof mapDispatchToProps>;
+
+export type Props = StateProps & DispatchProps;
+export default connect<StateProps, DispatchProps, OwnProps, StoreState>(mapStateToProps, mapDispatchToProps)(Verify);

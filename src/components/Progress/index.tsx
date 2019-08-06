@@ -1,21 +1,17 @@
-import React, { PureComponent } from 'react';
+import React, { FC, memo } from 'react';
 
 import LinearProgress from '@material-ui/core/LinearProgress';
-import withStyles, { WithStyles } from '@material-ui/styles/withStyles';
 
-import styles from '../../styles/progress';
+import useStyles from '../../styles/progress';
 
-class Progress extends PureComponent<WithStyles<typeof styles>> {
+const Progress: FC = memo(() => {
+    const classes = useStyles();
+    return (
+        <LinearProgress className={classes.progress} color='primary' classes={{
+            colorPrimary: classes.color,
+            barColorPrimary: classes.barColor,
+        }} />
+    );
+});
 
-    render() {
-        const { classes } = this.props;
-        return (
-            <LinearProgress className={classes.progress} color='primary' classes={{
-                colorPrimary: classes.color,
-                barColorPrimary: classes.barColor
-            }} />
-        );
-    }
-}
-
-export default withStyles(styles)(Progress);
+export default Progress;

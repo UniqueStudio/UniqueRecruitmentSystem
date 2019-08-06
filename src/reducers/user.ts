@@ -6,7 +6,7 @@ import { updateObjectInArray } from '../utils/reducerHelper';
 import { updateStorage } from '../utils/updateStorage';
 
 type Action =
-    actions.Login
+    | actions.Login
     | actions.Logout
     | actions.GetQRCodeFulfilled
     | actions.UserInfoFulfilled

@@ -1,13 +1,12 @@
 import { connect } from 'react-redux';
-import { Dispatch } from 'redux';
+import { bindActionCreators, Dispatch } from 'redux';
 
-import { OptionsObject } from 'notistack';
+import { enqueueSnackbar, sendSMS } from '../../actions';
 
-import { enqueueSnackbar, EnqueueSnackbar, sendSMS, SendSMS } from '../../actions';
-
-import Template from '../../components/SMS';
+import SMSTemplate from '../../components/SMS';
 
 import { Candidate } from '../../config/types';
+import { StoreState } from '../../reducers';
 
 interface OwnProps {
     selected: Candidate[];
@@ -15,12 +14,18 @@ interface OwnProps {
     deselect?: (cid: string) => void;
 }
 
-type DispatchType = Dispatch<EnqueueSnackbar | SendSMS>;
+const mapStateToProps =
+    (state: StoreState, ownProps: OwnProps) => ({
+        ...ownProps,
+    });
 
-const mapDispatchToProps = (dispatch: DispatchType, ownProps: OwnProps) => ({
-    enqueueSnackbar: (message: string, options: OptionsObject = { variant: 'info' }) => dispatch(enqueueSnackbar(message, options)),
-    sendSMS: (content: object) => dispatch(sendSMS(content)),
-    ...ownProps,
-});
+const mapDispatchToProps = (dispatch: Dispatch) => bindActionCreators({
+    enqueueSnackbar,
+    sendSMS,
+}, dispatch);
 
-export default connect(null, mapDispatchToProps)(Template);
+type StateProps = ReturnType<typeof mapStateToProps>;
+type DispatchProps = ReturnType<typeof mapDispatchToProps>;
+
+export type Props = StateProps & DispatchProps;
+export default connect<StateProps, DispatchProps, OwnProps, StoreState>(mapStateToProps, mapDispatchToProps)(SMSTemplate);

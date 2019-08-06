@@ -1,65 +1,50 @@
-import React, { PureComponent } from 'react';
+import React, { FC, memo, useEffect } from 'react';
 import { Redirect } from 'react-router';
-
-import withStyles, { WithStyles } from '@material-ui/styles/withStyles';
 
 import Progress from '../Progress';
 
-import { User } from '../../config/types';
 import AppBar from '../../containers/AppBar';
 import Drawer from '../../containers/Drawer';
-import styles from '../../styles/main';
+import { Props } from '../../containers/Frame';
 
-interface Props extends WithStyles<typeof styles> {
-    open: boolean;
-    loggedIn: boolean;
-    viewingRecruitment: string;
-    userInfo: User;
-    loading: boolean;
-    getUserInfo: () => void;
-    toggleOpen: () => void;
-    getRecruitments: () => void;
-    getCandidates: (title: string) => void;
-    getGroupInfo: () => void;
-}
+import { usePrevious } from '../../hooks/usePrevious';
 
-class Frame extends PureComponent<Props> {
+import useStyles from '../../styles/frame';
 
-    componentDidMount() {
-        const { loggedIn, getGroupInfo, getRecruitments, getUserInfo, viewingRecruitment, getCandidates } = this.props;
-        if (loggedIn) {
-            getUserInfo();
-            getRecruitments();
-            getGroupInfo();
-            viewingRecruitment && getCandidates(viewingRecruitment);
-        }
-    }
+const Frame: FC<Props> = memo(({ children, loggedIn, userInfo, loading, open, toggleOpen, getRecruitments, getGroup, getUser, title, getCandidates }) => {
+    const classes = useStyles();
+    const prevTitle = usePrevious(title);
 
-    componentDidUpdate(prevProps: Props) {
-        const { getCandidates, viewingRecruitment } = this.props;
-        if (!prevProps.viewingRecruitment && viewingRecruitment) {
-            getCandidates(viewingRecruitment);
-        }
-    }
-
-    handleClick = () => {
-        const { open, toggleOpen } = this.props;
+    const handleClick = () => {
         open && toggleOpen();
     };
 
-    render() {
-        const { classes, children, loggedIn, userInfo, loading } = this.props;
-        return (
-            loggedIn ? <div className={classes.root}>
-                <AppBar />
-                <Drawer />
-                <main className={classes.content} onClick={this.handleClick}>
-                    {userInfo && children}
-                </main>
-                {loading && <Progress />}
-            </div> : <Redirect to='/login' />
-        );
-    }
-}
+    useEffect(() => {
+        if (loggedIn) {
+            getUser();
+            getRecruitments();
+            getGroup();
+        }
+        // eslint-disable-next-line
+    }, []);
 
-export default withStyles(styles)(Frame);
+    useEffect(() => {
+        if (!prevTitle && title) {
+            getCandidates(title);
+        }
+        // eslint-disable-next-line
+    }, [prevTitle, title]);
+
+    return (
+        loggedIn ? <div className={classes.root}>
+            <AppBar />
+            <Drawer />
+            <main className={classes.content} onClick={handleClick}>
+                {userInfo && children}
+            </main>
+            {loading && <Progress />}
+        </div> : <Redirect to='/login' />
+    );
+});
+
+export default Frame;

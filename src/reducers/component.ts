@@ -1,7 +1,7 @@
 import * as actions from '../actions';
 
 type Action =
-    actions.EnqueueSnackbar
+    | actions.EnqueueSnackbar
     | actions.RemoveSnackbar
     | actions.ToggleDrawer
     | actions.ToggleProgress
@@ -28,7 +28,7 @@ const init: ComponentStore = {
     resume: {
         progress: 0,
         cid: '',
-    }
+    },
 };
 
 export function componentReducer(state = init, action: Action): ComponentStore {

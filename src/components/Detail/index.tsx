@@ -1,96 +1,76 @@
-import React, { PureComponent } from 'react';
+import React, { FC, memo, useState } from 'react';
 
-import IconButton from '@material-ui/core/IconButton';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import Button from '@material-ui/core/Button';
+import TextField from '@material-ui/core/TextField';
 
-import withStyles, { WithStyles } from '@material-ui/styles/withStyles';
-import { OptionsObject } from 'notistack';
+import Modal from '../Modal';
 
-import { Candidate, Comment, Evaluation, User } from '../../config/types';
+import { GENDERS, GRADES, GROUPS, GROUPS_, RANKS } from '../../config/consts';
 
-import styles from '../../styles/column';
+import { Props } from '../../containers/Detail';
 
-import Comments from './Comments';
-import Info from './Info';
+import useStyles from '../../styles/detail';
 
-interface Props extends WithStyles<typeof styles> {
-    index: number;
-    candidate: Candidate;
-    user: User;
-    downloadingResume: {
-        progress: number;
-        cid: string;
-    };
-    savedComment: {
-        content: string;
-        evaluation: Evaluation
-    };
-    handlePrev: (index: number) => void;
-    handleNext: (index: number) => void;
-    submit: (cid: string, comment: Partial<Comment>) => void;
-    remove: (cid: string, id: string) => void;
-    enqueueSnackbar: (message: string, options?: OptionsObject) => void;
-    changeInputting: (content: string, evaluation: Evaluation) => void;
-    getResume: (cid: string) => void;
-    handleTodo: () => void;
-}
+const Detail: FC<Props> = memo(({ info, downloadingResume, getResume }) => {
+    const classes = useStyles();
+    const [modal, setModal] = useState(false);
 
-interface State {
-    candidate: Candidate;
-}
+    const { cid, progress } = downloadingResume;
+    const { _id, name, group, gender, grade, institute, intro, mail, major, phone, rank, isQuick, referrer, resume } = info;
 
-class Detail extends PureComponent<Props, State> {
+    const items: {}[][] = [
+        [{ label: '姓名', value: name }, { label: '组别', value: GROUPS[GROUPS_.indexOf(group)] }, { label: '性别', value: GENDERS[gender] }],
+        [{ label: '学院', value: institute }, { label: '专业', value: major }],
+        [{ label: '年级', value: GRADES[grade] }, { label: '加权', value: RANKS[rank] }],
+        [{ label: '邮箱', value: mail }, { label: '电话号码', value: phone }],
+        [{ label: '是否快通', value: isQuick ? '是' : '否' }, { label: '推荐人', value: referrer || '无' }],
+        [{ label: '预览', value: intro, fullWidth: true, multiline: true, rowsMax: 3 }],
+    ];
 
-    state = {
-        candidate: this.props.candidate
+    const toggleModalOpen = () => {
+        setModal((prevModal) => !prevModal);
     };
 
-    componentDidUpdate() {
-        this.setState((prevState, { candidate }) => ({
-            candidate: candidate || prevState.candidate
-        }));
-    }
-
-    handleClick = (type: string) => () => {
-        const { handlePrev, handleNext, changeInputting, index } = this.props;
-        changeInputting('', 2);
-        type === 'prev' ? handlePrev(index) : handleNext(index);
+    const downloadResume = () => {
+        getResume(_id);
     };
 
-    componentWillUnmount() {
-        this.props.handleTodo();
-    }
-
-    render() {
-        const { classes, getResume, user, enqueueSnackbar, remove, changeInputting, savedComment, submit, downloadingResume } = this.props;
-        const { candidate } = this.state;
-        const { _id: cid, comments } = candidate;
-        const { _id: uid, username } = user;
-        return (
-            <div className={classes.detailContent}>
-                <IconButton className={classes.leftButton} onClick={this.handleClick('prev')}>
-                    <ExpandMoreIcon />
-                </IconButton>
-                <div className={classes.detailMain}>
-                    <Info info={candidate} getResume={getResume} downloadingResume={downloadingResume} />
-                    <Comments
-                        cid={cid}
-                        comments={comments}
-                        savedComment={savedComment}
-                        uid={uid}
-                        username={username}
-                        enqueueSnackbar={enqueueSnackbar}
-                        remove={remove}
-                        submit={submit}
-                        changeInputting={changeInputting}
-                    />
+    return (
+        <>
+            <div className={classes.detail}>
+                {items.map((row, i) => (
+                    <div className={classes.detailRow} key={i}>
+                        {row.map((props, j) => (
+                            <TextField
+                                margin='normal'
+                                key={j}
+                                InputProps={{ readOnly: true }}
+                                {...props}
+                            />
+                        ))}
+                    </div>
+                ))}
+                <div className={classes.detailRow}>
+                    <Button size='large' color='primary' onClick={toggleModalOpen}>
+                        自我介绍
+                    </Button>
+                    <Button size='large' color='primary' onClick={downloadResume} disabled={!resume || !!progress}>
+                        {progress ? cid === _id ? `${(progress * 100).toFixed(2)}%` : '下载中' : '简历下载'}
+                    </Button>
                 </div>
-                <IconButton className={classes.rightButton} onClick={this.handleClick('next')}>
-                    <ExpandMoreIcon />
-                </IconButton>
             </div>
-        );
-    }
-}
+            <Modal open={modal} onClose={toggleModalOpen} title='自我介绍'>
+                <div className={classes.introContent}>
+                    {intro.split('\n').filter((text) => text).map((text, index) => (
+                        <React.Fragment key={index}>
+                            {text}
+                            <br />
+                        </React.Fragment>
+                    ))}
+                </div>
+            </Modal>
+        </>
+    );
+});
 
-export default withStyles(styles)(Detail);
+export default Detail;

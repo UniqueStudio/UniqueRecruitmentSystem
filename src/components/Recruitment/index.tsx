@@ -1,110 +1,101 @@
-import React, { PureComponent } from 'react';
+import React, { FC, memo, useState } from 'react';
 
 import Button from '@material-ui/core/Button';
-
-import withStyles, { WithStyles } from '@material-ui/styles/withStyles';
-
-import { SetRecruitment } from '../../actions';
-import { GROUPS, GROUPS_ } from '../../config/consts';
-import { Group, Recruitment as RecruitmentType, Time } from '../../config/types';
-import styles from '../../styles/data';
-import { getMidnight } from '../../utils/getMidnight';
-import Accordion from '../Accordion';
-import Dates from '../Dates';
+import Allocation from '../Allocation';
 import Schedule from '../Schedule';
 
-interface Props extends WithStyles<typeof styles> {
-    data: RecruitmentType;
-    canLaunch: boolean;
-    userGroup: Group;
-    setRecruitment: (data: SetRecruitment['data']) => void;
-    enqueueSnackbar: (info: string) => void;
-}
+import { GROUPS, GROUPS_ } from '../../config/consts';
+import { Group, Time } from '../../config/types';
 
-class Recruitment extends PureComponent<Props> {
+import { Props } from '../../containers/Recruitment';
 
-    state = {
-        begin: new Date(this.props.data.begin),
-        end: new Date(this.props.data.end),
-        stop: new Date(this.props.data.stop)
-    };
+import useStyles from '../../styles/data';
 
-    handleChange = (name: string) => (date: Date | null) => {
-        this.setState({
-            [name]: date,
-        });
-    };
+import { getMidnight } from '../../utils/getMidnight';
 
-    setInterview = (type: 'team' | 'group', groupName?: Group) => (interview: Time[]) => {
-        const { begin, end, stop } = this.state;
-        const { data: { title }, setRecruitment, enqueueSnackbar } = this.props;
-        if (begin >= end) {
-            enqueueSnackbar('结束时间必须大于开始时间！');
+const Recruitment: FC<Props> = memo(({ data: { begin, end, stop, title, interview, groups }, userGroup, canLaunch, setRecruitment, enqueueSnackbar }) => {
+    const classes = useStyles();
+    const [beginS, setBeginS] = useState(new Date(begin));
+    const [endS, setEndS] = useState(new Date(end));
+    const [stopS, setStopS] = useState(new Date(stop));
+    const handleChange = (name: string) => (date: Date | null) => {
+        if (!date) {
             return;
         }
-        if (stop >= end) {
-            enqueueSnackbar('截止时间必须大于开始时间！');
+        if (name === 'begin') setBeginS(date);
+        if (name === 'end') setEndS(date);
+        if (name === 'stop') setStopS(date);
+    };
+
+    const setInterview = (type: 'team' | 'group', groupName?: Group) => (interviewTime: Time[]) => {
+        if (beginS >= endS) {
+            enqueueSnackbar('结束时间必须大于开始时间！', { variant: 'warning' });
+            return;
+        }
+        if (stopS >= endS) {
+            enqueueSnackbar('截止时间必须大于开始时间！', { variant: 'warning' });
             return;
         }
         setRecruitment({
             title,
             group: groupName,
-            begin: getMidnight(begin),
-            end: getMidnight(end),
-            stop: getMidnight(stop),
-            [`${type}Interview`]: interview
+            begin: getMidnight(beginS),
+            end: getMidnight(endS),
+            stop: getMidnight(stopS),
+            [`${type}Interview`]: interviewTime,
         });
     };
 
-    setTime = () => {
-        const { begin, end, stop } = this.state;
-        const { data: { title }, setRecruitment, enqueueSnackbar } = this.props;
-        if (begin >= end) {
-            enqueueSnackbar('结束时间必须大于开始时间！');
+    const setTime = () => {
+        if (beginS >= endS) {
+            enqueueSnackbar('结束时间必须大于开始时间！', { variant: 'warning' });
             return;
         }
-        if (stop >= end) {
-            enqueueSnackbar('截止时间必须大于开始时间！');
+        if (stopS >= endS) {
+            enqueueSnackbar('截止时间必须大于开始时间！', { variant: 'warning' });
             return;
         }
         setRecruitment({
             title,
-            begin: getMidnight(begin),
-            stop: getMidnight(stop),
-            end: getMidnight(end)
+            begin: getMidnight(beginS),
+            stop: getMidnight(stopS),
+            end: getMidnight(endS),
         });
     };
 
-    render() {
-        const { data, classes, userGroup, canLaunch } = this.props;
-        const { interview: teamInterview, groups } = data;
-
-        const { begin, end, stop } = this.state;
-        return (
-            <div className={classes.paper}>
-                <div className={classes.textFieldContainer}>
-                    <Schedule
-                        begin={begin}
-                        end={end}
-                        stop={stop}
-                        onChange={this.handleChange}
-                        disabled={!canLaunch}
-                        disablePast={false}
-                        classes={classes}
-                    />
-                    <Button onClick={this.setTime} variant='contained' color='primary' disabled={!canLaunch}>修改时间</Button>
+    return (
+        <div className={classes.recruitmentContainer}>
+            <div className={classes.textFieldContainer}>
+                <Schedule
+                    begin={beginS}
+                    end={endS}
+                    stop={stopS}
+                    onChange={handleChange}
+                    disabled={!canLaunch}
+                    disablePast={false}
+                    className={classes.datePicker}
+                />
+                <div className={classes.buttonContainer}>
+                    <Button onClick={setTime} variant='contained' color='primary' disabled={!canLaunch}>修改时间</Button>
                 </div>
-                {groups.map(({ name, interview }, index) =>
-                    <Accordion title={`${GROUPS[GROUPS_.indexOf(name)]}组组面时间/人数`} key={index}>
-                        <Dates dates={interview} disabled={!canLaunch && userGroup !== name} setRecruitment={this.setInterview('group', name)} />
-                    </Accordion>
-                )}
-                <Accordion title='群面时间/人数'>
-                    <Dates dates={teamInterview} disabled={!canLaunch} setRecruitment={this.setInterview('team')} />
-                </Accordion>
             </div>
-        );
-    }
-}
+            {groups.map(({ name, interview: groupInterview }, index) => (
+                <Allocation
+                    title={`${GROUPS[GROUPS_.indexOf(name)]}组组面时间/人数`}
+                    key={index}
+                    dates={groupInterview}
+                    disabled={!canLaunch && userGroup !== name}
+                    setRecruitment={setInterview('group', name)}
+                />
+            ))}
+            <Allocation
+                title='群面时间/人数'
+                dates={interview}
+                disabled={!canLaunch}
+                setRecruitment={setInterview('team')}
+            />
+        </div>
+    );
+});
 
-export default withStyles(styles)(Recruitment);
+export default Recruitment;

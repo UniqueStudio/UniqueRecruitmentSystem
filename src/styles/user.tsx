@@ -1,9 +1,10 @@
 import { Theme } from '@material-ui/core/styles/createMuiTheme';
-import { createStyles } from '@material-ui/styles';
+import createStyles from '@material-ui/styles/createStyles/createStyles';
+import makeStyles from '@material-ui/styles/makeStyles/makeStyles';
 
-const styles = ({ breakpoints, spacing }: Theme) => createStyles({
+const useStyles = makeStyles(({ breakpoints, spacing }: Theme) => createStyles({
     container: {
-        minWidth: 300,
+        minWidth: 250,
         maxWidth: 900,
         margin: `${spacing(3)}px ${spacing(3)}px 0`,
         [breakpoints.down('xs')]: {
@@ -27,6 +28,6 @@ const styles = ({ breakpoints, spacing }: Theme) => createStyles({
             width: '95%',
         },
     },
-});
+}));
 
-export default styles;
+export default useStyles;

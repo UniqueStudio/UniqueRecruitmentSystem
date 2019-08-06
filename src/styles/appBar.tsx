@@ -1,9 +1,10 @@
 import { Theme } from '@material-ui/core/styles/createMuiTheme';
-import { createStyles } from '@material-ui/styles';
+import createStyles from '@material-ui/styles/createStyles/createStyles';
+import makeStyles from '@material-ui/styles/makeStyles/makeStyles';
 
 import { drawerWidth } from './index';
 
-const styles = ({ zIndex, palette, transitions, spacing, breakpoints }: Theme) => createStyles({
+const useStyles = makeStyles(({ zIndex, palette, transitions, spacing, breakpoints }: Theme) => createStyles({
     appBar: {
         zIndex: zIndex.drawer + 1,
         background: `linear-gradient(60deg, ${palette.primary.main}, ${palette.primary.dark})`,
@@ -63,6 +64,6 @@ const styles = ({ zIndex, palette, transitions, spacing, breakpoints }: Theme) =
         },
         right: 0,
     }
-});
+}));
 
-export default styles;
+export default useStyles;

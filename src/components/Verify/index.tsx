@@ -1,73 +1,56 @@
-import React, { PureComponent } from 'react';
+import React, { FC, memo, useEffect, useState } from 'react';
 
 import classNames from 'classnames';
 
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 
-import withStyles, { WithStyles } from '@material-ui/styles/withStyles';
+import { Props } from '../../containers/Verify';
 
-import styles from '../../styles/verify';
+import useStyles from '../../styles/verify';
 
-interface Props extends WithStyles<typeof styles> {
-    code: string;
-    onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
-    getVerifyCode: () => void;
-}
+const Verify: FC<Props> = memo(({ onChange, code, getVerifyCode }) => {
+    const classes = useStyles();
+    const [time, setTime] = useState(0);
+    const [handle, setHandle] = useState(NaN);
 
-class Verify extends PureComponent<Props> {
+    useEffect(() => () => {
+        window.clearInterval(handle);
+    }, [handle]);
 
-    state = {
-        sent: false,
-        time: 0,
-    };
-
-    interval = NaN;
-
-    tick = () => {
-        this.setState(({ time }: { time: number }) => {
-            if (time === 0) {
-                window.clearInterval(this.interval);
-                return { sent: false };
+    const tick = () => {
+        setTime((prevTime) => {
+            if (prevTime === 0) {
+                window.clearInterval(handle);
+                setHandle(NaN);
+                return 0;
             }
-            return { time: time - 1 };
+            return prevTime - 1;
         });
     };
 
-    getCode = () => {
-        this.props.getVerifyCode();
-        this.setState({
-            sent: true,
-            time: 60,
-        });
-        this.interval = window.setInterval(this.tick, 1000);
+    const getCode = () => {
+        getVerifyCode();
+        setTime(60);
+        setHandle(window.setInterval(tick, 1000));
     };
+    return (
+        <div className={classNames(classes.content, classes.item)}>
+            <Button
+                color='primary'
+                onClick={getCode}
+                disabled={time > 0}
+            >
+                {time > 0 ? `${time}秒后重新获取` : '获取验证码'}
+            </Button>
+            <TextField
+                label='输入验证码'
+                className={classNames(classes.item, classes.input)}
+                onChange={onChange}
+                value={code}
+            />
+        </div>
+    );
+});
 
-    componentWillUnmount() {
-        window.clearInterval(this.interval);
-    }
-
-    render() {
-        const { classes, onChange, code } = this.props;
-        const { sent, time } = this.state;
-        return (
-            <div className={classNames(classes.content, classes.item)}>
-                <Button
-                    color='primary'
-                    onClick={this.getCode}
-                    disabled={sent}
-                >
-                    {sent ? `${time}秒后重新获取` : '获取验证码'}
-                </Button>
-                <TextField
-                    label='输入验证码'
-                    className={classNames(classes.item, classes.input)}
-                    onChange={onChange}
-                    value={code}
-                />
-            </div>
-        );
-    }
-}
-
-export default withStyles(styles)(Verify);
+export default Verify;

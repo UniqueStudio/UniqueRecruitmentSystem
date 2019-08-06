@@ -1,48 +1,38 @@
-import React, { PureComponent } from 'react';
+import React, { FC, memo, useState } from 'react';
 
 import Dialog from '@material-ui/core/Dialog';
 
-import withStyles, { WithStyles } from '@material-ui/styles/withStyles';
+import useStyles from '../../styles/enlargeableImg';
 
-import styles from '../../styles/messenger';
-
-interface Props extends WithStyles<typeof styles> {
+interface Props {
     src: string;
 }
 
-class EnlargeableImage extends PureComponent<Props> {
-    state = {
-        open: false,
+const EnlargeableImage: FC<Props> = memo(({ src }) => {
+    const classes = useStyles();
+    const [open, setOpen] = useState(false);
+
+    const handleOpen = () => {
+        setOpen(true);
     };
 
-    handleImageClick = () => {
-        this.setState({
-            open: true,
-        });
+    const handleClose = () => {
+        setOpen(false);
     };
 
-    handleClose = () => {
-        this.setState({
-            open: false,
-        });
-    };
+    return (
+        <>
+            <img src={src} onClick={handleOpen} className={classes.image} alt='small' />
+            <Dialog
+                open={open}
+                onClose={handleClose}
+                maxWidth={false}
+                classes={{ paper: classes.imageLayer, root: classes.imageRoot }}
+            >
+                <img src={src} onClick={handleClose} className={classes.image} alt='original' />
+            </Dialog>
+        </>
+    );
+});
 
-    render() {
-        const { classes, src } = this.props;
-        return (
-            <>
-                <img src={src} onClick={this.handleImageClick} className={classes.image} alt='small' />
-                <Dialog
-                    open={this.state.open}
-                    onClose={this.handleClose}
-                    maxWidth={false}
-                    classes={{ paper: classes.imageLayer, root: classes.imageRoot }}
-                >
-                    <img src={src} onClick={this.handleClose} className={classes.image} alt='original' />
-                </Dialog>
-            </>
-        );
-    }
-}
-
-export default withStyles(styles)(EnlargeableImage);
+export default EnlargeableImage;
