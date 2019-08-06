@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react';
+import React, { ChangeEventHandler, ClipboardEventHandler, FC, KeyboardEventHandler, memo, MouseEventHandler, useEffect, useState } from 'react';
 
 import classNames from 'classnames';
 
@@ -13,60 +13,48 @@ import FaceIcon from '@material-ui/icons/Face';
 import InsertPhotoIcon from '@material-ui/icons/InsertPhoto';
 import SendIcon from '@material-ui/icons/Send';
 
-import withStyles, { WithStyles } from '@material-ui/styles/withStyles';
-import { OptionsObject } from 'notistack';
-
 import EnlargeableImage from '../EnlargeableImg';
 
 import { Message } from '../../config/types';
 
-import styles from '../../styles/messenger';
+import { Props } from '../../containers/Messenger';
 
-interface Props extends WithStyles<typeof styles> {
-    messages: Message[];
-    username: string;
-    avatar: string;
-    sendMessage: (message: Message) => void;
-    enqueueSnackbar: (message: string, options?: OptionsObject) => void;
-}
+import useStyles from '../../styles/messenger';
 
-interface State {
-    content: string;
-}
+const Messenger: FC<Props> = memo(({ messages, username, avatar, sendMessage, enqueueSnackbar }) => {
+    const classes = useStyles();
+    const [content, setContent] = useState('');
+    const [container, setContainer] = useState<Element | null>(null);
 
-class Messenger extends PureComponent<Props, State> {
+    useEffect(() => {
+        if (container && container.scrollHeight - container.scrollTop < 1000) {
+            container.scrollTop = container.scrollHeight;
+        }
+    }, [messages, container]);
 
-    state = {
-        content: ''
-    };
+    const generateMessage = (message: string | ArrayBuffer | null, isImage = false) => ({
+        content: (message || '').toString(),
+        isSelf: true,
+        time: Date.now(),
+        isImage,
+        name: username,
+        avatar,
+    });
 
-    end = document.body;
-
-    handleKey = (event: React.KeyboardEvent) => {
-        const { charCode } = event;
-        if (charCode === 13) {
+    const handleKey: KeyboardEventHandler = (event) => {
+        const { ctrlKey, charCode } = event;
+        if (ctrlKey && charCode === 13) {
+            setContent((prevContent) => prevContent + '\n');
+        }
+        if (!ctrlKey && charCode === 13) {
             event.preventDefault();
-            const { content } = this.state;
             if (content && content.match(/\S+/)) {
-                this.send();
+                send();
             }
         }
     };
 
-    scrollToBottom = () => {
-        this.end.scrollTop = this.end.scrollHeight;
-    };
-
-    generateMessage = (content: string | ArrayBuffer | null, isImage = false) => ({
-        content: (content || '').toString(),
-        isSelf: true,
-        time: Date.now(),
-        isImage,
-        name: this.props.username,
-        avatar: this.props.avatar,
-    });
-
-    handlePaste = (event: React.ClipboardEvent) => {
+    const handlePaste: ClipboardEventHandler = (event) => {
         const items = (event.clipboardData || event['originalEvent'].clipboardData).items;
         let blob = null;
         for (const i of Object.values(items)) {
@@ -77,18 +65,17 @@ class Messenger extends PureComponent<Props, State> {
         if (blob !== null) {
             const reader = new FileReader();
             reader.onload = () => {
-                this.props.sendMessage(this.generateMessage(reader.result, true));
+                sendMessage(generateMessage(reader.result, true));
             };
             reader.readAsDataURL(blob);
         }
     };
 
-    resetInput = ({ currentTarget }: React.MouseEvent<HTMLInputElement>) => {
+    const resetInput: MouseEventHandler<HTMLInputElement> = ({ currentTarget }) => {
         currentTarget.value = '';
     };
 
-    handleImage = ({ target: { files } }: React.ChangeEvent<HTMLInputElement>) => {
-        const { enqueueSnackbar, sendMessage } = this.props;
+    const handleImage: ChangeEventHandler<HTMLInputElement> = ({ target: { files } }) => {
         if (!files) {
             enqueueSnackbar('你没有上传任何图片', { variant: 'info' });
             return;
@@ -106,111 +93,93 @@ class Messenger extends PureComponent<Props, State> {
         const reader = new FileReader();
         reader.readAsDataURL(file);
         reader.onload = () => {
-            sendMessage(this.generateMessage(reader.result, true));
+            sendMessage(generateMessage(reader.result, true));
         };
     };
 
-    handleChange = ({ target: { value } }: React.ChangeEvent<HTMLInputElement>) => {
-        this.setState({
-            content: value,
-        });
+    const handleChange: ChangeEventHandler<HTMLInputElement> = ({ target: { value } }) => {
+        setContent(value);
     };
 
-    plusOne = () => {
-        const { messages, sendMessage } = this.props;
+    const plusOne = () => {
         const last = messages[messages.length - 1];
         if (last) {
-            sendMessage(this.generateMessage(last.content, last.isImage));
+            sendMessage(generateMessage(last.content, last.isImage));
         }
     };
 
-    send = () => {
-        this.props.sendMessage(this.generateMessage(this.state.content));
-        this.setState({
-            content: '',
-        });
+    const send = () => {
+        sendMessage(generateMessage(content));
+        setContent('');
     };
 
-    componentDidMount() {
-        this.scrollToBottom();
-    }
-
-    componentDidUpdate() {
-        const { scrollHeight, scrollTop } = this.end;
-        if (scrollHeight - scrollTop < 1000) {
-            this.scrollToBottom();
-        }
-    }
-
-    render() {
-        const { classes, messages } = this.props;
-        const { content } = this.state;
-        const placeHolders = ['ctrl + Enter 以输入回车', '可以直接发送剪贴板中的图片', '+1 可以复读', '图片大小必须小于5MB', '消息历史最多只有100条'];
-        const MessageChip = ({ isSelf, name, time, isImage, content: message }: Message) =>
-            <div className={classes.message}>
-                <div className={classNames({ [classes.rightAlign]: isSelf })}>
-                    {`${name} - ${new Date(time).toLocaleTimeString('zh-CN', { hour12: false })}`}
-                </div>
-                <Divider className={classNames({ [classes.myDivider]: isSelf })} />
-                <div className={classes.messageContent}>
-                    {isImage
-                        ? <EnlargeableImage src={message} />
-                        : message.split('\n').map((text, index) => <span key={index}>{text}<br /></span>)
-                    }
-                </div>
-            </div>;
-        const AvatarBox = ({ avatar, name }: Message) =>
-            <Avatar alt={name} src={avatar} className={classes.avatar} children={<FaceIcon />} />;
-        return (
-            <Paper className={classes.messenger}>
-                <div
-                    className={classes.messages}
-                    ref={(el) => el && (this.end = el)}
-                >
-                    {messages.map((message, index) =>
-                        <div
-                            key={index}
-                            className={classNames(classes.messageContainer, { [classes.my]: message.isSelf })}
-                        >
-                            {AvatarBox(message)}
-                            <Chip
-                                label={MessageChip(message)}
-                                classes={{ root: classNames(classes.chipRoot, { [classes.myChip]: message.isSelf }) }}
-                            />
-                        </div>
-                    )}
-                </div>
-                <div className={classes.input}>
-                    <Divider />
-                    <div className={classes.inputContent}>
-                        <input accept='image/png, image/jpeg' className={classes.hidden} id='file' type='file'
-                               onChange={this.handleImage} onClick={this.resetInput} />
-                        <label htmlFor='file'>
-                            <IconButton color='primary' component='span'>
-                                <InsertPhotoIcon />
-                            </IconButton>
-                        </label>
-                        <IconButton color='primary' component='span' onClick={this.plusOne} disabled={!messages.length}>
-                            <PlusOneIcon />
-                        </IconButton>
-                        <TextField
-                            multiline
-                            value={content}
-                            placeholder={placeHolders[~~(Math.random() * placeHolders.length)]}
-                            className={classes.textField}
-                            margin='normal'
-                            onChange={this.handleChange}
-                            onKeyPress={this.handleKey}
-                            onPaste={this.handlePaste}
+    const placeHolders = ['ctrl + Enter 以输入回车', '可以直接发送剪贴板中的图片', '+1 可以复读', '图片大小必须小于5MB', '消息历史最多只有100条'];
+    const MessageChip = ({ isSelf, name, time, isImage, content: message }: Message) => (
+        <div className={classes.message}>
+            <div className={classNames({ [classes.rightAlign]: isSelf })}>
+                {`${name} - ${new Date(time).toLocaleTimeString('zh-CN', { hour12: false })}`}
+            </div>
+            <Divider className={classNames({ [classes.myDivider]: isSelf })} />
+            <div className={classes.messageContent}>
+                {isImage
+                    ? <EnlargeableImage src={message} />
+                    : message.split('\n').map((text, index) => <span key={index}>{text}<br /></span>)
+                }
+            </div>
+        </div>
+    );
+    const AvatarBox = ({ avatar: messageAvatar, name }: Message) => (
+        <Avatar alt={name} src={messageAvatar} className={classes.avatar} children={<FaceIcon />} />
+    );
+    return (
+        <Paper className={classes.messenger}>
+            <div
+                className={classes.messages}
+                ref={setContainer}
+            >
+                {messages.map((message, index) => (
+                    <div
+                        key={index}
+                        className={classNames(classes.messageContainer, { [classes.my]: message.isSelf })}
+                    >
+                        {AvatarBox(message)}
+                        <Chip
+                            label={MessageChip(message)}
+                            classes={{ root: classNames(classes.chipRoot, { [classes.myChip]: message.isSelf }) }}
                         />
-                        <IconButton color='primary' component='span' onClick={this.send} disabled={!(content && content.match(/\S+/))}>
-                            <SendIcon />
-                        </IconButton>
                     </div>
+                ))}
+            </div>
+            <div className={classes.input}>
+                <Divider />
+                <div className={classes.inputContent}>
+                    <input accept='image/png, image/jpeg' className={classes.hidden} id='file' type='file' onChange={handleImage} onClick={resetInput} />
+                    <label htmlFor='file'>
+                        <IconButton color='primary' component='span'>
+                            <InsertPhotoIcon />
+                        </IconButton>
+                    </label>
+                    <IconButton color='primary' component='span' onClick={plusOne} disabled={!messages.length}>
+                        <PlusOneIcon />
+                    </IconButton>
+                    <TextField
+                        multiline
+                        rowsMax={4}
+                        value={content}
+                        placeholder={placeHolders[~~(Math.random() * placeHolders.length)]}
+                        className={classes.textField}
+                        margin='normal'
+                        onChange={handleChange}
+                        onKeyPress={handleKey}
+                        onPaste={handlePaste}
+                    />
+                    <IconButton color='primary' component='span' onClick={send} disabled={!(content && content.match(/\S+/))}>
+                        <SendIcon />
+                    </IconButton>
                 </div>
-            </Paper>
-        );
-    }
-}
+            </div>
+        </Paper>
+    );
+});
 
-export default withStyles(styles)(Messenger);
+export default Messenger;

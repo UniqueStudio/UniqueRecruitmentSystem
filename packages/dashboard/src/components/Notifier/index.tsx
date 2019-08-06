@@ -1,45 +1,32 @@
-import { Component } from 'react';
+import { FC, memo, useEffect, useState } from 'react';
 
-import { WithSnackbarProps } from 'notistack';
+import { withSnackbar, WithSnackbarProps } from 'notistack';
 
-import { EnqueueSnackbar } from '../../actions';
+import { Props } from '../../containers/Notifier';
 
-interface Props extends WithSnackbarProps {
-    notifications: EnqueueSnackbar['notification'][];
-    removeSnackbar: (key: number) => void;
-}
+const Notifier: FC<Props & WithSnackbarProps> = memo(({ notifications = [], enqueueSnackbar, removeSnackbar }) => {
+    const [displayed, setDisplayed] = useState<number[]>([]);
 
-class Notifier extends Component<Props> {
-    displayed = [] as number[];
-
-    storeDisplayed = (id: number) => {
-        this.displayed = [...this.displayed, id];
+    const storeDisplayed = (id: number) => {
+        setDisplayed((prevDisplayed) => [...prevDisplayed, id]);
     };
 
-    shouldComponentUpdate({ notifications: newSnacks = [] as EnqueueSnackbar['notification'][] }) {
-        const { notifications: currentSnacks } = this.props;
-        let notExists = false;
-        newSnacks.forEach((snack) => {
-            if (notExists) return;
-            notExists = notExists || !currentSnacks.filter(({ key }) => snack.key === key).length;
-        });
-        return notExists;
-    }
-
-    componentDidUpdate() {
-        const { notifications = [], enqueueSnackbar, removeSnackbar } = this.props;
-
+    useEffect(() => {
         notifications.forEach(({ key, message, options }) => {
-            if (this.displayed.includes(key)) return;
+            if (displayed.includes(key)) return;
             enqueueSnackbar(message, options);
-            this.storeDisplayed(key);
+            storeDisplayed(key);
             removeSnackbar(key);
         });
-    }
+        // eslint-disable-next-line
+    }, [notifications]);
 
-    render() {
-        return null;
+    return null;
+}, (({ notifications: prevSnacks }, { notifications: nextSnacks }) => {
+    for (const snack of nextSnacks) {
+        if (!prevSnacks.find(({ key }) => snack.key === key)) return false;
     }
-}
+    return true;
+}));
 
-export default Notifier;
+export default withSnackbar(Notifier);

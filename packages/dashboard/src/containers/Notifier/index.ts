@@ -1,16 +1,21 @@
 import { connect } from 'react-redux';
 import { bindActionCreators, Dispatch } from 'redux';
 
-import { withSnackbar } from 'notistack';
-
 import { removeSnackbar } from '../../actions';
-import Notifier from '../../components/Notifier';
 import { StoreState } from '../../reducers';
 
-const mapStateToProps = ({ component }: StoreState) => ({
-    notifications: component.snackbars,
+import Notifier from '../../components/Notifier';
+
+const mapStateToProps = ({ component: { snackbars } }: StoreState) => ({
+    notifications: snackbars,
 });
 
-const mapDispatchToProps = (dispatch: Dispatch) => bindActionCreators({ removeSnackbar }, dispatch);
+const mapDispatchToProps = (dispatch: Dispatch) => bindActionCreators({
+    removeSnackbar
+}, dispatch);
 
-export default connect(mapStateToProps, mapDispatchToProps)(withSnackbar(Notifier));
+type StateProps = ReturnType<typeof mapStateToProps>;
+type DispatchProps = ReturnType<typeof mapDispatchToProps>;
+
+export type Props = StateProps & DispatchProps;
+export default connect<StateProps, DispatchProps, {}, StoreState>(mapStateToProps, mapDispatchToProps)(Notifier);

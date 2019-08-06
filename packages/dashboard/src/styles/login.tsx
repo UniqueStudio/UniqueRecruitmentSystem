@@ -1,14 +1,15 @@
 import { Theme } from '@material-ui/core/styles/createMuiTheme';
-import { createStyles } from '@material-ui/styles';
-import { getColors } from './index';
+import createStyles from '@material-ui/styles/createStyles/createStyles';
+import makeStyles from '@material-ui/styles/makeStyles/makeStyles';
+import { getRainbow } from './index';
 
 const colors = (i: number) => {
-    const colorArray = getColors(i);
+    const colorArray = getRainbow(i);
     const start = ~~(Math.random() * colorArray.length);
     return colorArray.slice(start).concat(colorArray.slice(0, start));
 };
 
-const styles = ({ breakpoints, spacing }: Theme) => createStyles({
+const useStyles = makeStyles(({ breakpoints, spacing }: Theme) => createStyles({
     '@keyframes rainbow': {
         '0%': { backgroundPosition: '0% 80%' },
         '50%': { backgroundPosition: '100% 20%' },
@@ -31,6 +32,9 @@ const styles = ({ breakpoints, spacing }: Theme) => createStyles({
         justifyContent: 'center',
         alignItems: 'center',
     },
+    textField: {
+        width: '65%'
+    },
     logoImage: {
         width: '10%',
         minWidth: 100,
@@ -38,6 +42,6 @@ const styles = ({ breakpoints, spacing }: Theme) => createStyles({
         margin: spacing(1),
         userSelect: 'none',
     },
-});
+}));
 
-export default styles;
+export default useStyles;

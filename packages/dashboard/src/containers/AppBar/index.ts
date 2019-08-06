@@ -1,40 +1,33 @@
 import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router';
-import { Dispatch } from 'redux';
+import { bindActionCreators, Dispatch } from 'redux';
 
-import {
-    Logout,
-    logout,
-    SetGroup,
-    setGroup,
-    SetSteps,
-    setSteps,
-    ToggleDrawer,
-    toggleDrawer
-} from '../../actions';
-import { Group } from '../../config/types';
+import { logout, setGroup, setSteps, toggleDrawer } from '../../actions';
 import { StoreState } from '../../reducers';
 
 import AppBar from '../../components/AppBar';
 
+type OwnProps = RouteComponentProps;
+
 const mapStateToProps =
     ({ component: { drawerOpen }, user: { token }, candidate: { group, steps }, recruitment: { viewing } }: StoreState,
-     ownProps: RouteComponentProps) => ({
+     ownProps: OwnProps) => ({
         open: drawerOpen,
-        loggedIn: Boolean(token),
         group,
         steps,
-        viewingRecruitment: viewing,
+        title: viewing,
         ...ownProps,
     });
 
-type DispatchType = Dispatch<ToggleDrawer | Logout | SetGroup | SetSteps>;
+const mapDispatchToProps = (dispatch: Dispatch) => bindActionCreators({
+    toggleDrawer,
+    logout,
+    setGroup,
+    setSteps,
+}, dispatch);
 
-const mapDispatchToProps = (dispatch: DispatchType) => ({
-    toggleDrawer: () => dispatch(toggleDrawer()),
-    logout: () => dispatch(logout()),
-    setGroup: (group: Group) => dispatch(setGroup(group)),
-    setSteps: (stepType: number) => dispatch(setSteps(stepType)),
-});
+type StateProps = ReturnType<typeof mapStateToProps>;
+type DispatchProps = ReturnType<typeof mapDispatchToProps>;
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(AppBar));
+export type Props = StateProps & DispatchProps;
+export default withRouter(connect<StateProps, DispatchProps, OwnProps, StoreState>(mapStateToProps, mapDispatchToProps)(AppBar));

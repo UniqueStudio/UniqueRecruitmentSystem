@@ -1,101 +1,91 @@
-import React, { PureComponent } from 'react';
+import React, { ChangeEventHandler, FC, memo, useState } from 'react';
 import { Redirect } from 'react-router';
 
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 
-import withStyles, { WithStyles } from '@material-ui/styles/withStyles';
-
-import { QR_CODE_URL } from '../../config/consts';
-import logo from '../../images/logo.png';
-import styles from '../../styles/login';
-
 import Modal from '../Modal';
 import Progress from '../Progress';
 
-interface Props extends WithStyles<typeof styles> {
-    loggedIn: boolean;
-    isLoading: boolean;
-    weChatKey: string;
-    isScanning: boolean;
-    getQRCode: () => void;
-    login: (phone: string, password: string) => void;
-}
+import { QR_CODE_URL } from '../../config/consts';
 
-class Login extends PureComponent<Props> {
+import { Props } from '../../containers/Login';
 
-    state = {
-        src: '',
-        method: 0,
-        phone: '',
-        password: ''
-    };
+import logo from '../../images/logo.png';
 
-    static getDerivedStateFromProps(nextProps: Props) {
-        const { weChatKey } = nextProps;
-        return {
-            src: weChatKey ? `${QR_CODE_URL}${weChatKey}` : '',
-        };
+import useStyles from '../../styles/login';
+
+const Login: FC<Props> = memo(({ loggedIn, isScanning, getQRCode, isLoading, weChatKey, login }) => {
+    const classes = useStyles();
+    const [phone, setPhone] = useState('');
+    const [password, setPassword] = useState('');
+    const [method, setMethod] = useState(0);
+    if (loggedIn) {
+        return <Redirect to='/' />;
     }
-
-    login = () => {
-        const { phone, password } = this.state;
-        this.props.login(phone, password);
+    const handleLogin = () => {
+        login(phone, password);
     };
 
-    setMethod = (method: 1 | 2) => () => {
-        this.setState({
-            method
-        });
+    const handleMethod = (newMethod: number) => () => {
+        setMethod(newMethod);
     };
 
-    handleChange = (name: string) => (event: React.ChangeEvent) => {
-        this.setState({
-            [name]: event.target['value'],
-        });
+    const handlePassword: ChangeEventHandler<HTMLInputElement> = ({ target: { value } }) => {
+        setPassword(value);
     };
 
-    render() {
-        const { classes, loggedIn, isScanning, getQRCode, isLoading } = this.props;
-        const { src, method, phone, password } = this.state;
-        const ChooseMethod = <>
-            <Button color='primary' size='large' onClick={this.setMethod(1)}>企业微信登录</Button>
-            <Button color='primary' size='large' onClick={this.setMethod(2)}>账号密码登录</Button>
-        </>;
-        const ByQRCode = <>
-            {src && <img src={src} alt='This is QRCode' />}
+    const handlePhone: ChangeEventHandler<HTMLInputElement> = ({ target: { value } }) => {
+        setPhone(value);
+    };
+
+    const ChooseMethod = (
+        <>
+            <Button color='primary' size='large' onClick={handleMethod(1)}>企业微信登录</Button>
+            <Button color='primary' size='large' onClick={handleMethod(2)}>账号密码登录</Button>
+        </>
+    );
+    const ByQRCode = (
+        <>
+            {weChatKey && <img src={`${QR_CODE_URL}${weChatKey}`} alt='This is QRCode' />}
             <Button color='primary' size='large' onClick={getQRCode} disabled={isScanning}>获取二维码</Button>
-            <Button color='primary' size='large' onClick={this.setMethod(2)}>账号密码登录</Button>
-        </>;
-        const ByPassword = <>
+            <Button color='primary' size='large' onClick={handleMethod(2)}>账号密码登录</Button>
+        </>
+    );
+    const ByPassword = (
+        <>
             <TextField
                 label='手机号'
+                className={classes.textField}
                 value={phone}
-                onChange={this.handleChange('phone')}
+                autoComplete='tel-national'
+                onChange={handlePhone}
                 margin='normal'
             />
             <TextField
                 label='密码'
+                className={classes.textField}
                 value={password}
                 type='password'
-                onChange={this.handleChange('password')}
+                autoComplete='current-password'
+                onChange={handlePassword}
                 margin='normal'
             />
-            <Button color='primary' size='large' onClick={this.login} disabled={!phone || !password}>登录</Button>
-            <Button color='primary' size='large' onClick={this.setMethod(1)}>企业微信登录</Button>
-        </>;
-        return (
-            !loggedIn ? <div className={classes.container}>
-                <img src={logo} className={classes.logoImage} alt='UNIQUE STUDIO' />
-                <Modal open title='登录' hideBackdrop>
-                    <div className={classes.login}>
-                        {[ChooseMethod, ByQRCode, ByPassword][method]}
-                    </div>
-                </Modal>
-                {isLoading && <Progress />}
-            </div> : <Redirect to='/' />
-        );
-    }
-}
+            <Button color='primary' size='large' onClick={handleLogin} disabled={!phone || !password}>登录</Button>
+            <Button color='primary' size='large' onClick={handleMethod(1)}>企业微信登录</Button>
+        </>
+    );
+    return (
+        <div className={classes.container}>
+            <img src={logo} className={classes.logoImage} alt='UNIQUE STUDIO' />
+            <Modal open title='登录' hideBackdrop>
+                <form className={classes.login}>
+                    {[ChooseMethod, ByQRCode, ByPassword][method]}
+                </form>
+            </Modal>
+            {isLoading && <Progress />}
+        </div>
+    );
+});
 
-export default withStyles(styles)(Login);
+export default Login;

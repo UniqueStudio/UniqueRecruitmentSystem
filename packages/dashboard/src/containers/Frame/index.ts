@@ -1,18 +1,7 @@
 import { connect } from 'react-redux';
-import { Dispatch } from 'redux';
+import { bindActionCreators, Dispatch } from 'redux';
 
-import {
-    getCandidatesStart,
-    GetCandidatesStart,
-    getGroupInfoStart,
-    GetGroupInfoStart,
-    getRecruitmentsStart,
-    GetRecruitmentsStart,
-    getUserInfoStart,
-    GetUserInfoStart,
-    toggleDrawer,
-    ToggleDrawer
-} from '../../actions';
+import { getCandidatesStart, getGroupInfoStart, getRecruitmentsStart, getUserInfoStart, toggleDrawer } from '../../actions';
 import { StoreState } from '../../reducers';
 
 import Frame from '../../components/Frame';
@@ -22,21 +11,19 @@ const mapStateToProps = ({ user: { token, info }, recruitment: { viewing }, comp
     loggedIn: Boolean(token),
     userInfo: info,
     loading: progressOn,
-    viewingRecruitment: viewing
+    title: viewing,
 });
 
-type DispatchType = Dispatch<| GetUserInfoStart
-    | ToggleDrawer
-    | GetGroupInfoStart
-    | GetRecruitmentsStart
-    | GetCandidatesStart>;
+const mapDispatchToProps = (dispatch: Dispatch) => bindActionCreators({
+    toggleOpen: toggleDrawer,
+    getUser: getUserInfoStart,
+    getGroup: getGroupInfoStart,
+    getRecruitments: getRecruitmentsStart,
+    getCandidates: getCandidatesStart,
+}, dispatch);
 
-const mapDispatchToProps = (dispatch: DispatchType) => ({
-    toggleOpen: () => dispatch(toggleDrawer()),
-    getUserInfo: () => dispatch(getUserInfoStart()),
-    getRecruitments: () => dispatch(getRecruitmentsStart()),
-    getCandidates: (title: string) => dispatch(getCandidatesStart(title)),
-    getGroupInfo: () => dispatch(getGroupInfoStart()),
-});
+type StateProps = ReturnType<typeof mapStateToProps>;
+type DispatchProps = ReturnType<typeof mapDispatchToProps>;
 
-export default connect(mapStateToProps, mapDispatchToProps)(Frame);
+export type Props = StateProps & DispatchProps;
+export default connect<StateProps, DispatchProps, {}, StoreState>(mapStateToProps, mapDispatchToProps)(Frame);

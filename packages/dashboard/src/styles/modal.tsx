@@ -1,9 +1,10 @@
 import { Theme } from '@material-ui/core/styles/createMuiTheme';
-import { createStyles } from '@material-ui/styles';
+import createStyles from '@material-ui/styles/createStyles/createStyles';
+import makeStyles from '@material-ui/styles/makeStyles/makeStyles';
 
 import { colorToShadow } from './index';
 
-const styles = ({ palette, shadows, spacing, breakpoints }: Theme) => createStyles({
+const useStyles = makeStyles(({ palette, shadows, spacing, breakpoints }: Theme) => createStyles({
     modalContainer: {
         display: 'flex',
         alignItems: 'center',
@@ -42,6 +43,6 @@ const styles = ({ palette, shadows, spacing, breakpoints }: Theme) => createStyl
     backdrop: {
         background: palette.primary.main
     }
-});
+}));
 
-export default styles;
+export default useStyles;
