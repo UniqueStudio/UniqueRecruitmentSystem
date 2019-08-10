@@ -97,47 +97,47 @@
     border: 0;
 }
 
-.submit {
-    position: absolute;
-    bottom: $spacing;
-    right: -$spacing * 24;
-    @media screen and (max-width: 1280px) {
-        right: -$spacing * 18;
-    }
-    @media screen and (max-width: 1024px) {
-        right: -$spacing * 12;
-    }
-    @media screen and (max-width: 500px) {
-        position: static;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-    }
+// .submit {
+//     position: absolute;
+//     bottom: $spacing;
+//     right: -$spacing * 24;
+//     @media screen and (max-width: 1280px) {
+//         right: -$spacing * 18;
+//     }
+//     @media screen and (max-width: 1024px) {
+//         right: -$spacing * 12;
+//     }
+//     @media screen and (max-width: 500px) {
+//         position: static;
+//         display: flex;
+//         flex-direction: column;
+//         align-items: center;
+//     }
 
-    button {
-        border-radius: 8px;
-        @media screen and (max-width: 500px) {
-            width: auto;
-        }
+//     button {
+//         border-radius: 8px;
+//         @media screen and (max-width: 500px) {
+//             width: auto;
+//         }
 
-        div {
-            font-size: 1.5rem;
-            margin: $spacing $spacing * 4;
-            @media screen and (max-width: 1280px) {
-                margin: $spacing $spacing * 2;
-                font-size: 1.2rem;
-            }
-            @media screen and (max-width: 1024px) {
-                right: $spacing * 4;
-                font-size: 1rem;
-            }
-            @media screen and (max-width: 500px) {
-                margin: $spacing $spacing * 4;
-                font-size: 1.5rem;
-            }
-        }
-    }
-}
+//         div {
+//             font-size: 1.5rem;
+//             margin: $spacing $spacing * 4;
+//             @media screen and (max-width: 1280px) {
+//                 margin: $spacing $spacing * 2;
+//                 font-size: 1.2rem;
+//             }
+//             @media screen and (max-width: 1024px) {
+//                 right: $spacing * 4;
+//                 font-size: 1rem;
+//             }
+//             @media screen and (max-width: 500px) {
+//                 margin: $spacing $spacing * 4;
+//                 font-size: 1.5rem;
+//             }
+//         }
+//     }
+// }
 
 .disabled {
     cursor: auto;

@@ -10,6 +10,7 @@ const styles = ({ spacing, breakpoints }: Theme) =>
             boxSizing: 'border-box',
             minHeight: '100vh',
             fontFamily: MyTheme.font.family,
+            marginRight: 'calc(100% - 100vw)',
             [breakpoints.down('xs')]: {
                 flexDirection: 'column',
                 alignItems: 'center'

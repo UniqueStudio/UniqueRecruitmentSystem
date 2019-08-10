@@ -1,9 +1,11 @@
 import React, { PureComponent } from 'react';
 
+import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 import classNames from 'classnames';
 import { GENDERS, GRADES, GROUPS, MEDIA, RANKS, URL } from '../../config/const';
 import { Departments } from '../../config/department';
 import { Candidate, Variant } from '../../config/types';
+import styles from '../../style/Form';
 import { upload } from '../../utils/upload';
 import { checkMail, checkPhone } from '../../utils/validators';
 import AutoSuggest from '../AutoSuggest';
@@ -14,7 +16,7 @@ import Select from '../Select';
 import Submitted from '../Submitted';
 import TextArea from '../TextArea';
 
-interface Props {
+interface Props extends WithStyles<typeof styles> {
     media: MEDIA;
     isMobile: boolean;
     submit: () => void;
@@ -173,7 +175,7 @@ class Form extends PureComponent<Props> {
     render() {
         const { submitted, info, sent, time, /*popoverOn,*/ progress } = this.state;
         const { gender, phone, group, grade, rank, isQuick, institute, major } = info;
-        const { isMobile } = this.props;
+        const { isMobile, classes } = this.props;
         const canGetCode = checkPhone(phone);
 
         const Institute = (
@@ -273,7 +275,7 @@ class Form extends PureComponent<Props> {
                     id='resume'
                     name='resume'
                     type='file'
-                    className='none'
+                    style={{ display: 'none' }}
                     onChange={this.handleFile}
                     onClick={this.resetInput}
                 />
@@ -282,8 +284,9 @@ class Form extends PureComponent<Props> {
                         className={classNames(
                             info.resume ? 'background_primary' : 'background_primaryLighter',
                             info.resume ? 'text_white' : 'text_primary',
-                            'fontSize',
+                            classes.border,
                             'button',
+                            'buttonName',
                             'contentPadding',
                             'fileButton'
                         )}
@@ -355,4 +358,4 @@ class Form extends PureComponent<Props> {
     }
 }
 
-export default Form;
+export default withStyles(styles)(Form);

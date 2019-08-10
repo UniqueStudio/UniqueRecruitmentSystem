@@ -19,6 +19,10 @@
   background: $primary;
 }
 
+body {
+  overflow-y: overlay;
+  overflow-x: hidden;
+}
 // html {
 //   font-size: 12px;
 //   @media screen and (min-width: 360px) {
