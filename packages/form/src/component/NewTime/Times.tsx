@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useReducer, useContext } from "react";
 import { MokeDates } from "./old";
 import { List, ListItem, Chip, Grid, makeStyles, Theme, createStyles, } from "@material-ui/core";
 import Header from "./Header";
@@ -33,6 +33,11 @@ const useStyles = makeStyles((theme: Theme) =>
 interface ITimesProps {
     isMobile: boolean
 }
+
+type Dispatch = React.Dispatch<number>
+type ClickedArray = Array<boolean | undefined>
+
+const TimeDispatch = React.createContext<Dispatch>(() => { })
 export default (props: ITimesProps): React.ReactElement => {
     // const formID = window.location.pathname
     // const [dates, getDates] = useResource((formID: string) => {
@@ -41,21 +46,36 @@ export default (props: ITimesProps): React.ReactElement => {
     // })
     // // fetching data
     // useEffect(() => getDates(formID), [])
-
+    const dates = MokeDates
     // //TODO: use custom loading component
     // if (dates.isLoading) return (<div>Loading</div>)
-
-    const dates = MokeDates
+    const initialState: State = { clicked: [] }
+    type State = {
+        clicked: ClickedArray;
+    }
+    const reducer = (state: State, action: number) => {
+        state.clicked[action] = !state.clicked[action]
+        console.log(state.clicked);
+        return { clicked: state.clicked }
+    }
+    const [state, dispatch] = useReducer(reducer, initialState)
     const classes = useStyles({ color: "white" })
-
     return (
-        <List
-            className={classes.root}
-            subheader={<Header />}>
-            {dates.map((item, line) => (
-                <OneDay date={item} line={line} isMobile={props.isMobile} />
-            ))}
-        </List>
+        <TimeDispatch.Provider value={dispatch}>
+            <List
+                className={classes.root}
+                subheader={<Header />}>
+                {dates.map((item, line) => (
+                    <OneDay
+                        date={item}
+                        line={line}
+                        isMobile={props.isMobile}
+                        clicked={state.clicked}
+                    // dispatch={dispatch}
+                    />
+                ))}
+            </List>
+        </TimeDispatch.Provider>
     )
 }
 
@@ -63,6 +83,8 @@ interface IOneDayProps {
     line: number
     date: SelectDate
     isMobile: boolean
+    clicked: ClickedArray
+    // dispatch: Dispatch
 }
 const getDate = (timestamp: number): string => {
     const date = new Date(timestamp);
@@ -71,7 +93,11 @@ const getDate = (timestamp: number): string => {
 
 const OneDay = (props: IOneDayProps): React.ReactElement => {
     const classes = useStyles({ color: "white" })
+    const dispatch = useContext(TimeDispatch)
 
+    const handleClick = (column: number) => {
+        dispatch(column + props.line * 3)
+    }
     return (
         <ListItem>
             <Grid container direction={"row"} >
@@ -83,9 +109,10 @@ const OneDay = (props: IOneDayProps): React.ReactElement => {
                         color={"primary"}
                         label={getDate(props.date.date)}
                         className={classes.dateChip}
+                        clickable={false}
                     />
                 </Grid>
-                {['上午', '下午', '晚上'].map((time, index) =>
+                {['上午', '下午', '晚上'].map((time, column) =>
                     <Grid
                         item
                         xs={props.isMobile ? 4 : 2}
@@ -93,8 +120,9 @@ const OneDay = (props: IOneDayProps): React.ReactElement => {
                     >
                         <TimeChip
                             label={time}
-                            disabled={!props.date[['morning', 'afternoon', 'evening'][index]]}
-                            clicked={false}
+                            disabled={!props.date[['morning', 'afternoon', 'evening'][column]]}
+                            clicked={props.clicked[props.line * 3 + column]}
+                            onClick={() => handleClick(column)}
                         />
                     </Grid>
                 )}
@@ -105,6 +133,7 @@ const OneDay = (props: IOneDayProps): React.ReactElement => {
 
 interface IChipProps {
     label: string
+    onClick: () => void
     clicked?: boolean
     disabled?: boolean
 }
@@ -139,6 +168,7 @@ const ClickableChip = (props: IChipProps): React.ReactElement => {
             label={props.label}
             clickable={true}
             className={classes.chip}
+            onClick={props.onClick}
         />
     )
 }
