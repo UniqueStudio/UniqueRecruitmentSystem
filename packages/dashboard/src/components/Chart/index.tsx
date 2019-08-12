@@ -1,12 +1,12 @@
 import React, { FC, memo, useState } from 'react';
-import { Doughnut } from 'react-chartjs-2';
 
 import classNames from 'classnames';
 
 import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
-import Tooltip from '@material-ui/core/Tooltip';
 import Typography from '@material-ui/core/Typography';
+
+import { ChartElement, Doughnut } from './Doughnut';
 
 import { GROUPS, GROUPS_, STEPS } from '../../config/consts';
 import { Recruitment } from '../../config/types';
@@ -21,34 +21,17 @@ interface Props {
     setViewing: () => void;
 }
 
-interface Element {
-    _chart: {
-        data: {
-            datasets: { _meta: Record<number, { data: { hidden: boolean }[] }> }[];
-        };
-        id: number;
-    };
-    _index: number;
-}
-
 const Chart: FC<Props> = memo(({ data: { groups, total, title, end }, setViewing }) => {
     const classes = useStyles();
     const [group, setGroup] = useState('');
     const [clicked, setClicked] = useState(false);
-    const setData = (elements: Element[]) => {
-        // magic function to reset legend
-        const length = elements.length;
-        const first = elements[0];
-        if (length) {
-            first._chart.data.datasets[0]._meta[first._chart.id].data.map((item) => item.hidden = false);
-        }
-        if (!clicked && length) {
-            setClicked(true);
-            setGroup(GROUPS_[first._index]);
-        } else if (clicked === Boolean(length)) {
-            setClicked(false);
-            setGroup('');
-        }
+    const setData = (elements: ChartElement[]) => {
+        const element = elements[0];
+        if (!element) return;
+        // reset legend
+        element._chart.data.datasets[0]._meta[element._chart.id].data.forEach((item) => item.hidden = false);
+        setClicked((prevClicked) => !prevClicked);
+        setGroup((prevClicked) => prevClicked ? '' : GROUPS_[element._index]);
     };
     const viewingGroup = groups.find(({ name }) => name === group);
     const data = viewingGroup ? viewingGroup.steps : groups.map(({ total: groupTotal }) => groupTotal);
@@ -77,31 +60,23 @@ const Chart: FC<Props> = memo(({ data: { groups, total, title, end }, setViewing
         },
     };
     const expired = Date.now() > end;
-    const ChartBox = (
-        <Paper className={classNames(classes.chart, { [classes.expired]: expired })}>
-            <div className={classes.doughnut}>
-                <Doughnut
-                    data={dataSet}
-                    onElementsClick={setData}
-                    options={options}
-                    width={300}
-                    height={300}
-                />
-            </div>
-            <Typography variant='body1' className={classes.centerText}>
-                {`总计：${viewingGroup ? viewingGroup.total : total}人`}
-            </Typography>
-        </Paper>
-    );
     return (
         <>
             <Button onClick={setViewing} variant='contained' color='primary'>浏览本次招新</Button>
-            {expired
-                ? <Tooltip title='该招新已结束' classes={{ tooltip: classes.tooltip }} placement='top'>
-                    {ChartBox}
-                </Tooltip>
-                : ChartBox
-            }
+            <Paper className={classNames(classes.chart, { [classes.expired]: expired })}>
+                <div className={classes.doughnut}>
+                    <Doughnut
+                        data={dataSet}
+                        handleClick={setData}
+                        options={options}
+                        width={300}
+                        height={300}
+                    />
+                </div>
+                <Typography variant='body1' className={classes.centerText}>
+                    {`总计：${viewingGroup ? viewingGroup.total : total}人`}
+                </Typography>
+            </Paper>
         </>
     );
 });

@@ -30,7 +30,6 @@
     "notistack": "^0.8.9",
     "react": "^16.9.0",
     "react-beautiful-dnd": "^11.0.5",
-    "react-chartjs-2": "^2.7.6",
     "react-dom": "^16.9.0",
     "react-redux": "^7.1.0",
     "react-router": "^5.0.1",
