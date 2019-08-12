@@ -59,7 +59,7 @@
     "typescript": "^3.5.3"
   },
   "scripts": {
-    "analyze": "source-map-explorer build/static/js/4.*",
+    "analyze": "source-map-explorer build/static/js/* --html result.html",
     "start": "react-scripts start",
     "build": "react-scripts build"
   },
