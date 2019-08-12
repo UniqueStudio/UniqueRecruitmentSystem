@@ -4,6 +4,7 @@ import { List, ListItem, Chip, Grid, makeStyles, Theme, createStyles, } from "@m
 import Header from "./Header";
 
 import { SelectDate } from "./old";
+import { reducer, ClickedArray, initialState } from "./reducer";
 
 interface IStyleProps {
     color?: "white" | undefined
@@ -35,9 +36,12 @@ interface ITimesProps {
 }
 
 type Dispatch = React.Dispatch<number>
-type ClickedArray = Array<boolean | undefined>
+interface IContextProps {
+    dispatch: Dispatch
+    clicked: ClickedArray
+}
 
-const TimeDispatch = React.createContext<Dispatch>(() => { })
+const TimeDispatch = React.createContext<IContextProps>({} as IContextProps)
 export default (props: ITimesProps): React.ReactElement => {
     // const formID = window.location.pathname
     // const [dates, getDates] = useResource((formID: string) => {
@@ -49,19 +53,13 @@ export default (props: ITimesProps): React.ReactElement => {
     const dates = MokeDates
     // //TODO: use custom loading component
     // if (dates.isLoading) return (<div>Loading</div>)
-    const initialState: State = { clicked: [] }
-    type State = {
-        clicked: ClickedArray;
-    }
-    const reducer = (state: State, action: number) => {
-        state.clicked[action] = !state.clicked[action]
-        console.log(state.clicked);
-        return { clicked: state.clicked }
-    }
     const [state, dispatch] = useReducer(reducer, initialState)
     const classes = useStyles({ color: "white" })
     return (
-        <TimeDispatch.Provider value={dispatch}>
+        <TimeDispatch.Provider value={{
+            dispatch: dispatch,
+            clicked: state.clicked
+        }}>
             <List
                 className={classes.root}
                 subheader={<Header />}>
@@ -71,7 +69,6 @@ export default (props: ITimesProps): React.ReactElement => {
                         line={line}
                         isMobile={props.isMobile}
                         clicked={state.clicked}
-                    // dispatch={dispatch}
                     />
                 ))}
             </List>
@@ -84,7 +81,6 @@ interface IOneDayProps {
     date: SelectDate
     isMobile: boolean
     clicked: ClickedArray
-    // dispatch: Dispatch
 }
 const getDate = (timestamp: number): string => {
     const date = new Date(timestamp);
@@ -93,11 +89,6 @@ const getDate = (timestamp: number): string => {
 
 const OneDay = (props: IOneDayProps): React.ReactElement => {
     const classes = useStyles({ color: "white" })
-    const dispatch = useContext(TimeDispatch)
-
-    const handleClick = (column: number) => {
-        dispatch(column + props.line * 3)
-    }
     return (
         <ListItem>
             <Grid container direction={"row"} >
@@ -121,8 +112,7 @@ const OneDay = (props: IOneDayProps): React.ReactElement => {
                         <TimeChip
                             label={time}
                             disabled={!props.date[['morning', 'afternoon', 'evening'][column]]}
-                            clicked={props.clicked[props.line * 3 + column]}
-                            onClick={() => handleClick(column)}
+                            index={props.line * 3 + column}
                         />
                     </Grid>
                 )}
@@ -133,43 +123,37 @@ const OneDay = (props: IOneDayProps): React.ReactElement => {
 
 interface IChipProps {
     label: string
-    onClick: () => void
-    clicked?: boolean
     disabled?: boolean
+    index: number
 }
 
 const TimeChip = (props: IChipProps): React.ReactElement => {
+    const { dispatch, clicked } = useContext(TimeDispatch)
+    const handleClick = () => {
+        dispatch(props.index)
+    }
     if (props.disabled) {
-        return <DisabledChip {...props} />
+        const classes = useStyles({ color: "white" })
+        return (
+            <Chip
+                color={"default"}
+                variant={"default"}
+                label={props.label}
+                clickable={false}
+                className={classes.chip}
+            />
+        )
     } else {
-        return <ClickableChip {...props} />
+        const classes = useStyles({})
+        return (
+            <Chip
+                color={"primary"}
+                variant={clicked[props.index] ? "default" : "outlined"}
+                label={props.label}
+                clickable={true}
+                className={classes.chip}
+                onClick={handleClick}
+            />
+        )
     }
 }
-
-const DisabledChip = (props: IChipProps): React.ReactElement => {
-    const classes = useStyles({ color: "white" })
-    return (
-        <Chip
-            color={"default"}
-            variant={"default"}
-            label={props.label}
-            clickable={false}
-            className={classes.chip}
-        />
-    )
-}
-
-const ClickableChip = (props: IChipProps): React.ReactElement => {
-    const classes = useStyles({})
-    return (
-        <Chip
-            color={"primary"}
-            variant={props.clicked ? "default" : "outlined"}
-            label={props.label}
-            clickable={true}
-            className={classes.chip}
-            onClick={props.onClick}
-        />
-    )
-}
-
