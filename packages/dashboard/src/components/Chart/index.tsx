@@ -6,7 +6,7 @@ import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 
-import { ChartElement, Doughnut } from './Doughnut';
+import { ChartComponentProps, ChartElement, Doughnut } from './Doughnut';
 
 import { GROUPS, GROUPS_, STEPS } from '../../config/consts';
 import { Recruitment } from '../../config/types';
@@ -37,7 +37,7 @@ const Chart: FC<Props> = memo(({ data: { groups, total, title, end }, setViewing
     const data = viewingGroup ? viewingGroup.steps : groups.map(({ total: groupTotal }) => groupTotal);
     const labels = viewingGroup ? STEPS : GROUPS;
     const text = viewingGroup ? `${viewingGroup.name}组各轮情况` : titleConverter(title);
-    const dataSet = {
+    const chartData: ChartComponentProps['data'] = {
         labels,
         datasets: [{
             data,
@@ -45,7 +45,7 @@ const Chart: FC<Props> = memo(({ data: { groups, total, title, end }, setViewing
             hoverBackgroundColor: getRainbow(300),
         }],
     };
-    const options = {
+    const options: ChartComponentProps['options'] = {
         cutoutPercentage: clicked ? 50 : 75,
         maintainAspectRatio: false,
         title: {
@@ -66,7 +66,7 @@ const Chart: FC<Props> = memo(({ data: { groups, total, title, end }, setViewing
             <Paper className={classNames(classes.chart, { [classes.expired]: expired })}>
                 <div className={classes.doughnut}>
                     <Doughnut
-                        data={dataSet}
+                        data={chartData}
                         handleClick={setData}
                         options={options}
                         width={300}
