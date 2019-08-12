@@ -1,6 +1,6 @@
 import React, { MouseEventHandler, PureComponent } from 'react';
 
-import Chart, { ChartData, ChartDataSets, ChartOptions, helpers } from 'chart.js';
+import { Chart, ChartData, ChartDataSets, ChartOptions, helpers } from 'chart.js';
 
 type Meta = ReturnType<Chart['getDatasetMeta']>;
 type MetaData = Meta['data'][0];
