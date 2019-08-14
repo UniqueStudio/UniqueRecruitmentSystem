@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 
 import classNames from 'classnames';
-import { MEDIA, URL } from '../../config/const';
+import { URL } from '../../config/const';
 import { Variant } from '../../config/types';
 import Button from '../Button';
 import Modal from '../Modal';
@@ -15,7 +15,8 @@ interface Date {
 }
 
 interface Props {
-    media: MEDIA;
+    isPC: boolean;
+    isPad: boolean;
     isMobile: boolean;
     toggleSnackbar: (content: string, variant: Variant) => void;
 }

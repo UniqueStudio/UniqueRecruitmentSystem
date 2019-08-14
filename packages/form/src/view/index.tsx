@@ -73,14 +73,16 @@ class Container extends PureComponent<Props> {
         const titleName = titleConverter(title);
         /* http://join.hustunique.com/:formId/:candidateId */
         /* formId: recruitmentId + groupId(if type === 1) + type(0: apply, 1: interview1, 2: interview2) */
+        const [isPC, isPad, isMobile] = [media === MEDIA.PC, media === MEDIA.Pad, media === MEDIA.Mobile];
         const main =
             params.length === 2 ? (
-                <Time media={media} isMobile={media === MEDIA.Mobile} toggleSnackbar={this.toggleSnackbar} />
+                <Time isPC={isPC} isPad={isPad} isMobile={isMobile} toggleSnackbar={this.toggleSnackbar} />
             ) : (
                 <Form
-                    media={media}
                     submit={this.submit}
-                    isMobile={media === MEDIA.Mobile}
+                    isPC={isPC}
+                    isPad={isPad}
+                    isMobile={isMobile}
                     title={title}
                     toggleSnackbar={this.toggleSnackbar}
                 />
@@ -96,7 +98,7 @@ class Container extends PureComponent<Props> {
                         </>
                     ) : (
                         <h1>Unique Studio{titleName === '' ? '' : ` - ${titleName}`}</h1>
-                        )}
+                    )}
                     {main}
                 </div>
             </div>

@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 
 import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 import classNames from 'classnames';
-import { GENDERS, GRADES, GROUPS, MEDIA, RANKS, URL } from '../../config/const';
+import { GENDERS, GRADES, GROUPS, RANKS, URL } from '../../config/const';
 import { Departments } from '../../config/department';
 import { Candidate, Variant } from '../../config/types';
 import styles from '../../style/Form';
@@ -17,7 +17,8 @@ import Submitted from '../Submitted';
 import TextArea from '../TextArea';
 
 interface Props extends WithStyles<typeof styles> {
-    media: MEDIA;
+    isPC: boolean;
+    isPad: boolean;
     isMobile: boolean;
     submit: () => void;
     toggleSnackbar: (content: string, variant: Variant) => void;
@@ -175,8 +176,9 @@ class Form extends PureComponent<Props> {
     render() {
         const { submitted, info, sent, time, /*popoverOn,*/ progress } = this.state;
         const { gender, phone, group, grade, rank, isQuick, institute, major } = info;
-        const { isMobile, classes } = this.props;
+        const { isPC, isPad, isMobile, classes } = this.props;
         const canGetCode = checkPhone(phone);
+        let main: JSX.Element;
 
         const Institute = (
             <AutoSuggest
@@ -211,38 +213,56 @@ class Form extends PureComponent<Props> {
             <Input for='referrer' name='推荐人' placeholder='无' onChange={this.handleChange('referrer')} />
         );
 
-        const Gender = (
-            <Select
-                selections={GENDERS}
-                value={GENDERS[gender] || ''}
-                defaultValue='性别选择'
-                handleSelect={this.handleSelect('gender')}
-            />
-        );
-        const Grade = (
-            <Select
-                selections={GRADES}
-                value={GRADES[grade] || ''}
-                defaultValue='所属年级'
-                handleSelect={this.handleSelect('grade')}
-            />
-        );
-        const Group = (
-            <Select
-                selections={GROUPS}
-                value={GROUPS[group] || ''}
-                defaultValue='组别选择'
-                handleSelect={this.handleSelect('group')}
-            />
-        );
-        const Rank = (
-            <Select
-                selections={RANKS}
-                value={RANKS[rank] || ''}
-                defaultValue='成绩排名'
-                handleSelect={this.handleSelect('rank')}
-            />
-        );
+        // const Gender = (
+        //     <Select
+        //         selections={GENDERS}
+        //         value={GENDERS[gender] || ''}
+        //         defaultValue='性别选择'
+        //         handleSelect={this.handleSelect('gender')}
+        //     />
+        // );
+        // const Grade = (
+        //     <Select
+        //         selections={GRADES}
+        //         value={GRADES[grade] || ''}
+        //         defaultValue='所属年级'
+        //         handleSelect={this.handleSelect('grade')}
+        //     />
+        // );
+        // const Group = (
+        //     <Select
+        //         selections={GROUPS}
+        //         value={GROUPS[group] || ''}
+        //         defaultValue='组别选择'
+        //         handleSelect={this.handleSelect('group')}
+        //     />
+        // );
+        // const Rank = (
+        //     <Select
+        //         selections={RANKS}
+        //         value={RANKS[rank] || ''}
+        //         defaultValue='成绩排名'
+        //         handleSelect={this.handleSelect('rank')}
+        //     />
+        // );
+
+        const selectComponents = ([
+            ['性别选择', 'gender', GENDERS, gender],
+            ['所属年级', 'grade', GRADES, grade],
+            ['组别选择', 'group', GROUPS, group],
+            ['成绩排名', 'rank', RANKS, rank]
+        ] as [string, string, string[], number][]).map((v) => {
+            return (
+                <Select
+                    key={v[1]}
+                    selections={v[2]}
+                    value={v[2][v[3]] || ''}
+                    defaultValue={v[0]}
+                    handleSelect={this.handleSelect(v[1])}
+                />
+            );
+        });
+
         const CodeButton = (
             <Button
                 name={sent ? `${time}秒后${isMobile ? '重新获取' : '重获'}` : '接收验证码'}
@@ -297,9 +317,41 @@ class Form extends PureComponent<Props> {
             </>
         );
 
+        isPC &&
+            (main = (
+                <div>
+                    <div>
+                        {Name}
+                        {Mail}
+                        {Referrer}
+                    </div>
+                    <div>
+                        <div>
+                            {Institute}
+                            {Major}
+                        </div>
+                        <div />
+                        <div>
+                            {Phone}
+                            {CodeButton}
+                            {Code}
+                        </div>
+                    </div>
+                    <div>{selectComponents}</div>
+                    <div>
+                        <div>{Intro}</div>
+                        <div>
+                            {Resume}
+                            {Quick}
+                            {Submit}
+                        </div>
+                    </div>
+                </div>
+            ));
+
         const PCInterface = (
             <>
-                <div className='gridWrapper'>
+                {/* <div className='gridWrapper'>
                     <div className='name'>{Name}</div>
                     <div className='institute'>{Institute}</div>
                     <div className='major'>{Major}</div>
@@ -316,13 +368,13 @@ class Form extends PureComponent<Props> {
                     <div className='quick'>{Quick}</div>
                     <div className='intro'>{Intro}</div>
                 </div>
-                {Submit}
+                {Submit} */}
             </>
         );
 
         const MobileInterface = (
             <>
-                <div className='form'>
+                {/* <div className='form'>
                     {Name}
                     {Gender}
                     {Group}
@@ -339,7 +391,7 @@ class Form extends PureComponent<Props> {
                     {Quick}
                     {Intro}
                     {Submit}
-                </div>
+                </div> */}
             </>
         );
 
