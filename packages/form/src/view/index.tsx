@@ -9,7 +9,7 @@ import Form from '../component/Form';
 import Loading from '../component/Loading';
 import Snackbar from '../component/SnackBar';
 import Time from '../component/Time';
-import { MEDIA, URL } from '../config/const';
+import { MEDIA } from '../config/const';
 import { Variant } from '../config/types';
 import styles from '../style/view';
 import { titleConverter } from '../utils/titleConverter';
@@ -40,13 +40,13 @@ class Container extends PureComponent<Props> {
 
     async componentDidMount() {
         window.addEventListener('resize', this.checkMobile);
-        const result = await fetch(`${URL}/recruitment/pending`);
-        const { type, data, message } = await result.json();
-        if (type === 'success') {
-            this.setState({ title: data[0] });
-        } else {
-            this.toggleSnackbar(message, type);
-        }
+        // const result = await fetch(`${URL}/recruitment/pending`);
+        // const { type, data, message } = await result.json();
+        // if (type === 'success') {
+        //     this.setState({ title: data[0] });
+        // } else {
+        //     this.toggleSnackbar(message, type);
+        // }
         this.setState({ loading: false });
     }
 

@@ -1,10 +1,10 @@
 import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 import classNames from 'classnames';
 import React, { PureComponent } from 'react';
-import borderStyles from '../../style/Border';
+import styles from '../../style/Button';
 import '../../style/Button.scss';
 
-interface Props extends WithStyles<typeof borderStyles> {
+interface Props extends WithStyles<typeof styles> {
     name: string;
     bgColor: string;
     textColor: string;
@@ -28,10 +28,10 @@ class Button extends PureComponent<Props> {
                 )}
                 onClick={onClick}
             >
-                <div className='buttonName'>{name}</div>
+                <div className={classNames('buttonName', classes.font)}>{name}</div>
             </button>
         );
     }
 }
 
-export default withStyles(borderStyles)(Button);
+export default withStyles(styles)(Button);

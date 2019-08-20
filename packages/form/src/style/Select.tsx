@@ -13,11 +13,15 @@ const style = ({ breakpoints, spacing }: Theme) =>
         root: {
             fontFamily: font.family,
             color: primary.main,
-            width: '20vw',
+            width: '10vw',
             fontWeight: 700,
             display: 'flex',
             justifyContent: 'center',
-            alignItems: 'center'
+            alignItems: 'center',
+            height: '50px',
+            '@media screen and (max-width: 1440px)': {
+                height: '40px'
+            }
         },
         select: {
             '&:focus': {
@@ -73,7 +77,7 @@ const style = ({ breakpoints, spacing }: Theme) =>
             transform: 'rotate(-90deg)'
         },
         input: {
-            paddingLeft: '32px',
+            paddingLeft: '1.5vw',
             textAlign: 'left'
         }
     });

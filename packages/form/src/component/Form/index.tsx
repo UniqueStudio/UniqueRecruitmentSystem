@@ -2,6 +2,7 @@ import React, { PureComponent } from 'react';
 
 import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 import classNames from 'classnames';
+import hlogo from '../../asset/img/hlogo.png';
 import { GENDERS, GRADES, GROUPS, RANKS, URL } from '../../config/const';
 import { Departments } from '../../config/department';
 import { Candidate, Variant } from '../../config/types';
@@ -178,13 +179,14 @@ class Form extends PureComponent<Props> {
         const { gender, phone, group, grade, rank, isQuick, institute, major } = info;
         const { isPC, isPad, isMobile, classes } = this.props;
         const canGetCode = checkPhone(phone);
-        let main: JSX.Element;
+        let main: JSX.Element = <></>;
 
         const Institute = (
             <AutoSuggest
                 id='学院'
                 items={Object.keys(Departments)}
                 value={institute || ''}
+                size={7}
                 getItemValue={(value) => value as string}
                 onChange={this.handleChange('institute')}
                 onSelect={(event, { suggestionValue }) =>
@@ -197,6 +199,7 @@ class Form extends PureComponent<Props> {
                 id='专业'
                 items={Departments[institute] || []}
                 value={major || ''}
+                size={7}
                 getItemValue={(value) => value as string}
                 onChange={this.handleChange('major')}
                 onSelect={(event, { suggestionValue }) =>
@@ -205,46 +208,13 @@ class Form extends PureComponent<Props> {
             />
         );
 
-        const Name = <Input for='name' name='姓名' onChange={this.handleChange('name')} />;
-        const Mail = <Input for='mail' name='邮箱' onChange={this.handleChange('mail')} />;
-        const Phone = <Input for='phone' name='电话' onChange={this.handleChange('phone')} />;
+        const Name = <Input for='name' name='姓名' onChange={this.handleChange('name')} size={3} />;
+        const Mail = <Input for='mail' name='邮箱' onChange={this.handleChange('mail')} size={8} />;
+        const Phone = <Input for='phone' name='电话' onChange={this.handleChange('phone')} size={7} />;
         const Code = <Input for='code' name='验证码' onChange={this.handleChange('code')} />;
         const Referrer = (
-            <Input for='referrer' name='推荐人' placeholder='无' onChange={this.handleChange('referrer')} />
+            <Input for='referrer' name='推荐人' placeholder='无' onChange={this.handleChange('referrer')} size={3} />
         );
-
-        // const Gender = (
-        //     <Select
-        //         selections={GENDERS}
-        //         value={GENDERS[gender] || ''}
-        //         defaultValue='性别选择'
-        //         handleSelect={this.handleSelect('gender')}
-        //     />
-        // );
-        // const Grade = (
-        //     <Select
-        //         selections={GRADES}
-        //         value={GRADES[grade] || ''}
-        //         defaultValue='所属年级'
-        //         handleSelect={this.handleSelect('grade')}
-        //     />
-        // );
-        // const Group = (
-        //     <Select
-        //         selections={GROUPS}
-        //         value={GROUPS[group] || ''}
-        //         defaultValue='组别选择'
-        //         handleSelect={this.handleSelect('group')}
-        //     />
-        // );
-        // const Rank = (
-        //     <Select
-        //         selections={RANKS}
-        //         value={RANKS[rank] || ''}
-        //         defaultValue='成绩排名'
-        //         handleSelect={this.handleSelect('rank')}
-        //     />
-        // );
 
         const selectComponents = ([
             ['性别选择', 'gender', GENDERS, gender],
@@ -290,7 +260,7 @@ class Form extends PureComponent<Props> {
         const Intro = <TextArea onChange={this.handleChange('intro')} />;
 
         const Resume = (
-            <>
+            <div>
                 <input
                     id='resume'
                     name='resume'
@@ -305,42 +275,45 @@ class Form extends PureComponent<Props> {
                             info.resume ? 'background_primary' : 'background_primaryLighter',
                             info.resume ? 'text_white' : 'text_primary',
                             classes.border,
-                            'button',
-                            'buttonName',
-                            'contentPadding',
-                            'fileButton'
+                            classes.font,
+                            classes.resume,
+                            'button'
                         )}
                     >
                         {info.resume && progress ? `上传中: ${progress}%` : '上传简历/作品集'}
                     </span>
                 </label>
-            </>
+            </div>
         );
 
-        isPC &&
+        (isPC || isPad) &&
             (main = (
-                <div>
-                    <div>
+                <div className={classes.container}>
+                    <div className={classes.partOne}>
                         {Name}
                         {Mail}
                         {Referrer}
                     </div>
-                    <div>
-                        <div>
+                    <div className={classes.partTwo}>
+                        <div className='ptLeft'>
                             {Institute}
                             {Major}
                         </div>
-                        <div />
-                        <div>
+                        <div className='ptMid'>
+                            <img src={hlogo} />
+                        </div>
+                        <div className='ptRight'>
                             {Phone}
-                            {CodeButton}
-                            {Code}
+                            <div className='codeBar'>
+                                {Code}
+                                {CodeButton}
+                            </div>
                         </div>
                     </div>
-                    <div>{selectComponents}</div>
-                    <div>
-                        <div>{Intro}</div>
-                        <div>
+                    <div className={classes.partThree}>{selectComponents}</div>
+                    <div className={classes.partFour}>
+                        <div className='pfLeft'>{Intro}</div>
+                        <div className='pfRight'>
                             {Resume}
                             {Quick}
                             {Submit}
@@ -349,55 +322,9 @@ class Form extends PureComponent<Props> {
                 </div>
             ));
 
-        const PCInterface = (
-            <>
-                {/* <div className='gridWrapper'>
-                    <div className='name'>{Name}</div>
-                    <div className='institute'>{Institute}</div>
-                    <div className='major'>{Major}</div>
-                    <div className='referrer'>{Referrer}</div>
-                    <div className='mail'>{Mail}</div>
-                    <div className='phone'>{Phone}</div>
-                    <div className='codeButton'>{CodeButton}</div>
-                    <div className='code'>{Code}</div>
-                    <div className='gender'>{Gender}</div>
-                    <div className='group'>{Group}</div>
-                    <div className='grade'>{Grade}</div>
-                    <div className='score'>{Rank}</div>
-                    <div className='resume'>{Resume}</div>
-                    <div className='quick'>{Quick}</div>
-                    <div className='intro'>{Intro}</div>
-                </div>
-                {Submit} */}
-            </>
-        );
-
-        const MobileInterface = (
-            <>
-                {/* <div className='form'>
-                    {Name}
-                    {Gender}
-                    {Group}
-                    {Grade}
-                    {Rank}
-                    {Institute}
-                    {Major}
-                    {Mail}
-                    {Phone}
-                    {CodeButton}
-                    {Code}
-                    {Referrer}
-                    {Resume}
-                    {Quick}
-                    {Intro}
-                    {Submit}
-                </div> */}
-            </>
-        );
-
         return (
             <div className='formContainer'>
-                {!submitted && (!isMobile ? PCInterface : MobileInterface)}
+                {!submitted && main}
                 {submitted && (
                     <Submitted
                         title='报名成功'
