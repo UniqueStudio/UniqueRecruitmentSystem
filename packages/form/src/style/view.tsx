@@ -106,11 +106,10 @@ const styles = ({ spacing, breakpoints }: Theme) =>
                 color: MyTheme.palette.secondary.light,
                 userSelect: 'none',
                 whiteSpace: 'nowrap',
-                fontSize: '2.5vw',
-                marginTop: spacing(-2),
+                fontSize: '3vw',
+                marginTop: spacing(-1),
                 marginBottom: 0,
                 [breakpoints.between('sm', 'md')]: {
-                    fontSize: '3vw',
                     marginTop: spacing(1)
                 },
                 [breakpoints.down('xs')]: {

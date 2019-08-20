@@ -91,7 +91,7 @@ class Container extends PureComponent<Props> {
         const MainInterface = (
             <div>
                 <div className={classes.title}>
-                    {media === MEDIA.Mobile ? (
+                    {isMobile ? (
                         <>
                             <h1>Unique Studio</h1>
                             <h1>{titleName}</h1>
