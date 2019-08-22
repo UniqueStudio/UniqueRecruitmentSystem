@@ -22,11 +22,13 @@ const style = ({ breakpoints, spacing }: Theme) =>
             '@media screen and (max-width: 1440px)': {
                 height: '40px'
             },
-            '&:hover': {
-                borderColor: primary.lightLittleMore
-            },
-            '&.Mui-focused': {
-                borderColor: primary.lightLittleMore
+            '@media screen and (min-width: 1440px)': {
+                '&:hover': {
+                    borderColor: primary.lightLittleMore
+                },
+                '&.Mui-focused': {
+                    borderColor: primary.lightLittleMore
+                }
             }
         },
         select: {

@@ -19,6 +19,9 @@ const style = ({ breakpoints, spacing }: Theme) =>
             '& > div': {
                 height: 'fit-content',
                 width: '100%'
+            },
+            [breakpoints.down('lg')]: {
+                padding: spacing(4, 6)
             }
         },
         resume: {

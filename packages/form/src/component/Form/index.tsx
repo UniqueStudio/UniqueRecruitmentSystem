@@ -211,7 +211,7 @@ class Form extends PureComponent<Props> {
         const Name = <Input for='name' name='姓名' onChange={this.handleChange('name')} size={3} />;
         const Mail = <Input for='mail' name='邮箱' onChange={this.handleChange('mail')} size={8} />;
         const Phone = <Input for='phone' name='电话' onChange={this.handleChange('phone')} size={7} />;
-        const Code = <Input for='code' name='验证码' onChange={this.handleChange('code')} />;
+        const Code = <Input for='code' name='验证码' onChange={this.handleChange('code')} size={3} />;
         const Referrer = (
             <Input for='referrer' name='推荐人' placeholder='无' onChange={this.handleChange('referrer')} size={3} />
         );
