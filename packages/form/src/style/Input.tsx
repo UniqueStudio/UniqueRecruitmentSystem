@@ -32,7 +32,8 @@ const style = ({ breakpoints }: Theme) =>
             borderTopRightRadius: '0 !important',
             borderBottomRightRadius: '0 !important',
             borderWidth: '0 !important',
-            backgroundColor: primary.main
+            backgroundColor: primary.main,
+            userSelect: 'none'
         },
         labelText: {
             color: 'white',

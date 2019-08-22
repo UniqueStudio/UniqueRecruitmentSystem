@@ -69,7 +69,7 @@ const styles = ({ spacing, breakpoints }: Theme) =>
             marginBottom: spacing(2),
             '& > div': {
                 width: '100%',
-                height: '100%'
+                height: 'auto'
             }
         },
         header: {
@@ -80,14 +80,14 @@ const styles = ({ spacing, breakpoints }: Theme) =>
         },
         msg: {
             fontFamily: MyTheme.font.family,
-            fontSize: '1.5vw',
+            fontSize: '1.2vw',
             margin: `${spacing(1)}px 0`,
             fontWeight: 500,
             [breakpoints.down('xs')]: {
                 fontSize: '3vw'
             },
             '& .sp': {
-                fontSize: '2vw',
+                fontSize: '1.5vw',
                 fontWeight: 'bold',
                 [breakpoints.down('xs')]: {
                     fontSize: '4vw'
