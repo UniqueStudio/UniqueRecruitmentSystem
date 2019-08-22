@@ -20,8 +20,11 @@ const style = ({ breakpoints, spacing }: Theme) =>
                 height: 'fit-content',
                 width: '100%'
             },
-            [breakpoints.down('lg')]: {
-                padding: spacing(4, 6)
+            [breakpoints.down('md')]: {
+                padding: spacing(2, 4)
+            },
+            [breakpoints.down('sm')]: {
+                padding: spacing(2, 3)
             }
         },
         resume: {
@@ -72,7 +75,10 @@ const style = ({ breakpoints, spacing }: Theme) =>
                     justifyContent: 'space-between',
                     width: '100%',
                     '& .button': {
-                        width: '7vw'
+                        width: '7vw',
+                        [breakpoints.down('md')]: {
+                            width: '10vw'
+                        }
                     }
                 },
                 '& > div': {
@@ -84,17 +90,36 @@ const style = ({ breakpoints, spacing }: Theme) =>
             display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'center',
-            margin: spacing(1, 0)
+            margin: spacing(1, 0),
+            '& > div': {
+                width: '10vw',
+                height: '50px',
+                '@media screen and (max-width: 1440px)': {
+                    height: '40px'
+                },
+                [breakpoints.down('md')]: {
+                    height: '45px',
+                    width: '14vw'
+                },
+                [breakpoints.down('sm')]: {
+                    height: '35px'
+                }
+            }
         },
         partFour: {
             display: 'flex',
             justifyContent: 'space-between',
             margin: spacing(2, 0),
+            [breakpoints.down('md')]: {
+                margin: spacing(1, 0)
+            },
             '& .pfLeft': {
-                width: 'calc(30vw + ( 100% - 40vw ) * 2 / 3)'
+                width: 'calc(30vw + ( 100% - 40vw ) * 2 / 3)',
+                [breakpoints.down('md')]: {
+                    width: 'calc(42vw + ( 100% - 56vw ) * 2 / 3)'
+                }
             },
             '& .pfRight': {
-                width: '10vw',
                 display: 'flex',
                 flexDirection: 'column',
                 '& > div,button': {
@@ -103,6 +128,15 @@ const style = ({ breakpoints, spacing }: Theme) =>
                     height: '50px',
                     '@media screen and (max-width: 1440px)': {
                         height: '40px'
+                    },
+                    [breakpoints.down('md')]: {
+                        height: '45px'
+                    },
+                    [breakpoints.down('sm')]: {
+                        height: '35px'
+                    },
+                    [breakpoints.down('md')]: {
+                        width: '14vw'
                     }
                 }
             },

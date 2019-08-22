@@ -15,7 +15,8 @@ interface Props extends WithStyles<typeof styles> {
     getItemValue: (value: string | object) => string;
     onChange: any; // function
     onSelect: (event: React.FormEvent, { suggestionValue }: { suggestionValue: string }) => void; // function when select a suggestion
-    size?: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12;
+    size?: number;
+    labelSize?: number;
 }
 
 class AutoSuggest extends PureComponent<Props> {
@@ -71,8 +72,8 @@ class AutoSuggest extends PureComponent<Props> {
     };
 
     renderInputComponent = (inputProps: object) => {
-        const { id, size } = this.props;
-        return <Input for={id} name={id} size={size || 10} inputProps={inputProps} />;
+        const { id, size, labelSize } = this.props;
+        return <Input for={id} name={id} size={size || 10} labelSize={labelSize || 4} inputProps={inputProps} />;
     };
 
     render() {

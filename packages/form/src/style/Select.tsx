@@ -1,6 +1,7 @@
 import { createStyles, Theme } from '@material-ui/core/styles';
 import combineStyles from '../utils/combindStyles';
 import borderStyles from './Border';
+import fontStyles from './Font';
 import CustomTheme from './theme';
 
 const {
@@ -13,15 +14,11 @@ const style = ({ breakpoints, spacing }: Theme) =>
         root: {
             fontFamily: font.family,
             color: primary.main,
-            width: '10vw',
+            minWidth: '10vw',
             fontWeight: 700,
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'center',
-            height: '50px',
-            '@media screen and (max-width: 1440px)': {
-                height: '40px'
-            },
             '@media screen and (min-width: 1440px)': {
                 '&:hover': {
                     borderColor: primary.lightLittleMore
@@ -90,6 +87,6 @@ const style = ({ breakpoints, spacing }: Theme) =>
         }
     });
 
-const styles = combineStyles(style, borderStyles);
+const styles = combineStyles(style, borderStyles, fontStyles);
 
 export default styles;

@@ -50,7 +50,7 @@ const styles = ({ spacing, breakpoints }: Theme) =>
             backgroundImage: `url(${bgLeft})`
         },
         bgRight: {
-            marginRight: spacing(3),
+            marginRight: spacing(4),
             backgroundImage: `url(${bgRight})`
         },
         center: {
@@ -59,7 +59,7 @@ const styles = ({ spacing, breakpoints }: Theme) =>
                 flex: 6
             },
             [breakpoints.down('md')]: {
-                flex: 4
+                flex: 5
             },
             display: 'flex',
             flexDirection: 'column',

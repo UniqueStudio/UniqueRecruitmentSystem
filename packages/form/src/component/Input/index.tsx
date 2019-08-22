@@ -19,10 +19,9 @@ interface Props extends WithStyles<typeof styles> {
 class Input extends PureComponent<Props> {
     render() {
         const { for: htmlFor, name, size, labelSize, onChange, placeholder, classes, inputProps } = this.props;
-        const base = 2;
         return (
             <div className={classes.container}>
-                <div style={{ width: `${base * (labelSize || 2)}vw` }}>
+                <div style={{ width: `${labelSize || 4}vw` }}>
                     <InputLabel
                         classes={{ root: classNames(classes.label, classes.border, classes.labelText, classes.font) }}
                         htmlFor={htmlFor}
@@ -30,7 +29,7 @@ class Input extends PureComponent<Props> {
                         {name}
                     </InputLabel>
                 </div>
-                <div style={{ width: `${base * (size || 3)}vw` }}>
+                <div style={{ width: `${size || 6}vw` }}>
                     <InputBase
                         classes={{ root: classNames(classes.input, classes.border, classes.inputText, classes.font) }}
                         name={htmlFor}

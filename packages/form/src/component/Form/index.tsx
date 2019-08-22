@@ -7,6 +7,7 @@ import { GENDERS, GRADES, GROUPS, RANKS, URL } from '../../config/const';
 import { Departments } from '../../config/department';
 import { Candidate, Variant } from '../../config/types';
 import styles from '../../style/Form';
+import { sizeSwitch } from '../../utils/sizeSwitch';
 import { upload } from '../../utils/upload';
 import { checkMail, checkPhone } from '../../utils/validators';
 import AutoSuggest from '../AutoSuggest';
@@ -186,7 +187,8 @@ class Form extends PureComponent<Props> {
                 id='学院'
                 items={Object.keys(Departments)}
                 value={institute || ''}
-                size={7}
+                size={sizeSwitch({ 15: isPC, 21: isPad })}
+                labelSize={sizeSwitch({ 4: isPC, 6: isPad })}
                 getItemValue={(value) => value as string}
                 onChange={this.handleChange('institute')}
                 onSelect={(event, { suggestionValue }) =>
@@ -199,7 +201,8 @@ class Form extends PureComponent<Props> {
                 id='专业'
                 items={Departments[institute] || []}
                 value={major || ''}
-                size={7}
+                size={sizeSwitch({ 15: isPC, 21: isPad })}
+                labelSize={sizeSwitch({ 4: isPC, 6: isPad })}
                 getItemValue={(value) => value as string}
                 onChange={this.handleChange('major')}
                 onSelect={(event, { suggestionValue }) =>
@@ -208,12 +211,51 @@ class Form extends PureComponent<Props> {
             />
         );
 
-        const Name = <Input for='name' name='姓名' onChange={this.handleChange('name')} size={3} />;
-        const Mail = <Input for='mail' name='邮箱' onChange={this.handleChange('mail')} size={8} />;
-        const Phone = <Input for='phone' name='电话' onChange={this.handleChange('phone')} size={7} />;
-        const Code = <Input for='code' name='验证码' onChange={this.handleChange('code')} size={3} />;
+        const Name = (
+            <Input
+                for='name'
+                name='姓名'
+                onChange={this.handleChange('name')}
+                size={sizeSwitch({ 6: isPC, 8: isPad })}
+                labelSize={sizeSwitch({ 4: isPC, 6: isPad })}
+            />
+        );
         const Referrer = (
-            <Input for='referrer' name='推荐人' placeholder='无' onChange={this.handleChange('referrer')} size={3} />
+            <Input
+                for='referrer'
+                name='推荐人'
+                placeholder='无'
+                onChange={this.handleChange('referrer')}
+                size={sizeSwitch({ 6: isPC, 8: isPad })}
+                labelSize={sizeSwitch({ 4: isPC, 6: isPad })}
+            />
+        );
+        const Mail = (
+            <Input
+                for='mail'
+                name='邮箱'
+                onChange={this.handleChange('mail')}
+                size={sizeSwitch({ 16: isPC, 24: isPad })}
+                labelSize={sizeSwitch({ 4: isPC, 6: isPad })}
+            />
+        );
+        const Phone = (
+            <Input
+                for='phone'
+                name='电话'
+                onChange={this.handleChange('phone')}
+                size={sizeSwitch({ 15: isPC, 21: isPad })}
+                labelSize={sizeSwitch({ 4: isPC, 6: isPad })}
+            />
+        );
+        const Code = (
+            <Input
+                for='code'
+                name='验证码'
+                onChange={this.handleChange('code')}
+                size={sizeSwitch({ 6: isPC, 8: isPad })}
+                labelSize={sizeSwitch({ 4: isPC, 6: isPad })}
+            />
         );
 
         const selectComponents = ([

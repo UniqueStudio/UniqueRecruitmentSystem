@@ -19,6 +19,12 @@ const style = ({ breakpoints }: Theme) =>
             },
             '@media screen and (max-width: 1440px)': {
                 height: '40px'
+            },
+            [breakpoints.down('md')]: {
+                height: '45px'
+            },
+            [breakpoints.down('sm')]: {
+                height: '35px'
             }
         },
         item: {
@@ -52,7 +58,13 @@ const style = ({ breakpoints }: Theme) =>
             borderLeftWidth: '0 !important',
             '& input': {
                 padding: '0 0 0 10px',
-                height: '100%'
+                height: '100%',
+                [breakpoints.down('md')]: {
+                    padding: '0 0 0 8px'
+                },
+                [breakpoints.down('sm')]: {
+                    padding: '0 0 0 6px'
+                }
             }
         },
         inputText: {}

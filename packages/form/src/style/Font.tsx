@@ -8,13 +8,19 @@ const styles = ({ breakpoints }: Theme) =>
         font: {
             fontFamily: font.family,
             fontSize: '18px',
+            '@media screen and (max-width: 1600px)': {
+                fontSize: '16px'
+            },
             '@media screen and (max-width: 1440px)': {
                 fontSize: '14px'
             },
             [breakpoints.down('md')]: {
-                fontSize: '14px'
+                fontSize: '15px'
             },
             [breakpoints.down('sm')]: {
+                fontSize: '12px'
+            },
+            [breakpoints.down('xs')]: {
                 fontSize: '12px'
             }
         }

@@ -56,11 +56,11 @@ class CustomSelect extends PureComponent<Props> {
                 }}
                 className={classNames(classes.border, classes.root)}
                 variant='standard'
-                input={<InputBase classes={{ input: classes.input }} />}
+                input={<InputBase classes={{ input: classNames(classes.input, classes.font) }} />}
                 MenuProps={{ classes: { paper: classNames(classes.menu, classes.border) } }}
             >
                 {selections.map((v, i) => (
-                    <MenuItem dense key={i} value={i} classes={{ root: classes.menuItem }}>
+                    <MenuItem dense key={i} value={i} classes={{ root: classNames(classes.menuItem, classes.font) }}>
                         {v}
                     </MenuItem>
                 ))}
