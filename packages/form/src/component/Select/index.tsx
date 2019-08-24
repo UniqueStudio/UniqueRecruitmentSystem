@@ -54,7 +54,7 @@ class CustomSelect extends PureComponent<Props> {
                 classes={{
                     select: classes.select
                 }}
-                className={classNames(classes.border, classes.root)}
+                className={classNames(classes.border, classes.root, classes.height)}
                 variant='standard'
                 input={<InputBase classes={{ input: classNames(classes.input, classes.font) }} />}
                 MenuProps={{ classes: { paper: classNames(classes.menu, classes.border) } }}

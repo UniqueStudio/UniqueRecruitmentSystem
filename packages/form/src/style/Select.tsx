@@ -2,6 +2,7 @@ import { createStyles, Theme } from '@material-ui/core/styles';
 import combineStyles from '../utils/combindStyles';
 import borderStyles from './Border';
 import fontStyles from './Font';
+import heightStyles from './Height';
 import CustomTheme from './theme';
 
 const {
@@ -87,6 +88,6 @@ const style = ({ breakpoints, spacing }: Theme) =>
         }
     });
 
-const styles = combineStyles(style, borderStyles, fontStyles);
+const styles = combineStyles(style, borderStyles, fontStyles, heightStyles);
 
 export default styles;

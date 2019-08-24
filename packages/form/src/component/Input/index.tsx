@@ -20,7 +20,7 @@ class Input extends PureComponent<Props> {
     render() {
         const { for: htmlFor, name, size, labelSize, onChange, placeholder, classes, inputProps } = this.props;
         return (
-            <div className={classes.container}>
+            <div className={classNames(classes.container, classes.height)}>
                 <div style={{ width: `${labelSize || 4}vw` }}>
                     <InputLabel
                         classes={{ root: classNames(classes.label, classes.border, classes.labelText, classes.font) }}

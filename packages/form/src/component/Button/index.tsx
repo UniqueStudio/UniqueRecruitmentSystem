@@ -21,6 +21,7 @@ class Button extends PureComponent<Props> {
                 id={id}
                 className={classNames(
                     classes.border,
+                    classes.height,
                     'button',
                     `text_${textColor}`,
                     `background_${bgColor}`,

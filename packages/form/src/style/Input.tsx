@@ -1,7 +1,8 @@
 import { createStyles, Theme } from '@material-ui/core/styles';
 import combineStyles from '../utils/combindStyles';
 import borderStyles from './Border';
-import fontStyle from './Font';
+import fontStyles from './Font';
+import heightStyles from './Height';
 import CustomTheme from './theme';
 
 const {
@@ -11,20 +12,10 @@ const {
 const style = ({ breakpoints }: Theme) =>
     createStyles({
         container: {
-            height: '50px',
             width: 'fit-content',
             display: 'flex',
             '& > div': {
                 height: '100%'
-            },
-            '@media screen and (max-width: 1440px)': {
-                height: '40px'
-            },
-            [breakpoints.down('md')]: {
-                height: '45px'
-            },
-            [breakpoints.down('sm')]: {
-                height: '35px'
             }
         },
         item: {
@@ -70,6 +61,6 @@ const style = ({ breakpoints }: Theme) =>
         inputText: {}
     });
 
-const styles = combineStyles(style, borderStyles, fontStyle);
+const styles = combineStyles(style, borderStyles, fontStyles, heightStyles);
 
 export default styles;

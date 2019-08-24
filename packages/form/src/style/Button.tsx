@@ -1,7 +1,8 @@
 import combineStyles from '../utils/combindStyles';
 import borderStyles from './Border';
-import fontStyle from './Font';
+import fontStyles from './Font';
+import heightStyles from './Height';
 
-const styles = combineStyles(borderStyles, fontStyle);
+const styles = combineStyles(borderStyles, fontStyles, heightStyles);
 
 export default styles;

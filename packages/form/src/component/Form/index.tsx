@@ -189,7 +189,7 @@ class Form extends PureComponent<Props> {
                 value={institute || ''}
                 size={sizeSwitch({ 15: isPC, 21: isPad })}
                 labelSize={sizeSwitch({ 4: isPC, 6: isPad })}
-                getItemValue={(value) => value as string}
+                getItemValue={(value: string | object) => value as string}
                 onChange={this.handleChange('institute')}
                 onSelect={(event, { suggestionValue }) =>
                     this.setState({ info: { ...this.state.info, institute: suggestionValue } })
@@ -203,7 +203,7 @@ class Form extends PureComponent<Props> {
                 value={major || ''}
                 size={sizeSwitch({ 15: isPC, 21: isPad })}
                 labelSize={sizeSwitch({ 4: isPC, 6: isPad })}
-                getItemValue={(value) => value as string}
+                getItemValue={(value: string | object) => value as string}
                 onChange={this.handleChange('major')}
                 onSelect={(event, { suggestionValue }) =>
                     this.setState({ info: { ...this.state.info, major: suggestionValue } })
@@ -319,6 +319,7 @@ class Form extends PureComponent<Props> {
                             classes.border,
                             classes.font,
                             classes.resume,
+                            classes.height,
                             'button'
                         )}
                     >

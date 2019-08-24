@@ -2,6 +2,7 @@ import { createStyles, Theme } from '@material-ui/core/styles';
 import combineStyles from '../utils/combindStyles';
 import borderStyles from './Border';
 import fontStyles from './Font';
+import heightStyles from './Height';
 import CustomTheme from './theme';
 
 const {
@@ -28,8 +29,7 @@ const style = ({ breakpoints, spacing }: Theme) =>
             }
         },
         resume: {
-            fontWeight: 700,
-            height: '100%'
+            fontWeight: 700
         },
         partOne: {
             display: 'flex',
@@ -57,6 +57,12 @@ const style = ({ breakpoints, spacing }: Theme) =>
                     width: '3px',
                     '@media screen and (max-width: 1440px)': {
                         height: '96px'
+                    },
+                    [breakpoints.down('md')]: {
+                        height: '106px'
+                    },
+                    [breakpoints.down('sm')]: {
+                        height: '86px'
                     }
                 },
                 '& img': {
@@ -93,16 +99,8 @@ const style = ({ breakpoints, spacing }: Theme) =>
             margin: spacing(1, 0),
             '& > div': {
                 width: '10vw',
-                height: '50px',
-                '@media screen and (max-width: 1440px)': {
-                    height: '40px'
-                },
                 [breakpoints.down('md')]: {
-                    height: '45px',
                     width: '14vw'
-                },
-                [breakpoints.down('sm')]: {
-                    height: '35px'
                 }
             }
         },
@@ -125,16 +123,6 @@ const style = ({ breakpoints, spacing }: Theme) =>
                 '& > div,button': {
                     margin: spacing(1, 0),
                     width: '10vw',
-                    height: '50px',
-                    '@media screen and (max-width: 1440px)': {
-                        height: '40px'
-                    },
-                    [breakpoints.down('md')]: {
-                        height: '45px'
-                    },
-                    [breakpoints.down('sm')]: {
-                        height: '35px'
-                    },
                     [breakpoints.down('md')]: {
                         width: '14vw'
                     }
@@ -148,6 +136,6 @@ const style = ({ breakpoints, spacing }: Theme) =>
         }
     });
 
-const styles = combineStyles(borderStyles, fontStyles, style);
+const styles = combineStyles(borderStyles, fontStyles, heightStyles, style);
 
 export default styles;
