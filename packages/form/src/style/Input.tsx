@@ -33,9 +33,6 @@ const style = ({ breakpoints }: Theme) =>
         labelText: {
             color: 'white',
             fontWeight: 700,
-            [breakpoints.down('xs')]: {
-                fontWeight: 'normal'
-            },
             textAlign: 'center',
             display: 'flex',
             alignItems: 'center',

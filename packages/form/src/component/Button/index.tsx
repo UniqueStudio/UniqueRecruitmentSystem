@@ -17,20 +17,17 @@ class Button extends PureComponent<Props> {
     render() {
         const { name, textColor, bgColor, id, className, onClick, classes } = this.props;
         return (
-            <button
+            <div
                 id={id}
-                className={classNames(
-                    classes.border,
-                    classes.height,
-                    'button',
-                    `text_${textColor}`,
-                    `background_${bgColor}`,
-                    className
-                )}
-                onClick={onClick}
+                className={classNames(classes.border, classes.height, 'button', className)}
             >
-                <div className={classNames('buttonName', classes.font)}>{name}</div>
-            </button>
+                <button
+                    className={classNames('buttonName', `text_${textColor}`, `background_${bgColor}`, classes.font)}
+                    onClick={onClick}
+                >
+                    {name}
+                </button>
+            </div>
         );
     }
 }

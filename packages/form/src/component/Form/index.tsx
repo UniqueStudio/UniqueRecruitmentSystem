@@ -37,6 +37,8 @@ class Form extends PureComponent<Props> {
         progress: 0
     };
 
+    focusFile = React.createRef<HTMLInputElement>();
+
     interval = (undefined as unknown) as number;
 
     handleSubmit = async () => {
@@ -128,6 +130,14 @@ class Form extends PureComponent<Props> {
         });
     };
 
+    handleFileFocus = ({ which }: React.KeyboardEvent<HTMLSpanElement>) => {
+        if (which === 13 || which === 32) {
+            if (this.focusFile.current) {
+                this.focusFile.current.click();
+            }
+        }
+    };
+
     getVerification = async () => {
         const { toggleSnackbar } = this.props;
         try {
@@ -187,8 +197,8 @@ class Form extends PureComponent<Props> {
                 id='学院'
                 items={Object.keys(Departments)}
                 value={institute || ''}
-                size={sizeSwitch({ 15: isPC, 21: isPad })}
-                labelSize={sizeSwitch({ 4: isPC, 6: isPad })}
+                size={sizeSwitch({ 15: isPC, 21: isPad, 65: isMobile })}
+                labelSize={sizeSwitch({ 4: isPC, 6: isPad, 15: isMobile })}
                 getItemValue={(value: string | object) => value as string}
                 onChange={this.handleChange('institute')}
                 onSelect={(event, { suggestionValue }) =>
@@ -201,8 +211,8 @@ class Form extends PureComponent<Props> {
                 id='专业'
                 items={Departments[institute] || []}
                 value={major || ''}
-                size={sizeSwitch({ 15: isPC, 21: isPad })}
-                labelSize={sizeSwitch({ 4: isPC, 6: isPad })}
+                size={sizeSwitch({ 15: isPC, 21: isPad, 65: isMobile })}
+                labelSize={sizeSwitch({ 4: isPC, 6: isPad, 15: isMobile })}
                 getItemValue={(value: string | object) => value as string}
                 onChange={this.handleChange('major')}
                 onSelect={(event, { suggestionValue }) =>
@@ -216,8 +226,8 @@ class Form extends PureComponent<Props> {
                 for='name'
                 name='姓名'
                 onChange={this.handleChange('name')}
-                size={sizeSwitch({ 6: isPC, 8: isPad })}
-                labelSize={sizeSwitch({ 4: isPC, 6: isPad })}
+                size={sizeSwitch({ 6: isPC, 8: isPad, 20: isMobile })}
+                labelSize={sizeSwitch({ 4: isPC, 6: isPad, 15: isMobile })}
             />
         );
         const Referrer = (
@@ -226,8 +236,8 @@ class Form extends PureComponent<Props> {
                 name='推荐人'
                 placeholder='无'
                 onChange={this.handleChange('referrer')}
-                size={sizeSwitch({ 6: isPC, 8: isPad })}
-                labelSize={sizeSwitch({ 4: isPC, 6: isPad })}
+                size={sizeSwitch({ 6: isPC, 8: isPad, 20: isMobile })}
+                labelSize={sizeSwitch({ 4: isPC, 6: isPad, 15: isMobile })}
             />
         );
         const Mail = (
@@ -235,8 +245,8 @@ class Form extends PureComponent<Props> {
                 for='mail'
                 name='邮箱'
                 onChange={this.handleChange('mail')}
-                size={sizeSwitch({ 16: isPC, 24: isPad })}
-                labelSize={sizeSwitch({ 4: isPC, 6: isPad })}
+                size={sizeSwitch({ 16: isPC, 24: isPad, 65: isMobile })}
+                labelSize={sizeSwitch({ 4: isPC, 6: isPad, 15: isMobile })}
             />
         );
         const Phone = (
@@ -244,8 +254,8 @@ class Form extends PureComponent<Props> {
                 for='phone'
                 name='电话'
                 onChange={this.handleChange('phone')}
-                size={sizeSwitch({ 15: isPC, 21: isPad })}
-                labelSize={sizeSwitch({ 4: isPC, 6: isPad })}
+                size={sizeSwitch({ 15: isPC, 21: isPad, 65: isMobile })}
+                labelSize={sizeSwitch({ 4: isPC, 6: isPad, 15: isMobile })}
             />
         );
         const Code = (
@@ -253,8 +263,8 @@ class Form extends PureComponent<Props> {
                 for='code'
                 name='验证码'
                 onChange={this.handleChange('code')}
-                size={sizeSwitch({ 6: isPC, 8: isPad })}
-                labelSize={sizeSwitch({ 4: isPC, 6: isPad })}
+                size={sizeSwitch({ 6: isPC, 8: isPad, 20: isMobile })}
+                labelSize={sizeSwitch({ 4: isPC, 6: isPad, 15: isMobile })}
             />
         );
 
@@ -303,14 +313,6 @@ class Form extends PureComponent<Props> {
 
         const Resume = (
             <div>
-                <input
-                    id='resume'
-                    name='resume'
-                    type='file'
-                    style={{ display: 'none' }}
-                    onChange={this.handleFile}
-                    onClick={this.resetInput}
-                />
                 <label htmlFor='resume'>
                     <span
                         className={classNames(
@@ -322,9 +324,20 @@ class Form extends PureComponent<Props> {
                             classes.height,
                             'button'
                         )}
+                        tabIndex={0}
+                        onKeyDown={this.handleFileFocus}
                     >
                         {info.resume && progress ? `上传中: ${progress}%` : '上传简历/作品集'}
                     </span>
+                    <input
+                        id='resume'
+                        name='resume'
+                        type='file'
+                        style={{ display: 'none' }}
+                        onChange={this.handleFile}
+                        onClick={this.resetInput}
+                        ref={this.focusFile}
+                    />
                 </label>
             </div>
         );
@@ -362,6 +375,31 @@ class Form extends PureComponent<Props> {
                             {Submit}
                         </div>
                     </div>
+                </div>
+            ));
+
+        isMobile &&
+            (main = (
+                <div className={classes.container}>
+                    <div>
+                        {Name}
+                        {Referrer}
+                    </div>
+                    <div>{Mail}</div>
+                    <div>{Institute}</div>
+                    <div>{Major}</div>
+                    <div className='mobile-select'>{selectComponents}</div>
+                    <div>
+                        {Resume}
+                        {Quick}
+                    </div>
+                    <div>{Intro}</div>
+                    <div>{Phone}</div>
+                    <div>
+                        {Code}
+                        {CodeButton}
+                    </div>
+                    <div className='mobile-submit'>{Submit}</div>
                 </div>
             ));
 

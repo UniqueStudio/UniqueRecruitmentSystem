@@ -31,6 +31,14 @@ const style = ({ breakpoints, spacing }: Theme) =>
                 transform: 'skewX(20deg)',
                 padding: spacing(0, 2),
                 letterSpacing: spacing(0.5)
+            },
+            [breakpoints.down('xs')]: {
+                height: '24px',
+                top: '-12px',
+                left: '0',
+                right: '0',
+                margin: '0 auto',
+                width: 'fit-content'
             }
         },
         textarea: {
@@ -41,7 +49,12 @@ const style = ({ breakpoints, spacing }: Theme) =>
             padding: spacing(0, 3),
             margin: spacing(3, 0),
             border: 0,
-            backgroundColor: 'transparent'
+            backgroundColor: 'transparent',
+            [breakpoints.down('xs')]: {
+                margin: spacing(4, 0),
+                padding: spacing(0, 2),
+                height: '150px'
+            }
         }
     });
 

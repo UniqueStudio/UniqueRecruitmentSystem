@@ -12,6 +12,9 @@ const styles = ({ breakpoints }: Theme) =>
             },
             [breakpoints.down('sm')]: {
                 height: '35px'
+            },
+            [breakpoints.down('xs')]: {
+                height: '40px'
             }
         }
     });

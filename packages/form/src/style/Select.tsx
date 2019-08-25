@@ -84,7 +84,10 @@ const style = ({ breakpoints, spacing }: Theme) =>
         },
         input: {
             paddingLeft: '1.5vw',
-            textAlign: 'left'
+            textAlign: 'left',
+            [breakpoints.down('xs')]: {
+                paddingLeft: '5vw'
+            }
         }
     });
 

@@ -61,6 +61,9 @@ const styles = ({ spacing, breakpoints }: Theme) =>
             [breakpoints.down('md')]: {
                 flex: 5
             },
+            '@media screen and (max-width: 800px)': {
+                flex: 6
+            },
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'center',

@@ -26,6 +26,35 @@ const style = ({ breakpoints, spacing }: Theme) =>
             },
             [breakpoints.down('sm')]: {
                 padding: spacing(2, 3)
+            },
+            [breakpoints.down('xs')]: {
+                width: 'fit-content',
+                padding: spacing(2, 0),
+                margin: '0 auto',
+                alignItems: 'center',
+                '& > div': {
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    margin: spacing(3, 0),
+                    width: '100%',
+                    '& .button': {
+                        width: '35vw'
+                    },
+                    '&.mobile-select': {
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        margin: spacing(0),
+                        '& > div': {
+                            margin: spacing(3, 0),
+                            width: '50vw'
+                        }
+                    },
+                    '&.mobile-submit': {
+                        '& > div': {
+                            margin: '0 auto'
+                        }
+                    }
+                }
             }
         },
         resume: {
@@ -120,7 +149,7 @@ const style = ({ breakpoints, spacing }: Theme) =>
             '& .pfRight': {
                 display: 'flex',
                 flexDirection: 'column',
-                '& > div,button': {
+                '& > div, > button': {
                     margin: spacing(1, 0),
                     width: '10vw',
                     [breakpoints.down('md')]: {
@@ -131,7 +160,13 @@ const style = ({ breakpoints, spacing }: Theme) =>
             '& .submit': {
                 display: 'flex',
                 alignItems: 'center',
-                justifyContent: 'center'
+                justifyContent: 'center',
+                '& .button': {
+                    width: '10vw',
+                    [breakpoints.down('md')]: {
+                        width: '14vw'
+                    }
+                }
             }
         }
     });
