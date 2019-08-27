@@ -1,6 +1,7 @@
 import { createStyles, Theme } from '@material-ui/core/styles';
 import combindStyles from '../utils/combindStyles';
 import borderStyles from './Border';
+import fontStyles from './Font';
 import CustomTheme from './theme';
 
 const {
@@ -10,26 +11,22 @@ const {
 const style = ({ spacing }: Theme) =>
     createStyles({
         menuItem: {
-            fontSize: '10px',
-            fontWeight: 400,
+            textAlign: 'center',
             minHeight: 'unset',
-            paddingTop: spacing(1),
-            paddingBottom: spacing(1)
+            color: primary.main,
+            justifyContent: 'center'
         },
         hightlightedItem: {
-            fontWeight: 'bold',
-            backgroundColor: primary.lighter
+            backgroundColor: primary.light
         },
         container: {
             position: 'relative'
         },
         suggestionsContainer: {
             position: 'absolute',
-            left: '9%',
             maxHeight: '30vh',
             overflowY: 'auto',
-            zIndex: 999,
-            width: 'fit-content'
+            zIndex: 999
         },
         suggestionsList: {
             margin: 0,
@@ -38,6 +35,6 @@ const style = ({ spacing }: Theme) =>
         }
     });
 
-const styles = combindStyles(style, borderStyles);
+const styles = combindStyles(borderStyles, fontStyles, style);
 
 export default styles;

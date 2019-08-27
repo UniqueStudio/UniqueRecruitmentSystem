@@ -49,12 +49,12 @@ class AutoSuggest extends PureComponent<Props> {
 
     renderSuggestion = (item: string | object, { isHighlighted }: { isHighlighted: boolean }) => {
         const suggestion = this.props.getItemValue(item);
-        const { menuItem, hightlightedItem } = this.props.classes;
+        const { menuItem, hightlightedItem, font } = this.props.classes;
         return (
             <MenuItem
                 dense
                 key={suggestion}
-                classes={{ root: classNames(menuItem, { [hightlightedItem]: isHighlighted }) }}
+                classes={{ root: classNames(menuItem, font, { [hightlightedItem]: isHighlighted }) }}
                 style={{ backgroundColor: isHighlighted ? '#E5F1FD' : 'transparent' }}
                 component={'div' as any}
             >
@@ -65,7 +65,10 @@ class AutoSuggest extends PureComponent<Props> {
 
     renderSuggestionsContainer = ({ containerProps, children, query }: any) => {
         return (
-            <Paper {...containerProps} style={{ display: this.state.suggestions.length ? '' : 'none' }}>
+            <Paper
+                {...containerProps}
+                style={{ display: this.state.suggestions.length ? '' : 'none', left: `${this.props.labelSize || 4}vw` }}
+            >
                 <MenuList>{children}</MenuList>
             </Paper>
         );
