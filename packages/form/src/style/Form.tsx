@@ -11,14 +11,16 @@ const {
 
 const style = ({ breakpoints, spacing }: Theme) =>
     createStyles({
-        root: {},
+        root: {
+            position: 'relative'
+        },
         container: {
+            position: 'relative',
             display: 'flex',
             flexDirection: 'column',
             width: '100%',
             padding: spacing(4, 12),
             '& > div': {
-                height: 'fit-content',
                 width: '100%'
             },
             [breakpoints.down('md')]: {
@@ -168,6 +170,9 @@ const style = ({ breakpoints, spacing }: Theme) =>
                     }
                 }
             }
+        },
+        curtain: {
+            opacity: 0.2
         }
     });
 

@@ -344,7 +344,7 @@ class Form extends PureComponent<Props> {
 
         (isPC || isPad) &&
             (main = (
-                <div className={classes.container}>
+                <>
                     <div className={classes.partOne}>
                         {Name}
                         {Mail}
@@ -375,12 +375,12 @@ class Form extends PureComponent<Props> {
                             {Submit}
                         </div>
                     </div>
-                </div>
+                </>
             ));
 
         isMobile &&
             (main = (
-                <div className={classes.container}>
+                <>
                     <div>
                         {Name}
                         {Referrer}
@@ -400,12 +400,14 @@ class Form extends PureComponent<Props> {
                         {CodeButton}
                     </div>
                     <div className='mobile-submit'>{Submit}</div>
-                </div>
+                </>
             ));
 
         return (
-            <div className='formContainer'>
-                {!submitted && main}
+            <div className={classes.root}>
+                <div className={classNames(classes.container, { [classes.curtain]: submitted && !isMobile })}>
+                    {main}
+                </div>
                 {submitted && (
                     <Submitted
                         title='报名成功'
