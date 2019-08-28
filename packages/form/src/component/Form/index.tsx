@@ -17,6 +17,7 @@ import Input from '../Input';
 import Select from '../Select';
 import Submitted from '../Submitted';
 import TextArea from '../TextArea';
+import UploadProgress from '../UploadProgress';
 
 interface Props extends WithStyles<typeof styles> {
     isPC: boolean;
@@ -34,7 +35,8 @@ class Form extends PureComponent<Props> {
         sent: false,
         popoverOn: false,
         time: 0,
-        progress: 0
+        progress: 0,
+        submitting: false
     };
 
     focusFile = React.createRef<HTMLInputElement>();
@@ -72,6 +74,7 @@ class Form extends PureComponent<Props> {
         const formData = new FormData();
         Object.entries(info).map(([key, value]) => formData.append(key, value));
         try {
+            this.setState({ submitting: true });
             info.resume && toggleSnackbar('开始上传，请耐心等待', 'info');
             const response = await upload(`${URL}/candidate`, { method: 'POST', body: formData }, ({ loaded, total }) =>
                 this.setState({
@@ -81,22 +84,15 @@ class Form extends PureComponent<Props> {
             const result = JSON.parse(response);
             if (result.type === 'success') {
                 toggleSnackbar('提交成功', result.type);
-                this.setState({
-                    submitted: true,
-                    progress: 0
-                });
+                this.setState({ submitted: true });
                 this.props.submit();
             } else {
                 toggleSnackbar(result.message, result.type);
-                this.setState({
-                    progress: 0
-                });
             }
         } catch ({ message }) {
             toggleSnackbar(message, 'error');
-            this.setState({
-                progress: 0
-            });
+        } finally {
+            this.setState({ progress: 0, submitting: false });
         }
     };
 
@@ -186,7 +182,7 @@ class Form extends PureComponent<Props> {
     }
 
     render() {
-        const { submitted, info, sent, time, /*popoverOn,*/ progress } = this.state;
+        const { submitted, info, sent, time, /*popoverOn,*/ progress, submitting } = this.state;
         const { gender, phone, group, grade, rank, isQuick, institute, major } = info;
         const { isPC, isPad, isMobile, classes } = this.props;
         const canGetCode = checkPhone(phone);
@@ -405,7 +401,11 @@ class Form extends PureComponent<Props> {
 
         return (
             <div className={classes.root}>
-                <div className={classNames(classes.container, { [classes.curtain]: submitted && !isMobile })}>
+                <div
+                    className={classNames(classes.container, {
+                        [classes.curtain]: (submitted || submitting) && !isMobile
+                    })}
+                >
                     {main}
                 </div>
                 {submitted && (
@@ -415,6 +415,7 @@ class Form extends PureComponent<Props> {
                         className='fullHeight'
                     />
                 )}
+                {submitting && <UploadProgress progress={progress} />}
             </div>
         );
     }
