@@ -83,17 +83,17 @@ const styles = ({ spacing, breakpoints }: Theme) =>
         },
         msg: {
             fontFamily: MyTheme.font.family,
-            fontSize: '1.2vw',
+            fontSize: '20px',
             margin: `${spacing(1)}px 0`,
-            fontWeight: 500,
+            fontWeight: 600,
             [breakpoints.down('xs')]: {
-                fontSize: '3vw'
+                fontSize: '14px'
             },
             '& .sp': {
-                fontSize: '1.5vw',
+                fontSize: '25px',
                 fontWeight: 'bold',
                 [breakpoints.down('xs')]: {
-                    fontSize: '4vw'
+                    fontSize: '20px'
                 }
             },
             '& .sp1': {
