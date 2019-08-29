@@ -409,11 +409,7 @@ class Form extends PureComponent<Props> {
                     {main}
                 </div>
                 {submitted && (
-                    <Submitted
-                        title='报名成功'
-                        description='请等待我们的短信通知，有问题可在招新群联系我们'
-                        className='fullHeight'
-                    />
+                    <Submitted title='报名成功' description='请等待我们的短信通知，有问题可在招新群联系我们' />
                 )}
                 {submitting && <UploadProgress progress={progress} />}
             </div>
