@@ -16,7 +16,11 @@ import {
     getFormVerify,
     getResume,
     setCandidate,
-    setCandidateVerify
+    setCandidateVerify,
+    newGetForm,
+    newGetFormVerify,
+    newSetCandidate,
+    newSetCandidateVerify
 } from '../actions/candidate';
 
 const router = Router();
@@ -27,10 +31,14 @@ router.post('/', fileHandler.single('resume'), addCandidateVerify, codeChecker('
 // generate form
 router.get('/:cid/form/:formId', getFormVerify, getForm);
 
+router.get('/form/:token', newGetFormVerify, newGetForm)
+
 router.use(authenticator);
 
 // set candidates data
 router.put('/:cid/form/:formId', setCandidateVerify, setCandidate);
+
+router.put('/form/:token', newSetCandidateVerify, newSetCandidate);
 
 // allocate one
 router.put('/:cid/interview/:type', allocateOneVerify, allocateOne);

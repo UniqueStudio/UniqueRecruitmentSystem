@@ -2,11 +2,13 @@ import { Request, RequestHandler } from 'express';
 import { body, validationResult } from 'express-validator/check';
 import moment from 'moment';
 import fetch from 'node-fetch';
-import { formURL, GROUPS_, smsAPI, token } from '../../config/consts';
+import { formURL, smsAPI, token } from '../../config/consts';
+import { FormPayload } from "../../config/types";
 import { CandidateRepo, RecruitmentRepo } from '../../database/model';
 import { errorRes } from '../../utils/errorRes';
 import { generateSMS } from '../../utils/generateSMS';
 import { titleConverter } from '../../utils/titleConverter';
+import { generateJWT } from "../../utils/generateJWT";
 
 const padZero = (toPad: number) => toPad.toString().padStart(2, '0');
 
@@ -17,7 +19,7 @@ const dateTranslator = (timestamp: number) => {
 
 const send = (req: Request) => {
     const { step, type, time, place, rest, next: nextStep, candidates } = req.body;
-    let formId = '';
+    let recruitmentId = '';
     return candidates.map(async (id: string) => {
         const candidateInfo = await CandidateRepo.queryById(id);
         if (!candidateInfo) {
@@ -25,12 +27,15 @@ const send = (req: Request) => {
         }
         const { name, title, group, interviews, phone } = candidateInfo;
         try {
-            if (type === 'accept' && !formId) {
+            if (type === 'accept' && !recruitmentId) {
+                // 仅执行一次，用于生成含有recruitment id的formId
+                // 以后所有的candidates都可以复用这个formId
                 const recruitment = (await RecruitmentRepo.query({ title }))[0];
                 if (recruitment.end < Date.now()) {
                     return new Error('This recruitment has already ended!');
                 }
                 if (nextStep === 2) {
+                    // 发送组面短信
                     const data = recruitment.groups.find((groupData) => groupData.name === group);
                     if (!data) {
                         return new Error('Group doesn\'t exist!');
@@ -38,18 +43,28 @@ const send = (req: Request) => {
                     if (!data.interview.length) {
                         return new Error('Please set group interview time first!');
                     }
-                    formId = `${recruitment._id}${GROUPS_.indexOf(group)}1`;
+                    recruitmentId = `${recruitment._id}`;
+                    // formId = `${recruitment._id}${GROUPS_.indexOf(group)}1`;
                 } else if (nextStep === 4) {
+                    // 发送群面短信
                     if (!recruitment.interview.length) {
                         return new Error('Please set team interview time first!');
                     }
-                    formId = `${recruitment._id}2`;
+                    recruitmentId = `${recruitment._id}`;
+                    // formId = `${recruitment._id}2`;
                 }
             }
             if (type === 'reject') {
                 await CandidateRepo.updateById(id, { rejected: true });
             }
-            const url = formId ? `${formURL}/${formId}/${id}` : '';
+            const payload: FormPayload = {
+                recruitmentId,
+                id,
+                step: nextStep === 2 ? "group" : "team",
+                group
+            }
+            const jwtToken = generateJWT(payload, 60 * 60 * 24 * 7)
+            const url = recruitmentId ? `${formURL}/${jwtToken}` : '';
             let allocated;
             if (type === 'group' || type === 'team') {
                 allocated = interviews[type].allocation;
