@@ -4,6 +4,12 @@ export interface Payload {
     id: string;
 }
 
+export interface FormPayload extends Payload {
+    recruitmentId: string;
+    step: 'group' | 'team' //group: 组面, team: 群面
+    group: Group;
+}
+
 export type Group = 'web' | 'lab' | 'ai' | 'game' | 'android' | 'ios' | 'design' | 'pm';
 export type Step = 0 | 1 | 2 | 3 | 4 | 5;       // 0-5: from 报名 to 通过
 export type Gender = 0 | 1 | 2;                 // 1: Male, 2: Female, 0: Other
