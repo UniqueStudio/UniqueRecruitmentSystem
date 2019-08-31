@@ -1,10 +1,13 @@
-import React, { useReducer, useContext } from "react";
-import { MokeDates } from "./old";
+import React, { useReducer, useContext, useEffect, useState } from "react";
 import { List, ListItem, Chip, Grid, makeStyles, Theme, createStyles, } from "@material-ui/core";
 import Header from "./Header";
+// import { useResource } from "react-request-hook";
+
 
 import { SelectDate } from "./old";
 import { reducer, ClickedArray, initialState } from "./reducer";
+
+import { URL } from "../../config/const";
 
 interface IStyleProps {
     color?: "white" | undefined
@@ -42,19 +45,28 @@ interface IContextProps {
 }
 
 const TimeDispatch = React.createContext<IContextProps>({} as IContextProps)
+
 export default (props: ITimesProps): React.ReactElement => {
-    // const formID = window.location.pathname
-    // const [dates, getDates] = useResource((formID: string) => {
-    //     url: `/form/${formID}`
-    //     method: "GET"
-    // })
-    // // fetching data
-    // useEffect(() => getDates(formID), [])
-    const dates = MokeDates
-    // //TODO: use custom loading component
-    // if (dates.isLoading) return (<div>Loading</div>)
-    const [state, dispatch] = useReducer(reducer, initialState)
     const classes = useStyles({ color: "white" })
+
+    const token = window.location.pathname
+    const [dates, setDates] = useState([] as SelectDate[])
+
+    useEffect(() => {
+        const fetchDates = async () => {
+            const resp = await fetch(`${URL}/candidate/form${token}`)
+            const data = await resp.json()
+
+            setDates(data.time)
+        }
+
+        fetchDates()
+    }, [])
+
+    const [state, dispatch] = useReducer(reducer, initialState)
+
+
+    if (!dates) { return (<div>Loading</div>) }
     return (
         <TimeDispatch.Provider value={{
             dispatch: dispatch,
@@ -144,14 +156,13 @@ const TimeChip = (props: IChipProps): React.ReactElement => {
             />
         )
     } else {
-        const classes = useStyles({})
         return (
             <Chip
                 color={"primary"}
                 variant={clicked[props.index] ? "default" : "outlined"}
                 label={props.label}
                 clickable={true}
-                className={classes.chip}
+                className={clicked[props.index] ? useStyles({ color: "white" }).chip : useStyles({}).chip}
                 onClick={handleClick}
             />
         )
