@@ -16,25 +16,6 @@ const styles = ({ spacing, breakpoints }: Theme) =>
                 alignItems: 'center'
             }
         },
-        logo: {
-            userSelect: 'none',
-            [breakpoints.between('sm', 'md')]: {
-                position: 'absolute',
-                top: spacing(3),
-                left: spacing(5),
-                width: '25%'
-            },
-            [breakpoints.up('lg')]: {
-                position: 'absolute',
-                top: spacing(3),
-                left: spacing(5),
-                width: '20%'
-            },
-            [breakpoints.down('xs')]: {
-                width: '50%',
-                marginTop: spacing(4)
-            }
-        },
         background: {
             flex: 1,
             backgroundSize: 'contain',

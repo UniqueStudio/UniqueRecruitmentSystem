@@ -3,7 +3,6 @@ import classNames from 'classnames';
 import React, { PureComponent } from 'react';
 // import borderTop from '../asset/img/borderTop.png';
 import header from '../asset/img/header.png';
-import logo from '../asset/img/logo.png';
 import Dialog from '../component/Dialog';
 import Form from '../component/Form';
 import Loading from '../component/Loading';
@@ -122,7 +121,6 @@ class Container extends PureComponent<Props> {
 
         return (
             <div className={classes.root}>
-                <img src={logo} className={classes.logo} alt='logo' />
                 <div className={classNames(classes.background, classes.bgLeft)} />
                 <div className={classes.center}>
                     <img src={header} className={classes.header} alt='header' />
