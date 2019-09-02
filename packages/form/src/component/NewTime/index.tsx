@@ -6,6 +6,7 @@ import Times from "./Times";
 
 interface ITimeRootProps {
   isMobile: boolean;
+  toggleSnackbar: (content: string) => void;
 }
 
 export const NewTime = (props: ITimeRootProps): React.ReactElement => {

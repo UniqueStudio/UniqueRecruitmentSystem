@@ -11,7 +11,7 @@ import {
 import Header from "./Header";
 import Modal from "./Modal";
 
-import { SelectDate } from "./old";
+import { SelectDate } from "./date";
 import { reducer, ClickedArray, initialState } from "./reducer";
 
 import { URL } from "../../config/const";
@@ -56,15 +56,17 @@ const TimeDispatch = React.createContext<IContextProps>({} as IContextProps);
 export default (props: ITimesProps): React.ReactElement => {
   const classes = useStyles({ color: "white" });
 
-  const token = window.location.pathname;
+  const token = window.location.pathname.slice(1); // get rid of "/"
   const [dates, setDates] = useState([] as SelectDate[]);
+  const [step, setStep] = useState("");
 
   useEffect(() => {
     const fetchDates = async () => {
-      const resp = await fetch(`${URL}/candidate/form${token}`);
+      const resp = await fetch(`${URL}/candidate/form/${token}`);
       const data = await resp.json();
 
       setDates(data.time);
+      setStep(data.step);
     };
 
     fetchDates();
@@ -92,7 +94,7 @@ export default (props: ITimesProps): React.ReactElement => {
           />
         ))}
       </List>
-      <Modal />
+      <Modal clicked={state.clicked} token={token} step={step} dates={dates} />
     </TimeDispatch.Provider>
   );
 };
