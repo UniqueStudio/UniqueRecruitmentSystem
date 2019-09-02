@@ -3,7 +3,7 @@ import React, { PureComponent } from 'react';
 import classNames from 'classnames';
 
 import { GENDERS, GRADES, GROUPS, RANKS, URL } from '../../config/const';
-import { Candidate } from '../../config/types';
+import { Candidate, Variant } from '../../config/types';
 import { titleConverter } from '../../utils/titleConverter';
 import { upload } from '../../utils/upload';
 import { checkMail, checkPhone } from '../../utils/validators';
@@ -17,7 +17,7 @@ import TextArea from '../TextArea';
 interface Props {
     isMobile: boolean;
     submit: () => void;
-    toggleSnackbar: (content: string) => void;
+    toggleSnackbar: (content: string, variant: Variant) => void;
     title: string;
 }
 
@@ -32,7 +32,7 @@ class Form extends PureComponent<Props> {
         progress: 0
     };
 
-    interval = undefined as unknown as number;
+    interval = (undefined as unknown) as number;
 
     handleSubmit = async () => {
         const { info: stateInfo } = this.state;
@@ -49,44 +49,44 @@ class Form extends PureComponent<Props> {
             score: '成绩排名',
             phone: '电话号码',
             code: '验证码',
-            intro: '自我介绍',
+            intro: '自我介绍'
         };
         for (const [key, value] of Object.entries(info)) {
             if (value === undefined) {
-                return toggleSnackbar(`请填写${translator[key]}`);
+                return toggleSnackbar(`请填写${translator[key]}`, 'warning');
             }
         }
         if (!checkMail(info.mail)) {
-            return toggleSnackbar('邮箱格式不正确!');
+            return toggleSnackbar('邮箱格式不正确!', 'warning');
         }
         if (!checkPhone(info.phone)) {
-            return toggleSnackbar('手机号码格式不正确!');
+            return toggleSnackbar('手机号码格式不正确!', 'warning');
         }
         const formData = new FormData();
         Object.entries(info).map(([key, value]) => formData.append(key, value));
         try {
-            info.resume && toggleSnackbar('开始上传，请耐心等待');
+            info.resume && toggleSnackbar('开始上传，请耐心等待', 'info');
             const response = await upload(`${URL}/candidate`, { method: 'POST', body: formData }, ({ loaded, total }) =>
                 this.setState({
-                    progress: (loaded / total * 100).toFixed(1)
+                    progress: ((loaded / total) * 100).toFixed(1)
                 })
             );
             const result = JSON.parse(response);
             if (result.type === 'success') {
-                toggleSnackbar('提交成功');
+                toggleSnackbar('提交成功', 'success');
                 this.setState({
                     submitted: true,
                     progress: 0
                 });
                 this.props.submit();
             } else {
-                toggleSnackbar(result.message);
+                toggleSnackbar(result.message, 'error');
                 this.setState({
                     progress: 0
                 });
             }
         } catch ({ message }) {
-            toggleSnackbar(message);
+            toggleSnackbar(message, 'error');
             this.setState({
                 progress: 0
             });
@@ -112,11 +112,11 @@ class Form extends PureComponent<Props> {
     handleFile = ({ target: { files } }: React.ChangeEvent<HTMLInputElement>) => {
         const { toggleSnackbar } = this.props;
         if (!files) {
-            return toggleSnackbar('你没有上传任何文件');
+            return toggleSnackbar('你没有上传任何文件', 'warning');
         }
         const file = files[0];
         if (file.size > 1024 * 1024 * 100) {
-            return toggleSnackbar('文件大小必须小于100MB');
+            return toggleSnackbar('文件大小必须小于100MB', 'warning');
         }
         this.setState({
             info: { ...this.state.info, resume: file }
@@ -128,17 +128,17 @@ class Form extends PureComponent<Props> {
         try {
             const { phone } = this.state.info;
             if (!phone) {
-                return toggleSnackbar('请填写手机号码!');
+                return toggleSnackbar('请填写手机号码!', 'warning');
             }
             if (!checkPhone(phone)) {
-                return toggleSnackbar('手机号码格式不正确!');
+                return toggleSnackbar('手机号码格式不正确!', 'warning');
             }
             const response = await fetch(`${URL}/sms/verification/candidate/${phone}`);
             const result = await response.json();
             if (result.type !== 'success') {
-                return toggleSnackbar(result.message || '获取验证码失败!');
+                return toggleSnackbar(result.message || '获取验证码失败!', 'error');
             }
-            toggleSnackbar('验证码已发送!');
+            toggleSnackbar('验证码已发送!', 'info');
             this.setState({
                 sent: true,
                 time: 60
@@ -146,7 +146,7 @@ class Form extends PureComponent<Props> {
             this.interval = window.setInterval(() => {
                 if (this.state.time === 0) {
                     this.setState({
-                        sent: false,
+                        sent: false
                     });
                     clearInterval(this.interval);
                     return;
@@ -156,7 +156,7 @@ class Form extends PureComponent<Props> {
                 });
             }, 1000);
         } catch ({ message }) {
-            toggleSnackbar(`无法预知的错误: ${message}`);
+            toggleSnackbar(`无法预知的错误: ${message}`, 'error');
         }
     };
 
@@ -181,7 +181,14 @@ class Form extends PureComponent<Props> {
         const { gender, phone, group, grade, rank, isQuick } = info;
         const { isMobile, title } = this.props;
         const canGetCode = checkPhone(phone);
-        const Name = <Input for='name' name='姓名' onChange={this.handleChange('name')} className={classNames({ mobile_sm: isMobile })} />;
+        const Name = (
+            <Input
+                for='name'
+                name='姓名'
+                onChange={this.handleChange('name')}
+                className={classNames({ mobile_sm: isMobile })}
+            />
+        );
         const Mail = <Input for='mail' name='邮箱' onChange={this.handleChange('mail')} />;
         const Institute = <Input for='institute' name='学院' onChange={this.handleChange('institute')} />;
         const Major = <Input for='major' name='专业' onChange={this.handleChange('major')} />;
@@ -235,21 +242,35 @@ class Form extends PureComponent<Props> {
                 className={classNames({ disabled: sent || !canGetCode })}
             />
         );
-        const Code = <Input for='code' name='验证码' onChange={this.handleChange('code')}
-                            className={classNames({ mobile_sm: isMobile })} />;
+        const Code = (
+            <Input
+                for='code'
+                name='验证码'
+                onChange={this.handleChange('code')}
+                className={classNames({ mobile_sm: isMobile })}
+            />
+        );
         const Resume = (
             <>
-                <input id='resume' name='resume' type='file' className='none'
-                       onChange={this.handleFile} onClick={this.resetInput} />
+                <input
+                    id='resume'
+                    name='resume'
+                    type='file'
+                    className='none'
+                    onChange={this.handleFile}
+                    onClick={this.resetInput}
+                />
                 <label htmlFor='resume'>
-                    <span className={classNames(
-                        info.resume ? 'background_primary' : 'background_primaryLighter',
-                        info.resume ? 'text_white' : 'text_primary',
-                        'fontSize',
-                        'button',
-                        'contentPadding',
-                        'fileButton'
-                    )}>
+                    <span
+                        className={classNames(
+                            info.resume ? 'background_primary' : 'background_primaryLighter',
+                            info.resume ? 'text_white' : 'text_primary',
+                            'fontSize',
+                            'button',
+                            'contentPadding',
+                            'fileButton'
+                        )}
+                    >
                         {info.resume && progress ? `上传中: ${progress}%` : '上传简历/作品集'}
                     </span>
                 </label>
@@ -332,8 +353,13 @@ class Form extends PureComponent<Props> {
         return (
             <div className='formContainer'>
                 {!submitted && (!isMobile ? PCInterface : MobileInterface)}
-                {submitted &&
-                <Submitted title='报名成功' description='请等待我们的短信通知，有问题可在招新群联系我们' className='fullHeight' />}
+                {submitted && (
+                    <Submitted
+                        title='报名成功'
+                        description='请等待我们的短信通知，有问题可在招新群联系我们'
+                        className='fullHeight'
+                    />
+                )}
             </div>
         );
     }

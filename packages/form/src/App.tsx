@@ -1,5 +1,5 @@
+import { CssBaseline } from '@material-ui/core';
 import React, { PureComponent } from 'react';
-
 import './style/index.scss';
 import Container from './view';
 
@@ -11,6 +11,7 @@ class App extends PureComponent {
     render() {
         return (
             <div className='main'>
+                <CssBaseline />
                 <Container />
             </div>
         );
