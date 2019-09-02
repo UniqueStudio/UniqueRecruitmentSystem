@@ -9,6 +9,7 @@ import {
   createStyles
 } from "@material-ui/core";
 import Header from "./Header";
+import Modal from "./Modal";
 
 import { SelectDate } from "./old";
 import { reducer, ClickedArray, initialState } from "./reducer";
@@ -91,6 +92,7 @@ export default (props: ITimesProps): React.ReactElement => {
           />
         ))}
       </List>
+      <Modal />
     </TimeDispatch.Provider>
   );
 };
