@@ -7,13 +7,14 @@ import Dialog from '../component/Dialog';
 import Form from '../component/Form';
 import Loading from '../component/Loading';
 import Snackbar from '../component/SnackBar';
-import Time from '../component/Time';
+// import Time from '../component/Time';
+import { NewTime } from "../component/NewTime";
 import { MEDIA, URL } from '../config/const';
 import { Variant } from '../config/types';
 import styles from '../style/view';
 import { titleConverter } from '../utils/titleConverter';
 
-interface Props extends WithStyles<typeof styles> {}
+interface Props extends WithStyles<typeof styles> { }
 
 class Container extends PureComponent<Props> {
     state = {
@@ -68,24 +69,25 @@ class Container extends PureComponent<Props> {
     render() {
         const classes = this.props.classes;
         const { media, title, snackBarOn, variant, loading, openDialog } = this.state;
-        const params = window.location.pathname.split('/').splice(1);
+        const pathname = window.location.pathname;
+        console.log(pathname)
         const titleName = titleConverter(title);
         /* http://join.hustunique.com/:formId/:candidateId */
         /* formId: recruitmentId + groupId(if type === 1) + type(0: apply, 1: interview1, 2: interview2) */
         const [isPC, isPad, isMobile] = [media === MEDIA.PC, media === MEDIA.Pad, media === MEDIA.Mobile];
         const main =
-            params.length === 2 ? (
-                <Time isPC={isPC} isPad={isPad} isMobile={isMobile} toggleSnackbar={this.toggleSnackbar} />
+            pathname !== "/" ? (
+                <NewTime isMobile={isMobile} toggleSnackbar={this.toggleSnackbar} />
             ) : (
-                <Form
-                    submit={this.submit}
-                    isPC={isPC}
-                    isPad={isPad}
-                    isMobile={isMobile}
-                    title={title}
-                    toggleSnackbar={this.toggleSnackbar}
-                />
-            );
+                    <Form
+                        submit={this.submit}
+                        isPC={isPC}
+                        isPad={isPad}
+                        isMobile={isMobile}
+                        title={title}
+                        toggleSnackbar={this.toggleSnackbar}
+                    />
+                );
 
         const MainInterface = (
             <div>
@@ -96,8 +98,8 @@ class Container extends PureComponent<Props> {
                             <h1>{titleName}</h1>
                         </>
                     ) : (
-                        <h1>Unique Studio{titleName === '' ? '' : ` - ${titleName}`}</h1>
-                    )}
+                            <h1>Unique Studio{titleName === '' ? '' : ` - ${titleName}`}</h1>
+                        )}
                     {main}
                 </div>
             </div>
@@ -129,7 +131,7 @@ class Container extends PureComponent<Props> {
                 <div className={classNames(classes.background, classes.bgRight)} />
                 <Snackbar open={snackBarOn !== ''} onClose={this.handleClose} content={snackBarOn} variant={variant} />
                 <Loading open={loading} />
-                <Dialog open={!loading && title === '' && params.length !== 2 && openDialog} content={msg} title='' />
+                <Dialog open={!loading && title === '' && pathname === "/" && openDialog} content={msg} title='' />
             </div>
         );
     }

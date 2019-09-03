@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import {
   Button,
   Dialog,
@@ -13,6 +13,7 @@ import {
 
 import { URL } from "../../config/const";
 import { SelectDate } from "./date";
+import { ToggleSnackbar } from "./index";
 
 interface IStyleProps {
   color?: "white" | undefined;
@@ -24,7 +25,8 @@ const useStyles = makeStyles((theme: Theme) =>
     button: (props: IStyleProps) => ({
       color: props.color,
       fontWeight: "bold",
-      margin: theme.spacing(1)
+      margin: theme.spacing(1),
+      boxShadow: "none"
     })
   })
 );
@@ -39,6 +41,7 @@ interface IModalProps {
 export default (props: IModalProps): React.ReactElement => {
   const [open, setOpen] = useState(false);
   const [abandon, setAbandon] = useState(false);
+  const { snackbar } = useContext(ToggleSnackbar)
 
   const white = useStyles({ color: "white" });
 
@@ -52,30 +55,32 @@ export default (props: IModalProps): React.ReactElement => {
   };
 
   const submitForm = async (abandon: boolean, time: SelectDate[]) => {
-    console.log("submit");
-    const resp = await fetch(`${URL}/candidate/form/${props.token}`, {
-      method: "PUT",
-      headers: {
-        "content-type": "application/json",
-        Authorization: `Bearer ${props.token}`
-      },
-      body: JSON.stringify(
-        abandon
-          ? { abandon: true }
-          : props.step === "1"
-          ? { groupInterview: time }
-          : { teamInterview: time }
-      )
-    });
-    const data = await resp.json();
-    if (data.type === "success") {
-      console.log("success");
-      console.log(data);
+    try {
+      const resp = await fetch(`${URL}/candidate/form/${props.token}`, {
+        method: "PUT",
+        headers: {
+          "content-type": "application/json",
+          Authorization: `Bearer ${props.token}`
+        },
+        body: JSON.stringify(
+          abandon
+            ? { abandon: true }
+            : props.step === "1"
+              ? { groupInterview: time }
+              : { teamInterview: time }
+        )
+      });
+      const data = await resp.json();
+      if (data.type !== "success") {
+        snackbar("提交表单出了问题，请尝试重新提交", data.type)
+      }
+    }
+    catch{
+      snackbar("提交表单出了问题，请尝试重新提交", "error")
     }
   };
 
   const handleSubmit = (abandon: boolean) => async () => {
-    console.log("ping");
     const time = props.dates.map(i => ({
       date: i.date,
       morning: 0,
@@ -105,6 +110,7 @@ export default (props: IModalProps): React.ReactElement => {
           disabled={disabled ? true : undefined}
           onClick={disabled ? undefined : handleClickOpen(false)}
           className={white.button}
+          disableRipple
         >
           提交
         </Button>

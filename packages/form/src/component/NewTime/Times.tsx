@@ -12,12 +12,13 @@ import Header from "./Header";
 import Modal from "./Modal";
 
 import { SelectDate } from "./date";
+import { ToggleSnackbar } from "./index";
 import { reducer, ClickedArray, initialState } from "./reducer";
 
 import { URL } from "../../config/const";
 
 interface IStyleProps {
-  color?: "white" | undefined;
+  color?: "white" | "rgba(0, 0, 0, 0.26)" | undefined;
 }
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -55,6 +56,7 @@ const TimeDispatch = React.createContext<IContextProps>({} as IContextProps);
 
 export default (props: ITimesProps): React.ReactElement => {
   const classes = useStyles({ color: "white" });
+  const { snackbar } = useContext(ToggleSnackbar)
 
   const token = window.location.pathname.slice(1); // get rid of "/"
   const [dates, setDates] = useState([] as SelectDate[]);
@@ -62,11 +64,19 @@ export default (props: ITimesProps): React.ReactElement => {
 
   useEffect(() => {
     const fetchDates = async () => {
-      const resp = await fetch(`${URL}/candidate/form/${token}`);
-      const data = await resp.json();
+      try {
+        const resp = await fetch(`${URL}/candidate/form/${token}`);
+        const data = await resp.json();
 
-      setDates(data.time);
-      setStep(data.step);
+        if (data.type !== "success") {
+          snackbar("获取表单出了问题，请尝试重新加载", data.type)
+        }
+
+        setDates(data.time);
+        setStep(data.step);
+      } catch{
+        snackbar("获取表单出了问题，请尝试重新加载", "error")
+      }
     };
 
     fetchDates();
@@ -150,19 +160,21 @@ interface IChipProps {
 }
 
 const TimeChip = (props: IChipProps): React.ReactElement => {
+  const white = useStyles({ color: "white" });
+  const classes = useStyles({})
+  const gray = useStyles({ color: "rgba(0, 0, 0, 0.26)" })
   const { dispatch, clicked } = useContext(TimeDispatch);
   const handleClick = () => {
     dispatch(props.index);
   };
   if (props.disabled) {
-    const classes = useStyles({ color: "white" });
     return (
       <Chip
         color={"default"}
         variant={"default"}
         label={props.label}
         clickable={false}
-        className={classes.chip}
+        className={gray.chip}
       />
     );
   } else {
@@ -174,8 +186,8 @@ const TimeChip = (props: IChipProps): React.ReactElement => {
         clickable={true}
         className={
           clicked[props.index]
-            ? useStyles({ color: "white" }).chip
-            : useStyles({}).chip
+            ? white.chip
+            : classes.chip
         }
         onClick={handleClick}
       />
