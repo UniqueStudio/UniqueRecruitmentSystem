@@ -1,4 +1,4 @@
-import { createStyles, Theme } from '@material-ui/core/styles';
+import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import combineStyles from '../utils/combindStyles';
 import borderStyles from './Border';
 import fontStyles from './Font';
@@ -8,6 +8,11 @@ import CustomTheme from './theme';
 const {
     palette: { primary }
 } = CustomTheme;
+
+interface Props {
+    size: number;
+    labelSize: number;
+}
 
 const style = ({ breakpoints }: Theme) =>
     createStyles({
@@ -21,6 +26,12 @@ const style = ({ breakpoints }: Theme) =>
         item: {
             height: '100%'
         },
+        labelContainer: ({ labelSize }: Props) => ({
+            width: `${labelSize}vw`
+        }),
+        inputContainer: ({ size }: Props) => ({
+            width: `${size}vw`
+        }),
         label: {
             width: '100%',
             height: '100%',
@@ -60,4 +71,4 @@ const style = ({ breakpoints }: Theme) =>
 
 const styles = combineStyles(style, borderStyles, fontStyles, heightStyles);
 
-export default styles;
+export default makeStyles(styles);
