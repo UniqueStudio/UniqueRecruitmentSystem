@@ -1,55 +1,51 @@
-import React, { PureComponent } from 'react';
+import React, { useState } from 'react';
 
 import { MenuItem, MenuList, Paper } from '@material-ui/core';
-import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 import classNames from 'classnames';
 import Autosuggest from 'react-autosuggest';
 
-import styles from '../../style/AutoSuggest';
+import useStyles from '../../style/AutoSuggest';
 import Input from '../Input';
 
-interface Props extends WithStyles<typeof styles> {
+export interface AutoSuggestProps<T> {
     id: string;
     value: string; // the input value
-    items: (string | object)[]; // all suggestions list
-    getItemValue: (value: string | object) => string;
+    items: T[]; // all suggestions list
+    getItemValue: (value: T) => string;
     onChange: any; // function
     onSelect: (event: React.FormEvent, { suggestionValue }: { suggestionValue: string }) => void; // function when select a suggestion
     size?: number;
     labelSize?: number;
 }
 
-class AutoSuggest extends PureComponent<Props> {
-    state = {
-        suggestions: []
-    };
+function AutoSuggest<T>(props: AutoSuggestProps<T>) {
+    const { id, value, items, getItemValue, onChange, onSelect, size = 10, labelSize = 4 } = props;
+    const [suggestions, setSuggestions] = useState<T[]>([]);
+    const classes = useStyles({ labelSize, suggestionLength: suggestions.length });
 
-    getSuggestions = (value: string) => {
+    const getSuggestions = (suggestion: string) => {
         return value.length === 0
             ? []
-            : this.props.items.filter((item) => {
+            : items.filter(item => {
                   return (
-                      this.props
-                          .getItemValue(item)
+                      getItemValue(item)
                           .toLowerCase()
-                          .indexOf(value.toLowerCase()) > -1
+                          .indexOf(suggestion.toLowerCase()) > -1
                   );
               });
     };
 
-    onSuggestionsClearRequested = () => {
-        this.setState({ suggestions: [] });
+    const onSuggestionsClearRequested = () => {
+        setSuggestions([]);
     };
 
-    onSuggestionsFetchRequested = ({ value }: { value: string }) => {
-        this.setState({
-            suggestions: this.getSuggestions(value)
-        });
+    const onSuggestionsFetchRequested = ({ value: suggestion }: { value: string }) => {
+        setSuggestions(getSuggestions(suggestion));
     };
 
-    renderSuggestion = (item: string | object, { isHighlighted }: { isHighlighted: boolean }) => {
-        const suggestion = this.props.getItemValue(item);
-        const { menuItem, hightlightedItem, font } = this.props.classes;
+    const renderSuggestion = (item: T, { isHighlighted }: { isHighlighted: boolean }) => {
+        const suggestion = getItemValue(item);
+        const { menuItem, hightlightedItem, font } = classes;
         return (
             <MenuItem
                 dense
@@ -63,43 +59,36 @@ class AutoSuggest extends PureComponent<Props> {
         );
     };
 
-    renderSuggestionsContainer = ({ containerProps, children, query }: any) => {
+    const renderSuggestionsContainer = ({ containerProps, children, query }: any) => {
         return (
-            <Paper
-                {...containerProps}
-                style={{ display: this.state.suggestions.length ? '' : 'none', left: `${this.props.labelSize || 4}vw` }}
-            >
+            <Paper {...containerProps}>
                 <MenuList>{children}</MenuList>
             </Paper>
         );
     };
 
-    renderInputComponent = (inputProps: object) => {
-        const { id, size, labelSize } = this.props;
-        return <Input for={id} name={id} size={size || 10} labelSize={labelSize || 4} inputProps={inputProps} />;
+    const renderInputComponent = (inputProps: object) => {
+        return <Input for={id} name={id} size={size} labelSize={labelSize} inputProps={inputProps} />;
     };
 
-    render() {
-        const { value, getItemValue, onChange, classes, onSelect } = this.props;
-        return (
-            <Autosuggest
-                suggestions={this.state.suggestions}
-                inputProps={{ value, onChange }}
-                onSuggestionsClearRequested={this.onSuggestionsClearRequested}
-                onSuggestionsFetchRequested={this.onSuggestionsFetchRequested}
-                onSuggestionSelected={onSelect}
-                getSuggestionValue={getItemValue}
-                renderSuggestion={this.renderSuggestion}
-                renderSuggestionsContainer={this.renderSuggestionsContainer}
-                renderInputComponent={this.renderInputComponent}
-                theme={{
-                    container: classes.container,
-                    suggestionsContainer: classes.suggestionsContainer,
-                    suggestionsList: classes.suggestionsList
-                }}
-            />
-        );
-    }
+    return (
+        <Autosuggest
+            suggestions={suggestions}
+            inputProps={{ value, onChange }}
+            onSuggestionsClearRequested={onSuggestionsClearRequested}
+            onSuggestionsFetchRequested={onSuggestionsFetchRequested}
+            onSuggestionSelected={onSelect}
+            getSuggestionValue={getItemValue}
+            renderSuggestion={renderSuggestion}
+            renderSuggestionsContainer={renderSuggestionsContainer}
+            renderInputComponent={renderInputComponent}
+            theme={{
+                container: classes.container,
+                suggestionsContainer: classes.suggestionsContainer,
+                suggestionsList: classes.suggestionsList
+            }}
+        />
+    );
 }
 
-export default withStyles(styles)(AutoSuggest);
+export default AutoSuggest;

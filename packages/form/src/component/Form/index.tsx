@@ -187,15 +187,14 @@ class Form extends PureComponent<Props> {
         const { isPC, isPad, isMobile, classes } = this.props;
         const canGetCode = checkPhone(phone);
         let main: JSX.Element = <></>;
-
         const Institute = (
-            <AutoSuggest
+            <AutoSuggest<string>
                 id='学院'
-                items={Object.keys(Departments)}
+                items={Object.keys(Departments) as string[]}
                 value={institute || ''}
                 size={sizeSwitch({ 15: isPC, 21: isPad, 65: isMobile })}
                 labelSize={sizeSwitch({ 4: isPC, 6: isPad, 15: isMobile })}
-                getItemValue={(value: string | object) => value as string}
+                getItemValue={(value: string) => value}
                 onChange={this.handleChange('institute')}
                 onSelect={(event, { suggestionValue }) =>
                     this.setState({ info: { ...this.state.info, institute: suggestionValue } })
@@ -203,13 +202,13 @@ class Form extends PureComponent<Props> {
             />
         );
         const Major = (
-            <AutoSuggest
+            <AutoSuggest<string>
                 id='专业'
                 items={Departments[institute] || []}
                 value={major || ''}
                 size={sizeSwitch({ 15: isPC, 21: isPad, 65: isMobile })}
                 labelSize={sizeSwitch({ 4: isPC, 6: isPad, 15: isMobile })}
-                getItemValue={(value: string | object) => value as string}
+                getItemValue={(value: string) => value}
                 onChange={this.handleChange('major')}
                 onSelect={(event, { suggestionValue }) =>
                     this.setState({ info: { ...this.state.info, major: suggestionValue } })
@@ -269,7 +268,7 @@ class Form extends PureComponent<Props> {
             ['所属年级', 'grade', GRADES, grade],
             ['组别选择', 'group', GROUPS, group],
             ['成绩排名', 'rank', RANKS, rank]
-        ] as [string, string, string[], number][]).map((v) => {
+        ] as [string, string, string[], number][]).map(v => {
             return (
                 <Select
                     key={v[1]}
