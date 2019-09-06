@@ -21,7 +21,7 @@
         "array"
       ]
     },
-    "arrow-parens": true,
+    "arrow-parens": false,
     "arrow-return-shorthand": true,
     "ban-types": {
       "options": [
