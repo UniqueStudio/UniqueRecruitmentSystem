@@ -1,10 +1,10 @@
-import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
+import React, { memo } from 'react';
+
 import classNames from 'classnames';
-import React, { PureComponent } from 'react';
-import styles from '../../style/Button';
+import useStyles from '../../style/Button';
 import '../../style/Button.scss';
 
-interface Props extends WithStyles<typeof styles> {
+interface ButtonProps {
     name: string;
     bgColor: string;
     textColor: string;
@@ -13,23 +13,19 @@ interface Props extends WithStyles<typeof styles> {
     onClick?: () => void;
 }
 
-class Button extends PureComponent<Props> {
-    render() {
-        const { name, textColor, bgColor, id, className, onClick, classes } = this.props;
-        return (
-            <div
-                id={id}
-                className={classNames(classes.border, classes.height, 'button', className)}
+const Button = memo((props: ButtonProps) => {
+    const classes = useStyles();
+    const { name, textColor, bgColor, id, className, onClick } = props;
+    return (
+        <div id={id} className={classNames(classes.border, classes.height, 'button', className)}>
+            <button
+                className={classNames('buttonName', `text_${textColor}`, `background_${bgColor}`, classes.font)}
+                onClick={onClick}
             >
-                <button
-                    className={classNames('buttonName', `text_${textColor}`, `background_${bgColor}`, classes.font)}
-                    onClick={onClick}
-                >
-                    {name}
-                </button>
-            </div>
-        );
-    }
-}
+                {name}
+            </button>
+        </div>
+    );
+});
 
-export default withStyles(styles)(Button);
+export default Button;
