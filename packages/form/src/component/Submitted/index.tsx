@@ -1,17 +1,16 @@
-import React from 'react';
+import React, { FC, memo } from 'react';
 
-import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 import classNames from 'classnames';
-import styles from '../../style/Submitted';
+import useStyles from '../../style/Submitted';
 
-interface Props extends WithStyles<typeof styles> {
+interface SubmittedProps {
     title: string;
     description: string;
     className?: string;
 }
 
-function Submitted(props: Props) {
-    const { className, title, description, classes } = props;
+const Submitted: FC<SubmittedProps> = memo(({ title, description, className }) => {
+    const classes = useStyles();
     return (
         <div className={classNames(classes.container, className)}>
             <div className={classes.box}>
@@ -26,6 +25,6 @@ function Submitted(props: Props) {
             </div>
         </div>
     );
-}
+});
 
-export default withStyles(styles)(Submitted);
+export default Submitted;
