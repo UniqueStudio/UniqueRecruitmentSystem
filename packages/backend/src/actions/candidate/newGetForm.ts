@@ -1,9 +1,9 @@
 import { RequestHandler } from 'express';
 import { param, validationResult } from 'express-validator/check';
-import { RecruitmentRepo } from '../../database/model';
+import { PayloadRepo, RecruitmentRepo } from '../../database/model';
+import { redisAsync } from '../../redis';
 import { errorRes } from '../../utils/errorRes';
 import { generateJWT } from '../../utils/generateJWT';
-import { extractJWT } from "../../utils/verifyJWT";
 
 export const newGetForm: RequestHandler = async (req, res, next) => {
     try {
@@ -11,29 +11,39 @@ export const newGetForm: RequestHandler = async (req, res, next) => {
         if (!errors.isEmpty()) {
             return next(errorRes(errors.array({ onlyFirstError: true })[0]['msg'], 'warning'));
         }
-        const { id, recruitmentId, step, group: groupName } = extractJWT(req.params.token)
 
+        const hash = req.params.hash;
+        const catchedId = await redisAsync.get(`payload:${hash}`);
+        let payload = await PayloadRepo.queryById(catchedId);
+        if (!payload) {
+            payload = (await PayloadRepo.query({ hash }))[0];
+            if (!payload) {
+                return next(errorRes('Form doesn\'t exist!', 'warning'));
+            }
+        }
+        const { id, recruitmentId, step, group: groupName } = payload;
         const token = generateJWT({ id }, 86400);
+
         switch (step) {
             case 'group': {
                 // 组面
                 const recruitment = await RecruitmentRepo.queryById(recruitmentId);
                 if (!recruitment) {
-                    return next(errorRes('Recruitment doesn\'t exist！', 'warning'));
+                    return next(errorRes('Recruitment doesn\'t exist!', 'warning'));
                 }
                 const groupData = recruitment.groups.find((group) => group.name === groupName);
-                return res.json({ type: 'success', time: groupData!.interview, token });
+                return res.json({ type: 'success', time: groupData!.interview, token, step });
             }
             case 'team': {
                 // 群面
                 const recruitment = await RecruitmentRepo.queryById(recruitmentId);
                 if (!recruitment) {
-                    return next(errorRes('Recruitment doesn\'t exist！', 'warning'));
+                    return next(errorRes('Recruitment doesn\'t exist!', 'warning'));
                 }
-                return res.json({ type: 'success', time: recruitment.interview, token });
+                return res.json({ type: 'success', time: recruitment.interview, token, step });
             }
             default: {
-                return next(errorRes('Form doesn\'t exist！', 'warning'));
+                return next(errorRes('Form doesn\'t exist!', 'warning'));
             }
         }
     } catch (error) {
@@ -42,5 +52,5 @@ export const newGetForm: RequestHandler = async (req, res, next) => {
 };
 
 export const newGetFormVerify = [
-    param('token').isString().withMessage('URL is invalid!'),
+    param('hash').isString().withMessage('URL is invalid!'),
 ];
