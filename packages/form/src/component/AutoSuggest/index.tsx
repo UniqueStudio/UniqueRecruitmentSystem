@@ -35,14 +35,6 @@ function AutoSuggest<T>(props: AutoSuggestProps<T>) {
               });
     };
 
-    const onSuggestionsClearRequested = () => {
-        setSuggestions([]);
-    };
-
-    const onSuggestionsFetchRequested = ({ value: suggestion }: { value: string }) => {
-        setSuggestions(getSuggestions(suggestion));
-    };
-
     const renderSuggestion = (item: T, { isHighlighted }: { isHighlighted: boolean }) => {
         const suggestion = getItemValue(item);
         const { menuItem, hightlightedItem, font } = classes;
@@ -75,8 +67,8 @@ function AutoSuggest<T>(props: AutoSuggestProps<T>) {
         <Autosuggest
             suggestions={suggestions}
             inputProps={{ value, onChange }}
-            onSuggestionsClearRequested={onSuggestionsClearRequested}
-            onSuggestionsFetchRequested={onSuggestionsFetchRequested}
+            onSuggestionsClearRequested={() => setSuggestions([])}
+            onSuggestionsFetchRequested={({ value: k }) => setSuggestions(getSuggestions(k))}
             onSuggestionSelected={onSelect}
             getSuggestionValue={getItemValue}
             renderSuggestion={renderSuggestion}
