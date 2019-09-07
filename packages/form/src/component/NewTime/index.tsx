@@ -1,23 +1,22 @@
-import React from "react";
-import { ThemeProvider } from "@material-ui/styles";
+import { ThemeProvider } from '@material-ui/styles';
+import React from 'react';
 
-import { UniqueTheme } from "../../style";
-import { Variant } from "../../config/types"
-import Times from "./Times";
+import { Variant } from '../../config/types';
+import { UniqueTheme } from '../../style';
+import Times from './Times';
 
-interface ITimeRootProps {
+interface TimeRootProps {
   isMobile: boolean;
   toggleSnackbar: (content: string, variant: Variant) => void;
 }
 
-
-interface IContextProps {
+interface ContextProps {
   snackbar: (content: string, variant: Variant) => void;
 }
 
-export const ToggleSnackbar = React.createContext<IContextProps>({} as IContextProps)
+export const ToggleSnackbar = React.createContext<ContextProps>({} as ContextProps);
 
-export const NewTime = (props: ITimeRootProps): React.ReactElement => {
+export const NewTime = (props: TimeRootProps): React.ReactElement => {
   return (
     <ThemeProvider theme={UniqueTheme}>
       <ToggleSnackbar.Provider value={{ snackbar: props.toggleSnackbar }}>
