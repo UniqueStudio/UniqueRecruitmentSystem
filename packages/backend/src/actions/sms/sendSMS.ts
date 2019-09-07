@@ -64,7 +64,6 @@ const send = (req: Request) => {
                 group
             };
             const hash = md5(payload);
-            await PayloadRepo.createAndInsert({ ...payload, hash });
             Promise.all([
                 PayloadRepo.createAndInsert({ ...payload, hash }),
                 redisAsync.set(`payload:${hash}`, id, 'EX', 60 * 60 * 24 * 2)
