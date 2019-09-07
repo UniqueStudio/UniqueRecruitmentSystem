@@ -1,9 +1,10 @@
 import { RequestHandler } from 'express';
 import { body, param, validationResult } from 'express-validator/check';
 import { CandidateRepo, RecruitmentRepo } from '../../database/model';
+import { PayloadRepo } from '../../database/model';
+import { redisAsync } from '../../redis';
 import { checkInterview } from '../../utils/checkInterview';
 import { errorRes } from '../../utils/errorRes';
-import { extractJWT } from "../../utils/verifyJWT";
 
 export const newSetCandidate: RequestHandler = async (req, res, next) => {
     try {
@@ -11,9 +12,18 @@ export const newSetCandidate: RequestHandler = async (req, res, next) => {
         if (!errors.isEmpty()) {
             return next(errorRes(errors.array({ onlyFirstError: true })[0]['msg'], 'warning'));
         }
-        const { id } = res.locals;
+        const { id } = res.locals; // from JWT
         const { teamInterview, groupInterview, abandon } = req.body;
-        const { id: cid, recruitmentId, step } = extractJWT(req.params.token)
+        const hash = req.params.hash;
+        const pid = await redisAsync.getThenDel(`payload:${hash}`);
+        let payload = await PayloadRepo.queryById(pid);
+        if (!payload) {
+            payload = (await PayloadRepo.query({ hash }))[0];
+            if (!payload) {
+                return next(errorRes('Form doesn\'t exist!', 'warning'));
+            }
+        }
+        const { id: cid, recruitmentId, step } = payload;
         if (id !== cid) {
             return next(errorRes('Candidate id is incorrect!', 'warning'));
         }
@@ -29,9 +39,12 @@ export const newSetCandidate: RequestHandler = async (req, res, next) => {
             return next(errorRes('You are already rejected!', 'warning'));
         }
         if (abandon) {
-            await CandidateRepo.updateById(id, {
-                abandon
-            });
+            await Promise.all([
+                CandidateRepo.updateById(id, {
+                    abandon
+                }),
+                redisAsync.del(`payload:${hash}`)
+            ]);
             return res.json({ type: 'success' });
         }
         switch (step) {
@@ -49,9 +62,12 @@ export const newSetCandidate: RequestHandler = async (req, res, next) => {
                 if (group.selection.length) {
                     return next(errorRes('You have already submitted!', 'warning'));
                 }
-                await CandidateRepo.updateById(id, {
-                    'interviews.group.selection': groupInterview,
-                });
+                await Promise.all([
+                    CandidateRepo.updateById(id, {
+                        'interviews.group.selection': groupInterview,
+                    }),
+                    PayloadRepo.deleteById(pid)
+                ]);
                 return res.json({ type: 'success' });
             }
             case 'team': {
@@ -68,9 +84,12 @@ export const newSetCandidate: RequestHandler = async (req, res, next) => {
                 if (team.selection.length) {
                     return next(errorRes('You have already submitted!', 'warning'));
                 }
-                await CandidateRepo.updateById(id, {
-                    'interviews.team.selection': teamInterview,
-                });
+                await Promise.all([
+                    CandidateRepo.updateById(id, {
+                        'interviews.team.selection': teamInterview,
+                    }),
+                    PayloadRepo.deleteById(pid)
+                ]);
                 return res.json({ type: 'success' });
             }
             default: {
@@ -85,5 +104,5 @@ export const newSetCandidate: RequestHandler = async (req, res, next) => {
 export const newSetCandidateVerify = [
     body('teamInterview').custom(checkInterview).withMessage('Interview time is invalid!'),
     body('groupInterview').custom(checkInterview).withMessage('Interview time is invalid!'),
-    param('token').isString().withMessage('URL is invalid!'),
+    param('hash').isString().withMessage('URL is invalid!'),
 ];
