@@ -55,14 +55,15 @@ const style = ({ breakpoints }: Theme) =>
             borderTopLeftRadius: '0 !important',
             borderBottomLeftRadius: '0 !important',
             borderLeftWidth: '0 !important',
+            overflow: 'hidden',
             '& input': {
-                padding: '0 0 0 10px',
+                padding: '0 10px',
                 height: '100%',
                 [breakpoints.down('md')]: {
-                    padding: '0 0 0 8px'
+                    padding: '0 8px'
                 },
                 [breakpoints.down('sm')]: {
-                    padding: '0 0 0 6px'
+                    padding: '0 6px'
                 }
             }
         },
