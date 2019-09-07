@@ -100,7 +100,7 @@ class Form extends PureComponent<Props> {
         this.setState({ info: { ...this.state.info, [name]: e.target['value'] } });
     };
 
-    handleSelect = (name: string) => (value: string | number) => () => {
+    handleSelect = (name: string) => (value: number) => {
         this.setState({ info: { ...this.state.info, [name]: value } });
     };
 
