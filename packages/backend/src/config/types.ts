@@ -4,10 +4,12 @@ export interface Payload {
     id: string;
 }
 
-export interface FormPayload extends Payload {
+export interface FormPayload extends Document {
+    id: string;
     recruitmentId: string;
-    step: 'group' | 'team' //group: 组面, team: 群面
+    step: 'group' | 'team'; // group: 组面, team: 群面
     group: Group;
+    hash: string;
 }
 
 export type Group = 'web' | 'lab' | 'ai' | 'game' | 'android' | 'ios' | 'design' | 'pm';
