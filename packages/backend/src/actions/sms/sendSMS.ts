@@ -3,12 +3,12 @@ import { body, validationResult } from 'express-validator/check';
 import moment from 'moment';
 import fetch from 'node-fetch';
 import { formURL, smsAPI, token } from '../../config/consts';
-import { FormPayload } from "../../config/types";
-import { CandidateRepo, RecruitmentRepo } from '../../database/model';
+import { CandidateRepo, PayloadRepo, RecruitmentRepo } from '../../database/model';
+import { redisAsync } from '../../redis';
 import { errorRes } from '../../utils/errorRes';
 import { generateSMS } from '../../utils/generateSMS';
+import md5 from '../../utils/md5';
 import { titleConverter } from '../../utils/titleConverter';
-import { generateJWT } from "../../utils/generateJWT";
 
 const padZero = (toPad: number) => toPad.toString().padStart(2, '0');
 
@@ -23,7 +23,7 @@ const send = (req: Request) => {
     return candidates.map(async (id: string) => {
         const candidateInfo = await CandidateRepo.queryById(id);
         if (!candidateInfo) {
-            return new Error('Candidate doesn\'t exist!');
+            return new Error("Candidate doesn't exist!");
         }
         const { name, title, group, interviews, phone } = candidateInfo;
         try {
@@ -38,7 +38,7 @@ const send = (req: Request) => {
                     // 发送组面短信
                     const data = recruitment.groups.find((groupData) => groupData.name === group);
                     if (!data) {
-                        return new Error('Group doesn\'t exist!');
+                        return new Error("Group doesn't exist!");
                     }
                     if (!data.interview.length) {
                         return new Error('Please set group interview time first!');
@@ -57,14 +57,21 @@ const send = (req: Request) => {
             if (type === 'reject') {
                 await CandidateRepo.updateById(id, { rejected: true });
             }
-            const payload: FormPayload = {
+            const payload = {
                 recruitmentId,
                 id,
-                step: nextStep === 2 ? "group" : "team",
+                step: nextStep === 2 ? 'group' : 'team',
                 group
-            }
-            const jwtToken = generateJWT(payload, 60 * 60 * 24 * 7)
-            const url = recruitmentId ? `${formURL}/${jwtToken}` : '';
+            };
+            const hash = md5(payload);
+            await PayloadRepo.createAndInsert({ ...payload, hash });
+            Promise.all([
+                PayloadRepo.createAndInsert({ ...payload, hash }),
+                redisAsync.set(`payload:${hash}`, id, 'EX', 60 * 60 * 24 * 2)
+            ]).catch((e) => {
+                return new Error(`Error in ${name}: ${e}`);
+            });
+            const url = recruitmentId ? `${formURL}/${hash}` : '';
             let allocated;
             if (type === 'group' || type === 'team') {
                 allocated = interviews[type].allocation;
@@ -84,7 +91,7 @@ const send = (req: Request) => {
             const response = await fetch(smsAPI, {
                 method: 'POST',
                 headers: {
-                    'Token': token,
+                    Token: token,
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
