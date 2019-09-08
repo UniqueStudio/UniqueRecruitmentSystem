@@ -1,3 +1,4 @@
+import fetch from 'node-fetch';
 import { smsAPI, token } from '../../config/consts';
 
 export default async (phone: string, name: string, status: string) => {
