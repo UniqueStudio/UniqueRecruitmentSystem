@@ -15,7 +15,10 @@ import { SelectDate } from './date';
 import { ToggleSnackbar } from './index';
 import { ClickedArray, initialState, reducer } from './reducer';
 
+import classNames from 'classnames';
 import { URL } from '../../config/const';
+import translate from '../../config/translate';
+import Submitted from '../Submitted';
 
 interface StyleProps {
   color?: 'white' | 'rgba(0, 0, 0, 0.26)' | undefined;
@@ -24,7 +27,11 @@ interface StyleProps {
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
-      width: '100%'
+      width: '100%',
+      position: 'relative'
+    },
+    curtain: {
+      opacity: 0.2
     },
     chipWrapper: {
       textAlign: 'center',
@@ -61,6 +68,7 @@ export default (props: TimesProps): React.ReactElement => {
   const hash = window.location.pathname.slice(1); // get rid of "/"
   const [dates, setDates] = useState([] as SelectDate[]);
   const [step, setStep] = useState(''); // 'group' / 'team'
+  const [submitted, setSubmitted] = useState(false);
 
   useEffect(() => {
     const fetchDates = async () => {
@@ -69,7 +77,7 @@ export default (props: TimesProps): React.ReactElement => {
         const data = await resp.json();
 
         if (data.type !== 'success') {
-          snackbar('获取表单出了问题，请尝试重新加载', data.type);
+          snackbar(translate(data.message), data.type);
         }
 
         sessionStorage.setItem('token', data.token);
@@ -95,18 +103,29 @@ export default (props: TimesProps): React.ReactElement => {
         clicked: state.clicked
       }}
     >
-      <List className={classes.root} subheader={<Header />}>
-        {dates.map((item, line) => (
-          <OneDay
-            key={line}
-            date={item}
-            line={line}
-            isMobile={props.isMobile}
+      <div className={classes.root}>
+        <div className={classNames({ [classes.curtain]: submitted })}>
+          <List className={classes.root} subheader={<Header />}>
+            {dates.map((item, line) => (
+              <OneDay
+                key={line}
+                date={item}
+                line={line}
+                isMobile={props.isMobile}
+                clicked={state.clicked}
+              />
+            ))}
+          </List>
+          <Modal
             clicked={state.clicked}
+            hash={hash}
+            step={step}
+            dates={dates}
+            onSubmitted={() => setSubmitted(true)}
           />
-        ))}
-      </List>
-      <Modal clicked={state.clicked} hash={hash} step={step} dates={dates} />
+        </div>
+        {submitted && <Submitted title={'选择成功'} description={'请等待我们的短信通知，有问题可在招新群联系我们'} />}
+      </div>
     </TimeDispatch.Provider>
   );
 };

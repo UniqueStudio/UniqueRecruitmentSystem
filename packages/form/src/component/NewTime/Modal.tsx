@@ -1,52 +1,54 @@
-import React, { useState, useContext } from "react";
 import {
   Button,
+  createStyles,
   Dialog,
-  DialogContent,
   DialogActions,
+  DialogContent,
   DialogContentText,
   DialogTitle,
   makeStyles,
-  createStyles,
   Theme
-} from "@material-ui/core";
+} from '@material-ui/core';
+import React, { useContext, useState } from 'react';
 
-import { URL } from "../../config/const";
-import { SelectDate } from "./date";
-import { ToggleSnackbar } from "./index";
+import { URL } from '../../config/const';
+import translate from '../../config/translate';
+import { SelectDate } from './date';
+import { ToggleSnackbar } from './index';
 
-interface IStyleProps {
-  color?: "white" | undefined;
+interface StyleProps {
+  color?: 'white' | undefined;
   fontColor?: string | undefined;
 }
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
-    button: (props: IStyleProps) => ({
+    button: (props: StyleProps) => ({
       color: props.color,
-      fontWeight: "bold",
+      fontWeight: 'bold',
       margin: theme.spacing(1),
-      boxShadow: "none"
+      boxShadow: 'none'
     })
   })
 );
 
-interface IModalProps {
+interface ModalProps {
   clicked: (boolean | undefined)[];
-  token: string;
-  step: "1" | "2" | string; //"1" for group and "2" for team
+  hash: string;
+  step: '1' | '2' | string; // "1" for group and "2" for team
   dates: SelectDate[];
+  onSubmitted: () => void;
 }
 
-export default (props: IModalProps): React.ReactElement => {
+export default (props: ModalProps): React.ReactElement => {
   const [open, setOpen] = useState(false);
   const [abandon, setAbandon] = useState(false);
-  const { snackbar } = useContext(ToggleSnackbar)
+  const { snackbar } = useContext(ToggleSnackbar);
 
-  const white = useStyles({ color: "white" });
+  const white = useStyles({ color: 'white' });
 
-  const handleClickOpen = (abandon: boolean) => () => {
-    setAbandon(abandon);
+  const handleClickOpen = (abandoned: boolean) => () => {
+    setAbandon(abandoned);
     setOpen(true);
   };
 
@@ -54,34 +56,39 @@ export default (props: IModalProps): React.ReactElement => {
     setOpen(false);
   };
 
-  const submitForm = async (abandon: boolean, time: SelectDate[]) => {
+  const submitForm = async (abandoned: boolean, time: SelectDate[]) => {
     try {
-      const resp = await fetch(`${URL}/candidate/form/${props.token}`, {
-        method: "PUT",
+      const token = sessionStorage.getItem('token');
+      if (!token) {
+        return snackbar('token不存在', 'warning');
+      }
+      const resp = await fetch(`${URL}/candidate/form/${props.hash}`, {
+        method: 'PUT',
         headers: {
-          "content-type": "application/json",
-          Authorization: `Bearer ${props.token}`
+          'content-type': 'application/json',
+          Authorization: `Bearer ${token}`
         },
         body: JSON.stringify(
-          abandon
+          abandoned
             ? { abandon: true }
-            : props.step === "1"
+            : props.step === 'group'
               ? { groupInterview: time }
               : { teamInterview: time }
         )
       });
+      props.onSubmitted();
       const data = await resp.json();
-      if (data.type !== "success") {
-        snackbar("提交表单出了问题，请尝试重新提交", data.type)
+      if (data.type !== 'success') {
+        return snackbar(translate(data.message), data.type);
       }
-    }
-    catch{
-      snackbar("提交表单出了问题，请尝试重新提交", "error")
+      snackbar('提交成功，请等待短信通知！', 'success');
+    } catch {
+      snackbar('提交出了问题，请尝试重新提交', 'error');
     }
   };
 
-  const handleSubmit = (abandon: boolean) => async () => {
-    const time = props.dates.map(i => ({
+  const handleSubmit = (abandoned: boolean) => async () => {
+    const time = props.dates.map((i) => ({
       date: i.date,
       morning: 0,
       afternoon: 0,
@@ -91,10 +98,10 @@ export default (props: IModalProps): React.ReactElement => {
       if (clicked) {
         const line = Math.floor(index / 3); // int
         const column = index - line * 3;
-        time[line][["morning", "afternoon", "evening"][column]] = 1;
+        time[line][['morning', 'afternoon', 'evening'][column]] = 1;
       }
     });
-    await submitForm(abandon, time);
+    await submitForm(abandoned, time);
 
     setOpen(false);
   };
@@ -105,8 +112,8 @@ export default (props: IModalProps): React.ReactElement => {
     <div>
       <div>
         <Button
-          variant="contained"
-          color="primary"
+          variant='contained'
+          color='primary'
           disabled={disabled ? true : undefined}
           onClick={disabled ? undefined : handleClickOpen(false)}
           className={white.button}
@@ -115,8 +122,8 @@ export default (props: IModalProps): React.ReactElement => {
           提交
         </Button>
         <Button
-          variant="contained"
-          color="secondary"
+          variant='contained'
+          color='secondary'
           onClick={handleClickOpen(true)}
           className={white.button}
         >
@@ -126,31 +133,31 @@ export default (props: IModalProps): React.ReactElement => {
       <Dialog
         open={open}
         onClose={handleClose}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
+        aria-labelledby='alert-dialog-title'
+        aria-describedby='alert-dialog-description'
       >
-        <DialogTitle id="alert-dialog-title">{"请确认你的选择"}</DialogTitle>
+        <DialogTitle id='alert-dialog-title'>{'请确认你的选择'}</DialogTitle>
         <DialogContent>
-          <DialogContentText id="alert-dialog-description">
+          <DialogContentText id='alert-dialog-description'>
             {abandon
-              ? "如果你以上时间都无法到场，可以尝试联系我们调整时间，或选择放弃面试同时错过本次招新"
-              : "请务必保证面试可以到场，你的选择将无法更改"}
+              ? '如果你以上时间都无法到场，可以尝试联系我们调整时间，或选择放弃面试同时错过本次招新'
+              : '请务必保证面试可以到场，你的选择将无法更改'}
           </DialogContentText>
         </DialogContent>
         <DialogActions>
           <Button
             onClick={handleSubmit(abandon)}
-            color="primary"
-            variant="contained"
+            color='primary'
+            variant='contained'
             className={white.button}
           >
             我确认
           </Button>
           <Button
             onClick={handleClose}
-            color="secondary"
+            color='secondary'
             autoFocus
-            variant="contained"
+            variant='contained'
             className={white.button}
           >
             再想想

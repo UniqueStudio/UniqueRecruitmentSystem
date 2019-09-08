@@ -1,11 +1,11 @@
-export type ClickedArray = Array<boolean | undefined>;
+export type ClickedArray = (boolean | undefined)[];
 
-interface IState {
+interface State {
   clicked: ClickedArray;
 }
-export const initialState: IState = { clicked: [] };
+export const initialState: State = { clicked: [] };
 
-export const reducer = (state: IState, action: number) => {
+export const reducer = (state: State, action: number) => {
   state.clicked[action] = !state.clicked[action];
   return { clicked: state.clicked };
 };
