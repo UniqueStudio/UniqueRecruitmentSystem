@@ -1,5 +1,5 @@
 import { RequestHandler } from 'express';
-import { body, validationResult } from 'express-validator/check';
+import { body, validationResult } from 'express-validator';
 
 import { io } from '../../app';
 import { GROUPS_ } from '../../config/consts';
@@ -37,9 +37,11 @@ export const launchRecruitment: RequestHandler = async (req, res, next) => {
 };
 
 export const launchRecruitmentVerify = [
-    body('title').matches(/\d{4}[ASC]/, 'g').withMessage('Title is invalid!').custom(async (title) =>
-        !(await RecruitmentRepo.query({ title })).length
-    ).withMessage('Current recruitment has already been launched!'),
+    body('title').matches(/\d{4}[ASC]/, 'g').withMessage('Title is invalid!').custom(async (title) => {
+        if ((await RecruitmentRepo.query({ title })).length) {
+            throw new Error('Current recruitment has already been launched!');
+        }
+    }),
     body('begin').isInt().withMessage('Begin time is invalid!')
         .custom((begin, { req }) => begin < req.body.stop).withMessage('Stop applying time should be later than begin time'),
     body('stop').isInt().withMessage('Stop applying time is invalid!')

@@ -1,5 +1,5 @@
 import { RequestHandler } from 'express';
-import { param, validationResult } from 'express-validator/check';
+import { param, validationResult } from 'express-validator';
 import fetch from 'node-fetch';
 
 import { smsAPI, token } from '../../config/consts';

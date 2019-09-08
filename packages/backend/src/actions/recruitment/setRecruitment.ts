@@ -1,5 +1,5 @@
 import { RequestHandler } from 'express';
-import { body, param, validationResult } from 'express-validator/check';
+import { body, param, validationResult } from 'express-validator';
 import { io } from '../../app';
 import { RecruitmentRepo, UserRepo } from '../../database/model';
 import { checkInterview } from '../../utils/checkInterview';

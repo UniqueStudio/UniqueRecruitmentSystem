@@ -1,5 +1,5 @@
 import { RequestHandler } from 'express';
-import { param, validationResult } from 'express-validator/check';
+import { param, validationResult } from 'express-validator';
 import { PayloadRepo, RecruitmentRepo } from '../../database/model';
 import { redisAsync } from '../../redis';
 import { errorRes } from '../../utils/errorRes';

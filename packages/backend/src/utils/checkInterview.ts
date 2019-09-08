@@ -1,4 +1,4 @@
-import { CustomValidator } from 'express-validator/check';
+import { CustomValidator } from 'express-validator';
 
 export const checkInterview: CustomValidator = (interview) => {
     if (!interview) {
