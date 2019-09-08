@@ -5,6 +5,7 @@ import { PayloadRepo } from '../../database/model';
 import { redisAsync } from '../../redis';
 import { checkInterview } from '../../utils/checkInterview';
 import { errorRes } from '../../utils/errorRes';
+import sendSMS from './sendSMS';
 
 export const newSetCandidate: RequestHandler = async (req, res, next) => {
     try {
@@ -31,7 +32,7 @@ export const newSetCandidate: RequestHandler = async (req, res, next) => {
         if (!candidate) {
             return next(errorRes('Candidate doesn\'t exist!', 'warning'));
         }
-        const { interviews: { group, team }, rejected } = candidate;
+        const { interviews: { group, team }, rejected, phone, name } = candidate;
         if (candidate.abandon) {
             return next(errorRes('You have already abandoned!', 'warning'));
         }
@@ -66,7 +67,8 @@ export const newSetCandidate: RequestHandler = async (req, res, next) => {
                     CandidateRepo.updateById(id, {
                         'interviews.group.selection': groupInterview,
                     }),
-                    PayloadRepo.deleteById(pid)
+                    PayloadRepo.deleteById(pid),
+                    sendSMS(phone, name, '成功选择组面时间')
                 ]);
                 return res.json({ type: 'success' });
             }
@@ -88,7 +90,8 @@ export const newSetCandidate: RequestHandler = async (req, res, next) => {
                     CandidateRepo.updateById(id, {
                         'interviews.team.selection': teamInterview,
                     }),
-                    PayloadRepo.deleteById(pid)
+                    PayloadRepo.deleteById(pid),
+                    sendSMS(phone, name, '成功选择群面时间')
                 ]);
                 return res.json({ type: 'success' });
             }

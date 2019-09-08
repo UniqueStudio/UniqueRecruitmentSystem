@@ -7,6 +7,7 @@ import { GENDERS, GRADES, GROUPS_, RANKS } from '../../config/consts';
 import { CandidateRepo, RecruitmentRepo } from '../../database/model';
 import { copyFile } from '../../utils/copyFile';
 import { errorRes } from '../../utils/errorRes';
+import sendSMS from './sendSMS';
 
 export const addCandidate: RequestHandler = async (req, res, next) => {
     try {
@@ -42,6 +43,7 @@ export const addCandidate: RequestHandler = async (req, res, next) => {
             'groups.$.steps.0': await CandidateRepo.count({ title, group, step: 0 }),
             'total': await CandidateRepo.count({ title })
         });
+        await sendSMS(phone, name, '成功提交报名表单');
         res.json({ type: 'success' });
         io.emit('addCandidate', { candidate: info });
         io.emit('updateRecruitment');
