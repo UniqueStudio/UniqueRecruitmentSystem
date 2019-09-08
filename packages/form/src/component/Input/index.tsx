@@ -1,4 +1,4 @@
-import React, { memo } from 'react';
+import React, { ChangeEvent, memo } from 'react';
 
 import { InputBase, InputLabel } from '@material-ui/core';
 import classNames from 'classnames';
@@ -9,7 +9,7 @@ interface InputProps {
     for: string;
     placeholder?: string;
     className?: string;
-    onChange?: (e: React.ChangeEvent) => void;
+    onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
     size?: number;
     labelSize?: number;
     inputProps?: object;

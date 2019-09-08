@@ -18,6 +18,6 @@ export interface Candidate {
     intro: string;
     isQuick: boolean;
     referrer: string;
-    resume: string;
+    resume: string | File;
     code: string;
 }

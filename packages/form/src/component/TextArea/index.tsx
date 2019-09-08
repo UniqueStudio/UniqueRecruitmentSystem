@@ -1,10 +1,10 @@
-import React, { FC, memo } from 'react';
+import React, { ChangeEvent, FC, memo } from 'react';
 
 import classNames from 'classnames';
 import useStyles from '../../style/TextArea';
 
 interface TextAreaProps {
-    onChange: (e: React.ChangeEvent) => void;
+    onChange: (e: ChangeEvent<HTMLTextAreaElement>) => void;
 }
 
 const TextArea: FC<TextAreaProps> = memo(({ onChange }) => {

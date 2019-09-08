@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 
 import { MenuItem, MenuList, Paper } from '@material-ui/core';
 import classNames from 'classnames';
-import Autosuggest from 'react-autosuggest';
+import Autosuggest, { InputProps } from 'react-autosuggest';
 
 import useStyles from '../../style/AutoSuggest';
 import Input from '../Input';
@@ -24,7 +24,7 @@ function AutoSuggest<T>(props: AutoSuggestProps<T>) {
     const classes = useStyles({ labelSize, suggestionLength: suggestions.length });
 
     const getSuggestions = (suggestion: string) => {
-        return value.length === 0
+        return suggestion.length === 0
             ? []
             : items.filter(item => {
                   return (
@@ -59,7 +59,7 @@ function AutoSuggest<T>(props: AutoSuggestProps<T>) {
         );
     };
 
-    const renderInputComponent = (inputProps: object) => {
+    const renderInputComponent = (inputProps: InputProps<T>) => {
         return <Input for={id} name={id} size={size} labelSize={labelSize} inputProps={inputProps} />;
     };
 
