@@ -1,6 +1,6 @@
 import { model } from 'mongoose';
 import { EVALUATIONS, GENDERS, GRADES, GROUPS_, RANKS, STEPS } from '../config/consts';
-import { Candidate, Recruitment, User } from '../config/types';
+import { Candidate, FormPayload, Recruitment, User } from '../config/types';
 import { createSchema, RepositoryBase } from './index';
 
 const arrayToIndex = (array: string[]) => array.map((i, j) => j);
@@ -254,3 +254,27 @@ const recruitmentSchema = createSchema({
 
 const RecruitmentModel = model<Recruitment>('recruitment', recruitmentSchema);
 export const RecruitmentRepo = new RepositoryBase<Recruitment>(RecruitmentModel);
+
+const payloadSchema = createSchema({
+    id: {
+        type: String,
+    },
+    group: {
+        type: String,
+        enum: GROUPS_
+    },
+    step: {
+        type: String,
+        enum: ['group', 'team'],
+    },
+    recruitmentId: {
+        type: String,
+    },
+    hash: {
+        type: String,
+        required: true
+    }
+});
+
+const payloadModel = model<FormPayload>('payload', payloadSchema);
+export const PayloadRepo = new RepositoryBase<FormPayload>(payloadModel);
