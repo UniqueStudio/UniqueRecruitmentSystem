@@ -5,6 +5,3 @@ services:
       context: nginx
     ports:
     - 6655:6655
-    volumes:
-    - ./build:/usr/share/nginx/form
-

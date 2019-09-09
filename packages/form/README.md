@@ -17,12 +17,7 @@ the other is [Dashboard](https://github.com/UniqueStudio/UniqueRecruitmentDashbo
 
 1. `TypeScript`
 2. `React`
-3. `Redux` (?)
-4. `Parcel`
-5. `Sass` (?)
-6. `Material UI` (?)
-7. ...
-
-## TODOS
-
-1. security
+3. `CRA`
+4. `Sass`
+5. `Material UI`
+6. ...
