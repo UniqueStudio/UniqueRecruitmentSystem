@@ -4,6 +4,7 @@ import classNames from 'classnames';
 import hlogo from '../../asset/img/hlogo.png';
 import { GENDERS, GRADES, GROUPS, RANKS, URL } from '../../config/const';
 import { Departments } from '../../config/department';
+import translate from '../../config/translate';
 import { Candidate, Variant } from '../../config/types';
 import useStyles from '../../style/Form';
 import { sizeSwitch } from '../../utils/sizeSwitch';
@@ -85,11 +86,11 @@ const Form: FC<FormProps> = memo(props => {
                 setSubmitState({ submitted: true, submitting: false });
                 submit();
             } else {
-                toggleSnackbar(result.message, result.type);
+                toggleSnackbar(translate(result.message), result.type);
                 setSubmitState({ submitted: false, submitting: false });
             }
         } catch ({ message }) {
-            toggleSnackbar(message, 'error');
+            toggleSnackbar(translate(message), 'error');
             setSubmitState({ submitted: false, submitting: false });
         } finally {
             setProgress(0);

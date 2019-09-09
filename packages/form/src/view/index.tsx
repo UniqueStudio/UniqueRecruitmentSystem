@@ -10,6 +10,7 @@ import { NewTime } from '../component/NewTime';
 import Snackbar from '../component/SnackBar';
 // import Time from '../component/Time';
 import { MEDIA, URL } from '../config/const';
+import translate from '../config/translate';
 import { Variant } from '../config/types';
 import styles from '../style/view';
 import { titleConverter } from '../utils/titleConverter';
@@ -45,7 +46,7 @@ class Container extends PureComponent<Props> {
         if (type === 'success') {
             this.setState({ title: data[0] });
         } else {
-            this.toggleSnackbar(message, type);
+            this.toggleSnackbar(translate(message), type);
         }
         this.setState({ loading: false });
     }
@@ -70,7 +71,6 @@ class Container extends PureComponent<Props> {
         const classes = this.props.classes;
         const { media, title, snackBarOn, variant, loading, openDialog } = this.state;
         const pathname = window.location.pathname;
-        console.log(pathname);
         const titleName = titleConverter(title);
         /* http://join.hustunique.com/:formId/:candidateId */
         /* formId: recruitmentId + groupId(if type === 1) + type(0: apply, 1: interview1, 2: interview2) */

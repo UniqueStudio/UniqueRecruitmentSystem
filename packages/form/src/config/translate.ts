@@ -1,5 +1,7 @@
 export default (msg: string): string => {
     switch (msg) {
+        case 'No pending recruitment!':
+            return '招新未开启';
         case 'Form doesn\'t exist!':
         case 'URL is invalid!':
             return '表单不存在，请检查URL信息';
