@@ -41,7 +41,7 @@ export const addCandidate: RequestHandler = async (req, res, next) => {
             resume: filepath,
             referrer
         }, session);
-        Promise.all([
+        await Promise.all([
             RecruitmentRepo.update({ title, 'groups.name': group }, {
                 'groups.$.total': await CandidateRepo.count({ title, group }),
                 'groups.$.steps.0': await CandidateRepo.count({ title, group, step: 0 }),
