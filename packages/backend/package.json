@@ -16,6 +16,7 @@
     }
   ],
   "dependencies": {
+    "acm-client": "^3.1.0",
     "cron": "^1.7.1",
     "express": "^4.17.1",
     "express-validator": "^6.2.0",

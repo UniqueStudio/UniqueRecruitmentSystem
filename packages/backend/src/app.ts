@@ -2,6 +2,7 @@ import express from 'express';
 import fs from 'fs';
 // import http from 'http';
 import https from 'https';
+import { loadConfig } from './config/acm';
 import { jsonParser, urlencodedParser } from './middlewares/bodyParser';
 import { cors } from './middlewares/cors';
 import { errorHandler } from './middlewares/errorHandler';
@@ -10,6 +11,8 @@ import { routes } from './routes';
 import { task } from './task';
 import { logger } from './utils/logger';
 import { wsHandler, wsServer } from './websocket';
+
+loadConfig().catch((e) => logger.error(e));
 
 export const app = express();
 
