@@ -73,8 +73,8 @@ export const newSetCandidate: RequestHandler = async (req, res, next) => {
                         'interviews.group.selection': groupInterview,
                     }, session),
                     PayloadRepo.deleteById(pid),
-                    // {1}你好，您当前状态是{2}，请关注手机短信以便获取后续通知。
-                    sendSMS(phone, { template: 96388, param_list: [name, '成功选择组面时间'] })
+                    // {1}你好，您当前状态是{2}，请关注手机短信及邮箱以便获取后续通知。
+                    sendSMS(phone, { template: 416721, param_list: [name, '成功选择组面时间'] })
                 ]);
                 await session.commitTransaction();
                 return res.json({ type: 'success' });
@@ -99,8 +99,8 @@ export const newSetCandidate: RequestHandler = async (req, res, next) => {
                         'interviews.team.selection': teamInterview,
                     }, session),
                     PayloadRepo.deleteById(pid),
-                    // {1}你好，您当前状态是{2}，请关注手机短信以便获取后续通知。
-                    sendSMS(phone, { template: 96388, param_list: [name, '成功选择群面时间'] })
+                    // {1}你好，您当前状态是{2}，请关注手机短信及邮箱以便获取后续通知。
+                    sendSMS(phone, { template: 416721, param_list: [name, '成功选择群面时间'] })
                 ]);
                 await session.commitTransaction();
                 return res.json({ type: 'success' });
