@@ -125,7 +125,7 @@ class Container extends PureComponent<Props> {
             <div className={classes.root}>
                 <div className={classNames(classes.background, classes.bgLeft)} />
                 <div className={classes.center}>
-                    <img src={header} className={classes.header} alt='header' />
+                    <img src={header} className={classes.header} alt='header' draggable={false} />
                     {MainInterface}
                 </div>
                 <div className={classNames(classes.background, classes.bgRight)} />

@@ -17,6 +17,7 @@ const style = ({ breakpoints, spacing }: Theme) =>
             margin: spacing(1, 0)
         },
         textLabel: {
+            userSelect: 'none',
             color: 'white',
             fontWeight: 700,
             height: '30px',

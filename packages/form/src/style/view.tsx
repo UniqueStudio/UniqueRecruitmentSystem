@@ -63,6 +63,7 @@ const styles = ({ spacing, breakpoints }: Theme) =>
             }
         },
         msg: {
+            userSelect: 'none',
             fontFamily: MyTheme.font.family,
             fontSize: '20px',
             margin: `${spacing(1)}px 0`,

@@ -316,7 +316,7 @@ const Form: FC<FormProps> = memo(props => {
                         {Major}
                     </div>
                     <div className='ptMid'>
-                        <img src={hlogo} />
+                        <img src={hlogo} draggable={false} alt='logo' />
                     </div>
                     <div className='ptRight'>
                         {Phone}

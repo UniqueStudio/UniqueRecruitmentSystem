@@ -36,6 +36,7 @@ const styles = ({ breakpoints, spacing }: Theme) =>
             }
         },
         svg: {
+            userSelect: 'none',
             fill: primary.main,
             height: '70px',
             [breakpoints.down('md')]: {
@@ -46,6 +47,7 @@ const styles = ({ breakpoints, spacing }: Theme) =>
             }
         },
         title: {
+            userSelect: 'none',
             fontFamily: font.family,
             color: primary.main,
             fontWeight: 'bold',
@@ -62,6 +64,7 @@ const styles = ({ breakpoints, spacing }: Theme) =>
             }
         },
         description: {
+            userSelect: 'none',
             fontFamily: font.family,
             color: primary.lightLittle,
             fontWeight: 'bold',
