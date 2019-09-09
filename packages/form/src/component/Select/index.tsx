@@ -1,72 +1,56 @@
-import React, { PureComponent } from 'react';
+import React, { ChangeEvent, FC, memo, useState } from 'react';
 
 import { InputBase, MenuItem, Select } from '@material-ui/core';
 import classNames from 'classnames';
 import arrow from '../../asset/img/arrow.svg';
+import useStyles from '../../style/Select';
 
-import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
-import styles from '../../style/Select';
-
-interface Props extends WithStyles<typeof styles> {
+interface SelectProps {
     selections: string[];
     value: string;
     defaultValue: string;
-    handleSelect: (value: string | number) => () => void;
+    handleSelect: (value: number) => void;
 }
 
-class CustomSelect extends PureComponent<Props> {
-    state = {
-        open: false
+const CustomSelect: FC<SelectProps> = memo(({ selections, value, defaultValue, handleSelect }) => {
+    const [open, setOpen] = useState<boolean>(false);
+    const classes = useStyles();
+
+    const renderIcon = () => {
+        const { svg, rotateSvg } = classes;
+        return <img src={arrow} className={classNames('MuiSvgIcon-root', svg, { [rotateSvg]: open })} />;
     };
 
-    onOpen = () => {
-        this.setState({ open: true });
+    const renderValue = (v: any) => {
+        if (!v) return defaultValue;
+        return v;
     };
 
-    onClose = () => {
-        this.setState({ open: false });
-    };
+    return (
+        <Select
+            value={value}
+            IconComponent={renderIcon}
+            onChange={(event: ChangeEvent<{ value: unknown }>) => {
+                handleSelect(event.target.value as number);
+            }}
+            displayEmpty
+            renderValue={renderValue}
+            open={open}
+            onOpen={() => setOpen(true)}
+            onClose={() => setOpen(false)}
+            classes={{ select: classes.select }}
+            className={classNames(classes.border, classes.root, classes.height)}
+            variant='standard'
+            input={<InputBase classes={{ input: classNames(classes.input, classes.font) }} />}
+            MenuProps={{ classes: { paper: classNames(classes.menu, classes.border) } }}
+        >
+            {selections.map((v, i) => (
+                <MenuItem dense key={i} value={i} classes={{ root: classNames(classes.menuItem, classes.font) }}>
+                    {v}
+                </MenuItem>
+            ))}
+        </Select>
+    );
+});
 
-    renderIcon = () => {
-        const { svg, rotateSvg } = this.props.classes;
-        return <img src={arrow} className={classNames('MuiSvgIcon-root', svg, { [rotateSvg]: this.state.open })} />;
-    };
-
-    renderValue = (value: any) => {
-        if (!value) return this.props.defaultValue;
-        return value;
-    };
-
-    render() {
-        const { selections, value, handleSelect, classes } = this.props;
-        return (
-            <Select
-                value={value}
-                IconComponent={this.renderIcon}
-                onChange={(event: React.ChangeEvent<{ value: unknown }>) => {
-                    handleSelect(event.target.value as string | number)();
-                }}
-                displayEmpty
-                renderValue={this.renderValue}
-                open={this.state.open}
-                onOpen={this.onOpen}
-                onClose={this.onClose}
-                classes={{
-                    select: classes.select
-                }}
-                className={classNames(classes.border, classes.root, classes.height)}
-                variant='standard'
-                input={<InputBase classes={{ input: classNames(classes.input, classes.font) }} />}
-                MenuProps={{ classes: { paper: classNames(classes.menu, classes.border) } }}
-            >
-                {selections.map((v, i) => (
-                    <MenuItem dense key={i} value={i} classes={{ root: classNames(classes.menuItem, classes.font) }}>
-                        {v}
-                    </MenuItem>
-                ))}
-            </Select>
-        );
-    }
-}
-
-export default withStyles(styles)(CustomSelect);
+export default CustomSelect;

@@ -1,25 +1,17 @@
+import React, { FC, memo } from 'react';
+
+import { IconButton, Snackbar, SnackbarContent } from '@material-ui/core';
 import { amber, green } from '@material-ui/core/colors';
-import IconButton from '@material-ui/core/IconButton';
-import Snackbar from '@material-ui/core/Snackbar';
-import SnackbarContent from '@material-ui/core/SnackbarContent';
 import { makeStyles, Theme } from '@material-ui/core/styles';
-
-import CheckCircleIcon from '@material-ui/icons/CheckCircle';
-import CloseIcon from '@material-ui/icons/Close';
-import ErrorIcon from '@material-ui/icons/Error';
-import InfoIcon from '@material-ui/icons/Info';
-
-import WarningIcon from '@material-ui/icons/Warning';
+import { CheckCircle, Close, Error as ErrorIcon, Info, Warning } from '@material-ui/icons';
 import clsx from 'clsx';
-import React from 'react';
-
 import { Variant } from '../../config/types';
 
 const variantIcon = {
-    success: CheckCircleIcon,
-    warning: WarningIcon,
+    success: CheckCircle,
+    warning: Warning,
     error: ErrorIcon,
-    info: InfoIcon
+    info: Info
 };
 
 const useStyles1 = makeStyles((theme: Theme) => ({
@@ -55,7 +47,7 @@ interface Props {
     variant: Variant;
 }
 
-function MySnackbarContentWrapper(props: Props) {
+const MySnackbarContentWrapper: FC<Props> = memo(props => {
     const classes = useStyles1();
     const { className, message, onClose, variant, ...other } = props;
     const Icon = variantIcon[variant];
@@ -72,13 +64,13 @@ function MySnackbarContentWrapper(props: Props) {
             }
             action={[
                 <IconButton key='close' aria-label='Close' color='inherit' onClick={onClose}>
-                    <CloseIcon className={classes.icon} />
+                    <Close className={classes.icon} />
                 </IconButton>
             ]}
             {...other}
         />
     );
-}
+});
 
 interface SnackbarProps {
     open: boolean;
@@ -87,18 +79,17 @@ interface SnackbarProps {
     variant: Variant;
 }
 
-export default function MySnackbar(props: SnackbarProps) {
+const CustomSnackbar: FC<SnackbarProps> = memo(({ open, content, onClose, variant }) => {
     return (
         <Snackbar
-            anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'left'
-            }}
-            open={props.open}
+            anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+            open={open}
             autoHideDuration={3000}
-            onClose={props.onClose}
+            onClose={onClose}
         >
-            <MySnackbarContentWrapper onClose={props.onClose} variant={props.variant} message={props.content} />
+            <MySnackbarContentWrapper onClose={onClose} variant={variant} message={content} />
         </Snackbar>
     );
-}
+});
+
+export default CustomSnackbar;

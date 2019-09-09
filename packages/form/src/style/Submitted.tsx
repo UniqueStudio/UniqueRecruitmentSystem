@@ -1,4 +1,4 @@
-import { createStyles, Theme } from '@material-ui/core/styles';
+import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import CustomTheme from './theme';
 
 const {
@@ -72,4 +72,4 @@ const styles = ({ breakpoints, spacing }: Theme) =>
         }
     });
 
-export default styles;
+export default makeStyles(styles);

@@ -1,8 +1,13 @@
-import { createStyles, Theme } from '@material-ui/core/styles';
+import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import combindStyles from '../utils/combindStyles';
 import borderStyles from './Border';
 import fontStyles from './Font';
 import CustomTheme from './theme';
+
+interface Props {
+    labelSize: number;
+    suggestionLength: number;
+}
 
 const {
     palette: { primary }
@@ -22,12 +27,14 @@ const style = ({ spacing }: Theme) =>
         container: {
             position: 'relative'
         },
-        suggestionsContainer: {
+        suggestionsContainer: ({ labelSize, suggestionLength }: Props) => ({
             position: 'absolute',
             maxHeight: '30vh',
             overflowY: 'auto',
-            zIndex: 999
-        },
+            zIndex: 999,
+            display: suggestionLength ? '' : 'none',
+            left: `${labelSize}vw`
+        }),
         suggestionsList: {
             margin: 0,
             padding: 0,
@@ -37,4 +44,4 @@ const style = ({ spacing }: Theme) =>
 
 const styles = combindStyles(borderStyles, fontStyles, style);
 
-export default styles;
+export default makeStyles(styles);

@@ -1,4 +1,4 @@
-import { createStyles, Theme } from '@material-ui/core/styles';
+import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import combineStyles from '../utils/combindStyles';
 import borderStyles from './Border';
 import fontStyle from './Font';
@@ -60,4 +60,4 @@ const style = ({ breakpoints, spacing }: Theme) =>
 
 const styles = combineStyles(borderStyles, fontStyle, style);
 
-export default styles;
+export default makeStyles(styles);

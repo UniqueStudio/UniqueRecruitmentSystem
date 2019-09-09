@@ -1,4 +1,4 @@
-import { createStyles, Theme } from '@material-ui/core/styles';
+import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import combineStyles from '../utils/combindStyles';
 import borderStyles from './Border';
 import fontStyles from './Font';
@@ -23,9 +23,6 @@ const style = ({ breakpoints, spacing }: Theme) =>
             '@media screen and (min-width: 1440px)': {
                 '&:hover': {
                     borderColor: primary.lightLittleMore
-                },
-                '&.Mui-focused': {
-                    borderColor: primary.lightLittleMore
                 }
             }
         },
@@ -48,10 +45,7 @@ const style = ({ breakpoints, spacing }: Theme) =>
             fontFamily: font.family,
             color: primary.main,
             justifyContent: 'center',
-            '&:focus': {
-                backgroundColor: primary.light
-            },
-            '&:hover': {
+            '&:focus,&:hover': {
                 backgroundColor: primary.light
             }
         },
@@ -93,4 +87,4 @@ const style = ({ breakpoints, spacing }: Theme) =>
 
 const styles = combineStyles(style, borderStyles, fontStyles, heightStyles);
 
-export default styles;
+export default makeStyles(styles);
