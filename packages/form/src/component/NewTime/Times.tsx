@@ -20,33 +20,38 @@ import { URL } from '../../config/const';
 import translate from '../../config/translate';
 import Submitted from '../Submitted';
 
+import fontStyle from '../../style/Font';
+import combineStyles from '../../utils/combindStyles';
+
 interface StyleProps {
   color?: 'white' | 'rgba(0, 0, 0, 0.26)' | undefined;
 }
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      width: '100%',
-      position: 'relative'
-    },
-    curtain: {
-      opacity: 0.2
-    },
-    chipWrapper: {
-      textAlign: 'center',
-      fontWeight: 'bold',
-      marginTop: theme.spacing(1)
-    },
-    dateChip: {
-      color: 'white',
-      width: '40%'
-    },
-    chip: (props: StyleProps) => ({
-      color: props.color,
-      width: '80%'
-    })
-  })
+const useStyles = makeStyles(
+  combineStyles((theme: Theme) =>
+    createStyles({
+      root: {
+        width: '100%',
+        position: 'relative'
+      },
+      curtain: {
+        opacity: 0.2
+      },
+      chipWrapper: {
+        textAlign: 'center',
+        fontWeight: 'bold',
+        marginTop: theme.spacing(1)
+      },
+      dateChip: {
+        color: 'white',
+        width: '40%'
+      },
+      chip: (props: StyleProps) => ({
+        color: props.color,
+        width: '80%',
+        maxWidth: '100px'
+      })
+    }), fontStyle)
 );
 
 interface TimesProps {
