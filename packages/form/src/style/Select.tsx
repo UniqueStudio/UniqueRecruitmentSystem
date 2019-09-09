@@ -21,7 +21,7 @@ const style = ({ breakpoints, spacing }: Theme) =>
             justifyContent: 'center',
             alignItems: 'center',
             '@media screen and (min-width: 1440px)': {
-                '&:hover,&.Mui-focused': {
+                '&:hover': {
                     borderColor: primary.lightLittleMore
                 }
             }
