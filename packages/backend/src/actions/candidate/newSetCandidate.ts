@@ -1,5 +1,6 @@
 import { RequestHandler } from 'express';
 import { body, param, validationResult } from 'express-validator';
+import { startSession } from 'mongoose';
 import { CandidateRepo, RecruitmentRepo } from '../../database/model';
 import { PayloadRepo } from '../../database/model';
 import { redisAsync } from '../../redis';
@@ -8,6 +9,7 @@ import { errorRes } from '../../utils/errorRes';
 import sendSMS from './sendSMS';
 
 export const newSetCandidate: RequestHandler = async (req, res, next) => {
+    const session = await startSession();
     try {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
@@ -40,12 +42,14 @@ export const newSetCandidate: RequestHandler = async (req, res, next) => {
             return next(errorRes('You are already rejected!', 'warning'));
         }
         if (abandon) {
+            session.startTransaction();
             await Promise.all([
                 CandidateRepo.updateById(id, {
                     abandon
-                }),
+                }, session),
                 redisAsync.del(`payload:${hash}`)
             ]);
+            await session.commitTransaction();
             return res.json({ type: 'success' });
         }
         switch (step) {
@@ -63,13 +67,15 @@ export const newSetCandidate: RequestHandler = async (req, res, next) => {
                 if (group.selection.length) {
                     return next(errorRes('You have already submitted!', 'warning'));
                 }
+                session.startTransaction();
                 await Promise.all([
                     CandidateRepo.updateById(id, {
                         'interviews.group.selection': groupInterview,
-                    }),
+                    }, session),
                     PayloadRepo.deleteById(pid),
                     sendSMS(phone, name, '成功选择组面时间')
                 ]);
+                await session.commitTransaction();
                 return res.json({ type: 'success' });
             }
             case 'team': {
@@ -86,13 +92,15 @@ export const newSetCandidate: RequestHandler = async (req, res, next) => {
                 if (team.selection.length) {
                     return next(errorRes('You have already submitted!', 'warning'));
                 }
+                session.startTransaction();
                 await Promise.all([
                     CandidateRepo.updateById(id, {
                         'interviews.team.selection': teamInterview,
-                    }),
+                    }, session),
                     PayloadRepo.deleteById(pid),
                     sendSMS(phone, name, '成功选择群面时间')
                 ]);
+                await session.commitTransaction();
                 return res.json({ type: 'success' });
             }
             default: {
@@ -100,6 +108,7 @@ export const newSetCandidate: RequestHandler = async (req, res, next) => {
             }
         }
     } catch (error) {
+        await session.abortTransaction();
         return next(error);
     }
 };
