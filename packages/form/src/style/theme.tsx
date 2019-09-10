@@ -15,7 +15,8 @@ const theme = {
         }
     },
     font: {
-        family: 'Hiragino, "Microsoft YaHei", "Open Sans", Arial, sans-serif'
+        family: '"PingFang SC", "Microsoft YaHei", "Open Sans", Arial, sans-serif',
+        special: 'Hiragino,"PingFang SC", "Microsoft YaHei", "Open Sans", Arial, sans-serif',
     }
 };
 
