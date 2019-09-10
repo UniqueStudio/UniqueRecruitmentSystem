@@ -1,4 +1,5 @@
 const { APP_ID, AGENT_ID, REDIRECT_URI, CORP_ID, CORP_SECRET, TOKEN, DB_PORT, SECRET } = process.env;
+const { ACM_DATAID, ACM_GROUP, ACM_NAMESPACE, ACM_ACCESS_KEY, ACM_SECRET_KEY } = process.env;
 const QRCodeAPI = `https://open.work.weixin.qq.com/wwopen/sso`;
 export const getQRCodeURL = `${QRCodeAPI}/qrConnect?appid=${APP_ID}&agentid=${AGENT_ID}&redirect_uri=${REDIRECT_URI}`;
 export const scanningURL = `${QRCodeAPI}/l/qrConnect?key=`;
@@ -41,3 +42,12 @@ export const ID_TO_GROUP = {
     25: 'pm',
 };
 export const secret = SECRET!;
+
+export const Acm = {
+    endpoint: 'acm.aliyun.com',
+    dataId: ACM_DATAID!,
+    group: ACM_GROUP!,
+    namespace: ACM_NAMESPACE!,
+    accessKey: ACM_ACCESS_KEY!,
+    secretKey: ACM_SECRET_KEY!
+};

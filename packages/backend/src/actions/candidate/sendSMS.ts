@@ -1,9 +1,8 @@
 import fetch from 'node-fetch';
+// import { Questions } from '../../config/acm';
 import { smsAPI, token } from '../../config/consts';
 
-export default async (phone: string, name: string, status: string) => {
-    // {1}你好，您当前状态是{2}，请关注手机短信以便获取后续通知。
-    const smsBody = { template: 96388, param_list: [name, status] };
+export const sendSMS = async (phone: string, body: { template: number, param_list: string[] }) => {
     const resp = await fetch(smsAPI, {
         method: 'POST',
         headers: {
@@ -12,7 +11,7 @@ export default async (phone: string, name: string, status: string) => {
         },
         body: JSON.stringify({
             phone,
-            ...smsBody
+            ...body
         })
     });
     const { code, message }: { code: number, message: string } = await resp.json();
