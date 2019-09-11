@@ -13,7 +13,8 @@
     "moduleResolution": "node",
     "rootDir": "src",
     "typeRoots": [
-      "node_modules/@types"
+      "node_modules/@types",
+      "typings"
     ],
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
