@@ -72,6 +72,7 @@ const styles = ({ spacing, breakpoints }: Theme) =>
                 fontSize: '14px'
             },
             '& .sp': {
+                fontFamily: MyTheme.font.special,
                 fontSize: '25px',
                 fontWeight: 'bold',
                 [breakpoints.down('xs')]: {

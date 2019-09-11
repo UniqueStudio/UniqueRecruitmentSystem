@@ -373,7 +373,15 @@ const Form: FC<FormProps> = memo(props => {
                 {main}
             </div>
             {submitState.submitted && (
-                <Submitted title='报名成功' description='请等待我们的短信通知，有问题可在招新群联系我们' />
+                <Submitted
+                    title='报名成功'
+                    description={
+                        <>
+                            请等待短信通知，并留意邮件，我们将发送一份问卷至你的邮箱，
+                            <span className={classes.redTips}>请及时答题</span>
+                        </>
+                    }
+                />
             )}
             {submitState.submitting && <UploadProgress progress={progress} />}
         </div>

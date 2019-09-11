@@ -6,7 +6,7 @@ import heightStyles from './Height';
 import CustomTheme from './theme';
 
 const {
-    palette: { primary }
+    palette: { primary, secondary }
 } = CustomTheme;
 
 const style = ({ breakpoints, spacing }: Theme) =>
@@ -173,6 +173,10 @@ const style = ({ breakpoints, spacing }: Theme) =>
         },
         curtain: {
             opacity: 0.2
+        },
+        redTips: {
+            color: secondary.main,
+            fontWeight: 'bold'
         }
     });
 

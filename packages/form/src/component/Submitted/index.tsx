@@ -5,7 +5,7 @@ import useStyles from '../../style/Submitted';
 
 interface SubmittedProps {
     title: string;
-    description: string;
+    description: string | JSX.Element;
     className?: string;
 }
 
