@@ -22,6 +22,26 @@ export default (msg: string): string => {
             return '你已经成功报名了';
         case 'Validation code is incorrect!':
             return '验证码错误';
+        case 'Name is invalid!':
+            return '请填写名字';
+        case 'Mail is invalid!':
+            return '请正确填写邮箱';
+        case 'Grade is invalid!':
+            return '请选择年级';
+        case 'Institute is invalid!':
+            return '请填写学院';
+        case 'Major is invalid!':
+            return '请填写专业';
+        case 'Gender is invalid!':
+            return '请选择性别';
+        case 'Phone is invalid!':
+            return '电话号码错误';
+        case 'Group is invalid!':
+            return '请选择要报名的组别';
+        case 'Rank is invalid!':
+            return '请选择成绩排名';
+        case 'Intro is invalid!':
+            return '请填写自我介绍';
         default:
             return '操作失败，请重试';
     }
