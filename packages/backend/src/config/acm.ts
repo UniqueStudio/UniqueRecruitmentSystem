@@ -2,18 +2,7 @@ import { ACMClient } from 'acm-client';
 import { logger } from '../utils/logger';
 import { Acm } from './consts';
 
-interface QuestionURI {
-    web: string;
-    pm: string;
-    game: string;
-    android: string;
-    ai: string;
-    ios: string;
-    lab: string;
-    design: string;
-}
-
-export let Questions = {} as QuestionURI;
+logger.info(JSON.stringify(Acm));
 
 export const loadConfig = async () => {
     logger.info(JSON.stringify(Acm));
@@ -25,11 +14,10 @@ export const loadConfig = async () => {
     acm.subscribe({
         dataId: Acm.dataId,
         group: Acm.group,
-    }, (newConfig: QuestionURI) => {
-        logger.info(JSON.stringify(newConfig));
-        Questions = newConfig;
+    }, (newConfig: string) => {
+        logger.info(newConfig);
+        global.acmConfig = JSON.parse(newConfig);
     });
 
-    Questions = await acm.getConfig(Acm.dataId, Acm.group) as QuestionURI;
-    logger.info(JSON.stringify(Questions));
+    global.acmConfig = JSON.parse(await acm.getConfig(Acm.dataId, Acm.group));
 };
