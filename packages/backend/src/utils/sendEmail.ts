@@ -4,12 +4,12 @@ const { EMAIL_PASS } = process.env;
 
 const transport = createTransport({
     host: 'smtpdm.aliyun.com',
-    port: 25,
+    port: 465,
     auth: {
         user: 'robot@mail.hustunique.com',
         pass: EMAIL_PASS!
     },
-    secure: false
+    secure: true
 });
 
 interface Receiver {
