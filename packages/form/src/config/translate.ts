@@ -18,6 +18,10 @@ export default (msg: string): string => {
             return '面试时间错误';
         case 'You have already submitted!':
             return '你已经提交过了';
+        case 'You have already applied!':
+            return '你已经成功报名了';
+        case 'Validation code is incorrect!':
+            return '验证码错误';
         default:
             return '操作失败，请重试';
     }
