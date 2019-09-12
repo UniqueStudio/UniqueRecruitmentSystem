@@ -18,6 +18,9 @@ export const addCandidate: RequestHandler = async (req, res, next) => {
         }
         const { name, grade, institute, major, rank, mail, phone, group, gender, intro, title, isQuick, referrer } = req.body;
         let filepath = '';
+        if (group === 'design' && !req.file) {
+            return next(errorRes('Signing up Design team needs works', 'warning'));
+        }
         if (req.file) {
             const { originalname: filename, path: oldPath } = req.file;
             filepath = path.join('../resumes', title, group);
