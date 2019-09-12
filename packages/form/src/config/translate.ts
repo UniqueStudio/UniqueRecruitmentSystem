@@ -42,6 +42,8 @@ export default (msg: string): string => {
             return '请选择成绩排名';
         case 'Intro is invalid!':
             return '请填写自我介绍';
+        case 'Signing up Design team needs works':
+            return '填报Design组需要上交作品集';
         default:
             return '操作失败，请重试';
     }
