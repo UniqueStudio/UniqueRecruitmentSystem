@@ -35,7 +35,7 @@ const translator = new Map([
     ['gender', '性别'],
     ['grade', '年级'],
     ['group', '组别'],
-    ['score', '成绩排名'],
+    ['rank', '成绩排名'],
     ['phone', '电话号码'],
     ['code', '验证码'],
     ['intro', '自我介绍']
@@ -67,13 +67,16 @@ const Form: FC<FormProps> = memo(props => {
         if (!checkPhone(info.phone)) {
             return toggleSnackbar('手机号码格式不正确!', 'warning');
         }
-        const formData = new FormData();
-        for (const [key, value] of Object.entries(info)) {
-            if (value === undefined) {
-                return toggleSnackbar(`请填写${translator.get(key)}`, 'warning');
-            }
-            formData.append(key, value);
+        if (GROUPS[group] === 'Design' && !resume) {
+            return toggleSnackbar('填报Design组需要上交作品集', 'warning');
         }
+        const formData = new FormData();
+        for (const [key, value] of translator.entries()) {
+            if (formInfo[key] === undefined) {
+                return toggleSnackbar(`请填写${value}`, 'warning');
+            }
+        }
+        Object.entries(info).forEach(([key, value]) => formData.append(key, value));
         try {
             setSubmitState(({ submitted }) => ({ submitted, submitting: true }));
             info.resume && toggleSnackbar('开始上传，请耐心等待', 'info');
