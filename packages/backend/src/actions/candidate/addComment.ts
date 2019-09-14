@@ -2,7 +2,7 @@ import { Socket } from 'socket.io';
 
 import { io } from '../../app';
 import { Comment } from '../../config/types';
-import { CandidateRepo } from '../../database/model';
+import { CandidateRepo, UserRepo } from '../../database/model';
 import { errorRes } from '../../utils/errorRes';
 import { logger } from '../../utils/logger';
 import { verifyJWT } from '../../utils/verifyJWT';
@@ -12,15 +12,19 @@ export const onAddComment = (socket: Socket) => async (req: { cid: string, comme
         const { cid, comment, token } = req;
         const id = verifyJWT(token);
         const candidate = await CandidateRepo.queryById(cid);
+        const user = await UserRepo.queryById(id);
         if (!candidate) {
-            return socket.emit('addCommentError', errorRes('candidate doesn\'t exist!', 'warning'));
+            return socket.emit('addCommentError', errorRes('Candidate doesn\'t exist!', 'warning'));
+        }
+        if (!user) {
+            return socket.emit('addCommentError', errorRes('User doesn\'t exist!', 'warning'));
         }
         if (!comment) {
             return socket.emit('addCommentError', errorRes('No comment provided!', 'warning'));
         }
         const { title } = candidate;
         const { uid, content, evaluation, username } = comment;
-        if (uid !== id || !content || !username || ![0, 1, 2].includes(evaluation)) {
+        if (uid !== id || !content || username !== user.username || ![0, 1, 2].includes(evaluation)) {
             return socket.emit('addCommentError', errorRes('Comment is invalid!', 'warning'));
         }
         const updated = await CandidateRepo.pushById(cid, { comments: { uid, content, evaluation, username } });
