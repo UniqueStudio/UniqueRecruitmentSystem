@@ -7,9 +7,9 @@ import { GENDERS, GRADES, GROUPS_, RANKS } from '../../config/consts';
 import { CandidateRepo, RecruitmentRepo } from '../../database/model';
 import { copyFile } from '../../utils/copyFile';
 import { errorRes } from '../../utils/errorRes';
+import { logger } from '../../utils/logger';
 import sendEmail from '../../utils/sendEmail';
 import { sendSMS } from './sendSMS';
-import { logger } from '../../utils/logger';
 
 export const addCandidate: RequestHandler = async (req, res, next) => {
     try {
@@ -55,7 +55,7 @@ export const addCandidate: RequestHandler = async (req, res, next) => {
             const question = global.acmConfig[group];
             if (!question.uri) return;
             sendEmail({ name, address: mail }, question.uri, question.description)
-                .catch((e) => logger.error(e))
+                .catch((e) => logger.error(e));
         }, 30 * 1000);
     } catch (err) {
         return next(err);
@@ -90,7 +90,11 @@ export const addCandidateVerify = [
             throw new Error('You have already applied!');
         }
     }),
-    body('group').isIn(GROUPS_).withMessage('Group is invalid!'),
+    body('group')
+        .isIn(GROUPS_)
+        .withMessage('Group is invalid!')
+        .custom((group, { req }) => !(group === 'design' && !req.file))
+        .withMessage('Signing up Design team needs works'),
     body('rank').isInt({ lt: RANKS.length, gt: -1 }).withMessage('Rank is invalid!'),
     body('intro').isString().withMessage('Intro is invalid!'),
     body('referrer').isString().withMessage('Referrer is invalid!'),

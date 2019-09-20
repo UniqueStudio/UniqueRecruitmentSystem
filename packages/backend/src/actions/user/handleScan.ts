@@ -104,6 +104,9 @@ export const handleScan: RequestHandler = async (req, res, next) => {
                 const data = dataConverter(userInfoResult);
                 const users = await UserRepo.query({ weChatID: data.weChatID });
                 const user = users.length ? users[0] : await UserRepo.createAndInsert(data);
+                if (data.isCaptain && !user.isCaptain) {
+                    await UserRepo.updateById(user._id, { isCaptain: true, isAdmin: true });
+                }
                 const token = generateJWT({ id: user._id }, 604800);
                 res.json({ token, type: 'success' });
             }
