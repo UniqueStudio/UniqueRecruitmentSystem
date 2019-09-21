@@ -26,50 +26,50 @@ const send = (req: Request) => {
             return new Error("Candidate doesn't exist!");
         }
         const { name, title, group, interviews, phone } = candidateInfo;
+        let hash = '';
         try {
-            if (type === 'accept' && !recruitmentId) {
-                // 仅执行一次，用于生成含有recruitment id的formId
-                // 以后所有的candidates都可以复用这个formId
-                const recruitment = (await RecruitmentRepo.query({ title }))[0];
-                if (recruitment.end < Date.now()) {
-                    return new Error('This recruitment has already ended!');
-                }
-                if (nextStep === 2) {
-                    // 发送组面短信
-                    const data = recruitment.groups.find((groupData) => groupData.name === group);
-                    if (!data) {
-                        return new Error("Group doesn't exist!");
+            if (type === 'accept') {
+                if (!recruitmentId) {
+                    // 仅执行一次，用于生成含有recruitment id的formId
+                    // 以后所有的candidates都可以复用这个formId
+                    const recruitment = (await RecruitmentRepo.query({ title }))[0];
+                    if (recruitment.end < Date.now()) {
+                        return new Error('This recruitment has already ended!');
                     }
-                    if (!data.interview.length) {
-                        return new Error('Please set group interview time first!');
+                    if (nextStep === 2) {
+                        // 组面
+                        const data = recruitment.groups.find((groupData) => groupData.name === group);
+                        if (!data) {
+                            return new Error("Group doesn't exist!");
+                        }
+                        if (!data.interview.length) {
+                            return new Error('Please set group interview time first!');
+                        }
+                    } else if (nextStep === 4) {
+                        // 群面
+                        if (!recruitment.interview.length) {
+                            return new Error('Please set team interview time first!');
+                        }
                     }
                     recruitmentId = `${recruitment._id}`;
-                    // formId = `${recruitment._id}${GROUPS_.indexOf(group)}1`;
-                } else if (nextStep === 4) {
-                    // 发送群面短信
-                    if (!recruitment.interview.length) {
-                        return new Error('Please set team interview time first!');
-                    }
-                    recruitmentId = `${recruitment._id}`;
-                    // formId = `${recruitment._id}2`;
                 }
+                const payload = {
+                    recruitmentId,
+                    id,
+                    step: nextStep === 2 ? 'group' : 'team',
+                    group
+                };
+                hash = md5(payload);
+                Promise.all([
+                    PayloadRepo.createAndInsert({ ...payload, hash }),
+                    redisAsync.set(`payload:${hash}`, id, 'EX', 60 * 60 * 24 * 2)
+                ]).catch((e) => {
+                    throw new Error(`Error in ${name}: ${e}`);
+                });
             }
             if (type === 'reject') {
                 await CandidateRepo.updateById(id, { rejected: true });
             }
-            const payload = {
-                recruitmentId,
-                id,
-                step: nextStep === 2 ? 'group' : 'team',
-                group
-            };
-            const hash = md5(payload);
-            Promise.all([
-                PayloadRepo.createAndInsert({ ...payload, hash }),
-                redisAsync.set(`payload:${hash}`, id, 'EX', 60 * 60 * 24 * 2)
-            ]).catch((e) => {
-                return new Error(`Error in ${name}: ${e}`);
-            });
             const url = recruitmentId ? `${formURL}/${hash}` : '';
             let allocated;
             if (type === 'group' || type === 'team') {
