@@ -45,7 +45,7 @@ export const generateSMS = ({ name, title, step, type, group, time, place, rest,
         case 'reject': {
             if (!group) throw new Error('Group not provided!');
             if (!title) throw new Error('Title not provided!');
-            if (!step || step < 0 || step > 4) throw new Error('Step is invalid!');
+            if (step !== undefined || step < 0 || step > 4) throw new Error('Step is invalid!');
             const defaultRest = '不要灰心，继续学习。期待与更强大的你的相遇！';
             rest = `${rest || defaultRest}${suffix}`;
             // {1}你好，你没有通过{2}{3}组{4}审核，请你{5}

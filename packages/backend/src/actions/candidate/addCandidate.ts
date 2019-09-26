@@ -71,7 +71,7 @@ export const verifyTitle = body('title').matches(/\d{4}[ASC]/, 'g').withMessage(
         if (Date.now() < recruitment.begin) {
             throw new Error('Current recruitment is not started!');
         }
-        if (Date.now() > recruitment.stop) {
+        if (Date.now() > recruitment.end) {
             throw new Error('Current recruitment has ended!');
         }
     });
