@@ -2,7 +2,7 @@ import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 import classNames from 'classnames';
 import React, { PureComponent } from 'react';
 // import borderTop from '../asset/img/borderTop.png';
-import header from '../asset/img/headerFA.png';
+import header from '../asset/img/headerSP.png';
 import Dialog from '../component/Dialog';
 import Form from '../component/Form';
 import Loading from '../component/Loading';
