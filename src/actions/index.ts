@@ -792,3 +792,19 @@ export function resumeProgress(progress: number, cid: string): ResumeProgress {
         cid
     };
 }
+
+export const SET_GROUP_ADMIN = 'SET_GROUP_ADMIN';
+export type SET_GROUP_ADMIN = typeof SET_GROUP_ADMIN;
+export interface SetGroupAdmin {
+    type: SET_GROUP_ADMIN;
+    data: {
+        group: string;
+        who: string[];
+    };
+}
+export function setGroupAdmin(data: SetGroupAdmin['data']) {
+    return {
+        type: SET_GROUP_ADMIN,
+        data,
+    };
+}
