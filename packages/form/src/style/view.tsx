@@ -64,7 +64,7 @@ const styles = ({ spacing, breakpoints }: Theme) =>
         },
         msg: {
             userSelect: 'none',
-            fontFamily: MyTheme.font.family,
+            fontFamily: MyTheme.font.special,
             fontSize: '20px',
             margin: `${spacing(1)}px 0`,
             fontWeight: 600,
@@ -72,6 +72,7 @@ const styles = ({ spacing, breakpoints }: Theme) =>
                 fontSize: '14px'
             },
             '& .sp': {
+                fontFamily: MyTheme.font.special,
                 fontSize: '25px',
                 fontWeight: 'bold',
                 [breakpoints.down('xs')]: {
@@ -88,6 +89,7 @@ const styles = ({ spacing, breakpoints }: Theme) =>
         title: {
             textAlign: 'center',
             '& h1': {
+                fontFamily: MyTheme.font.special,
                 color: MyTheme.palette.secondary.light,
                 userSelect: 'none',
                 whiteSpace: 'nowrap',

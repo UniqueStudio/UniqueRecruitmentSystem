@@ -21,7 +21,7 @@ const styles = ({ breakpoints }: Theme) =>
                 fontSize: '12px'
             },
             '@media screen and (max-width: 800px)': {
-                fontSize: '2px'
+                fontSize: '12px'
             },
             [breakpoints.down('xs')]: {
                 fontSize: '14px'

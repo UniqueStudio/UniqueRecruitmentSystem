@@ -80,7 +80,7 @@ const style = ({ breakpoints, spacing }: Theme) =>
             paddingLeft: '1.5vw',
             textAlign: 'left',
             [breakpoints.down('xs')]: {
-                paddingLeft: '5vw'
+                paddingLeft: '7vw'
             }
         }
     });
