@@ -2,7 +2,7 @@ import { ofType } from 'redux-observable';
 import { EMPTY, of } from 'rxjs';
 import { catchError, mergeMap, switchMap, tap } from 'rxjs/operators';
 
-import { MOVE_CANDIDATE_START, moveCandidateFulfilled, MoveCandidateStart, toggleProgress } from '../../actions';
+import { moveCandidateFulfilled, MoveCandidateStart, MOVE_CANDIDATE_START, toggleProgress } from '../../actions';
 
 import { checkToken, Epic, errHandler } from '../';
 

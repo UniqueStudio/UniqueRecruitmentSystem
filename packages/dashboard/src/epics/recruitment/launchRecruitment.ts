@@ -3,7 +3,7 @@ import { of } from 'rxjs';
 import { ajax } from 'rxjs/ajax';
 import { catchError, mergeMap, startWith } from 'rxjs/operators';
 
-import { enqueueSnackbar, getRecruitmentsStart, LAUNCH_RECRUITMENT, LaunchRecruitment, setShouldUpdateRecruitment, toggleProgress } from '../../actions';
+import { enqueueSnackbar, getRecruitmentsStart, LaunchRecruitment, LAUNCH_RECRUITMENT, setShouldUpdateRecruitment, toggleProgress } from '../../actions';
 
 import { API } from '../../config/consts';
 

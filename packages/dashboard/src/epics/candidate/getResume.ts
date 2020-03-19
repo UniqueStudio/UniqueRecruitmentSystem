@@ -2,7 +2,7 @@ import { ofType } from 'redux-observable';
 import { from } from 'rxjs';
 import { catchError, mergeMap, startWith } from 'rxjs/operators';
 
-import { GET_RESUME, GetResume, resumeProgress, toggleProgress } from '../../actions';
+import { GetResume, GET_RESUME, resumeProgress, toggleProgress } from '../../actions';
 
 import { API } from '../../config/consts';
 

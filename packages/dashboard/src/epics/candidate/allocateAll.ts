@@ -3,7 +3,7 @@ import { of } from 'rxjs';
 import { ajax } from 'rxjs/ajax';
 import { catchError, mergeMap, startWith } from 'rxjs/operators';
 
-import { ALLOCATE_ALL_START, allocateAllFulfilled, AllocateAllFulfilled, AllocateAllStart, enqueueSnackbar, toggleProgress } from '../../actions';
+import { allocateAllFulfilled, AllocateAllFulfilled, AllocateAllStart, ALLOCATE_ALL_START, enqueueSnackbar, toggleProgress } from '../../actions';
 
 import { API } from '../../config/consts';
 

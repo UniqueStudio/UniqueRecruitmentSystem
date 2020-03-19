@@ -3,7 +3,7 @@ import { of } from 'rxjs';
 import { ajax } from 'rxjs/ajax';
 import { catchError, mergeMap, startWith } from 'rxjs/operators';
 
-import { enqueueSnackbar, SET_USER_INFO_START, SetUserInfoStart, toggleProgress, userInfoFulfilled } from '../../actions';
+import { enqueueSnackbar, SetUserInfoStart, SET_USER_INFO_START, toggleProgress, userInfoFulfilled } from '../../actions';
 
 import { API } from '../../config/consts';
 

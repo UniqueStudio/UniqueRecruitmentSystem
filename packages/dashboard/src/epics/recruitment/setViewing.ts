@@ -5,8 +5,8 @@ import { mergeMap } from 'rxjs/operators';
 import {
     enqueueSnackbar,
     getCandidatesStart,
-    SET_VIEWING_RECRUITMENT_START,
-    SetViewingRecruitmentStart
+    SetViewingRecruitmentStart,
+    SET_VIEWING_RECRUITMENT_START
 } from '../../actions';
 
 import { Epic } from '../';

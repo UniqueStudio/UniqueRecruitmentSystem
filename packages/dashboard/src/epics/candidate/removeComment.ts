@@ -2,7 +2,7 @@ import { ofType } from 'redux-observable';
 import { EMPTY } from 'rxjs';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 
-import { REMOVE_COMMENT_START, RemoveCommentStart, toggleProgress } from '../../actions';
+import { RemoveCommentStart, REMOVE_COMMENT_START, toggleProgress } from '../../actions';
 
 import { checkToken, Epic, errHandler } from '../';
 

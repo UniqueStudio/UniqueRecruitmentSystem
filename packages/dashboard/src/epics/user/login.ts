@@ -5,11 +5,11 @@ import { catchError, filter, mergeMap, startWith, switchMap } from 'rxjs/operato
 
 import {
     enqueueSnackbar,
-    GET_QR_CODE_FULFILLED,
-    GET_QR_CODE_START,
     GetQRCodeFulfilled,
     getQRCodeFulfilled,
-    login, LOGIN_START, LoginStart,
+    GET_QR_CODE_FULFILLED,
+    GET_QR_CODE_START,
+    login, LoginStart, LOGIN_START,
     toggleProgress,
 } from '../../actions';
 
