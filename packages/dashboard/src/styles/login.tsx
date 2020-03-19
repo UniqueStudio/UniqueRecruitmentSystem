@@ -18,7 +18,7 @@ const useStyles = makeStyles(({ breakpoints, spacing }: Theme) => createStyles({
     container: {
         height: '100vh',
         background: `linear-gradient(45deg, ${colors(200).join()})`,
-        animation: 'rainbow 50s ease infinite',
+        animation: '$rainbow 50s ease infinite',
         backgroundSize: '1800% 1800%'
     },
     login: {
