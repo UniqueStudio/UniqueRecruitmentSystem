@@ -5,8 +5,8 @@ import { catchError, mergeMap, startWith } from 'rxjs/operators';
 
 import {
     enqueueSnackbar,
-    GET_RECRUITMENTS_START,
     getRecruitmentsFulfilled,
+    GET_RECRUITMENTS_START,
     setViewingRecruitmentFulfilled,
     toggleProgress
 } from '../../actions';

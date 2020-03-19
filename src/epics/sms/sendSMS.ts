@@ -3,7 +3,7 @@ import { of } from 'rxjs';
 import { ajax } from 'rxjs/ajax';
 import { catchError, mergeMap, startWith } from 'rxjs/operators';
 
-import { enqueueSnackbar, SEND_SMS, SendSMS, toggleProgress } from '../../actions';
+import { enqueueSnackbar, SendSMS, SEND_SMS, toggleProgress } from '../../actions';
 
 import { API } from '../../config/consts';
 

@@ -3,7 +3,7 @@ import { of } from 'rxjs';
 import { ajax } from 'rxjs/ajax';
 import { catchError, mergeMap, startWith } from 'rxjs/operators';
 
-import { GET_GROUP_INFO_START, getGroupInfoFulfilled, toggleProgress } from '../../actions';
+import { getGroupInfoFulfilled, GET_GROUP_INFO_START, toggleProgress } from '../../actions';
 
 import { API } from '../../config/consts';
 import { User } from '../../config/types';
