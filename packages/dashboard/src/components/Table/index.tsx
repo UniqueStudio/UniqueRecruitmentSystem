@@ -2,7 +2,7 @@ import React, { FC, memo, useState } from 'react';
 
 import classNames from 'classnames';
 
-import DateFnsUtils from '@date-io/date-fns';
+import DateFnsUtils from '@material-ui/pickers/adapter/date-fns';
 
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
@@ -16,8 +16,7 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
-import { DateTimePicker } from '@material-ui/pickers/DateTimePicker/DateTimePicker';
-import { MuiPickersUtilsProvider } from '@material-ui/pickers/MuiPickersUtilsProvider';
+import { DateTimePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 
 import Modal from '../Modal';
 

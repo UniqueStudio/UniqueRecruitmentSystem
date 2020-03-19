@@ -19,7 +19,7 @@ import useStyles from '../../styles/fab';
 const ButtonGenerator = (content: string, icon: JSX.Element, onClick: () => void, disabled = false) => (
     <SpeedDialAction
         icon={icon}
-        ButtonProps={{ disabled }}
+        FabProps={{ disabled }}
         tooltipTitle={content}
         onClick={onClick}
     />
