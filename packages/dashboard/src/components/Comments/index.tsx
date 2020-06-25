@@ -18,6 +18,21 @@ const Comments: FC<Props> = memo(({ savedComment, comments, uid, changeInputting
     const [evaluation, setEvaluation] = useState(savedComment.evaluation);
     const [content, setContent] = useState(savedComment.content);
 
+    const handleSubmit = () => {
+        if (content && evaluation !== undefined) {
+            submit(cid, {
+                uid,
+                content,
+                evaluation,
+                username,
+            });
+            setEvaluation(2);
+            setContent('');
+        } else {
+            enqueueSnackbar('请完整填写评论！', { variant: 'warning' });
+        }
+    };
+
     const handleKey: KeyboardEventHandler = (event) => {
         const { ctrlKey, charCode } = event;
         if (ctrlKey && charCode === 13) {
@@ -38,21 +53,6 @@ const Comments: FC<Props> = memo(({ savedComment, comments, uid, changeInputting
     const changeContent: ChangeEventHandler<HTMLInputElement> = ({ target: { value } }) => {
         setContent(value);
         changeInputting(value, evaluation);
-    };
-
-    const handleSubmit = () => {
-        if (content && evaluation !== undefined) {
-            submit(cid, {
-                uid,
-                content,
-                evaluation,
-                username,
-            });
-            setEvaluation(2);
-            setContent('');
-        } else {
-            enqueueSnackbar('请完整填写评论！', { variant: 'warning' });
-        }
     };
 
     const handleRemove = (id: string) => () => {

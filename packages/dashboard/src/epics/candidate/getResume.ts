@@ -18,41 +18,43 @@ const download = (cid: string) => async (res: Response) => {
     }
     const total = res.headers.get('Content-Length');
     const disposition = res.headers.get('Content-Disposition');
+    const reader = res.body?.getReader();
     if (!total) {
-        throw new Error('Can\'t get content-length');
+        throw customError({ message: 'Can\'t get Content-Length', type: 'error' });
+    }
+    if (!reader) {
+        throw customError({ message: 'Can\'t get reader', type: 'error' });
     }
     let loaded = 0;
-    const response = new Response(new ReadableStream({
+    const stream = new ReadableStream({
         async start(controller: ReadableStreamDefaultController) {
-            const reader = res.body!.getReader();
-            let result = await reader.read();
-            while (!result.done) {
-                const value = result.value;
+            while (true) {
+                const { done, value } = await reader.read();
+                if (done || !value) {
+                    break;
+                }
                 loaded += value.byteLength;
                 store.dispatch(resumeProgress(loaded / +total, cid));
                 controller.enqueue(value);
-                result = await reader.read();
             }
             controller.close();
         }
-    }));
+    });
     let filename = 'resume';
-    const blob = await response.blob();
-    if (disposition && disposition.indexOf('attachment') !== -1) {
+    if (disposition && disposition.includes('attachment')) {
         const filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
         const matches = filenameRegex.exec(disposition);
-        if (matches !== null && matches[1]) {
+        if (matches && matches[1]) {
             filename = Buffer.from(matches[1].replace(/['"]/g, ''), 'base64').toString();
         }
     }
-    const url = window.URL.createObjectURL(new Blob([blob]));
+    const blob = await new Response(stream).blob();
+    const url = URL.createObjectURL(new Blob([blob]));
     const a = document.createElement('a');
     a.href = url;
     a.download = filename;
-    document.body.appendChild(a);
     a.click();
-    document.body.removeChild(a);
-    window.URL.revokeObjectURL(url);
+    URL.revokeObjectURL(url);
     store.dispatch(resumeProgress(0, ''));
     return toggleProgress();
 };

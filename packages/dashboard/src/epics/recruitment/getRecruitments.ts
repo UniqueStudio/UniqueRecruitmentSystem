@@ -30,7 +30,7 @@ export const getRecruitmentsEpic: Epic = (action$, state$, { sessionStorage }) =
                     enqueueSnackbar('成功获取招新信息', { variant: 'success' }),
                 );
             }
-            return ajax.getJSON<{ type: string, data: Recruitment[] }>(`${API}/recruitment/`, {
+            return ajax.getJSON<{ type: string; data: Recruitment[] }>(`${API}/recruitment/`, {
                 Authorization: `Bearer ${token}`,
             }).pipe(
                 mergeMap((res) => {

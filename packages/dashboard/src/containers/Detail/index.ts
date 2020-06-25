@@ -12,7 +12,7 @@ interface OwnProps {
     info: Candidate;
 }
 
-const mapStateToProps = ({ candidate: { inputtingComment }, user: { info }, component: { resume } }: StoreState, ownProps: OwnProps) => ({
+const mapStateToProps = ({ component: { resume } }: StoreState, ownProps: OwnProps) => ({
     downloadingResume: resume,
     ...ownProps,
 });

@@ -1,17 +1,14 @@
-import React, { MouseEventHandler, PureComponent } from 'react';
+import React, { MouseEvent, MouseEventHandler, PureComponent } from 'react';
 
-import { Chart, ChartData, ChartDataSets, ChartOptions, helpers } from 'chart.js';
+import Chart, { ChartData, ChartOptions } from 'chart.js';
 
-type Meta = ReturnType<Chart['getDatasetMeta']>;
-type MetaData = Meta['data'][0];
+interface ChartDoughnut extends Chart {
+    getElementsAtEvent: (event: MouseEvent) => ChartElement[];
+    _hiddenIndices: {};
+}
 
-export interface ChartElement extends Omit<MetaData, '_chart'> {
-    _chart: {
-        data: {
-            datasets: (ChartDataSets & { _meta: Meta[] })[];
-        };
-        id: number;
-    };
+interface ChartElement {
+    index: number;
 }
 
 export interface ChartComponentProps {
@@ -19,54 +16,42 @@ export interface ChartComponentProps {
     height: number;
     width: number;
     options: ChartOptions;
-    handleClick: (elements: ChartElement[]) => void;
+    handleClick: (event: MouseEvent, chart: ChartDoughnut) => void;
 }
 
 export class Doughnut extends PureComponent<ChartComponentProps> {
 
-    chartInstance!: Chart;
+    chart!: Chart;
     element!: HTMLCanvasElement;
 
     componentDidMount() {
-        this.renderChart();
+        const { options, data } = this.props;
+        this.chart = new Chart(this.element, { type: 'pie', data, options });
     }
 
     componentDidUpdate() {
-        this.updateChart();
+        const { options, data: { datasets, labels } } = this.props;
+        const currentDatasets = this.chart.config.data?.datasets;
+
+        if (!datasets || !currentDatasets) {
+            return;
+        }
+        this.chart.options = { ...this.chart.options, ...options };
+
+        this.chart.config.data = {
+            datasets: datasets.map((next, i) => ({ ...currentDatasets[i], ...next })),
+            labels
+        };
+
+        this.chart.update();
     }
 
     componentWillUnmount() {
-        this.destroyChart();
-    }
-
-    getCurrentDatasets() {
-        return this.chartInstance.config.data!.datasets!;
-    }
-
-    updateChart() {
-        const { options, data } = this.props;
-
-        this.chartInstance.options = helpers.configMerge(this.chartInstance.options, options);
-
-        const currentDatasets = this.getCurrentDatasets();
-        const { datasets, labels } = data;
-
-        this.chartInstance.config.data = { datasets: datasets!.map((next, i) => ({ ...currentDatasets[i], ...next })), labels };
-
-        this.chartInstance.update();
-    }
-
-    renderChart() {
-        const { options, data } = this.props;
-        this.chartInstance = new Chart(this.element, { type: 'pie', data, options });
-    }
-
-    destroyChart() {
-        this.chartInstance.destroy();
+        this.chart.destroy();
     }
 
     handleClick: MouseEventHandler<HTMLCanvasElement> = (event) => {
-        this.props.handleClick(this.chartInstance.getElementsAtEvent(event) as ChartElement[]);
+        this.props.handleClick(event, this.chart as ChartDoughnut);
     };
 
     ref = (element: HTMLCanvasElement) => {

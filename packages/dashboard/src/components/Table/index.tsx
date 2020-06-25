@@ -2,8 +2,6 @@ import React, { FC, memo, useState } from 'react';
 
 import classNames from 'classnames';
 
-import DateFnsUtils from '@material-ui/pickers/adapter/date-fns';
-
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -16,8 +14,8 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
-import { DateTimePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 
+import DatePicker from '../DatePicker';
 import Modal from '../Modal';
 
 import { GROUPS, GROUPS_ } from '../../config/consts';
@@ -45,7 +43,7 @@ const CandidateTable: FC<Props> = memo(({ candidates, changeType, interviewType,
         allocateAll(interviewType);
     };
 
-    const toggleDialog = (id: string = '') => () => {
+    const toggleDialog = (id = '') => () => {
         setDialog(!!id);
         setCid(id);
     };
@@ -58,8 +56,8 @@ const CandidateTable: FC<Props> = memo(({ candidates, changeType, interviewType,
         setViewing(nextViewing);
     };
 
-    const handleChange = (value: Date | null) => {
-        value && setTime(value);
+    const handleChange = (value: unknown) => {
+        value && setTime(value as Date);
     };
 
     return (
@@ -129,16 +127,12 @@ const CandidateTable: FC<Props> = memo(({ candidates, changeType, interviewType,
             </div>
             <Dialog open={dialog} onClose={toggleDialog()}>
                 <div className={classes.dialog}>
-                    <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                        <DateTimePicker
-                            label='选择时间'
-                            className={classes.dateSelection}
-                            ampm={false}
-                            value={time}
-                            onChange={handleChange}
-                            format='yyyy/MM/dd HH:mm'
-                        />
-                    </MuiPickersUtilsProvider>
+                    <DatePicker
+                        label='选择时间'
+                        value={time}
+                        onChange={handleChange}
+                        className={classes.dateSelection}
+                    />
                     <Button color='primary' variant='contained' onClick={handleAllocateOne} disabled={!time}>确定</Button>
                 </div>
             </Dialog>

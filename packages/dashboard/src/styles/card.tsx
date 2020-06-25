@@ -8,10 +8,10 @@ const yellow = colorToAlpha(warningColor, 0.1);
 const green = colorToAlpha(successColor, 0.1);
 
 interface Props {
-    disabled: boolean;
-    white: boolean;
-    good: number;
-    soSo: number;
+    disabled?: boolean;
+    white?: boolean;
+    good?: number;
+    soSo?: number;
 }
 
 const useStyles = makeStyles(({ breakpoints, spacing, zIndex }: Theme) => createStyles({
@@ -21,7 +21,7 @@ const useStyles = makeStyles(({ breakpoints, spacing, zIndex }: Theme) => create
             padding: spacing(0.5),
         },
     },
-    card: ({ disabled, white, good, soSo }: Props) => ({
+    card: ({ disabled = false, white = true, good = 0, soSo = 0 }: Props) => ({
         position: 'relative',
         zIndex: zIndex.drawer,
         cursor: 'pointer',

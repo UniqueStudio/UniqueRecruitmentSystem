@@ -86,21 +86,29 @@ const SMSTemplate: FC<Props> = memo(({ toggleOpen, enqueueSnackbar, selected: se
         setCode(value);
     };
 
-    const steps = ['发送对象', '消息模板', '确认发送'];
-    const stepContent = [
-        <Picker selected={selected} onDelete={handleDelete} />,
-        <Detail content={content} handleChange={handleChange} />,
-        <Verify code={code} onChange={handleCode} />,
+    const steps = [
+        {
+            name: '发送对象',
+            element: <Picker selected={selected} onDelete={handleDelete} />
+        },
+        {
+            name: '消息模板',
+            element: <Detail content={content} handleChange={handleChange} />
+        },
+        {
+            name: '确认发送',
+            element: <Verify code={code} onChange={handleCode} />
+        }
     ];
 
     return (
         <div className={classes.template}>
             <Stepper activeStep={activeStep} classes={{ root: classes.stepper }} orientation='vertical'>
-                {steps.map((stepName, index) => (
+                {steps.map(({ name, element }, index) => (
                     <Step key={index}>
-                        <StepLabel>{stepName}</StepLabel>
+                        <StepLabel>{name}</StepLabel>
                         <StepContent classes={{ last: classes.verify }}>
-                            {stepContent[index]}
+                            {element}
                             <div>
                                 <Button onClick={activeStep ? handleBack : toggleOpen} className={classes.templateItem}>
                                     {activeStep ? '上一步' : '关闭'}

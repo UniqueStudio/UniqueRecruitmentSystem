@@ -24,8 +24,8 @@ export interface Candidate {
     abandon: boolean;
     rejected: boolean;
     interviews: {
-        group: Interview,
-        team: Interview
+        group: Interview;
+        team: Interview;
     };
     step: Step;
     comments: Comment[];
@@ -70,8 +70,8 @@ export interface Recruitment {
     _id: string;
     title: string; // e.g. 2018A || 2018S (A: AUTUMN, S: SPRING, C: CAMP)
     begin: number;
-    end: number;
-    stop: number; // stop applying
+    end: number; // The deadline of the corresponding recruitment
+    stop: number; // The deadline of applying (step 0)
     total: number;
     interview: Time[];
     groups: GroupData[];

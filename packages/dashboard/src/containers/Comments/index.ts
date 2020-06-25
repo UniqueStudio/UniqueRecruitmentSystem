@@ -13,7 +13,7 @@ interface OwnProps {
     comments: Comment[];
 }
 
-const mapStateToProps = ({ candidate: { inputtingComment }, user: { info: { _id, username } }, component: { resume } }: StoreState, ownProps: OwnProps) => ({
+const mapStateToProps = ({ candidate: { inputtingComment }, user: { info: { _id, username } } }: StoreState, ownProps: OwnProps) => ({
     savedComment: inputtingComment,
     uid: _id,
     username,

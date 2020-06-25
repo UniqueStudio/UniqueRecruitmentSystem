@@ -23,7 +23,7 @@ export const getInfoEpic: Epic = (action$, state$, { sessionStorage }) =>
                     socketStart(),
                 );
             }
-            return ajax.getJSON<{ type: string, data: User }>(`${API}/user/`, {
+            return ajax.getJSON<{ type: string; data: User }>(`${API}/user/`, {
                 Authorization: `Bearer ${token}`,
             }).pipe(
                 mergeMap((res) => {

@@ -41,6 +41,11 @@ const Messenger: FC<Props> = memo(({ messages, username, avatar, sendMessage, en
         avatar,
     });
 
+    const send = () => {
+        sendMessage(generateMessage(content));
+        setContent('');
+    };
+
     const handleKey: KeyboardEventHandler = (event) => {
         const { ctrlKey, charCode } = event;
         if (ctrlKey && charCode === 13) {
@@ -48,7 +53,7 @@ const Messenger: FC<Props> = memo(({ messages, username, avatar, sendMessage, en
         }
         if (!ctrlKey && charCode === 13) {
             event.preventDefault();
-            if (content && content.match(/\S+/)) {
+            if (content.trim()) {
                 send();
             }
         }
@@ -58,7 +63,7 @@ const Messenger: FC<Props> = memo(({ messages, username, avatar, sendMessage, en
         const items = (event.clipboardData || event['originalEvent'].clipboardData).items;
         let blob = null;
         for (const i of Object.values(items)) {
-            if (i.type.indexOf('image') === 0) {
+            if (i.type.startsWith('image')) {
                 blob = i.getAsFile();
             }
         }
@@ -108,11 +113,6 @@ const Messenger: FC<Props> = memo(({ messages, username, avatar, sendMessage, en
         }
     };
 
-    const send = () => {
-        sendMessage(generateMessage(content));
-        setContent('');
-    };
-
     const placeHolders = ['ctrl + Enter 以输入回车', '可以直接发送剪贴板中的图片', '+1 可以复读', '图片大小必须小于5MB', '消息历史最多只有100条'];
     const MessageChip = ({ isSelf, name, time, isImage, content: message }: Message) => (
         <div className={classes.message}>
@@ -129,7 +129,9 @@ const Messenger: FC<Props> = memo(({ messages, username, avatar, sendMessage, en
         </div>
     );
     const AvatarBox = ({ avatar: messageAvatar, name }: Message) => (
-        <Avatar alt={name} src={messageAvatar} className={classes.avatar} children={<FaceIcon />} />
+        <Avatar alt={name} src={messageAvatar} className={classes.avatar} >
+            <FaceIcon />
+        </Avatar>
     );
     return (
         <Paper className={classes.messenger}>
@@ -173,7 +175,7 @@ const Messenger: FC<Props> = memo(({ messages, username, avatar, sendMessage, en
                         onKeyPress={handleKey}
                         onPaste={handlePaste}
                     />
-                    <IconButton color='primary' component='span' onClick={send} disabled={!(content && content.match(/\S+/))}>
+                    <IconButton color='primary' component='span' onClick={send} disabled={!content.trim()}>
                         <SendIcon />
                     </IconButton>
                 </div>

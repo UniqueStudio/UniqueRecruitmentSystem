@@ -75,9 +75,6 @@ const Recruitment: FC<Props> = memo(({ data: { begin, end, stop, title, intervie
                     disablePast={false}
                     className={classes.datePicker}
                 />
-                <div className={classes.buttonContainer}>
-                    <Button onClick={setTime} variant='contained' color='primary' disabled={!canLaunch}>修改时间</Button>
-                </div>
             </div>
             {groups.map(({ name, interview: groupInterview }, index) => (
                 <Allocation
@@ -94,6 +91,9 @@ const Recruitment: FC<Props> = memo(({ data: { begin, end, stop, title, intervie
                 disabled={!canLaunch}
                 setRecruitment={setInterview('team')}
             />
+            <div className={classes.buttonContainer}>
+                <Button onClick={setTime} variant='contained' color='primary' disabled={!canLaunch}>提交</Button>
+            </div>
         </div>
     );
 });

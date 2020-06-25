@@ -36,7 +36,7 @@ export const getCandidatesEpic: Epic<GetCandidatesStart> = (action$, state$, { s
                     enqueueSnackbar('成功获取候选人信息', { variant: 'success' }),
                 );
             }
-            return ajax.getJSON<{ type: string, data: Candidate[] }>(
+            return ajax.getJSON<{ type: string; data: Candidate[] }>(
                 `${API}/candidate/${JSON.stringify({ title, step, group })}`,
                 {
                     Authorization: `Bearer ${token}`,

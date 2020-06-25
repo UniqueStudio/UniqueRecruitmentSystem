@@ -10,14 +10,14 @@ import AppBar from '../../components/AppBar';
 type OwnProps = RouteComponentProps;
 
 const mapStateToProps =
-    ({ component: { drawerOpen }, user: { token }, candidate: { group, steps }, recruitment: { viewing } }: StoreState,
-     ownProps: OwnProps) => ({
-        open: drawerOpen,
-        group,
-        steps,
-        title: viewing,
-        ...ownProps,
-    });
+    ({ component: { drawerOpen }, candidate: { group, steps }, recruitment: { viewing } }: StoreState,
+        ownProps: OwnProps) => ({
+            open: drawerOpen,
+            group,
+            steps,
+            title: viewing,
+            ...ownProps,
+        });
 
 const mapDispatchToProps = (dispatch: Dispatch) => bindActionCreators({
     toggleDrawer,
