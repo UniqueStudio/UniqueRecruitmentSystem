@@ -19,7 +19,7 @@ export const generateModel = ({ type, name = '{{候选人姓名}}', title = '{{�
             switch (next) {
                 case 2:
                 case 4:
-                    defaultRest = `，请进入以下链接选择面试时间：{{链接}}`;
+                    defaultRest = '，请进入以下链接选择面试时间：{{链接}}';
                     break;
                 case 1:
                 case 3:

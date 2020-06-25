@@ -21,7 +21,7 @@ export const getQRCodeEpic: Epic = (action$) =>
     action$.pipe(
         ofType(GET_QR_CODE_START),
         mergeMap(() =>
-            ajax.getJSON<{ type: string, key: string }>(`${API}/user/qrCode`)
+            ajax.getJSON<{ type: string; key: string }>(`${API}/user/qrCode`)
                 .pipe(
                     mergeMap((res) => {
                         if (res.type === 'success') {
@@ -45,7 +45,7 @@ export const scanQRCodeEpic: Epic<GetQRCodeFulfilled> = (action$) =>
         ofType(GET_QR_CODE_FULFILLED),
         filter(({ key }) => !!key),
         switchMap((action) =>
-            ajax.getJSON<{ token: string, type: string }>(`${API}/user/qrCode/${action.key}`).pipe(
+            ajax.getJSON<{ token: string; type: string }>(`${API}/user/qrCode/${action.key}`).pipe(
                 mergeMap((res) => {
                     const { token, type } = res;
                     if (type === 'success') {

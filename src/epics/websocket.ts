@@ -30,7 +30,7 @@ const socketConnectEpic: Epic = (action$, state$, { io, socket$ }) =>
             new Observable<Socket>((o) => {
                 const socket = io(API);
                 socket.on('connect', () => o.next(socket));
-                socket.on('disconnect', socket.close);
+                socket.on('disconnect', () => socket.close());
             }),
         ),
         tap(socket$),
@@ -41,7 +41,7 @@ const socketReceiveEpic: Epic = (action$, state$, { socket$ }) =>
     socket$.pipe(
         switchMap((socket) => !socket ? EMPTY :
             new Observable<Action>((o) => {
-                socket.on('removeCandidate', (res: { cid: string, title: string }) => {
+                socket.on('removeCandidate', (res: { cid: string; title: string }) => {
                     const { cid, title } = res;
                     if (title === state$.value.recruitment.viewing) {
                         o.next(toggleProgress(true));
@@ -51,13 +51,13 @@ const socketReceiveEpic: Epic = (action$, state$, { socket$ }) =>
                         o.next(toggleProgress());
                     }
                 });
-                socket.on('removeCandidateError', (res: { message: string, type: VariantType }) => {
+                socket.on('removeCandidateError', (res: { message: string; type: VariantType }) => {
                     const { message, type } = res;
                     o.next(enqueueSnackbar(`ERROR: ${message}`, { variant: type || 'error' }));
                     o.next(toggleProgress());
                 });
 
-                socket.on('moveCandidate', (res: { cid: string, from: Step, to: Step, title: string }) => {
+                socket.on('moveCandidate', (res: { cid: string; from: Step; to: Step; title: string }) => {
                     const { cid, from, to, title } = res;
                     o.next(toggleProgress(true));
                     if (title === state$.value.recruitment.viewing) {
@@ -71,14 +71,14 @@ const socketReceiveEpic: Epic = (action$, state$, { socket$ }) =>
                     o.next(setShouldUpdateRecruitment());
                     o.next(toggleProgress());
                 });
-                socket.on('moveCandidateError', (res: { message: string, type: VariantType, data: { to: Step, from: Step, cid: string } }) => {
+                socket.on('moveCandidateError', (res: { message: string; type: VariantType; data: { to: Step; from: Step; cid: string } }) => {
                     const { message, type, data } = res;
                     o.next(moveCandidateFulfilled(data.to, data.from, data.cid));
                     o.next(enqueueSnackbar(`ERROR: ${message}`, { variant: type || 'error' }));
                     o.next(toggleProgress());
                 });
 
-                socket.on('addComment', (res: { cid: string, comment: Comment, title: string }) => {
+                socket.on('addComment', (res: { cid: string; comment: Comment; title: string }) => {
                     const { cid, comment, title } = res;
                     if (title === state$.value.recruitment.viewing) {
                         o.next(toggleProgress(true));
@@ -86,13 +86,13 @@ const socketReceiveEpic: Epic = (action$, state$, { socket$ }) =>
                         o.next(toggleProgress());
                     }
                 });
-                socket.on('addCommentError', (res: { message: string, type: VariantType }) => {
+                socket.on('addCommentError', (res: { message: string; type: VariantType }) => {
                     const { message, type } = res;
                     o.next(enqueueSnackbar(`ERROR: ${message}`, { variant: type || 'error' }));
                     o.next(toggleProgress());
                 });
 
-                socket.on('removeComment', (res: { cid: string, id: string, title: string }) => {
+                socket.on('removeComment', (res: { cid: string; id: string; title: string }) => {
                     const { cid, id, title } = res;
                     if (title === state$.value.recruitment.viewing) {
                         o.next(toggleProgress(true));
@@ -100,7 +100,7 @@ const socketReceiveEpic: Epic = (action$, state$, { socket$ }) =>
                         o.next(toggleProgress());
                     }
                 });
-                socket.on('removeCommentError', (res: { message: string, type: VariantType }) => {
+                socket.on('removeCommentError', (res: { message: string; type: VariantType }) => {
                     const { message, type } = res;
                     o.next(enqueueSnackbar(`ERROR: ${message}`, { variant: type || 'error' }));
                     o.next(toggleProgress());

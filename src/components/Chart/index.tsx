@@ -6,7 +6,7 @@ import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 
-import { ChartComponentProps, ChartElement, Doughnut } from './Doughnut';
+import { ChartComponentProps, Doughnut } from './Doughnut';
 
 import { GROUPS, GROUPS_, STEPS } from '../../config/consts';
 import { Recruitment } from '../../config/types';
@@ -25,13 +25,25 @@ const Chart: FC<Props> = memo(({ data: { groups, total, title, end }, setViewing
     const classes = useStyles();
     const [group, setGroup] = useState('');
     const [clicked, setClicked] = useState(false);
-    const setData = (elements: ChartElement[]) => {
+    const setData: ChartComponentProps['handleClick'] = (event, chart) => {
+        const elements = chart.getElementsAtEvent(event);
         const element = elements[0];
         if (!element) return;
-        // reset legend
-        element._chart.data.datasets[0]._meta[element._chart.id].data.forEach((item) => item.hidden = false);
+        /*
+         * Chart.js provides some public apis to change data visibility:
+         * ```ts
+         * for (let i = 0; i < chart.data.labels.length; i++) {
+         *     if (!chart.getDataVisibility(i)) {
+         *         chart.toggleDataVisibility(i);
+         *     }
+         * }
+         * ```
+         * but I prefer the following way :)
+         */
+        chart._hiddenIndices = {};
+
         setClicked((prevClicked) => !prevClicked);
-        setGroup((prevClicked) => prevClicked ? '' : GROUPS_[element._index]);
+        setGroup((prevClicked) => prevClicked ? '' : GROUPS_[element.index]);
     };
     const viewingGroup = groups.find(({ name }) => name === group);
     const data = viewingGroup ? viewingGroup.steps : groups.map(({ total: groupTotal }) => groupTotal);

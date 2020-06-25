@@ -1,7 +1,8 @@
 import React, { FC, memo } from 'react';
 
-import { DatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
+import { MobileDateTimePicker, LocalizationProvider } from '@material-ui/pickers';
 import DateFnsUtils from '@material-ui/pickers/adapter/date-fns';
+import { TextField } from '@material-ui/core';
 
 interface Props {
     value: Date;
@@ -12,18 +13,20 @@ interface Props {
     onChange: (date: Date | null) => void;
 }
 
-const Picker: FC<Props> = memo(({ className, onChange, value, label, disabled, disablePast = true }) => (
-    <MuiPickersUtilsProvider utils={DateFnsUtils}>
-        <DatePicker
+const Picker: FC<Props> = memo(({ className, onChange, value, label, disabled = false, disablePast = true }) => (
+    <LocalizationProvider dateAdapter={DateFnsUtils}>
+        <MobileDateTimePicker
             label={label}
-            className={className}
             disablePast={disablePast}
             value={value}
-            onChange={onChange}
-            format='yyyy/MM/dd'
+            ampm={false}
+            onChange={onChange as (date: unknown) => void}
+            inputFormat='yyyy/MM/dd HH:mm'
+            mask='___/__/__ __:__'
+            renderInput={props => <TextField {...props} helperText={undefined} className={className} />}
             disabled={disabled}
         />
-    </MuiPickersUtilsProvider>
+    </LocalizationProvider>
 ));
 
 export default Picker;

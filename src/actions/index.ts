@@ -559,7 +559,7 @@ export interface SetUserInfoStart {
     };
 }
 
-export function setUserInfoStart(info: { phone: string, mail: string, password?: string }): SetUserInfoStart {
+export function setUserInfoStart(info: { phone: string; mail: string; password?: string }): SetUserInfoStart {
     return {
         type: SET_USER_INFO_START,
         info,
@@ -658,13 +658,13 @@ export type SET_RECRUITMENT = typeof SET_RECRUITMENT;
 export interface SetRecruitment {
     type: SET_RECRUITMENT;
     data: {
-        title: string,
-        begin: number,
-        end: number,
-        stop: number,
-        group?: Group,
-        groupInterview?: Time[],
-        teamInterview?: Time[]
+        title: string;
+        begin: number;
+        end: number;
+        stop: number;
+        group?: Group;
+        groupInterview?: Time[];
+        teamInterview?: Time[];
     };
 }
 

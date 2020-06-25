@@ -1,5 +1,5 @@
 import React, { ChangeEventHandler, FC, memo, MouseEventHandler, useMemo } from 'react';
-import { Draggable, DraggableProvided } from 'react-beautiful-dnd';
+import { Draggable } from 'react-beautiful-dnd';
 
 import Card from '@material-ui/core/Card';
 import Checkbox from '@material-ui/core/Checkbox';
@@ -30,11 +30,11 @@ const getProportion = (evaluations: Evaluation[]) => {
     return { good, soSo };
 };
 
-const genderIcons = [
-    <TransGender htmlColor={orange[500]} fontSize='small' />,
-    <Male htmlColor={blue[500]} fontSize='small' />,
-    <Female htmlColor={pink[500]} fontSize='small' />,
-];
+const genderIcons = {
+    0: <TransGender htmlColor={orange[500]} fontSize='small' />,
+    1: <Male htmlColor={blue[500]} fontSize='small' />,
+    2: <Female htmlColor={pink[500]} fontSize='small' />,
+};
 
 const CandidateCard: FC<Props> = memo((props) => {
     const { candidate, disabled, checked, isTeamInterview, index, toggleFabOn, select, deselect, toggleDetail, changeInputting } = props;
@@ -102,7 +102,7 @@ const CandidateCard: FC<Props> = memo((props) => {
 
     return (
         <Draggable draggableId={_id} index={index} isDragDisabled={abandon || rejected || checked || isMobile}>
-            {({ innerRef, draggableProps, dragHandleProps }: DraggableProvided) => (
+            {({ innerRef, draggableProps, dragHandleProps }) => (
                 <div ref={innerRef} className={classes.cardContainer} {...draggableProps} {...dragHandleProps}>
                     {CardContent}
                 </div>

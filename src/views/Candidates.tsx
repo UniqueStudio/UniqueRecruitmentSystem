@@ -36,6 +36,12 @@ const Candidates: FC<Props> = memo(({ selected, candidates, fabOn, selectedInfo,
         setTodo(-1);
     };
 
+    const toggleOpen = (name: string) => () => {
+        modal && deselect(selected);
+        if (name === 'modal') setModal((prevModal) => !prevModal);
+        if (name === 'dialog') setDialog((prevDialog) => !prevDialog);
+    };
+
     const handleRemove = (toRemove: string[]) => () => {
         toggleOpen('dialog')();
         if (toRemove.length === 0) {
@@ -43,12 +49,6 @@ const Candidates: FC<Props> = memo(({ selected, candidates, fabOn, selectedInfo,
             return;
         }
         toRemove.map((cid) => remove(cid));
-    };
-
-    const toggleOpen = (name: string) => () => {
-        modal && deselect(selected);
-        if (name === 'modal') setModal((prevModal) => !prevModal);
-        if (name === 'dialog') setDialog((prevDialog) => !prevDialog);
     };
 
     const handleTodo = () => {

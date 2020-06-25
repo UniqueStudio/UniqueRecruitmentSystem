@@ -33,22 +33,26 @@ const FabButton: FC<Props> = memo(({ candidates, selected, fabOn, canOperate, de
     const prevSelected = usePrevious(selected);
     const prevSteps = usePrevious(steps);
 
-    const handleSelectAll = (all: string[]) => () => {
-        select(all.filter((cid) => selectable(cid)));
-    };
-
-    const handleInverse = (all: string[], toDeselect: string[]) => () => {
-        deselect(toDeselect.filter((cid) => selectable(cid)));
-        select(all.filter((cid) => !toDeselect.includes(cid) && selectable(cid)));
-    };
-
     const selectable = (cid: string) => {
         const candidate = candidates.find(({ _id }) => _id === cid);
         return candidate && !(candidate.abandon || candidate.rejected);
     };
 
+    const handleSelectAll = (all: string[]) => () => {
+        select(all.filter(selectable));
+    };
+
+    const handleInverse = (all: string[], toDeselect: string[]) => () => {
+        deselect(toDeselect.filter(selectable));
+        select(all.filter((cid) => !toDeselect.includes(cid) && selectable(cid)));
+    };
+
     const hideFab = () => {
         deselect(selected);
+    };
+
+    const toggleFabButtons = () => {
+        setFabOpen((prevFabOpen) => !prevFabOpen);
     };
 
     const sendNotification = () => {
@@ -59,10 +63,6 @@ const FabButton: FC<Props> = memo(({ candidates, selected, fabOn, canOperate, de
     const confirmRemove = () => {
         toggleOpen('dialog')();
         toggleFabButtons();
-    };
-
-    const toggleFabButtons = () => {
-        setFabOpen((prevFabOpen) => !prevFabOpen);
     };
 
     const openFab = () => {

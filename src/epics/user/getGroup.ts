@@ -21,7 +21,7 @@ export const getGroupEpic: Epic = (action$, state$, { sessionStorage }) =>
                     getGroupInfoFulfilled(JSON.parse(groupInfo)),
                 );
             }
-            return ajax.getJSON<{ type: string, data: User[] }>(`${API}/user/group/`, {
+            return ajax.getJSON<{ type: string; data: User[] }>(`${API}/user/group/`, {
                 Authorization: `Bearer ${token}`,
             }).pipe(
                 mergeMap((res) => {
