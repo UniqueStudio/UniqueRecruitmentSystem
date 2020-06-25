@@ -51,3 +51,6 @@ export const Acm = {
     accessKey: ACM_ACCESS_KEY!,
     secretKey: ACM_SECRET_KEY!
 };
+
+export const ENV_DEV = 'development';
+export const ENV_PROD = 'production';

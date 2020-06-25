@@ -20,7 +20,7 @@ interface Data {
     department: number[];
 }
 
-const dataConverter = (data: Data) => {
+const parseUserInfo = (data: Data) => {
     const {
         userid: weChatID,
         name: username,
@@ -101,7 +101,7 @@ export const handleScan: RequestHandler = async (req, res, next) => {
 
                 const userInfoResponse = await fetch(userInfoURL(accessToken, userID));
                 const userInfoResult = await userInfoResponse.json();
-                const data = dataConverter(userInfoResult);
+                const data = parseUserInfo(userInfoResult);
                 const users = await UserRepo.query({ weChatID: data.weChatID });
                 const user = users.length ? users[0] : await UserRepo.createAndInsert(data);
                 if (data.isCaptain && !user.isCaptain) {

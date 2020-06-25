@@ -5,13 +5,11 @@
     "outDir": "build",
     "target": "esnext",
     "lib": [
-      "esnext",
-      "dom"
+      "esnext"
     ],
     "sourceMap": true,
     "allowJs": true,
     "moduleResolution": "node",
-    "rootDir": "src",
     "typeRoots": [
       "node_modules/@types",
       "typings"

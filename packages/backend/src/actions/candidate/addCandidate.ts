@@ -21,7 +21,7 @@ export const addCandidate: RequestHandler = async (req, res, next) => {
         let filepath = '';
         if (req.file) {
             const { originalname: filename, path: oldPath } = req.file;
-            filepath = path.join('../resumes', title, group);
+            filepath = path.join('./data/resumes', title, group);
             filepath = await copyFile(oldPath, filepath, `${name} - ${filename}`);
         }
         const info = await CandidateRepo.createAndInsert({

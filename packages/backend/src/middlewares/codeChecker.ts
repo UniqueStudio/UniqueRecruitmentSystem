@@ -1,9 +1,11 @@
 import { RequestHandler } from 'express';
+
 import { redisAsync } from '../redis';
+import { isProd } from '../utils/environment';
 import { errorRes } from '../utils/errorRes';
 
 export const codeChecker = (type: 'user' | 'candidate'): RequestHandler => async (req, res, next) => {
-    if (process.env.NODE_ENV !== 'test') {
+    if (isProd()) {
         const { id } = res.locals;
         const { code, phone } = req.body;
         if (!code) {
