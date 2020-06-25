@@ -1,12 +1,14 @@
 import request from 'supertest';
 import { app } from '../src/app';
+import { UserRepo } from '../src/database/model';
 import { generateJWT } from '../src/utils/generateJWT';
 
-const token = generateJWT({ id: '123' }, 100000);
-
 describe('GET /recruitment', () => {
-    it('should return success', (done) => {
-        return request(app)
+    it('should return success', async (done) => {
+        const users = await UserRepo.query({ weChatID: 'foo' });
+        expect(users.length).toBe(1);
+        const token = generateJWT({ id: users[0]._id }, 100000);
+        request(app)
             .get('/recruitment')
             .set({
                 Authorization: token

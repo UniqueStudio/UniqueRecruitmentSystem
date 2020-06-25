@@ -1,19 +1,22 @@
 import request from 'supertest';
 import { app } from '../src/app';
+import { UserRepo } from '../src/database/model';
 import { generateJWT } from '../src/utils/generateJWT';
 
-const token = generateJWT({ id: '5c432947a4f608756d550fcf' }, 100000);
-
 describe('POST /recruitment', () => {
-    it('should return success', (done) => {
-        return request(app)
+    it('should create a new recruitment', async (done) => {
+        const users = await UserRepo.query({ weChatID: 'foo' });
+        expect(users.length).toBe(1);
+        const token = generateJWT({ id: users[0]._id }, 100000);
+        request(app)
             .post('/recruitment')
             .set({
                 Authorization: token
             })
             .send({
-                title: '2020C',
+                title: '2021C',
                 begin: `${Date.now()}`,
+                stop: `${Date.now() + 5000000}`,
                 end: `${Date.now() + 10000000}`,
                 code: '1234'
             })

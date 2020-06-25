@@ -43,9 +43,9 @@ export const launchRecruitmentVerify = [
         }
     }),
     body('begin').isInt().withMessage('Begin time is invalid!')
-        .custom((begin, { req }) => begin < req.body.stop).withMessage('Stop applying time should be later than begin time'),
-    body('stop').isInt().withMessage('Stop applying time is invalid!')
-        .custom((stop, { req }) => stop < req.body.end).withMessage('End time should be later than stop applying time'),
+        .custom((begin, { req }) => begin < req.body.stop).withMessage('Stop time should be later than begin time'),
+    body('stop').isInt().withMessage('Stop time is invalid!')
+        .custom((stop, { req }) => stop < req.body.end).withMessage('End time should be later than stop time'),
     body('end').isInt().withMessage('End time is invalid!')
         .custom((end, { req }) => end > req.body.begin).withMessage('End time should be later than begin time'),
 ];

@@ -1,8 +1,8 @@
 import request from 'supertest';
 import { app } from '../src/app';
 
-describe('POST /candidate', () =>
-    it('should return success', (done) =>
+describe('POST /candidate', () => {
+    it('should return success', (done) => {
         request(app)
             .post('/candidate')
             .field('name', 'test')
@@ -11,7 +11,7 @@ describe('POST /candidate', () =>
             .field('code', '1234')
             .field('isQuick', 'false')
             .field('intro', '123')
-            .field('title', '2019S')
+            .field('title', '2021C')
             .field('group', 'web')
             .field('phone', '13343485564')
             .field('rank', 0)
@@ -25,5 +25,6 @@ describe('POST /candidate', () =>
                 console.log(result);
                 expect(result.type).toBe('success');
                 done();
-            })),
-);
+            });
+    });
+});

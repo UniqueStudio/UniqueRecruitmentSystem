@@ -1,15 +1,11 @@
-import socketIO from 'socket.io';
 import io from 'socket.io-client';
-
-import { wsHandler } from '../src/websocket';
-
-const server = socketIO.listen(5000);
-wsHandler(server);
+import { CandidateRepo, UserRepo } from '../src/database/model';
+import { generateJWT } from '../src/utils/generateJWT';
 
 describe('WebSocket /addComment', () => {
     let socket: typeof io.Socket;
     beforeEach((done) => {
-        socket = io('http://localhost:5000');
+        socket = io('http://192.168.1.200:5000');
         socket.on('connect', () => {
             console.log('worked...');
             done();
@@ -29,19 +25,23 @@ describe('WebSocket /addComment', () => {
         done();
     });
 
-    it('should return success', (done) => {
-        socket.emit('addComment', 1, 123, {
-            uid: 123,
-            username: 123,
-            content: 123,
-            evaluation: 2
+    it('should return success', async (done) => {
+        const users = await UserRepo.query({ weChatID: 'foo' });
+        const candidates = await CandidateRepo.query({ name: 'test', title: '2021C' });
+        expect(users.length).toBe(1);
+        const token = generateJWT({ id: users[0]._id }, 100000);
+        socket.emit('addComment', {
+            cid: candidates[0]._id,
+            comment: { uid: users[0]._id, content: 'testddd', evaluation: 1, username: 'w1nd3r1c4' },
+            token
         });
         socket.on('addComment', (...res: any) => {
             console.log(res);
             done();
         });
         socket.on('addCommentError', (...res: any) => {
-            throw new Error(res[0]);
+            console.log(res);
+            throw new Error('addCommentError');
         });
     });
 });
