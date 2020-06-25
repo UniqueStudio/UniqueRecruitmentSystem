@@ -24,7 +24,7 @@
     "mkdirp": "^1.0.4",
     "moment": "^2.27.0",
     "mongodb": "^3.5.9",
-    "mongoose": "^5.9.20",
+    "mongoose": "5.7.5",
     "multer": "^1.4.2",
     "node-fetch": "^2.6.0",
     "nodemailer": "^6.4.10",
@@ -38,7 +38,7 @@
     "@types/jsonwebtoken": "^8.5.0",
     "@types/mkdirp": "^1.0.1",
     "@types/mongodb": "^3.5.25",
-    "@types/mongoose": "^5.7.27",
+    "@types/mongoose": "5.5.6",
     "@types/multer": "^1.4.3",
     "@types/node": "^14.0.14",
     "@types/node-fetch": "^2.5.7",
@@ -58,7 +58,7 @@
   "scripts": {
     "build": "tsc",
     "test": "jest --forceExit",
-    "startProd": "node build/app.js",
-    "startDev": "ts-node --files src/app.ts"
+    "startProd": "node build/index.js",
+    "startDev": "ts-node --files src/index.ts"
   }
 }
