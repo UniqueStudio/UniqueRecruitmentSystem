@@ -5,3 +5,4 @@ export { handleQR } from './handleQR';
 export { handleLogin, handleLoginVerify } from './handleLogin';
 export { handleScan } from './handleScan';
 export { messenger } from './messenger';
+export { setAdmin, setAdminVerify } from './setAdmin';
