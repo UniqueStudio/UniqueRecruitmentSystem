@@ -38,7 +38,10 @@ const Dashboard: FC<Props> = memo(({ data, setViewing, viewing }) => {
                     <div className={classes.block}>
                         <AddOne shouldClear={shouldClear} />
                     </div>
-                    {!!data.length && data.map((recruitment) => (
+                    {!!data.length && data.slice().reverse().map((recruitment) => (
+                        // using slice() to create a shallow copy in case the
+                        // switching between router case problem
+                        // maybe it's better to change the order in backend :(
                         <div key={recruitment._id} className={classes.block}>
                             <Chart
                                 data={recruitment}
