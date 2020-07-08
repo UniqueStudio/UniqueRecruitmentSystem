@@ -26,7 +26,7 @@ const useStyles = makeStyles(({ spacing, palette, breakpoints }: Theme) => creat
         userSelect: 'none',
     },
     columnTitle: {
-        color: palette.secondary.contrastText,
+        color: palette.primary.contrastText,
         textAlign: 'center',
         margin: spacing(1),
     },

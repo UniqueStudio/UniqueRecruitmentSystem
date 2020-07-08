@@ -42,6 +42,9 @@ const useStyles = makeStyles(({ breakpoints, spacing }: Theme) => createStyles({
         margin: spacing(1),
         userSelect: 'none',
     },
+    button: {
+        marginTop: spacing(1),
+    },
 }));
 
 export default useStyles;

@@ -41,15 +41,48 @@ const Login: FC<Props> = memo(({ loggedIn, isScanning, getQRCode, isLoading, weC
 
     const ChooseMethod = (
         <>
-            <Button color='primary' size='large' onClick={handleMethod(1)}>企业微信登录</Button>
-            <Button color='primary' size='large' onClick={handleMethod(2)}>账号密码登录</Button>
+            <Button
+                className={classes.button}
+                variant='contained'
+                color='default'
+                size='large'
+                onClick={handleMethod(1)}
+            >
+                企业微信登录
+            </Button>
+            <Button
+                className={classes.button}
+                variant='contained'
+                color='primary'
+                size='large'
+                onClick={handleMethod(2)}
+            >
+                账号密码登录
+            </Button>
         </>
     );
     const ByQRCode = (
         <>
             {weChatKey && <img src={`${QR_CODE_URL}${weChatKey}`} alt='This is QRCode' />}
-            <Button color='primary' size='large' onClick={getQRCode} disabled={isScanning}>获取二维码</Button>
-            <Button color='primary' size='large' onClick={handleMethod(2)}>账号密码登录</Button>
+            <Button
+                className={classes.button}
+                variant='contained'
+                color='default'
+                size='large'
+                onClick={getQRCode}
+                disabled={isScanning}
+            >
+                获取二维码
+            </Button>
+            <Button
+                className={classes.button}
+                variant='contained'
+                color='primary'
+                size='large'
+                onClick={handleMethod(2)}
+            >
+                账号密码登录
+            </Button>
         </>
     );
     const ByPassword = (
@@ -71,8 +104,23 @@ const Login: FC<Props> = memo(({ loggedIn, isScanning, getQRCode, isLoading, weC
                 onChange={handlePassword}
                 margin='normal'
             />
-            <Button color='primary' size='large' onClick={handleLogin} disabled={!phone || !password}>登录</Button>
-            <Button color='primary' size='large' onClick={handleMethod(1)}>企业微信登录</Button>
+            <Button
+                variant='contained'
+                color='default'
+                size='large'
+                onClick={handleLogin}
+                disabled={!phone || !password}
+            >
+                登录
+            </Button>
+            <Button
+                variant='contained'
+                color='primary'
+                size='large'
+                onClick={handleMethod(1)}
+            >
+                企业微信登录
+            </Button>
         </>
     );
     return (
