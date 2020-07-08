@@ -10,7 +10,7 @@ import ThemeProvider from '@material-ui/core/styles/MuiThemeProvider';
 
 interface ContextProps {
     darkMode: boolean;
-    setDarkMode: (mode: boolean) => void;
+    setDarkMode: () => void;
 }
 
 export const ThemeContext = createContext<ContextProps>({
@@ -46,7 +46,7 @@ function withRoot<T>(Component: ComponentType<T>) {
         }, [prefersDarkMode]);
 
         return (
-            <ThemeContext.Provider value={{ darkMode, setDarkMode }}>
+            <ThemeContext.Provider value={{ darkMode, setDarkMode: () => setDarkMode(!darkMode) }}>
                 <ThemeProvider theme={darkMode ? darkTheme : defaultTheme}>
                     <CssBaseline />
                     <Component {...props} />

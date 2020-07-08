@@ -1,4 +1,4 @@
-import React, { ChangeEventHandler, FC, memo, MouseEventHandler, useMemo, useState } from 'react';
+import React, { ChangeEventHandler, FC, memo, MouseEventHandler, useMemo, useState, useContext } from 'react';
 
 import classNames from 'classnames';
 
@@ -14,6 +14,7 @@ import HelpIcon from '@material-ui/icons/HelpOutline';
 import MenuIcon from '@material-ui/icons/Menu';
 import PersonIcon from '@material-ui/icons/Person';
 import RefreshIcon from '@material-ui/icons/Refresh';
+import Brightness4 from '@material-ui/icons/Brightness4'
 
 import Modal from '../Modal';
 import Select from '../Select';
@@ -24,18 +25,19 @@ import { Group } from '../../config/types';
 import { Props } from '../../containers/AppBar';
 import Messenger from '../../containers/Messenger';
 
+import { ThemeContext } from "../../styles/withRoot";
 import useStyles from '../../styles/appBar';
 
 import { titleConverter } from '../../utils/titleConverter';
 
 import { version } from '../../../package.json';
-import { DarkModeSwitcher } from './darkMode';
 
 const Bar: FC<Props> = memo(({ open, location: { pathname }, group, title, steps, logout, setSteps, setGroup, toggleDrawer }) => {
     const classes = useStyles();
     const [anchorEl, setAnchorEl] = useState<Element | null>(null);
     const [modal, setModal] = useState(false);
     const [messenger, setMessenger] = useState(false);
+    const { darkMode, setDarkMode } = useContext(ThemeContext);
 
     const handleClick: MouseEventHandler = ({ currentTarget }) => {
         setAnchorEl(currentTarget);
@@ -150,13 +152,15 @@ const Bar: FC<Props> = memo(({ open, location: { pathname }, group, title, steps
                             <IconButton color='inherit' onClick={refresh}>
                                 <RefreshIcon />
                             </IconButton>
-                            <DarkModeSwitcher />
+                            <IconButton color='inherit' onClick={setDarkMode}>
+                                <Brightness4 />
+                            </IconButton>
                             <IconButton color='inherit' onClick={handleClick}>
                                 <PersonIcon />
                             </IconButton>
                         </div>
                         // eslint-disable-next-line
-                    ), [open])}
+                    ), [open, darkMode])}
                     <Menu
                         anchorEl={anchorEl}
                         open={Boolean(anchorEl)}
