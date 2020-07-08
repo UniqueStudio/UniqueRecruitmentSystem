@@ -1,7 +1,6 @@
 import React, { ComponentType, createContext, useState, useEffect } from 'react';
 
 import blue from '@material-ui/core/colors/blue';
-import grey from '@material-ui/core/colors/grey';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import createMuiTheme from '@material-ui/core/styles/createMuiTheme';
@@ -21,15 +20,27 @@ export const ThemeContext = createContext<ContextProps>({
 const darkTheme = createMuiTheme({
     palette: {
         type: 'dark',
-        primary: blue,
-        secondary: grey,
+        primary: {
+            main: '#343434',
+            dark: '#000000',
+            light: '#484848',
+            contrastText: '#ffffff',
+        },
+        secondary: {
+            main: '#ff7597',
+        },
+        background: {
+            default: '#121212',
+        }
     },
 });
 
 const defaultTheme = createMuiTheme({
     palette: {
         primary: blue,
-        secondary: grey,
+        background: {
+            default: '#f1f1f1',
+        }
     },
 });
 

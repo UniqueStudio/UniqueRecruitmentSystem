@@ -13,7 +13,7 @@ const useStyles = makeStyles(({ spacing, palette, typography: { button } }: Them
         position: 'relative',
     },
     expired: {
-        background: colorToAlpha(palette.secondary.light, 0.1),
+        background: colorToAlpha(palette.grey[500], 0.1),
     },
     tooltip: {
         fontSize: button.fontSize,
