@@ -29,6 +29,7 @@ import useStyles from '../../styles/appBar';
 import { titleConverter } from '../../utils/titleConverter';
 
 import { version } from '../../../package.json';
+import { DarkModeSwitcher } from './darkMode';
 
 const Bar: FC<Props> = memo(({ open, location: { pathname }, group, title, steps, logout, setSteps, setGroup, toggleDrawer }) => {
     const classes = useStyles();
@@ -149,6 +150,7 @@ const Bar: FC<Props> = memo(({ open, location: { pathname }, group, title, steps
                             <IconButton color='inherit' onClick={refresh}>
                                 <RefreshIcon />
                             </IconButton>
+                            <DarkModeSwitcher />
                             <IconButton color='inherit' onClick={handleClick}>
                                 <PersonIcon />
                             </IconButton>
