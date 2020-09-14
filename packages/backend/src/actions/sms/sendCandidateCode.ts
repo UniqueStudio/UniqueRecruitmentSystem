@@ -21,6 +21,7 @@ export const sendCandidateCode: RequestHandler = async (req, res, next) => {
                 'Token': token,
                 'Content-Type': 'application/json'
             },
+            // 您{1}的验证码为：{2}，请于3分钟内填写。如非本人操作，请忽略本短信。
             body: JSON.stringify({
                 phone,
                 template: 719160,

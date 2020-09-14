@@ -24,10 +24,11 @@ export const sendUserCode: RequestHandler = async (req, res, next) => {
                 'Token': token,
                 'Content-Type': 'application/json'
             },
+            // 您{1}的验证码为：{2}，请于3分钟内填写。如非本人操作，请忽略本短信。
             body: JSON.stringify({
                 phone,
                 template: 719160,
-                param_list: ['在dashboard中当前', code]
+                param_list: ['dashboard中', code]
             })
         });
         const result = await response.json();
