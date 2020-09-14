@@ -1,6 +1,7 @@
 import { RequestHandler } from 'express';
 import { body, validationResult } from 'express-validator';
 import path from 'path';
+import { titleConverter } from 'src/utils/titleConverter';
 import { io } from '../../app';
 
 import { GENDERS, GRADES, GROUPS_, RANKS } from '../../config/consts';
@@ -54,8 +55,12 @@ export const addCandidate: RequestHandler = async (req, res, next) => {
                 .catch((e) => logger.error(e));
             const question = global.acmConfig[group];
             if (!question.uri) return;
-            sendEmail({ name, address: mail }, question.uri, question.description)
-                .catch((e) => logger.error(e));
+            sendEmail(
+                { name, address: mail },
+                question.uri,
+                question.description,
+                titleConverter(title),
+            ).catch((e) => logger.error(e));
         }, 30 * 1000);
     } catch (err) {
         return next(err);
