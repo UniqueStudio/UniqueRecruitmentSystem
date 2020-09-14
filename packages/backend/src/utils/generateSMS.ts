@@ -40,7 +40,7 @@ export const generateSMS = ({ name, title, step, type, group, time, place, rest,
             }
             rest = `${rest || defaultRest}${suffix}`;
             // {1}你好，你通过了{2}{3}组{4}审核{5}
-            return { template: 185990, param_list: [name, title, group, STEPS[step], rest] };
+            return { template: 670901, param_list: [name, title, group, STEPS[step], rest] };
         }
         case 'reject': {
             if (!group) throw new Error('Group not provided!');
@@ -49,20 +49,20 @@ export const generateSMS = ({ name, title, step, type, group, time, place, rest,
             const defaultRest = '不要灰心，继续学习。期待与更强大的你的相遇！';
             rest = `${rest || defaultRest}${suffix}`;
             // {1}你好，你没有通过{2}{3}组{4}审核，请你{5}
-            return { template: 185987, param_list: [name, title, group, STEPS[step], rest] };
+            return { template: 670903, param_list: [name, title, group, STEPS[step], rest] };
         }
         case 'group': {
             if (!group) throw new Error('Group not provided!');
             if (!place) throw new Error('Place not provided!');
             if (!time) throw new Error('Time not provided!');
             // {1}你好，请于{2}在启明学院亮胜楼{3}参加{4}，请准时到场。
-            return { template: 96404, param_list: [name, time, place, `${group}组组面`] };
+            return { template: 670906, param_list: [name, time, place, `${group}组组面`] };
         }
         case 'team': {
             if (!place) throw new Error('Place not provided!');
             if (!time) throw new Error('Time not provided!');
             // {1}你好，请于{2}在启明学院亮胜楼{3}参加{4}，请准时到场。
-            return { template: 96404, param_list: [name, time, place, `团队群面`] };
+            return { template: 670906, param_list: [name, time, place, `团队群面`] };
         }
 
         default:

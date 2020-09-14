@@ -1,5 +1,4 @@
 import fetch from 'node-fetch';
-// import { Questions } from '../../config/acm';
 import { smsAPI, token } from '../../config/consts';
 
 export const sendSMS = async (phone: string, body: { template: number, param_list: string[] }) => {

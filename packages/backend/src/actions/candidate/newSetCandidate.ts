@@ -71,8 +71,8 @@ export const newSetCandidate: RequestHandler = async (req, res, next) => {
                     PayloadRepo.deleteById(pid),
                 ]);
                 res.json({ type: 'success' });
-                // {1}你好，您当前状态是{2}，请关注手机短信及邮箱以便获取后续通知。
-                sendSMS(phone, { template: 416721, param_list: [name, '成功选择组面时间'] }).catch((e) => logger.error(e));
+                // {{1}你好，您当前状态是{2}，请关注手机短信以便获取后续通知。
+                sendSMS(phone, { template: 670908, param_list: [name, '成功选择组面时间'] }).catch((e) => logger.error(e));
             }
             case 'team': {
                 const recruitment = await RecruitmentRepo.queryById(recruitmentId);
@@ -95,8 +95,8 @@ export const newSetCandidate: RequestHandler = async (req, res, next) => {
                     PayloadRepo.deleteById(pid),
                 ]);
                 res.json({ type: 'success' });
-                // {1}你好，您当前状态是{2}，请关注手机短信及邮箱以便获取后续通知。
-                sendSMS(phone, { template: 416721, param_list: [name, '成功选择群面时间'] }).catch((e) => logger.error(e));
+                // {1}你好，您当前状态是{2}，请关注手机短信以便获取后续通知。
+                sendSMS(phone, { template: 670908, param_list: [name, '成功选择群面时间'] }).catch((e) => logger.error(e));
             }
             default: {
                 return next(errorRes('Failed to set!', 'warning'));

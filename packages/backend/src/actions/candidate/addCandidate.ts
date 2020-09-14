@@ -49,8 +49,8 @@ export const addCandidate: RequestHandler = async (req, res, next) => {
         io.emit('addCandidate', { candidate: info });
         io.emit('updateRecruitment');
         setTimeout(() => {
-            // {1}你好，您当前状态是{2}，请关注手机短信及邮箱以便获取后续通知。
-            sendSMS(phone, { template: 416721, param_list: [name, '成功提交报名表单'] })
+            // {1}你好，您当前状态是{2}，请关注手机短信以便获取后续通知。
+            sendSMS(phone, { template: 670908, param_list: [name, '成功提交报名表单'] })
                 .catch((e) => logger.error(e));
             const question = global.acmConfig[group];
             if (!question.uri) return;

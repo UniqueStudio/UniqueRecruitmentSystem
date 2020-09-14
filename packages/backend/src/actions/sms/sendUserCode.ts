@@ -26,7 +26,7 @@ export const sendUserCode: RequestHandler = async (req, res, next) => {
             },
             body: JSON.stringify({
                 phone,
-                template: 185982,
+                template: 719160,
                 param_list: ['在dashboard中当前', code]
             })
         });
