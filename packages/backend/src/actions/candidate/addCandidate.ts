@@ -1,7 +1,7 @@
 import { RequestHandler } from 'express';
 import { body, validationResult } from 'express-validator';
 import path from 'path';
-import { titleConverter } from 'src/utils/titleConverter';
+import { titleConverter } from '../../utils/titleConverter';
 import { io } from '../../app';
 
 import { GENDERS, GRADES, GROUPS_, RANKS } from '../../config/consts';
