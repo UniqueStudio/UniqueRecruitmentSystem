@@ -4,6 +4,6 @@ export const checkMail = (mail: string) => {
 };
 
 export const checkPhone = (phone: string) => {
-    const re = /^((13[0-9])|(14[57])|(15[0-3,5-9])|166|(17[035678])|(18[0-9])|(19[89]))\d{8}$/i;
+    const re = /^1\d{10}$/i;
     return re.test(phone);
 };
