@@ -37,7 +37,7 @@ const useStyles = makeStyles(
 );
 
 export default (): React.ReactElement => {
-  const classes = useStyles();
+  const classes = useStyles() as any;
   return (
     <div className={classes.root}>
       <Typography variant={'h4'} className={classes.subTitle}>

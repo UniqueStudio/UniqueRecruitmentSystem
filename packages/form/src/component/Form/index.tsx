@@ -42,7 +42,7 @@ const translator = new Map([
 ]);
 
 const Form: FC<FormProps> = memo(props => {
-    const classes = useStyles();
+    const classes = useStyles() as any;
     const { isPC, isPad, isMobile, title, submit, toggleSnackbar } = props;
 
     const [formInfo, setFormInfo] = useState<Candidate>({ referrer: '', resume: '', isQuick: false } as Candidate);

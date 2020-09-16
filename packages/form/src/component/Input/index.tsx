@@ -17,7 +17,7 @@ interface InputProps {
 
 const Input = memo((props: InputProps) => {
     const { for: htmlFor, name, size = 6, labelSize = 4, onChange, placeholder, inputProps } = props;
-    const classes = useStyles({ size, labelSize });
+    const classes = useStyles({ size, labelSize }) as any;
     return (
         <div className={classNames(classes.container, classes.height)}>
             <div className={classes.labelContainer}>

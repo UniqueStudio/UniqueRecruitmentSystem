@@ -14,7 +14,7 @@ interface ButtonProps {
 }
 
 const Button = memo((props: ButtonProps) => {
-    const classes = useStyles();
+    const classes = useStyles() as any;
     const { name, textColor, bgColor, id, className, onClick } = props;
     return (
         <div id={id} className={classNames(classes.border, classes.height, 'button', className)}>

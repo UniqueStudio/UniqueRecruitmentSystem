@@ -14,7 +14,7 @@ interface SelectProps {
 
 const CustomSelect: FC<SelectProps> = memo(({ selections, value, defaultValue, handleSelect }) => {
     const [open, setOpen] = useState<boolean>(false);
-    const classes = useStyles();
+    const classes = useStyles() as any;
 
     const renderIcon = () => {
         const { svg, rotateSvg } = classes;

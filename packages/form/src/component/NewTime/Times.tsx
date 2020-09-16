@@ -67,7 +67,7 @@ interface ContextProps {
 const TimeDispatch = React.createContext<ContextProps>({} as ContextProps);
 
 export default (props: TimesProps): React.ReactElement => {
-  const classes = useStyles({ color: 'white' });
+  const classes = useStyles({ color: 'white' }) as any;
   const { snackbar } = useContext(ToggleSnackbar);
 
   const hash = window.location.pathname.slice(1); // get rid of "/"
@@ -147,7 +147,7 @@ const getDate = (timestamp: number): string => {
 };
 
 const OneDay = (props: OneDayProps): React.ReactElement => {
-  const classes = useStyles({ color: 'white' });
+  const classes = useStyles({ color: 'white' }) as any;
   return (
     <ListItem>
       <Grid container direction={'row'}>
@@ -187,9 +187,9 @@ interface ChipProps {
 }
 
 const TimeChip = (props: ChipProps): React.ReactElement => {
-  const white = useStyles({ color: 'white' });
-  const classes = useStyles({});
-  const gray = useStyles({ color: 'rgba(0, 0, 0, 0.26)' });
+  const white = useStyles({ color: 'white' }) as any;
+  const classes = useStyles({}) as any;
+  const gray = useStyles({ color: 'rgba(0, 0, 0, 0.26)' }) as any;
   const { dispatch, clicked } = useContext(TimeDispatch);
   const handleClick = () => {
     dispatch(props.index);

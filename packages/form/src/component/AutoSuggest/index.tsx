@@ -21,7 +21,7 @@ export interface AutoSuggestProps<T> {
 function AutoSuggest<T>(props: AutoSuggestProps<T>) {
     const { id, value, items, getItemValue, onChange, onSelect, size = 10, labelSize = 4 } = props;
     const [suggestions, setSuggestions] = useState<T[]>([]);
-    const classes = useStyles({ labelSize, suggestionLength: suggestions.length });
+    const classes = useStyles({ labelSize, suggestionLength: suggestions.length }) as any;
 
     const getSuggestions = (suggestion: string) => {
         return suggestion.length === 0

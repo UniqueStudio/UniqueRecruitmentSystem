@@ -18,6 +18,7 @@ interface DialogProps {
 }
 
 const Transition = React.forwardRef<unknown, TransitionProps>((props, ref) => {
+    // @ts-ignore
     return <Zoom ref={ref} {...props} />;
 });
 
