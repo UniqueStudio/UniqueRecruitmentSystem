@@ -125,7 +125,7 @@ const Bar: FC<Props> = memo(({ open, location: { pathname }, group, title, steps
                             <MenuIcon />
                         </IconButton>
                         // eslint-disable-next-line
-                    ), [open])}
+                    ), [open, classes.menuButton])}
                     <Typography variant='h6' color='inherit' noWrap>{pathToTitle[pathname] || '808 / 2 = ?'}</Typography>
                     {pathname === '/candidates' && <>
                         <Select
