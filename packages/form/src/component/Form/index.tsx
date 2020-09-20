@@ -1,4 +1,4 @@
-import React, { ChangeEvent, FC, KeyboardEvent, memo, MouseEvent, useEffect, useRef, useState } from 'react';
+import React, { ChangeEvent, FC, KeyboardEvent, memo, MouseEvent, useEffect, useMemo, useRef, useState } from 'react';
 
 import classNames from 'classnames';
 import hlogo from '../../asset/img/hlogo.png';
@@ -56,8 +56,10 @@ const Form: FC<FormProps> = memo(props => {
     const canGetCode = checkPhone(phone);
 
     useEffect(() => {
-        return () => window.clearInterval(interval);
-    }, [interval]);
+        if (code.time === 0) {
+            window.clearInterval(interval);
+        }
+    }, [code]);
 
     const handleSubmit = async () => {
         const info = { ...formInfo, group: (GROUPS[group] || '').toLowerCase(), title };
@@ -141,7 +143,6 @@ const Form: FC<FormProps> = memo(props => {
                 window.setInterval(() => {
                     setCode(({ time, sent }) => {
                         if (time === 0) {
-                            clearInterval(interval);
                             return { time: 0, sent: false };
                         }
                         return { time: time - 1, sent };
@@ -240,13 +241,13 @@ const Form: FC<FormProps> = memo(props => {
         ['成绩排名', 'rank', RANKS, rank]
     ] as [string, string, string[], number][]).map(v => {
         return (
-            <Select
+            useMemo(() => <Select
                 key={v[1]}
                 selections={v[2]}
                 value={v[2][v[3]] || ''}
                 defaultValue={v[0]}
                 handleSelect={handleChangeFormInfo(v[1])}
-            />
+            />, [v[3]])
         );
     });
 
