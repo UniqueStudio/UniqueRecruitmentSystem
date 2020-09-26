@@ -61,7 +61,7 @@
     "build": "tsc",
     "postbuild": "ts-node scripts/resolveAlias.ts",
     "test": "jest --forceExit",
-    "startProd": "node build/index.js",
+    "startProd": "node build/src/index.js",
     "startDev": "ts-node -r tsconfig-paths/register --files src/index.ts"
   }
 }

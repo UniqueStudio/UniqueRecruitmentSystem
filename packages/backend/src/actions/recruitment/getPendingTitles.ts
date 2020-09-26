@@ -1,7 +1,7 @@
 import { RequestHandler } from 'express';
 
-import { RecruitmentRepo } from '../../database/model';
-import { errorRes } from '../../utils/errorRes';
+import { RecruitmentRepo } from '@database/model';
+import { errorRes } from '@utils/errorRes';
 
 export const getPendingTitles: RequestHandler = async (req, res, next) => {
     try {

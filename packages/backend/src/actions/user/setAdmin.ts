@@ -1,9 +1,9 @@
 import { RequestHandler } from "express";
-import { UserRepo } from "../../database/model";
-import { errorRes } from "../../utils/errorRes";
+import { UserRepo } from "@database/model";
+import { errorRes } from "@utils/errorRes";
 import { body, validationResult } from 'express-validator';
-import { GROUPS_ } from "../../config/consts";
-import { User } from "../../config/types";
+import { GROUPS_ } from "@config/consts";
+import { User } from "@config/types";
 
 // set users to admin, only admin or captain can do this
 // notice that non-exist user will be ignore

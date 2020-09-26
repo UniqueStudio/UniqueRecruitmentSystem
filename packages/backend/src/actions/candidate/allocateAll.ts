@@ -1,8 +1,8 @@
 import { RequestHandler } from 'express';
 import { param, validationResult } from 'express-validator';
-import { CandidateRepo, RecruitmentRepo, UserRepo } from '../../database/model';
-import { allocateTime } from '../../utils/allocateTime';
-import { errorRes } from '../../utils/errorRes';
+import { CandidateRepo, RecruitmentRepo, UserRepo } from '@database/model';
+import { allocateTime } from '@utils/allocateTime';
+import { errorRes } from '@utils/errorRes';
 import { verifyTitle } from './addCandidate';
 
 export const allocateAll: RequestHandler = async (req, res, next) => {

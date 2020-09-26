@@ -1,10 +1,10 @@
 import { Socket } from 'socket.io';
 import { io } from '../../app';
-import { CandidateRepo, RecruitmentRepo } from '../../database/model';
-import { deleteFile } from '../../utils/deleteFile';
-import { errorRes } from '../../utils/errorRes';
-import { logger } from '../../utils/logger';
-import { verifyJWT } from '../../utils/verifyJWT';
+import { CandidateRepo, RecruitmentRepo } from '@database/model';
+import { deleteFile } from '@utils/deleteFile';
+import { errorRes } from '@utils/errorRes';
+import { logger } from '@utils/logger';
+import { verifyJWT } from '@utils/verifyJWT';
 
 export const onRemoveCandidate = (socket: Socket) => async ({ cid, token }: { cid: string, token: string }) => {
     try {

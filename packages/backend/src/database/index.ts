@@ -1,7 +1,7 @@
 import { connect, Document, Model, Schema, SchemaDefinition, set } from 'mongoose';
 
-import { dbURI } from '../config/consts';
-import { logger } from '../utils/logger';
+import { dbURI } from '@config/consts';
+import { logger } from '@utils/logger';
 
 set('useFindAndModify', false);
 

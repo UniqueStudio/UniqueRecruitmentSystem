@@ -1,7 +1,7 @@
 import { RequestHandler } from 'express';
 import { basename, resolve } from 'path';
-import { CandidateRepo } from '../../database/model';
-import { errorRes } from '../../utils/errorRes';
+import { CandidateRepo } from '@database/model';
+import { errorRes } from '@utils/errorRes';
 
 export const getResume: RequestHandler = async (req, res) => {
     try {

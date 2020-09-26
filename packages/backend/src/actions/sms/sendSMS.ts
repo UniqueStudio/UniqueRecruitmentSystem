@@ -2,14 +2,14 @@ import { Request, RequestHandler } from 'express';
 import { body, validationResult } from 'express-validator';
 import moment from 'moment';
 import fetch from 'node-fetch';
-import { shortenURL } from '../../utils/shortenURL';
-import { formURL, smsAPI, token } from '../../config/consts';
-import { CandidateRepo, PayloadRepo, RecruitmentRepo } from '../../database/model';
+import { shortenURL } from '@utils/shortenURL';
+import { formURL, smsAPI, token } from '@config/consts';
+import { CandidateRepo, PayloadRepo, RecruitmentRepo } from '@database/model';
 import { redisAsync } from '../../redis';
-import { errorRes } from '../../utils/errorRes';
-import { generateSMS } from '../../utils/generateSMS';
-import md5 from '../../utils/md5';
-import { titleConverter } from '../../utils/titleConverter';
+import { errorRes } from '@utils/errorRes';
+import { generateSMS } from '@utils/generateSMS';
+import md5 from '@utils/md5';
+import { titleConverter } from '@utils/titleConverter';
 
 const padZero = (toPad: number) => toPad.toString().padStart(2, '0');
 

@@ -1,5 +1,5 @@
 import { ACMClient } from 'acm-client';
-import { logger } from '../utils/logger';
+import { logger } from '@utils/logger';
 import { Acm } from './consts';
 
 logger.info(JSON.stringify(Acm));

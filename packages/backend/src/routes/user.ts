@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { getGroup, getInfo, handleLogin, handleLoginVerify, handleQR, handleScan, setInfo, setInfoVerify, setAdmin, setAdminVerify } from '../actions/user';
-import { authenticator } from '../middlewares/authenticator';
+import { authenticator } from '@mw/authenticator';
 
 const router = Router();
 

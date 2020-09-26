@@ -1,8 +1,8 @@
 import { Router } from 'express';
-import { authenticator } from '../middlewares/authenticator';
+import { authenticator } from '@mw/authenticator';
 
 import { sendCandidateCode, sendCandidateCodeVerify, sendSMS, sendSMSVerify, sendUserCode } from '../actions/sms';
-import { codeChecker } from '../middlewares/codeChecker';
+import { codeChecker } from '@mw/codeChecker';
 
 const router = Router();
 
