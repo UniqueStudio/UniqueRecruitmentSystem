@@ -52,13 +52,16 @@
     "supertest": "^4.0.2",
     "ts-jest": "^26.1.1",
     "ts-node": "^8.10.2",
+    "tsc-alias": "^1.1.1",
+    "tsconfig-paths": "^3.9.0",
     "tslint": "^6.1.2",
     "typescript": "^3.9.5"
   },
   "scripts": {
     "build": "tsc",
+    "postbuild": "ts-node scripts/resolveAlias.ts",
     "test": "jest --forceExit",
     "startProd": "node build/index.js",
-    "startDev": "ts-node --files src/index.ts"
+    "startDev": "ts-node -r tsconfig-paths/register --files src/index.ts"
   }
 }
