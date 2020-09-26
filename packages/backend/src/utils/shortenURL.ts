@@ -1,5 +1,5 @@
 import fetch from "node-fetch";
-import { shortenURLAPI } from "src/config/consts";
+import { shortenURLAPI } from "../config/consts";
 import { URLSearchParams } from "url";
 
 interface IAlAPIShortURLResp {
