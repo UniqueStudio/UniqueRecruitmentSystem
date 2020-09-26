@@ -2,6 +2,7 @@ import { Request, RequestHandler } from 'express';
 import { body, validationResult } from 'express-validator';
 import moment from 'moment';
 import fetch from 'node-fetch';
+import { shortenURL } from 'src/utils/shortenURL';
 import { formURL, smsAPI, token } from '../../config/consts';
 import { CandidateRepo, PayloadRepo, RecruitmentRepo } from '../../database/model';
 import { redisAsync } from '../../redis';
@@ -70,7 +71,7 @@ const send = (req: Request) => {
             if (type === 'reject') {
                 await CandidateRepo.updateById(id, { rejected: true });
             }
-            const url = recruitmentId ? `${formURL}/${hash}` : '';
+            const url = recruitmentId ? await shortenURL(`${formURL}/${hash}`) : '';
             let allocated;
             if (type === 'group' || type === 'team') {
                 allocated = interviews[type].allocation;
