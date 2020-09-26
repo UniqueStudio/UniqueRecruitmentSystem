@@ -1,16 +1,12 @@
-FROM node:12.4.0-alpine
-
-RUN npm install -g yarn
+FROM node:alpine
 
 WORKDIR /usr/src/backend
 
-COPY package.json .
+COPY . .
 
 COPY yarn.lock .
 
 RUN yarn
-
-COPY . .
 
 RUN yarn build
 

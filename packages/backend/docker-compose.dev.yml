@@ -10,20 +10,19 @@ services:
     volumes:
       - mongodb:/data/db
   backend:
-    build: .
+    image: node:alpine
     env_file:
       - .env
     environment:
-      - NODE_ENV=production
+      - NODE_ENV=development
     ports:
     - 5000:5000
     links:
     - mongodb
     - redis
+    command: yarn startDev
+    working_dir: /usr/src/backend
     volumes:
-      # - ./server.key:/usr/src/backend/uniqcert.key
-      # - ./server.crt:/usr/src/backend/uniqcert.fullchain
-      - ./data/resumes:/usr/src/backend/data/resumes
-      - ./logs:/usr/src/backend/logs
+      - ./:/usr/src/backend
 volumes:
   mongodb:

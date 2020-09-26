@@ -15,6 +15,6 @@ export const sendSMS = async (phone: string, body: { template: number, param_lis
     });
     const { code, message }: { code: number, message: string } = await resp.json();
     if (code !== 200) {
-        throw new Error(`Error in ${name}: ${message}`);
+        throw new Error(`Error : ${message}`);
     }
 };

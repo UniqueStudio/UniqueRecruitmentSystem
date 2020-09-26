@@ -7,11 +7,10 @@ import { logger } from './utils/logger';
 
 const readdir = promisify(fs.readdir);
 const unlink = promisify(fs.unlink);
-const mkdir = promisify(mkdirp);
 
 export const task = async () => {
     const directory = '/tmp/resumes';
-    await mkdir(directory);
+    mkdirp.sync(directory);
     new CronJob('0 0 * * * *', async () => {
         try {
             const files = await readdir(directory);

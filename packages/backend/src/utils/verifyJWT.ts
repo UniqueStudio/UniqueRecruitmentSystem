@@ -1,21 +1,20 @@
 import jwt from 'jsonwebtoken';
 import { secret } from '../config/consts';
-import { Payload, FormPayload } from '../config/types';
+import { FormPayload } from '../config/types';
 
-export const verifyJWT = (token: string) => {
-    if (token.indexOf('Bearer ') === 0) {
-        token = token.replace('Bearer ', '');
+export const extractJWT = (token?: string): FormPayload => {
+    if (!token) {
+        throw new Error('Missing token');
     }
-
-    const { id } = jwt.verify(token, secret) as Payload;
-    return id;
-};
-
-export const extractJWT = (token: string): FormPayload => {
     if (token.indexOf('Bearer ') === 0) {
         token = token.replace('Bearer ', '');
     }
 
     const payload = jwt.verify(token, secret) as FormPayload;
-    return payload
-}
+    return payload;
+};
+
+export const verifyJWT = (token?: string) => {
+    const { id } = extractJWT(token);
+    return id;
+};

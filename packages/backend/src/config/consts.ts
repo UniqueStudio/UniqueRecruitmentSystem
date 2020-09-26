@@ -11,6 +11,8 @@ export const smsAPI = `https://open.hustunique.com/message/sms`;
 export const token = TOKEN!;
 export const formURL = 'https://join.hustunique.com';
 export const dbURI = `mongodb://mongodb:${DB_PORT}/recruitment`;
+// TODO: move this into open service
+export const shortenURLAPI = `https://v1.alapi.cn/api/url`;
 
 export const GROUPS = ['Web', 'Lab', 'AI', 'Game', 'Android', 'iOS', 'Design', 'PM'];
 export const GROUPS_ = GROUPS.map((group) => group.toLowerCase());
@@ -51,3 +53,6 @@ export const Acm = {
     accessKey: ACM_ACCESS_KEY!,
     secretKey: ACM_SECRET_KEY!
 };
+
+export const ENV_DEV = 'development';
+export const ENV_PROD = 'production';

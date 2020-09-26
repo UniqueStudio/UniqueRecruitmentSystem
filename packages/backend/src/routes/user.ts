@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { getGroup, getInfo, handleLogin, handleLoginVerify, handleQR, handleScan, setInfo, setInfoVerify } from '../actions/user';
+import { getGroup, getInfo, handleLogin, handleLoginVerify, handleQR, handleScan, setInfo, setInfoVerify, setAdmin, setAdminVerify } from '../actions/user';
 import { authenticator } from '../middlewares/authenticator';
 
 const router = Router();
@@ -23,5 +23,8 @@ router.put('/', setInfoVerify, setInfo);
 
 // get users in one's group
 router.get('/group', getGroup);
+
+// set users to admin
+router.post('/admin', setAdminVerify, setAdmin);
 
 export const user = router;

@@ -1,18 +1,15 @@
 import express from 'express';
 import fs from 'fs';
-// import http from 'http';
+import http from 'http';
 import https from 'https';
-import { loadConfig } from './config/acm';
+
 import { jsonParser, urlencodedParser } from './middlewares/bodyParser';
 import { cors } from './middlewares/cors';
 import { errorHandler } from './middlewares/errorHandler';
 import { infoLogger } from './middlewares/infoLogger';
 import { routes } from './routes';
-import { task } from './task';
-import { logger } from './utils/logger';
-import { wsHandler, wsServer } from './websocket';
-
-loadConfig().catch((e) => logger.error(e));
+import { isDev } from './utils/environment';
+import { wsServer } from './websocket';
 
 export const app = express();
 
@@ -28,16 +25,9 @@ app.use(routes);
 
 app.use(errorHandler);
 
-export const server = https.createServer({
+export const server = isDev() ? http.createServer(app) : https.createServer({
     key: fs.readFileSync('uniqcert.key'),
     cert: fs.readFileSync('uniqcert.fullchain')
 }, app);
-// export const server = http.createServer(app);
 
 export const io = wsServer(server);
-
-wsHandler(io);
-
-server.listen(5000);
-
-task().then(() => logger.info('Task started'));

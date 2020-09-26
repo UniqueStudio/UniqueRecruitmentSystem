@@ -1,7 +1,7 @@
 import fs from 'fs';
 
-const logInfo = fs.createWriteStream('./stdout.log');
-const logError = fs.createWriteStream('./stderr.log');
+const logInfo = fs.createWriteStream('./logs/stdout.log');
+const logError = fs.createWriteStream('./logs/stderr.log');
 
 export const logger = {
     info: (message: string) => {
