@@ -45,7 +45,7 @@ export class RepositoryBase<T extends Document> {
     }
 
     updateByIds(ids: string[], newItem: object, isRemove = false) {
-        return this.model.updateMany({ id: { $in: ids } }, { [isRemove ? '$unset' : '$set']: newItem }, { new: true });
+        return this.model.updateMany({ _id: { $in: ids } }, { [isRemove ? '$unset' : '$set']: newItem }, { new: true });
     }
 
     pushById(id: string, newItem: object) {
