@@ -16,20 +16,15 @@ const Data: FC<Props> = memo(({ recruitment, userGroup, candidates }) => {
         setInterviewType(value as 'group' | 'team');
     };
 
-    const sorted = (
-        interviewType === 'group'
-            ? candidates.filter(({ group, step }) => group === userGroup && step === 2)
-            : candidates.filter(({ step }) => step === 4)
+    const sorted = (interviewType === 'group'
+        ? candidates.filter(({ group, step }) => group === userGroup && step === 2)
+        : candidates.filter(({ step }) => step === 4)
     ).sort(sortBySlot);
 
     return !userGroup || !recruitment ? null : (
         <div className={classes.container}>
             <Recruitment />
-            <Table
-                candidates={sorted}
-                changeType={changeType}
-                interviewType={interviewType}
-            />
+            <Table candidates={sorted} changeType={changeType} interviewType={interviewType} />
         </div>
     );
 });

@@ -14,21 +14,20 @@ export const getCodeEpic: Epic = (action$) =>
         ofType(GET_VERIFY_CODE),
         mergeMap(() => {
             const token = checkToken();
-            return ajax.getJSON<{ type: string }>(`${API}/sms/verification/user`, {
-                Authorization: `Bearer ${token}`,
-            }).pipe(
-                mergeMap((res) => {
-                    if (res.type === 'success') {
-                        return of(
-                            enqueueSnackbar('验证码已发送！', { variant: 'success' }),
-                            toggleProgress(),
-                        );
-                    }
-                    throw customError(res);
-                }),
-                startWith(toggleProgress(true)),
-                catchError((err) => errHandler(err)),
-            );
+            return ajax
+                .getJSON<{ type: string }>(`${API}/sms/verification/user`, {
+                    Authorization: `Bearer ${token}`,
+                })
+                .pipe(
+                    mergeMap((res) => {
+                        if (res.type === 'success') {
+                            return of(enqueueSnackbar('验证码已发送！', { variant: 'success' }), toggleProgress());
+                        }
+                        throw customError(res);
+                    }),
+                    startWith(toggleProgress(true)),
+                    catchError((err) => errHandler(err)),
+                );
         }),
-        catchError((err) => errHandler(err))
+        catchError((err) => errHandler(err)),
     );

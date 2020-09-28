@@ -19,9 +19,12 @@ const SMSPicker: FC<Props> = memo(({ onDelete, selected }) => {
     const classes = useStyles();
     return (
         <div className={classNames(classes.templateContent, classes.templateItem, classes.picker)}>
-            {!selected.length
-                ? <Typography variant='h6' className={classes.templateItem}>你未选中任何人!</Typography>
-                : selected.map(({ _id, name, grade, institute }) => (
+            {!selected.length ? (
+                <Typography variant='h6' className={classes.templateItem}>
+                    你未选中任何人!
+                </Typography>
+            ) : (
+                selected.map(({ _id, name, grade, institute }) => (
                     <Chip
                         key={_id}
                         label={`${name} ${GRADES[grade]} ${institute}`}
@@ -30,7 +33,7 @@ const SMSPicker: FC<Props> = memo(({ onDelete, selected }) => {
                         color='primary'
                     />
                 ))
-            }
+            )}
         </div>
     );
 });

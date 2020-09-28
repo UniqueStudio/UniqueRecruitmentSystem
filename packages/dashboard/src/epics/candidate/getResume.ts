@@ -2,7 +2,7 @@ import { ofType } from 'redux-observable';
 import { from } from 'rxjs';
 import { catchError, mergeMap, startWith } from 'rxjs/operators';
 
-import { GET_RESUME, GetResume, resumeProgress, toggleProgress } from '../../actions';
+import { GetResume, GET_RESUME, resumeProgress, toggleProgress } from '../../actions';
 
 import { API } from '../../config/consts';
 
@@ -19,23 +19,25 @@ const download = (cid: string) => async (res: Response) => {
     const total = res.headers.get('Content-Length');
     const disposition = res.headers.get('Content-Disposition');
     if (!total) {
-        throw new Error('Can\'t get content-length');
+        throw new Error("Can't get content-length");
     }
     let loaded = 0;
-    const response = new Response(new ReadableStream({
-        async start(controller: ReadableStreamDefaultController) {
-            const reader = res.body!.getReader();
-            let result = await reader.read();
-            while (!result.done) {
-                const value = result.value;
-                loaded += value.byteLength;
-                store.dispatch(resumeProgress(loaded / +total, cid));
-                controller.enqueue(value);
-                result = await reader.read();
-            }
-            controller.close();
-        }
-    }));
+    const response = new Response(
+        new ReadableStream({
+            async start(controller: ReadableStreamDefaultController) {
+                const reader = res.body!.getReader();
+                let result = await reader.read();
+                while (!result.done) {
+                    const value = result.value;
+                    loaded += value.byteLength;
+                    store.dispatch(resumeProgress(loaded / +total, cid));
+                    controller.enqueue(value);
+                    result = await reader.read();
+                }
+                controller.close();
+            },
+        }),
+    );
     let filename = 'resume';
     const blob = await response.blob();
     if (disposition && disposition.indexOf('attachment') !== -1) {
@@ -63,11 +65,13 @@ export const getResumeEpic: Epic<GetResume> = (action$) =>
         mergeMap((action) => {
             const token = checkToken();
             const { cid } = action;
-            return from(fetch(`${API}/candidate/${cid}/resume`, {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            })).pipe(
+            return from(
+                fetch(`${API}/candidate/${cid}/resume`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                }),
+            ).pipe(
                 mergeMap(download(cid)),
                 startWith(toggleProgress(true)),
                 catchError((err) => errHandler(err)),

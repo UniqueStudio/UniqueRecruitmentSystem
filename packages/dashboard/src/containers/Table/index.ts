@@ -14,15 +14,18 @@ interface OwnProps {
     changeType: ChangeEventHandler<{ name?: string; value: unknown }>;
 }
 
-const mapStateToProps =
-    (state: StoreState, ownProps: OwnProps) => ({
-        ...ownProps,
-    });
+const mapStateToProps = (state: StoreState, ownProps: OwnProps) => ({
+    ...ownProps,
+});
 
-const mapDispatchToProps = (dispatch: Dispatch) => bindActionCreators({
-    allocateOne: allocateOneStart,
-    allocateAll: allocateAllStart,
-}, dispatch);
+const mapDispatchToProps = (dispatch: Dispatch) =>
+    bindActionCreators(
+        {
+            allocateOne: allocateOneStart,
+            allocateAll: allocateAllStart,
+        },
+        dispatch,
+    );
 
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = ReturnType<typeof mapDispatchToProps>;

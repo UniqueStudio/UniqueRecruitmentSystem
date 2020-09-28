@@ -37,7 +37,9 @@ const Column: FC<Props> = memo(({ title, children, dropIndex }) => {
                 <div ref={innerRef} {...draggableProps}>
                     <Paper className={classes.column}>
                         <div className={classes.columnHeader}>
-                            <Typography variant='h6' className={classes.columnTitle} {...dragHandleProps}>{title}</Typography>
+                            <Typography variant='h6' className={classes.columnTitle} {...dragHandleProps}>
+                                {title}
+                            </Typography>
                         </div>
                         <Divider />
                         {ColumnBody}

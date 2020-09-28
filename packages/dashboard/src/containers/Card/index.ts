@@ -21,12 +21,16 @@ const mapStateToProps = ({ candidate: { selected }, component: { fabOn } }: Stor
     ...ownProps,
 });
 
-const mapDispatchToProps = (dispatch: Dispatch) => bindActionCreators({
-    select: selectCandidate,
-    deselect: deselectCandidate,
-    changeInputting: recordInputtingComment,
-    toggleFabOn,
-}, dispatch);
+const mapDispatchToProps = (dispatch: Dispatch) =>
+    bindActionCreators(
+        {
+            select: selectCandidate,
+            deselect: deselectCandidate,
+            changeInputting: recordInputtingComment,
+            toggleFabOn,
+        },
+        dispatch,
+    );
 
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = ReturnType<typeof mapDispatchToProps>;

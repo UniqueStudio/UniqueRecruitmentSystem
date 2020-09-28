@@ -13,10 +13,14 @@ const mapStateToProps = ({ user: { token, key: weChatKey, isScanning }, componen
     isLoading: progressOn,
 });
 
-const mapDispatchToProps = (dispatch: Dispatch) => bindActionCreators({
-    getQRCode: getQRCodeStart,
-    login: loginStart,
-}, dispatch);
+const mapDispatchToProps = (dispatch: Dispatch) =>
+    bindActionCreators(
+        {
+            getQRCode: getQRCodeStart,
+            login: loginStart,
+        },
+        dispatch,
+    );
 
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = ReturnType<typeof mapDispatchToProps>;

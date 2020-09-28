@@ -75,18 +75,10 @@ const User: FC<Props> = memo(({ userInfo, enqueueSnackbar, submitInfo }) => {
         <form>
             <Paper className={classes.container}>
                 <div className={classes.title}>
-                    <Typography variant='h6'>
-                        我的信息
-                    </Typography>
+                    <Typography variant='h6'>我的信息</Typography>
                 </div>
                 {textFields.map((props, index) => (
-                    <TextField
-                        margin='normal'
-                        className={classes.userInfo}
-                        disabled
-                        key={index}
-                        {...props}
-                    />
+                    <TextField margin='normal' className={classes.userInfo} disabled key={index} {...props} />
                 ))}
                 {editableFields.map(({ name, ...otherProps }, index) => (
                     <TextField
@@ -98,7 +90,9 @@ const User: FC<Props> = memo(({ userInfo, enqueueSnackbar, submitInfo }) => {
                     />
                 ))}
                 <div>
-                    <Button size='large' onClick={submitChange} color='primary'>修改</Button>
+                    <Button size='large' onClick={submitChange} color='primary'>
+                        修改
+                    </Button>
                 </div>
             </Paper>
         </form>

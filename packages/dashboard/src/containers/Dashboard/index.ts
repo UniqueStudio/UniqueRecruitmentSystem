@@ -12,9 +12,13 @@ const mapStateToProps = ({ recruitment: { recruitments: data, viewing } }: Store
     viewing,
 });
 
-const mapDispatchToProps = (dispatch: Dispatch) => bindActionCreators({
-    setViewing: setViewingRecruitmentStart,
-}, dispatch);
+const mapDispatchToProps = (dispatch: Dispatch) =>
+    bindActionCreators(
+        {
+            setViewing: setViewingRecruitmentStart,
+        },
+        dispatch,
+    );
 
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = ReturnType<typeof mapDispatchToProps>;

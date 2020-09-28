@@ -5,9 +5,9 @@ import { catchError, mergeMap, startWith } from 'rxjs/operators';
 
 import {
     enqueueSnackbar,
-    GET_CANDIDATES_START,
     getCandidatesFulfilled,
     GetCandidatesStart,
+    GET_CANDIDATES_START,
     setViewingRecruitmentFulfilled,
     toggleFabOff,
     toggleProgress,
@@ -36,27 +36,29 @@ export const getCandidatesEpic: Epic<GetCandidatesStart> = (action$, state$, { s
                     enqueueSnackbar('成功获取候选人信息', { variant: 'success' }),
                 );
             }
-            return ajax.getJSON<{ type: string, data: Candidate[] }>(
-                `${API}/candidate/${JSON.stringify({ title, step, group })}`,
-                {
-                    Authorization: `Bearer ${token}`,
-                },
-            ).pipe(
-                mergeMap((res) => {
-                    if (res.type === 'success') {
-                        return of(
-                            getCandidatesFulfilled(res.data),
-                            setViewingRecruitmentFulfilled(title),
-                            toggleFabOff(),
-                            enqueueSnackbar('成功获取候选人信息', { variant: 'success' }),
-                            toggleProgress(),
-                        );
-                    }
-                    throw customError(res);
-                }),
-                startWith(toggleProgress(true)),
-                catchError((err) => errHandler(err)),
-            );
+            return ajax
+                .getJSON<{ type: string; data: Candidate[] }>(
+                    `${API}/candidate/${JSON.stringify({ title, step, group })}`,
+                    {
+                        Authorization: `Bearer ${token}`,
+                    },
+                )
+                .pipe(
+                    mergeMap((res) => {
+                        if (res.type === 'success') {
+                            return of(
+                                getCandidatesFulfilled(res.data),
+                                setViewingRecruitmentFulfilled(title),
+                                toggleFabOff(),
+                                enqueueSnackbar('成功获取候选人信息', { variant: 'success' }),
+                                toggleProgress(),
+                            );
+                        }
+                        throw customError(res);
+                    }),
+                    startWith(toggleProgress(true)),
+                    catchError((err) => errHandler(err)),
+                );
         }),
         catchError((err) => errHandler(err)),
     );
