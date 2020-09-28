@@ -33,6 +33,13 @@ const darkTheme = createMuiTheme({
             default: '#121212',
         }
     },
+    overrides: {
+        MuiButton: {
+            textPrimary: {
+                color: 'white'
+            },
+        },
+    },
 });
 
 const defaultTheme = createMuiTheme({
