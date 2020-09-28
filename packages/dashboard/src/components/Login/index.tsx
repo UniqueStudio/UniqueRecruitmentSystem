@@ -1,4 +1,4 @@
-import React, { ChangeEventHandler, FC, memo, useState } from 'react';
+import React, { ChangeEventHandler, FormEventHandler, FC, memo, useState } from 'react';
 import { Redirect } from 'react-router';
 
 import Button from '@material-ui/core/Button';
@@ -23,7 +23,9 @@ const Login: FC<Props> = memo(({ loggedIn, isScanning, getQRCode, isLoading, weC
     if (loggedIn) {
         return <Redirect to='/' />;
     }
-    const handleLogin = () => {
+    const handleLogin: FormEventHandler = (event) => {
+        // use preventDefault to disable HTML form's auto redirect
+        event.preventDefault();
         login(phone, password);
     };
 
@@ -108,7 +110,7 @@ const Login: FC<Props> = memo(({ loggedIn, isScanning, getQRCode, isLoading, weC
                 variant='contained'
                 color='default'
                 size='large'
-                onClick={handleLogin}
+                type='submit'
                 disabled={!phone || !password}
             >
                 登录
@@ -127,7 +129,7 @@ const Login: FC<Props> = memo(({ loggedIn, isScanning, getQRCode, isLoading, weC
         <div className={classes.container}>
             <img src={logo} className={classes.logoImage} alt='UNIQUE STUDIO' />
             <Modal open title='登录' hideBackdrop>
-                <form className={classes.login}>
+                <form className={classes.login} onSubmit={handleLogin}>
                     {[ChooseMethod, ByQRCode, ByPassword][method]}
                 </form>
             </Modal>
