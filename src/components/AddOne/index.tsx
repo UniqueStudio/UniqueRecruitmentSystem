@@ -95,14 +95,16 @@ const AddOne: FC<Props> = memo(({ disabled, enqueueSnackbar, launchRecruitment, 
 
     return (
         <>
-            <Tooltip title={disabled ? '只有组长或管理员能发起招新' : '发起招新'} classes={{ tooltip: classes.tooltip }} placement='top'>
+            <Tooltip
+                title={disabled ? '只有组长或管理员能发起招新' : '发起招新'}
+                classes={{ tooltip: classes.tooltip }}
+                placement='top'>
                 <Paper className={classes.paper}>
                     <IconButton
                         className={classes.newButton}
                         classes={{ root: classes.newButtonRoot }}
                         onClick={toggleModal}
-                        disabled={disabled}
-                    >
+                        disabled={disabled}>
                         <AddIcon color='primary' className={classes.newIcon} />
                     </IconButton>
                 </Paper>
@@ -116,9 +118,17 @@ const AddOne: FC<Props> = memo(({ disabled, enqueueSnackbar, launchRecruitment, 
                         margin='normal'
                         disabled
                     />
-                    <Schedule onChange={handleChangeDate} begin={begin} end={end} stop={stop} className={classes.datePicker} />
+                    <Schedule
+                        onChange={handleChangeDate}
+                        begin={begin}
+                        end={end}
+                        stop={stop}
+                        className={classes.datePicker}
+                    />
                     <Verify onChange={handleChange('code')} code={code} />
-                    <Button color='primary' variant='contained' onClick={handleLaunch}>确定</Button>
+                    <Button color='primary' variant='contained' onClick={handleLaunch}>
+                        确定
+                    </Button>
                 </div>
             </Modal>
         </>

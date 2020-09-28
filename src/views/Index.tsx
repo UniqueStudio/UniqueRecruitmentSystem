@@ -21,9 +21,7 @@ const Index: FC = memo(() => {
     useStyles();
     const routeRender = (Component: JSX.Element) => (props: RouteComponentProps) => (
         <PageFrame {...props}>
-            <Suspense fallback={<Progress />}>
-                {Component}
-            </Suspense>
+            <Suspense fallback={<Progress />}>{Component}</Suspense>
         </PageFrame>
     );
     return (

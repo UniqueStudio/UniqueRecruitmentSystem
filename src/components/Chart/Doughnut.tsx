@@ -23,7 +23,6 @@ export interface ChartComponentProps {
 }
 
 export class Doughnut extends PureComponent<ChartComponentProps> {
-
     chartInstance!: Chart;
     element!: HTMLCanvasElement;
 
@@ -51,7 +50,10 @@ export class Doughnut extends PureComponent<ChartComponentProps> {
         const currentDatasets = this.getCurrentDatasets();
         const { datasets, labels } = data;
 
-        this.chartInstance.config.data = { datasets: datasets!.map((next, i) => ({ ...currentDatasets[i], ...next })), labels };
+        this.chartInstance.config.data = {
+            datasets: datasets!.map((next, i) => ({ ...currentDatasets[i], ...next })),
+            labels,
+        };
 
         this.chartInstance.update();
     }

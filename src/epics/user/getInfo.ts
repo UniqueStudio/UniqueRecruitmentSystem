@@ -17,30 +17,23 @@ export const getInfoEpic: Epic = (action$, state$, { sessionStorage }) =>
             const token = checkToken();
             const user = sessionStorage.getItem('user');
             if (user) {
-                return of(
-                    userInfoFulfilled(JSON.parse(user)),
-                    setGroup(JSON.parse(user).group),
-                    socketStart(),
-                );
+                return of(userInfoFulfilled(JSON.parse(user)), setGroup(JSON.parse(user).group), socketStart());
             }
-            return ajax.getJSON<{ type: string, data: User }>(`${API}/user/`, {
-                Authorization: `Bearer ${token}`,
-            }).pipe(
-                mergeMap((res) => {
-                    if (res.type === 'success') {
-                        const { data } = res;
-                        return of(
-                            userInfoFulfilled(data),
-                            setGroup(data.group),
-                            socketStart(),
-                            toggleProgress(),
-                        );
-                    }
-                    throw customError(res);
-                }),
-                startWith(toggleProgress(true)),
-                catchError((err) => errHandler(err)),
-            );
+            return ajax
+                .getJSON<{ type: string; data: User }>(`${API}/user/`, {
+                    Authorization: `Bearer ${token}`,
+                })
+                .pipe(
+                    mergeMap((res) => {
+                        if (res.type === 'success') {
+                            const { data } = res;
+                            return of(userInfoFulfilled(data), setGroup(data.group), socketStart(), toggleProgress());
+                        }
+                        throw customError(res);
+                    }),
+                    startWith(toggleProgress(true)),
+                    catchError((err) => errHandler(err)),
+                );
         }),
         catchError((err) => errHandler(err)),
     );

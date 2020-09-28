@@ -1,4 +1,13 @@
-import React, { ChangeEventHandler, ClipboardEventHandler, FC, KeyboardEventHandler, memo, MouseEventHandler, useEffect, useState } from 'react';
+import React, {
+    ChangeEventHandler,
+    ClipboardEventHandler,
+    FC,
+    KeyboardEventHandler,
+    memo,
+    MouseEventHandler,
+    useEffect,
+    useState,
+} from 'react';
 
 import classNames from 'classnames';
 
@@ -113,7 +122,13 @@ const Messenger: FC<Props> = memo(({ messages, username, avatar, sendMessage, en
         setContent('');
     };
 
-    const placeHolders = ['ctrl + Enter 以输入回车', '可以直接发送剪贴板中的图片', '+1 可以复读', '图片大小必须小于5MB', '消息历史最多只有100条'];
+    const placeHolders = [
+        'ctrl + Enter 以输入回车',
+        '可以直接发送剪贴板中的图片',
+        '+1 可以复读',
+        '图片大小必须小于5MB',
+        '消息历史最多只有100条',
+    ];
     const MessageChip = ({ isSelf, name, time, isImage, content: message }: Message) => (
         <div className={classes.message}>
             <div className={classNames({ [classes.rightAlign]: isSelf })}>
@@ -121,10 +136,16 @@ const Messenger: FC<Props> = memo(({ messages, username, avatar, sendMessage, en
             </div>
             <Divider className={classNames({ [classes.myDivider]: isSelf })} />
             <div className={classes.messageContent}>
-                {isImage
-                    ? <EnlargeableImage src={message} />
-                    : message.split('\n').map((text, index) => <span key={index}>{text}<br /></span>)
-                }
+                {isImage ? (
+                    <EnlargeableImage src={message} />
+                ) : (
+                    message.split('\n').map((text, index) => (
+                        <span key={index}>
+                            {text}
+                            <br />
+                        </span>
+                    ))
+                )}
             </div>
         </div>
     );
@@ -133,15 +154,9 @@ const Messenger: FC<Props> = memo(({ messages, username, avatar, sendMessage, en
     );
     return (
         <Paper className={classes.messenger}>
-            <div
-                className={classes.messages}
-                ref={setContainer}
-            >
+            <div className={classes.messages} ref={setContainer}>
                 {messages.map((message, index) => (
-                    <div
-                        key={index}
-                        className={classNames(classes.messageContainer, { [classes.my]: message.isSelf })}
-                    >
+                    <div key={index} className={classNames(classes.messageContainer, { [classes.my]: message.isSelf })}>
                         {AvatarBox(message)}
                         <Chip
                             label={MessageChip(message)}
@@ -153,7 +168,14 @@ const Messenger: FC<Props> = memo(({ messages, username, avatar, sendMessage, en
             <div className={classes.input}>
                 <Divider />
                 <div className={classes.inputContent}>
-                    <input accept='image/png, image/jpeg' className={classes.hidden} id='file' type='file' onChange={handleImage} onClick={resetInput} />
+                    <input
+                        accept='image/png, image/jpeg'
+                        className={classes.hidden}
+                        id='file'
+                        type='file'
+                        onChange={handleImage}
+                        onClick={resetInput}
+                    />
                     <label htmlFor='file'>
                         <IconButton color='primary' component='span'>
                             <InsertPhotoIcon />
@@ -173,7 +195,11 @@ const Messenger: FC<Props> = memo(({ messages, username, avatar, sendMessage, en
                         onKeyPress={handleKey}
                         onPaste={handlePaste}
                     />
-                    <IconButton color='primary' component='span' onClick={send} disabled={!(content && content.match(/\S+/))}>
+                    <IconButton
+                        color='primary'
+                        component='span'
+                        onClick={send}
+                        disabled={!(content && content.match(/\S+/))}>
                         <SendIcon />
                     </IconButton>
                 </div>

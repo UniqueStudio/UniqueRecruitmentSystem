@@ -80,42 +80,75 @@ const CandidateTable: FC<Props> = memo(({ candidates, changeType, interviewType,
                         <TableHead>
                             <TableRow>
                                 {heads.map((head, index) => (
-                                    <TableCell key={index} classes={{ root: classes.tableCell }}>{head}</TableCell>
+                                    <TableCell key={index} classes={{ root: classes.tableCell }}>
+                                        {head}
+                                    </TableCell>
                                 ))}
                             </TableRow>
                         </TableHead>
                         <TableBody>
                             {candidates.map(({ rejected, abandon, name, group, _id, interviews }) => {
                                 const { selection, allocation } = interviews[interviewType];
-                                const slotInfo = allocation ? new Date(allocation).toLocaleString('zh-CN', { hour12: false }) : '未分配';
-                                const state = <>
-                                    <div>
-                                        {rejected ? '已淘汰'
-                                            : abandon ? '已放弃'
-                                                : selection && selection.length ? <Button color='primary' onClick={toggleViewing(_id)}>查看</Button>
-                                                    : '未选择'}
-                                    </div>
-                                    <Modal open={viewing === _id} onClose={toggleViewing('')} title='选择情况'>
-                                        {selection.map(({ date, afternoon, morning, evening }, index) => (
-                                            <div className={classes.textFieldContainer} key={index}>
-                                                <TextField
-                                                    label='日期'
-                                                    value={new Date(date).toLocaleDateString('zh-CN', { hour12: false })}
-                                                    className={classes.datePicker}
-                                                />
-                                                <TextField label='上午' value={morning ? '是' : '否'} className={classes.textField} />
-                                                <TextField label='下午' value={afternoon ? '是' : '否'} className={classes.textField} />
-                                                <TextField label='晚上' value={evening ? '是' : '否'} className={classes.textField} />
-                                            </div>
-                                        ))}
-                                    </Modal>
-                                </>;
-                                const button = <Button variant='contained' color='primary' onClick={toggleDialog(_id)}>设置</Button>;
+                                const slotInfo = allocation
+                                    ? new Date(allocation).toLocaleString('zh-CN', { hour12: false })
+                                    : '未分配';
+                                const state = (
+                                    <>
+                                        <div>
+                                            {rejected ? (
+                                                '已淘汰'
+                                            ) : abandon ? (
+                                                '已放弃'
+                                            ) : selection && selection.length ? (
+                                                <Button color='primary' onClick={toggleViewing(_id)}>
+                                                    查看
+                                                </Button>
+                                            ) : (
+                                                '未选择'
+                                            )}
+                                        </div>
+                                        <Modal open={viewing === _id} onClose={toggleViewing('')} title='选择情况'>
+                                            {selection.map(({ date, afternoon, morning, evening }, index) => (
+                                                <div className={classes.textFieldContainer} key={index}>
+                                                    <TextField
+                                                        label='日期'
+                                                        value={new Date(date).toLocaleDateString('zh-CN', {
+                                                            hour12: false,
+                                                        })}
+                                                        className={classes.datePicker}
+                                                    />
+                                                    <TextField
+                                                        label='上午'
+                                                        value={morning ? '是' : '否'}
+                                                        className={classes.textField}
+                                                    />
+                                                    <TextField
+                                                        label='下午'
+                                                        value={afternoon ? '是' : '否'}
+                                                        className={classes.textField}
+                                                    />
+                                                    <TextField
+                                                        label='晚上'
+                                                        value={evening ? '是' : '否'}
+                                                        className={classes.textField}
+                                                    />
+                                                </div>
+                                            ))}
+                                        </Modal>
+                                    </>
+                                );
+                                const button = (
+                                    <Button variant='contained' color='primary' onClick={toggleDialog(_id)}>
+                                        设置
+                                    </Button>
+                                );
                                 const items = [name, GROUPS[GROUPS_.indexOf(group)], state, slotInfo, button];
                                 return (
                                     <TableRow key={_id}>
                                         {items.map((item, index) => (
-                                            <TableCell classes={{ root: classes.tableCell }} key={index}>{item}</TableCell>
+                                            <TableCell classes={{ root: classes.tableCell }} key={index}>
+                                                {item}
+                                            </TableCell>
                                         ))}
                                     </TableRow>
                                 );
@@ -124,8 +157,12 @@ const CandidateTable: FC<Props> = memo(({ candidates, changeType, interviewType,
                     </Table>
                 </div>
                 <div className={classNames(classes.tableButtons, classes.buttonContainer)}>
-                    <Button color='primary' variant='contained' onClick={handleAllocateAll}>自动分配</Button>
-                    <Button color='primary' variant='contained' onClick={toggleModal}>发送短信</Button>
+                    <Button color='primary' variant='contained' onClick={handleAllocateAll}>
+                        自动分配
+                    </Button>
+                    <Button color='primary' variant='contained' onClick={toggleModal}>
+                        发送短信
+                    </Button>
                 </div>
             </div>
             <Dialog open={dialog} onClose={toggleDialog()}>
@@ -140,7 +177,9 @@ const CandidateTable: FC<Props> = memo(({ candidates, changeType, interviewType,
                             format='yyyy/MM/dd HH:mm'
                         />
                     </MuiPickersUtilsProvider>
-                    <Button color='primary' variant='contained' onClick={handleAllocateOne} disabled={!time}>确定</Button>
+                    <Button color='primary' variant='contained' onClick={handleAllocateOne} disabled={!time}>
+                        确定
+                    </Button>
                 </div>
             </Dialog>
             <Modal open={modal} onClose={toggleModal} title='发送通知'>

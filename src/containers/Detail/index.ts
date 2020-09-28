@@ -12,14 +12,21 @@ interface OwnProps {
     info: Candidate;
 }
 
-const mapStateToProps = ({ candidate: { inputtingComment }, user: { info }, component: { resume } }: StoreState, ownProps: OwnProps) => ({
+const mapStateToProps = (
+    { candidate: { inputtingComment }, user: { info }, component: { resume } }: StoreState,
+    ownProps: OwnProps,
+) => ({
     downloadingResume: resume,
     ...ownProps,
 });
 
-const mapDispatchToProps = (dispatch: Dispatch) => bindActionCreators({
-    getResume,
-}, dispatch);
+const mapDispatchToProps = (dispatch: Dispatch) =>
+    bindActionCreators(
+        {
+            getResume,
+        },
+        dispatch,
+    );
 
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = ReturnType<typeof mapDispatchToProps>;

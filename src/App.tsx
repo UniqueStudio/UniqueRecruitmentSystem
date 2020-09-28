@@ -18,7 +18,6 @@ export const store = createStore(reducers, composeWithDevTools(applyMiddleware(.
 epicMiddleware.run(epics);
 
 const App: FC = memo(() => {
-
     useEffect(() => {
         import('./utils/console').then(({ logger }) => logger());
     }, []);

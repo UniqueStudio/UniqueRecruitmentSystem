@@ -51,8 +51,7 @@ const CommentChip: FC<Props> = memo(({ comment: { content, evaluation, username 
                 transformOrigin={{ vertical: 'top', horizontal: 'center' }}
                 onClose={handleClose}
                 disableRestoreFocus
-                disableEnforceFocus
-            >
+                disableEnforceFocus>
                 <Paper className={classNames(classes.content, classes[color])}>{content}</Paper>
             </Popover>
         </>

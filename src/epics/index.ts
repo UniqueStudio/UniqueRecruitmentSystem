@@ -1,5 +1,11 @@
 import { Action, AnyAction } from 'redux';
-import { ActionsObservable, combineEpics, createEpicMiddleware, EpicMiddleware, StateObservable } from 'redux-observable';
+import {
+    ActionsObservable,
+    combineEpics,
+    createEpicMiddleware,
+    EpicMiddleware,
+    StateObservable,
+} from 'redux-observable';
 import { BehaviorSubject, Observable, of } from 'rxjs';
 
 import io from 'socket.io-client';
@@ -31,14 +37,10 @@ export const customError = (error: object) => {
     return err as CustomError;
 };
 
-export const errHandler = ({ message, type }: CustomError, customAction?: AnyAction) => customAction ? of(
-    enqueueSnackbar(`ERROR: ${message}`, { variant: type || 'error' }),
-    toggleProgress(),
+export const errHandler = ({ message, type }: CustomError, customAction?: AnyAction) =>
     customAction
-) : of(
-    enqueueSnackbar(`ERROR: ${message}`, { variant: type || 'error' }),
-    toggleProgress(),
-);
+        ? of(enqueueSnackbar(`ERROR: ${message}`, { variant: type || 'error' }), toggleProgress(), customAction)
+        : of(enqueueSnackbar(`ERROR: ${message}`, { variant: type || 'error' }), toggleProgress());
 
 export const checkToken = () => {
     const token = store.getState().user.token;
@@ -48,12 +50,15 @@ export const checkToken = () => {
     return token;
 };
 
-const dependencies = { io, socket$: new BehaviorSubject(null as unknown as Socket), sessionStorage };
+const dependencies = { io, socket$: new BehaviorSubject((null as unknown) as Socket), sessionStorage };
 
 export type Dependencies = typeof dependencies;
 
-export type Epic<T extends Action = Action> =
-    (action$: ActionsObservable<T>, state$: StateObservable<StoreState>, dependencies: Dependencies) => Observable<AnyAction>;
+export type Epic<T extends Action = Action> = (
+    action$: ActionsObservable<T>,
+    state$: StateObservable<StoreState>,
+    dependencies: Dependencies,
+) => Observable<AnyAction>;
 
 export const epicMiddleware: EpicMiddleware<Action, Action, StoreState> = createEpicMiddleware({
     dependencies,
@@ -65,5 +70,5 @@ export const epics = combineEpics(
     ...chatEpic,
     ...recruitmentEpic,
     ...smsEpic,
-    ...websocketEpic
+    ...websocketEpic,
 );

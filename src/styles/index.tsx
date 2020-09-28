@@ -8,7 +8,8 @@ import purple from '@material-ui/core/colors/purple';
 import red from '@material-ui/core/colors/red';
 import yellow from '@material-ui/core/colors/yellow';
 
-export const getRainbow = (variant: number) => [red, purple, indigo, blue, cyan, green, yellow, amber, orange].map((color) => color[variant]);
+export const getRainbow = (variant: number) =>
+    [red, purple, indigo, blue, cyan, green, yellow, amber, orange].map((color) => color[variant]);
 
 export const warningColor = amber[700];
 export const dangerColor = red[700];
@@ -26,4 +27,7 @@ export const colorToAlpha = (hex: string, alpha: number) => {
 };
 
 export const colorToShadow = (hex: string) =>
-    `0 12px 20px -10px ${colorToAlpha(hex, 0.28)}, 0 4px 20px 0px rgba(0, 0, 0, 0.12), 0 7px 8px -5px ${colorToAlpha(hex, 0.2)}`;
+    `0 12px 20px -10px ${colorToAlpha(hex, 0.28)}, 0 4px 20px 0px rgba(0, 0, 0, 0.12), 0 7px 8px -5px ${colorToAlpha(
+        hex,
+        0.2,
+    )}`;

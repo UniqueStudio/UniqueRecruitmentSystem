@@ -12,15 +12,18 @@ interface OwnProps {
     toggleDetail: (detail: number) => (index: number) => () => void;
 }
 
-const mapStateToProps =
-    ({ candidate: { steps } }: StoreState, ownProps: OwnProps) => ({
-        steps,
-        ...ownProps
-    });
+const mapStateToProps = ({ candidate: { steps } }: StoreState, ownProps: OwnProps) => ({
+    steps,
+    ...ownProps,
+});
 
-const mapDispatchToProps = (dispatch: Dispatch) => bindActionCreators({
-    move: moveCandidateStart
-}, dispatch);
+const mapDispatchToProps = (dispatch: Dispatch) =>
+    bindActionCreators(
+        {
+            move: moveCandidateStart,
+        },
+        dispatch,
+    );
 
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = ReturnType<typeof mapDispatchToProps>;

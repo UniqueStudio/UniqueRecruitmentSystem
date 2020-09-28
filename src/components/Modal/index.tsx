@@ -18,7 +18,12 @@ const InfoModal: FC<Props> = memo(({ open, onClose, title, children, direction, 
     const classes = useStyles();
     const leaveDirection = direction === 'left' ? 'right' : 'left';
     return (
-        <Modal open={open} onClose={onClose} className={classes.modalContainer} hideBackdrop={hideBackdrop} disableEnforceFocus>
+        <Modal
+            open={open}
+            onClose={onClose}
+            className={classes.modalContainer}
+            hideBackdrop={hideBackdrop}
+            disableEnforceFocus>
             <Slide direction={open ? direction || 'right' : leaveDirection} in={open} mountOnEnter unmountOnExit>
                 <div className={classes.modal}>
                     <div className={classes.modalHeader}>

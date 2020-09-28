@@ -10,9 +10,13 @@ const mapStateToProps = ({ component: { snackbars } }: StoreState) => ({
     notifications: snackbars,
 });
 
-const mapDispatchToProps = (dispatch: Dispatch) => bindActionCreators({
-    removeSnackbar
-}, dispatch);
+const mapDispatchToProps = (dispatch: Dispatch) =>
+    bindActionCreators(
+        {
+            removeSnackbar,
+        },
+        dispatch,
+    );
 
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = ReturnType<typeof mapDispatchToProps>;

@@ -5,14 +5,17 @@ import { mergeKV } from '../utils/mergeKV';
 
 import { colorToAlpha, colorToShadow, dangerColor, infoColor, successColor, warningColor } from './index';
 
-export const colorStyles = mergeKV(['info', 'success', 'warning', 'danger'],
+export const colorStyles = mergeKV(
+    ['info', 'success', 'warning', 'danger'],
     [infoColor, successColor, warningColor, dangerColor].map((color) => ({
         background: color,
         color: 'white',
         boxShadow: colorToShadow(color),
-    })));
+    })),
+);
 
-const rootColorStyles = mergeKV(['root-info', 'root-success', 'root-warning', 'root-danger'],
+const rootColorStyles = mergeKV(
+    ['root-info', 'root-success', 'root-warning', 'root-danger'],
     [infoColor, successColor, warningColor, dangerColor].map((color) => ({
         '& span': {
             pointerEvents: 'none',
@@ -26,25 +29,27 @@ const rootColorStyles = mergeKV(['root-info', 'root-success', 'root-warning', 'r
         '&:focus, &:active': {
             background: color,
         },
-    }))
+    })),
 );
 
-const useStyles = makeStyles(({ spacing }: Theme) => createStyles({
-    chip: {
-        margin: spacing(1),
-        cursor: 'pointer',
-        maxWidth: 250
-    },
-    popover: {
-        pointerEvents: 'none',
-    },
-    content: {
-        maxWidth: 400,
-        padding: spacing(2),
-        wordWrap: 'break-word',
-    },
-    ...colorStyles,
-    ...rootColorStyles,
-}));
+const useStyles = makeStyles(({ spacing }: Theme) =>
+    createStyles({
+        chip: {
+            margin: spacing(1),
+            cursor: 'pointer',
+            maxWidth: 250,
+        },
+        popover: {
+            pointerEvents: 'none',
+        },
+        content: {
+            maxWidth: 400,
+            padding: spacing(2),
+            wordWrap: 'break-word',
+        },
+        ...colorStyles,
+        ...rootColorStyles,
+    }),
+);
 
 export default useStyles;
