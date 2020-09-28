@@ -2,7 +2,7 @@ import { ofType } from 'redux-observable';
 import { EMPTY } from 'rxjs';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 
-import { REMOVE_CANDIDATE_START, RemoveCandidateStart, toggleProgress } from '../../actions';
+import { RemoveCandidateStart, REMOVE_CANDIDATE_START, toggleProgress } from '../../actions';
 
 import { checkToken, Epic, errHandler } from '../';
 
@@ -17,7 +17,7 @@ export const removeCandidateEpic: Epic<RemoveCandidateStart> = (action$, state$,
                         socket.emit('removeCandidate', { cid, token });
                     }),
                     map(() => toggleProgress(true)),
-                    catchError((err) => errHandler(err))
+                    catchError((err) => errHandler(err)),
                 );
             }
             return EMPTY;

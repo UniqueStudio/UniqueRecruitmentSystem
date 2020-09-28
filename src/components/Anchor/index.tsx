@@ -12,8 +12,7 @@ const Anchor: FC<Props> = memo(({ to, children }) => (
             textDecoration: 'none',
             outline: 'none',
             color: 'inherit',
-        }}
-    >
+        }}>
         {children}
     </Link>
 ));

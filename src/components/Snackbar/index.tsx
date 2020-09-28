@@ -25,11 +25,8 @@ const Snackbar: FC<Props> = memo(({ children, fabOn }) => {
                 variantInfo: classes.info,
             }}
             autoHideDuration={3000}
-            className={classNames(classes.snackBar, { [classes.shrink]: fabOn !== -1 && isMobile })}
-        >
-            <>
-                {children}
-            </>
+            className={classNames(classes.snackBar, { [classes.shrink]: fabOn !== -1 && isMobile })}>
+            <>{children}</>
         </SnackbarProvider>
     );
 });

@@ -29,30 +29,37 @@ const Dashboard: FC<Props> = memo(({ data, setViewing, viewing }) => {
     const handleSet = (title: string) => () => {
         setViewing(title);
     };
-    return shouldRedirect ? <Redirect to='/data' /> : (
+    return shouldRedirect ? (
+        <Redirect to='/data' />
+    ) : (
         <div className={classes.root}>
             <div className={classes.left}>
-                <Typography variant='h4' className={classes.title}>Recruitments</Typography>
+                <Typography variant='h4' className={classes.title}>
+                    Recruitments
+                </Typography>
                 <Divider variant='fullWidth' />
                 <div className={classes.blocksContainer}>
                     <div className={classes.block}>
                         <AddOne shouldClear={shouldClear} />
                     </div>
-                    {!!data.length && data.slice().reverse().map((recruitment) => (
-                        // using slice() to create a shallow copy in case the
-                        // switching between router case problem
-                        // maybe it's better to change the order in backend :(
-                        <div key={recruitment._id} className={classes.block}>
-                            <Chart
-                                data={recruitment}
-                                setViewing={handleSet(recruitment.title)}
-                            />
-                        </div>
-                    ))}
+                    {!!data.length &&
+                        data
+                            .slice()
+                            .reverse()
+                            .map((recruitment) => (
+                                // using slice() to create a shallow copy in case the
+                                // switching between router case problem
+                                // maybe it's better to change the order in backend :(
+                                <div key={recruitment._id} className={classes.block}>
+                                    <Chart data={recruitment} setViewing={handleSet(recruitment.title)} />
+                                </div>
+                            ))}
                 </div>
             </div>
             <div className={classes.right}>
-                <Typography variant='h4' className={classes.title}>Notifications</Typography>
+                <Typography variant='h4' className={classes.title}>
+                    Notifications
+                </Typography>
                 <Divider variant='fullWidth' />
                 <Paper className={classes.paper}>
                     <ul>

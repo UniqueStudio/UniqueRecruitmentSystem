@@ -1,9 +1,9 @@
 export type Group = 'web' | 'lab' | 'ai' | 'game' | 'android' | 'ios' | 'design' | 'pm';
-export type Step = 0 | 1 | 2 | 3 | 4 | 5;       // 0-5: from 报名 to 通过
-export type Gender = 0 | 1 | 2;                 // 1: Male, 2: Female, 0: Other
-export type Grade = 0 | 1 | 2 | 3 | 4 | 5 | 6;  // 0-6: from 大一 to 研三
-export type Rank = 0 | 1 | 2 | 3 | 4;           // 1: 10%, 2: 25%, 3: 50%, 4: 100%, 0: null
-export type Evaluation = 0 | 1 | 2;             // 0: bad, 1: so-so, 2: good
+export type Step = 0 | 1 | 2 | 3 | 4 | 5; // 0-5: from 报名 to 通过
+export type Gender = 0 | 1 | 2; // 1: Male, 2: Female, 0: Other
+export type Grade = 0 | 1 | 2 | 3 | 4 | 5 | 6; // 0-6: from 大一 to 研三
+export type Rank = 0 | 1 | 2 | 3 | 4; // 1: 10%, 2: 25%, 3: 50%, 4: 100%, 0: null
+export type Evaluation = 0 | 1 | 2; // 0: bad, 1: so-so, 2: good
 
 export interface Candidate {
     _id: string;
@@ -24,8 +24,8 @@ export interface Candidate {
     abandon: boolean;
     rejected: boolean;
     interviews: {
-        group: Interview,
-        team: Interview
+        group: Interview;
+        team: Interview;
     };
     step: Step;
     comments: Comment[];

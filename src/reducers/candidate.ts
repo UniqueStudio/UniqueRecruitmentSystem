@@ -97,7 +97,9 @@ export function candidateReducer(state = init, action: Action): CandidateStore {
             return { ...state, candidates, selected };
         }
         case actions.MOVE_CANDIDATE_FULFILLED: {
-            const candidates = state.candidates.map((candidate) => candidate._id === action.cid ? { ...candidate, step: action.to } : candidate);
+            const candidates = state.candidates.map((candidate) =>
+                candidate._id === action.cid ? { ...candidate, step: action.to } : candidate,
+            );
             update(candidates);
             return { ...state, candidates };
         }

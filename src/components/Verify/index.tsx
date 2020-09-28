@@ -14,9 +14,12 @@ const Verify: FC<Props> = memo(({ onChange, code, getVerifyCode }) => {
     const [time, setTime] = useState(0);
     const [handle, setHandle] = useState(NaN);
 
-    useEffect(() => () => {
-        window.clearInterval(handle);
-    }, [handle]);
+    useEffect(
+        () => () => {
+            window.clearInterval(handle);
+        },
+        [handle],
+    );
 
     const tick = () => {
         setTime((prevTime) => {
@@ -36,11 +39,7 @@ const Verify: FC<Props> = memo(({ onChange, code, getVerifyCode }) => {
     };
     return (
         <div className={classNames(classes.content, classes.item)}>
-            <Button
-                color='primary'
-                onClick={getCode}
-                disabled={time > 0}
-            >
+            <Button color='primary' onClick={getCode} disabled={time > 0}>
                 {time > 0 ? `${time}秒后重新获取` : '获取验证码'}
             </Button>
             <TextField

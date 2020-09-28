@@ -12,7 +12,10 @@ import { sortBySlot } from '../../utils/sortBySlot';
 
 import Candidates from '../../views/Candidates';
 
-const mapStateToProps = ({ candidate: { group: viewingGroup, selected, candidates, steps }, component: { fabOn } }: StoreState) => {
+const mapStateToProps = ({
+    candidate: { group: viewingGroup, selected, candidates, steps },
+    component: { fabOn },
+}: StoreState) => {
     let candidateInSteps: Candidate[][] = [...new Array(STEPS.length)].map(() => []);
     const selectedInfo: Candidate[] = [];
     if (steps.length !== 2) {
@@ -45,11 +48,15 @@ const mapStateToProps = ({ candidate: { group: viewingGroup, selected, candidate
     };
 };
 
-const mapDispatchToProps = (dispatch: Dispatch) => bindActionCreators({
-    deselect: deselectCandidate,
-    enqueueSnackbar,
-    remove: removeCandidateStart,
-}, dispatch);
+const mapDispatchToProps = (dispatch: Dispatch) =>
+    bindActionCreators(
+        {
+            deselect: deselectCandidate,
+            enqueueSnackbar,
+            remove: removeCandidateStart,
+        },
+        dispatch,
+    );
 
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = ReturnType<typeof mapDispatchToProps>;

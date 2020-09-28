@@ -27,7 +27,7 @@ export interface UserStore {
 const storedToken = localStorage.getItem('token');
 const payload = storedToken && storedToken.split('.')[1];
 const time = payload && JSON.parse(atob(payload)).exp;
-const verifiedToken = storedToken !== null && (time > Date.now() / 1000) ? storedToken : '';
+const verifiedToken = storedToken !== null && time > Date.now() / 1000 ? storedToken : '';
 
 const init: UserStore = {
     token: verifiedToken,

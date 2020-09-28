@@ -4,12 +4,17 @@ import { StoreState } from '../../reducers';
 
 import Data from '../../views/Data';
 
-const mapStateToProps =
-    ({ recruitment: { recruitments, viewing }, user: { info: { group: userGroup } }, candidate: { candidates } }: StoreState) => ({
-        recruitment: recruitments.find(({ title }) => title === viewing),
-        userGroup,
-        candidates,
-    });
+const mapStateToProps = ({
+    recruitment: { recruitments, viewing },
+    user: {
+        info: { group: userGroup },
+    },
+    candidate: { candidates },
+}: StoreState) => ({
+    recruitment: recruitments.find(({ title }) => title === viewing),
+    userGroup,
+    candidates,
+});
 
 type StateProps = ReturnType<typeof mapStateToProps>;
 

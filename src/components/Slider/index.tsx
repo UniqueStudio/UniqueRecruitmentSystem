@@ -19,7 +19,6 @@ interface State {
 }
 
 class Slider extends PureComponent<Props, State> {
-
     state = {
         candidate: this.props.candidate,
     };

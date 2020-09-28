@@ -1,4 +1,4 @@
-import React, { ChangeEventHandler, FormEventHandler, FC, memo, useState } from 'react';
+import React, { ChangeEventHandler, FC, FormEventHandler, memo, useState } from 'react';
 import { Redirect } from 'react-router';
 
 import Button from '@material-ui/core/Button';
@@ -48,8 +48,7 @@ const Login: FC<Props> = memo(({ loggedIn, isScanning, getQRCode, isLoading, weC
                 variant='contained'
                 color='default'
                 size='large'
-                onClick={handleMethod(1)}
-            >
+                onClick={handleMethod(1)}>
                 企业微信登录
             </Button>
             <Button
@@ -57,8 +56,7 @@ const Login: FC<Props> = memo(({ loggedIn, isScanning, getQRCode, isLoading, weC
                 variant='contained'
                 color='primary'
                 size='large'
-                onClick={handleMethod(2)}
-            >
+                onClick={handleMethod(2)}>
                 账号密码登录
             </Button>
         </>
@@ -72,8 +70,7 @@ const Login: FC<Props> = memo(({ loggedIn, isScanning, getQRCode, isLoading, weC
                 color='default'
                 size='large'
                 onClick={getQRCode}
-                disabled={isScanning}
-            >
+                disabled={isScanning}>
                 获取二维码
             </Button>
             <Button
@@ -81,8 +78,7 @@ const Login: FC<Props> = memo(({ loggedIn, isScanning, getQRCode, isLoading, weC
                 variant='contained'
                 color='primary'
                 size='large'
-                onClick={handleMethod(2)}
-            >
+                onClick={handleMethod(2)}>
                 账号密码登录
             </Button>
         </>
@@ -106,21 +102,10 @@ const Login: FC<Props> = memo(({ loggedIn, isScanning, getQRCode, isLoading, weC
                 onChange={handlePassword}
                 margin='normal'
             />
-            <Button
-                variant='contained'
-                color='default'
-                size='large'
-                type='submit'
-                disabled={!phone || !password}
-            >
+            <Button variant='contained' color='default' size='large' type='submit' disabled={!phone || !password}>
                 登录
             </Button>
-            <Button
-                variant='contained'
-                color='primary'
-                size='large'
-                onClick={handleMethod(1)}
-            >
+            <Button variant='contained' color='primary' size='large' onClick={handleMethod(1)}>
                 企业微信登录
             </Button>
         </>
