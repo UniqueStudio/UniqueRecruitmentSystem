@@ -39,7 +39,7 @@ export const setAdmin: RequestHandler = async (req, res, next) => {
             { isAdmin: true }
         );
 
-        res.json({ type: 'success', newAdmins: admins.map(({ phone }) => ({ phone })) });
+        res.json({ type: 'success', newAdmins: admins.map(({ phone }) => phone) });
     } catch (error) {
         return next(error);
     }
