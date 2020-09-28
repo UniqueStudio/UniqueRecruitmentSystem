@@ -11,6 +11,7 @@ type Action =
     | actions.GetQRCodeFulfilled
     | actions.UserInfoFulfilled
     | actions.GetGroupInfoFulfilled
+    | actions.UpdateGroupAdmin
     | actions.AddMessage;
 
 export interface UserStore {
@@ -57,6 +58,7 @@ const insert = (item: Message, arr: Message[]) => {
 };
 
 export function userReducer(state = init, action: Action): UserStore {
+    const { info, groupInfo } = state;
     switch (action.type) {
         case actions.GET_QR_CODE_FULFILLED:
             return { ...state, key: action.key, isScanning: Boolean(action.key) };
@@ -68,23 +70,33 @@ export function userReducer(state = init, action: Action): UserStore {
             localStorage.removeItem('token');
             return { ...state, token: '' };
         case actions.USER_INFO_FULFILLED: {
-            const { info, groupInfo } = state;
             const { password, ...infoWithoutPassword } = action.info;
             const updatedInfo = { ...state.info, ...infoWithoutPassword };
             const index = groupInfo.findIndex(({ _id }) => _id === info._id);
+            // tslint:disable-next-line:no-shadowed-variable
             const updatedGroupInfo = updateObjectInArray(state.groupInfo, index, updatedInfo);
             updateStorage('user')(updatedInfo);
             updateStorage('group')(updatedGroupInfo);
             return { ...state, info: updatedInfo, groupInfo: updatedGroupInfo };
         }
         case actions.GET_GROUP_INFO_FULFILLED: {
-            const info = action.info;
-            updateStorage('group')(info);
-            return { ...state, groupInfo: info, firstLoad: false };
+            updateStorage('group')(action.info);
+            return { ...state, groupInfo: action.info, firstLoad: false };
         }
         case actions.ADD_MESSAGE:
             const messages = insert(action.message, [...state.messages]);
             return { ...state, messages };
+        case actions.UPDATE_GROUP_ADMIN:
+            // only returns the phone of `new` admins
+            // doing so to avoid another query and too much data transfer
+            const { newAdmins } = action.data;
+            const updatedGroupInfo = groupInfo.map(({ isAdmin, phone, ...others }) => ({
+                ...others,
+                phone,
+                isAdmin: newAdmins.includes(phone) ? true : isAdmin,
+            }));
+            updateStorage('group')(updatedGroupInfo);
+            return { ...state, groupInfo: updatedGroupInfo };
     }
     return state;
 }
