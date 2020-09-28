@@ -33,6 +33,11 @@ const darkTheme = createMuiTheme({
         },
     },
     overrides: {
+        MuiIconButton: {
+            colorPrimary: {
+                color: 'white',
+            },
+        },
         MuiButton: {
             textPrimary: {
                 color: 'white',
