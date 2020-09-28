@@ -39,6 +39,13 @@ const darkTheme = createMuiTheme({
                 color: 'white'
             },
         },
+        MuiCheckbox: {
+            colorPrimary: {
+                // override the checked checkbox styles
+                // ref: https://material-ui.com/customization/components/#use-rulename-to-reference-a-local-rule-within-the-same-style-sheet
+                '&$checked': 'inherit'
+            },
+        },
     },
 });
 
