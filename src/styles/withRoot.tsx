@@ -4,7 +4,7 @@ import blue from '@material-ui/core/colors/blue';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import createMuiTheme from '@material-ui/core/styles/createMuiTheme';
-import ThemeProvider from '@material-ui/core/styles/MuiThemeProvider';
+import { ThemeProvider } from '@material-ui/core/styles';
 
 
 interface ContextProps {
