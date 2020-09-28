@@ -65,6 +65,14 @@ const Dashboard: FC<Props> = memo(({ data, setViewing, viewing }) => {
                         <li>
                             <del>通知是写死的，面试问题也是</del>
                         </li>
+                        <li>What's new in v3.0</li>
+                        <ul>
+                            <li>新增了黑暗模式，右上角有切换按钮</li>
+                            <li>
+                                <del>管理员可以设置本组其他成员管理员</del>
+                            </li>
+                            <li>重新排列了首页的招新，最近的招新会在最上面</li>
+                        </ul>
                     </ul>
                 </Paper>
             </div>

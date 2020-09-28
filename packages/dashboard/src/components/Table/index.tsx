@@ -110,7 +110,7 @@ const CandidateTable: FC<Props> = memo(({ candidates, changeType, interviewType,
                                         ))}
                                     </Modal>
                                 </>;
-                                const button = <Button color='primary' onClick={toggleDialog(_id)}>设置</Button>;
+                                const button = <Button variant='contained' color='primary' onClick={toggleDialog(_id)}>设置</Button>;
                                 const items = [name, GROUPS[GROUPS_.indexOf(group)], state, slotInfo, button];
                                 return (
                                     <TableRow key={_id}>

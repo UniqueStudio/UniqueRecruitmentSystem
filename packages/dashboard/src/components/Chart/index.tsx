@@ -15,6 +15,7 @@ import { getRainbow } from '../../styles';
 import useStyles from '../../styles/chart';
 
 import { titleConverter } from '../../utils/titleConverter';
+import { useTheme } from '@material-ui/core';
 
 interface Props {
     data: Recruitment;
@@ -25,6 +26,7 @@ const Chart: FC<Props> = memo(({ data: { groups, total, title, end }, setViewing
     const classes = useStyles();
     const [group, setGroup] = useState('');
     const [clicked, setClicked] = useState(false);
+    const theme = useTheme();
     const setData = (elements: ChartElement[]) => {
         const element = elements[0];
         if (!element) return;
@@ -50,12 +52,14 @@ const Chart: FC<Props> = memo(({ data: { groups, total, title, end }, setViewing
         maintainAspectRatio: false,
         title: {
             display: true,
+            fontColor: theme.palette.text.primary,
             text,
         },
         legend: {
             position: 'bottom' as 'bottom',
             labels: {
                 boxWidth: 12,
+                fontColor: theme.palette.text.primary,
             },
         },
     };
