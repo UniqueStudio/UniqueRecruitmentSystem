@@ -1,9 +1,9 @@
 import { RequestHandler } from 'express';
 import { param, validationResult } from 'express-validator';
-import { GROUPS_ } from '../../config/consts';
-import { RecruitmentRepo } from '../../database/model';
-import { errorRes } from '../../utils/errorRes';
-import { generateJWT } from '../../utils/generateJWT';
+import { GROUPS_ } from '@config/consts';
+import { RecruitmentRepo } from '@database/model';
+import { errorRes } from '@utils/errorRes';
+import { generateJWT } from '@utils/generateJWT';
 
 export const getForm: RequestHandler = async (req, res, next) => {
     try {

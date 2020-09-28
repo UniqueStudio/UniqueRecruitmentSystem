@@ -1,10 +1,10 @@
 import { RequestHandler } from 'express';
 import fetch from 'node-fetch';
-import { smsAPI, token } from '../../config/consts';
-import { UserRepo } from '../../database/model';
+import { smsAPI, token } from '@config/consts';
+import { UserRepo } from '@database/model';
 import { redisAsync } from '../../redis';
-import { errorRes } from '../../utils/errorRes';
-import { getRandom } from '../../utils/getRandom';
+import { errorRes } from '@utils/errorRes';
+import { getRandom } from '@utils/getRandom';
 
 export const sendUserCode: RequestHandler = async (req, res, next) => {
     try {

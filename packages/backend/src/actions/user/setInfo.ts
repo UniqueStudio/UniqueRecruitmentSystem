@@ -1,8 +1,8 @@
 import crypto from 'crypto';
 import { RequestHandler } from 'express';
 import { body, validationResult } from 'express-validator';
-import { UserRepo } from '../../database/model';
-import { errorRes } from '../../utils/errorRes';
+import { UserRepo } from '@database/model';
+import { errorRes } from '@utils/errorRes';
 
 export const setInfo: RequestHandler = async (req, res, next) => {
     try {

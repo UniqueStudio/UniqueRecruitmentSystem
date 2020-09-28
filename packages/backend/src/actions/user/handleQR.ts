@@ -1,6 +1,6 @@
 import { RequestHandler } from 'express';
 import fetch from 'node-fetch';
-import { getQRCodeURL } from '../../config/consts';
+import { getQRCodeURL } from '@config/consts';
 
 export const handleQR: RequestHandler = async (req, res, next) => {
     try {

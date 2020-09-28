@@ -1,6 +1,6 @@
 import { model } from 'mongoose';
-import { EVALUATIONS, GENDERS, GRADES, GROUPS_, RANKS, STEPS } from '../config/consts';
-import { Candidate, FormPayload, Recruitment, User } from '../config/types';
+import { EVALUATIONS, GENDERS, GRADES, GROUPS_, RANKS, STEPS } from '@config/consts';
+import { Candidate, FormPayload, Recruitment, User } from '@config/types';
 import { createSchema, RepositoryBase } from './index';
 
 const arrayToIndex = (array: string[]) => array.map((i, j) => j);

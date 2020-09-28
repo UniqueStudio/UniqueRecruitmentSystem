@@ -1,4 +1,4 @@
-import { STEPS } from '../config/consts';
+import { STEPS } from '@config/consts';
 
 interface Model {
     type: string;

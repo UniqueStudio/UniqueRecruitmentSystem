@@ -1,7 +1,7 @@
 import { connect, Document, Model, Schema, SchemaDefinition, set } from 'mongoose';
 
-import { dbURI } from '../config/consts';
-import { logger } from '../utils/logger';
+import { dbURI } from '@config/consts';
+import { logger } from '@utils/logger';
 
 set('useFindAndModify', false);
 
@@ -44,6 +44,10 @@ export class RepositoryBase<T extends Document> {
         return this.model.findByIdAndUpdate(id, { [isRemove ? '$unset' : '$set']: newItem }, { new: true });
     }
 
+    updateByIds(ids: string[], newItem: object, isRemove = false) {
+        return this.model.updateMany({ _id: { $in: ids } }, { [isRemove ? '$unset' : '$set']: newItem }, { new: true });
+    }
+
     pushById(id: string, newItem: object) {
         return this.model.findByIdAndUpdate(id, { $push: newItem }, { new: true });
     }
@@ -65,7 +69,8 @@ export class RepositoryBase<T extends Document> {
     }
 }
 
-export const createSchema = (definition: SchemaDefinition, withId = true) => new Schema(definition, {
-    versionKey: false,
-    _id: withId
-});
+export const createSchema = (definition: SchemaDefinition, withId = true) =>
+    new Schema(definition, {
+        versionKey: false,
+        _id: withId,
+    });

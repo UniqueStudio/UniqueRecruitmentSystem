@@ -1,9 +1,9 @@
 import { Socket } from 'socket.io';
 import { io } from '../../app';
-import { CandidateRepo, RecruitmentRepo } from '../../database/model';
-import { errorRes } from '../../utils/errorRes';
-import { logger } from '../../utils/logger';
-import { verifyJWT } from '../../utils/verifyJWT';
+import { CandidateRepo, RecruitmentRepo } from '@database/model';
+import { errorRes } from '@utils/errorRes';
+import { logger } from '@utils/logger';
+import { verifyJWT } from '@utils/verifyJWT';
 
 export const onMoveCandidate = (socket: Socket) => async (req: { cid: string, from: number, to: number, token: string }) => {
     const { cid, from, to, token } = req;

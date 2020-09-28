@@ -1,12 +1,12 @@
 import { RequestHandler } from 'express';
 import { body, param, validationResult } from 'express-validator';
-import { CandidateRepo, RecruitmentRepo } from '../../database/model';
-import { PayloadRepo } from '../../database/model';
+import { CandidateRepo, RecruitmentRepo } from '@database/model';
+import { PayloadRepo } from '@database/model';
 import { redisAsync } from '../../redis';
-import { checkInterview } from '../../utils/checkInterview';
-import { errorRes } from '../../utils/errorRes';
+import { checkInterview } from '@utils/checkInterview';
+import { errorRes } from '@utils/errorRes';
 import { sendSMS } from './sendSMS';
-import { logger } from '../../utils/logger';
+import { logger } from '@utils/logger';
 
 export const newSetCandidate: RequestHandler = async (req, res, next) => {
     try {

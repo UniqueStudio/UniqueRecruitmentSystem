@@ -2,9 +2,9 @@ import { RequestHandler } from 'express';
 import { body, validationResult } from 'express-validator';
 
 import { io } from '../../app';
-import { GROUPS_ } from '../../config/consts';
-import { RecruitmentRepo, UserRepo } from '../../database/model';
-import { errorRes } from '../../utils/errorRes';
+import { GROUPS_ } from '@config/consts';
+import { RecruitmentRepo, UserRepo } from '@database/model';
+import { errorRes } from '@utils/errorRes';
 
 export const launchRecruitment: RequestHandler = async (req, res, next) => {
     try {

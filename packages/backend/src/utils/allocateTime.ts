@@ -1,5 +1,5 @@
 import moment from 'moment';
-import { Candidate, Time } from '../config/types';
+import { Candidate, Time } from '@config/types';
 
 const padZero = (toPad: number) => toPad.toString().padStart(2, '0');
 

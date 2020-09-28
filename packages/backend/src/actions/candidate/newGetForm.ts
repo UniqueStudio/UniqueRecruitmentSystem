@@ -1,9 +1,9 @@
 import { RequestHandler } from 'express';
 import { param, validationResult } from 'express-validator';
-import { PayloadRepo, RecruitmentRepo } from '../../database/model';
+import { PayloadRepo, RecruitmentRepo } from '@database/model';
 import { redisAsync } from '../../redis';
-import { errorRes } from '../../utils/errorRes';
-import { generateJWT } from '../../utils/generateJWT';
+import { errorRes } from '@utils/errorRes';
+import { generateJWT } from '@utils/generateJWT';
 
 export const newGetForm: RequestHandler = async (req, res, next) => {
     try {

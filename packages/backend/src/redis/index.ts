@@ -1,6 +1,6 @@
 import redis from 'redis';
 import { promisify } from 'util';
-import { logger } from '../utils/logger';
+import { logger } from '@utils/logger';
 
 const redisClient = redis.createClient({ host: 'redis' });
 export const redisAsync = {

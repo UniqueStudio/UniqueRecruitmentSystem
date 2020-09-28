@@ -1,7 +1,7 @@
 import { RequestHandler } from 'express';
 import { body, param, validationResult } from 'express-validator';
-import { CandidateRepo, RecruitmentRepo } from '../../database/model';
-import { errorRes } from '../../utils/errorRes';
+import { CandidateRepo, RecruitmentRepo } from '@database/model';
+import { errorRes } from '@utils/errorRes';
 
 export const allocateOne: RequestHandler = async (req, res, next) => {
     try {

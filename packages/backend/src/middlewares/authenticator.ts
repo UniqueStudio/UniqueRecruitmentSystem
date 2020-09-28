@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
-import { errorRes } from '../utils/errorRes';
-import { verifyJWT } from '../utils/verifyJWT';
+import { errorRes } from '@utils/errorRes';
+import { verifyJWT } from '@utils/verifyJWT';
 
 export const authenticator = (req: Request, res: Response, next: NextFunction) => {
     if (req.method === 'OPTIONS') {

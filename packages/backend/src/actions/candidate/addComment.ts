@@ -1,11 +1,11 @@
 import { Socket } from 'socket.io';
 
 import { io } from '../../app';
-import { Comment } from '../../config/types';
-import { CandidateRepo, UserRepo } from '../../database/model';
-import { errorRes } from '../../utils/errorRes';
-import { logger } from '../../utils/logger';
-import { verifyJWT } from '../../utils/verifyJWT';
+import { Comment } from '@config/types';
+import { CandidateRepo, UserRepo } from '@database/model';
+import { errorRes } from '@utils/errorRes';
+import { logger } from '@utils/logger';
+import { verifyJWT } from '@utils/verifyJWT';
 
 export const onAddComment = (socket: Socket) => async (req: { cid: string, comment: Comment, token: string }) => {
     try {

@@ -1,8 +1,8 @@
 import { RequestHandler } from 'express';
 
 import { redisAsync } from '../redis';
-import { isProd } from '../utils/environment';
-import { errorRes } from '../utils/errorRes';
+import { isProd } from '@utils/environment';
+import { errorRes } from '@utils/errorRes';
 
 export const codeChecker = (type: 'user' | 'candidate'): RequestHandler => async (req, res, next) => {
     if (isProd()) {

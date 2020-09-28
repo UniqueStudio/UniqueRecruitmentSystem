@@ -2,10 +2,10 @@ import { RequestHandler } from 'express';
 import { param, validationResult } from 'express-validator';
 import fetch from 'node-fetch';
 
-import { smsAPI, token } from '../../config/consts';
+import { smsAPI, token } from '@config/consts';
 import { redisAsync } from '../../redis';
-import { errorRes } from '../../utils/errorRes';
-import { getRandom } from '../../utils/getRandom';
+import { errorRes } from '@utils/errorRes';
+import { getRandom } from '@utils/getRandom';
 
 export const sendCandidateCode: RequestHandler = async (req, res, next) => {
     try {
