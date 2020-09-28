@@ -29,7 +29,7 @@ const Comments: FC<Props> = memo(({ savedComment, comments, uid, changeInputting
         }
     };
 
-    const changeEvaluation: ChangeEventHandler<HTMLSelectElement> = ({ target: { value } }) => {
+    const changeEvaluation: ChangeEventHandler<HTMLInputElement> = ({ target: { value } }) => {
         const newEvaluation = +value as Evaluation;
         setEvaluation(newEvaluation);
         changeInputting(content, newEvaluation);
