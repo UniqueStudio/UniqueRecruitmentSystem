@@ -24,7 +24,7 @@ const useStyles = makeStyles(({ transitions, mixins, spacing, breakpoints }: The
         width: spacing(9),
         [breakpoints.down('sm')]: {
             border: 0,
-            width: 0, // bugs in 0px, iOS <- I think it is fixed now
+            width: '1px', // bugs in 0px, iOS <- I think it is fixed now
         },
     },
     toolbar: {

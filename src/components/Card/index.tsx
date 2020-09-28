@@ -95,7 +95,7 @@ const CandidateCard: FC<Props> = memo((props) => {
             <div className={classes.cardContent}>
                 {useMemo(Check, [checked, disableCheck])}
                 {useMemo(Profile, [isTeamInterview, abandon, rejected, allocation])}
-                {useMemo(Info, [])}
+                {useMemo(Info, [classes.iconButton])}
             </div>
         </Card>
     );

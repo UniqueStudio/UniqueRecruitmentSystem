@@ -1,7 +1,6 @@
 import { Theme } from '@material-ui/core/styles/createMuiTheme';
 import { createStyles, makeStyles } from '@material-ui/styles';
 
-import { colorToAlpha } from './index';
 
 const useStyles = makeStyles(({ palette, spacing, breakpoints }: Theme) => createStyles({
     root: {
@@ -9,7 +8,6 @@ const useStyles = makeStyles(({ palette, spacing, breakpoints }: Theme) => creat
     },
     content: {
         flexGrow: 1,
-        backgroundColor: colorToAlpha(palette.secondary.light, 0.2),
         marginTop: spacing(8),
         height: 'calc(100vh - 64px)',
         overflowX: 'auto',

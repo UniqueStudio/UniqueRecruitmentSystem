@@ -35,7 +35,7 @@ const useStyles = makeStyles(({ palette, shadows, spacing, breakpoints }: Theme)
         userSelect: 'none',
     },
     modalTitle: {
-        color: palette.secondary.contrastText,
+        color: palette.primary.contrastText,
         textAlign: 'center',
         margin: spacing(1),
     },
