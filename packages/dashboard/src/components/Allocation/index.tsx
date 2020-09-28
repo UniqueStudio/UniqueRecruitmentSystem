@@ -63,7 +63,9 @@ const Allocation: FC<Props> = memo(({ disabled, title, dates, setRecruitment }) 
         });
     };
 
-    const setPeriod = (id: number, period: keyof Time): ChangeEventHandler<HTMLInputElement> => ({ target: { value } }) => {
+    const setPeriod = (id: number, period: keyof Time): ChangeEventHandler<HTMLInputElement> => ({
+        target: { value },
+    }) => {
         if (period !== 'date') {
             setAllocation((prevAllocation) => {
                 const time = [...prevAllocation];
@@ -79,7 +81,9 @@ const Allocation: FC<Props> = memo(({ disabled, title, dates, setRecruitment }) 
 
     const getButton = (name: string, children: JSX.Element, handler: () => void) => (
         <Tooltip title={name}>
-            <IconButton onClick={handler} color='primary' disabled={disabled} size='small'>{children}</IconButton>
+            <IconButton onClick={handler} color='primary' disabled={disabled} size='small'>
+                {children}
+            </IconButton>
         </Tooltip>
     );
 

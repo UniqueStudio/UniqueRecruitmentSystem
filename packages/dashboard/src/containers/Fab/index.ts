@@ -11,28 +11,33 @@ interface OwnProps {
     toggleOpen: (component: string) => () => void;
 }
 
-const mapStateToProps =
-    (
-        {
-            candidate: { group, selected, steps },
-            component: { fabOn },
-            user: { info: { isAdmin, isCaptain, group: userGroup } }
-        }: StoreState,
-        ownProps: OwnProps
-    ) => ({
-        group,
-        selected,
-        fabOn,
-        steps,
-        canOperate: isAdmin || (steps.length === 2 ? isCaptain : group === userGroup),
-        ...ownProps
-    });
+const mapStateToProps = (
+    {
+        candidate: { group, selected, steps },
+        component: { fabOn },
+        user: {
+            info: { isAdmin, isCaptain, group: userGroup },
+        },
+    }: StoreState,
+    ownProps: OwnProps,
+) => ({
+    group,
+    selected,
+    fabOn,
+    steps,
+    canOperate: isAdmin || (steps.length === 2 ? isCaptain : group === userGroup),
+    ...ownProps,
+});
 
-const mapDispatchToProps = (dispatch: Dispatch) => bindActionCreators({
-    deselect: deselectCandidate,
-    select: selectCandidate,
-    toggleFabOff
-}, dispatch);
+const mapDispatchToProps = (dispatch: Dispatch) =>
+    bindActionCreators(
+        {
+            deselect: deselectCandidate,
+            select: selectCandidate,
+            toggleFabOff,
+        },
+        dispatch,
+    );
 
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = ReturnType<typeof mapDispatchToProps>;

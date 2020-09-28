@@ -39,65 +39,82 @@ const SMSDetail: FC<Props> = memo(({ handleChange, content }) => {
                     {generateModel({ type, step, time, place, rest, next })}
                 </Typography>
             </div>
-            <div className={classNames(classes.templateContent, classes.templateItem, classes.templateParams, classes.inputContainer)}>
+            <div
+                className={classNames(
+                    classes.templateContent,
+                    classes.templateItem,
+                    classes.templateParams,
+                    classes.inputContainer,
+                )}>
                 <TextField
                     select
                     label='类型'
                     value={type}
                     className={classNames(classes.templateItem, classes.input)}
-                    onChange={handleChange('type')}
-                >
+                    onChange={handleChange('type')}>
                     <MenuItem value='accept'>通过</MenuItem>
                     <MenuItem value='reject'>被刷</MenuItem>
                     <MenuItem value='group'>组面通知</MenuItem>
                     <MenuItem value='team'>群面通知</MenuItem>
                 </TextField>
-                {withStep && <TextField
-                    select
-                    label='轮次'
-                    className={classNames(classes.templateItem, classes.input)}
-                    value={step}
-                    onChange={handleChange('step')}
-                >
-                    {STEPS.slice(0, 5).map((stepName, index) => (
-                        <MenuItem key={stepName} value={index}>{stepName}</MenuItem>
-                    ))}
-                </TextField>}
-                {withStep && <TextField
-                    select
-                    label='下一轮'
-                    className={classNames(classes.templateItem, classes.input)}
-                    value={next}
-                    onChange={handleChange('next')}
-                >
-                    {STEPS.map((stepName, index) => (
-                        <MenuItem key={stepName} value={index}>{stepName}</MenuItem>
-                    ))}
-                </TextField>}
-                {withTime && <TextField
-                    label='时间'
-                    value={time}
-                    className={classNames(classes.templateItem, classes.input)}
-                    InputLabelProps={{ shrink: true }}
-                    onChange={handleChange('time')}
-                />}
-                {withPlace && <TextField
-                    label='地点'
-                    value={place}
-                    className={classNames(classes.templateItem, classes.input)}
-                    InputLabelProps={{ shrink: true }}
-                    onChange={handleChange('place')}
-                />}
-                {withRest && <TextField
-                    label='自定义'
-                    value={rest}
-                    className={classNames(classes.templateItem)}
-                    fullWidth
-                    InputLabelProps={{
-                        shrink: true,
-                    }}
-                    onChange={handleChange('rest')}
-                />}
+                {withStep && (
+                    <TextField
+                        select
+                        label='轮次'
+                        className={classNames(classes.templateItem, classes.input)}
+                        value={step}
+                        onChange={handleChange('step')}>
+                        {STEPS.slice(0, 5).map((stepName, index) => (
+                            <MenuItem key={stepName} value={index}>
+                                {stepName}
+                            </MenuItem>
+                        ))}
+                    </TextField>
+                )}
+                {withStep && (
+                    <TextField
+                        select
+                        label='下一轮'
+                        className={classNames(classes.templateItem, classes.input)}
+                        value={next}
+                        onChange={handleChange('next')}>
+                        {STEPS.map((stepName, index) => (
+                            <MenuItem key={stepName} value={index}>
+                                {stepName}
+                            </MenuItem>
+                        ))}
+                    </TextField>
+                )}
+                {withTime && (
+                    <TextField
+                        label='时间'
+                        value={time}
+                        className={classNames(classes.templateItem, classes.input)}
+                        InputLabelProps={{ shrink: true }}
+                        onChange={handleChange('time')}
+                    />
+                )}
+                {withPlace && (
+                    <TextField
+                        label='地点'
+                        value={place}
+                        className={classNames(classes.templateItem, classes.input)}
+                        InputLabelProps={{ shrink: true }}
+                        onChange={handleChange('place')}
+                    />
+                )}
+                {withRest && (
+                    <TextField
+                        label='自定义'
+                        value={rest}
+                        className={classNames(classes.templateItem)}
+                        fullWidth
+                        InputLabelProps={{
+                            shrink: true,
+                        }}
+                        onChange={handleChange('rest')}
+                    />
+                )}
             </div>
         </>
     );

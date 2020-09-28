@@ -1,11 +1,10 @@
-import React, { ComponentType, createContext, useState, useEffect } from 'react';
+import React, { ComponentType, createContext, useEffect, useState } from 'react';
 
 import blue from '@material-ui/core/colors/blue';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import useMediaQuery from '@material-ui/core/useMediaQuery';
-import createMuiTheme from '@material-ui/core/styles/createMuiTheme';
 import { ThemeProvider } from '@material-ui/core/styles';
-
+import createMuiTheme from '@material-ui/core/styles/createMuiTheme';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
 
 interface ContextProps {
     darkMode: boolean;
@@ -14,7 +13,7 @@ interface ContextProps {
 
 export const ThemeContext = createContext<ContextProps>({
     darkMode: false,
-    setDarkMode: () => { },
+    setDarkMode: () => undefined,
 });
 
 const darkTheme = createMuiTheme({
@@ -31,12 +30,12 @@ const darkTheme = createMuiTheme({
         },
         background: {
             default: '#121212',
-        }
+        },
     },
     overrides: {
         MuiButton: {
             textPrimary: {
-                color: 'white'
+                color: 'white',
             },
         },
     },
@@ -47,7 +46,7 @@ const defaultTheme = createMuiTheme({
         primary: blue,
         background: {
             default: '#f1f1f1',
-        }
+        },
     },
 });
 
@@ -71,7 +70,7 @@ function withRoot<T>(Component: ComponentType<T>) {
                 </ThemeProvider>
             </ThemeContext.Provider>
         );
-    }
+    };
 }
 
 export default withRoot;

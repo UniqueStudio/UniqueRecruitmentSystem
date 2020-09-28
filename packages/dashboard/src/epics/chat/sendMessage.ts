@@ -2,7 +2,7 @@ import { ofType } from 'redux-observable';
 import { EMPTY } from 'rxjs';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 
-import { addMessage, SEND_MESSAGE, SendMessage } from '../../actions';
+import { addMessage, SendMessage, SEND_MESSAGE } from '../../actions';
 
 import { checkToken, Epic, errHandler } from '../';
 
@@ -21,8 +21,8 @@ export const sendMessageEpic: Epic<SendMessage> = (action$, state$, { socket$ })
                 map(({ message }) => {
                     return addMessage(message);
                 }),
-                catchError((err) => errHandler(err))
+                catchError((err) => errHandler(err)),
             );
         }),
-        catchError((err) => errHandler(err))
+        catchError((err) => errHandler(err)),
     );

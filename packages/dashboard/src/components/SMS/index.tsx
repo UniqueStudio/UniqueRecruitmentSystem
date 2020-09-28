@@ -110,8 +110,7 @@ const SMSTemplate: FC<Props> = memo(({ toggleOpen, enqueueSnackbar, selected: se
                                     color='primary'
                                     onClick={activeStep === steps.length - 1 ? handleSend : handleNext}
                                     className={classes.templateItem}
-                                    disabled={selected.length === 0}
-                                >
+                                    disabled={selected.length === 0}>
                                     {activeStep === steps.length - 1 ? '发送通知' : '下一步'}
                                 </Button>
                             </div>
@@ -121,13 +120,12 @@ const SMSTemplate: FC<Props> = memo(({ toggleOpen, enqueueSnackbar, selected: se
             </Stepper>
             {activeStep === steps.length && (
                 <Paper square elevation={0} className={classes.templateEnd}>
-                    <Button onClick={handleBack} className={classes.templateItem}>上一步</Button>
-                    <Button
-                        variant='contained'
-                        color='primary'
-                        onClick={toggleOpen}
-                        className={classes.templateItem}
-                    >关闭</Button>
+                    <Button onClick={handleBack} className={classes.templateItem}>
+                        上一步
+                    </Button>
+                    <Button variant='contained' color='primary' onClick={toggleOpen} className={classes.templateItem}>
+                        关闭
+                    </Button>
                 </Paper>
             )}
         </div>

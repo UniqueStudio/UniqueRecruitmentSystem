@@ -11,15 +11,26 @@ interface OwnProps {
     shouldClear: boolean;
 }
 
-const mapStateToProps = ({ user: { info: { isAdmin, isCaptain } } }: StoreState, ownProps: OwnProps) => ({
+const mapStateToProps = (
+    {
+        user: {
+            info: { isAdmin, isCaptain },
+        },
+    }: StoreState,
+    ownProps: OwnProps,
+) => ({
     disabled: !(isCaptain || isAdmin),
     ...ownProps,
 });
 
-const mapDispatchToProps = (dispatch: Dispatch) => bindActionCreators({
-    enqueueSnackbar,
-    launchRecruitment,
-}, dispatch);
+const mapDispatchToProps = (dispatch: Dispatch) =>
+    bindActionCreators(
+        {
+            enqueueSnackbar,
+            launchRecruitment,
+        },
+        dispatch,
+    );
 
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = ReturnType<typeof mapDispatchToProps>;

@@ -35,8 +35,7 @@ const Menu: FC<Props> = ({ open, toggleOpen }) => {
         <Drawer
             variant='permanent'
             classes={{ paper: classNames(classes.drawerPaper, !open && classes.drawerPaperClose) }}
-            open={open}
-        >
+            open={open}>
             <div className={classes.toolbar}>
                 <IconButton onClick={toggleOpen}>
                     <ChevronLeftIcon />
@@ -44,16 +43,14 @@ const Menu: FC<Props> = ({ open, toggleOpen }) => {
             </div>
             <Divider />
             <List>
-                {listItems.map(({ to, text, icon }, index) =>
+                {listItems.map(({ to, text, icon }, index) => (
                     <Anchor to={to} key={index}>
                         <ListItem button onClick={open ? toggleOpen : undefined}>
-                            <ListItemIcon className={classes.icon}>
-                                {icon}
-                            </ListItemIcon>
+                            <ListItemIcon className={classes.icon}>{icon}</ListItemIcon>
                             <ListItemText primary={text} />
                         </ListItem>
-                    </Anchor>,
-                )}
+                    </Anchor>
+                ))}
             </List>
         </Drawer>
     );

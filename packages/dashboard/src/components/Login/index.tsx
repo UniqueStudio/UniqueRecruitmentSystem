@@ -46,8 +46,7 @@ const Login: FC<Props> = memo(({ loggedIn, isScanning, getQRCode, isLoading, weC
                 variant='contained'
                 color='default'
                 size='large'
-                onClick={handleMethod(1)}
-            >
+                onClick={handleMethod(1)}>
                 企业微信登录
             </Button>
             <Button
@@ -55,8 +54,7 @@ const Login: FC<Props> = memo(({ loggedIn, isScanning, getQRCode, isLoading, weC
                 variant='contained'
                 color='primary'
                 size='large'
-                onClick={handleMethod(2)}
-            >
+                onClick={handleMethod(2)}>
                 账号密码登录
             </Button>
         </>
@@ -70,8 +68,7 @@ const Login: FC<Props> = memo(({ loggedIn, isScanning, getQRCode, isLoading, weC
                 color='default'
                 size='large'
                 onClick={getQRCode}
-                disabled={isScanning}
-            >
+                disabled={isScanning}>
                 获取二维码
             </Button>
             <Button
@@ -79,8 +76,7 @@ const Login: FC<Props> = memo(({ loggedIn, isScanning, getQRCode, isLoading, weC
                 variant='contained'
                 color='primary'
                 size='large'
-                onClick={handleMethod(2)}
-            >
+                onClick={handleMethod(2)}>
                 账号密码登录
             </Button>
         </>
@@ -109,16 +105,10 @@ const Login: FC<Props> = memo(({ loggedIn, isScanning, getQRCode, isLoading, weC
                 color='default'
                 size='large'
                 onClick={handleLogin}
-                disabled={!phone || !password}
-            >
+                disabled={!phone || !password}>
                 登录
             </Button>
-            <Button
-                variant='contained'
-                color='primary'
-                size='large'
-                onClick={handleMethod(1)}
-            >
+            <Button variant='contained' color='primary' size='large' onClick={handleMethod(1)}>
                 企业微信登录
             </Button>
         </>
@@ -127,9 +117,7 @@ const Login: FC<Props> = memo(({ loggedIn, isScanning, getQRCode, isLoading, weC
         <div className={classes.container}>
             <img src={logo} className={classes.logoImage} alt='UNIQUE STUDIO' />
             <Modal open title='登录' hideBackdrop>
-                <form className={classes.login}>
-                    {[ChooseMethod, ByQRCode, ByPassword][method]}
-                </form>
+                <form className={classes.login}>{[ChooseMethod, ByQRCode, ByPassword][method]}</form>
             </Modal>
             {isLoading && <Progress />}
         </div>
