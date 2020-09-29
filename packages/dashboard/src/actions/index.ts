@@ -811,3 +811,18 @@ export function setGroupAdmin(data: SetGroupAdmin['data']) {
         data,
     };
 }
+
+export const UPDATE_GROUP_ADMIN = 'UPDATE_GROUP_ADMIN';
+export type UPDATE_GROUP_ADMIN = typeof UPDATE_GROUP_ADMIN;
+export interface UpdateGroupAdmin {
+    type: UPDATE_GROUP_ADMIN;
+    data: {
+        newAdmins: string[];
+    };
+}
+export function updateGroupAdmin(data: UpdateGroupAdmin['data']) {
+    return {
+        type: UPDATE_GROUP_ADMIN,
+        data,
+    };
+}
