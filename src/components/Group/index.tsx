@@ -29,6 +29,7 @@ const memberDataConverter = (handleSelect: SelectHandler, admin: object, disable
     mail,
     joinTime,
     isCaptain,
+    isAdmin,
 }: User) => [
     username,
     GENDERS[gender],
@@ -36,7 +37,12 @@ const memberDataConverter = (handleSelect: SelectHandler, admin: object, disable
     mail || '未知',
     titleConverter(joinTime),
     isCaptain ? '是' : '否',
-    <Checkbox checked={admin[username]} onChange={handleSelect(username)} disabled={disabled} color='primary' />,
+    <Checkbox
+        checked={admin[phone] || isAdmin}
+        onChange={handleSelect(phone)}
+        disabled={disabled || isAdmin}
+        color='primary'
+    />,
 ];
 
 const Group: FC<Props> = memo(({ groupInfo, canSetAdmin, submitAdmin, group }) => {
@@ -48,11 +54,12 @@ const Group: FC<Props> = memo(({ groupInfo, canSetAdmin, submitAdmin, group }) =
 
     // { user1: true, user2: false ...}
     const [admin, setAdmin] = useState(
-        Object.fromEntries(groupInfo.map((member) => [member.username, member.isAdmin])),
+        // use phone instead of name to avoid same name in same group
+        Object.fromEntries(groupInfo.map((member) => [member.phone, member.isAdmin])),
     );
 
-    const handleSelect = (name: string) => (event: React.ChangeEvent<HTMLInputElement>) => {
-        setAdmin({ ...admin, [name]: event.target.checked });
+    const handleSelect = (phone: string) => (event: React.ChangeEvent<HTMLInputElement>) => {
+        setAdmin({ ...admin, [phone]: event.target.checked });
     };
 
     const submitChange = () => {

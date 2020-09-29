@@ -3,7 +3,7 @@ import { of } from 'rxjs';
 import { ajax } from 'rxjs/ajax';
 import { catchError, mergeMap, startWith } from 'rxjs/operators';
 
-import { enqueueSnackbar, SetGroupAdmin, SET_GROUP_ADMIN, toggleProgress } from '../../actions';
+import { enqueueSnackbar, SetGroupAdmin, SET_GROUP_ADMIN, toggleProgress, updateGroupAdmin } from '../../actions';
 
 import { API } from '../../config/consts';
 
@@ -16,14 +16,19 @@ export const setGroupAdminEpic: Epic<SetGroupAdmin> = (action$) =>
             const token = checkToken();
             const { data } = action;
             return ajax
-                .put(`${API}/user/group/admin`, JSON.stringify(data), {
+                .put(`${API}/user/admin`, JSON.stringify(data), {
                     Authorization: `Bearer ${token}`,
                     'Content-Type': 'application/json',
                 })
                 .pipe(
                     mergeMap(({ response: res }) => {
-                        if (res.type === 'success') {
-                            return of(toggleProgress(), enqueueSnackbar('已成功修改管理员！', { variant: 'success' }));
+                        const { type, newAdmins = [] } = res;
+                        if (type === 'success') {
+                            return of(
+                                updateGroupAdmin({ newAdmins }),
+                                toggleProgress(),
+                                enqueueSnackbar('已成功修改管理员！', { variant: 'success' }),
+                            );
                         }
                         throw customError(res);
                     }),
