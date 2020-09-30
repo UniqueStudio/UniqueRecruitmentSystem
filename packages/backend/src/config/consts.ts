@@ -17,6 +17,17 @@ export const dbURI = `mongodb://mongodb:${DB_PORT}/recruitment`;
 export const shortenURLAPI = `http://uniqs.cc/generate`;
 
 export const GROUPS = ['Web', 'Lab', 'AI', 'Game', 'Android', 'iOS', 'Design', 'PM'];
+// shorten group name due to qcloud sms limits
+export const GROUP_SHORT = {
+    web: 'web',
+    lab: 'lab',
+    ai: 'ai',
+    game: 'game',
+    android: '安卓',
+    ios: 'ios',
+    design: '设计',
+    pm: 'pm',
+};
 export const GROUPS_ = GROUPS.map((group) => group.toLowerCase());
 export const STEPS = ['报名流程', '笔试流程', '面试流程', '熬测流程', '群面流程', '通过'];
 export const RANKS = ['暂无', '前10%', '前25%', '前50%', '前100%'];

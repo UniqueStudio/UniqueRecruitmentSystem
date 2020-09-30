@@ -1,4 +1,4 @@
-import { STEPS } from '@config/consts';
+import { GROUP_SHORT, STEPS } from '@config/consts';
 
 interface Model {
     type: string;
@@ -23,10 +23,11 @@ export const generateSMS = ({ name, title, step, type, group, time, place, rest,
                 case 2:
                 case 4:
                     if (!url) throw new Error('URL not provided!');
-                    // {1}你好，你通过了{2}{3}组{4}审核，请{5}以完成下一流程：{6} (请勿回复本短信)
+                    if (!(group in GROUP_SHORT)) throw new Error('Group invalid!');
+                    // {1}你好，你通过了{2}{3}组{4}审核，请{5}以完成下一流程：{6}
                     return {
-                        template: 735443,
-                        param_list: [name, title, group, STEPS[step], '进入以下链接选择面试时间', url],
+                        template: 736724,
+                        param_list: [name, title, GROUP_SHORT[group], STEPS[step], '在以下链接选择面试时间', url],
                     };
                 case 1:
                 case 3:
