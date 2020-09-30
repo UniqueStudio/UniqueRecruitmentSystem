@@ -20,27 +20,26 @@ export const generateSMS = ({ name, title, step, type, group, time, place, rest,
         case 'accept': {
             if (!group) throw new Error('Group not provided!');
             if (!title) throw new Error('Title not provided!');
-            let defaultRest = '';
             switch (nextStep) {
                 case 2:
                 case 4:
                     if (!url) throw new Error('URL not provided!');
-                    defaultRest = `，请进入以下链接选择面试时间：${url}`;
-                    break;
+                    // {1}你好，你通过了{2}{3}组{4}审核，请{5}以完成下一流程：{6} (请勿回复本短信)
+                    return {
+                        template: 735281,
+                        param_list: [name, title, group, STEPS[step], '进入以下链接选择面试时间', url],
+                    };
                 case 1:
                 case 3:
+                    // {1}你好，请于{2}在启明学院亮胜楼{3}参加{4}，请准时到场。
                     if (!time || !place) throw new Error('Time or place not provided!');
-                    defaultRest = `，请于${time}在${place}参加${STEPS[nextStep]}，请务必准时到场`;
-                    break;
+                    return { template: 670906, param_list: [name, time, place, STEPS[nextStep]] };
                 case 5:
-                    defaultRest = `，你已成功加入${group}组`;
-                    break;
+                    // {1}你好，你在{2}中已成功加入{3}组！
+                    return { template: 670904, param_list: [name, title, group] };
                 default:
                     throw new Error('Next step is invalid!');
             }
-            rest = `${rest || defaultRest}${suffix}`;
-            // {1}你好，你通过了{2}{3}组{4}审核{5}
-            return { template: 670901, param_list: [name, title, group, STEPS[step], rest] };
         }
         case 'reject': {
             if (!group) throw new Error('Group not provided!');

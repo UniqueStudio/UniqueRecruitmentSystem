@@ -58,12 +58,12 @@ const send = (req: Request) => {
                     recruitmentId,
                     id,
                     step: nextStep === 2 ? 'group' : 'team',
-                    group
+                    group,
                 };
                 hash = md5(payload);
                 Promise.all([
                     PayloadRepo.createAndInsert({ ...payload, hash }),
-                    redisAsync.set(`payload:${hash}`, id, 'EX', 60 * 60 * 24 * 2)
+                    redisAsync.set(`payload:${hash}`, id, 'EX', 60 * 60 * 24 * 2),
                 ]).catch((e) => {
                     throw new Error(`Error in ${name}: ${e}`);
                 });
@@ -86,20 +86,20 @@ const send = (req: Request) => {
                 nextStep,
                 url,
                 time: type === 'accept' ? time : allocated && dateTranslator(allocated),
-                place
+                place,
             });
             const response = await fetch(smsAPI, {
                 method: 'POST',
                 headers: {
                     Token: token,
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
                     phone,
-                    ...smsBody
-                })
+                    ...smsBody,
+                }),
             });
-            const { code, message }: { code: number, message: string } = await response.json();
+            const { code, message }: { code: number; message: string } = await response.json();
             if (code !== 200) {
                 return new Error(`Error in ${name}: ${message.replace('\n', '')}`);
             }
@@ -116,8 +116,7 @@ export const sendSMS: RequestHandler = async (req, res, next) => {
         if (!validationErrors.isEmpty()) {
             return next(errorRes(validationErrors.array({ onlyFirstError: true })[0]['msg'], 'warning'));
         }
-        Promise
-            .all(send(req))
+        Promise.all(send(req))
             .then((values) => {
                 const errors = values.filter((value) => value instanceof Error).map(({ message }) => message);
                 if (errors.length) {
@@ -132,6 +131,4 @@ export const sendSMS: RequestHandler = async (req, res, next) => {
     }
 };
 
-export const sendSMSVerify = [
-    body('type').isIn(['accept', 'reject', 'group', 'team']).withMessage('Type is invalid!'),
-];
+export const sendSMSVerify = [body('type').isIn(['accept', 'reject', 'group', 'team']).withMessage('Type is invalid!')];
