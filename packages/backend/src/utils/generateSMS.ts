@@ -14,7 +14,6 @@ interface Model {
 }
 
 export const generateSMS = ({ name, title, step, type, group, time, place, rest, url, nextStep }: Model) => {
-    const suffix = ' (请勿回复本短信)';
     if (!name) throw new Error('Name not provided!');
     switch (type) {
         case 'accept': {
@@ -26,7 +25,7 @@ export const generateSMS = ({ name, title, step, type, group, time, place, rest,
                     if (!url) throw new Error('URL not provided!');
                     // {1}你好，你通过了{2}{3}组{4}审核，请{5}以完成下一流程：{6} (请勿回复本短信)
                     return {
-                        template: 735281,
+                        template: 735443,
                         param_list: [name, title, group, STEPS[step], '进入以下链接选择面试时间', url],
                     };
                 case 1:
@@ -45,10 +44,8 @@ export const generateSMS = ({ name, title, step, type, group, time, place, rest,
             if (!group) throw new Error('Group not provided!');
             if (!title) throw new Error('Title not provided!');
             if (step === undefined || step < 0 || step > 4) throw new Error('Step is invalid!');
-            const defaultRest = '不要灰心，继续学习。期待与更强大的你的相遇！';
-            rest = `${rest || defaultRest}${suffix}`;
-            // {1}你好，你没有通过{2}{3}组{4}审核，请你{5}
-            return { template: 670903, param_list: [name, title, group, STEPS[step], rest] };
+            // {1}你好，你没有通过{2}{3}组{4}审核，请你不要灰心，继续学习。期待与更强大的你的相遇！
+            return { template: 735719, param_list: [name, title, group, STEPS[step]] };
         }
         case 'group': {
             if (!group) throw new Error('Group not provided!');
