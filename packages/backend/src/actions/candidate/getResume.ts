@@ -11,10 +11,17 @@ export const getResume: RequestHandler = async (req, res) => {
         } else {
             const path = resolve(data.resume);
             const filename = Buffer.from(basename(path)).toString('base64');
-            res.header('Access-Control-Expose-Headers', 'Content-Length, Content-Disposition')
-                .download(path, filename);
+            res.header('Access-Control-Expose-Headers', 'Content-Length, Content-Disposition').download(
+                path,
+                filename,
+                (err) => {
+                    if (err) {
+                        res.status(500).json(errorRes(err.message, 'error'));
+                    }
+                }
+            );
         }
     } catch (err) {
-        res.status(500).send(errorRes(err.message, 'error'));
+        res.status(500).json(errorRes(err.message, 'error'));
     }
 };

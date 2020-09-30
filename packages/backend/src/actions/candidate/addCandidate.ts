@@ -6,7 +6,7 @@ import { io } from '../../app';
 import { GENDERS, GRADES, GROUPS_, RANKS } from '@config/consts';
 import { CandidateRepo, RecruitmentRepo } from '@database/model';
 import { titleConverter } from '@utils/titleConverter';
-import { copyFile } from '@utils/copyFile';
+import { moveFile } from '@utils/moveFile';
 import { errorRes } from '@utils/errorRes';
 import { logger } from '@utils/logger';
 import sendEmail from '@utils/sendEmail';
@@ -18,12 +18,26 @@ export const addCandidate: RequestHandler = async (req, res, next) => {
         if (!errors.isEmpty()) {
             return next(errorRes(errors.array({ onlyFirstError: true })[0]['msg'], 'warning'));
         }
-        const { name, grade, institute, major, rank, mail, phone, group, gender, intro, title, isQuick, referrer } = req.body;
+        const {
+            name,
+            grade,
+            institute,
+            major,
+            rank,
+            mail,
+            phone,
+            group,
+            gender,
+            intro,
+            title,
+            isQuick,
+            referrer,
+        } = req.body;
         let filepath = '';
         if (req.file) {
             const { originalname: filename, path: oldPath } = req.file;
             filepath = path.join('./data/resumes', title, group);
-            filepath = await copyFile(oldPath, filepath, `${name} - ${filename}`);
+            filepath = await moveFile(oldPath, filepath, `${name} - ${filename}`);
         }
         const info = await CandidateRepo.createAndInsert({
             name,
@@ -39,39 +53,44 @@ export const addCandidate: RequestHandler = async (req, res, next) => {
             isQuick,
             title,
             resume: filepath,
-            referrer
+            referrer,
         });
-        await RecruitmentRepo.update({ title, 'groups.name': group }, {
-            'groups.$.total': await CandidateRepo.count({ title, group }),
-            'groups.$.steps.0': await CandidateRepo.count({ title, group, step: 0 }),
-            'total': await CandidateRepo.count({ title })
-        });
+        await RecruitmentRepo.update(
+            { title, 'groups.name': group },
+            {
+                'groups.$.total': await CandidateRepo.count({ title, group }),
+                'groups.$.steps.0': await CandidateRepo.count({ title, group, step: 0 }),
+                total: await CandidateRepo.count({ title }),
+            }
+        );
         res.json({ type: 'success' });
         io.emit('addCandidate', { candidate: info });
         io.emit('updateRecruitment');
         setTimeout(() => {
             // {1}你好，您当前状态是{2}，请关注手机短信以便获取后续通知。
-            sendSMS(phone, { template: 670908, param_list: [name, '成功提交报名表单'] })
-                .catch((e) => logger.error(e));
+            sendSMS(phone, { template: 670908, param_list: [name, '成功提交报名表单'] }).catch((e) => logger.error(e));
             const question = global.acmConfig[group];
-            if (!question.uri) return;
-            sendEmail(
-                { name, address: mail },
-                question.uri,
-                question.description,
-                titleConverter(title),
-            ).catch((e) => logger.error(e));
+            if (question.uri) {
+                sendEmail(
+                    { name, address: mail },
+                    question.uri,
+                    question.description,
+                    titleConverter(title)
+                ).catch((e) => logger.error(e));
+            }
         }, 30 * 1000);
     } catch (err) {
         return next(err);
     }
 };
 
-export const verifyTitle = body('title').matches(/\d{4}[ASC]/, 'g').withMessage('Title is invalid!')
+export const verifyTitle = body('title')
+    .matches(/\d{4}[ASC]/, 'g')
+    .withMessage('Title is invalid!')
     .custom(async (title) => {
         const recruitment = (await RecruitmentRepo.query({ title }))[0];
         if (!recruitment) {
-            throw new Error('Current recruitment doesn\'t exist!');
+            throw new Error("Current recruitment doesn't exist!");
         }
         if (Date.now() < recruitment.begin) {
             throw new Error('Current recruitment is not started!');
@@ -103,5 +122,5 @@ export const addCandidateVerify = [
     body('rank').isInt({ lt: RANKS.length, gt: -1 }).withMessage('Rank is invalid!'),
     body('intro').isString().withMessage('Intro is invalid!'),
     body('referrer').isString().withMessage('Referrer is invalid!'),
-    verifyTitle
+    verifyTitle,
 ];
