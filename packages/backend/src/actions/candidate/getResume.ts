@@ -15,7 +15,7 @@ export const getResume: RequestHandler = async (req, res) => {
                 path,
                 filename,
                 (err) => {
-                    if (err) {
+                    if (err && !res.headersSent) {
                         res.status(500).json(errorRes(err.message, 'error'));
                     }
                 }
