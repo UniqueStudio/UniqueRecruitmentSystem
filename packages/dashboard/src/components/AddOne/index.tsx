@@ -2,6 +2,7 @@ import React, { ChangeEventHandler, FC, memo, useEffect, useState } from 'react'
 
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
+import MenuItem from '@material-ui/core/MenuItem';
 import Paper from '@material-ui/core/Paper';
 import TextField from '@material-ui/core/TextField';
 import Tooltip from '@material-ui/core/Tooltip';
@@ -18,21 +19,16 @@ import useStyles from '../../styles/addOne';
 import { getMidnight } from '../../utils/getMidnight';
 import { titleConverter } from '../../utils/titleConverter';
 
-const generateTitle = (date: Date) => {
-    const year = date.getFullYear();
-    const month = date.getMonth() + 1;
-    const type = month <= 5 ? 'S' : month >= 9 ? 'A' : 'C';
-    return year + type;
-};
+const titles = ['S', 'C', 'A', 'O'].map((i) => `${new Date().getFullYear()}${i}`);
 
 const initialState = () => {
-    const date = new Date();
+    const now = new Date();
     return {
         modal: false,
-        title: generateTitle(date),
-        begin: date,
-        end: date,
-        stop: date,
+        title: `${now.getFullYear()}O`,
+        begin: now,
+        end: now,
+        stop: now,
         code: '',
     };
 };
@@ -81,7 +77,6 @@ const AddOne: FC<Props> = memo(({ disabled, enqueueSnackbar, launchRecruitment, 
             setState((prevState) => ({
                 ...prevState,
                 [name]: date,
-                title: name === 'begin' ? generateTitle(date) : prevState.title,
             }));
         }
     };
@@ -113,11 +108,17 @@ const AddOne: FC<Props> = memo(({ disabled, enqueueSnackbar, launchRecruitment, 
                 <div className={classes.newContainer}>
                     <TextField
                         label='招新名称'
+                        select
+                        onChange={handleChange('title')}
                         className={classes.textField}
-                        value={titleConverter(title)}
-                        margin='normal'
-                        disabled
-                    />
+                        value={title}
+                        margin='normal'>
+                        {titles.map((option) => (
+                            <MenuItem key={option} value={option}>
+                                {titleConverter(option)}
+                            </MenuItem>
+                        ))}
+                    </TextField>
                     <Schedule
                         onChange={handleChangeDate}
                         begin={begin}
