@@ -56,3 +56,5 @@ export const Acm = {
 
 export const ENV_DEV = 'development';
 export const ENV_PROD = 'production';
+
+export const TITLE_REGEX = /\d{4}[ASCO]/g;

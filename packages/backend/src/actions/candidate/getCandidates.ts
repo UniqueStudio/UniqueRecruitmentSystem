@@ -3,6 +3,7 @@ import { param, validationResult } from 'express-validator';
 import { CandidateRepo, RecruitmentRepo, UserRepo } from '@database/model';
 import { compareTitle } from '@utils/compareTitle';
 import { errorRes } from '@utils/errorRes';
+import { TITLE_REGEX } from '@config/consts';
 
 export const getCandidates: RequestHandler = async (req, res, next) => {
     try {
@@ -35,6 +36,6 @@ export const getCandidateVerify = [
     param('query').isJSON().withMessage('Query is invalid!')
         .custom((query) => {
             const { title } = JSON.parse(query);
-            return title.match(/\d{4}[ASCO]/g);
+            return title.match(TITLE_REGEX);
         }).withMessage('Title is invalid!')
 ];

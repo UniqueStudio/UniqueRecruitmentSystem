@@ -3,7 +3,7 @@ import { body, validationResult } from 'express-validator';
 import path from 'path';
 import { io } from '../../app';
 
-import { GENDERS, GRADES, GROUPS_, RANKS } from '@config/consts';
+import { GENDERS, GRADES, GROUPS_, RANKS, TITLE_REGEX } from '@config/consts';
 import { CandidateRepo, RecruitmentRepo } from '@database/model';
 import { titleConverter } from '@utils/titleConverter';
 import { copyFile } from '@utils/copyFile';
@@ -67,7 +67,7 @@ export const addCandidate: RequestHandler = async (req, res, next) => {
     }
 };
 
-export const verifyTitle = body('title').matches(/\d{4}[ASCO]/, 'g').withMessage('Title is invalid!')
+export const verifyTitle = body('title').matches(TITLE_REGEX).withMessage('Title is invalid!')
     .custom(async (title) => {
         const recruitment = (await RecruitmentRepo.query({ title }))[0];
         if (!recruitment) {

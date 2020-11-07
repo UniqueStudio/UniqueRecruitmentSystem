@@ -4,6 +4,7 @@ import { io } from '../../app';
 import { RecruitmentRepo, UserRepo } from '@database/model';
 import { checkInterview } from '@utils/checkInterview';
 import { errorRes } from '@utils/errorRes';
+import { TITLE_REGEX } from '@config/consts';
 
 export const setRecruitment: RequestHandler = async (req, res, next) => {
     try {
@@ -53,7 +54,7 @@ export const setRecruitment: RequestHandler = async (req, res, next) => {
 };
 
 export const setRecruitmentVerify = [
-    param('title').matches(/\d{4}[ASCO]/, 'g').withMessage('Title is invalid!')
+    param('title').matches(TITLE_REGEX).withMessage('Title is invalid!')
         .custom(async (title) => {
             const recruitment = (await RecruitmentRepo.query({ title }))[0];
             if (!recruitment) {

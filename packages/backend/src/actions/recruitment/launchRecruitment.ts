@@ -2,7 +2,7 @@ import { RequestHandler } from 'express';
 import { body, validationResult } from 'express-validator';
 
 import { io } from '../../app';
-import { GROUPS_ } from '@config/consts';
+import { GROUPS_, TITLE_REGEX } from '@config/consts';
 import { RecruitmentRepo, UserRepo } from '@database/model';
 import { errorRes } from '@utils/errorRes';
 
@@ -37,7 +37,7 @@ export const launchRecruitment: RequestHandler = async (req, res, next) => {
 };
 
 export const launchRecruitmentVerify = [
-    body('title').matches(/\d{4}[ASCO]/, 'g').withMessage('Title is invalid!').custom(async (title) => {
+    body('title').matches(TITLE_REGEX).withMessage('Title is invalid!').custom(async (title) => {
         if ((await RecruitmentRepo.query({ title })).length) {
             throw new Error('Current recruitment has already been launched!');
         }
