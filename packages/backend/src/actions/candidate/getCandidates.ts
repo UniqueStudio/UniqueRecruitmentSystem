@@ -35,6 +35,6 @@ export const getCandidateVerify = [
     param('query').isJSON().withMessage('Query is invalid!')
         .custom((query) => {
             const { title } = JSON.parse(query);
-            return title.match(/\d{4}[ASC]/g);
+            return title.match(/\d{4}[ASCO]/g);
         }).withMessage('Title is invalid!')
 ];

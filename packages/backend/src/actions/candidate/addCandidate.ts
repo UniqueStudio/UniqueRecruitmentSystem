@@ -67,7 +67,7 @@ export const addCandidate: RequestHandler = async (req, res, next) => {
     }
 };
 
-export const verifyTitle = body('title').matches(/\d{4}[ASC]/, 'g').withMessage('Title is invalid!')
+export const verifyTitle = body('title').matches(/\d{4}[ASCO]/, 'g').withMessage('Title is invalid!')
     .custom(async (title) => {
         const recruitment = (await RecruitmentRepo.query({ title }))[0];
         if (!recruitment) {

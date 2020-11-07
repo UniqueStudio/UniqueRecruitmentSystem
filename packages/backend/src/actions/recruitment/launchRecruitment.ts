@@ -37,7 +37,7 @@ export const launchRecruitment: RequestHandler = async (req, res, next) => {
 };
 
 export const launchRecruitmentVerify = [
-    body('title').matches(/\d{4}[ASC]/, 'g').withMessage('Title is invalid!').custom(async (title) => {
+    body('title').matches(/\d{4}[ASCO]/, 'g').withMessage('Title is invalid!').custom(async (title) => {
         if ((await RecruitmentRepo.query({ title })).length) {
             throw new Error('Current recruitment has already been launched!');
         }

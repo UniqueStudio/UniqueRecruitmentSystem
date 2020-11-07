@@ -53,7 +53,7 @@ export const setRecruitment: RequestHandler = async (req, res, next) => {
 };
 
 export const setRecruitmentVerify = [
-    param('title').matches(/\d{4}[ASC]/, 'g').withMessage('Title is invalid!')
+    param('title').matches(/\d{4}[ASCO]/, 'g').withMessage('Title is invalid!')
         .custom(async (title) => {
             const recruitment = (await RecruitmentRepo.query({ title }))[0];
             if (!recruitment) {
