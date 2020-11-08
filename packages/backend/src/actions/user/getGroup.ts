@@ -1,8 +1,8 @@
-import { RequestHandler } from 'express';
+import { Handler } from '@config/types';
 import { UserRepo } from '@database/model';
 import { errorRes } from '@utils/errorRes';
 
-export const getGroup: RequestHandler = async (req, res, next) => {
+export const getGroup: Handler = async (req, res, next) => {
     try {
         const user = await UserRepo.queryById(res.locals.id);
         if (!user) {

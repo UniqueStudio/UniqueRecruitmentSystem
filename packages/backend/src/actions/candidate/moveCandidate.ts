@@ -1,11 +1,13 @@
 import { Socket } from 'socket.io';
-import { io } from '../../app';
+
+import { Step } from '@config/types';
 import { CandidateRepo, RecruitmentRepo } from '@database/model';
+import { io } from '@servers/websocket';
 import { errorRes } from '@utils/errorRes';
 import { logger } from '@utils/logger';
 import { verifyJWT } from '@utils/verifyJWT';
 
-export const onMoveCandidate = (socket: Socket) => async (req: { cid: string, from: number, to: number, token: string }) => {
+export const onMoveCandidate = (socket: Socket) => async (req: { cid: string, from: Step, to: Step, token: string }) => {
     const { cid, from, to, token } = req;
     try {
         verifyJWT(token);
@@ -15,6 +17,9 @@ export const onMoveCandidate = (socket: Socket) => async (req: { cid: string, fr
         }
         const { step, title, group } = candidate;
         const recruitment = (await RecruitmentRepo.query({ title }))[0];
+        if (!recruitment) {
+            return socket.emit('moveCandidateError', errorRes('Recruitment doesn\'t exist!', 'warning', { cid, to, from }));
+        }
         if (recruitment.end < Date.now()) {
             return socket.emit('moveCandidateError', errorRes('This recruitment has already ended!', 'warning', { cid, to, from }));
         }

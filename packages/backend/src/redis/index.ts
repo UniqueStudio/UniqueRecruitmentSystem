@@ -1,16 +1,12 @@
-import redis from 'redis';
-import { promisify } from 'util';
-import { logger } from '@utils/logger';
+import IORedis from 'ioredis';
 
-const redisClient = redis.createClient({ host: 'redis' });
+const redisClient = new IORedis({ host: 'redis' });
+
 export const redisAsync = {
-    get: promisify(redisClient.get).bind(redisClient),
-    del: promisify(redisClient.del).bind(redisClient),
-    set: promisify(redisClient.set).bind(redisClient),
+    ...redisClient,
     getThenDel: async (query: string) => {
-        const result = await redisAsync.get(query);
-        await redisAsync.del(query);
+        const result = await redisClient.get(query);
+        await redisClient.del(query);
         return result;
-    }
+    },
 };
-redisClient.on('error', logger.error);

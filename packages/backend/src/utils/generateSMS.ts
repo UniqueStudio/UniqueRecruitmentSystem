@@ -62,7 +62,7 @@ export const generateSMS = ({ name, title, step, type, group, time, place, rest,
             if (!place) throw new Error('Place not provided!');
             if (!time) throw new Error('Time not provided!');
             // {1}你好，请于{2}在启明学院亮胜楼{3}参加{4}，请准时到场。
-            return { template: 670906, param_list: [name, time, place, `团队群面`] };
+            return { template: 670906, param_list: [name, time, place, '团队群面'] };
         }
 
         default:

@@ -1,11 +1,12 @@
-import { RequestHandler } from 'express';
 import { param, validationResult } from 'express-validator';
+
+import { TITLE_REGEX } from '@config/consts';
+import { Handler } from '@config/types';
 import { CandidateRepo, RecruitmentRepo, UserRepo } from '@database/model';
 import { compareTitle } from '@utils/compareTitle';
 import { errorRes } from '@utils/errorRes';
-import { TITLE_REGEX } from '@config/consts';
 
-export const getCandidates: RequestHandler = async (req, res, next) => {
+export const getCandidates: Handler = async (req, res, next) => {
     try {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
@@ -36,6 +37,6 @@ export const getCandidateVerify = [
     param('query').isJSON().withMessage('Query is invalid!')
         .custom((query) => {
             const { title } = JSON.parse(query);
-            return title.match(TITLE_REGEX);
-        }).withMessage('Title is invalid!')
+            return TITLE_REGEX.test(title);
+        }).withMessage('Title is invalid!'),
 ];

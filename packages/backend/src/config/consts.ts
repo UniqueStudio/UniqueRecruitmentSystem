@@ -1,18 +1,31 @@
-const { APP_ID, AGENT_ID, REDIRECT_URI, CORP_ID, CORP_SECRET, TOKEN, DB_PORT, SECRET } = process.env;
-const { ACM_DATAID, ACM_GROUP, ACM_NAMESPACE, ACM_ACCESS_KEY, ACM_SECRET_KEY } = process.env;
-const QRCodeAPI = `https://open.work.weixin.qq.com/wwopen/sso`;
+const {
+    APP_ID,
+    AGENT_ID,
+    REDIRECT_URI,
+    CORP_ID,
+    CORP_SECRET,
+    TOKEN,
+    DB_PORT,
+    SECRET,
+    ACM_DATAID,
+    ACM_GROUP,
+    ACM_NAMESPACE,
+    ACM_ACCESS_KEY,
+    ACM_SECRET_KEY,
+} = process.env;
+const QRCodeAPI = 'https://open.work.weixin.qq.com/wwopen/sso';
 export const getQRCodeURL = `${QRCodeAPI}/qrConnect?appid=${APP_ID}&agentid=${AGENT_ID}&redirect_uri=${REDIRECT_URI}`;
 export const scanningURL = `${QRCodeAPI}/l/qrConnect?key=`;
 const weChatAPI = 'https://qyapi.weixin.qq.com/cgi-bin';
 export const accessTokenURL = `${weChatAPI}/gettoken?corpid=${CORP_ID}&corpsecret=${CORP_SECRET}`;
 export const userIDURL = (accessToken: string, code: string) => `${weChatAPI}/user/getuserinfo?access_token=${accessToken}&code=${code}`;
 export const userInfoURL = (accessToken: string, uid: string) => `${weChatAPI}/user/get?access_token=${accessToken}&userid=${uid}`;
-export const smsAPI = `https://open.hustunique.com/message/sms`;
-export const token = TOKEN!;
+export const smsAPI = 'https://open.hustunique.com/message/sms';
+export const token = TOKEN;
 export const formURL = 'https://join.hustunique.com';
 export const dbURI = `mongodb://mongodb:${DB_PORT}/recruitment`;
 // TODO: move this into open service
-export const shortenURLAPI = `https://v1.alapi.cn/api/url`;
+export const shortenURLAPI = 'https://v1.alapi.cn/api/url';
 
 export const GROUPS = ['Web', 'Lab', 'AI', 'Game', 'Android', 'iOS', 'Design', 'PM'];
 export const GROUPS_ = GROUPS.map((group) => group.toLowerCase());
@@ -43,15 +56,15 @@ export const ID_TO_GROUP = {
     24: 'lab',
     25: 'pm',
 };
-export const secret = SECRET!;
+export const secret = SECRET;
 
 export const Acm = {
     endpoint: 'acm.aliyun.com',
-    dataId: ACM_DATAID!,
-    group: ACM_GROUP!,
-    namespace: ACM_NAMESPACE!,
-    accessKey: ACM_ACCESS_KEY!,
-    secretKey: ACM_SECRET_KEY!
+    dataId: ACM_DATAID,
+    group: ACM_GROUP,
+    namespace: ACM_NAMESPACE,
+    accessKey: ACM_ACCESS_KEY,
+    secretKey: ACM_SECRET_KEY,
 };
 
 export const ENV_DEV = 'development';

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-types */
 import { connect, Document, Model, Schema, SchemaDefinition, set } from 'mongoose';
 
 import { dbURI } from '@config/consts';
@@ -7,7 +8,7 @@ set('useFindAndModify', false);
 
 connect(dbURI, { useNewUrlParser: true })
     .then(() => logger.info('Connected to MongoDB'))
-    .catch((err) => logger.error(err.message));
+    .catch(({ message }) => logger.error(message));
 
 export class RepositoryBase<T extends Document> {
     private readonly model: Model<T>;
@@ -21,7 +22,7 @@ export class RepositoryBase<T extends Document> {
     }
 
     insert(item: T) {
-        return this.model.create(item);
+        return this.model.create(item as any);
     }
 
     createAndInsert(item: object) {
@@ -37,23 +38,23 @@ export class RepositoryBase<T extends Document> {
     }
 
     update(condition: object, newItem: object, isRemove = false) {
-        return this.model.findOneAndUpdate(condition, { [isRemove ? '$unset' : '$set']: newItem }, { new: true });
+        return this.model.findOneAndUpdate(condition, { [isRemove ? '$unset' : '$set']: newItem } as any, { new: true });
     }
 
     updateById(id: string, newItem: object, isRemove = false) {
-        return this.model.findByIdAndUpdate(id, { [isRemove ? '$unset' : '$set']: newItem }, { new: true });
+        return this.model.findByIdAndUpdate(id, { [isRemove ? '$unset' : '$set']: newItem } as any, { new: true });
     }
 
     updateByIds(ids: string[], newItem: object, isRemove = false) {
-        return this.model.updateMany({ _id: { $in: ids } }, { [isRemove ? '$unset' : '$set']: newItem }, { new: true });
+        return this.model.updateMany({ _id: { $in: ids } } as any, { [isRemove ? '$unset' : '$set']: newItem } as any, { new: true });
     }
 
     pushById(id: string, newItem: object) {
-        return this.model.findByIdAndUpdate(id, { $push: newItem }, { new: true });
+        return this.model.findByIdAndUpdate(id, { $push: newItem } as any, { new: true });
     }
 
     pullById(id: string, deleteItem: object) {
-        return this.model.findByIdAndUpdate(id, { $pull: deleteItem }, { new: true });
+        return this.model.findByIdAndUpdate(id, { $pull: deleteItem } as any, { new: true });
     }
 
     delete(condition: object) {

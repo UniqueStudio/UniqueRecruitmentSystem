@@ -1,9 +1,8 @@
-import { RequestHandler } from 'express';
-
+import { Handler } from '@config/types';
 import { RecruitmentRepo } from '@database/model';
 import { errorRes } from '@utils/errorRes';
 
-export const getPendingTitles: RequestHandler = async (req, res, next) => {
+export const getPendingTitles: Handler = async (req, res, next) => {
     try {
         const pending = await RecruitmentRepo.query({ stop: { $gt: Date.now() }, begin: { $lt: Date.now() } });
         if (pending.length === 0) {

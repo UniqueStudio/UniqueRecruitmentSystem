@@ -1,11 +1,16 @@
-import { RequestHandler } from 'express';
-
 import { redisAsync } from '../redis';
+
+import { Handler } from '@config/types';
 import { isProd } from '@utils/environment';
 import { errorRes } from '@utils/errorRes';
 
-export const codeChecker = (type: 'user' | 'candidate'): RequestHandler => async (req, res, next) => {
-    if (isProd()) {
+interface Body {
+    code: string;
+    phone: string;
+}
+
+export const codeChecker = (type: 'user' | 'candidate'): Handler<Body> => async (req, res, next) => {
+    if (isProd) {
         const { id } = res.locals;
         const { code, phone } = req.body;
         if (!code) {

@@ -1,13 +1,9 @@
-import fs from 'fs';
-import mkdirp from 'mkdirp';
+import { copyFileSync, mkdirSync } from 'fs';
 import { join } from 'path';
-import { promisify } from 'util';
 
-const copy = promisify(fs.copyFile);
-
-export const copyFile = async (oldPath: string, newDirectory: string, name: string) => {
-    mkdirp.sync(newDirectory);
+export const copyFile = (oldPath: string, newDirectory: string, name: string) => {
+    mkdirSync(newDirectory, { recursive: true });
     const newPath = join(newDirectory, name);
-    await copy(oldPath, newPath);
+    copyFileSync(oldPath, newPath);
     return newPath;
 };

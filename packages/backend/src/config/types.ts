@@ -1,3 +1,5 @@
+import { NextFunction, Request, RequestHandler, Response } from 'express';
+import { ObjectId } from 'mongodb';
 import { Document } from 'mongoose';
 
 export interface Payload {
@@ -5,6 +7,7 @@ export interface Payload {
 }
 
 export interface FormPayload extends Document {
+    _id: ObjectId;
     id: string;
     recruitmentId: string;
     step: 'group' | 'team'; // group: 组面, team: 群面
@@ -20,6 +23,7 @@ export type Rank = 0 | 1 | 2 | 3 | 4;           // 1: 10%, 2: 25%, 3: 50%, 4: 10
 export type Evaluation = 0 | 1 | 2;             // 0: bad, 1: so-so, 2: good
 
 export interface Candidate extends Document {
+    _id: ObjectId;
     name: string;
     gender: Gender;
     grade: Grade;
@@ -45,6 +49,7 @@ export interface Candidate extends Document {
 }
 
 export interface Comment extends Document {
+    _id: ObjectId;
     uid: string;
     username: string;
     content: string;
@@ -52,6 +57,7 @@ export interface Comment extends Document {
 }
 
 export interface User extends Document {
+    _id: ObjectId;
     weChatID: string;
     username: string;
     password?: {
@@ -81,6 +87,7 @@ export interface Interview {
 }
 
 export interface Recruitment extends Document {
+    _id: ObjectId;
     title: string; // e.g. 2018A || 2018S (A: AUTUMN, S: SPRING, C: CAMP)
     begin: number;
     end: number;
@@ -105,3 +112,15 @@ export interface Message {
     avatar: string;
     content: string;
 }
+
+type Req<Body> = Request<Record<string, string>, unknown, Body>;
+
+interface Res extends Response {
+    locals: {
+        id: string;
+    }
+}
+
+type Next = NextFunction;
+
+export type Handler<Body = Record<string, unknown>> = (req: Req<Body>, res: Res, next: Next) => ReturnType<RequestHandler>;

@@ -7,9 +7,9 @@ const transport = createTransport({
     port: 465,
     auth: {
         user: 'robot@mail.hustunique.com',
-        pass: EMAIL_PASS!
+        pass: EMAIL_PASS!,
     },
-    secure: true
+    secure: true,
 });
 
 interface Receiver {
@@ -24,7 +24,7 @@ export default async (to: Receiver, url: string, description: string, title: str
         from: '联创团队<robot@mail.hustunique.com>',
         to,
         subject: `联创团队${title}报名成功通知`,
-        html
+        html,
     };
     await transport.sendMail(message);
     // logger.info(info);

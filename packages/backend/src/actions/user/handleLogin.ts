@@ -1,11 +1,18 @@
 import crypto from 'crypto';
-import { RequestHandler } from 'express';
+
 import { body, validationResult } from 'express-validator';
+
+import { Handler } from '@config/types';
 import { UserRepo } from '@database/model';
 import { errorRes } from '@utils/errorRes';
 import { generateJWT } from '@utils/generateJWT';
 
-export const handleLogin: RequestHandler = async (req, res, next) => {
+interface Body {
+    phone: string;
+    password: string;
+}
+
+export const handleLogin: Handler<Body> = async (req, res, next) => {
     try {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
@@ -26,7 +33,7 @@ export const handleLogin: RequestHandler = async (req, res, next) => {
         if (hash !== crypto.scryptSync(password, salt, 64).toString()) {
             return next(errorRes('Password is incorrect!', 'warning'));
         }
-        const token = generateJWT({ id: user._id }, 604800);
+        const token = generateJWT({ id: user._id.toString() }, 604800);
         res.json({ token, type: 'success' });
     } catch (error) {
         return next(error);

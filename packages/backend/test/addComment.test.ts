@@ -29,7 +29,7 @@ describe('WebSocket /addComment', () => {
         const users = await UserRepo.query({ weChatID: 'foo' });
         const candidates = await CandidateRepo.query({ name: 'test', title: '2021C' });
         expect(users.length).toBe(1);
-        const token = generateJWT({ id: users[0]._id }, 100000);
+        const token = generateJWT({ id: users[0]._id.toString() }, 100000);
         socket.emit('addComment', {
             cid: candidates[0]._id,
             comment: { uid: users[0]._id, content: 'testddd', evaluation: 1, username: 'w1nd3r1c4' },

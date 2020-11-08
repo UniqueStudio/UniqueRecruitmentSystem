@@ -1,12 +1,14 @@
-import { RequestHandler } from 'express';
 import fetch from 'node-fetch';
-import { smsAPI, token } from '@config/consts';
-import { UserRepo } from '@database/model';
+
 import { redisAsync } from '../../redis';
+
+import { smsAPI, token } from '@config/consts';
+import { Handler } from '@config/types';
+import { UserRepo } from '@database/model';
 import { errorRes } from '@utils/errorRes';
 import { getRandom } from '@utils/getRandom';
 
-export const sendUserCode: RequestHandler = async (req, res, next) => {
+export const sendUserCode: Handler = async (req, res, next) => {
     try {
         const { id: uid } = res.locals;
         const user = await UserRepo.queryById(uid);
@@ -17,25 +19,25 @@ export const sendUserCode: RequestHandler = async (req, res, next) => {
         if (!phone) {
             return next(errorRes('Phone number doesn\'t exist!', 'warning'));
         }
-        const code = getRandom(1000, 10000).toString();
+        const verificationCode = getRandom(1000, 10000).toString();
         const response = await fetch(smsAPI, {
             method: 'POST',
             headers: {
                 'Token': token,
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
             },
             // 您{1}的验证码为：{2}，请于3分钟内填写。如非本人操作，请忽略本短信。
             body: JSON.stringify({
                 phone,
                 template: 719160,
-                param_list: ['dashboard中', code]
-            })
+                param_list: ['dashboard中', verificationCode],
+            }),
         });
-        const result = await response.json();
-        if (result.code !== 200) {
-            return next(errorRes(result.message, 'warning'));
+        const { code, message } = await response.json();
+        if (code !== 200) {
+            return next(errorRes(message, 'warning'));
         }
-        await redisAsync.set(`userCode:${uid}`, code, 'EX', 600);
+        await redisAsync.set(`userCode:${uid}`, verificationCode, 'EX', 600);
         res.json({ type: 'success' });
     } catch (error) {
         return next(error);

@@ -1,6 +1,7 @@
 import { ACMClient } from 'acm-client';
+
+import { Acm } from '@config/consts';
 import { logger } from '@utils/logger';
-import { Acm } from './consts';
 
 logger.info(JSON.stringify(Acm));
 
@@ -10,6 +11,7 @@ export const loadConfig = async () => {
         ...Acm,
         requestTimeout: 6000, // Request timeout, 6s by default
     });
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
     await acm.ready();
     acm.subscribe({
         dataId: Acm.dataId,

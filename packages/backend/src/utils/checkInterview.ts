@@ -14,6 +14,6 @@ export const checkInterview: CustomValidator = (interview) => {
         typeof date !== 'number'
         || typeof morning !== 'number'
         || typeof afternoon !== 'number'
-        || typeof evening !== 'number'
+        || typeof evening !== 'number',
     ).length === 0;
 };

@@ -1,9 +1,10 @@
-import { RequestHandler } from 'express';
 import { basename, resolve } from 'path';
+
+import { Handler } from '@config/types';
 import { CandidateRepo } from '@database/model';
 import { errorRes } from '@utils/errorRes';
 
-export const getResume: RequestHandler = async (req, res) => {
+export const getResume: Handler = async (req, res) => {
     try {
         const data = await CandidateRepo.queryById(req.params.cid);
         if (!data || !data.resume) {
@@ -14,7 +15,7 @@ export const getResume: RequestHandler = async (req, res) => {
             res.header('Access-Control-Expose-Headers', 'Content-Length, Content-Disposition')
                 .download(path, filename);
         }
-    } catch (err) {
-        res.status(500).send(errorRes(err.message, 'error'));
+    } catch ({ message }) {
+        res.status(500).send(errorRes(message, 'error'));
     }
 };

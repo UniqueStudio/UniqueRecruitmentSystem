@@ -1,8 +1,13 @@
 import { Router } from 'express';
+
 import {
-    getAllRecruitments, getOneRecruitment, getPendingTitles,
-    launchRecruitment, launchRecruitmentVerify,
-    setRecruitment, setRecruitmentVerify
+    getAllRecruitments,
+    getOneRecruitment,
+    getPendingTitles,
+    launchRecruitment,
+    launchRecruitmentVerify,
+    setRecruitment,
+    setRecruitmentVerify,
 } from '../actions/recruitment';
 
 import { authenticator } from '@mw/authenticator';

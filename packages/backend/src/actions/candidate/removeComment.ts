@@ -1,7 +1,8 @@
 import { Types } from 'mongoose';
 import { Socket } from 'socket.io';
-import { io } from '../../app';
+
 import { CandidateRepo } from '@database/model';
+import { io } from '@servers/websocket';
 import { errorRes } from '@utils/errorRes';
 import { logger } from '@utils/logger';
 import { verifyJWT } from '@utils/verifyJWT';
