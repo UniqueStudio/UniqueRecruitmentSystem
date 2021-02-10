@@ -1,10 +1,13 @@
-import '../styles/globals.css';
 import type { AppProps } from 'next/app';
 import Head from 'next/head';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import Layout from 'layout';
 import { ThemeProvider } from '@material-ui/core';
+
+import Snackbar from 'components/Snackbar';
 import theme from 'styles/theme';
+import Layout from 'layout';
+
+import '../styles/globals.css';
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
@@ -18,6 +21,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         <Layout>
           <Component {...pageProps} />
         </Layout>
+        <Snackbar type={undefined} message={undefined} />
       </ThemeProvider>
     </>
   );
