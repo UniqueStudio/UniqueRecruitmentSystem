@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build && next export",
     "start": "next start",
-    "prebuild": "rimraf .next"
+    "prebuild": "rimraf .next",
+    "postinstall": "husky install"
   },
   "dependencies": {
     "@material-ui/core": "^4.11.3",
@@ -31,16 +32,11 @@
     "eslint-plugin-prettier": "^3.3.1",
     "eslint-plugin-react": "^7.22.0",
     "eslint-plugin-react-hooks": "^4.2.0",
-    "husky": ">=4",
+    "husky": "5",
     "lint-staged": ">=10",
     "prettier": "^2.2.1",
     "rimraf": "^3.0.2",
     "typescript": "^4.1.3"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
