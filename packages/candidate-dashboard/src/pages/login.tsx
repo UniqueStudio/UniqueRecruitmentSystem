@@ -136,7 +136,7 @@ const Login: NextPage = () => {
                   联创团队
                 </Typography>
                 <Typography variant='subtitle1' align='center'>
-                  招新选手Dashboard
+                  招新选手 Dashboard
                 </Typography>
               </Grid>
             </Grid>
@@ -158,7 +158,7 @@ const Login: NextPage = () => {
 
           <Grid item xs={6}>
             <Input
-              id='verification code'
+              id='verification_code'
               placeholder='验证码'
               fullWidth
               inputProps={{ maxLength: 4 }}

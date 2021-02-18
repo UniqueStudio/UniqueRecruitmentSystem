@@ -30,7 +30,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   return (
     <>
       <Head>
-        <title>联创团队招新选手dashboard</title>
+        <title>联创团队招新选手Dashboard</title>
         <meta name='viewport' content='width=device-width, initial-scale=1.0' />
       </Head>
       <CssBaseline />
