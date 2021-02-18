@@ -18,6 +18,25 @@ const translator: Map<keyof CandidateForm, string> = new Map([
   ['intro', '自我介绍'],
 ]);
 
+export interface LoginCandidateResp {
+  type: MessageType;
+  token?: string;
+  message?: string;
+}
+
+export const loginCandidate: (phone: string, code: string) => Promise<LoginCandidateResp> = async (
+  phone: string,
+  code: string,
+) => {
+  const resp = await fetch(`${HOST}/${prefix}/login`, {
+    method: 'POST',
+    body: JSON.stringify({ phone, code }),
+    headers: { 'Content-Type': 'application/json' },
+  });
+  const result: LoginCandidateResp = await resp.json();
+  return result;
+};
+
 export interface SubmitCandidateFormResp {
   type: MessageType;
   message?: string;
