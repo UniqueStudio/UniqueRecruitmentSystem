@@ -9,7 +9,7 @@ import {
   useTheme,
   List,
 } from '@material-ui/core';
-import { Home as HomeIcon, Menu as MenuIcon } from '@material-ui/icons';
+import { Home as HomeIcon, Menu as MenuIcon, Edit as EditIcon } from '@material-ui/icons';
 import clsx from 'clsx';
 import ListItemLink from 'components/ListItemLink';
 import { FC, useEffect, useState } from 'react';
@@ -127,6 +127,7 @@ const Layout: FC = (props) => {
           </header>
           <List className={classes.drawerList}>
             <ListItemLink href='/' primary='首页' icon={<HomeIcon />} />
+            <ListItemLink href='/edit' primary='编辑信息' icon={<EditIcon />} />
           </List>
         </nav>
       </SwipeableDrawer>
