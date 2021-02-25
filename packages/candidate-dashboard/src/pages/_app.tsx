@@ -3,14 +3,14 @@ import Head from 'next/head';
 import { useRouter } from 'next/router';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import { ThemeProvider } from '@material-ui/core';
-import { Provider, useSelector } from 'react-redux';
+import { Provider } from 'react-redux';
 import { FC } from 'react';
 
 import Snackbar from 'components/Snackbar';
 import theme from 'styles/theme';
 import Layout from 'layout';
 
-import store, { RootState, useAppDispatch } from 'store';
+import store, { useAppDispatch, useAppSelector } from 'store';
 import { resetSnackbar } from 'store/component';
 
 import '../styles/globals.css';
@@ -19,7 +19,7 @@ import '../styles/globals.css';
 const withoutLayout: Set<string> = new Set(['/login', '/_error']);
 
 const SnackbarWapper: FC = () => {
-  const snackbarProps = useSelector((state: RootState) => state.component.snackbar);
+  const snackbarProps = useAppSelector((state) => state.component.snackbar);
   const dispatch = useAppDispatch();
   return <Snackbar {...snackbarProps} onClose={() => dispatch(resetSnackbar())} />;
 };

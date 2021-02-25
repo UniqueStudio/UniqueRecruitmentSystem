@@ -13,6 +13,7 @@ import { Home as HomeIcon, Menu as MenuIcon } from '@material-ui/icons';
 import clsx from 'clsx';
 import ListItemLink from 'components/ListItemLink';
 import { FC, useEffect, useState } from 'react';
+import { useAppSelector } from 'store';
 
 const drawerWidth = 300;
 
@@ -85,6 +86,7 @@ const Layout: FC = (props) => {
   const theme = useTheme();
   const classes = useStyles();
   const matchMedia = useMediaQuery(theme.breakpoints.up('lg'));
+  const title = useAppSelector((state) => state.component.layout.title);
   const [open, setOpen] = useState<boolean>(matchMedia);
 
   const handleClose = () => setOpen(false);
@@ -107,7 +109,7 @@ const Layout: FC = (props) => {
             <MenuIcon />
           </IconButton>
           <Typography variant='h6' className={classes.title}>
-            首页
+            {title}
           </Typography>
         </Toolbar>
       </AppBar>
