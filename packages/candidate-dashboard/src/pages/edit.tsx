@@ -121,18 +121,6 @@ const Edit: NextPage = () => {
             />
           </Grid>
           <Grid item className={classes.item} {...grid}>
-            <FormControl className={classes.input}>
-              <FormHelperText>性别</FormHelperText>
-              <NativeSelect variant='outlined' value={selectValue.sex} onChange={handleSelect(SelectKeys.sex)}>
-                {GENDERS.map((gender) => (
-                  <option value={gender} key={gender}>
-                    {gender}
-                  </option>
-                ))}
-              </NativeSelect>
-            </FormControl>
-          </Grid>
-          <Grid item className={classes.item} {...grid}>
             <TextField
               required
               label='电话'
@@ -160,6 +148,18 @@ const Edit: NextPage = () => {
               variant='outlined'
               defaultValue={data.institude || ''}
             />
+          </Grid>
+          <Grid item className={classes.item} {...grid}>
+            <FormControl className={classes.input}>
+              <FormHelperText>性别</FormHelperText>
+              <NativeSelect variant='outlined' value={selectValue.sex} onChange={handleSelect(SelectKeys.sex)}>
+                {GENDERS.map((gender) => (
+                  <option value={gender} key={gender}>
+                    {gender}
+                  </option>
+                ))}
+              </NativeSelect>
+            </FormControl>
           </Grid>
           <Grid item className={classes.item} {...grid}>
             <FormControl className={classes.input}>
