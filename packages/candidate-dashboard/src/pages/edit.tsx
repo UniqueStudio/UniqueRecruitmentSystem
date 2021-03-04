@@ -8,25 +8,33 @@ import {
   FormHelperText,
   Grid,
   GridSize,
-  makeStyles,
+  IconButton,
   NativeSelect,
   Switch,
   TextField,
   Typography,
+  Popover,
 } from '@material-ui/core';
-import type { Breakpoint } from '@material-ui/core/styles/createBreakpoints';
+import { makeStyles } from '@material-ui/core/styles';
+import { HelpOutline } from '@material-ui/icons';
 import { ChangeEvent, useState, useCallback } from 'react';
-import { NextPage } from 'next';
+import clsx from 'clsx';
+
 import { GROUPS, GRADES, GENDERS } from 'config/consts';
 import { useAppDispatch } from 'store';
 import { showSnackbar } from 'store/component';
 
+import type { Breakpoint } from '@material-ui/core/styles/createBreakpoints';
+import type { NextPage } from 'next';
+
 const useStyle = makeStyles((theme) => ({
-  root: {
+  center: {
     display: 'flex',
-    flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  root: {
+    flexDirection: 'column',
     width: '100%',
     height: '100%',
   },
@@ -39,10 +47,17 @@ const useStyle = makeStyles((theme) => ({
   input: {
     margin: theme.spacing(2),
   },
+  select: {
+    width: theme.spacing(12),
+  },
   item: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
+    minHeight: theme.spacing(10),
+  },
+  popover: {
+    pointerEvents: 'none',
+  },
+  paper: {
+    padding: theme.spacing(1),
   },
 }));
 
@@ -65,6 +80,15 @@ const Edit: NextPage = () => {
   const data: any = {};
   const dispatch = useAppDispatch();
   const classes = useStyle();
+  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null); // popover
+  const handlePopoverOpen = (event: React.MouseEvent<HTMLElement, MouseEvent>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handlePopoverClose = () => {
+    setAnchorEl(null);
+  };
+
   const [file, setFile] = useState<File | null>(null);
   const [selectValue, setSelectValue] = useState<SelectData>({});
 
@@ -87,13 +111,40 @@ const Edit: NextPage = () => {
     setFile(file);
   }, []);
 
+  const popOpen = Boolean(anchorEl);
+
+  const Pop = (
+    <Popover
+      id='quick-helper-popover'
+      className={classes.popover}
+      classes={{
+        paper: classes.paper,
+      }}
+      open={popOpen}
+      anchorEl={anchorEl}
+      anchorOrigin={{
+        vertical: 'bottom',
+        horizontal: 'left',
+      }}
+      transformOrigin={{
+        vertical: 'top',
+        horizontal: 'left',
+      }}
+      onClose={handlePopoverClose}
+      disableRestoreFocus
+    >
+      {/* TODO(colinaaa): intro to quick */}
+      <Typography>所谓的快速通道 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</Typography>
+    </Popover>
+  );
+
   return (
-    <Container className={classes.root}>
+    <Container className={clsx(classes.root, classes.center)}>
       <Card className={classes.card}>
         <Typography variant='h4'>编辑信息</Typography>
         <Divider />
         <Grid container justify='space-evenly' direction='row'>
-          <Grid item className={classes.item} {...grid}>
+          <Grid item className={clsx(classes.item, classes.center)} {...grid}>
             <TextField
               required
               label='姓名'
@@ -102,7 +153,7 @@ const Edit: NextPage = () => {
               defaultValue={data.name || ''}
             />
           </Grid>
-          <Grid item className={classes.item} {...grid}>
+          <Grid item className={clsx(classes.item, classes.center)} {...grid}>
             <TextField
               required
               label='邮箱'
@@ -111,7 +162,7 @@ const Edit: NextPage = () => {
               defaultValue={data.email || ''}
             />
           </Grid>
-          <Grid item className={classes.item} {...grid}>
+          <Grid item className={clsx(classes.item, classes.center)} {...grid}>
             <TextField
               required
               label='推荐人'
@@ -120,7 +171,7 @@ const Edit: NextPage = () => {
               defaultValue={data.recommend || '无'}
             />
           </Grid>
-          <Grid item className={classes.item} {...grid}>
+          <Grid item className={clsx(classes.item, classes.center)} {...grid}>
             <TextField
               required
               label='电话'
@@ -129,7 +180,7 @@ const Edit: NextPage = () => {
               defaultValue={data.phone || ''}
             />
           </Grid>
-          <Grid item className={classes.item} {...grid}>
+          <Grid item className={clsx(classes.item, classes.center)} {...grid}>
             {/* TODO: Autocomplete */}
             <TextField
               required
@@ -139,7 +190,7 @@ const Edit: NextPage = () => {
               defaultValue={data.institude || ''}
             />
           </Grid>
-          <Grid item className={classes.item} {...grid}>
+          <Grid item className={clsx(classes.item, classes.center)} {...grid}>
             {/* TODO: Autocomplete */}
             <TextField
               required
@@ -149,8 +200,8 @@ const Edit: NextPage = () => {
               defaultValue={data.institude || ''}
             />
           </Grid>
-          <Grid item className={classes.item} {...grid}>
-            <FormControl className={classes.input}>
+          <Grid item className={clsx(classes.item, classes.center)} {...grid}>
+            <FormControl className={clsx(classes.input, classes.select)}>
               <FormHelperText>性别</FormHelperText>
               <NativeSelect variant='outlined' value={selectValue.sex} onChange={handleSelect(SelectKeys.sex)}>
                 {GENDERS.map((gender) => (
@@ -161,8 +212,8 @@ const Edit: NextPage = () => {
               </NativeSelect>
             </FormControl>
           </Grid>
-          <Grid item className={classes.item} {...grid}>
-            <FormControl className={classes.input}>
+          <Grid item className={clsx(classes.item, classes.center)} {...grid}>
+            <FormControl className={clsx(classes.input, classes.select)}>
               <FormHelperText>所属年级</FormHelperText>
               <NativeSelect variant='outlined' value={selectValue.grade} onChange={handleSelect(SelectKeys.grade)}>
                 {GRADES.map((grade) => (
@@ -173,8 +224,8 @@ const Edit: NextPage = () => {
               </NativeSelect>
             </FormControl>
           </Grid>
-          <Grid item className={classes.item} {...grid}>
-            <FormControl className={classes.input}>
+          <Grid item className={clsx(classes.item, classes.center)} {...grid}>
+            <FormControl className={clsx(classes.input, classes.select)}>
               <FormHelperText>组别</FormHelperText>
               <NativeSelect variant='outlined' value={selectValue.group} onChange={handleSelect(SelectKeys.group)}>
                 {GROUPS.map((group) => (
@@ -185,17 +236,29 @@ const Edit: NextPage = () => {
               </NativeSelect>
             </FormControl>
           </Grid>
-          <Grid item className={classes.item} {...grid}>
-            <FormHelperText>快速通道</FormHelperText>
-            <Switch inputProps={{ name: 'isQuick' }} />
+          <Grid item className={clsx(classes.item, classes.center)} {...grid}>
+            <FormControlLabel
+              className={classes.center}
+              control={<Switch inputProps={{ name: 'isQuick' }} size='small' />}
+              label={
+                <div className={classes.center}>
+                  <span>快速通道</span>
+                  <IconButton size='small' onMouseEnter={handlePopoverOpen} onMouseLeave={handlePopoverClose}>
+                    <HelpOutline fontSize='small' />
+                  </IconButton>
+                  {Pop}
+                </div>
+              }
+              labelPlacement='top'
+            />
           </Grid>
-          <Grid item className={classes.item} {...grid}>
+          <Grid item className={clsx(classes.item, classes.center)} {...grid}>
             <Button variant='outlined' component='label'>
               上传建立/作品集
               <input id='resume' name='resume' type='file' hidden onChange={handleFile} />
             </Button>
           </Grid>
-          <Grid item className={classes.item} {...grid}>
+          <Grid item className={clsx(classes.item, classes.center)} {...grid}>
             <TextField
               required
               multiline
