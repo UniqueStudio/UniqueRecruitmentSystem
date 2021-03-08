@@ -15,9 +15,10 @@ import {
   Typography,
   Popover,
 } from '@material-ui/core';
+import { Autocomplete } from '@material-ui/lab';
 import { makeStyles } from '@material-ui/core/styles';
 import { HelpOutline } from '@material-ui/icons';
-import { ChangeEvent, FormEventHandler, useState, useCallback } from 'react';
+import { ChangeEvent, FormEventHandler, useState, useCallback, useMemo } from 'react';
 import clsx from 'clsx';
 
 import { GROUPS, GRADES, GENDERS, RANKS } from 'config/consts';
@@ -28,6 +29,7 @@ import { submitCandidateForm } from 'services';
 import type { Breakpoint } from '@material-ui/core/styles/createBreakpoints';
 import type { NextPage } from 'next';
 import type { CandidateForm } from 'config/types';
+import { Departments } from 'config/departments';
 
 const useStyle = makeStyles((theme) => ({
   center: {
@@ -48,6 +50,7 @@ const useStyle = makeStyles((theme) => ({
   },
   input: {
     margin: theme.spacing(2),
+    width: theme.spacing(24),
   },
   select: {
     width: theme.spacing(12),
@@ -131,6 +134,11 @@ const Edit: NextPage = () => {
     }
   };
 
+  const Majors = useMemo(
+    () => Departments[inputValue.institute as keyof typeof Departments] ?? Object.values(Departments).flat(),
+    [inputValue.institute],
+  );
+
   const popOpen = Boolean(anchorEl);
 
   const Pop = (
@@ -205,25 +213,25 @@ const Edit: NextPage = () => {
               />
             </Grid>
             <Grid item className={clsx(classes.item, classes.center)} {...grid}>
-              {/* TODO: Autocomplete */}
-              <TextField
-                required
-                label='学院'
+              <Autocomplete
                 className={classes.input}
-                variant='outlined'
-                value={inputValue.institute || ''}
-                onChange={handleInput('institute')}
+                options={Object.keys(Departments)}
+                autoHighlight
+                freeSolo
+                onChange={(_, v) => setInputValue((prev) => ({ ...prev, institute: v ?? '' }))}
+                onInputChange={(_, institute) => setInputValue((prev) => ({ ...prev, institute }))}
+                renderInput={(params) => <TextField {...params} required label='学院' variant='outlined' />}
               />
             </Grid>
             <Grid item className={clsx(classes.item, classes.center)} {...grid}>
-              {/* TODO: Autocomplete */}
-              <TextField
-                required
-                label='专业'
+              <Autocomplete
                 className={classes.input}
-                variant='outlined'
-                value={inputValue.major || ''}
-                onChange={handleInput('major')}
+                options={Majors}
+                autoHighlight
+                freeSolo
+                onChange={(_, v) => setInputValue((prev) => ({ ...prev, major: v ?? '' }))}
+                onInputChange={(_, major) => setInputValue((prev) => ({ ...prev, major }))}
+                renderInput={(params) => <TextField {...params} required label='专业' variant='outlined' />}
               />
             </Grid>
             <Grid item className={clsx(classes.item, classes.center)} {...grid}>
