@@ -22,14 +22,15 @@ import { ChangeEvent, FormEventHandler, useState, useCallback, useMemo } from 'r
 import clsx from 'clsx';
 
 import { GROUPS, GRADES, GENDERS, RANKS } from 'config/consts';
-import { useAppDispatch } from 'store';
+import { Departments } from 'config/departments';
+import { useAppDispatch, useAppSelector } from 'store';
 import { showSnackbar } from 'store/component';
+import { setCandidateField } from 'store/candidate';
 import { submitCandidateForm } from 'services';
 
 import type { Breakpoint } from '@material-ui/core/styles/createBreakpoints';
 import type { NextPage } from 'next';
 import type { CandidateForm } from 'config/types';
-import { Departments } from 'config/departments';
 
 const useStyle = makeStyles((theme) => ({
   center: {
@@ -75,12 +76,6 @@ const grid: Partial<Record<Breakpoint, boolean | GridSize>> = {
 type InputKeys = keyof CandidateForm;
 
 const Edit: NextPage = () => {
-  const data: any = {
-    group: 'ai',
-    gender: 0,
-    rank: 0,
-    grade: 0,
-  };
   const dispatch = useAppDispatch();
   const classes = useStyle();
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null); // popover
@@ -94,15 +89,15 @@ const Edit: NextPage = () => {
 
   const [resume, setResume] = useState<File | null>(null);
   const [isQuick, setIsQuick] = useState(false);
-  const [inputValue, setInputValue] = useState<CandidateForm>(data);
+  const inputValue = useAppSelector(({ candidate }) => candidate);
 
   const handleIsQuick = useCallback(() => {
     setIsQuick((prev) => !prev);
   }, []);
 
   const handleInput = useCallback(
-    (id: InputKeys) => (e: ChangeEvent<{ name?: string; value: unknown }>) => {
-      setInputValue((prev) => ({ ...prev, [id]: e.target.value }));
+    (id: InputKeys) => (e: ChangeEvent<{ name?: string; value: CandidateForm[InputKeys] }>) => {
+      dispatch(setCandidateField({ key: id, value: e.target.value }));
     },
     [],
   );
@@ -218,8 +213,8 @@ const Edit: NextPage = () => {
                 options={Object.keys(Departments)}
                 autoHighlight
                 freeSolo
-                onChange={(_, v) => setInputValue((prev) => ({ ...prev, institute: v ?? '' }))}
-                onInputChange={(_, institute) => setInputValue((prev) => ({ ...prev, institute }))}
+                onChange={(_, v) => dispatch(setCandidateField({ key: 'institute', value: v ?? '' }))}
+                onInputChange={(_, value) => dispatch(setCandidateField({ key: 'institute', value }))}
                 renderInput={(params) => <TextField {...params} required label='学院' variant='outlined' />}
               />
             </Grid>
@@ -229,8 +224,8 @@ const Edit: NextPage = () => {
                 options={Majors}
                 autoHighlight
                 freeSolo
-                onChange={(_, v) => setInputValue((prev) => ({ ...prev, major: v ?? '' }))}
-                onInputChange={(_, major) => setInputValue((prev) => ({ ...prev, major }))}
+                onChange={(_, v) => dispatch(setCandidateField({ key: 'major', value: v ?? '' }))}
+                onInputChange={(_, value) => dispatch(setCandidateField({ key: 'major', value }))}
                 renderInput={(params) => <TextField {...params} required label='专业' variant='outlined' />}
               />
             </Grid>
