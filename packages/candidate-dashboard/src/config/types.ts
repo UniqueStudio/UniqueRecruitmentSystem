@@ -44,3 +44,10 @@ export interface Candidate extends CandidateForm {
   };
   step: Step;
 }
+
+export interface Recruitment {
+  title: string; // e.g. 2018A || 2018S (A: AUTUMN, S: SPRING, C: CAMP)
+  begin: number;
+  end: number;
+  stop: number;
+}
