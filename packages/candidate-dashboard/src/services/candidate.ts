@@ -1,5 +1,5 @@
 import { HOST } from 'config/consts';
-import { CandidateForm, MessageType, Time } from 'config/types';
+import { Candidate, CandidateForm, MessageType, Time } from 'config/types';
 import { getToken } from 'utils/token';
 import { checkMail, checkPhone } from 'utils/validators';
 
@@ -84,3 +84,19 @@ export interface GetInterviewFormResp {
   token?: string;
   message?: string;
 }
+
+export interface GetCandidateInfoResp extends Candidate {
+  type: MessageType;
+  message?: string;
+}
+
+export const getCandidateInfo: () => Promise<GetCandidateInfoResp> = async () => {
+  const resp = await fetch(`${HOST}/${prefix}`, {
+    method: 'GET',
+    headers: {
+      Authorization: `Bearer ${getToken()}`,
+    },
+  });
+
+  return resp.json();
+};

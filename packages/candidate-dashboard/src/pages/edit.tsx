@@ -18,19 +18,19 @@ import {
 import { Autocomplete } from '@material-ui/lab';
 import { makeStyles } from '@material-ui/core/styles';
 import { HelpOutline } from '@material-ui/icons';
-import { ChangeEvent, FormEventHandler, useState, useCallback, useMemo } from 'react';
+import { ChangeEvent, FormEventHandler, useState, useCallback, useMemo, useEffect } from 'react';
 import clsx from 'clsx';
-
-import { GROUPS, GRADES, GENDERS, RANKS } from 'config/consts';
-import { Departments } from 'config/departments';
-import { useAppDispatch, useAppSelector } from 'store';
-import { showSnackbar } from 'store/component';
-import { setCandidateField } from 'store/candidate';
-import { submitCandidateForm } from 'services';
 
 import type { Breakpoint } from '@material-ui/core/styles/createBreakpoints';
 import type { NextPage } from 'next';
 import type { CandidateForm } from 'config/types';
+
+import { GROUPS, GRADES, GENDERS, RANKS } from 'config/consts';
+import { useAppDispatch, useAppSelector } from 'store';
+import { showSnackbar } from 'store/component';
+import { fetchCandidate, setCandidateField } from 'store/candidate';
+import { submitCandidateForm } from 'services';
+import { Departments } from 'config/departments';
 
 const useStyle = makeStyles((theme) => ({
   center: {
@@ -78,46 +78,54 @@ type InputKeys = keyof CandidateForm;
 const Edit: NextPage = () => {
   const dispatch = useAppDispatch();
   const classes = useStyle();
+  const title = useAppSelector(({ recruitment }) => recruitment.title);
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null); // popover
   const handlePopoverOpen = (event: React.MouseEvent<HTMLElement, MouseEvent>) => {
     setAnchorEl(event.currentTarget);
   };
 
-  const handlePopoverClose = () => {
-    setAnchorEl(null);
-  };
+  const handlePopoverClose = useCallback(() => void setAnchorEl(null), []);
 
-  const [resume, setResume] = useState<File | null>(null);
-  const [isQuick, setIsQuick] = useState(false);
+  const [resume, setResume] = useState<File | string>('');
   const inputValue = useAppSelector(({ candidate }) => candidate);
 
-  const handleIsQuick = useCallback(() => {
-    setIsQuick((prev) => !prev);
-  }, []);
+  // fetch candidate data
+  useEffect(() => void dispatch(fetchCandidate()), [dispatch]);
 
   const handleInput = useCallback(
-    (id: InputKeys) => (e: ChangeEvent<{ name?: string; value: CandidateForm[InputKeys] }>) => {
-      dispatch(setCandidateField({ key: id, value: e.target.value }));
-    },
-    [],
+    (id: InputKeys) => (e: ChangeEvent<{ name?: string; value: CandidateForm[InputKeys] }>) =>
+      void dispatch(setCandidateField({ key: id, value: e.target.value })),
+    [dispatch],
   );
 
-  const handleFile = useCallback(({ target: { files } }: ChangeEvent<HTMLInputElement>) => {
-    if (!files) {
-      return dispatch(showSnackbar({ message: '你没有上传任何文件', type: 'warning' }));
-    }
-    const resume = files[0];
-    if (resume.size > 1024 * 1024 * 100) {
-      return dispatch(showSnackbar({ message: '文件大小必须小于100MB', type: 'warning' }));
-    }
+  // use `<T extends xxx>` to aviod conflict with jsx `<T>`
+  // see: https://stackoverflow.com/questions/32308370/what-is-the-syntax-for-typescript-arrow-functions-with-generics
+  const setField = useCallback(
+    (key: InputKeys) => <T extends CandidateForm[InputKeys] | null>(_: unknown, value: T) =>
+      void dispatch(setCandidateField({ key, value: value ?? '' })),
+    [dispatch],
+  );
 
-    setResume(resume);
-  }, []);
+  const handleFile = useCallback(
+    ({ target: { files } }: ChangeEvent<HTMLInputElement>) => {
+      if (!files) {
+        return dispatch(showSnackbar({ message: '你没有上传任何文件', type: 'warning' }));
+      }
+      const resume = files[0];
+      if (resume.size > 1024 * 1024 * 100) {
+        return dispatch(showSnackbar({ message: '文件大小必须小于100MB', type: 'warning' }));
+      }
+
+      setResume(resume);
+    },
+    [dispatch],
+  );
 
   const handleSubmit: FormEventHandler = async (event) => {
     event.preventDefault();
     try {
-      const { type, message } = await submitCandidateForm({ ...inputValue, isQuick, resume: resume ?? '' });
+      // TODO: use redux thunk to submit form
+      const { type, message } = await submitCandidateForm({ ...inputValue, title, resume });
 
       if (type !== 'success') {
         return dispatch(showSnackbar({ type, message }));
@@ -213,8 +221,8 @@ const Edit: NextPage = () => {
                 options={Object.keys(Departments)}
                 autoHighlight
                 freeSolo
-                onChange={(_, v) => dispatch(setCandidateField({ key: 'institute', value: v ?? '' }))}
-                onInputChange={(_, value) => dispatch(setCandidateField({ key: 'institute', value }))}
+                onChange={setField('institute')}
+                onInputChange={setField('institute')}
                 renderInput={(params) => <TextField {...params} required label='学院' variant='outlined' />}
               />
             </Grid>
@@ -224,8 +232,8 @@ const Edit: NextPage = () => {
                 options={Majors}
                 autoHighlight
                 freeSolo
-                onChange={(_, v) => dispatch(setCandidateField({ key: 'major', value: v ?? '' }))}
-                onInputChange={(_, value) => dispatch(setCandidateField({ key: 'major', value }))}
+                onChange={setField('major')}
+                onInputChange={setField('major')}
                 renderInput={(params) => <TextField {...params} required label='专业' variant='outlined' />}
               />
             </Grid>
@@ -281,7 +289,12 @@ const Edit: NextPage = () => {
               <FormControlLabel
                 className={classes.center}
                 control={
-                  <Switch inputProps={{ name: 'isQuick' }} size='small' checked={isQuick} onChange={handleIsQuick} />
+                  <Switch
+                    inputProps={{ name: 'isQuick' }}
+                    size='small'
+                    checked={inputValue.isQuick}
+                    onChange={setField('isQuick')}
+                  />
                 }
                 label={
                   <div className={classes.center}>
