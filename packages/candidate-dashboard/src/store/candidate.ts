@@ -45,10 +45,10 @@ const fetchCandidate = createAsyncThunk<
     rejectValue: string;
   }
 >('candidate/fetch', async (_, { rejectWithValue, dispatch }) => {
-  const { type, message, ...candidate } = await getCandidateInfo();
+  const { type, message, data } = await getCandidateInfo();
 
   if (type === 'success') {
-    return candidate;
+    return data;
   }
 
   dispatch(showSnackbar({ type, message }));
@@ -72,9 +72,7 @@ const candidateSlice = createSlice({
    */
   extraReducers: (builder) => {
     builder
-      .addCase(fetchCandidate.fulfilled, (_, action) => {
-        return action.payload;
-      })
+      .addCase(fetchCandidate.fulfilled, (_, { payload }) => payload)
       .addCase(fetchCandidate.rejected, (_, { payload }) => {
         if (payload === 'JWT is invalid!') {
           // TODO: find better solution

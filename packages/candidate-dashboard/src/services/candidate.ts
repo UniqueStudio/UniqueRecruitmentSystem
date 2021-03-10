@@ -42,9 +42,10 @@ export interface SubmitCandidateFormResp {
   message?: string;
 }
 
-export const submitCandidateForm: (candidateForm: CandidateForm) => Promise<SubmitCandidateFormResp> = async (
-  candidaiteForm,
-) => {
+export const submitCandidateForm: (
+  candidateForm: CandidateForm,
+  update?: boolean,
+) => Promise<SubmitCandidateFormResp> = async (candidaiteForm, update = false) => {
   if (!checkMail(candidaiteForm.mail)) {
     return { type: 'warning', message: '邮箱格式不正确！' };
   }
@@ -68,7 +69,7 @@ export const submitCandidateForm: (candidateForm: CandidateForm) => Promise<Subm
   Object.entries(candidaiteForm).forEach(([key, value]) => formData.append(key, value as string | File));
 
   const resp = await fetch(`${HOST}/${prefix}`, {
-    method: 'POST',
+    method: update ? 'PUT' : 'POST',
     body: formData,
     headers: {
       Authorization: `Bearer ${getToken()}`,
@@ -85,7 +86,8 @@ export interface GetInterviewFormResp {
   message?: string;
 }
 
-export interface GetCandidateInfoResp extends Candidate {
+export interface GetCandidateInfoResp {
+  data: Candidate;
   type: MessageType;
   message?: string;
 }
