@@ -15,7 +15,6 @@ import {
   Typography,
   Popover,
 } from '@material-ui/core';
-import { Autocomplete } from '@material-ui/lab';
 import { makeStyles } from '@material-ui/core/styles';
 import { HelpOutline } from '@material-ui/icons';
 import { ChangeEvent, FormEventHandler, useState, useCallback, useMemo, useEffect } from 'react';
@@ -25,6 +24,7 @@ import type { Breakpoint } from '@material-ui/core/styles/createBreakpoints';
 import type { NextPage } from 'next';
 import type { CandidateForm } from 'config/types';
 
+import AutoComplete from 'components/AutoComplete';
 import { GROUPS, GRADES, GENDERS, RANKS } from 'config/consts';
 import { useAppDispatch, useAppSelector } from 'store';
 import { showSnackbar } from 'store/component';
@@ -79,14 +79,15 @@ const Edit: NextPage = () => {
   const dispatch = useAppDispatch();
   const classes = useStyle();
   const title = useAppSelector(({ recruitment }) => recruitment.title);
+
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null); // popover
   const handlePopoverOpen = (event: React.MouseEvent<HTMLElement, MouseEvent>) => {
     setAnchorEl(event.currentTarget);
   };
-
   const handlePopoverClose = useCallback(() => void setAnchorEl(null), []);
 
   const [resume, setResume] = useState<File | string>('');
+  // all form value
   const inputValue = useAppSelector(({ candidate }) => candidate);
 
   // fetch candidate data
@@ -125,7 +126,7 @@ const Edit: NextPage = () => {
     event.preventDefault();
     try {
       // TODO: use redux thunk to submit form
-      const { type, message } = await submitCandidateForm({ ...inputValue, title, resume });
+      const { type, message } = await submitCandidateForm({ ...inputValue, title, resume }, true);
 
       if (type !== 'success') {
         return dispatch(showSnackbar({ type, message }));
@@ -216,25 +217,21 @@ const Edit: NextPage = () => {
               />
             </Grid>
             <Grid item className={clsx(classes.item, classes.center)} {...grid}>
-              <Autocomplete
+              <AutoComplete
+                label='学院'
                 className={classes.input}
                 options={Object.keys(Departments)}
-                autoHighlight
-                freeSolo
+                value={inputValue.institute}
                 onChange={setField('institute')}
-                onInputChange={setField('institute')}
-                renderInput={(params) => <TextField {...params} required label='学院' variant='outlined' />}
               />
             </Grid>
             <Grid item className={clsx(classes.item, classes.center)} {...grid}>
-              <Autocomplete
+              <AutoComplete
+                label='专业'
                 className={classes.input}
                 options={Majors}
-                autoHighlight
-                freeSolo
+                value={inputValue.major}
                 onChange={setField('major')}
-                onInputChange={setField('major')}
-                renderInput={(params) => <TextField {...params} required label='专业' variant='outlined' />}
               />
             </Grid>
             <Grid item className={clsx(classes.item, classes.center)} {...grid}>
