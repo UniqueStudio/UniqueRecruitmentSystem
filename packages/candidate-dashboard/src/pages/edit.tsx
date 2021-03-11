@@ -28,8 +28,7 @@ import AutoComplete from 'components/AutoComplete';
 import { GROUPS, GRADES, GENDERS, RANKS } from 'config/consts';
 import { useAppDispatch, useAppSelector } from 'store';
 import { showSnackbar } from 'store/component';
-import { fetchCandidate, setCandidateField } from 'store/candidate';
-import { submitCandidateForm } from 'services';
+import { fetchCandidate, setCandidateField, updateCandidate } from 'store/candidate';
 import { Departments } from 'config/departments';
 
 const useStyle = makeStyles((theme) => ({
@@ -78,7 +77,6 @@ type InputKeys = keyof CandidateForm;
 const Edit: NextPage = () => {
   const dispatch = useAppDispatch();
   const classes = useStyle();
-  const title = useAppSelector(({ recruitment }) => recruitment.title);
 
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null); // popover
   const handlePopoverOpen = (event: React.MouseEvent<HTMLElement, MouseEvent>) => {
@@ -109,7 +107,7 @@ const Edit: NextPage = () => {
 
   const handleFile = useCallback(
     ({ target: { files } }: ChangeEvent<HTMLInputElement>) => {
-      if (!files) {
+      if (!files?.length) {
         return dispatch(showSnackbar({ message: '你没有上传任何文件', type: 'warning' }));
       }
       const resume = files[0];
@@ -124,18 +122,7 @@ const Edit: NextPage = () => {
 
   const handleSubmit: FormEventHandler = async (event) => {
     event.preventDefault();
-    try {
-      // TODO: use redux thunk to submit form
-      const { type, message } = await submitCandidateForm({ ...inputValue, title, resume }, true);
-
-      if (type !== 'success') {
-        return dispatch(showSnackbar({ type, message }));
-      }
-
-      return dispatch(showSnackbar({ type: 'success', message: '修改成功' }));
-    } catch (error) {
-      dispatch(showSnackbar({ type: 'error', message: '网络错误' }));
-    }
+    dispatch(updateCandidate({ resume }));
   };
 
   const Majors = useMemo(
@@ -302,7 +289,7 @@ const Edit: NextPage = () => {
                     {Pop}
                   </div>
                 }
-                labelPlacement='top'
+                labelPlacement='start'
               />
             </Grid>
             <Grid item className={clsx(classes.item, classes.center)} {...grid}>

@@ -1,7 +1,9 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { Candidate, CandidateForm } from 'config/types';
-import { getCandidateInfo } from 'services';
+import { getCandidateInfo, submitCandidateForm } from 'services';
 import { showSnackbar } from './component';
+
+import type { RootState } from './index';
 
 const initialState: Candidate = {
   name: '',
@@ -56,6 +58,27 @@ const fetchCandidate = createAsyncThunk<
   return rejectWithValue(message ?? '网络错误');
 });
 
+const updateCandidate = createAsyncThunk<
+  void,
+  Partial<CandidateForm>,
+  {
+    rejectValue: string;
+  }
+>('candidate/update', async (form, { rejectWithValue, dispatch, getState }) => {
+  const { recruitment, candidate } = getState() as RootState;
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { abandon, rejected, interviews, step, ...stateForm } = candidate;
+  const { type, message } = await submitCandidateForm({ ...form, ...stateForm, title: recruitment.title }, true);
+
+  if (type === 'success') {
+    dispatch(showSnackbar({ type: 'success', message: '修改成功' }));
+    return;
+  }
+  dispatch(showSnackbar({ type, message }));
+
+  return rejectWithValue(message ?? '网络错误');
+});
+
 const candidateSlice = createSlice({
   name: 'candidate',
   initialState,
@@ -78,10 +101,16 @@ const candidateSlice = createSlice({
           // TODO: find better solution
           window.location.href = '/login';
         }
+      })
+      .addCase(updateCandidate.rejected, () => {
+        //
+      })
+      .addCase(updateCandidate.fulfilled, () => {
+        //
       });
   },
 });
 
 export default candidateSlice.reducer;
 export const { setCandidate, setCandidateField } = candidateSlice.actions;
-export { fetchCandidate };
+export { fetchCandidate, updateCandidate };
