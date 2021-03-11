@@ -2,7 +2,6 @@ import {
   Button,
   Card,
   Container,
-  Divider,
   FormControl,
   FormControlLabel,
   FormHelperText,
@@ -27,7 +26,7 @@ import type { CandidateForm } from 'config/types';
 import AutoComplete from 'components/AutoComplete';
 import { GROUPS, GRADES, GENDERS, RANKS } from 'config/consts';
 import { useAppDispatch, useAppSelector } from 'store';
-import { showSnackbar } from 'store/component';
+import { setLayoutTitle, showSnackbar } from 'store/component';
 import { fetchCandidate, setCandidateField, updateCandidate } from 'store/candidate';
 import { Departments } from 'config/departments';
 
@@ -45,15 +44,16 @@ const useStyle = makeStyles((theme) => ({
   card: {
     display: 'flex',
     flexDirection: 'column',
-    width: '80%',
+    width: '90%',
     padding: theme.spacing(2),
+    marginTop: theme.spacing(4),
   },
   input: {
     margin: theme.spacing(2),
     width: theme.spacing(24),
   },
-  select: {
-    width: theme.spacing(12),
+  intro: {
+    width: '100%',
   },
   item: {
     minHeight: theme.spacing(10),
@@ -90,6 +90,9 @@ const Edit: NextPage = () => {
 
   // fetch candidate data
   useEffect(() => void dispatch(fetchCandidate()), [dispatch]);
+
+  // title
+  useEffect(() => void dispatch(setLayoutTitle('编辑信息')), [dispatch]);
 
   const handleInput = useCallback(
     (id: InputKeys) => (e: ChangeEvent<{ name?: string; value: CandidateForm[InputKeys] }>) =>
@@ -160,8 +163,6 @@ const Edit: NextPage = () => {
   return (
     <Container className={clsx(classes.root, classes.center)}>
       <Card className={classes.card}>
-        <Typography variant='h4'>编辑信息</Typography>
-        <Divider />
         <form onSubmit={handleSubmit}>
           <Grid container justify='space-evenly' direction='row'>
             <Grid item className={clsx(classes.item, classes.center)} {...grid}>
@@ -222,7 +223,7 @@ const Edit: NextPage = () => {
               />
             </Grid>
             <Grid item className={clsx(classes.item, classes.center)} {...grid}>
-              <FormControl className={clsx(classes.input, classes.select)}>
+              <FormControl className={classes.input}>
                 <FormHelperText>成绩排名</FormHelperText>
                 <NativeSelect variant='outlined' value={inputValue.rank || 0} onChange={handleInput('rank')}>
                   {RANKS.map((rank, index) => (
@@ -234,7 +235,7 @@ const Edit: NextPage = () => {
               </FormControl>
             </Grid>
             <Grid item className={clsx(classes.item, classes.center)} {...grid}>
-              <FormControl className={clsx(classes.input, classes.select)}>
+              <FormControl className={classes.input}>
                 <FormHelperText>性别</FormHelperText>
                 <NativeSelect variant='outlined' value={inputValue.gender || 0} onChange={handleInput('gender')}>
                   {GENDERS.map((gender, index) => (
@@ -246,7 +247,7 @@ const Edit: NextPage = () => {
               </FormControl>
             </Grid>
             <Grid item className={clsx(classes.item, classes.center)} {...grid}>
-              <FormControl className={clsx(classes.input, classes.select)}>
+              <FormControl className={classes.input}>
                 <FormHelperText>所属年级</FormHelperText>
                 <NativeSelect variant='outlined' value={inputValue.grade || 0} onChange={handleInput('grade')}>
                   {GRADES.map((grade, index) => (
@@ -258,7 +259,7 @@ const Edit: NextPage = () => {
               </FormControl>
             </Grid>
             <Grid item className={clsx(classes.item, classes.center)} {...grid}>
-              <FormControl className={clsx(classes.input, classes.select)}>
+              <FormControl className={classes.input}>
                 <FormHelperText>组别</FormHelperText>
                 <NativeSelect variant='outlined' value={inputValue.group || 'web'} onChange={handleInput('group')}>
                   {GROUPS.map((group) => (
@@ -298,14 +299,14 @@ const Edit: NextPage = () => {
                 <input id='resume' name='resume' type='file' hidden onChange={handleFile} />
               </Button>
             </Grid>
-            <Grid item className={clsx(classes.item, classes.center)} {...grid}>
+            <Grid item className={clsx(classes.item, classes.center)} xs={12}>
               <TextField
                 required
                 multiline
-                rows={2}
+                rows={4}
                 rowsMax={8}
                 label='自我介绍'
-                className={classes.input}
+                className={clsx(classes.input, classes.intro)}
                 variant='outlined'
                 value={inputValue.intro || ''}
                 onChange={handleInput('intro')}
