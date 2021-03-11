@@ -6,7 +6,7 @@ import { io } from '../../app';
 import { GENDERS, GRADES, GROUPS_, RANKS } from '@config/consts';
 import { CandidateRepo, RecruitmentRepo } from '@database/model';
 import { titleConverter } from '@utils/titleConverter';
-import { moveFile } from '@utils/moveFile';
+import { copyFile } from "@utils/copyFile";
 import { errorRes } from '@utils/errorRes';
 import { logger } from '@utils/logger';
 import sendEmail from '@utils/sendEmail';
@@ -37,7 +37,7 @@ export const addCandidate: RequestHandler = async (req, res, next) => {
         if (req.file) {
             const { originalname: filename, path: oldPath } = req.file;
             filepath = path.join('./data/resumes', title, group);
-            filepath = await moveFile(oldPath, filepath, `${name} - ${filename}`);
+            filepath = await copyFile(oldPath, filepath, `${name} - ${filename}`);
         }
         const info = await CandidateRepo.createAndInsert({
             name,
