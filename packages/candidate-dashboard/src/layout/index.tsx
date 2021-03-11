@@ -128,8 +128,8 @@ const Layout: FC = (props) => {
             </Typography>
           </header>
           <List className={classes.drawerList}>
-            <ListItemLink href='/' primary='首页' icon={<HomeIcon />} />
-            <ListItemLink href='/edit' primary='编辑信息' icon={<EditIcon />} />
+            <ListItemLink href='/' primary='首页' icon={<HomeIcon />} onClick={handleClose} />
+            <ListItemLink href='/edit' primary='编辑信息' icon={<EditIcon />} onClick={handleClose} />
           </List>
         </nav>
       </SwipeableDrawer>
