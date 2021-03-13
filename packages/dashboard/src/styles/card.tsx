@@ -22,23 +22,16 @@ const useStyles = makeStyles(({ breakpoints, spacing, zIndex }: Theme) =>
                 padding: spacing(0.5),
             },
         },
-        card: ({ disabled, white, good, soSo }: Props) => {
-            const goodLeft = Math.min(good - 5, 0);
-            const goodRight = Math.max(good + 5, soSo - 5);
-
-            const soSoLeft = Math.min(soSo - 5, goodRight);
-            const soSoRight = Math.max(soSo + 5, 100);
-            return {
-                position: 'relative',
-                zIndex: zIndex.drawer,
-                cursor: 'pointer',
-                background: disabled
-                    ? 'rgba(0, 0, 0, 0.1)'
-                    : white
-                    ? 'rgba(0, 0, 0, 0)'
-                    : `linear-gradient(to right, ${green}, ${green} ${goodLeft}%, ${yellow} ${goodRight}%, ${yellow} ${soSoLeft}%, ${red} ${soSoRight}%, ${red})`,
-            };
-        },
+        card: ({ disabled, white, good, soSo }: Props) => ({
+            position: 'relative',
+            zIndex: zIndex.drawer,
+            cursor: 'pointer',
+            background: disabled
+                ? 'rgba(0, 0, 0, 0.1)'
+                : white
+                ? 'rgba(0, 0, 0, 0)'
+                : `linear-gradient(to right, ${green}, ${green} ${good}%, ${yellow} ${good}%, ${yellow} ${soSo}%, ${red} ${soSo}%, ${red})`,
+        }),
         cardAction: {
             justifyContent: 'center',
             alignItems: 'center',
