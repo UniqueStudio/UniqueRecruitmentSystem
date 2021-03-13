@@ -61,7 +61,6 @@ const Comments: FC<Props> = memo(
         };
 
         const handleCopy = (comment: Comment) => () => {
-            remove(cid, comment._id);
             setEvaluation(comment.evaluation);
             setContent(comment.content);
         };
