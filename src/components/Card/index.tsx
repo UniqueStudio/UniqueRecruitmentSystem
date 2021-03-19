@@ -118,7 +118,7 @@ const CandidateCard: FC<Props> = memo((props) => {
             </Typography>
             {allocation && isTeamInterview && (
                 <Typography color='textSecondary' variant='caption' display='block'>
-                    {new Date(allocation).toLocaleString('zh-CN', { hour12: false })}
+                    {new Date(allocation).toLocaleString('ja-JP', { hour12: false })}
                 </Typography>
             )}
         </span>

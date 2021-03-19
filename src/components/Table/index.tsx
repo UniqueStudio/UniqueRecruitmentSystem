@@ -90,7 +90,7 @@ const CandidateTable: FC<Props> = memo(({ candidates, changeType, interviewType,
                             {candidates.map(({ rejected, abandon, name, group, _id, interviews }) => {
                                 const { selection, allocation } = interviews[interviewType];
                                 const slotInfo = allocation
-                                    ? new Date(allocation).toLocaleString('zh-CN', { hour12: false })
+                                    ? new Date(allocation).toLocaleString('ja-JP', { hour12: false })
                                     : '未分配';
                                 const state = (
                                     <>
