@@ -28,10 +28,8 @@ import Messenger from '../../containers/Messenger';
 import useStyles from '../../styles/appBar';
 import { ThemeContext } from '../../styles/withRoot';
 
-import { titleConverter } from '../../utils/titleConverter';
 import { localStorage } from '../../utils/storage';
-
-import { version } from '../../../package.json';
+import { titleConverter } from '../../utils/titleConverter';
 
 const Bar: FC<Props> = memo(
     ({ open, location: { pathname }, group, title, steps, logout, setSteps, setGroup, toggleDrawer }) => {
@@ -76,7 +74,8 @@ const Bar: FC<Props> = memo(
 
         title = titleConverter(title);
         const pathToTitle = {
-            '/': `Unique Studio Recruitment Dashboard v${version}`,
+            // tslint:disable-next-line:whitespace TODO: remove this after migrating to eslint
+            '/': `Unique Studio Recruitment Dashboard v${import.meta.env.SNOWPACK_PUBLIC_VERSION}`,
             '/data': `${title}・数据展示`,
             '/candidates': `${title}・选手信息`,
             '/my': '组员信息',
