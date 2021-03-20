@@ -211,7 +211,7 @@ const CandidateTable: FC<Props> = memo(({ candidates, changeType, interviewType,
                 </div>
             </Dialog>
             <Modal open={modal} onClose={toggleModal} title='发送通知'>
-                <Template toggleOpen={toggleModal} selected={candidates} />
+                <Template toggleOpen={toggleModal} selected={candidates.filter(({ _id }) => checked[_id])} />
             </Modal>
         </Paper>
     );
