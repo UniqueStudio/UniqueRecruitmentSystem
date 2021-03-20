@@ -1,5 +1,4 @@
-import { Theme } from '@material-ui/core/styles/createMuiTheme';
-import { createStyles, makeStyles } from '@material-ui/styles';
+import { makeStyles } from '@material-ui/core';
 
 import { mergeKV } from '../utils/mergeKV';
 
@@ -32,24 +31,22 @@ const rootColorStyles = mergeKV(
     })),
 );
 
-const useStyles = makeStyles(({ spacing }: Theme) =>
-    createStyles({
-        chip: {
-            margin: spacing(1),
-            cursor: 'pointer',
-            maxWidth: 250,
-        },
-        popover: {
-            pointerEvents: 'none',
-        },
-        content: {
-            maxWidth: 400,
-            padding: spacing(2),
-            wordWrap: 'break-word',
-        },
-        ...colorStyles,
-        ...rootColorStyles,
-    }),
-);
+const useStyles = makeStyles(({ spacing }) => ({
+    chip: {
+        margin: spacing(1),
+        cursor: 'pointer',
+        maxWidth: 250,
+    },
+    popover: {
+        pointerEvents: 'none',
+    },
+    content: {
+        maxWidth: 400,
+        padding: spacing(2),
+        wordWrap: 'break-word',
+    },
+    ...colorStyles,
+    ...rootColorStyles,
+}));
 
 export default useStyles;
