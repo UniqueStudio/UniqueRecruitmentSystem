@@ -1,5 +1,5 @@
 import React, { FC, lazy, memo, Suspense } from 'react';
-import { Route, RouteComponentProps, Switch, withRouter } from 'react-router';
+import { Route, RouteComponentProps, Switch, withRouter } from 'react-router-dom';
 
 import Progress from '../components/Progress';
 

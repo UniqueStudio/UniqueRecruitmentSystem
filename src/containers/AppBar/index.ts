@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import { RouteComponentProps, withRouter } from 'react-router';
+import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { bindActionCreators, Dispatch } from 'redux';
 
 import { logout, setGroup, setSteps, toggleDrawer } from '../../actions';
