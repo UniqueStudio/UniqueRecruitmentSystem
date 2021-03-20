@@ -4,7 +4,13 @@ import classNames from 'classnames';
 
 import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
+// import Grid from '@material-ui/core/Grid';
+import Box from '@material-ui/core/Box';
+// import Divider from '@material-ui/core/Divider';
+
 import Typography from '@material-ui/core/Typography';
+import VisibilityIcon from '@material-ui/icons/Visibility';
+import VisibilityOffIcon from '@material-ui/icons/VisibilityOff';
 
 import { ChartComponentProps, ChartElement, Doughnut } from './Doughnut';
 
@@ -20,9 +26,10 @@ import { titleConverter } from '../../utils/titleConverter';
 interface Props {
     data: Recruitment;
     setViewing: () => void;
+    selected: boolean;
 }
 
-const Chart: FC<Props> = memo(({ data: { groups, total, title, end }, setViewing }) => {
+const Chart: FC<Props> = memo(({ data: { groups, total, title, end }, setViewing, selected }) => {
     const classes = useStyles();
     const [group, setGroup] = useState('');
     const [clicked, setClicked] = useState(false);
@@ -66,18 +73,33 @@ const Chart: FC<Props> = memo(({ data: { groups, total, title, end }, setViewing
         },
     };
     const expired = Date.now() > end;
+    const EyeIcon = selected ? VisibilityIcon : VisibilityOffIcon;
     return (
         <>
-            <Button onClick={setViewing} variant='contained' color='primary'>
-                浏览本次招新
-            </Button>
-            <Paper className={classNames(classes.chart, { [classes.expired]: expired })}>
-                <div className={classes.doughnut}>
-                    <Doughnut data={chartData} handleClick={setData} options={options} width={300} height={300} />
-                </div>
-                <Typography variant='body1' className={classes.centerText}>
-                    {`总计：${viewingGroup ? viewingGroup.total : total}人`}
-                </Typography>
+            <Paper
+                className={classNames(classes.container, {
+                    [classes.selected]: selected,
+                    [classes.expired]: expired,
+                })}>
+                {/* <Grid container direction='column' justify='center' alignItems='center'> */}
+                <Box className={classes.chart}>
+                    <div className={classes.doughnut}>
+                        <Doughnut data={chartData} handleClick={setData} options={options} width={300} height={300} />
+                    </div>
+                    <Typography variant='body1' className={classes.centerText}>
+                        {`总计：${viewingGroup ? viewingGroup.total : total}人`}
+                    </Typography>
+                </Box>
+                <Button
+                    className={classes.btn}
+                    onClick={setViewing}
+                    fullWidth
+                    // color={selected ? 'primary' : 'inherit'}
+                    disabled={selected}>
+                    <EyeIcon color='inherit' />
+                    {selected ? '当前招新' : '查看招新'}
+                </Button>
+                {/* </Grid> */}
             </Paper>
         </>
     );
