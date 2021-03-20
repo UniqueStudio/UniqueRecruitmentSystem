@@ -18,16 +18,16 @@ import { Candidate } from '../../config/types';
 
 import { checkToken, customError, Epic, errHandler } from '../';
 
-export const getCandidatesEpic: Epic<GetCandidatesStart> = (action$, state$, { sessionStorage }) =>
+export const getCandidatesEpic: Epic<GetCandidatesStart> = (action$, state$, { localStorage }) =>
     action$.pipe(
         ofType(GET_CANDIDATES_START),
         mergeMap((action) => {
             const token = checkToken();
             const { title, step, group } = action;
-            const candidates = sessionStorage.getItem('candidates');
-            const viewing = sessionStorage.getItem('viewing');
+            const candidates = localStorage.getItem('candidates');
+            const viewing = localStorage.getItem('viewing');
             if (candidates && title === viewing) {
-                let data = JSON.parse(candidates);
+                let data = candidates;
                 if (step) data = data.filter((candidate: Candidate) => candidate.step === step);
                 if (group) data = data.filter((candidate: Candidate) => candidate.group === group);
                 return of(
