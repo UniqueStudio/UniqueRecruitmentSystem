@@ -1,5 +1,5 @@
 import React, { FC, memo, useEffect } from 'react';
-import { Redirect } from 'react-router';
+import { Redirect } from 'react-router-dom';
 
 import Progress from '../Progress';
 
