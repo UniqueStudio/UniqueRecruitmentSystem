@@ -14,6 +14,7 @@ import { VariantType } from 'notistack';
 
 import { store } from '../App';
 
+import { localStorage } from '../utils/storage';
 import { enqueueSnackbar, toggleProgress } from '../actions';
 import { StoreState } from '../reducers';
 
@@ -23,6 +24,7 @@ import recruitmentEpic from './recruitment';
 import smsEpic from './sms';
 import userEpic from './user';
 import websocketEpic from './websocket';
+
 
 export type Socket = typeof io.Socket;
 
@@ -50,7 +52,7 @@ export const checkToken = () => {
     return token;
 };
 
-const dependencies = { io, socket$: new BehaviorSubject((null as unknown) as Socket), sessionStorage };
+const dependencies = { io, socket$: new BehaviorSubject((null as unknown) as Socket), localStorage };
 
 export type Dependencies = typeof dependencies;
 
