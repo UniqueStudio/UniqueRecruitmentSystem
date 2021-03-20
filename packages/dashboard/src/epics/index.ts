@@ -8,15 +8,15 @@ import {
 } from 'redux-observable';
 import { BehaviorSubject, Observable, of } from 'rxjs';
 
-import io from 'socket.io-client';
+import { io, Socket } from 'socket.io-client';
 
 import { VariantType } from 'notistack';
 
 import { store } from '../App';
 
-import { localStorage } from '../utils/storage';
 import { enqueueSnackbar, toggleProgress } from '../actions';
 import { StoreState } from '../reducers';
+import { localStorage } from '../utils/storage';
 
 import candidateEpic from './candidate';
 import chatEpic from './chat';
@@ -24,9 +24,6 @@ import recruitmentEpic from './recruitment';
 import smsEpic from './sms';
 import userEpic from './user';
 import websocketEpic from './websocket';
-
-
-export type Socket = typeof io.Socket;
 
 interface CustomError extends Error {
     message: string;
