@@ -43,8 +43,14 @@ const download = (cid: string) => async (res: Response) => {
     if (disposition && disposition.indexOf('attachment') !== -1) {
         const filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
         const matches = filenameRegex.exec(disposition);
-        if (matches !== null && matches[1]) {
-            filename = Buffer.from(matches[1].replace(/['"]/g, ''), 'base64').toString();
+        if (matches?.[1]) {
+            const base64 = matches[1].replace(/['"]/g, '');
+            filename = decodeURIComponent(
+                atob(base64)
+                    .split('')
+                    .map((c) => `%${c.charCodeAt(0).toString(16).padStart(2, '0')}`)
+                    .join(''),
+            );
         }
     }
     const url = window.URL.createObjectURL(new Blob([blob]));
