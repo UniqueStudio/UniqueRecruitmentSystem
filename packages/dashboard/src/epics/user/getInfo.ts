@@ -10,7 +10,6 @@ import { User } from '../../config/types';
 
 import { checkToken, customError, Epic, errHandler } from '../';
 
-
 export const getInfoEpic: Epic = (action$, state$, { localStorage }) =>
     action$.pipe(
         ofType(GET_USER_INFO_START),
