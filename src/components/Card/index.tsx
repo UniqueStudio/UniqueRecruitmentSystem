@@ -13,7 +13,6 @@ import FlashOn from '@material-ui/icons/FlashOn';
 import InfoIcon from '@material-ui/icons/InfoOutlined';
 import Female from 'mdi-material-ui/GenderFemale';
 import Male from 'mdi-material-ui/GenderMale';
-import TransGender from 'mdi-material-ui/GenderTransgender';
 
 import useTheme from '@material-ui/core/styles/useTheme';
 import useMediaQuery from '@material-ui/core/useMediaQuery/useMediaQuery';
@@ -31,7 +30,7 @@ const getProportion = (evaluations: Evaluation[]) => {
 };
 
 const genderIcons = [
-    <TransGender htmlColor={orange[500]} fontSize='small' />,
+    <></>,
     <Male htmlColor={blue[500]} fontSize='small' />,
     <Female htmlColor={pink[500]} fontSize='small' />,
 ];
