@@ -6,7 +6,7 @@ import Table from '../containers/Table';
 
 import useStyles from '../styles/data';
 
-import { sortBySlot } from '../utils/sortBySlot';
+import { groupSort, teamSort } from '../utils/sortBySlot';
 
 const Data: FC<Props> = memo(({ recruitment, userGroup, candidates }) => {
     const classes = useStyles();
@@ -19,7 +19,7 @@ const Data: FC<Props> = memo(({ recruitment, userGroup, candidates }) => {
     const sorted = (interviewType === 'group'
         ? candidates.filter(({ group, step }) => group === userGroup && step === 2)
         : candidates.filter(({ step }) => step === 4)
-    ).sort(sortBySlot);
+    ).sort(interviewType === 'group' ? groupSort : teamSort);
 
     return !userGroup || !recruitment ? null : (
         <div className={classes.container}>
