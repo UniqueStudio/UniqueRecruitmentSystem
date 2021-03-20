@@ -16,17 +16,17 @@ import { Recruitment } from '../../config/types';
 
 import { checkToken, customError, Epic, errHandler } from '../';
 
-export const getRecruitmentsEpic: Epic = (action$, state$, { sessionStorage }) =>
+export const getRecruitmentsEpic: Epic = (action$, state$, { localStorage }) =>
     action$.pipe(
         ofType(GET_RECRUITMENTS_START),
         mergeMap(() => {
             const token = checkToken();
-            const recruitments = sessionStorage.getItem('recruitments');
-            const viewing = sessionStorage.getItem('viewing');
+            const recruitments = localStorage.getItem('recruitments');
+            const viewing = localStorage.getItem('viewing');
             const { shouldUpdateRecruitment } = state$.value.recruitment;
             if (recruitments && !shouldUpdateRecruitment) {
                 return of(
-                    getRecruitmentsFulfilled(JSON.parse(recruitments)),
+                    getRecruitmentsFulfilled(recruitments),
                     enqueueSnackbar('成功获取招新信息', { variant: 'success' }),
                 );
             }

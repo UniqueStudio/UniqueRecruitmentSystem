@@ -3,7 +3,7 @@ import * as actions from '../actions';
 import { Candidate, Evaluation, Group, Step } from '../config/types';
 import { insertItem, removeItem, updateObjectInArray } from '../utils/reducerHelper';
 
-import { updateStorage } from '../utils/updateStorage';
+import { updateStorage } from '../utils/storage';
 
 const update = updateStorage('candidates');
 
