@@ -2,6 +2,7 @@ import { Action } from 'redux';
 import { ofType } from 'redux-observable';
 import { EMPTY, Observable } from 'rxjs';
 import { ignoreElements, switchMap, tap } from 'rxjs/operators';
+import { Socket } from 'socket.io-client';
 
 import { VariantType } from 'notistack';
 
@@ -21,7 +22,7 @@ import {
 import { API } from '../config/consts';
 import { Candidate, Comment, Message, Step } from '../config/types';
 
-import { Epic, Socket } from './';
+import { Epic } from './';
 
 const socketConnectEpic: Epic = (action$, state$, { io, socket$ }) =>
     action$.pipe(
