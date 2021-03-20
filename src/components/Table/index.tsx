@@ -1,10 +1,11 @@
-import React, { FC, memo, useState } from 'react';
+import React, { FC, memo, useMemo, useState } from 'react';
 
 import classNames from 'classnames';
 
 import DateFnsUtils from '@date-io/date-fns';
 
 import Button from '@material-ui/core/Button';
+import Checkbox from '@material-ui/core/Checkbox';
 import Dialog from '@material-ui/core/Dialog';
 import MenuItem from '@material-ui/core/MenuItem';
 import Paper from '@material-ui/core/Paper';
@@ -37,6 +38,9 @@ const CandidateTable: FC<Props> = memo(({ candidates, changeType, interviewType,
     const [cid, setCid] = useState('');
     const [time, setTime] = useState(new Date());
     const [viewing, setViewing] = useState('');
+    const [checked, setChecked] = useState(() => Object.fromEntries(candidates.map((c) => [c._id, false])));
+    const checkedCount = useMemo(() => Object.values(checked).filter(Boolean).length, [checked]);
+    const allChecked = useMemo(() => Object.fromEntries(candidates.map(({ _id }) => [_id, true])), [candidates]);
 
     const handleAllocateOne = () => {
         allocateOne(cid, time.setMilliseconds(0), interviewType);
@@ -63,6 +67,26 @@ const CandidateTable: FC<Props> = memo(({ candidates, changeType, interviewType,
         value && setTime(value);
     };
 
+    const handleCheck = (id: string = '') => (event: React.ChangeEvent<HTMLInputElement>) => {
+        setChecked((prev) => ({ ...prev, [id]: event.target.checked }));
+    };
+
+    const handleCheckAll = () => {
+        if (checkedCount === candidates.length) {
+            setChecked({});
+        } else {
+            setChecked(allChecked);
+        }
+    };
+
+    const globalCheckbox = (
+        <Checkbox
+            checked={checkedCount === candidates.length}
+            onClick={handleCheckAll}
+            indeterminate={checkedCount !== 0 && checkedCount !== candidates.length}
+        />
+    );
+
     return (
         <Paper className={classes.paper}>
             <div className={classes.data}>
@@ -79,7 +103,7 @@ const CandidateTable: FC<Props> = memo(({ candidates, changeType, interviewType,
                     <Table className={classes.table}>
                         <TableHead>
                             <TableRow>
-                                {heads.map((head, index) => (
+                                {[globalCheckbox, ...heads].map((head, index) => (
                                     <TableCell key={index} classes={{ root: classes.tableCell }}>
                                         {head}
                                     </TableCell>
@@ -142,7 +166,11 @@ const CandidateTable: FC<Props> = memo(({ candidates, changeType, interviewType,
                                         设置
                                     </Button>
                                 );
-                                const items = [name, GROUPS[GROUPS_.indexOf(group)], state, slotInfo, button];
+                                // `|| false` deal with undefined, which React think it's a uncontrolled component
+                                const checkbox = (
+                                    <Checkbox checked={checked[_id] || false} onChange={handleCheck(_id)} />
+                                );
+                                const items = [checkbox, name, GROUPS[GROUPS_.indexOf(group)], state, slotInfo, button];
                                 return (
                                     <TableRow key={_id}>
                                         {items.map((item, index) => (
