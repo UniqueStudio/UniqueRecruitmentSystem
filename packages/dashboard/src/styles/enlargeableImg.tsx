@@ -1,21 +1,18 @@
-import { Theme } from '@material-ui/core/styles/createMuiTheme';
-import { createStyles, makeStyles } from '@material-ui/styles';
+import { makeStyles } from '@material-ui/core';
 
-const useStyles = makeStyles(({ zIndex }: Theme) =>
-    createStyles({
-        imageLayer: {
-            maxHeight: '100%',
+const useStyles = makeStyles(({ zIndex }) => ({
+    imageLayer: {
+        maxHeight: '100%',
+    },
+    image: {
+        '&:hover': {
+            cursor: 'pointer',
         },
-        image: {
-            '&:hover': {
-                cursor: 'pointer',
-            },
-            maxWidth: '100%',
-        },
-        imageRoot: {
-            zIndex: zIndex.snackbar * 4,
-        },
-    }),
-);
+        maxWidth: '100%',
+    },
+    imageRoot: {
+        zIndex: zIndex.snackbar * 4,
+    },
+}));
 
 export default useStyles;

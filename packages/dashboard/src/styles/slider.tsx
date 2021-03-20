@@ -1,5 +1,4 @@
-import { Theme } from '@material-ui/core/styles/createMuiTheme';
-import { createStyles } from '@material-ui/styles';
+import { createStyles, Theme } from '@material-ui/core';
 
 const styles = ({ spacing, breakpoints }: Theme) =>
     createStyles({
