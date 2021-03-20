@@ -1,7 +1,7 @@
 import * as actions from '../actions';
 
 import { Recruitment } from '../config/types';
-import { updateStorage } from '../utils/updateStorage';
+import { updateStorage } from '../utils/storage';
 
 type Action =
     | actions.GetRecruitmentsFulfilled

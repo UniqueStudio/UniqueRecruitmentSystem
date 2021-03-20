@@ -3,7 +3,7 @@ import * as actions from '../actions';
 import { Message, User } from '../config/types';
 
 import { updateObjectInArray } from '../utils/reducerHelper';
-import { updateStorage } from '../utils/updateStorage';
+import { localStorage, updateStorage } from '../utils/storage';
 
 type Action =
     | actions.Login
