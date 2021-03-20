@@ -29,6 +29,7 @@ import useStyles from '../../styles/appBar';
 import { ThemeContext } from '../../styles/withRoot';
 
 import { titleConverter } from '../../utils/titleConverter';
+import { localStorage } from '../../utils/storage';
 
 import { version } from '../../../package.json';
 
@@ -69,8 +70,8 @@ const Bar: FC<Props> = memo(
         };
 
         const refresh = () => {
-            window.sessionStorage.clear();
-            window.location.reload();
+            localStorage.clear();
+            globalThis.location.reload();
         };
 
         title = titleConverter(title);

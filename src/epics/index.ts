@@ -24,6 +24,9 @@ import smsEpic from './sms';
 import userEpic from './user';
 import websocketEpic from './websocket';
 
+import { localStorage } from '../utils/storage';
+
+
 export type Socket = typeof io.Socket;
 
 interface CustomError extends Error {
@@ -50,7 +53,7 @@ export const checkToken = () => {
     return token;
 };
 
-const dependencies = { io, socket$: new BehaviorSubject((null as unknown) as Socket), sessionStorage };
+const dependencies = { io, socket$: new BehaviorSubject((null as unknown) as Socket), localStorage };
 
 export type Dependencies = typeof dependencies;
 
