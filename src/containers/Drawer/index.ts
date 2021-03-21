@@ -10,9 +10,13 @@ const mapStateToProps = ({ component: { drawerOpen: open } }: StoreState) => ({
     open,
 });
 
-const mapDispatchToProps = (dispatch: Dispatch) => bindActionCreators({
-    toggleOpen: toggleDrawer,
-}, dispatch);
+const mapDispatchToProps = (dispatch: Dispatch) =>
+    bindActionCreators(
+        {
+            toggleOpen: toggleDrawer,
+        },
+        dispatch,
+    );
 
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = ReturnType<typeof mapDispatchToProps>;

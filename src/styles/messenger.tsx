@@ -1,9 +1,8 @@
-import { Theme } from '@material-ui/core/styles/createMuiTheme';
-import { createStyles, makeStyles } from '@material-ui/styles';
+import { makeStyles } from '@material-ui/core';
 
 import { colorToAlpha } from './index';
 
-const useStyles = makeStyles(({ spacing, transitions, breakpoints, palette, zIndex }: Theme) => createStyles({
+const useStyles = makeStyles(({ spacing, transitions, breakpoints, palette, zIndex }) => ({
     messenger: {
         display: 'flex',
         flexDirection: 'column',

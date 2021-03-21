@@ -1,9 +1,9 @@
 import React, { ChangeEventHandler, FC, memo, useState } from 'react';
 
-import ExpansionPanel from '@material-ui/core/ExpansionPanel';
-import ExpansionPanelActions from '@material-ui/core/ExpansionPanelActions';
-import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
-import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
+import Accordion from '@material-ui/core/Accordion';
+import AccordionActions from '@material-ui/core/AccordionActions';
+import AccordionDetails from '@material-ui/core/AccordionDetails';
+import AccordionSummary from '@material-ui/core/AccordionSummary';
 import IconButton from '@material-ui/core/IconButton';
 import TextField from '@material-ui/core/TextField';
 import Tooltip from '@material-ui/core/Tooltip';
@@ -63,7 +63,9 @@ const Allocation: FC<Props> = memo(({ disabled, title, dates, setRecruitment }) 
         });
     };
 
-    const setPeriod = (id: number, period: keyof Time): ChangeEventHandler<HTMLInputElement> => ({ target: { value } }) => {
+    const setPeriod = (id: number, period: keyof Time): ChangeEventHandler<HTMLInputElement> => ({
+        target: { value },
+    }) => {
         if (period !== 'date') {
             setAllocation((prevAllocation) => {
                 const time = [...prevAllocation];
@@ -79,14 +81,16 @@ const Allocation: FC<Props> = memo(({ disabled, title, dates, setRecruitment }) 
 
     const getButton = (name: string, children: JSX.Element, handler: () => void) => (
         <Tooltip title={name}>
-            <IconButton onClick={handler} color='primary' disabled={disabled} size='small'>{children}</IconButton>
+            <IconButton onClick={handler} color='primary' disabled={disabled} size='small'>
+                {children}
+            </IconButton>
         </Tooltip>
     );
 
     return (
-        <ExpansionPanel className={classes.expansion}>
-            <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>{title}</ExpansionPanelSummary>
-            <ExpansionPanelDetails classes={{ root: classes.expansionDetails }}>
+        <Accordion className={classes.expansion}>
+            <AccordionSummary expandIcon={<ExpandMoreIcon />}>{title}</AccordionSummary>
+            <AccordionDetails classes={{ root: classes.expansionDetails }}>
                 <div className={classes.dates}>
                     {allocation.map(({ morning, afternoon, evening, date }, index) => (
                         <div className={classes.textFieldContainer} key={index}>
@@ -134,15 +138,15 @@ const Allocation: FC<Props> = memo(({ disabled, title, dates, setRecruitment }) 
                         </div>
                     ))}
                 </div>
-            </ExpansionPanelDetails>
-            <ExpansionPanelActions classes={{ root: classes.expansionActions }}>
+            </AccordionDetails>
+            <AccordionActions classes={{ root: classes.expansionActions }}>
                 <div className={classes.buttonContainer}>
                     {!!allocation.length && getButton('提交', <CheckIcon />, submit)}
                     {!!allocation.length && getButton('取消', <CancelIcon />, cancel)}
                     {getButton('增加', <AddIcon />, addDate)}
                 </div>
-            </ExpansionPanelActions>
-        </ExpansionPanel>
+            </AccordionActions>
+        </Accordion>
     );
 });
 

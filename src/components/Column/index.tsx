@@ -1,9 +1,12 @@
 import React, { FC, memo } from 'react';
 import { Draggable, Droppable } from 'react-beautiful-dnd';
 
-import { Divider, Paper, Typography, useMediaQuery } from '@material-ui/core';
+import Divider from '@material-ui/core/Divider';
+import Paper from '@material-ui/core/Paper';
+import Typography from '@material-ui/core/Typography';
 
 import useTheme from '@material-ui/core/styles/useTheme';
+import useMediaQuery from '@material-ui/core/useMediaQuery/useMediaQuery';
 
 import useStyles from '../../styles/column';
 
@@ -34,7 +37,9 @@ const Column: FC<Props> = memo(({ title, children, dropIndex }) => {
                 <div ref={innerRef} {...draggableProps}>
                     <Paper className={classes.column}>
                         <div className={classes.columnHeader}>
-                            <Typography variant='h6' className={classes.columnTitle} {...dragHandleProps}>{title}</Typography>
+                            <Typography variant='h6' className={classes.columnTitle} {...dragHandleProps}>
+                                {title}
+                            </Typography>
                         </div>
                         <Divider />
                         {ColumnBody}

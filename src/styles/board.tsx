@@ -1,7 +1,6 @@
-import { Theme } from '@material-ui/core/styles/createMuiTheme';
-import { createStyles, makeStyles } from '@material-ui/styles';
+import { makeStyles } from '@material-ui/core';
 
-const useStyles = makeStyles(({ spacing, breakpoints }: Theme) => createStyles({
+const useStyles = makeStyles(({ spacing, breakpoints }) => ({
     board: {
         height: '100%',
         [breakpoints.down('xs')]: {

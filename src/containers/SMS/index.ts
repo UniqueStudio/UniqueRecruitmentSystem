@@ -14,18 +14,24 @@ interface OwnProps {
     deselect?: (cid: string) => void;
 }
 
-const mapStateToProps =
-    (state: StoreState, ownProps: OwnProps) => ({
-        ...ownProps,
-    });
+const mapStateToProps = (state: StoreState, ownProps: OwnProps) => ({
+    ...ownProps,
+});
 
-const mapDispatchToProps = (dispatch: Dispatch) => bindActionCreators({
-    enqueueSnackbar,
-    sendSMS,
-}, dispatch);
+const mapDispatchToProps = (dispatch: Dispatch) =>
+    bindActionCreators(
+        {
+            enqueueSnackbar,
+            sendSMS,
+        },
+        dispatch,
+    );
 
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = ReturnType<typeof mapDispatchToProps>;
 
 export type Props = StateProps & DispatchProps;
-export default connect<StateProps, DispatchProps, OwnProps, StoreState>(mapStateToProps, mapDispatchToProps)(SMSTemplate);
+export default connect<StateProps, DispatchProps, OwnProps, StoreState>(
+    mapStateToProps,
+    mapDispatchToProps,
+)(SMSTemplate);

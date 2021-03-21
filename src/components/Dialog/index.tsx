@@ -24,8 +24,12 @@ const CustomDialog: FC<Props> = memo(({ open, toggleOpen, onClick, content, titl
             <DialogContentText>{content}</DialogContentText>
         </DialogContent>
         <DialogActions>
-            <Button onClick={toggleOpen} color='primary' autoFocus>{no}</Button>
-            <Button onClick={onClick} color='primary'>{yes}</Button>
+            <Button onClick={toggleOpen} color='primary' autoFocus>
+                {no}
+            </Button>
+            <Button onClick={onClick} color='primary'>
+                {yes}
+            </Button>
         </DialogActions>
     </Dialog>
 ));

@@ -1,5 +1,5 @@
-import React, { ChangeEventHandler, FC, memo, useState } from 'react';
-import { Redirect } from 'react-router';
+import React, { ChangeEventHandler, FC, FormEventHandler, memo, useState } from 'react';
+import { Redirect } from 'react-router-dom';
 
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
@@ -23,7 +23,9 @@ const Login: FC<Props> = memo(({ loggedIn, isScanning, getQRCode, isLoading, weC
     if (loggedIn) {
         return <Redirect to='/' />;
     }
-    const handleLogin = () => {
+    const handleLogin: FormEventHandler = (event) => {
+        // use preventDefault to disable HTML form's auto redirect
+        event.preventDefault();
         login(phone, password);
     };
 
@@ -41,15 +43,44 @@ const Login: FC<Props> = memo(({ loggedIn, isScanning, getQRCode, isLoading, weC
 
     const ChooseMethod = (
         <>
-            <Button color='primary' size='large' onClick={handleMethod(1)}>企业微信登录</Button>
-            <Button color='primary' size='large' onClick={handleMethod(2)}>账号密码登录</Button>
+            <Button
+                className={classes.button}
+                variant='contained'
+                color='default'
+                size='large'
+                onClick={handleMethod(1)}>
+                企业微信登录
+            </Button>
+            <Button
+                className={classes.button}
+                variant='contained'
+                color='primary'
+                size='large'
+                onClick={handleMethod(2)}>
+                账号密码登录
+            </Button>
         </>
     );
     const ByQRCode = (
         <>
             {weChatKey && <img src={`${QR_CODE_URL}${weChatKey}`} alt='This is QRCode' />}
-            <Button color='primary' size='large' onClick={getQRCode} disabled={isScanning}>获取二维码</Button>
-            <Button color='primary' size='large' onClick={handleMethod(2)}>账号密码登录</Button>
+            <Button
+                className={classes.button}
+                variant='contained'
+                color='default'
+                size='large'
+                onClick={getQRCode}
+                disabled={isScanning}>
+                获取二维码
+            </Button>
+            <Button
+                className={classes.button}
+                variant='contained'
+                color='primary'
+                size='large'
+                onClick={handleMethod(2)}>
+                账号密码登录
+            </Button>
         </>
     );
     const ByPassword = (
@@ -71,15 +102,19 @@ const Login: FC<Props> = memo(({ loggedIn, isScanning, getQRCode, isLoading, weC
                 onChange={handlePassword}
                 margin='normal'
             />
-            <Button color='primary' size='large' onClick={handleLogin} disabled={!phone || !password}>登录</Button>
-            <Button color='primary' size='large' onClick={handleMethod(1)}>企业微信登录</Button>
+            <Button variant='contained' color='default' size='large' type='submit' disabled={!phone || !password}>
+                登录
+            </Button>
+            <Button variant='contained' color='primary' size='large' onClick={handleMethod(1)}>
+                企业微信登录
+            </Button>
         </>
     );
     return (
         <div className={classes.container}>
             <img src={logo} className={classes.logoImage} alt='UNIQUE STUDIO' />
             <Modal open title='登录' hideBackdrop>
-                <form className={classes.login}>
+                <form className={classes.login} onSubmit={handleLogin}>
                     {[ChooseMethod, ByQRCode, ByPassword][method]}
                 </form>
             </Modal>

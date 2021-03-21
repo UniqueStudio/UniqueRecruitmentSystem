@@ -13,19 +13,32 @@ interface OwnProps {
     comments: Comment[];
 }
 
-const mapStateToProps = ({ candidate: { inputtingComment }, user: { info: { _id, username } } }: StoreState, ownProps: OwnProps) => ({
+const mapStateToProps = (
+    {
+        candidate: { inputtingComment },
+        user: {
+            info: { _id, username },
+        },
+        component: { resume },
+    }: StoreState,
+    ownProps: OwnProps,
+) => ({
     savedComment: inputtingComment,
     uid: _id,
     username,
     ...ownProps,
 });
 
-const mapDispatchToProps = (dispatch: Dispatch) => bindActionCreators({
-    submit: addCommentStart,
-    remove: removeCommentStart,
-    enqueueSnackbar,
-    changeInputting: recordInputtingComment,
-}, dispatch);
+const mapDispatchToProps = (dispatch: Dispatch) =>
+    bindActionCreators(
+        {
+            submit: addCommentStart,
+            remove: removeCommentStart,
+            enqueueSnackbar,
+            changeInputting: recordInputtingComment,
+        },
+        dispatch,
+    );
 
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = ReturnType<typeof mapDispatchToProps>;

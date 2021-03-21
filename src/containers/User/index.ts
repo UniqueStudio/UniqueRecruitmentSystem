@@ -10,10 +10,14 @@ const mapStateToProps = ({ user: { info } }: StoreState) => ({
     userInfo: info,
 });
 
-const mapDispatchToProps = (dispatch: Dispatch) => bindActionCreators({
-    enqueueSnackbar,
-    submitInfo: setUserInfoStart,
-}, dispatch);
+const mapDispatchToProps = (dispatch: Dispatch) =>
+    bindActionCreators(
+        {
+            enqueueSnackbar,
+            submitInfo: setUserInfoStart,
+        },
+        dispatch,
+    );
 
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = ReturnType<typeof mapDispatchToProps>;

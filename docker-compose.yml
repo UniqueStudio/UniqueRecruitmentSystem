@@ -1,12 +1,11 @@
 version: "3"
 services:
   nginx:
-    build:
-      context: nginx
+    image: nginx:alpine
     ports:
       - 7341:7341
     volumes:
       - ./build:/usr/share/nginx/dashboard
-    environment:
-      - NODE_ENV=production
-
+      - type: bind
+        source: ./nginx/nginx.conf
+        target: /etc/nginx/nginx.conf

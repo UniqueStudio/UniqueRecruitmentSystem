@@ -20,7 +20,7 @@ export const addCommentEpic: Epic<AddCommentStart> = (action$, state$, { socket$
                     socket.emit('addComment', { cid, comment, token });
                 }),
                 map(() => toggleProgress(true)),
-                catchError((err) => errHandler(err))
+                catchError((err) => errHandler(err)),
             );
         }),
     );

@@ -4,10 +4,9 @@ import Snackbar from '../../components/Snackbar';
 
 import { StoreState } from '../../reducers';
 
-const mapStateToProps =
-    ({ component: { fabOn } }: StoreState) => ({
-        fabOn,
-    });
+const mapStateToProps = ({ component: { fabOn } }: StoreState) => ({
+    fabOn,
+});
 
 type StateProps = ReturnType<typeof mapStateToProps>;
 

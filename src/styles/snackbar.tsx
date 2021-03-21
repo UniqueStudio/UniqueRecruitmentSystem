@@ -1,16 +1,15 @@
-import { Theme } from '@material-ui/core/styles/createMuiTheme';
-import { createStyles, makeStyles } from '@material-ui/styles';
+import { makeStyles } from '@material-ui/core';
 
 import { dangerColor, infoColor, successColor, warningColor } from './index';
 
-const useStyles = makeStyles(({ breakpoints }: Theme) => createStyles({
+const useStyles = makeStyles(({ breakpoints }) => ({
     success: { backgroundColor: successColor },
     error: { backgroundColor: dangerColor },
     warning: { backgroundColor: warningColor },
     info: { backgroundColor: infoColor },
     snackBar: {
         [breakpoints.down('xs')]: {
-            width: 'calc(100% - 16px)'
+            width: 'calc(100% - 16px)',
         },
     },
     shrink: {

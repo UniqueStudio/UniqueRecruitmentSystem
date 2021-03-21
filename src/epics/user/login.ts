@@ -9,7 +9,9 @@ import {
     getQRCodeFulfilled,
     GET_QR_CODE_FULFILLED,
     GET_QR_CODE_START,
-    login, LoginStart, LOGIN_START,
+    login,
+    LoginStart,
+    LOGIN_START,
     toggleProgress,
 } from '../../actions';
 
@@ -21,21 +23,20 @@ export const getQRCodeEpic: Epic = (action$) =>
     action$.pipe(
         ofType(GET_QR_CODE_START),
         mergeMap(() =>
-            ajax.getJSON<{ type: string; key: string }>(`${API}/user/qrCode`)
-                .pipe(
-                    mergeMap((res) => {
-                        if (res.type === 'success') {
-                            return of(
-                                getQRCodeFulfilled(res.key),
-                                enqueueSnackbar('请尽快用企业微信扫描二维码！', { variant: 'info' }),
-                                toggleProgress(),
-                            );
-                        }
-                        throw customError(res);
-                    }),
-                    startWith(toggleProgress(true)),
-                    catchError((err) => errHandler(err)),
-                ),
+            ajax.getJSON<{ type: string; key: string }>(`${API}/user/qrCode`).pipe(
+                mergeMap((res) => {
+                    if (res.type === 'success') {
+                        return of(
+                            getQRCodeFulfilled(res.key),
+                            enqueueSnackbar('请尽快用企业微信扫描二维码！', { variant: 'info' }),
+                            toggleProgress(),
+                        );
+                    }
+                    throw customError(res);
+                }),
+                startWith(toggleProgress(true)),
+                catchError((err) => errHandler(err)),
+            ),
         ),
         catchError((err) => errHandler(err)),
     );
@@ -58,7 +59,7 @@ export const scanQRCodeEpic: Epic<GetQRCodeFulfilled> = (action$) =>
                     throw customError(res);
                 }),
                 catchError((err) => errHandler(err, getQRCodeFulfilled(''))),
-            )
+            ),
         ),
         catchError((err) => errHandler(err, getQRCodeFulfilled(''))),
     );
@@ -67,23 +68,25 @@ export const loginEpic: Epic<LoginStart> = (action$) =>
     action$.pipe(
         ofType(LOGIN_START),
         mergeMap(({ phone, password }) =>
-            ajax.post(`${API}/user/login`, JSON.stringify({ phone, password }), {
-                'Content-Type': 'application/json',
-            }).pipe(
-                mergeMap(({ response: res }) => {
-                    const { token, type } = res;
-                    if (type === 'success') {
-                        return of(
-                            login(token),
-                            enqueueSnackbar('已成功登录！', { variant: 'success' }),
-                            toggleProgress(),
-                        );
-                    }
-                    throw customError(res);
-                }),
-                startWith(toggleProgress(true)),
-                catchError((err) => errHandler(err)),
-            )
+            ajax
+                .post(`${API}/user/login`, JSON.stringify({ phone, password }), {
+                    'Content-Type': 'application/json',
+                })
+                .pipe(
+                    mergeMap(({ response: res }) => {
+                        const { token, type } = res;
+                        if (type === 'success') {
+                            return of(
+                                login(token),
+                                enqueueSnackbar('已成功登录！', { variant: 'success' }),
+                                toggleProgress(),
+                            );
+                        }
+                        throw customError(res);
+                    }),
+                    startWith(toggleProgress(true)),
+                    catchError((err) => errHandler(err)),
+                ),
         ),
         catchError((err) => errHandler(err)),
     );

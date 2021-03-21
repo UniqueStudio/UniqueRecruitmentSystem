@@ -25,7 +25,7 @@ export const moveCandidateEpic: Epic<MoveCandidateStart> = (action$, state$, { s
                             toggleProgress(true),
                         );
                     }),
-                    catchError((err) => errHandler(err))
+                    catchError((err) => errHandler(err)),
                 );
             }
             return EMPTY;

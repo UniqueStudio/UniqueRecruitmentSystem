@@ -1,9 +1,8 @@
-import { Theme } from '@material-ui/core/styles/createMuiTheme';
-import { createStyles, makeStyles } from '@material-ui/styles';
+import { makeStyles } from '@material-ui/core';
 
 import { colorToShadow } from './index';
 
-const useStyles = makeStyles(({ palette, shadows, spacing, breakpoints }: Theme) => createStyles({
+const useStyles = makeStyles(({ palette, shadows, spacing, breakpoints }) => ({
     modalContainer: {
         display: 'flex',
         alignItems: 'center',
@@ -35,13 +34,13 @@ const useStyles = makeStyles(({ palette, shadows, spacing, breakpoints }: Theme)
         userSelect: 'none',
     },
     modalTitle: {
-        color: palette.secondary.contrastText,
+        color: palette.primary.contrastText,
         textAlign: 'center',
         margin: spacing(1),
     },
     backdrop: {
-        background: palette.primary.main
-    }
+        background: palette.primary.main,
+    },
 }));
 
 export default useStyles;

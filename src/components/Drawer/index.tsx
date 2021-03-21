@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 
-import classNames from 'classnames';
+import clsx from 'clsx';
 
 import Divider from '@material-ui/core/Divider';
 import Drawer from '@material-ui/core/Drawer';
@@ -34,9 +34,8 @@ const Menu: FC<Props> = ({ open, toggleOpen }) => {
     return (
         <Drawer
             variant='permanent'
-            classes={{ paper: classNames(classes.drawerPaper, !open && classes.drawerPaperClose) }}
-            open={open}
-        >
+            classes={{ paper: clsx(classes.drawerPaper, !open && classes.drawerPaperClose) }}
+            open={open}>
             <div className={classes.toolbar}>
                 <IconButton onClick={toggleOpen}>
                     <ChevronLeftIcon />
@@ -44,16 +43,14 @@ const Menu: FC<Props> = ({ open, toggleOpen }) => {
             </div>
             <Divider />
             <List>
-                {listItems.map(({ to, text, icon }, index) =>
+                {listItems.map(({ to, text, icon }, index) => (
                     <Anchor to={to} key={index}>
                         <ListItem button onClick={open ? toggleOpen : undefined}>
-                            <ListItemIcon className={classes.icon}>
-                                {icon}
-                            </ListItemIcon>
+                            <ListItemIcon className={classes.icon}>{icon}</ListItemIcon>
                             <ListItemText primary={text} />
                         </ListItem>
-                    </Anchor>,
-                )}
+                    </Anchor>
+                ))}
             </List>
         </Drawer>
     );

@@ -10,7 +10,7 @@ export interface SocketStart {
 
 export function socketStart(): SocketStart {
     return {
-        type: SOCKET_START
+        type: SOCKET_START,
     };
 }
 
@@ -25,7 +25,7 @@ export interface ToggleProgress {
 export function toggleProgress(on = false): ToggleProgress {
     return {
         type: TOGGLE_PROGRESS,
-        on
+        on,
     };
 }
 
@@ -60,8 +60,8 @@ export function enqueueSnackbar(message: string, options?: OptionsObject): Enque
         notification: {
             key: new Date().getTime() + Math.random(),
             message,
-            options
-        }
+            options,
+        },
     };
 }
 
@@ -76,7 +76,7 @@ export interface RemoveSnackbar {
 export function removeSnackbar(key: number): RemoveSnackbar {
     return {
         type: REMOVE_SNACKBAR,
-        key
+        key,
     };
 }
 
@@ -208,7 +208,7 @@ export function getCandidatesStart(title: string, group?: Group, step?: number):
         type: GET_CANDIDATES_START,
         title,
         group,
-        step
+        step,
     };
 }
 
@@ -253,7 +253,7 @@ export interface AddCandidateFulfilled {
 export function addCandidateFulfilled(candidate: Candidate): AddCandidateFulfilled {
     return {
         type: ADD_CANDIDATE_FULFILLED,
-        candidate
+        candidate,
     };
 }
 
@@ -374,7 +374,7 @@ export function allocateOneStart(cid: string, time: number, interviewType: 'grou
         type: ALLOCATE_ONE_START,
         cid,
         time,
-        interviewType
+        interviewType,
     };
 }
 
@@ -393,7 +393,7 @@ export function allocateOneFulfilled(cid: string, time: number, interviewType: '
         type: ALLOCATE_ONE_FULFILLED,
         cid,
         time,
-        interviewType
+        interviewType,
     };
 }
 
@@ -408,7 +408,7 @@ export interface AllocateAllStart {
 export function allocateAllStart(interviewType: 'group' | 'team'): AllocateAllStart {
     return {
         type: ALLOCATE_ALL_START,
-        interviewType
+        interviewType,
     };
 }
 
@@ -424,11 +424,14 @@ export interface AllocateAllFulfilled {
     interviewType: 'group' | 'team';
 }
 
-export function allocateAllFulfilled(data: AllocateAllFulfilled['data'], interviewType: 'group' | 'team'): AllocateAllFulfilled {
+export function allocateAllFulfilled(
+    data: AllocateAllFulfilled['data'],
+    interviewType: 'group' | 'team',
+): AllocateAllFulfilled {
     return {
         type: ALLOCATE_ALL_FULFILLED,
         data,
-        interviewType
+        interviewType,
     };
 }
 
@@ -473,7 +476,7 @@ export interface Login {
 export function login(token: string): Login {
     return {
         type: LOGIN,
-        token
+        token,
     };
 }
 
@@ -530,7 +533,7 @@ export function loginStart(phone: string, password: string): LoginStart {
     return {
         type: LOGIN_START,
         password,
-        phone
+        phone,
     };
 }
 
@@ -686,7 +689,7 @@ export interface SetViewingRecruitmentStart {
 export function setViewingRecruitmentStart(title: string): SetViewingRecruitmentStart {
     return {
         type: SET_VIEWING_RECRUITMENT_START,
-        title
+        title,
     };
 }
 
@@ -701,7 +704,7 @@ export interface SetViewingRecruitmentFulfilled {
 export function setViewingRecruitmentFulfilled(title: string): SetViewingRecruitmentFulfilled {
     return {
         type: SET_VIEWING_RECRUITMENT_FULFILLED,
-        title
+        title,
     };
 }
 
@@ -729,7 +732,7 @@ export interface AddMessage {
 export function addMessage(message: Message): AddMessage {
     return {
         type: ADD_MESSAGE,
-        message
+        message,
     };
 }
 
@@ -744,7 +747,7 @@ export interface SendMessage {
 export function sendMessage(message: Message): SendMessage {
     return {
         type: SEND_MESSAGE,
-        message
+        message,
     };
 }
 
@@ -789,6 +792,37 @@ export function resumeProgress(progress: number, cid: string): ResumeProgress {
     return {
         type: RESUME_PROGRESS,
         progress,
-        cid
+        cid,
+    };
+}
+
+export const SET_GROUP_ADMIN = 'SET_GROUP_ADMIN';
+export type SET_GROUP_ADMIN = typeof SET_GROUP_ADMIN;
+export interface SetGroupAdmin {
+    type: SET_GROUP_ADMIN;
+    data: {
+        group: string;
+        who: string[];
+    };
+}
+export function setGroupAdmin(data: SetGroupAdmin['data']) {
+    return {
+        type: SET_GROUP_ADMIN,
+        data,
+    };
+}
+
+export const UPDATE_GROUP_ADMIN = 'UPDATE_GROUP_ADMIN';
+export type UPDATE_GROUP_ADMIN = typeof UPDATE_GROUP_ADMIN;
+export interface UpdateGroupAdmin {
+    type: UPDATE_GROUP_ADMIN;
+    data: {
+        newAdmins: string[];
+    };
+}
+export function updateGroupAdmin(data: UpdateGroupAdmin['data']) {
+    return {
+        type: UPDATE_GROUP_ADMIN,
+        data,
     };
 }

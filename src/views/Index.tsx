@@ -1,5 +1,5 @@
 import React, { FC, lazy, memo, Suspense } from 'react';
-import { Route, RouteComponentProps, Switch, withRouter } from 'react-router';
+import { Route, RouteComponentProps, Switch, withRouter } from 'react-router-dom';
 
 import Progress from '../components/Progress';
 
@@ -21,9 +21,7 @@ const Index: FC = memo(() => {
     useStyles();
     const routeRender = (Component: JSX.Element) => (props: RouteComponentProps) => (
         <PageFrame {...props}>
-            <Suspense fallback={<Progress />}>
-                {Component}
-            </Suspense>
+            <Suspense fallback={<Progress />}>{Component}</Suspense>
         </PageFrame>
     );
     return (

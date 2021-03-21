@@ -15,12 +15,12 @@ interface Props {
 const CustomSelect: FC<Props> = memo(({ data, values, onChange, currentValue }) => {
     const classes = useStyles();
     return (
-        <Select
-            value={currentValue}
-            onChange={onChange}
-            className={classes.select}
-        >
-            {data.map((item, index) => <MenuItem value={values[index]} key={index}>{item}</MenuItem>)}
+        <Select value={currentValue} onChange={onChange} className={classes.select}>
+            {data.map((item, index) => (
+                <MenuItem value={values[index]} key={index}>
+                    {item}
+                </MenuItem>
+            ))}
         </Select>
     );
 });

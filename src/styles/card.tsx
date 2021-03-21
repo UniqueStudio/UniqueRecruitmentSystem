@@ -1,5 +1,4 @@
-import { Theme } from '@material-ui/core/styles/createMuiTheme';
-import { createStyles, makeStyles } from '@material-ui/styles';
+import { makeStyles } from '@material-ui/core';
 
 import { colorToAlpha, dangerColor, successColor, warningColor } from './index';
 
@@ -8,27 +7,28 @@ const yellow = colorToAlpha(warningColor, 0.1);
 const green = colorToAlpha(successColor, 0.1);
 
 interface Props {
-    disabled?: boolean;
-    white?: boolean;
-    good?: number;
-    soSo?: number;
+    disabled: boolean;
+    white: boolean;
+    good: number;
+    soSo: number;
 }
 
-const useStyles = makeStyles(({ breakpoints, spacing, zIndex }: Theme) => createStyles({
+const useStyles = makeStyles(({ breakpoints, spacing, zIndex }) => ({
     cardContainer: {
         padding: `${spacing(0.5)}px ${spacing(1)}px`,
         [breakpoints.down('xs')]: {
             padding: spacing(0.5),
         },
     },
-    card: ({ disabled = false, white = true, good = 0, soSo = 0 }: Props) => ({
+    card: ({ disabled, white, good, soSo }: Props) => ({
         position: 'relative',
         zIndex: zIndex.drawer,
         cursor: 'pointer',
-        background:
-            disabled ? 'rgba(0, 0, 0, 0.1)'
-                : white ? 'rgba(0, 0, 0, 0)'
-                : `linear-gradient(to right, ${green}, ${green} ${good}%, ${yellow} ${good}%, ${yellow} ${soSo}%, ${red} ${soSo}%, ${red})`,
+        background: disabled
+            ? 'rgba(0, 0, 0, 0.1)'
+            : white
+            ? 'rgba(0, 0, 0, 0)'
+            : `linear-gradient(to right, ${green}, ${green} ${good}%, ${yellow} ${good}%, ${yellow} ${soSo}%, ${red} ${soSo}%, ${red})`,
     }),
     cardAction: {
         justifyContent: 'center',

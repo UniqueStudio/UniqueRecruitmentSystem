@@ -1,9 +1,8 @@
-import { Theme } from '@material-ui/core/styles/createMuiTheme';
-import { createStyles, makeStyles } from '@material-ui/styles';
+import { makeStyles } from '@material-ui/core';
 
 import { drawerWidth } from './index';
 
-const useStyles = makeStyles(({ transitions, mixins, spacing, breakpoints }: Theme) => createStyles({
+const useStyles = makeStyles(({ transitions, mixins, spacing, breakpoints }) => ({
     drawerPaper: {
         position: 'sticky',
         top: 0,
@@ -24,7 +23,7 @@ const useStyles = makeStyles(({ transitions, mixins, spacing, breakpoints }: The
         width: spacing(9),
         [breakpoints.down('sm')]: {
             border: 0,
-            width: 0, // bugs in 0px, iOS <- I think it is fixed now
+            width: '1px', // bugs in 0px, iOS <- I think it is fixed now
         },
     },
     toolbar: {
@@ -35,8 +34,8 @@ const useStyles = makeStyles(({ transitions, mixins, spacing, breakpoints }: The
         ...mixins.toolbar,
     },
     icon: {
-        margin: `0 ${spacing(1)}px`
-    }
+        margin: `0 ${spacing(1)}px`,
+    },
 }));
 
 export default useStyles;

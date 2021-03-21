@@ -1,7 +1,6 @@
-import { Theme } from '@material-ui/core/styles/createMuiTheme';
-import { createStyles, makeStyles } from '@material-ui/styles';
+import { makeStyles } from '@material-ui/core';
 
-const useStyles = makeStyles(({ spacing, breakpoints }: Theme) => createStyles({
+const useStyles = makeStyles(({ spacing, breakpoints }) => ({
     container: {
         minWidth: 300,
         marginTop: spacing(3),
@@ -50,7 +49,7 @@ const useStyles = makeStyles(({ spacing, breakpoints }: Theme) => createStyles({
         maxWidth: 600,
         [breakpoints.down('xs')]: {
             display: 'block',
-            padding: `0 ${spacing(1)}px`
+            padding: `0 ${spacing(1)}px`,
         },
     },
     textField: {
@@ -118,14 +117,14 @@ const useStyles = makeStyles(({ spacing, breakpoints }: Theme) => createStyles({
     },
     table: {
         marginBottom: spacing(1),
-        minWidth: 350
+        minWidth: 350,
     },
     tableCell: {
         padding: spacing(1),
         textAlign: 'center',
         [breakpoints.down('xs')]: {
             padding: spacing(0.5),
-            width: spacing(7)
+            width: spacing(7),
         },
     },
     title: {

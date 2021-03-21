@@ -1,7 +1,7 @@
 import * as actions from '../actions';
 
 import { Recruitment } from '../config/types';
-import { updateStorage } from '../utils/updateStorage';
+import { localStorage, updateStorage } from '../utils/storage';
 
 type Action =
     | actions.GetRecruitmentsFulfilled
@@ -17,7 +17,7 @@ export interface RecruitmentStore {
 
 const init: RecruitmentStore = {
     recruitments: [],
-    viewing: sessionStorage.getItem('viewing') || '',
+    viewing: localStorage.getItem('viewing') || '',
     isLoading: false,
     shouldUpdateRecruitment: true,
 };
