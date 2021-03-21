@@ -51,7 +51,11 @@ const Dashboard: FC<Props> = memo(({ data, setViewing, viewing }) => {
                                 // switching between router case problem
                                 // maybe it's better to change the order in backend :(
                                 <div key={recruitment._id} className={classes.block}>
-                                    <Chart data={recruitment} setViewing={handleSet(recruitment.title)} />
+                                    <Chart
+                                        data={recruitment}
+                                        selected={viewing === recruitment.title}
+                                        setViewing={handleSet(recruitment.title)}
+                                    />
                                 </div>
                             ))}
                 </div>

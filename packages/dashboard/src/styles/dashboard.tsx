@@ -32,8 +32,9 @@ const useStyles = makeStyles(({ spacing, breakpoints }: Theme) =>
         },
         blocksContainer: {
             marginTop: spacing(1),
+            display: 'flex',
+            flexWrap: "wrap",
             [breakpoints.down('xs')]: {
-                display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
             },
