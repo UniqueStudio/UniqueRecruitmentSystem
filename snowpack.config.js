@@ -40,7 +40,9 @@ module.exports = {
     optimize: {
         treeshake: true,
         minify: true,
-        target: 'es2015',
+        // TODO: snowpack complaints when targeting to ES2015,
+        // but I doubt whether it is a right decision to target to ES2020
+        target: 'es2020',
     },
     buildOptions: {
         sourcemap: false,
