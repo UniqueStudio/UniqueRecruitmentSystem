@@ -17,7 +17,7 @@ export const removeCandidateEpic: Epic<RemoveCandidateStart> = (action$, state$,
                         socket.emit('removeCandidate', { cid, token });
                     }),
                     map(() => toggleProgress(true)),
-                    catchError((err) => errHandler(err))
+                    catchError((err) => errHandler(err)),
                 );
             }
             return EMPTY;

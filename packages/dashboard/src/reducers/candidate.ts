@@ -3,7 +3,7 @@ import * as actions from '../actions';
 import { Candidate, Evaluation, Group, Step } from '../config/types';
 import { insertItem, removeItem, updateObjectInArray } from '../utils/reducerHelper';
 
-import { updateStorage } from '../utils/updateStorage';
+import { updateStorage } from '../utils/storage';
 
 const update = updateStorage('candidates');
 
@@ -97,7 +97,9 @@ export function candidateReducer(state = init, action: Action): CandidateStore {
             return { ...state, candidates, selected };
         }
         case actions.MOVE_CANDIDATE_FULFILLED: {
-            const candidates = state.candidates.map((candidate) => candidate._id === action.cid ? { ...candidate, step: action.to } : candidate);
+            const candidates = state.candidates.map((candidate) =>
+                candidate._id === action.cid ? { ...candidate, step: action.to } : candidate,
+            );
             update(candidates);
             return { ...state, candidates };
         }

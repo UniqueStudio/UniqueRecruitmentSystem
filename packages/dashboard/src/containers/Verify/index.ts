@@ -17,9 +17,13 @@ const mapStateToProps = (storeState: StoreState, ownProps: OwnProps) => ({
     ...ownProps,
 });
 
-const mapDispatchToProps = (dispatch: Dispatch) => bindActionCreators({
-    getVerifyCode,
-}, dispatch);
+const mapDispatchToProps = (dispatch: Dispatch) =>
+    bindActionCreators(
+        {
+            getVerifyCode,
+        },
+        dispatch,
+    );
 
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = ReturnType<typeof mapDispatchToProps>;

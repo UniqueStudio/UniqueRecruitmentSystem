@@ -10,37 +10,30 @@ import { User } from '../../config/types';
 
 import { checkToken, customError, Epic, errHandler } from '../';
 
-export const getInfoEpic: Epic = (action$, state$, { sessionStorage }) =>
+export const getInfoEpic: Epic = (action$, state$, { localStorage }) =>
     action$.pipe(
         ofType(GET_USER_INFO_START),
         mergeMap(() => {
             const token = checkToken();
-            const user = sessionStorage.getItem('user');
+            const user = localStorage.getItem('user');
             if (user) {
-                return of(
-                    userInfoFulfilled(JSON.parse(user)),
-                    setGroup(JSON.parse(user).group),
-                    socketStart(),
-                );
+                return of(userInfoFulfilled(user), setGroup(user.group), socketStart());
             }
-            return ajax.getJSON<{ type: string; data: User }>(`${API}/user/`, {
-                Authorization: `Bearer ${token}`,
-            }).pipe(
-                mergeMap((res) => {
-                    if (res.type === 'success') {
-                        const { data } = res;
-                        return of(
-                            userInfoFulfilled(data),
-                            setGroup(data.group),
-                            socketStart(),
-                            toggleProgress(),
-                        );
-                    }
-                    throw customError(res);
-                }),
-                startWith(toggleProgress(true)),
-                catchError((err) => errHandler(err)),
-            );
+            return ajax
+                .getJSON<{ type: string; data: User }>(`${API}/user/`, {
+                    Authorization: `Bearer ${token}`,
+                })
+                .pipe(
+                    mergeMap((res) => {
+                        if (res.type === 'success') {
+                            const { data } = res;
+                            return of(userInfoFulfilled(data), setGroup(data.group), socketStart(), toggleProgress());
+                        }
+                        throw customError(res);
+                    }),
+                    startWith(toggleProgress(true)),
+                    catchError((err) => errHandler(err)),
+                );
         }),
         catchError((err) => errHandler(err)),
     );

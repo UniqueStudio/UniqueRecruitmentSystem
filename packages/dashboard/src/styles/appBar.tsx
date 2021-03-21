@@ -1,9 +1,8 @@
-import { Theme } from '@material-ui/core/styles/createMuiTheme';
-import { createStyles, makeStyles } from '@material-ui/styles';
+import { makeStyles } from '@material-ui/core';
 
 import { drawerWidth } from './index';
 
-const useStyles = makeStyles(({ zIndex, palette, transitions, spacing, breakpoints }: Theme) => createStyles({
+const useStyles = makeStyles(({ zIndex, palette, transitions, spacing, breakpoints }) => ({
     appBar: {
         zIndex: zIndex.drawer + 1,
         background: `linear-gradient(60deg, ${palette.primary.main}, ${palette.primary.dark})`,
@@ -35,7 +34,7 @@ const useStyles = makeStyles(({ zIndex, palette, transitions, spacing, breakpoin
         [breakpoints.down('xs')]: {
             marginLeft: 0,
             marginRight: 0,
-            padding: spacing(1)
+            padding: spacing(1),
         },
     },
     rightButtons: {
@@ -43,16 +42,16 @@ const useStyles = makeStyles(({ zIndex, palette, transitions, spacing, breakpoin
         display: 'flex',
         '& button': {
             [breakpoints.down('xs')]: {
-                padding: spacing(1)
+                padding: spacing(1),
             },
-        }
+        },
     },
     hide: {
         display: 'none',
     },
     suggestion: {
         padding: spacing(2),
-        overflowY: 'auto'
+        overflowY: 'auto',
     },
     collapse: {
         zIndex: zIndex.drawer + 1,
@@ -62,7 +61,7 @@ const useStyles = makeStyles(({ zIndex, palette, transitions, spacing, breakpoin
             top: spacing(6),
         },
         right: 0,
-    }
+    },
 }));
 
 export default useStyles;

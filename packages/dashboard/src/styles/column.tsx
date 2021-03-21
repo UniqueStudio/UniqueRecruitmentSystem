@@ -1,9 +1,8 @@
-import { Theme } from '@material-ui/core/styles/createMuiTheme';
-import { createStyles, makeStyles } from '@material-ui/styles';
+import { makeStyles } from '@material-ui/core';
 
 import { colorToShadow } from './index';
 
-const useStyles = makeStyles(({ spacing, palette, breakpoints }: Theme) => createStyles({
+const useStyles = makeStyles(({ spacing, palette, breakpoints }) => ({
     column: {
         margin: spacing(1),
         [breakpoints.down('xs')]: {
@@ -26,7 +25,7 @@ const useStyles = makeStyles(({ spacing, palette, breakpoints }: Theme) => creat
         userSelect: 'none',
     },
     columnTitle: {
-        color: palette.secondary.contrastText,
+        color: palette.primary.contrastText,
         textAlign: 'center',
         margin: spacing(1),
     },

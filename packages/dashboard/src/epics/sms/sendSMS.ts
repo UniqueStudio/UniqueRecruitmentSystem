@@ -14,28 +14,27 @@ export const sendSMSEpic: Epic<SendSMS> = (action$) =>
         ofType(SEND_SMS),
         mergeMap(({ content }) => {
             const token = checkToken();
-            return ajax.post(`${API}/sms`, JSON.stringify(content), {
-                'Authorization': `Bearer ${token}`,
-                'Content-Type': 'application/json',
-            }).pipe(
-                mergeMap(({ response: res }) => {
-                    const { type, messages } = res;
-                    if (type === 'success') {
-                        return of(
-                            enqueueSnackbar('已成功发送短信', { variant: 'success' }),
-                            toggleProgress(),
-                        );
-                    } else if (messages) {
-                        return of(
-                            ...messages.map((message: string) => enqueueSnackbar(message, { variant: type })),
-                            toggleProgress(),
-                        );
-                    }
-                    throw customError(res);
-                }),
-                startWith(toggleProgress(true)),
-                catchError((err) => errHandler(err)),
-            );
+            return ajax
+                .post(`${API}/sms`, JSON.stringify(content), {
+                    Authorization: `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                })
+                .pipe(
+                    mergeMap(({ response: res }) => {
+                        const { type, messages } = res;
+                        if (type === 'success') {
+                            return of(enqueueSnackbar('已成功发送短信', { variant: 'success' }), toggleProgress());
+                        } else if (messages) {
+                            return of(
+                                ...messages.map((message: string) => enqueueSnackbar(message, { variant: type })),
+                                toggleProgress(),
+                            );
+                        }
+                        throw customError(res);
+                    }),
+                    startWith(toggleProgress(true)),
+                    catchError((err) => errHandler(err)),
+                );
         }),
         catchError((err) => errHandler(err)),
     );

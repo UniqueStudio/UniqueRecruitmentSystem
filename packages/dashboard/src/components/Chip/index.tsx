@@ -1,6 +1,6 @@
 import React, { FC, memo, MouseEventHandler, useState } from 'react';
 
-import classNames from 'classnames';
+import clsx from 'clsx';
 
 import Chip from '@material-ui/core/Chip';
 import Paper from '@material-ui/core/Paper';
@@ -36,7 +36,7 @@ const CommentChip: FC<Props> = memo(({ comment: { content, evaluation, username 
                 label={text}
                 className={classes.chip}
                 classes={{
-                    root: classNames(classes[color], classes[`root-${color}`]),
+                    root: clsx(classes[color], classes[`root-${color}`]),
                 }}
                 onMouseOver={handleOpen}
                 onMouseOut={handleClose}
@@ -51,9 +51,8 @@ const CommentChip: FC<Props> = memo(({ comment: { content, evaluation, username 
                 transformOrigin={{ vertical: 'top', horizontal: 'center' }}
                 onClose={handleClose}
                 disableRestoreFocus
-                disableEnforceFocus
-            >
-                <Paper className={classNames(classes.content, classes[color])}>{content}</Paper>
+                disableEnforceFocus>
+                <Paper className={clsx(classes.content, classes[color])}>{content}</Paper>
             </Popover>
         </>
     );

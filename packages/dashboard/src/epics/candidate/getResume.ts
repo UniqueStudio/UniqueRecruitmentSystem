@@ -18,43 +18,49 @@ const download = (cid: string) => async (res: Response) => {
     }
     const total = res.headers.get('Content-Length');
     const disposition = res.headers.get('Content-Disposition');
-    const reader = res.body?.getReader();
     if (!total) {
-        throw customError({ message: 'Can\'t get Content-Length', type: 'error' });
-    }
-    if (!reader) {
-        throw customError({ message: 'Can\'t get reader', type: 'error' });
+        throw new Error("Can't get content-length");
     }
     let loaded = 0;
-    const stream = new ReadableStream({
-        async start(controller: ReadableStreamDefaultController) {
-            while (true) {
-                const { done, value } = await reader.read();
-                if (done || !value) {
-                    break;
+    const response = new Response(
+        new ReadableStream({
+            async start(controller: ReadableStreamDefaultController) {
+                const reader = res.body!.getReader();
+                let result = await reader.read();
+                while (!result.done) {
+                    const value = result.value;
+                    loaded += value.byteLength;
+                    store.dispatch(resumeProgress(loaded / +total, cid));
+                    controller.enqueue(value);
+                    result = await reader.read();
                 }
-                loaded += value.byteLength;
-                store.dispatch(resumeProgress(loaded / +total, cid));
-                controller.enqueue(value);
-            }
-            controller.close();
-        }
-    });
+                controller.close();
+            },
+        }),
+    );
     let filename = 'resume';
-    if (disposition && disposition.includes('attachment')) {
+    const blob = await response.blob();
+    if (disposition && disposition.indexOf('attachment') !== -1) {
         const filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
         const matches = filenameRegex.exec(disposition);
-        if (matches && matches[1]) {
-            filename = Buffer.from(matches[1].replace(/['"]/g, ''), 'base64').toString();
+        if (matches?.[1]) {
+            const base64 = matches[1].replace(/['"]/g, '');
+            filename = decodeURIComponent(
+                atob(base64)
+                    .split('')
+                    .map((c) => `%${c.charCodeAt(0).toString(16).padStart(2, '0')}`)
+                    .join(''),
+            );
         }
     }
-    const blob = await new Response(stream).blob();
-    const url = URL.createObjectURL(new Blob([blob]));
+    const url = window.URL.createObjectURL(new Blob([blob]));
     const a = document.createElement('a');
     a.href = url;
     a.download = filename;
+    document.body.appendChild(a);
     a.click();
-    URL.revokeObjectURL(url);
+    document.body.removeChild(a);
+    window.URL.revokeObjectURL(url);
     store.dispatch(resumeProgress(0, ''));
     return toggleProgress();
 };
@@ -65,11 +71,13 @@ export const getResumeEpic: Epic<GetResume> = (action$) =>
         mergeMap((action) => {
             const token = checkToken();
             const { cid } = action;
-            return from(fetch(`${API}/candidate/${cid}/resume`, {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            })).pipe(
+            return from(
+                fetch(`${API}/candidate/${cid}/resume`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                }),
+            ).pipe(
                 mergeMap(download(cid)),
                 startWith(toggleProgress(true)),
                 catchError((err) => errHandler(err)),

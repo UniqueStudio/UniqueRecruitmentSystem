@@ -1,7 +1,6 @@
-import { Theme } from '@material-ui/core/styles/createMuiTheme';
-import { createStyles, makeStyles } from '@material-ui/styles';
+import { makeStyles } from '@material-ui/core';
 
-const useStyles = makeStyles(({ breakpoints, spacing }: Theme) => createStyles({
+const useStyles = makeStyles(({ breakpoints, spacing }) => ({
     template: {
         margin: spacing(2),
         width: spacing(100),
@@ -68,8 +67,8 @@ const useStyles = makeStyles(({ breakpoints, spacing }: Theme) => createStyles({
         width: spacing(15),
     },
     picker: {
-        display: 'block'
-    }
+        display: 'block',
+    },
 }));
 
 export default useStyles;

@@ -10,31 +10,29 @@ import { User } from '../../config/types';
 
 import { checkToken, customError, Epic, errHandler } from '../';
 
-export const getGroupEpic: Epic = (action$, state$, { sessionStorage }) =>
+export const getGroupEpic: Epic = (action$, state$, { localStorage }) =>
     action$.pipe(
         ofType(GET_GROUP_INFO_START),
         mergeMap(() => {
             const token = checkToken();
-            const groupInfo = sessionStorage.getItem('group');
+            const groupInfo = localStorage.getItem('group');
             if (groupInfo && !state$.value.user.firstLoad) {
-                return of(
-                    getGroupInfoFulfilled(JSON.parse(groupInfo)),
-                );
+                return of(getGroupInfoFulfilled(groupInfo));
             }
-            return ajax.getJSON<{ type: string; data: User[] }>(`${API}/user/group/`, {
-                Authorization: `Bearer ${token}`,
-            }).pipe(
-                mergeMap((res) => {
-                    if (res.type === 'success') {
-                        return of(
-                            getGroupInfoFulfilled(res.data),
-                            toggleProgress(),
-                        );
-                    }
-                    throw customError(res);
-                }),
-                startWith(toggleProgress(true)),
-                catchError((err) => errHandler(err)));
+            return ajax
+                .getJSON<{ type: string; data: User[] }>(`${API}/user/group/`, {
+                    Authorization: `Bearer ${token}`,
+                })
+                .pipe(
+                    mergeMap((res) => {
+                        if (res.type === 'success') {
+                            return of(getGroupInfoFulfilled(res.data), toggleProgress());
+                        }
+                        throw customError(res);
+                    }),
+                    startWith(toggleProgress(true)),
+                    catchError((err) => errHandler(err)),
+                );
         }),
         catchError((err) => errHandler(err)),
     );

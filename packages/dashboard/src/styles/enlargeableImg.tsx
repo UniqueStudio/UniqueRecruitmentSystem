@@ -1,7 +1,6 @@
-import { Theme } from '@material-ui/core/styles/createMuiTheme';
-import { createStyles, makeStyles } from '@material-ui/styles';
+import { makeStyles } from '@material-ui/core';
 
-const useStyles = makeStyles(({ zIndex }: Theme) => createStyles({
+const useStyles = makeStyles(({ zIndex }) => ({
     imageLayer: {
         maxHeight: '100%',
     },

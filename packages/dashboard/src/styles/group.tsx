@@ -1,7 +1,6 @@
-import { Theme } from '@material-ui/core/styles/createMuiTheme';
-import { createStyles, makeStyles } from '@material-ui/styles';
+import { makeStyles } from '@material-ui/core';
 
-const useStyles = makeStyles(({ spacing, breakpoints }: Theme) => createStyles({
+const useStyles = makeStyles(({ spacing, breakpoints }) => ({
     infoContainer: {
         display: 'flex',
         flexDirection: 'column',
@@ -9,7 +8,7 @@ const useStyles = makeStyles(({ spacing, breakpoints }: Theme) => createStyles({
         [breakpoints.down('xs')]: {
             padding: `0 ${spacing(1)}px ${spacing(2)}px`,
         },
-        marginBottom: spacing(3)
+        marginBottom: spacing(3),
     },
     paper: {
         marginTop: spacing(2),
@@ -32,7 +31,7 @@ const useStyles = makeStyles(({ spacing, breakpoints }: Theme) => createStyles({
     title: {
         display: 'flex',
         justifyContent: 'space-around',
-    }
+    },
 }));
 
 export default useStyles;

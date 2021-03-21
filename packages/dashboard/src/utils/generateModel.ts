@@ -12,18 +12,30 @@ interface Model {
     rest?: string;
 }
 
-export const generateModel = ({ type, name = '{{候选人姓名}}', title = '{{招新名称}}', group = '{{组别}}', step, time, place, rest, next }: Model) => {
+export const generateModel = ({
+    type,
+    name = '{{候选人姓名}}',
+    title = '{{招新名称}}',
+    group = '{{组别}}',
+    step,
+    time,
+    place,
+    rest,
+    next,
+}: Model) => {
     switch (type) {
         case 'accept': {
             let defaultRest = '';
             switch (next) {
                 case 2:
                 case 4:
-                    defaultRest = '，请进入以下链接选择面试时间：{{链接}}';
+                    defaultRest = `，请进入以下链接选择面试时间：{{链接}}`;
                     break;
                 case 1:
                 case 3:
-                    defaultRest = `，请于${time || '{{时间}}'}在${place || '{{地点}}'}参加${STEPS[next] || '{{下一流程}}'}，请务必准时到场`;
+                    defaultRest = `，请于${time || '{{时间}}'}在${place || '{{地点}}'}参加${
+                        STEPS[next] || '{{下一流程}}'
+                    }，请务必准时到场`;
                     break;
                 case 5:
                     defaultRest = `，你已成功加入${group}组`;

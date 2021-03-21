@@ -1,6 +1,6 @@
-import { createStyles, makeStyles } from '@material-ui/styles';
+import { makeStyles } from '@material-ui/styles';
 
-const useStyles = makeStyles(() => createStyles({
+const useStyles = makeStyles(() => ({
     '@global': {
         '::-webkit-scrollbar': {
             width: 3,

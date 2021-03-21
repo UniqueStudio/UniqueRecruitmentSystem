@@ -20,7 +20,7 @@ export const removeCommentEpic: Epic<RemoveCommentStart> = (action$, state$, { s
                     socket.emit('removeComment', { cid, id, token });
                 }),
                 map(() => toggleProgress(true)),
-                catchError((err) => errHandler(err))
+                catchError((err) => errHandler(err)),
             );
         }),
     );

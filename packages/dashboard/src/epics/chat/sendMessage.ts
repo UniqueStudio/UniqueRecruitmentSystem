@@ -21,8 +21,8 @@ export const sendMessageEpic: Epic<SendMessage> = (action$, state$, { socket$ })
                 map(({ message }) => {
                     return addMessage(message);
                 }),
-                catchError((err) => errHandler(err))
+                catchError((err) => errHandler(err)),
             );
         }),
-        catchError((err) => errHandler(err))
+        catchError((err) => errHandler(err)),
     );

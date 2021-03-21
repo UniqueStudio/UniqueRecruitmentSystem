@@ -1,7 +1,6 @@
-import { Theme } from '@material-ui/core/styles/createMuiTheme';
-import { createStyles, makeStyles } from '@material-ui/styles';
+import { makeStyles } from '@material-ui/core';
 
-const useStyles = makeStyles(({ breakpoints, spacing }: Theme) => createStyles({
+const useStyles = makeStyles(({ breakpoints, spacing }) => ({
     evaluation: {
         justifyContent: 'center',
         alignItems: 'center',

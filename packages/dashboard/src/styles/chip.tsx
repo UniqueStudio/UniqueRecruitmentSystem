@@ -1,18 +1,20 @@
-import { Theme } from '@material-ui/core/styles/createMuiTheme';
-import { createStyles, makeStyles } from '@material-ui/styles';
+import { makeStyles } from '@material-ui/core';
 
 import { mergeKV } from '../utils/mergeKV';
 
 import { colorToAlpha, colorToShadow, dangerColor, infoColor, successColor, warningColor } from './index';
 
-export const colorStyles = mergeKV(['info', 'success', 'warning', 'danger'],
+export const colorStyles = mergeKV(
+    ['info', 'success', 'warning', 'danger'],
     [infoColor, successColor, warningColor, dangerColor].map((color) => ({
         background: color,
         color: 'white',
         boxShadow: colorToShadow(color),
-    })));
+    })),
+);
 
-const rootColorStyles = mergeKV(['root-info', 'root-success', 'root-warning', 'root-danger'],
+const rootColorStyles = mergeKV(
+    ['root-info', 'root-success', 'root-warning', 'root-danger'],
     [infoColor, successColor, warningColor, dangerColor].map((color) => ({
         '& span': {
             pointerEvents: 'none',
@@ -26,14 +28,14 @@ const rootColorStyles = mergeKV(['root-info', 'root-success', 'root-warning', 'r
         '&:focus, &:active': {
             background: color,
         },
-    }))
+    })),
 );
 
-const useStyles = makeStyles(({ spacing }: Theme) => createStyles({
+const useStyles = makeStyles(({ spacing }) => ({
     chip: {
         margin: spacing(1),
         cursor: 'pointer',
-        maxWidth: 250
+        maxWidth: 250,
     },
     popover: {
         pointerEvents: 'none',
