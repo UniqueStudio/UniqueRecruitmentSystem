@@ -1,6 +1,6 @@
 import React, { FC, memo } from 'react';
 
-import classNames from 'classnames';
+import clsx from 'clsx';
 
 import Chip from '@material-ui/core/Chip';
 import Typography from '@material-ui/core/Typography';
@@ -18,7 +18,7 @@ interface Props {
 const SMSPicker: FC<Props> = memo(({ onDelete, selected }) => {
     const classes = useStyles();
     return (
-        <div className={classNames(classes.templateContent, classes.templateItem, classes.picker)}>
+        <div className={clsx(classes.templateContent, classes.templateItem, classes.picker)}>
             {!selected.length ? (
                 <Typography variant='h6' className={classes.templateItem}>
                     你未选中任何人!

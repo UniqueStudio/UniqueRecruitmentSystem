@@ -1,6 +1,6 @@
 import React, { FC, memo, useMemo, useState } from 'react';
 
-import classNames from 'classnames';
+import clsx from 'clsx';
 
 import DateFnsUtils from '@date-io/date-fns';
 
@@ -187,7 +187,7 @@ const CandidateTable: FC<Props> = memo(({ candidates, changeType, interviewType,
                         </TableBody>
                     </Table>
                 </div>
-                <div className={classNames(classes.tableButtons, classes.buttonContainer)}>
+                <div className={clsx(classes.tableButtons, classes.buttonContainer)}>
                     <Button color='primary' variant='contained' onClick={handleAllocateAll}>
                         自动分配
                     </Button>

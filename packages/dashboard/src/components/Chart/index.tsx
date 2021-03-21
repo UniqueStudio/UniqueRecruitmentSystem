@@ -1,6 +1,6 @@
 import React, { FC, memo, useState } from 'react';
 
-import classNames from 'classnames';
+import clsx from 'clsx';
 
 import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
@@ -71,7 +71,7 @@ const Chart: FC<Props> = memo(({ data: { groups, total, title, end }, setViewing
             <Button onClick={setViewing} variant='contained' color='primary'>
                 浏览本次招新
             </Button>
-            <Paper className={classNames(classes.chart, { [classes.expired]: expired })}>
+            <Paper className={clsx(classes.chart, { [classes.expired]: expired })}>
                 <div className={classes.doughnut}>
                     <Doughnut data={chartData} handleClick={setData} options={options} width={300} height={300} />
                 </div>
