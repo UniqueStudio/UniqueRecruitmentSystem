@@ -168,7 +168,7 @@ const CandidateTable: FC<Props> = memo(({ candidates, changeType, interviewType,
                                             设置
                                         </Button>
                                     );
-                                    const items = [name, GROUPS[GROUPS_.indexOf(group)], state, slotInfo, button];
+                                    const items = [name, GROUPS[GROUPS_.indexOf(group)], slotInfo, state, button];
                                     return (
                                         <TableRow key={_id}>
                                             <TableCell classes={{ root: classes.tableCell }} padding='checkbox'>
