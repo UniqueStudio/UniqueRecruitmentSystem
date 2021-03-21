@@ -9,7 +9,7 @@ import React, {
     useState,
 } from 'react';
 
-import classNames from 'classnames';
+import clsx from 'clsx';
 
 import Avatar from '@material-ui/core/Avatar';
 import Chip from '@material-ui/core/Chip';
@@ -131,10 +131,10 @@ const Messenger: FC<Props> = memo(({ messages, username, avatar, sendMessage, en
     ];
     const MessageChip = ({ isSelf, name, time, isImage, content: message }: Message) => (
         <div className={classes.message}>
-            <div className={classNames({ [classes.rightAlign]: isSelf })}>
+            <div className={clsx({ [classes.rightAlign]: isSelf })}>
                 {`${name} - ${new Date(time).toLocaleTimeString('zh-CN', { hour12: false })}`}
             </div>
-            <Divider className={classNames({ [classes.myDivider]: isSelf })} />
+            <Divider className={clsx({ [classes.myDivider]: isSelf })} />
             <div className={classes.messageContent}>
                 {isImage ? (
                     <EnlargeableImage src={message} />
@@ -156,11 +156,11 @@ const Messenger: FC<Props> = memo(({ messages, username, avatar, sendMessage, en
         <Paper className={classes.messenger}>
             <div className={classes.messages} ref={setContainer}>
                 {messages.map((message, index) => (
-                    <div key={index} className={classNames(classes.messageContainer, { [classes.my]: message.isSelf })}>
+                    <div key={index} className={clsx(classes.messageContainer, { [classes.my]: message.isSelf })}>
                         {AvatarBox(message)}
                         <Chip
                             label={MessageChip(message)}
-                            classes={{ root: classNames(classes.chipRoot, { [classes.myChip]: message.isSelf }) }}
+                            classes={{ root: clsx(classes.chipRoot, { [classes.myChip]: message.isSelf }) }}
                         />
                     </div>
                 ))}

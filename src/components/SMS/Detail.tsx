@@ -1,6 +1,6 @@
 import React, { ChangeEventHandler, FC, memo } from 'react';
 
-import classNames from 'classnames';
+import clsx from 'clsx';
 
 import MenuItem from '@material-ui/core/MenuItem';
 import TextField from '@material-ui/core/TextField';
@@ -34,13 +34,13 @@ const SMSDetail: FC<Props> = memo(({ handleChange, content }) => {
     const withPlace = withTime || !withStep;
     return (
         <>
-            <div className={classNames(classes.templateContent, classes.templateItem)}>
+            <div className={clsx(classes.templateContent, classes.templateItem)}>
                 <Typography variant='subtitle2' className={classes.templateItem}>
                     {generateModel({ type, step, time, place, rest, next })}
                 </Typography>
             </div>
             <div
-                className={classNames(
+                className={clsx(
                     classes.templateContent,
                     classes.templateItem,
                     classes.templateParams,
@@ -50,7 +50,7 @@ const SMSDetail: FC<Props> = memo(({ handleChange, content }) => {
                     select
                     label='类型'
                     value={type}
-                    className={classNames(classes.templateItem, classes.input)}
+                    className={clsx(classes.templateItem, classes.input)}
                     onChange={handleChange('type')}>
                     <MenuItem value='accept'>通过</MenuItem>
                     <MenuItem value='reject'>被刷</MenuItem>
@@ -61,7 +61,7 @@ const SMSDetail: FC<Props> = memo(({ handleChange, content }) => {
                     <TextField
                         select
                         label='轮次'
-                        className={classNames(classes.templateItem, classes.input)}
+                        className={clsx(classes.templateItem, classes.input)}
                         value={step}
                         onChange={handleChange('step')}>
                         {STEPS.slice(0, 5).map((stepName, index) => (
@@ -75,7 +75,7 @@ const SMSDetail: FC<Props> = memo(({ handleChange, content }) => {
                     <TextField
                         select
                         label='下一轮'
-                        className={classNames(classes.templateItem, classes.input)}
+                        className={clsx(classes.templateItem, classes.input)}
                         value={next}
                         onChange={handleChange('next')}>
                         {STEPS.map((stepName, index) => (
@@ -89,7 +89,7 @@ const SMSDetail: FC<Props> = memo(({ handleChange, content }) => {
                     <TextField
                         label='时间'
                         value={time}
-                        className={classNames(classes.templateItem, classes.input)}
+                        className={clsx(classes.templateItem, classes.input)}
                         InputLabelProps={{ shrink: true }}
                         onChange={handleChange('time')}
                     />
@@ -98,7 +98,7 @@ const SMSDetail: FC<Props> = memo(({ handleChange, content }) => {
                     <TextField
                         label='地点'
                         value={place}
-                        className={classNames(classes.templateItem, classes.input)}
+                        className={clsx(classes.templateItem, classes.input)}
                         InputLabelProps={{ shrink: true }}
                         onChange={handleChange('place')}
                     />
@@ -107,7 +107,7 @@ const SMSDetail: FC<Props> = memo(({ handleChange, content }) => {
                     <TextField
                         label='自定义'
                         value={rest}
-                        className={classNames(classes.templateItem)}
+                        className={clsx(classes.templateItem)}
                         fullWidth
                         InputLabelProps={{
                             shrink: true,

@@ -1,6 +1,6 @@
 import React, { ChangeEventHandler, FC, memo, MouseEventHandler, useContext, useMemo, useState } from 'react';
 
-import classNames from 'classnames';
+import clsx from 'clsx';
 
 import AppBar from '@material-ui/core/AppBar';
 import Collapse from '@material-ui/core/Collapse';
@@ -121,7 +121,7 @@ const Bar: FC<Props> = memo(
         );
         return (
             <>
-                <AppBar position='fixed' className={classNames(classes.appBar, { [classes.appBarShift]: open })}>
+                <AppBar position='fixed' className={clsx(classes.appBar, { [classes.appBarShift]: open })}>
                     <Toolbar
                         disableGutters={!open}
                         classes={{ gutters: classes.appBarGutters, regular: classes.regular }}>
@@ -130,7 +130,7 @@ const Bar: FC<Props> = memo(
                                 <IconButton
                                     color='inherit'
                                     onClick={toggleDrawer}
-                                    className={classNames(classes.menuButton, { [classes.hide]: open })}>
+                                    className={clsx(classes.menuButton, { [classes.hide]: open })}>
                                     <MenuIcon />
                                 </IconButton>
                             ),
@@ -160,7 +160,7 @@ const Bar: FC<Props> = memo(
                         )}
                         {useMemo(
                             () => (
-                                <div className={classNames(open && classes.hide, classes.rightButtons)}>
+                                <div className={clsx(open && classes.hide, classes.rightButtons)}>
                                     <IconButton color='inherit' onClick={toggleMessenger}>
                                         <ChatIcon />
                                     </IconButton>

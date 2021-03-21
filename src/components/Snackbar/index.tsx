@@ -1,6 +1,6 @@
 import React, { FC, memo } from 'react';
 
-import classNames from 'classnames';
+import clsx from 'clsx';
 
 import { SnackbarProvider } from 'notistack';
 
@@ -25,7 +25,7 @@ const Snackbar: FC<Props> = memo(({ children, fabOn }) => {
                 variantInfo: classes.info,
             }}
             autoHideDuration={3000}
-            className={classNames(classes.snackBar, { [classes.shrink]: fabOn !== -1 && isMobile })}>
+            className={clsx(classes.snackBar, { [classes.shrink]: fabOn !== -1 && isMobile })}>
             <>{children}</>
         </SnackbarProvider>
     );
