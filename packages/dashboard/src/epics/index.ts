@@ -8,7 +8,7 @@ import {
 } from 'redux-observable';
 import { BehaviorSubject, Observable, of } from 'rxjs';
 
-import { io, Socket } from 'socket.io-client';
+import io, { Socket } from 'socket.io-client';
 
 import { VariantType } from 'notistack';
 
@@ -49,7 +49,7 @@ export const checkToken = () => {
     return token;
 };
 
-const dependencies = { io, socket$: new BehaviorSubject((null as unknown) as Socket), localStorage };
+const dependencies = { io, socket$: new BehaviorSubject((null as unknown) as typeof Socket), localStorage };
 
 export type Dependencies = typeof dependencies;
 
