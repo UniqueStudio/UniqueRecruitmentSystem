@@ -1,6 +1,6 @@
 import { makeStyles } from '@material-ui/core';
 
-const useStyles = makeStyles(({ spacing, breakpoints }: Theme) => ({
+const useStyles = makeStyles(({ spacing, breakpoints }) => ({
     left: {
         width: '70%',
         margin: spacing(1),
