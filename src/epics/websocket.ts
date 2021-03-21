@@ -29,7 +29,7 @@ const socketConnectEpic: Epic = (action$, state$, { io, socket$ }) =>
         ofType(SOCKET_START),
         switchMap(
             () =>
-                new Observable<Socket>((o) => {
+                new Observable<typeof Socket>((o) => {
                     const socket = io(API);
                     socket.on('connect', () => o.next(socket));
                     socket.on('disconnect', socket.close);
