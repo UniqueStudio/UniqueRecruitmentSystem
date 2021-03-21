@@ -20,5 +20,10 @@
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
     <script type="module" src="./build/index.js"></script>
+    <script>
+        window.addEventListener('load', () => {
+            navigator.serviceWorker?.register('./serviceWorker.js');
+        });
+    </script>
 </body>
 </html>
