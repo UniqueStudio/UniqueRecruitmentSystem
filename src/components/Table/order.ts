@@ -4,7 +4,7 @@ import { OrderBy } from './header';
 
 export const compareCandidate = (order: Order, orderBy: OrderBy) => {
     switch (orderBy) {
-        case '选择情况':
+        case '分配结果':
             return order === 'asc' ? groupSort : groupSortDesc;
         case '姓名':
             return getComparator(order, 'name');

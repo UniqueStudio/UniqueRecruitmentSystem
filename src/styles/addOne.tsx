@@ -5,7 +5,7 @@ const useStyles = makeStyles(({ spacing, typography: { button }, breakpoints }) 
         display: 'flex',
         margin: spacing(1),
         width: 300,
-        height: 300,
+        height: '100%',
         verticalAlign: 'top',
         position: 'relative',
     },
