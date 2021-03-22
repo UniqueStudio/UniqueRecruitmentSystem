@@ -1,15 +1,16 @@
-import React, { FC, memo, useEffect, useState } from 'react';
-
+import { Button, TextField } from '@material-ui/core';
 import clsx from 'clsx';
+import React, { ChangeEventHandler, FC, memo, useEffect, useState } from 'react';
 
-import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
+import { getVerifyCode } from '@apis/rest';
+import useStyles from '@styles/verify';
 
-import { Props } from '../../containers/Verify';
+interface Props {
+    code: string;
+    onChange: ChangeEventHandler<HTMLInputElement>;
+}
 
-import useStyles from '../../styles/verify';
-
-const Verify: FC<Props> = memo(({ onChange, code, getVerifyCode }) => {
+const Verify: FC<Props> = memo(({ onChange, code }) => {
     const classes = useStyles();
     const [time, setTime] = useState(0);
     const [handle, setHandle] = useState(NaN);
@@ -33,7 +34,7 @@ const Verify: FC<Props> = memo(({ onChange, code, getVerifyCode }) => {
     };
 
     const getCode = () => {
-        getVerifyCode();
+        void getVerifyCode();
         setTime(60);
         setHandle(window.setInterval(tick, 1000));
     };

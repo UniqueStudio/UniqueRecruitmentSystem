@@ -1,33 +1,40 @@
-import React, { FC, memo, useEffect, useState } from 'react';
+import { Divider, Paper, Typography } from '@material-ui/core';
+import { observer } from 'mobx-react-lite';
+import React, { FC, useEffect, useState } from 'react';
 import { Redirect } from 'react-router-dom';
 
-import Divider from '@material-ui/core/Divider';
-import Paper from '@material-ui/core/Paper';
-import Typography from '@material-ui/core/Typography';
+import { getCandidates } from '@apis/rest';
+import AddOne from '@components/AddOne';
+import Chart from '@components/Chart';
+import { usePrevious } from '@hooks/usePrevious';
+import { useStores } from '@hooks/useStores';
+import useStyles from '@styles/dashboard';
+import { compareTitle } from '@utils/compareTitle';
 
-import Chart from '../components/Chart';
-
-import AddOne from '../containers/AddOne';
-import { Props } from '../containers/Dashboard';
-
-import { usePrevious } from '../hooks/usePrevious';
-
-import useStyles from '../styles/dashboard';
-
-const Dashboard: FC<Props> = memo(({ data, setViewing, viewing }) => {
+const Dashboard: FC = observer(() => {
+    const { $recruitment, $user, $component } = useStores();
     const classes = useStyles();
     const [shouldClear, setShouldClear] = useState(false);
     const [shouldRedirect, setShouldRedirect] = useState(false);
-    const prevData = usePrevious(data);
-    const prevViewing = usePrevious(viewing);
+    const prevData = usePrevious($recruitment.recruitments);
+    const prevViewing = usePrevious($recruitment.viewing);
     useEffect(() => {
         if (prevData !== undefined && prevViewing !== undefined) {
-            setShouldClear(prevData.length !== data.length);
-            setShouldRedirect(prevViewing !== viewing && !!prevViewing);
+            setShouldClear(prevData.length !== $recruitment.recruitments.length);
+            setShouldRedirect(prevViewing !== $recruitment.viewing && !!prevViewing);
         }
-    }, [data, viewing, prevData, prevViewing]);
+    }, [$recruitment.recruitments, $recruitment.viewing, prevData, prevViewing]);
     const handleSet = (title: string) => () => {
-        setViewing(title);
+        if (compareTitle($user.info.joinTime, title) >= 0) {
+            $component.enqueueSnackbar('你不能查看本次招新！', 'info');
+            return;
+        }
+        if ($recruitment.viewing === title) {
+            $component.enqueueSnackbar('设置成功', 'success');
+            return;
+        }
+        $component.enqueueSnackbar('设置成功，正在获取候选人信息', 'success');
+        return getCandidates(title);
     };
     return shouldRedirect ? (
         <Redirect to='/data' />
@@ -42,8 +49,8 @@ const Dashboard: FC<Props> = memo(({ data, setViewing, viewing }) => {
                     <div className={classes.block}>
                         <AddOne shouldClear={shouldClear} />
                     </div>
-                    {!!data.length &&
-                        data
+                    {!!$recruitment.recruitments.length &&
+                        $recruitment.recruitments
                             .slice()
                             .reverse()
                             .map((recruitment) => (
@@ -53,7 +60,7 @@ const Dashboard: FC<Props> = memo(({ data, setViewing, viewing }) => {
                                 <div key={recruitment._id} className={classes.block}>
                                     <Chart
                                         data={recruitment}
-                                        selected={viewing === recruitment.title}
+                                        selected={$recruitment.viewing === recruitment.title}
                                         setViewing={handleSet(recruitment.title)}
                                     />
                                 </div>

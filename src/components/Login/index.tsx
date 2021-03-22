@@ -1,32 +1,29 @@
-import React, { ChangeEventHandler, FC, FormEventHandler, memo, useState } from 'react';
+import { Button, TextField } from '@material-ui/core';
+import { observer } from 'mobx-react-lite';
+import React, { ChangeEventHandler, FC, FormEventHandler, useState } from 'react';
 import { Redirect } from 'react-router-dom';
 
-import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
+import { loginViaPassword, loginViaQRCode } from '@apis/rest';
+import Modal from '@components/Modal';
+import Progress from '@components/Progress';
+import { useStores } from '@hooks/useStores';
+import logo from '@images/logo.png';
+import useStyles from '@styles/login';
 
-import Modal from '../Modal';
-import Progress from '../Progress';
+const Login: FC = observer(() => {
+    const { $user, $component } = useStores();
 
-import { QR_CODE_URL } from '../../config/consts';
-
-import { Props } from '../../containers/Login';
-
-import logo from '../../images/logo.png';
-
-import useStyles from '../../styles/login';
-
-const Login: FC<Props> = memo(({ loggedIn, isScanning, getQRCode, isLoading, weChatKey, login }) => {
     const classes = useStyles();
     const [phone, setPhone] = useState('');
     const [password, setPassword] = useState('');
     const [method, setMethod] = useState(0);
-    if (loggedIn) {
+    if ($user.token) {
         return <Redirect to='/' />;
     }
     const handleLogin: FormEventHandler = (event) => {
         // use preventDefault to disable HTML form's auto redirect
         event.preventDefault();
-        login(phone, password);
+        return loginViaPassword(phone, password);
     };
 
     const handleMethod = (newMethod: number) => () => {
@@ -63,20 +60,20 @@ const Login: FC<Props> = memo(({ loggedIn, isScanning, getQRCode, isLoading, weC
     );
     const ByQRCode = (
         <>
-            {weChatKey && <img src={`${QR_CODE_URL}${weChatKey}`} alt='This is QRCode' />}
+            {$user.qrCodeURL && <img className={classes.qrCode} src={$user.qrCodeURL} alt='QRCode' />}
             <Button
                 className={classes.button}
                 variant='contained'
-                color='default'
+                color='primary'
                 size='large'
-                onClick={getQRCode}
-                disabled={isScanning}>
+                onClick={loginViaQRCode}
+                disabled={!!$user.qrCodeURL}>
                 获取二维码
             </Button>
             <Button
                 className={classes.button}
                 variant='contained'
-                color='primary'
+                color='default'
                 size='large'
                 onClick={handleMethod(2)}>
                 账号密码登录
@@ -102,10 +99,21 @@ const Login: FC<Props> = memo(({ loggedIn, isScanning, getQRCode, isLoading, weC
                 onChange={handlePassword}
                 margin='normal'
             />
-            <Button variant='contained' color='default' size='large' type='submit' disabled={!phone || !password}>
+            <Button
+                className={classes.button}
+                variant='contained'
+                color='primary'
+                size='large'
+                type='submit'
+                disabled={!phone || !password}>
                 登录
             </Button>
-            <Button variant='contained' color='primary' size='large' onClick={handleMethod(1)}>
+            <Button
+                className={classes.button}
+                variant='contained'
+                color='default'
+                size='large'
+                onClick={handleMethod(1)}>
                 企业微信登录
             </Button>
         </>
@@ -118,7 +126,7 @@ const Login: FC<Props> = memo(({ loggedIn, isScanning, getQRCode, isLoading, weC
                     {[ChooseMethod, ByQRCode, ByPassword][method]}
                 </form>
             </Modal>
-            {isLoading && <Progress />}
+            {$component.progressOn && <Progress />}
         </div>
     );
 });

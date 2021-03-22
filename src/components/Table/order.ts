@@ -1,6 +1,7 @@
-import { getComparator, Order } from '../../utils/order';
-import { groupSort, groupSortDesc } from '../../utils/sortBySlot';
 import { OrderBy } from './header';
+
+import { getComparator, Order } from '@utils/order';
+import { groupSort, groupSortDesc } from '@utils/sortBySlot';
 
 export const compareCandidate = (order: Order, orderBy: OrderBy) => {
     switch (orderBy) {

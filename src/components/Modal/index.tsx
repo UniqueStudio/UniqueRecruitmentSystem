@@ -1,10 +1,7 @@
+import { Modal, Slide, SlideProps, Typography } from '@material-ui/core';
 import React, { FC, memo } from 'react';
 
-import Modal from '@material-ui/core/Modal';
-import Slide, { SlideProps } from '@material-ui/core/Slide';
-import Typography from '@material-ui/core/Typography';
-
-import useStyles from '../../styles/modal';
+import useStyles from '@styles/modal';
 
 interface Props {
     open: boolean;

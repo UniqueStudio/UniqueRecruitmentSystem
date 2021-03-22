@@ -1,66 +1,50 @@
-import React, { FC, memo, useEffect } from 'react';
+import { observer } from 'mobx-react-lite';
+import React, { FC, useEffect } from 'react';
 import { Redirect } from 'react-router-dom';
 
-import Progress from '../Progress';
+import { getCandidates, getGroup, getRecruitments, getUserInfo } from '@apis/rest';
+import AppBar from '@components/AppBar';
+import Drawer from '@components/Drawer';
+import Progress from '@components/Progress';
+import { usePrevious } from '@hooks/usePrevious';
+import { useStores } from '@hooks/useStores';
+import useStyles from '@styles/frame';
 
-import AppBar from '../../containers/AppBar';
-import Drawer from '../../containers/Drawer';
-import { Props } from '../../containers/Frame';
+const Frame: FC = observer(({ children }) => {
+    const { $component, $recruitment, $user } = useStores();
+    const classes = useStyles();
+    const prevTitle = usePrevious($recruitment.viewing);
 
-import { usePrevious } from '../../hooks/usePrevious';
+    const handleClick = () => {
+        $component.drawerOpen && $component.toggleDrawer();
+    };
 
-import useStyles from '../../styles/frame';
+    useEffect(() => {
+        if ($user.token) {
+            void getUserInfo();
+            void getRecruitments();
+            void getGroup();
+        }
+    }, []);
 
-const Frame: FC<Props> = memo(
-    ({
-        children,
-        loggedIn,
-        userInfo,
-        loading,
-        open,
-        toggleOpen,
-        getRecruitments,
-        getGroup,
-        getUser,
-        title,
-        getCandidates,
-    }) => {
-        const classes = useStyles();
-        const prevTitle = usePrevious(title);
+    useEffect(() => {
+        if (!prevTitle && $recruitment.viewing) {
+            void getCandidates($recruitment.viewing);
+        }
+    }, [prevTitle, $recruitment.viewing]);
 
-        const handleClick = () => {
-            open && toggleOpen();
-        };
-
-        useEffect(() => {
-            if (loggedIn) {
-                getUser();
-                getRecruitments();
-                getGroup();
-            }
-            // eslint-disable-next-line
-        }, []);
-
-        useEffect(() => {
-            if (!prevTitle && title) {
-                getCandidates(title);
-            }
-            // eslint-disable-next-line
-        }, [prevTitle, title]);
-
-        return loggedIn ? (
-            <div className={classes.root}>
-                <AppBar />
-                <Drawer />
-                <main className={classes.content} onClick={handleClick}>
-                    {userInfo && children}
-                </main>
-                {loading && <Progress />}
-            </div>
-        ) : (
-            <Redirect to='/login' />
-        );
-    },
-);
+    return $user.token ? (
+        <div className={classes.root}>
+            <AppBar />
+            <Drawer />
+            <main className={classes.content} onClick={handleClick}>
+                {$user.info && children}
+            </main>
+            {$component.progressOn && <Progress />}
+        </div>
+    ) : (
+        <Redirect to='/login' />
+    );
+});
 
 export default Frame;

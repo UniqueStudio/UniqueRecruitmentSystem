@@ -1,14 +1,9 @@
+import { Chip, Paper, Popover } from '@material-ui/core';
+import clsx from 'clsx';
 import React, { FC, memo, MouseEventHandler, useState } from 'react';
 
-import clsx from 'clsx';
-
-import Chip from '@material-ui/core/Chip';
-import Paper from '@material-ui/core/Paper';
-import Popover from '@material-ui/core/Popover';
-
-import { Comment } from '../../config/types';
-
-import useStyles from '../../styles/chip';
+import { Comment } from '@config/types';
+import useStyles from '@styles/chip';
 
 interface Props {
     comment: Comment;

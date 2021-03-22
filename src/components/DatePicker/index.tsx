@@ -1,8 +1,6 @@
-import React, { FC, memo } from 'react';
-
 import DateFnsUtils from '@date-io/date-fns';
-import { DatePicker } from '@material-ui/pickers/DatePicker/DatePicker';
-import { MuiPickersUtilsProvider } from '@material-ui/pickers/MuiPickersUtilsProvider';
+import { DatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
+import React, { FC, memo } from 'react';
 
 interface Props {
     value: Date;

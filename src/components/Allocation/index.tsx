@@ -1,23 +1,22 @@
-import React, { ChangeEventHandler, FC, memo, useState } from 'react';
-
-import Accordion from '@material-ui/core/Accordion';
-import AccordionActions from '@material-ui/core/AccordionActions';
-import AccordionDetails from '@material-ui/core/AccordionDetails';
-import AccordionSummary from '@material-ui/core/AccordionSummary';
-import IconButton from '@material-ui/core/IconButton';
-import TextField from '@material-ui/core/TextField';
-import Tooltip from '@material-ui/core/Tooltip';
+import {
+    Accordion,
+    AccordionActions,
+    AccordionDetails,
+    AccordionSummary,
+    IconButton,
+    TextField,
+    Tooltip,
+} from '@material-ui/core';
 import AddIcon from '@material-ui/icons/AddCircleOutline';
 import CancelIcon from '@material-ui/icons/CancelOutlined';
 import CheckIcon from '@material-ui/icons/CheckCircleOutlined';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import RemoveIcon from '@material-ui/icons/RemoveCircleOutline';
+import React, { ChangeEventHandler, FC, memo, useState } from 'react';
 
-import DatePicker from '../DatePicker';
-
-import { Time } from '../../config/types';
-
-import useStyles from '../../styles/data';
+import DatePicker from '@components/DatePicker';
+import { Time } from '@config/types';
+import useStyles from '@styles/data';
 
 interface Props {
     dates: Time[];

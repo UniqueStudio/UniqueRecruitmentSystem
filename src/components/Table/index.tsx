@@ -1,67 +1,66 @@
-import React, { FC, memo, useMemo, useState } from 'react';
-
-import clsx from 'clsx';
-
 import DateFnsUtils from '@date-io/date-fns';
+import {
+    Button,
+    Checkbox,
+    Dialog,
+    MenuItem,
+    Paper,
+    Select,
+    Table,
+    TableBody,
+    TableCell,
+    TableRow,
+    TextField,
+    Typography,
+} from '@material-ui/core';
+import { DateTimePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
+import clsx from 'clsx';
+import { observer } from 'mobx-react-lite';
+import React, { ChangeEventHandler, FC, useEffect, useState } from 'react';
 
-import Button from '@material-ui/core/Button';
-import Checkbox from '@material-ui/core/Checkbox';
-import Dialog from '@material-ui/core/Dialog';
-import MenuItem from '@material-ui/core/MenuItem';
-import Paper from '@material-ui/core/Paper';
-import Select from '@material-ui/core/Select';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableRow from '@material-ui/core/TableRow';
-import TextField from '@material-ui/core/TextField';
-import Typography from '@material-ui/core/Typography';
-import { DateTimePicker } from '@material-ui/pickers/DateTimePicker/DateTimePicker';
-import { MuiPickersUtilsProvider } from '@material-ui/pickers/MuiPickersUtilsProvider';
-
-import Modal from '../Modal';
-
-import { GROUPS, GROUPS_ } from '../../config/consts';
-
-import Template from '../../containers/SMS';
-import { Props } from '../../containers/Table';
-
-import { Candidate } from '../../config/types';
-import useStyles from '../../styles/data';
-import { Order } from '../../utils/order';
-import { stableSort } from '../../utils/reducerHelper';
 import { EnhancedTableHead, OrderBy } from './header';
 import { compareCandidate } from './order';
 
-const CandidateTable: FC<Props> = memo(({ candidates, changeType, interviewType, allocateAll, allocateOne }) => {
+import { allocateAll, allocateOne } from '@apis/rest';
+import Modal from '@components/Modal';
+import Template from '@components/SMS';
+import { GROUPS, GROUPS_ } from '@config/consts';
+import { Candidate } from '@config/types';
+import { useStores } from '@hooks/useStores';
+import useStyles from '@styles/data';
+import { Order } from '@utils/order';
+import { stableSort } from '@utils/reducerHelper';
+
+interface Props {
+    candidates: Candidate[];
+    interviewType: 'group' | 'team';
+    changeType: ChangeEventHandler<{ name?: string; value: unknown }>;
+}
+
+const CandidateTable: FC<Props> = observer(({ candidates, changeType, interviewType }) => {
+    const { $candidate } = useStores();
     const classes = useStyles();
     const [modal, setModal] = useState(false);
     const [dialog, setDialog] = useState(false);
     const [cid, setCid] = useState('');
     const [time, setTime] = useState(new Date());
     const [viewing, setViewing] = useState('');
-    const [checked, setChecked] = useState(() => Object.fromEntries(candidates.map((c) => [c._id, false])));
-    const checkedCount = useMemo(() => Object.values(checked).filter(Boolean).length, [checked]);
-    const allChecked = useMemo(() => Object.fromEntries(candidates.map(({ _id }) => [_id, true])), [candidates]);
     const [order, setOrder] = useState<Order>('asc');
     const [orderBy, setOrderBy] = useState<OrderBy>('分配结果');
+    useEffect(() => {
+        $candidate.deselectAll();
+    }, []);
 
-    const handleAllocateOne = () => {
-        allocateOne(cid, time.setMilliseconds(0), interviewType);
-    };
+    const handleAllocateOne = () => allocateOne(interviewType, cid, time.setMilliseconds(0));
 
-    const handleAllocateAll = () => {
-        allocateAll(interviewType);
-    };
+    const handleAllocateAll = () => allocateAll(interviewType);
 
-    const toggleDialog = (id: string = '') => () => {
+    const toggleDialog = (id = '') => () => {
         setDialog(!!id);
         setCid(id);
     };
 
-    const toggleModal = () => {
-        setModal((prevModal) => !prevModal);
-    };
+    const toggleModal = () => setModal((prevModal) => !prevModal);
 
     const toggleViewing = (nextViewing: string) => () => {
         setViewing(nextViewing);
@@ -71,15 +70,19 @@ const CandidateTable: FC<Props> = memo(({ candidates, changeType, interviewType,
         value && setTime(value);
     };
 
-    const handleCheck = (id: string = '') => (event: React.ChangeEvent<HTMLInputElement>) => {
-        setChecked((prev) => ({ ...prev, [id]: event.target.checked }));
+    const handleCheck = (id = '') => (event: React.ChangeEvent<HTMLInputElement>) => {
+        if (event.target.checked) {
+            $candidate.selectCandidate(id);
+        } else {
+            $candidate.deselectCandidate(id);
+        }
     };
 
     const handleCheckAll = () => {
-        if (checkedCount === candidates.length) {
-            setChecked({});
+        if ($candidate.selected.size === candidates.length) {
+            $candidate.deselectAll();
         } else {
-            setChecked(allChecked);
+            $candidate.selectCandidates(candidates.map(({ _id }) => _id));
         }
     };
 
@@ -104,7 +107,7 @@ const CandidateTable: FC<Props> = memo(({ candidates, changeType, interviewType,
                 <div className={classes.tableContainer}>
                     <Table className={classes.table}>
                         <EnhancedTableHead
-                            numSelected={checkedCount}
+                            numSelected={$candidate.selected.size}
                             order={order}
                             orderBy={orderBy}
                             onCheckAll={handleCheckAll}
@@ -172,8 +175,10 @@ const CandidateTable: FC<Props> = memo(({ candidates, changeType, interviewType,
                                     return (
                                         <TableRow key={_id}>
                                             <TableCell classes={{ root: classes.tableCell }} padding='checkbox'>
-                                                {/* `|| false` deal with undefined, which React think it's a uncontrolled component */}
-                                                <Checkbox checked={checked[_id] || false} onChange={handleCheck(_id)} />
+                                                <Checkbox
+                                                    checked={$candidate.selected.has(_id)}
+                                                    onChange={handleCheck(_id)}
+                                                />
                                             </TableCell>
                                             {items.map((item, index) => (
                                                 <TableCell classes={{ root: classes.tableCell }} key={index}>
@@ -214,7 +219,7 @@ const CandidateTable: FC<Props> = memo(({ candidates, changeType, interviewType,
                 </div>
             </Dialog>
             <Modal open={modal} onClose={toggleModal} title='发送通知'>
-                <Template toggleOpen={toggleModal} selected={candidates.filter(({ _id }) => checked[_id])} />
+                <Template toggleOpen={toggleModal} />
             </Modal>
         </Paper>
     );

@@ -1,28 +1,18 @@
-import React, { ChangeEventHandler, FC, memo, MouseEventHandler, useMemo } from 'react';
-import { Draggable, DraggableProvided } from 'react-beautiful-dnd';
-
-import Card from '@material-ui/core/Card';
-import Checkbox from '@material-ui/core/Checkbox';
-import amber from '@material-ui/core/colors/amber';
-import blue from '@material-ui/core/colors/blue';
-import orange from '@material-ui/core/colors/orange';
-import pink from '@material-ui/core/colors/pink';
-import IconButton from '@material-ui/core/IconButton';
-import Typography from '@material-ui/core/Typography';
+import { Card, Checkbox, IconButton, Typography, useTheme, useMediaQuery } from '@material-ui/core';
+import { amber, blue, orange, pink } from '@material-ui/core/colors';
 import FlashOn from '@material-ui/icons/FlashOn';
 import InfoIcon from '@material-ui/icons/InfoOutlined';
 import Female from 'mdi-material-ui/GenderFemale';
 import Male from 'mdi-material-ui/GenderMale';
 import TransGender from 'mdi-material-ui/GenderTransgender';
+import { observer } from 'mobx-react-lite';
+import React, { ChangeEventHandler, FC, MouseEventHandler, useMemo } from 'react';
+import { Draggable, DraggableProvided } from 'react-beautiful-dnd';
 
-import useTheme from '@material-ui/core/styles/useTheme';
-import useMediaQuery from '@material-ui/core/useMediaQuery/useMediaQuery';
-
-import { GRADES, GROUPS, GROUPS_ } from '../../config/consts';
-import { Evaluation } from '../../config/types';
-
-import { Props } from '../../containers/Card';
-import useStyles from '../../styles/card';
+import { GRADES, GROUPS, GROUPS_ } from '@config/consts';
+import { Candidate as CandidateType, Evaluation } from '@config/types';
+import { useStores } from '@hooks/useStores';
+import useStyles from '@styles/card';
 
 const getProportion = (evaluations: Evaluation[]) => {
     const good = (evaluations.filter((evaluation) => evaluation === 2).length / evaluations.length) * 100;
@@ -36,19 +26,15 @@ const genderIcons = [
     <Female htmlColor={pink[500]} fontSize='small' />,
 ];
 
-const CandidateCard: FC<Props> = memo((props) => {
-    const {
-        candidate,
-        disabled,
-        checked,
-        isTeamInterview,
-        index,
-        toggleFabOn,
-        select,
-        deselect,
-        toggleDetail,
-        changeInputting,
-    } = props;
+interface Props {
+    candidate: CandidateType;
+    index: number;
+    isTeamInterview: boolean;
+    toggleDetail: () => void;
+}
+
+const CandidateCard: FC<Props> = observer(({ candidate, isTeamInterview, index, toggleDetail }) => {
+    const { $candidate, $component } = useStores();
     const {
         name,
         grade,
@@ -74,18 +60,21 @@ const CandidateCard: FC<Props> = memo((props) => {
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('xs'));
 
+    const checked = $candidate.selected.has(_id);
+    const disabled = $candidate.selected.size !== 0 && $component.fabOn !== step;
+
     const handleCheck: ChangeEventHandler<HTMLInputElement> = ({ target }) => {
         if (target.checked) {
-            select(_id);
-            toggleFabOn(step);
+            $candidate.selectCandidate(_id);
+            $component.toggleFabOn(step);
         } else {
-            deselect(_id);
+            $candidate.deselectCandidate(_id);
         }
     };
 
     const handleToggle = () => {
         toggleDetail();
-        changeInputting('', 2);
+        $component.recordInputtingComment(2, '');
     };
 
     const stopPropagation: MouseEventHandler = (event) => event.stopPropagation();
