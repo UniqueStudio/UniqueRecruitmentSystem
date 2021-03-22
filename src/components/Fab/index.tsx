@@ -1,5 +1,7 @@
 import { SpeedDial, SpeedDialAction, SpeedDialIcon } from '@material-ui/lab';
 import RemoveIcon from 'mdi-material-ui/AccountRemove';
+import ArrowLeftBoldIcon from 'mdi-material-ui/ArrowLeftBold';
+import ArrowRightBoldIcon from 'mdi-material-ui/ArrowRightBold';
 import CloseIcon from 'mdi-material-ui/EyeOff';
 import SelectAllIcon from 'mdi-material-ui/SelectAll';
 import SelectInverseIcon from 'mdi-material-ui/SelectInverse';
@@ -7,7 +9,8 @@ import SendIcon from 'mdi-material-ui/Send';
 import { observer } from 'mobx-react-lite';
 import React, { FC, useEffect, useState } from 'react';
 
-import { Candidate } from '@config/types';
+import { moveCandidate } from '@apis/websocket';
+import { Candidate, Step } from '@config/types';
 import { usePrevious } from '@hooks/usePrevious';
 import { useStores } from '@hooks/useStores';
 import useStyles from '@styles/fab';
@@ -70,6 +73,18 @@ const FabButton: FC<Props> = observer(({ candidates, toggleOpen }) => {
         setFabOpen(false);
     };
 
+    const changeProcess = (dir: 'prev' | 'next') => () => {
+        if ($candidate.selected.size === 0) return;
+        $candidate.selected.forEach(({ _id, step }) => {
+            const to = ((dir === 'prev' ? -1 : +1) + step) as Step;
+            if (to < 0 || to > 5) {
+                return;
+            }
+            moveCandidate(_id, step, to);
+        });
+        $candidate.deselectAll();
+    };
+
     useEffect(() => {
         if (prevSelected !== undefined && prevSteps !== undefined && prevGroup !== undefined) {
             if (prevSelected.size !== 0 && $candidate.selected.size === 0) {
@@ -103,6 +118,8 @@ const FabButton: FC<Props> = observer(({ candidates, toggleOpen }) => {
             open={fabOpen}>
             {ButtonGenerator('隐藏Fab', <CloseIcon />, hideFab)}
             {ButtonGenerator('移除', <RemoveIcon />, confirmRemove, !enabled)}
+            {ButtonGenerator('下一流程', <ArrowRightBoldIcon />, changeProcess('next'), !enabled)}
+            {ButtonGenerator('上一流程', <ArrowLeftBoldIcon />, changeProcess('prev'), !enabled)}
             {ButtonGenerator('发送通知', <SendIcon />, sendNotification, !enabled)}
             {ButtonGenerator('反选', <SelectInverseIcon />, handleInverse(ids, selectedInColumn))}
             {ButtonGenerator('全选', <SelectAllIcon />, handleSelectAll(ids))}
