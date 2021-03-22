@@ -14,21 +14,17 @@ import Verify from '../../components/Verify';
 
 import { observer } from 'mobx-react-lite';
 import { sendSMS } from '../../apis/rest';
-import { Candidate } from '../../config/types';
 import { useStores } from '../../hooks/useStores';
 import useStyles from '../../styles/sms';
 
 interface Props {
-    selected: Candidate[];
     toggleOpen: () => void;
-    deselect: boolean;
 }
 
-const SMSTemplate: FC<Props> = observer(({ toggleOpen, selected: selectedP, deselect = false }) => {
+const SMSTemplate: FC<Props> = observer(({ toggleOpen }) => {
     const { componentStateStore, candidateStore } = useStores();
     const classes = useStyles();
     const [activeStep, setActiveStep] = useState(0);
-    const [selected, setSelected] = useState(selectedP);
     const [content, setContent] = useState({
         type: 'accept',
         step: -1 as -1,
@@ -49,8 +45,8 @@ const SMSTemplate: FC<Props> = observer(({ toggleOpen, selected: selectedP, dese
             return;
         }
 
-        sendSMS({ ...content, code, candidates: selected.map(({ _id }) => _id) });
         setCode('');
+        return sendSMS({ ...content, code, candidates: [...candidateStore.selected.keys()] });
     };
 
     const handleNext = () => {
@@ -81,11 +77,6 @@ const SMSTemplate: FC<Props> = observer(({ toggleOpen, selected: selectedP, dese
         setActiveStep((prevActiveStep) => prevActiveStep + 1);
     };
 
-    const handleDelete = (cid: string) => () => {
-        setSelected((prevSelected) => prevSelected.filter(({ _id }) => _id !== cid));
-        deselect && candidateStore.deselectCandidate(cid);
-    };
-
     const handleChange = (name: string): ChangeEventHandler<HTMLInputElement> => ({ target: { value } }) => {
         // `value` is defined as string but can be number here
         setContent((prevContent) => ({ ...prevContent, [name]: value }));
@@ -97,7 +88,7 @@ const SMSTemplate: FC<Props> = observer(({ toggleOpen, selected: selectedP, dese
 
     const steps = ['发送对象', '消息模板', '确认发送'];
     const stepContent = [
-        <Picker selected={selected} onDelete={handleDelete} />,
+        <Picker />,
         <Detail content={content} handleChange={handleChange} />,
         <Verify code={code} onChange={handleCode} />,
     ];
@@ -119,7 +110,7 @@ const SMSTemplate: FC<Props> = observer(({ toggleOpen, selected: selectedP, dese
                                     color='primary'
                                     onClick={activeStep === steps.length - 1 ? handleSend : handleNext}
                                     className={classes.templateItem}
-                                    disabled={selected.length === 0}>
+                                    disabled={candidateStore.selected.size === 0}>
                                     {activeStep === steps.length - 1 ? '发送通知' : '下一步'}
                                 </Button>
                             </div>

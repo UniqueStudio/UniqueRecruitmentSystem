@@ -49,7 +49,7 @@ const FabButton: FC<Props> = observer(({ candidates, toggleOpen }) => {
     };
 
     const hideFab = () => {
-        candidateStore.deselectCandidates(candidateStore.selected);
+        candidateStore.deselectAll();
     };
 
     const sendNotification = () => {
@@ -76,7 +76,7 @@ const FabButton: FC<Props> = observer(({ candidates, toggleOpen }) => {
 
     useEffect(() => {
         if (prevSelected !== undefined && prevSteps !== undefined && prevGroup !== undefined) {
-            if (prevSelected.length !== 0 && candidateStore.selected.length === 0) {
+            if (prevSelected.size !== 0 && candidateStore.selected.size === 0) {
                 componentStateStore.toggleFabOff();
                 closeFab();
             }
@@ -87,7 +87,7 @@ const FabButton: FC<Props> = observer(({ candidates, toggleOpen }) => {
     }, [prevGroup, prevSteps, prevSelected, candidateStore.steps, candidateStore.group, candidateStore.selected]);
 
     const ids = candidates.map(({ _id }) => _id);
-    const selectedInColumn = candidateStore.selected.filter((cid) => ids.includes(cid));
+    const selectedInColumn = [...candidateStore.selected.keys()].filter((cid) => ids.includes(cid));
     const enabled =
         selectedInColumn.length &&
         (userStore.info.isCaptain ||

@@ -72,8 +72,8 @@ const CandidateCard: FC<Props> = observer(({ candidate, isTeamInterview, index, 
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('xs'));
 
-    const checked = candidateStore.selected.includes(_id);
-    const disabled = candidateStore.selected.length !== 0 && componentStateStore.fabOn !== step;
+    const checked = candidateStore.selected.has(_id);
+    const disabled = candidateStore.selected.size !== 0 && componentStateStore.fabOn !== step;
 
     const handleCheck: ChangeEventHandler<HTMLInputElement> = ({ target }) => {
         if (target.checked) {

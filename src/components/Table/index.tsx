@@ -1,6 +1,7 @@
-import React, { ChangeEventHandler, FC, memo, useMemo, useState } from 'react';
+import React, { ChangeEventHandler, FC, useEffect, useState } from 'react';
 
 import clsx from 'clsx';
+import { observer } from 'mobx-react-lite';
 
 import DateFnsUtils from '@date-io/date-fns';
 
@@ -27,6 +28,7 @@ import Template from '../../components/SMS';
 
 import { allocateAll, allocateOne } from '../../apis/rest';
 import { Candidate } from '../../config/types';
+import { useStores } from '../../hooks/useStores';
 import useStyles from '../../styles/data';
 import { Order } from '../../utils/order';
 import { stableSort } from '../../utils/reducerHelper';
@@ -39,35 +41,30 @@ interface Props {
     changeType: ChangeEventHandler<{ name?: string; value: unknown }>;
 }
 
-const CandidateTable: FC<Props> = memo(({ candidates, changeType, interviewType }) => {
+const CandidateTable: FC<Props> = observer(({ candidates, changeType, interviewType }) => {
+    const { candidateStore } = useStores();
     const classes = useStyles();
     const [modal, setModal] = useState(false);
     const [dialog, setDialog] = useState(false);
     const [cid, setCid] = useState('');
     const [time, setTime] = useState(new Date());
     const [viewing, setViewing] = useState('');
-    const [checked, setChecked] = useState(() => Object.fromEntries(candidates.map((c) => [c._id, false])));
-    const checkedCount = useMemo(() => Object.values(checked).filter(Boolean).length, [checked]);
-    const allChecked = useMemo(() => Object.fromEntries(candidates.map(({ _id }) => [_id, true])), [candidates]);
     const [order, setOrder] = useState<Order>('asc');
     const [orderBy, setOrderBy] = useState<OrderBy>('分配结果');
+    useEffect(() => {
+        candidateStore.deselectAll();
+    }, []);
 
-    const handleAllocateOne = () => {
-        allocateOne(interviewType, cid, time.setMilliseconds(0));
-    };
+    const handleAllocateOne = () => allocateOne(interviewType, cid, time.setMilliseconds(0));
 
-    const handleAllocateAll = () => {
-        allocateAll(interviewType);
-    };
+    const handleAllocateAll = () => allocateAll(interviewType);
 
     const toggleDialog = (id: string = '') => () => {
         setDialog(!!id);
         setCid(id);
     };
 
-    const toggleModal = () => {
-        setModal((prevModal) => !prevModal);
-    };
+    const toggleModal = () => setModal((prevModal) => !prevModal);
 
     const toggleViewing = (nextViewing: string) => () => {
         setViewing(nextViewing);
@@ -78,14 +75,18 @@ const CandidateTable: FC<Props> = memo(({ candidates, changeType, interviewType 
     };
 
     const handleCheck = (id: string = '') => (event: React.ChangeEvent<HTMLInputElement>) => {
-        setChecked((prev) => ({ ...prev, [id]: event.target.checked }));
+        if (event.target.checked) {
+            candidateStore.selectCandidate(id);
+        } else {
+            candidateStore.deselectCandidate(id);
+        }
     };
 
     const handleCheckAll = () => {
-        if (checkedCount === candidates.length) {
-            setChecked({});
+        if (candidateStore.selected.size === candidates.length) {
+            candidateStore.deselectAll();
         } else {
-            setChecked(allChecked);
+            candidateStore.selectCandidates(candidates.map(({ _id }) => _id));
         }
     };
 
@@ -110,7 +111,7 @@ const CandidateTable: FC<Props> = memo(({ candidates, changeType, interviewType 
                 <div className={classes.tableContainer}>
                     <Table className={classes.table}>
                         <EnhancedTableHead
-                            numSelected={checkedCount}
+                            numSelected={candidateStore.selected.size}
                             order={order}
                             orderBy={orderBy}
                             onCheckAll={handleCheckAll}
@@ -178,8 +179,10 @@ const CandidateTable: FC<Props> = memo(({ candidates, changeType, interviewType 
                                     return (
                                         <TableRow key={_id}>
                                             <TableCell classes={{ root: classes.tableCell }} padding='checkbox'>
-                                                {/* `|| false` deal with undefined, which React think it's a uncontrolled component */}
-                                                <Checkbox checked={checked[_id] || false} onChange={handleCheck(_id)} />
+                                                <Checkbox
+                                                    checked={candidateStore.selected.has(_id)}
+                                                    onChange={handleCheck(_id)}
+                                                />
                                             </TableCell>
                                             {items.map((item, index) => (
                                                 <TableCell classes={{ root: classes.tableCell }} key={index}>
@@ -220,11 +223,7 @@ const CandidateTable: FC<Props> = memo(({ candidates, changeType, interviewType 
                 </div>
             </Dialog>
             <Modal open={modal} onClose={toggleModal} title='发送通知'>
-                <Template
-                    toggleOpen={toggleModal}
-                    selected={candidates.filter(({ _id }) => checked[_id])}
-                    deselect={false}
-                />
+                <Template toggleOpen={toggleModal} />
             </Modal>
         </Paper>
     );
