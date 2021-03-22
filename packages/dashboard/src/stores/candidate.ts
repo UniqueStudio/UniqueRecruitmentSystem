@@ -68,7 +68,7 @@ export class CandidateStore {
         update(this.candidates);
     }
 
-    moveCandidate(id: string, from: Step, to: Step /*, position?: number*/) {
+    moveCandidate(id: string, from: Step, to: Step, position?: number) {
         const candidate = this.candidates.find(({ _id }) => _id === id);
         if (!candidate) {
             return;
