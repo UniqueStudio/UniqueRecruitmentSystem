@@ -29,16 +29,16 @@ const listItems = [
 ];
 
 const Menu: FC = observer(() => {
-    const { componentStateStore } = useStores();
+    const { $component } = useStores();
     const classes = useStyles();
 
     return (
         <Drawer
             variant='permanent'
-            classes={{ paper: clsx(classes.drawerPaper, !componentStateStore.drawerOpen && classes.drawerPaperClose) }}
-            open={componentStateStore.drawerOpen}>
+            classes={{ paper: clsx(classes.drawerPaper, !$component.drawerOpen && classes.drawerPaperClose) }}
+            open={$component.drawerOpen}>
             <div className={classes.toolbar}>
-                <IconButton onClick={componentStateStore.toggleDrawer}>
+                <IconButton onClick={$component.toggleDrawer}>
                     <ChevronLeftIcon />
                 </IconButton>
             </div>
@@ -46,9 +46,7 @@ const Menu: FC = observer(() => {
             <List>
                 {listItems.map(({ to, text, icon }, index) => (
                     <Anchor to={to} key={index}>
-                        <ListItem
-                            button
-                            onClick={componentStateStore.drawerOpen ? componentStateStore.toggleDrawer : undefined}>
+                        <ListItem button onClick={$component.drawerOpen ? $component.toggleDrawer : undefined}>
                             <ListItemIcon className={classes.icon}>{icon}</ListItemIcon>
                             <ListItemText primary={text} />
                         </ListItem>

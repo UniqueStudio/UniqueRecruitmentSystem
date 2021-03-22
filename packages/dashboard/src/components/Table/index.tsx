@@ -42,7 +42,7 @@ interface Props {
 }
 
 const CandidateTable: FC<Props> = observer(({ candidates, changeType, interviewType }) => {
-    const { candidateStore } = useStores();
+    const { $candidate } = useStores();
     const classes = useStyles();
     const [modal, setModal] = useState(false);
     const [dialog, setDialog] = useState(false);
@@ -52,7 +52,7 @@ const CandidateTable: FC<Props> = observer(({ candidates, changeType, interviewT
     const [order, setOrder] = useState<Order>('asc');
     const [orderBy, setOrderBy] = useState<OrderBy>('分配结果');
     useEffect(() => {
-        candidateStore.deselectAll();
+        $candidate.deselectAll();
     }, []);
 
     const handleAllocateOne = () => allocateOne(interviewType, cid, time.setMilliseconds(0));
@@ -76,17 +76,17 @@ const CandidateTable: FC<Props> = observer(({ candidates, changeType, interviewT
 
     const handleCheck = (id: string = '') => (event: React.ChangeEvent<HTMLInputElement>) => {
         if (event.target.checked) {
-            candidateStore.selectCandidate(id);
+            $candidate.selectCandidate(id);
         } else {
-            candidateStore.deselectCandidate(id);
+            $candidate.deselectCandidate(id);
         }
     };
 
     const handleCheckAll = () => {
-        if (candidateStore.selected.size === candidates.length) {
-            candidateStore.deselectAll();
+        if ($candidate.selected.size === candidates.length) {
+            $candidate.deselectAll();
         } else {
-            candidateStore.selectCandidates(candidates.map(({ _id }) => _id));
+            $candidate.selectCandidates(candidates.map(({ _id }) => _id));
         }
     };
 
@@ -111,7 +111,7 @@ const CandidateTable: FC<Props> = observer(({ candidates, changeType, interviewT
                 <div className={classes.tableContainer}>
                     <Table className={classes.table}>
                         <EnhancedTableHead
-                            numSelected={candidateStore.selected.size}
+                            numSelected={$candidate.selected.size}
                             order={order}
                             orderBy={orderBy}
                             onCheckAll={handleCheckAll}
@@ -180,7 +180,7 @@ const CandidateTable: FC<Props> = observer(({ candidates, changeType, interviewT
                                         <TableRow key={_id}>
                                             <TableCell classes={{ root: classes.tableCell }} padding='checkbox'>
                                                 <Checkbox
-                                                    checked={candidateStore.selected.has(_id)}
+                                                    checked={$candidate.selected.has(_id)}
                                                     onChange={handleCheck(_id)}
                                                 />
                                             </TableCell>

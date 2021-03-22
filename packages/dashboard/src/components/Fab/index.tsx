@@ -26,21 +26,21 @@ interface Props {
 }
 
 const FabButton: FC<Props> = observer(({ candidates, toggleOpen }) => {
-    const { componentStateStore, candidateStore, userStore } = useStores();
+    const { $component, $candidate, $user } = useStores();
     const classes = useStyles();
     const [fabOpen, setFabOpen] = useState(false);
 
-    const prevGroup = usePrevious(candidateStore.group);
-    const prevSelected = usePrevious(candidateStore.selected);
-    const prevSteps = usePrevious(candidateStore.steps);
+    const prevGroup = usePrevious($candidate.group);
+    const prevSelected = usePrevious($candidate.selected);
+    const prevSteps = usePrevious($candidate.steps);
 
     const handleSelectAll = (all: string[]) => () => {
-        candidateStore.selectCandidates(all.filter((cid) => selectable(cid)));
+        $candidate.selectCandidates(all.filter((cid) => selectable(cid)));
     };
 
     const handleInverse = (all: string[], toDeselect: string[]) => () => {
-        candidateStore.deselectCandidates(toDeselect.filter((cid) => selectable(cid)));
-        candidateStore.selectCandidates(all.filter((cid) => !toDeselect.includes(cid) && selectable(cid)));
+        $candidate.deselectCandidates(toDeselect.filter((cid) => selectable(cid)));
+        $candidate.selectCandidates(all.filter((cid) => !toDeselect.includes(cid) && selectable(cid)));
     };
 
     const selectable = (cid: string) => {
@@ -49,7 +49,7 @@ const FabButton: FC<Props> = observer(({ candidates, toggleOpen }) => {
     };
 
     const hideFab = () => {
-        candidateStore.deselectAll();
+        $candidate.deselectAll();
     };
 
     const sendNotification = () => {
@@ -76,29 +76,27 @@ const FabButton: FC<Props> = observer(({ candidates, toggleOpen }) => {
 
     useEffect(() => {
         if (prevSelected !== undefined && prevSteps !== undefined && prevGroup !== undefined) {
-            if (prevSelected.size !== 0 && candidateStore.selected.size === 0) {
-                componentStateStore.toggleFabOff();
+            if (prevSelected.size !== 0 && $candidate.selected.size === 0) {
+                $component.toggleFabOff();
                 closeFab();
             }
-            if (prevGroup !== candidateStore.group || prevSteps.length !== candidateStore.steps.length) {
+            if (prevGroup !== $candidate.group || prevSteps.length !== $candidate.steps.length) {
                 hideFab();
             }
         }
-    }, [prevGroup, prevSteps, prevSelected, candidateStore.steps, candidateStore.group, candidateStore.selected]);
+    }, [prevGroup, prevSteps, prevSelected, $candidate.steps, $candidate.group, $candidate.selected]);
 
     const ids = candidates.map(({ _id }) => _id);
-    const selectedInColumn = [...candidateStore.selected.keys()].filter((cid) => ids.includes(cid));
+    const selectedInColumn = [...$candidate.selected.keys()].filter((cid) => ids.includes(cid));
     const enabled =
         selectedInColumn.length &&
-        (userStore.info.isCaptain ||
-            (candidateStore.steps.length === 2
-                ? userStore.info.isCaptain
-                : candidateStore.group === userStore.info.group));
+        ($user.info.isCaptain ||
+            ($candidate.steps.length === 2 ? $user.info.isCaptain : $candidate.group === $user.info.group));
     return (
         <SpeedDial
             ariaLabel='fab'
             className={classes.fab}
-            hidden={componentStateStore.fabOn === -1}
+            hidden={$component.fabOn === -1}
             icon={<SpeedDialIcon />}
             onBlur={closeFab}
             onClick={toggleFabButtons}

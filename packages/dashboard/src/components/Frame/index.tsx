@@ -14,16 +14,16 @@ import { useStores } from '../../hooks/useStores';
 import useStyles from '../../styles/frame';
 
 const Frame: FC = observer(({ children }) => {
-    const { componentStateStore, recruitmentStore, userStore } = useStores();
+    const { $component, $recruitment, $user } = useStores();
     const classes = useStyles();
-    const prevTitle = usePrevious(recruitmentStore.viewing);
+    const prevTitle = usePrevious($recruitment.viewing);
 
     const handleClick = () => {
-        componentStateStore.drawerOpen && componentStateStore.toggleDrawer();
+        $component.drawerOpen && $component.toggleDrawer();
     };
 
     useEffect(() => {
-        if (userStore.token) {
+        if ($user.token) {
             getUserInfo();
             getRecruitments();
             getGroup();
@@ -31,19 +31,19 @@ const Frame: FC = observer(({ children }) => {
     }, []);
 
     useEffect(() => {
-        if (!prevTitle && recruitmentStore.viewing) {
-            getCandidates(recruitmentStore.viewing);
+        if (!prevTitle && $recruitment.viewing) {
+            getCandidates($recruitment.viewing);
         }
-    }, [prevTitle, recruitmentStore.viewing]);
+    }, [prevTitle, $recruitment.viewing]);
 
-    return userStore.token ? (
+    return $user.token ? (
         <div className={classes.root}>
             <AppBar />
             <Drawer />
             <main className={classes.content} onClick={handleClick}>
-                {userStore.info && children}
+                {$user.info && children}
             </main>
-            {componentStateStore.progressOn && <Progress />}
+            {$component.progressOn && <Progress />}
         </div>
     ) : (
         <Redirect to='/login' />

@@ -12,7 +12,7 @@ import { useStores } from '../../hooks/useStores';
 import useStyles from '../../styles/snackbar';
 
 const Snackbar: FC = observer(({ children }) => {
-    const { componentStateStore } = useStores();
+    const { $component } = useStores();
     const classes = useStyles();
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('xs'));
@@ -26,7 +26,7 @@ const Snackbar: FC = observer(({ children }) => {
                 variantInfo: classes.info,
             }}
             autoHideDuration={3000}
-            className={clsx(classes.snackBar, { [classes.shrink]: componentStateStore.fabOn !== -1 && isMobile })}>
+            className={clsx(classes.snackBar, { [classes.shrink]: $component.fabOn !== -1 && isMobile })}>
             <>{children}</>
         </SnackbarProvider>
     );

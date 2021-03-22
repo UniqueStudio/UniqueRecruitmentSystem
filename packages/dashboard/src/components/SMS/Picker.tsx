@@ -12,14 +12,14 @@ import { useStores } from '../../hooks/useStores';
 import useStyles from '../../styles/sms';
 
 const SMSPicker: FC = observer(() => {
-    const { candidateStore } = useStores();
+    const { $candidate } = useStores();
     const classes = useStyles();
     const handleDeselect = (id: string) => () => {
-        candidateStore.deselectCandidate(id);
+        $candidate.deselectCandidate(id);
     };
 
     const chips: ReactElement[] = [];
-    candidateStore.selected.forEach(({ _id, name, grade, institute }) =>
+    $candidate.selected.forEach(({ _id, name, grade, institute }) =>
         chips.push(
             <Chip
                 key={_id}

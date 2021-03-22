@@ -46,10 +46,10 @@ interface Props {
 
 const AddOne: FC<Props> = observer(({ shouldClear }) => {
     const classes = useStyles();
-    const { componentStateStore, userStore } = useStores();
+    const { $component, $user } = useStores();
     const [{ modal, title, begin, end, stop, code }, setState] = useState(initialState());
 
-    const disabled = !(userStore.info.isCaptain || userStore.info.isAdmin);
+    const disabled = !$user.isAdminOrCaptain;
 
     useEffect(() => {
         if (shouldClear) {
@@ -59,15 +59,15 @@ const AddOne: FC<Props> = observer(({ shouldClear }) => {
 
     const handleLaunch = async () => {
         if (!code || !begin || !end || !stop || !title) {
-            componentStateStore.enqueueSnackbar('请完整填写信息！', 'warning');
+            $component.enqueueSnackbar('请完整填写信息！', 'warning');
             return;
         }
         if (begin >= stop) {
-            componentStateStore.enqueueSnackbar('截止时间必须大于开始时间！', 'warning');
+            $component.enqueueSnackbar('截止时间必须大于开始时间！', 'warning');
             return;
         }
         if (stop >= end) {
-            componentStateStore.enqueueSnackbar('结束时间必须大于截止时间！', 'warning');
+            $component.enqueueSnackbar('结束时间必须大于截止时间！', 'warning');
             return;
         }
         await launchRecruitment({

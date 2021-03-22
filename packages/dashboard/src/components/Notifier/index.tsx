@@ -6,15 +6,15 @@ import { useStores } from '../../hooks/useStores';
 
 const Notifier = () => {
     const [displayed, setDisplayed] = useState<SnackbarKey[]>([]);
-    const { componentStateStore } = useStores();
+    const { $component } = useStores();
     const { enqueueSnackbar, closeSnackbar } = useSnackbar();
     useEffect(() => {
         autorun(() => {
-            Object.entries(componentStateStore.snackbars).forEach(([key, { options, message }]) => {
+            Object.entries($component.snackbars).forEach(([key, { options, message }]) => {
                 if (displayed.includes(key)) return;
                 enqueueSnackbar(message, options);
                 setDisplayed((prevDisplayed) => [...prevDisplayed, key]);
-                componentStateStore.removeSnackbar(key);
+                $component.removeSnackbar(key);
                 closeSnackbar(key);
             });
         });

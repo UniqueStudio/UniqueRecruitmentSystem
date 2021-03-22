@@ -17,30 +17,31 @@ import { useStores } from '../hooks/useStores';
 import { teamSort } from '../utils/sortBySlot';
 
 const Candidates: FC = observer(() => {
-    const { componentStateStore, candidateStore } = useStores();
+    const { $component, $candidate } = useStores();
     const [dialog, setDialog] = useState(false);
     const [modal, setModal] = useState(false);
     const [step, setStep] = useState(0);
     const [index, setIndex] = useState(-1);
     const [direction, setDirection] = useState<SlideProps['direction']>('left');
 
-    let candidates: Candidate[][] = [...new Array(STEPS.length)].map(() => []);
-    if (candidateStore.steps.length !== 2) {
+    const candidates: Candidate[][] = [...new Array(STEPS.length)].map(() => []);
+    if ($candidate.steps.length !== 2) {
         // 全部面板
-        for (const candidate of candidateStore.candidates) {
-            if (candidate.group === candidateStore.group) {
+        for (const candidate of $candidate.candidates) {
+            if (candidate.group === $candidate.group) {
                 candidates[candidate.step].push(candidate);
             }
         }
     } else {
         // 群面面板
-        for (const candidate of candidateStore.candidates) {
-            if (candidate.step === candidateStore.steps[0] || candidate.step === candidateStore.steps[1]) {
+        for (const candidate of $candidate.candidates) {
+            if (candidate.step === $candidate.steps[0] || candidate.step === $candidate.steps[1]) {
                 // 位于群面或通过
                 candidates[candidate.step].push(candidate);
             }
         }
-        candidates = candidates.map((toSort) => toSort.sort(teamSort));
+        // it's unnecessary to reassign because Array.prototype.sort is in-place
+        candidates.map((toSort) => toSort.sort(teamSort));
     }
 
     const handleRight = () => {
@@ -53,7 +54,7 @@ const Candidates: FC = observer(() => {
         setIndex(-1);
     };
 
-    const handleNewIndex = (newIndex: number) => {
+    const handleNextIndex = (newIndex: number) => {
         if (newIndex >= candidates[step].length || newIndex < 0) {
             setIndex(-1);
         } else {
@@ -68,15 +69,15 @@ const Candidates: FC = observer(() => {
 
     const handleRemove = () => {
         toggleOpen('dialog')();
-        if (candidateStore.selected.size === 0) {
-            componentStateStore.enqueueSnackbar('你没有选中任何人', 'info');
+        if ($candidate.selected.size === 0) {
+            $component.enqueueSnackbar('你没有选中任何人', 'info');
             return;
         }
-        candidateStore.selected.forEach(({ _id }) => removeCandidate(_id));
+        $candidate.selected.forEach(({ _id }) => removeCandidate(_id));
     };
 
     const toggleOpen = (name: string) => () => {
-        modal && candidateStore.deselectAll();
+        modal && $candidate.deselectAll();
         if (name === 'modal') setModal((prevModal) => !prevModal);
         if (name === 'dialog') setDialog((prevDialog) => !prevDialog);
     };
@@ -84,7 +85,7 @@ const Candidates: FC = observer(() => {
     return (
         <>
             <Board candidates={candidates} toggleDetail={toggleDetail} />
-            <Fab candidates={candidates[componentStateStore.fabOn] || []} toggleOpen={toggleOpen} />
+            <Fab candidates={candidates[$component.fabOn] || []} toggleOpen={toggleOpen} />
             <Dialog
                 open={dialog}
                 onClick={handleRemove}
@@ -103,7 +104,7 @@ const Candidates: FC = observer(() => {
                         candidate={candidates[step][index]}
                         handleLeft={handleLeft}
                         handleRight={handleRight}
-                        handleNextIndex={handleNewIndex}
+                        handleNextIndex={handleNextIndex}
                     />
                 )}
             </Modal>

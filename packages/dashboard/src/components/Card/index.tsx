@@ -46,7 +46,7 @@ interface Props {
 }
 
 const CandidateCard: FC<Props> = observer(({ candidate, isTeamInterview, index, toggleDetail }) => {
-    const { candidateStore, componentStateStore } = useStores();
+    const { $candidate, $component } = useStores();
     const {
         name,
         grade,
@@ -72,21 +72,21 @@ const CandidateCard: FC<Props> = observer(({ candidate, isTeamInterview, index, 
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('xs'));
 
-    const checked = candidateStore.selected.has(_id);
-    const disabled = candidateStore.selected.size !== 0 && componentStateStore.fabOn !== step;
+    const checked = $candidate.selected.has(_id);
+    const disabled = $candidate.selected.size !== 0 && $component.fabOn !== step;
 
     const handleCheck: ChangeEventHandler<HTMLInputElement> = ({ target }) => {
         if (target.checked) {
-            candidateStore.selectCandidate(_id);
-            componentStateStore.toggleFabOn(step);
+            $candidate.selectCandidate(_id);
+            $component.toggleFabOn(step);
         } else {
-            candidateStore.deselectCandidate(_id);
+            $candidate.deselectCandidate(_id);
         }
     };
 
     const handleToggle = () => {
         toggleDetail();
-        componentStateStore.recordInputtingComment(2, '');
+        $component.recordInputtingComment(2, '');
     };
 
     const stopPropagation: MouseEventHandler = (event) => event.stopPropagation();

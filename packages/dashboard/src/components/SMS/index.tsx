@@ -22,7 +22,7 @@ interface Props {
 }
 
 const SMSTemplate: FC<Props> = observer(({ toggleOpen }) => {
-    const { componentStateStore, candidateStore } = useStores();
+    const { $component, $candidate } = useStores();
     const classes = useStyles();
     const [activeStep, setActiveStep] = useState(0);
     const [content, setContent] = useState({
@@ -41,12 +41,12 @@ const SMSTemplate: FC<Props> = observer(({ toggleOpen }) => {
 
     const handleSend = () => {
         if (code === '') {
-            componentStateStore.enqueueSnackbar('请填写验证码！', 'warning');
+            $component.enqueueSnackbar('请填写验证码！', 'warning');
             return;
         }
 
         setCode('');
-        return sendSMS({ ...content, code, candidates: [...candidateStore.selected.keys()] });
+        return sendSMS({ ...content, code, candidates: [...$candidate.selected.keys()] });
     };
 
     const handleNext = () => {
@@ -54,22 +54,22 @@ const SMSTemplate: FC<Props> = observer(({ toggleOpen }) => {
         if (activeStep === 1) {
             if (type === 'group' || type === 'team') {
                 if (!place) {
-                    componentStateStore.enqueueSnackbar('请填写地点！', 'warning');
+                    $component.enqueueSnackbar('请填写地点！', 'warning');
                     return;
                 }
             } else if (step === -1) {
-                componentStateStore.enqueueSnackbar('请选择流程！', 'warning');
+                $component.enqueueSnackbar('请选择流程！', 'warning');
                 return;
             } else if (next === -1) {
-                componentStateStore.enqueueSnackbar('请选择下一轮！', 'warning');
+                $component.enqueueSnackbar('请选择下一轮！', 'warning');
                 return;
             } else if ((next === 1 || next === 3) && type === 'accept' && !rest) {
                 if (!time) {
-                    componentStateStore.enqueueSnackbar('请填写时间！', 'warning');
+                    $component.enqueueSnackbar('请填写时间！', 'warning');
                     return;
                 }
                 if (!place) {
-                    componentStateStore.enqueueSnackbar('请填写地点！', 'warning');
+                    $component.enqueueSnackbar('请填写地点！', 'warning');
                     return;
                 }
             }
@@ -110,7 +110,7 @@ const SMSTemplate: FC<Props> = observer(({ toggleOpen }) => {
                                     color='primary'
                                     onClick={activeStep === steps.length - 1 ? handleSend : handleNext}
                                     className={classes.templateItem}
-                                    disabled={candidateStore.selected.size === 0}>
+                                    disabled={$candidate.selected.size === 0}>
                                     {activeStep === steps.length - 1 ? '发送通知' : '下一步'}
                                 </Button>
                             </div>

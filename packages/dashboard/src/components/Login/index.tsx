@@ -16,13 +16,13 @@ import { useStores } from '../../hooks/useStores';
 import useStyles from '../../styles/login';
 
 const Login: FC = observer(() => {
-    const { userStore, componentStateStore } = useStores();
+    const { $user, $component } = useStores();
 
     const classes = useStyles();
     const [phone, setPhone] = useState('');
     const [password, setPassword] = useState('');
     const [method, setMethod] = useState(0);
-    if (userStore.token) {
+    if ($user.token) {
         return <Redirect to='/' />;
     }
     const handleLogin: FormEventHandler = (event) => {
@@ -65,14 +65,14 @@ const Login: FC = observer(() => {
     );
     const ByQRCode = (
         <>
-            {userStore.qrCodeURL && <img className={classes.qrCode} src={userStore.qrCodeURL} alt='QRCode' />}
+            {$user.qrCodeURL && <img className={classes.qrCode} src={$user.qrCodeURL} alt='QRCode' />}
             <Button
                 className={classes.button}
                 variant='contained'
                 color='primary'
                 size='large'
                 onClick={loginViaQRCode}
-                disabled={!!userStore.qrCodeURL}>
+                disabled={!!$user.qrCodeURL}>
                 获取二维码
             </Button>
             <Button
@@ -131,7 +131,7 @@ const Login: FC = observer(() => {
                     {[ChooseMethod, ByQRCode, ByPassword][method]}
                 </form>
             </Modal>
-            {componentStateStore.progressOn && <Progress />}
+            {$component.progressOn && <Progress />}
         </div>
     );
 });

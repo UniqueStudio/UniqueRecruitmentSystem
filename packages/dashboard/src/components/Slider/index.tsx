@@ -28,7 +28,7 @@ enum Direction {
 }
 
 const Slider: FC<Props> = observer(({ candidate, handleNextIndex, handleLeft, handleRight, index }) => {
-    const { componentStateStore } = useStores();
+    const { $component } = useStores();
     const prevCandidate = usePrevious(candidate);
     const [nextIndex, setNextIndex] = useState(-1);
     useEffect(
@@ -42,7 +42,7 @@ const Slider: FC<Props> = observer(({ candidate, handleNextIndex, handleLeft, ha
     const { _id: cid, comments } = candidate || prevCandidate;
 
     const handleClick = (type: Direction) => () => {
-        componentStateStore.recordInputtingComment(2, '');
+        $component.recordInputtingComment(2, '');
         if (type === Direction.L) {
             handleLeft();
             setNextIndex(index - 1);

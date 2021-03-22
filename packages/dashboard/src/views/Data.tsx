@@ -9,7 +9,7 @@ import useStyles from '../styles/data';
 import { groupSort, teamSort } from '../utils/sortBySlot';
 
 const Data: FC = observer(() => {
-    const { candidateStore, userStore, recruitmentStore } = useStores();
+    const { $candidate, $user, $recruitment } = useStores();
     const classes = useStyles();
     const [interviewType, setInterviewType] = useState<'group' | 'team'>('group');
 
@@ -19,13 +19,13 @@ const Data: FC = observer(() => {
 
     const sorted =
         interviewType === 'group'
-            ? candidateStore.candidates
-                  .filter(({ group, step }) => group === userStore.info.group && step === 2)
+            ? $candidate.candidates
+                  .filter(({ group, step }) => group === $user.info.group && step === 2)
                   .sort(groupSort)
-            : candidateStore.candidates.filter(({ step }) => step === 4).sort(teamSort);
+            : $candidate.candidates.filter(({ step }) => step === 4).sort(teamSort);
 
-    return !userStore.info.group ||
-        !recruitmentStore.recruitments.find(({ title }) => title === recruitmentStore.viewing) ? null : (
+    return !$user.info.group ||
+        !$recruitment.recruitments.find(({ title }) => title === $recruitment.viewing) ? null : (
         <div className={classes.container}>
             <Recruitment />
             <Table candidates={sorted} changeType={changeType} interviewType={interviewType} />

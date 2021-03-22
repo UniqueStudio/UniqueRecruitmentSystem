@@ -19,28 +19,28 @@ import useStyles from '../styles/dashboard';
 import { compareTitle } from '../utils/compareTitle';
 
 const Dashboard: FC = observer(() => {
-    const { recruitmentStore, userStore, componentStateStore } = useStores();
+    const { $recruitment, $user, $component } = useStores();
     const classes = useStyles();
     const [shouldClear, setShouldClear] = useState(false);
     const [shouldRedirect, setShouldRedirect] = useState(false);
-    const prevData = usePrevious(recruitmentStore.recruitments);
-    const prevViewing = usePrevious(recruitmentStore.viewing);
+    const prevData = usePrevious($recruitment.recruitments);
+    const prevViewing = usePrevious($recruitment.viewing);
     useEffect(() => {
         if (prevData !== undefined && prevViewing !== undefined) {
-            setShouldClear(prevData.length !== recruitmentStore.recruitments.length);
-            setShouldRedirect(prevViewing !== recruitmentStore.viewing && !!prevViewing);
+            setShouldClear(prevData.length !== $recruitment.recruitments.length);
+            setShouldRedirect(prevViewing !== $recruitment.viewing && !!prevViewing);
         }
-    }, [recruitmentStore.recruitments, recruitmentStore.viewing, prevData, prevViewing]);
+    }, [$recruitment.recruitments, $recruitment.viewing, prevData, prevViewing]);
     const handleSet = (title: string) => () => {
-        if (compareTitle(userStore.info.joinTime, title) >= 0) {
-            componentStateStore.enqueueSnackbar('你不能查看本次招新！', 'info');
+        if (compareTitle($user.info.joinTime, title) >= 0) {
+            $component.enqueueSnackbar('你不能查看本次招新！', 'info');
             return;
         }
-        if (recruitmentStore.viewing === title) {
-            componentStateStore.enqueueSnackbar('设置成功', 'success');
+        if ($recruitment.viewing === title) {
+            $component.enqueueSnackbar('设置成功', 'success');
             return;
         }
-        componentStateStore.enqueueSnackbar('设置成功，正在获取候选人信息', 'success');
+        $component.enqueueSnackbar('设置成功，正在获取候选人信息', 'success');
         return getCandidates(title);
     };
     return shouldRedirect ? (
@@ -56,8 +56,8 @@ const Dashboard: FC = observer(() => {
                     <div className={classes.block}>
                         <AddOne shouldClear={shouldClear} />
                     </div>
-                    {!!recruitmentStore.recruitments.length &&
-                        recruitmentStore.recruitments
+                    {!!$recruitment.recruitments.length &&
+                        $recruitment.recruitments
                             .slice()
                             .reverse()
                             .map((recruitment) => (
@@ -67,7 +67,7 @@ const Dashboard: FC = observer(() => {
                                 <div key={recruitment._id} className={classes.block}>
                                     <Chart
                                         data={recruitment}
-                                        selected={recruitmentStore.viewing === recruitment.title}
+                                        selected={$recruitment.viewing === recruitment.title}
                                         setViewing={handleSet(recruitment.title)}
                                     />
                                 </div>

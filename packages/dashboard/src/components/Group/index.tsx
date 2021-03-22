@@ -47,17 +47,17 @@ const memberDataConverter = (handleSelect: SelectHandler, admin: object, disable
 ];
 
 const Group: FC = observer(() => {
-    const { userStore } = useStores();
+    const { $user } = useStores();
     const classes = useStyles();
 
-    if (!userStore.groupInfo) {
+    if (!$user.groupInfo) {
         return null;
     }
 
     // { user1: true, user2: false ...}
     const [admin, setAdmin] = useState(
         // use phone instead of name to avoid same name in same group
-        Object.fromEntries(userStore.groupInfo.map((member) => [member.phone, member.isAdmin])),
+        Object.fromEntries($user.groupInfo.map((member) => [member.phone, member.isAdmin])),
     );
 
     const handleSelect = (phone: string) => (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -65,7 +65,7 @@ const Group: FC = observer(() => {
     };
 
     const submitChange = () => {
-        setGroupAdmin({ group: userStore.info.group, who: Object.keys(admin).filter((i) => admin[i]) });
+        setGroupAdmin({ group: $user.info.group, who: Object.keys(admin).filter((i) => admin[i]) });
     };
 
     return (
@@ -86,14 +86,8 @@ const Group: FC = observer(() => {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {userStore.groupInfo
-                                .map(
-                                    memberDataConverter(
-                                        handleSelect,
-                                        admin,
-                                        !(userStore.info.isCaptain || userStore.info.isAdmin),
-                                    ),
-                                )
+                            {$user.groupInfo
+                                .map(memberDataConverter(handleSelect, admin, !$user.isAdminOrCaptain))
                                 .map((member, index) => (
                                     <TableRow key={index}>
                                         {member.map((item, idx) => (
