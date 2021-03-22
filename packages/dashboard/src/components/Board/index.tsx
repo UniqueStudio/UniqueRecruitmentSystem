@@ -5,13 +5,13 @@ import React, { FC, useCallback, useState } from 'react';
 import { DragDropContext, Droppable, DropResult } from 'react-beautiful-dnd';
 import SwipeableViews from 'react-swipeable-views';
 
-import { moveCandidate } from '../../apis/websocket';
-import Card from '../../components/Card';
-import Column from '../../components/Column';
-import { STEPS } from '../../config/consts';
-import { Candidate, Step } from '../../config/types';
-import { useStores } from '../../hooks/useStores';
-import useStyles from '../../styles/board';
+import { moveCandidate } from '@apis/websocket';
+import Card from '@components/Card';
+import Column from '@components/Column';
+import { STEPS } from '@config/consts';
+import { Candidate, Step } from '@config/types';
+import { useStores } from '@hooks/useStores';
+import useStyles from '@styles/board';
 
 interface Props {
     candidates: Candidate[][];

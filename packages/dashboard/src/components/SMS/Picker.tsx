@@ -4,9 +4,9 @@ import clsx from 'clsx';
 import { observer } from 'mobx-react-lite';
 import React, { FC, ReactElement } from 'react';
 
-import { GRADES } from '../../config/consts';
-import { useStores } from '../../hooks/useStores';
-import useStyles from '../../styles/sms';
+import { GRADES } from '@config/consts';
+import { useStores } from '@hooks/useStores';
+import useStyles from '@styles/sms';
 
 const SMSPicker: FC = observer(() => {
     const { $candidate } = useStores();

@@ -1,7 +1,7 @@
 import { makeAutoObservable } from 'mobx';
 
-import { Recruitment } from '../config/types';
-import { localStorage, updateStorage } from '../utils/storage';
+import { Recruitment } from '@config/types';
+import { localStorage, updateStorage } from '@utils/storage';
 
 const updateViewing = updateStorage('viewing');
 const updateRecruitments = updateStorage('recruitments');

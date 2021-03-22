@@ -17,10 +17,10 @@ import { observer } from 'mobx-react-lite';
 import React, { ChangeEventHandler, FC, MouseEventHandler, useMemo } from 'react';
 import { Draggable, DraggableProvided } from 'react-beautiful-dnd';
 
-import { GRADES, GROUPS, GROUPS_ } from '../../config/consts';
-import { Candidate as CandidateType, Evaluation } from '../../config/types';
-import { useStores } from '../../hooks/useStores';
-import useStyles from '../../styles/card';
+import { GRADES, GROUPS, GROUPS_ } from '@config/consts';
+import { Candidate as CandidateType, Evaluation } from '@config/types';
+import { useStores } from '@hooks/useStores';
+import useStyles from '@styles/card';
 
 const getProportion = (evaluations: Evaluation[]) => {
     const good = (evaluations.filter((evaluation) => evaluation === 2).length / evaluations.length) * 100;

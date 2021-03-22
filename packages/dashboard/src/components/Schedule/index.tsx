@@ -1,6 +1,6 @@
 import React, { FC, memo } from 'react';
 
-import DatePicker from '../DatePicker';
+import DatePicker from '@components/DatePicker';
 
 interface Props {
     begin: Date;

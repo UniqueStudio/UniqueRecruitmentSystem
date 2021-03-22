@@ -20,11 +20,11 @@ import React, {
     useState,
 } from 'react';
 
-import { sendMessage } from '../../apis/websocket';
-import { Message } from '../../config/types';
-import { useStores } from '../../hooks/useStores';
-import useStyles from '../../styles/messenger';
-import EnlargeableImage from '../EnlargeableImg';
+import { sendMessage } from '@apis/websocket';
+import EnlargeableImage from '@components/EnlargeableImg';
+import { Message } from '@config/types';
+import { useStores } from '@hooks/useStores';
+import useStyles from '@styles/messenger';
 
 const Messenger: FC = observer(() => {
     const { $user, $component } = useStores();

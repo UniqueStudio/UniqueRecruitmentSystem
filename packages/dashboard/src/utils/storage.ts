@@ -1,4 +1,4 @@
-import { Candidate, Recruitment, User } from '../config/types';
+import { Candidate, Recruitment, User } from '@config/types';
 
 interface LocalStorageRecord extends Record<string, unknown> {
     token: string;

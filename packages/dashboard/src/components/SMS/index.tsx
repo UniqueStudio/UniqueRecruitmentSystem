@@ -7,13 +7,13 @@ import Stepper from '@material-ui/core/Stepper';
 import { observer } from 'mobx-react-lite';
 import React, { ChangeEventHandler, FC, useState } from 'react';
 
-import { sendSMS } from '../../apis/rest';
-import Verify from '../../components/Verify';
-import { useStores } from '../../hooks/useStores';
-import useStyles from '../../styles/sms';
-
 import Detail from './Detail';
 import Picker from './Picker';
+
+import { sendSMS } from '@apis/rest';
+import Verify from '@components/Verify';
+import { useStores } from '@hooks/useStores';
+import useStyles from '@styles/sms';
 
 interface Props {
     toggleOpen: () => void;

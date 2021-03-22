@@ -1,9 +1,9 @@
 import { VariantType } from 'notistack';
 import io from 'socket.io-client';
 
-import { API } from '../config/consts';
-import { Candidate, Comment, Message, Step } from '../config/types';
-import { stores } from '../stores';
+import { API } from '@config/consts';
+import { Candidate, Comment, Message, Step } from '@config/types';
+import { stores } from '@stores/index';
 
 // TODO: in current implementation, we cannot distinguish whether the incoming event is fired by the user,
 // and it may bring some surprising bugs. Fixes should first be done in the backend.

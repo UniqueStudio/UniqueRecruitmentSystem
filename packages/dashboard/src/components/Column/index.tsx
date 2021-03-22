@@ -6,7 +6,7 @@ import useMediaQuery from '@material-ui/core/useMediaQuery/useMediaQuery';
 import React, { FC, memo } from 'react';
 import { Draggable, Droppable } from 'react-beautiful-dnd';
 
-import useStyles from '../../styles/column';
+import useStyles from '@styles/column';
 
 interface Props {
     title: string;

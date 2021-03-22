@@ -5,11 +5,11 @@ import Typography from '@material-ui/core/Typography';
 import { observer } from 'mobx-react-lite';
 import React, { ChangeEventHandler, FC, useState } from 'react';
 
-import { setUserInfo } from '../../apis/rest';
-import { GENDERS, GROUPS, GROUPS_ } from '../../config/consts';
-import { useStores } from '../../hooks/useStores';
-import useStyles from '../../styles/user';
-import { titleConverter } from '../../utils/titleConverter';
+import { setUserInfo } from '@apis/rest';
+import { GENDERS, GROUPS, GROUPS_ } from '@config/consts';
+import { useStores } from '@hooks/useStores';
+import useStyles from '@styles/user';
+import { titleConverter } from '@utils/titleConverter';
 
 const User: FC = observer(() => {
     const { $user, $component } = useStores();

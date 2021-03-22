@@ -1,7 +1,7 @@
 import { makeAutoObservable } from 'mobx';
 
-import { Candidate, Comment, Group, Step } from '../config/types';
-import { updateStorage } from '../utils/storage';
+import { Candidate, Comment, Group, Step } from '@config/types';
+import { updateStorage } from '@utils/storage';
 
 const update = updateStorage('candidates');
 

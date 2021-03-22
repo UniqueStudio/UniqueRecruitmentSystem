@@ -12,9 +12,9 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import RemoveIcon from '@material-ui/icons/RemoveCircleOutline';
 import React, { ChangeEventHandler, FC, memo, useState } from 'react';
 
-import { Time } from '../../config/types';
-import useStyles from '../../styles/data';
-import DatePicker from '../DatePicker';
+import DatePicker from '@components/DatePicker';
+import { Time } from '@config/types';
+import useStyles from '@styles/data';
 
 interface Props {
     dates: Time[];

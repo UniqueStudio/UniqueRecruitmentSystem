@@ -10,12 +10,12 @@ import Typography from '@material-ui/core/Typography';
 import { observer } from 'mobx-react-lite';
 import React, { FC, useState } from 'react';
 
-import { setGroupAdmin } from '../../apis/rest';
-import { GENDERS } from '../../config/consts';
-import { User } from '../../config/types';
-import { useStores } from '../../hooks/useStores';
-import useStyles from '../../styles/group';
-import { titleConverter } from '../../utils/titleConverter';
+import { setGroupAdmin } from '@apis/rest';
+import { GENDERS } from '@config/consts';
+import { User } from '@config/types';
+import { useStores } from '@hooks/useStores';
+import useStyles from '@styles/group';
+import { titleConverter } from '@utils/titleConverter';
 
 const heads = ['成员姓名', '性别', '电话号码', '邮箱', '加入时间', '组长？', '管理员？'];
 

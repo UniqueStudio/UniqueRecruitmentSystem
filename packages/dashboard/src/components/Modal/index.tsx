@@ -3,7 +3,7 @@ import Slide, { SlideProps } from '@material-ui/core/Slide';
 import Typography from '@material-ui/core/Typography';
 import React, { FC, memo } from 'react';
 
-import useStyles from '../../styles/modal';
+import useStyles from '@styles/modal';
 
 interface Props {
     open: boolean;

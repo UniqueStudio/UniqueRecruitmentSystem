@@ -5,11 +5,11 @@ import Typography from '@material-ui/core/Typography';
 import { observer } from 'mobx-react-lite';
 import React, { ChangeEventHandler, FC, KeyboardEventHandler, useState } from 'react';
 
-import { addComment, removeComment } from '../../apis/websocket';
-import { Comment, Evaluation } from '../../config/types';
-import { useStores } from '../../hooks/useStores';
-import useStyles from '../../styles/comments';
-import Chip from '../Chip';
+import { addComment, removeComment } from '@apis/websocket';
+import Chip from '@components/Chip';
+import { Comment, Evaluation } from '@config/types';
+import { useStores } from '@hooks/useStores';
+import useStyles from '@styles/comments';
 
 interface Props {
     cid: string;

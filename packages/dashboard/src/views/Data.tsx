@@ -1,11 +1,11 @@
 import { observer } from 'mobx-react-lite';
 import React, { ChangeEventHandler, FC, useState } from 'react';
 
-import Recruitment from '../components/Recruitment';
-import Table from '../components/Table';
-import { useStores } from '../hooks/useStores';
-import useStyles from '../styles/data';
-import { groupSort, teamSort } from '../utils/sortBySlot';
+import Recruitment from '@components/Recruitment';
+import Table from '@components/Table';
+import { useStores } from '@hooks/useStores';
+import useStyles from '@styles/data';
+import { groupSort, teamSort } from '@utils/sortBySlot';
 
 const Data: FC = observer(() => {
     const { $candidate, $user, $recruitment } = useStores();

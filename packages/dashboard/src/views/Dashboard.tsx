@@ -5,13 +5,13 @@ import { observer } from 'mobx-react-lite';
 import React, { FC, useEffect, useState } from 'react';
 import { Redirect } from 'react-router-dom';
 
-import { getCandidates } from '../apis/rest';
-import AddOne from '../components/AddOne';
-import Chart from '../components/Chart';
-import { usePrevious } from '../hooks/usePrevious';
-import { useStores } from '../hooks/useStores';
-import useStyles from '../styles/dashboard';
-import { compareTitle } from '../utils/compareTitle';
+import { getCandidates } from '@apis/rest';
+import AddOne from '@components/AddOne';
+import Chart from '@components/Chart';
+import { usePrevious } from '@hooks/usePrevious';
+import { useStores } from '@hooks/useStores';
+import useStyles from '@styles/dashboard';
+import { compareTitle } from '@utils/compareTitle';
 
 const Dashboard: FC = observer(() => {
     const { $recruitment, $user, $component } = useStores();

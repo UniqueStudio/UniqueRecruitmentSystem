@@ -2,7 +2,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 import React, { ChangeEventHandler, FC, memo } from 'react';
 
-import useStyles from '../../styles/select';
+import useStyles from '@styles/select';
 
 interface Props {
     data: (string | number)[];

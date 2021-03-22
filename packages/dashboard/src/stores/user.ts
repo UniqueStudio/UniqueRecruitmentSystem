@@ -1,9 +1,9 @@
 import { makeAutoObservable } from 'mobx';
 
-import { setAuthToken } from '../apis/rest';
-import { QR_CODE_URL } from '../config/consts';
-import { Message, User } from '../config/types';
-import { localStorage, updateStorage } from '../utils/storage';
+import { setAuthToken } from '@apis/rest';
+import { QR_CODE_URL } from '@config/consts';
+import { Message, User } from '@config/types';
+import { localStorage, updateStorage } from '@utils/storage';
 
 const updateUser = updateStorage('user');
 const updateGroup = updateStorage('group');
