@@ -1,5 +1,5 @@
 import React, { FC, lazy, Suspense } from 'react';
-import { Route, RouteComponentProps, Switch, withRouter } from 'react-router-dom';
+import { BrowserRouter, Route, RouteComponentProps, Switch } from 'react-router-dom';
 
 import PageFrame from '@components/Frame';
 import Login from '@components/Login';
@@ -8,6 +8,7 @@ import Progress from '@components/Progress';
 import Snackbar from '@components/Snackbar';
 import useStyles from '@styles/global';
 import withRoot from '@styles/withRoot';
+import { logger } from '@utils/console';
 
 const Candidates = lazy(() => import('./Candidates'));
 const Dashboard = lazy(() => import('./Dashboard'));
@@ -15,7 +16,9 @@ const Data = lazy(() => import('./Data'));
 const My = lazy(() => import('./My'));
 const NoMatch = lazy(() => import('./NoMatch'));
 
-const Index: FC = () => {
+logger();
+
+const App: FC = () => {
     useStyles();
     const routeRender = (Component: JSX.Element) => (props: RouteComponentProps) => (
         <PageFrame {...props}>
@@ -23,7 +26,7 @@ const Index: FC = () => {
         </PageFrame>
     );
     return (
-        <>
+        <BrowserRouter>
             <Snackbar>
                 <Notifier />
             </Snackbar>
@@ -35,8 +38,8 @@ const Index: FC = () => {
                 <Route path='/my' render={routeRender(<My />)} />
                 <Route render={routeRender(<NoMatch />)} />
             </Switch>
-        </>
+        </BrowserRouter>
     );
 };
 
-export default withRouter(withRoot(Index));
+export default withRoot(App);
