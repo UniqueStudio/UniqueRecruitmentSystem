@@ -53,9 +53,11 @@ const client = axios.create({
     baseURL: Endpoint.base,
 });
 
-const setAuthToken = (token: string) => {
+export const setAuthToken = (token: string) => {
     (client.defaults.headers as { common: Record<string, string> }).common['Authorization'] = `Bearer ${token}`;
 };
+
+setAuthToken($user.token);
 
 const apiWrapper = async <T>(
     action: () => Promise<AxiosResponse<R<T>>>,
@@ -63,7 +65,6 @@ const apiWrapper = async <T>(
     onFailure?: () => void | Promise<void>,
 ) => {
     $component.setProgress(true);
-    setAuthToken($user.token);
     try {
         const { data } = await action();
         $component.setProgress(false);
@@ -134,7 +135,6 @@ export const getCandidates = (title: string, group?: Group, step?: Step) =>
 
 export const getResume = async (cid: string) => {
     $component.setProgress(true);
-    setAuthToken($user.token);
     try {
         const { data, headers } = await client.get<Blob>(Endpoint.resume(cid), {
             responseType: 'blob',
@@ -270,6 +270,7 @@ export const loginViaQRCode = () =>
                     return client.get<R<{ token: string }>>(Endpoint.qrCode(key));
                 },
                 ({ token }) => {
+                    setAuthToken(token);
                     $user.setToken(token);
                     $component.enqueueSnackbar('已成功登录！', 'success');
                 },
@@ -280,6 +281,7 @@ export const loginViaPassword = (phone: string, password: string) =>
     apiWrapper(
         () => client.post<R<{ token: string }>>(Endpoint.login, { phone, password }),
         ({ token }) => {
+            setAuthToken(token);
             $user.setToken(token);
             $component.enqueueSnackbar('已成功登录！', 'success');
         },

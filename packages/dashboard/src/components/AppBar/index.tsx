@@ -10,6 +10,7 @@ import { observer } from 'mobx-react-lite';
 import React, { ChangeEventHandler, FC, MouseEventHandler, useContext, useMemo, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 
+import { setAuthToken } from '@apis/rest';
 import Messenger from '@components/Messenger';
 import Modal from '@components/Modal';
 import Select from '@components/Select';
@@ -44,6 +45,7 @@ const Bar: FC = observer(() => {
     const handleLogout = () => {
         handleClose();
         $user.logout();
+        setAuthToken('');
     };
 
     const handleChange = (type: 'group' | 'step'): ChangeEventHandler<{ name?: string; value: unknown }> => ({
