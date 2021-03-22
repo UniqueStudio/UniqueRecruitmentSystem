@@ -23,7 +23,6 @@ const Detail: FC<Props> = observer(({ info }) => {
     const classes = useStyles();
     const [modal, setModal] = useState(false);
 
-    const { cid, progress } = componentStateStore.resume;
     const {
         _id,
         name,
@@ -40,6 +39,7 @@ const Detail: FC<Props> = observer(({ info }) => {
         referrer,
         resume,
     } = info;
+    const progress = componentStateStore.resumeProgresses[_id] || 0;
 
     const items: {}[][] = [
         [
@@ -87,7 +87,7 @@ const Detail: FC<Props> = observer(({ info }) => {
                         自我介绍
                     </Button>
                     <Button size='large' color='primary' onClick={downloadResume} disabled={!resume || !!progress}>
-                        {progress ? (cid === _id ? `${(progress * 100).toFixed(2)}%` : '下载中') : '简历下载'}
+                        {progress ? `${(progress * 100).toFixed(2)}%` : '简历下载'}
                     </Button>
                 </div>
             </div>
