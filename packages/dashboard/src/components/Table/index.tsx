@@ -1,35 +1,20 @@
 import DateFnsUtils from '@date-io/date-fns';
-import {
-    Button,
-    Checkbox,
-    Dialog,
-    MenuItem,
-    Paper,
-    Select,
-    Table,
-    TableBody,
-    TableCell,
-    TableRow,
-    TextField,
-    Typography,
-} from '@material-ui/core';
+import { Button, Dialog, MenuItem, Paper, Select, Table, Typography } from '@material-ui/core';
 import { DateTimePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 import clsx from 'clsx';
 import { observer } from 'mobx-react-lite';
 import React, { ChangeEventHandler, FC, useEffect, useState } from 'react';
 
-import { EnhancedTableHead, OrderBy } from './header';
-import { compareCandidate } from './order';
+import { Body } from './body';
+import { Header, OrderBy } from './header';
 
 import { allocateAll, allocateOne } from '@apis/rest';
 import Modal from '@components/Modal';
 import Template from '@components/SMS';
-import { GROUPS, GROUPS_ } from '@config/consts';
 import { Candidate } from '@config/types';
 import { useStores } from '@hooks/useStores';
 import useStyles from '@styles/data';
 import { Order } from '@utils/order';
-import { stableSort } from '@utils/reducerHelper';
 
 interface Props {
     candidates: Candidate[];
@@ -44,7 +29,6 @@ const CandidateTable: FC<Props> = observer(({ candidates, changeType, interviewT
     const [dialog, setDialog] = useState(false);
     const [cid, setCid] = useState('');
     const [time, setTime] = useState(new Date());
-    const [viewing, setViewing] = useState('');
     const [order, setOrder] = useState<Order>('asc');
     const [orderBy, setOrderBy] = useState<OrderBy>('分配结果');
     useEffect(() => {
@@ -62,20 +46,8 @@ const CandidateTable: FC<Props> = observer(({ candidates, changeType, interviewT
 
     const toggleModal = () => setModal((prevModal) => !prevModal);
 
-    const toggleViewing = (nextViewing: string) => () => {
-        setViewing(nextViewing);
-    };
-
     const handleChange = (value: Date | null) => {
         value && setTime(value);
-    };
-
-    const handleCheck = (id = '') => (event: React.ChangeEvent<HTMLInputElement>) => {
-        if (event.target.checked) {
-            $candidate.selectCandidate(id);
-        } else {
-            $candidate.deselectCandidate(id);
-        }
     };
 
     const handleCheckAll = () => {
@@ -106,7 +78,7 @@ const CandidateTable: FC<Props> = observer(({ candidates, changeType, interviewT
                 </div>
                 <div className={classes.tableContainer}>
                     <Table className={classes.table}>
-                        <EnhancedTableHead
+                        <Header
                             numSelected={$candidate.selected.size}
                             order={order}
                             orderBy={orderBy}
@@ -114,82 +86,13 @@ const CandidateTable: FC<Props> = observer(({ candidates, changeType, interviewT
                             onRequestSort={handleRequestSort}
                             rowCount={candidates.length}
                         />
-                        <TableBody>
-                            {stableSort<Candidate>(candidates, compareCandidate(order, orderBy)).map(
-                                ({ rejected, abandon, name, group, _id, interviews }) => {
-                                    const { selection, allocation } = interviews[interviewType];
-                                    const slotInfo = allocation
-                                        ? new Date(allocation).toLocaleString('ja-JP', { hour12: false })
-                                        : '未分配';
-                                    const state = (
-                                        <>
-                                            <div>
-                                                {rejected ? (
-                                                    '已淘汰'
-                                                ) : abandon ? (
-                                                    '已放弃'
-                                                ) : selection && selection.length ? (
-                                                    <Button color='primary' onClick={toggleViewing(_id)}>
-                                                        查看
-                                                    </Button>
-                                                ) : (
-                                                    '未选择'
-                                                )}
-                                            </div>
-                                            <Modal open={viewing === _id} onClose={toggleViewing('')} title='选择情况'>
-                                                {selection.map(({ date, afternoon, morning, evening }, index) => (
-                                                    <div className={classes.textFieldContainer} key={index}>
-                                                        <TextField
-                                                            label='日期'
-                                                            value={new Date(date).toLocaleDateString('zh-CN', {
-                                                                hour12: false,
-                                                            })}
-                                                            className={classes.datePicker}
-                                                        />
-                                                        <TextField
-                                                            label='上午'
-                                                            value={morning ? '是' : '否'}
-                                                            className={classes.textField}
-                                                        />
-                                                        <TextField
-                                                            label='下午'
-                                                            value={afternoon ? '是' : '否'}
-                                                            className={classes.textField}
-                                                        />
-                                                        <TextField
-                                                            label='晚上'
-                                                            value={evening ? '是' : '否'}
-                                                            className={classes.textField}
-                                                        />
-                                                    </div>
-                                                ))}
-                                            </Modal>
-                                        </>
-                                    );
-                                    const button = (
-                                        <Button variant='contained' color='primary' onClick={toggleDialog(_id)}>
-                                            设置
-                                        </Button>
-                                    );
-                                    const items = [name, GROUPS[GROUPS_.indexOf(group)], slotInfo, state, button];
-                                    return (
-                                        <TableRow key={_id}>
-                                            <TableCell classes={{ root: classes.tableCell }} padding='checkbox'>
-                                                <Checkbox
-                                                    checked={$candidate.selected.has(_id)}
-                                                    onChange={handleCheck(_id)}
-                                                />
-                                            </TableCell>
-                                            {items.map((item, index) => (
-                                                <TableCell classes={{ root: classes.tableCell }} key={index}>
-                                                    {item}
-                                                </TableCell>
-                                            ))}
-                                        </TableRow>
-                                    );
-                                },
-                            )}
-                        </TableBody>
+                        <Body
+                            order={order}
+                            orderBy={orderBy}
+                            candidates={candidates}
+                            interviewType={interviewType}
+                            toggleDialog={toggleDialog}
+                        />
                     </Table>
                 </div>
                 <div className={clsx(classes.tableButtons, classes.buttonContainer)}>
