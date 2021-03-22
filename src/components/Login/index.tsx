@@ -4,12 +4,12 @@ import { observer } from 'mobx-react-lite';
 import React, { ChangeEventHandler, FC, FormEventHandler, useState } from 'react';
 import { Redirect } from 'react-router-dom';
 
-import { loginViaPassword, loginViaQRCode } from '../../apis/rest';
-import { useStores } from '../../hooks/useStores';
-import logo from '../../images/logo.png';
-import useStyles from '../../styles/login';
-import Modal from '../Modal';
-import Progress from '../Progress';
+import { loginViaPassword, loginViaQRCode } from '@apis/rest';
+import Modal from '@components/Modal';
+import Progress from '@components/Progress';
+import { useStores } from '@hooks/useStores';
+import logo from '@images/logo.png';
+import useStyles from '@styles/login';
 
 const Login: FC = observer(() => {
     const { $user, $component } = useStores();

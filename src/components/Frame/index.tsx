@@ -2,13 +2,13 @@ import { observer } from 'mobx-react-lite';
 import React, { FC, useEffect } from 'react';
 import { Redirect } from 'react-router-dom';
 
-import { getCandidates, getGroup, getRecruitments, getUserInfo } from '../../apis/rest';
-import AppBar from '../../components/AppBar';
-import Drawer from '../../components/Drawer';
-import { usePrevious } from '../../hooks/usePrevious';
-import { useStores } from '../../hooks/useStores';
-import useStyles from '../../styles/frame';
-import Progress from '../Progress';
+import { getCandidates, getGroup, getRecruitments, getUserInfo } from '@apis/rest';
+import AppBar from '@components/AppBar';
+import Drawer from '@components/Drawer';
+import Progress from '@components/Progress';
+import { usePrevious } from '@hooks/usePrevious';
+import { useStores } from '@hooks/useStores';
+import useStyles from '@styles/frame';
 
 const Frame: FC = observer(({ children }) => {
     const { $component, $recruitment, $user } = useStores();

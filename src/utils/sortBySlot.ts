@@ -1,4 +1,4 @@
-import { Candidate } from '../config/types';
+import { Candidate } from '@config/types';
 
 export const teamSort = (i: Candidate, j: Candidate) => {
     return sortBySlot(i.interviews.team.allocation, j.interviews.team.allocation);

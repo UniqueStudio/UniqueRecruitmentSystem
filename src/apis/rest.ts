@@ -1,9 +1,9 @@
 import axios, { AxiosResponse } from 'axios';
 
-import { API } from '../config/consts';
-import { Candidate, Group, Recruitment, Step, Time, User } from '../config/types';
-import { stores } from '../stores';
-import { localStorage } from '../utils/storage';
+import { API } from '@config/consts';
+import { Candidate, Group, Recruitment, Step, Time, User } from '@config/types';
+import { stores } from '@stores/index';
+import { localStorage } from '@utils/storage';
 
 class Endpoint {
     static base = API;

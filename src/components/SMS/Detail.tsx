@@ -4,10 +4,10 @@ import Typography from '@material-ui/core/Typography';
 import clsx from 'clsx';
 import React, { ChangeEventHandler, FC, memo } from 'react';
 
-import { STEPS } from '../../config/consts';
-import { Step } from '../../config/types';
-import useStyles from '../../styles/sms';
-import { generateModel } from '../../utils/generateModel';
+import { STEPS } from '@config/consts';
+import { Step } from '@config/types';
+import useStyles from '@styles/sms';
+import { generateModel } from '@utils/generateModel';
 
 interface Props {
     content: {

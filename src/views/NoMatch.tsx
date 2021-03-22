@@ -1,8 +1,8 @@
 import React, { FC, memo } from 'react';
 
-import fourOFour from '../images/404.png';
-import logo from '../images/logo.png';
-import useStyles from '../styles/noMatch';
+import fourOFour from '@images/404.png';
+import logo from '@images/logo.png';
+import useStyles from '@styles/noMatch';
 
 const NoMatch: FC = memo(() => {
     const classes = useStyles();

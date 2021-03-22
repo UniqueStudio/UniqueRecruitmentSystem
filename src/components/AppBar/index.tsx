@@ -16,16 +16,16 @@ import { observer } from 'mobx-react-lite';
 import React, { ChangeEventHandler, MouseEventHandler, useContext, useMemo, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 
-import Messenger from '../../components/Messenger';
-import { GROUPS, GROUPS_ } from '../../config/consts';
-import { Group } from '../../config/types';
-import { useStores } from '../../hooks/useStores';
-import useStyles from '../../styles/appBar';
-import { ThemeContext } from '../../styles/withRoot';
-import { localStorage } from '../../utils/storage';
-import { titleConverter } from '../../utils/titleConverter';
-import Modal from '../Modal';
-import Select from '../Select';
+import Messenger from '@components/Messenger';
+import Modal from '@components/Modal';
+import Select from '@components/Select';
+import { GROUPS, GROUPS_ } from '@config/consts';
+import { Group } from '@config/types';
+import { useStores } from '@hooks/useStores';
+import useStyles from '@styles/appBar';
+import { ThemeContext } from '@styles/withRoot';
+import { localStorage } from '@utils/storage';
+import { titleConverter } from '@utils/titleConverter';
 
 const Bar = observer(() => {
     const { pathname } = useLocation();
@@ -73,7 +73,6 @@ const Bar = observer(() => {
     };
 
     const pathToTitle = {
-        // tslint:disable-next-line:whitespace TODO: remove this after migrating to eslint
         '/': `Unique Studio Recruitment Dashboard v${import.meta.env.SNOWPACK_PUBLIC_VERSION}`,
         '/data': `${title}・数据展示`,
         '/candidates': `${title}・选手信息`,

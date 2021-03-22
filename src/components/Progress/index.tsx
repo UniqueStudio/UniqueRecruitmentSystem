@@ -1,7 +1,7 @@
 import LinearProgress from '@material-ui/core/LinearProgress';
 import React, { FC, memo } from 'react';
 
-import useStyles from '../../styles/progress';
+import useStyles from '@styles/progress';
 
 const Progress: FC = memo(() => {
     const classes = useStyles();

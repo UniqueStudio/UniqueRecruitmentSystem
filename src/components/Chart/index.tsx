@@ -10,13 +10,13 @@ import VisibilityOffIcon from '@material-ui/icons/VisibilityOff';
 import clsx from 'clsx';
 import React, { FC, memo, useState } from 'react';
 
-import { GROUPS, GROUPS_, STEPS } from '../../config/consts';
-import { Recruitment } from '../../config/types';
-import { getRainbow } from '../../styles';
-import useStyles from '../../styles/chart';
-import { titleConverter } from '../../utils/titleConverter';
-
 import { ChartComponentProps, ChartElement, Doughnut } from './Doughnut';
+
+import { GROUPS, GROUPS_, STEPS } from '@config/consts';
+import { Recruitment } from '@config/types';
+import useStyles from '@styles/chart';
+import { getRainbow } from '@styles/index';
+import { titleConverter } from '@utils/titleConverter';
 
 interface Props {
     data: Recruitment;

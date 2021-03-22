@@ -3,8 +3,8 @@ import TextField from '@material-ui/core/TextField';
 import clsx from 'clsx';
 import React, { ChangeEventHandler, FC, memo, useEffect, useState } from 'react';
 
-import { getVerifyCode } from '../../apis/rest';
-import useStyles from '../../styles/verify';
+import { getVerifyCode } from '@apis/rest';
+import useStyles from '@styles/verify';
 
 interface Props {
     code: string;

@@ -1,13 +1,13 @@
 import React, { FC, lazy, Suspense } from 'react';
 import { Route, RouteComponentProps, Switch, withRouter } from 'react-router-dom';
 
-import PageFrame from '../components/Frame';
-import Login from '../components/Login';
-import Notifier from '../components/Notifier';
-import Progress from '../components/Progress';
-import Snackbar from '../components/Snackbar';
-import useStyles from '../styles/global';
-import withRoot from '../styles/withRoot';
+import PageFrame from '@components/Frame';
+import Login from '@components/Login';
+import Notifier from '@components/Notifier';
+import Progress from '@components/Progress';
+import Snackbar from '@components/Snackbar';
+import useStyles from '@styles/global';
+import withRoot from '@styles/withRoot';
 
 const Candidates = lazy(() => import('./Candidates'));
 const Dashboard = lazy(() => import('./Dashboard'));

@@ -1,7 +1,7 @@
 import { makeAutoObservable } from 'mobx';
 import { OptionsObject, SnackbarKey, SnackbarMessage, VariantType } from 'notistack';
 
-import { Evaluation } from '../config/types';
+import { Evaluation } from '@config/types';
 
 interface Snackbar {
     message: SnackbarMessage;

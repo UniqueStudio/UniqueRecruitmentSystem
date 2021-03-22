@@ -2,12 +2,12 @@ import { Button, TextField, TextFieldProps } from '@material-ui/core';
 import { observer } from 'mobx-react-lite';
 import React, { FC, useState } from 'react';
 
-import { getResume } from '../../apis/rest';
-import { GENDERS, GRADES, GROUPS, GROUPS_, RANKS } from '../../config/consts';
-import { Candidate } from '../../config/types';
-import { useStores } from '../../hooks/useStores';
-import useStyles from '../../styles/detail';
-import Modal from '../Modal';
+import { getResume } from '@apis/rest';
+import Modal from '@components/Modal';
+import { GENDERS, GRADES, GROUPS, GROUPS_, RANKS } from '@config/consts';
+import { Candidate } from '@config/types';
+import { useStores } from '@hooks/useStores';
+import useStyles from '@styles/detail';
 
 interface Props {
     info: Candidate;

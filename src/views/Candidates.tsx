@@ -2,17 +2,17 @@ import { SlideProps } from '@material-ui/core/Slide';
 import { observer } from 'mobx-react-lite';
 import React, { FC, useState } from 'react';
 
-import { removeCandidate } from '../apis/websocket';
-import Board from '../components/Board';
-import Dialog from '../components/Dialog';
-import Fab from '../components/Fab';
-import Modal from '../components/Modal';
-import Slider from '../components/Slider';
-import Template from '../components/SMS';
-import { STEPS } from '../config/consts';
-import { Candidate } from '../config/types';
-import { useStores } from '../hooks/useStores';
-import { teamSort } from '../utils/sortBySlot';
+import { removeCandidate } from '@apis/websocket';
+import Board from '@components/Board';
+import Dialog from '@components/Dialog';
+import Fab from '@components/Fab';
+import Modal from '@components/Modal';
+import Slider from '@components/Slider';
+import Template from '@components/SMS';
+import { STEPS } from '@config/consts';
+import { Candidate } from '@config/types';
+import { useStores } from '@hooks/useStores';
+import { teamSort } from '@utils/sortBySlot';
 
 const Candidates: FC = observer(() => {
     const { $component, $candidate } = useStores();

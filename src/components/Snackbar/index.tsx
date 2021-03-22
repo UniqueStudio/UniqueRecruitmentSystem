@@ -5,8 +5,8 @@ import { observer } from 'mobx-react-lite';
 import { SnackbarProvider } from 'notistack';
 import React, { FC } from 'react';
 
-import { useStores } from '../../hooks/useStores';
-import useStyles from '../../styles/snackbar';
+import { useStores } from '@hooks/useStores';
+import useStyles from '@styles/snackbar';
 
 const Snackbar: FC = observer(({ children }) => {
     const { $component } = useStores();

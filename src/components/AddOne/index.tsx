@@ -7,14 +7,14 @@ import AddIcon from '@material-ui/icons/Add';
 import { observer } from 'mobx-react-lite';
 import React, { ChangeEventHandler, FC, useEffect, useState } from 'react';
 
-import { launchRecruitment } from '../../apis/rest';
-import Verify from '../../components/Verify';
-import { useStores } from '../../hooks/useStores';
-import useStyles from '../../styles/addOne';
-import { getMidnight } from '../../utils/getMidnight';
-import { titleConverter } from '../../utils/titleConverter';
-import Modal from '../Modal';
-import Schedule from '../Schedule';
+import { launchRecruitment } from '@apis/rest';
+import Modal from '@components/Modal';
+import Schedule from '@components/Schedule';
+import Verify from '@components/Verify';
+import { useStores } from '@hooks/useStores';
+import useStyles from '@styles/addOne';
+import { getMidnight } from '@utils/getMidnight';
+import { titleConverter } from '@utils/titleConverter';
 
 const generateTitle = (date: Date) => {
     const year = date.getFullYear().toString();

@@ -17,18 +17,18 @@ import clsx from 'clsx';
 import { observer } from 'mobx-react-lite';
 import React, { ChangeEventHandler, FC, useEffect, useState } from 'react';
 
-import { allocateAll, allocateOne } from '../../apis/rest';
-import Template from '../../components/SMS';
-import { GROUPS, GROUPS_ } from '../../config/consts';
-import { Candidate } from '../../config/types';
-import { useStores } from '../../hooks/useStores';
-import useStyles from '../../styles/data';
-import { Order } from '../../utils/order';
-import { stableSort } from '../../utils/reducerHelper';
-import Modal from '../Modal';
-
 import { EnhancedTableHead, OrderBy } from './header';
 import { compareCandidate } from './order';
+
+import { allocateAll, allocateOne } from '@apis/rest';
+import Modal from '@components/Modal';
+import Template from '@components/SMS';
+import { GROUPS, GROUPS_ } from '@config/consts';
+import { Candidate } from '@config/types';
+import { useStores } from '@hooks/useStores';
+import useStyles from '@styles/data';
+import { Order } from '@utils/order';
+import { stableSort } from '@utils/reducerHelper';
 
 interface Props {
     candidates: Candidate[];

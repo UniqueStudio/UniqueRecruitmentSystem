@@ -9,10 +9,10 @@ import SendIcon from 'mdi-material-ui/Send';
 import { observer } from 'mobx-react-lite';
 import React, { FC, useEffect, useState } from 'react';
 
-import { Candidate } from '../../config/types';
-import { usePrevious } from '../../hooks/usePrevious';
-import { useStores } from '../../hooks/useStores';
-import useStyles from '../../styles/fab';
+import { Candidate } from '@config/types';
+import { usePrevious } from '@hooks/usePrevious';
+import { useStores } from '@hooks/useStores';
+import useStyles from '@styles/fab';
 
 const ButtonGenerator = (content: string, icon: JSX.Element, onClick: () => void, disabled = false) => (
     <SpeedDialAction icon={icon} FabProps={{ disabled }} tooltipTitle={content} onClick={onClick} />

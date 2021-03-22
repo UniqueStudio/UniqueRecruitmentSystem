@@ -14,9 +14,9 @@ import clsx from 'clsx';
 import { observer } from 'mobx-react-lite';
 import React, { FC } from 'react';
 
-import { useStores } from '../../hooks/useStores';
-import useStyles from '../../styles/drawer';
-import Anchor from '../Anchor';
+import Anchor from '@components/Anchor';
+import { useStores } from '@hooks/useStores';
+import useStyles from '@styles/drawer';
 
 const listItems = [
     { to: '/', text: 'Dashboard', icon: <HomeIcon /> },
