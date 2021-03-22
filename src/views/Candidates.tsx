@@ -23,7 +23,6 @@ const Candidates: FC = observer(() => {
     const [step, setStep] = useState(0);
     const [index, setIndex] = useState(-1);
     const [direction, setDirection] = useState<SlideProps['direction']>('left');
-    const [todo, setTodo] = useState(-1);
 
     let candidates: Candidate[][] = [...new Array(STEPS.length)].map(() => []);
     const selectedInfo: Candidate[] = [];
@@ -51,22 +50,27 @@ const Candidates: FC = observer(() => {
         candidates = candidates.map((toSort) => toSort.sort(teamSort));
     }
 
-    const handleNext = (current: number) => {
+    const handleRight = () => {
         setDirection('left');
         setIndex(-1);
-        setTodo(current + 1 === candidates[step].length ? -1 : current + 1);
     };
 
-    const handlePrev = (current: number) => {
+    const handleLeft = () => {
         setDirection('right');
         setIndex(-1);
-        setTodo(Math.max(current - 1, -1));
+    };
+
+    const handleNewIndex = (newIndex: number) => {
+        if (newIndex >= candidates[step].length || newIndex < 0) {
+            setIndex(-1);
+        } else {
+            setIndex(newIndex);
+        }
     };
 
     const toggleDetail = (newStep: number) => (newIndex: number) => () => {
         setStep(newStep);
         setIndex(newIndex);
-        setTodo(-1);
     };
 
     const handleRemove = (toRemove: string[]) => () => {
@@ -82,10 +86,6 @@ const Candidates: FC = observer(() => {
         modal && candidateStore.deselectCandidates(candidateStore.selected);
         if (name === 'modal') setModal((prevModal) => !prevModal);
         if (name === 'dialog') setDialog((prevDialog) => !prevDialog);
-    };
-
-    const handleTodo = () => {
-        setIndex(todo);
     };
 
     return (
@@ -108,9 +108,9 @@ const Candidates: FC = observer(() => {
                     <Slider
                         index={index}
                         candidate={candidates[step][index]}
-                        handlePrev={handlePrev}
-                        handleNext={handleNext}
-                        handleTodo={handleTodo}
+                        handleLeft={handleLeft}
+                        handleRight={handleRight}
+                        handleNextIndex={handleNewIndex}
                     />
                 )}
             </Modal>
