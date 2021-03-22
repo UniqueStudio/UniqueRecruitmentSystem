@@ -1,6 +1,5 @@
 import { makeAutoObservable } from 'mobx';
 
-import { setAuthToken } from '@apis/rest';
 import { QR_CODE_URL } from '@config/consts';
 import { Message, User } from '@config/types';
 import { localStorage, updateStorage } from '@utils/storage';
@@ -30,7 +29,6 @@ export class UserStore {
         } else {
             this.token = '';
         }
-        setAuthToken(this.token);
         makeAutoObservable(this);
     }
 
@@ -45,13 +43,11 @@ export class UserStore {
     setToken(token: string) {
         this.token = token;
         localStorage.setItem('token', this.token);
-        setAuthToken(this.token);
     }
 
     logout() {
         localStorage.removeItem('token');
         this.token = '';
-        setAuthToken(this.token);
     }
 
     setUserInfo(userInfo: Partial<User>) {
