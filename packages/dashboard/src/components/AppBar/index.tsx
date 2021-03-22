@@ -6,6 +6,7 @@ import MenuIcon from '@material-ui/icons/Menu';
 import PersonIcon from '@material-ui/icons/Person';
 import RefreshIcon from '@material-ui/icons/Refresh';
 import clsx from 'clsx';
+import { clear } from 'idb-keyval';
 import { observer } from 'mobx-react-lite';
 import React, { ChangeEventHandler, FC, MouseEventHandler, useContext, useMemo, useState } from 'react';
 import { useLocation } from 'react-router-dom';
@@ -64,8 +65,9 @@ const Bar: FC = observer(() => {
     };
 
     const refresh = () => {
+        void clear();
         localStorage.clear();
-        globalThis.location.reload();
+        location.reload();
     };
 
     const pathToTitle = {

@@ -1,9 +1,7 @@
-import { makeAutoObservable } from 'mobx';
+import { set } from 'idb-keyval';
+import { makeAutoObservable, toJS } from 'mobx';
 
 import { Candidate, Comment, Group, Step } from '@config/types';
-import { updateStorage } from '@utils/storage';
-
-const update = updateStorage('candidates');
 
 export class CandidateStore {
     candidates: Candidate[] = [];
@@ -24,7 +22,7 @@ export class CandidateStore {
             return;
         }
         candidate.comments.push(comment);
-        update(this.candidates);
+        void set('candidates', toJS(this.candidates));
     }
 
     removeComment(cid: string, id: string) {
@@ -33,18 +31,18 @@ export class CandidateStore {
             return;
         }
         candidate.comments = candidate.comments.filter(({ _id }) => _id !== id);
-        update(this.candidates);
+        void set('candidates', toJS(this.candidates));
     }
 
     addCandidates(candidates: Candidate[]) {
         this.candidates = candidates;
         this.deselectAll();
-        update(this.candidates);
+        void set('candidates', candidates);
     }
 
     addCandidate(candidate: Candidate) {
         this.candidates.push(candidate);
-        update(this.candidates);
+        void set('candidates', toJS(this.candidates));
     }
 
     selectCandidate(id: string) {
@@ -74,7 +72,7 @@ export class CandidateStore {
     removeCandidate(id: string) {
         this.candidates = this.candidates.filter(({ _id }) => _id !== id);
         this.deselectCandidate(id);
-        update(this.candidates);
+        void set('candidates', toJS(this.candidates));
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -84,7 +82,7 @@ export class CandidateStore {
             return;
         }
         candidate.step = to;
-        update(this.candidates);
+        void set('candidates', toJS(this.candidates));
     }
 
     setGroup(group: Group) {
@@ -105,7 +103,7 @@ export class CandidateStore {
             return;
         }
         candidate.interviews[interviewType].allocation = time;
-        update(this.candidates);
+        void set('candidates', toJS(this.candidates));
     }
 
     allocateAll(allocations: { id: string; time: number }[], interviewType: 'group' | 'team') {
@@ -116,6 +114,6 @@ export class CandidateStore {
             }
             candidate.interviews[interviewType].allocation = time;
         });
-        update(this.candidates);
+        void set('candidates', toJS(this.candidates));
     }
 }

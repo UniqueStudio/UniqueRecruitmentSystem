@@ -1,19 +1,14 @@
-import { Candidate, Recruitment, User } from '@config/types';
+/*
+ * There are two storages in our dashboard, the first is IndexedDB and the second is LocalStorage.
+ * To avoid (manual) serialization, objects are stored in IDB and plain strings are stored in LocalStorage.
+ */
 
-interface LocalStorageRecord extends Record<string, unknown> {
+interface LocalStorageRecord {
     token: string;
-    candidates: Candidate[];
     viewing: string;
-    user: User;
-    group: User[];
-    recruitments: Recruitment[];
 }
 
-type StringKeyOf<T> = Extract<keyof T, string>;
-
-const stringify = <T>(data: T) => (typeof data === 'string' ? data : JSON.stringify(data));
-
-export class TypedStorage<T extends Record<string, unknown>> {
+export class TypedStorage<T extends string> {
     private storage: Storage;
 
     constructor(storage: Storage) {
@@ -36,30 +31,21 @@ export class TypedStorage<T extends Record<string, unknown>> {
         this.storage.clear();
     }
 
-    getItem<K extends StringKeyOf<T>>(key: K): T[K] | null {
-        const item = this.storage.getItem(key);
-        try {
-            return item ? (JSON.parse(item) as T[K]) : null;
-        } catch (e) {
-            return (item as unknown) as T[K];
-        }
+    getItem(key: T) {
+        return this.storage.getItem(key);
     }
 
     key(index: number) {
-        return this.storage.key(index) as StringKeyOf<T> | null;
+        return this.storage.key(index) as T | null;
     }
 
-    removeItem(key: StringKeyOf<T>): void {
+    removeItem(key: T): void {
         this.storage.removeItem(key);
     }
 
-    setItem<K extends StringKeyOf<T>>(key: K, value: T[K]) {
-        this.storage.setItem(key, stringify(value));
+    setItem(key: T, value: string) {
+        this.storage.setItem(key, value);
     }
 }
 
-// export const sessionStorage = new TypedStorage<SessionStorageRecord>(globalThis.sessionStorage);
-export const localStorage = new TypedStorage<LocalStorageRecord>(globalThis.localStorage);
-
-export const updateStorage = <K extends StringKeyOf<LocalStorageRecord>>(name: K) => (data: LocalStorageRecord[K]) =>
-    localStorage.setItem(name, data);
+export const localStorage = new TypedStorage<keyof LocalStorageRecord>(globalThis.localStorage);
