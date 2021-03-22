@@ -1,5 +1,7 @@
-import React, { ChangeEventHandler, FC, memo, MouseEventHandler, useMemo } from 'react';
+import React, { ChangeEventHandler, FC, MouseEventHandler, useMemo } from 'react';
 import { Draggable, DraggableProvided } from 'react-beautiful-dnd';
+
+import { observer } from 'mobx-react-lite';
 
 import Card from '@material-ui/core/Card';
 import Checkbox from '@material-ui/core/Checkbox';
@@ -19,9 +21,9 @@ import useTheme from '@material-ui/core/styles/useTheme';
 import useMediaQuery from '@material-ui/core/useMediaQuery/useMediaQuery';
 
 import { GRADES, GROUPS, GROUPS_ } from '../../config/consts';
-import { Evaluation } from '../../config/types';
+import { Candidate as CandidateType, Evaluation } from '../../config/types';
 
-import { Props } from '../../containers/Card';
+import { useStores } from '../../hooks/useStores';
 import useStyles from '../../styles/card';
 
 const getProportion = (evaluations: Evaluation[]) => {
@@ -36,19 +38,15 @@ const genderIcons = [
     <Female htmlColor={pink[500]} fontSize='small' />,
 ];
 
-const CandidateCard: FC<Props> = memo((props) => {
-    const {
-        candidate,
-        disabled,
-        checked,
-        isTeamInterview,
-        index,
-        toggleFabOn,
-        select,
-        deselect,
-        toggleDetail,
-        changeInputting,
-    } = props;
+interface Props {
+    candidate: CandidateType;
+    index: number;
+    isTeamInterview: boolean;
+    toggleDetail: () => void;
+}
+
+const CandidateCard: FC<Props> = observer(({ candidate, isTeamInterview, index, toggleDetail }) => {
+    const { candidateStore, componentStateStore } = useStores();
     const {
         name,
         grade,
@@ -74,18 +72,21 @@ const CandidateCard: FC<Props> = memo((props) => {
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('xs'));
 
+    const checked = candidateStore.selected.includes(_id);
+    const disabled = candidateStore.selected.length !== 0 && componentStateStore.fabOn !== step;
+
     const handleCheck: ChangeEventHandler<HTMLInputElement> = ({ target }) => {
         if (target.checked) {
-            select(_id);
-            toggleFabOn(step);
+            candidateStore.selectCandidate(_id);
+            componentStateStore.toggleFabOn(step);
         } else {
-            deselect(_id);
+            candidateStore.deselectCandidate(_id);
         }
     };
 
     const handleToggle = () => {
         toggleDetail();
-        changeInputting('', 2);
+        componentStateStore.recordInputtingComment(2, '');
     };
 
     const stopPropagation: MouseEventHandler = (event) => event.stopPropagation();

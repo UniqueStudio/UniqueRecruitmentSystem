@@ -1,4 +1,6 @@
-import React, { ChangeEventHandler, FC, memo, useEffect, useState } from 'react';
+import React, { ChangeEventHandler, FC, useEffect, useState } from 'react';
+
+import { observer } from 'mobx-react-lite';
 
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
@@ -10,11 +12,12 @@ import AddIcon from '@material-ui/icons/Add';
 import Modal from '../Modal';
 import Schedule from '../Schedule';
 
-import { Props } from '../../containers/AddOne';
-import Verify from '../../containers/Verify';
+import Verify from '../../components/Verify';
 
 import useStyles from '../../styles/addOne';
 
+import { launchRecruitment } from '../../apis/rest';
+import { useStores } from '../../hooks/useStores';
 import { getMidnight } from '../../utils/getMidnight';
 import { titleConverter } from '../../utils/titleConverter';
 
@@ -37,9 +40,16 @@ const initialState = () => {
     };
 };
 
-const AddOne: FC<Props> = memo(({ disabled, enqueueSnackbar, launchRecruitment, shouldClear }) => {
+interface Props {
+    shouldClear: boolean;
+}
+
+const AddOne: FC<Props> = observer(({ shouldClear }) => {
     const classes = useStyles();
+    const { componentStateStore, userStore } = useStores();
     const [{ modal, title, begin, end, stop, code }, setState] = useState(initialState());
+
+    const disabled = !(userStore.info.isCaptain || userStore.info.isAdmin);
 
     useEffect(() => {
         if (shouldClear) {
@@ -47,20 +57,20 @@ const AddOne: FC<Props> = memo(({ disabled, enqueueSnackbar, launchRecruitment, 
         }
     }, [shouldClear]);
 
-    const handleLaunch = () => {
+    const handleLaunch = async () => {
         if (!code || !begin || !end || !stop || !title) {
-            enqueueSnackbar('请完整填写信息！', { variant: 'warning' });
+            componentStateStore.enqueueSnackbar('请完整填写信息！', 'warning');
             return;
         }
         if (begin >= stop) {
-            enqueueSnackbar('截止时间必须大于开始时间！', { variant: 'warning' });
+            componentStateStore.enqueueSnackbar('截止时间必须大于开始时间！', 'warning');
             return;
         }
         if (stop >= end) {
-            enqueueSnackbar('结束时间必须大于截止时间！', { variant: 'warning' });
+            componentStateStore.enqueueSnackbar('结束时间必须大于截止时间！', 'warning');
             return;
         }
-        launchRecruitment({
+        await launchRecruitment({
             title,
             begin: getMidnight(begin),
             end: getMidnight(end),

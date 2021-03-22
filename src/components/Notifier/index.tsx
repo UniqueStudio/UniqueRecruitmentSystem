@@ -1,35 +1,25 @@
-import { FC, memo, useEffect, useState } from 'react';
+import { autorun } from 'mobx';
+import { SnackbarKey, useSnackbar } from 'notistack';
+import { useEffect, useState } from 'react';
 
-import { withSnackbar, WithSnackbarProps } from 'notistack';
+import { useStores } from '../../hooks/useStores';
 
-import { Props } from '../../containers/Notifier';
-
-const Notifier: FC<Props & WithSnackbarProps> = memo(
-    ({ notifications = [], enqueueSnackbar, removeSnackbar }) => {
-        const [displayed, setDisplayed] = useState<number[]>([]);
-
-        const storeDisplayed = (id: number) => {
-            setDisplayed((prevDisplayed) => [...prevDisplayed, id]);
-        };
-
-        useEffect(() => {
-            notifications.forEach(({ key, message, options }) => {
+const Notifier = () => {
+    const [displayed, setDisplayed] = useState<SnackbarKey[]>([]);
+    const { componentStateStore } = useStores();
+    const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+    useEffect(() => {
+        autorun(() => {
+            Object.entries(componentStateStore.snackbars).forEach(([key, { options, message }]) => {
                 if (displayed.includes(key)) return;
                 enqueueSnackbar(message, options);
-                storeDisplayed(key);
-                removeSnackbar(key);
+                setDisplayed((prevDisplayed) => [...prevDisplayed, key]);
+                componentStateStore.removeSnackbar(key);
+                closeSnackbar(key);
             });
-            // eslint-disable-next-line
-        }, [notifications]);
+        });
+    }, []);
+    return null;
+};
 
-        return null;
-    },
-    ({ notifications: prevSnacks }, { notifications: nextSnacks }) => {
-        for (const snack of nextSnacks) {
-            if (!prevSnacks.find(({ key }) => snack.key === key)) return false;
-        }
-        return true;
-    },
-);
-
-export default withSnackbar(Notifier);
+export default Notifier;

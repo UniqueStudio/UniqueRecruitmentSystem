@@ -3,13 +3,13 @@ import React, {
     ClipboardEventHandler,
     FC,
     KeyboardEventHandler,
-    memo,
     MouseEventHandler,
     useEffect,
     useState,
 } from 'react';
 
 import clsx from 'clsx';
+import { observer } from 'mobx-react-lite';
 
 import Avatar from '@material-ui/core/Avatar';
 import Chip from '@material-ui/core/Chip';
@@ -26,11 +26,12 @@ import EnlargeableImage from '../EnlargeableImg';
 
 import { Message } from '../../config/types';
 
-import { Props } from '../../containers/Messenger';
-
+import { sendMessage } from '../../apis/websocket';
+import { useStores } from '../../hooks/useStores';
 import useStyles from '../../styles/messenger';
 
-const Messenger: FC<Props> = memo(({ messages, username, avatar, sendMessage, enqueueSnackbar }) => {
+const Messenger: FC = observer(() => {
+    const { userStore, componentStateStore } = useStores();
     const classes = useStyles();
     const [content, setContent] = useState('');
     const [container, setContainer] = useState<Element | null>(null);
@@ -39,15 +40,15 @@ const Messenger: FC<Props> = memo(({ messages, username, avatar, sendMessage, en
         if (container && container.scrollHeight - container.scrollTop < 1000) {
             container.scrollTop = container.scrollHeight;
         }
-    }, [messages, container]);
+    }, [userStore.messages, container]);
 
     const generateMessage = (message: string | ArrayBuffer | null, isImage = false) => ({
         content: (message || '').toString(),
         isSelf: true,
         time: Date.now(),
         isImage,
-        name: username,
-        avatar,
+        name: userStore.info.username,
+        avatar: userStore.info.avatar,
     });
 
     const handleKey: KeyboardEventHandler = (event) => {
@@ -86,17 +87,17 @@ const Messenger: FC<Props> = memo(({ messages, username, avatar, sendMessage, en
 
     const handleImage: ChangeEventHandler<HTMLInputElement> = ({ target: { files } }) => {
         if (!files) {
-            enqueueSnackbar('你没有上传任何图片', { variant: 'info' });
+            componentStateStore.enqueueSnackbar('你没有上传任何图片', 'info');
             return;
         }
         const file = files[0];
         const extension = file.name.split('.').slice(-1)[0];
         if (!['jpg', 'jpeg', 'png'].includes(extension)) {
-            enqueueSnackbar('请上传jpg或png类型的图片', { variant: 'info' });
+            componentStateStore.enqueueSnackbar('请上传jpg或png类型的图片', 'info');
             return;
         }
         if (file.size > 1024 * 1024 * 5) {
-            enqueueSnackbar('图片大小必须小于5MB', { variant: 'info' });
+            componentStateStore.enqueueSnackbar('图片大小必须小于5MB', 'info');
             return;
         }
         const reader = new FileReader();
@@ -111,7 +112,7 @@ const Messenger: FC<Props> = memo(({ messages, username, avatar, sendMessage, en
     };
 
     const plusOne = () => {
-        const last = messages[messages.length - 1];
+        const last = userStore.messages[userStore.messages.length - 1];
         if (last) {
             sendMessage(generateMessage(last.content, last.isImage));
         }
@@ -155,7 +156,7 @@ const Messenger: FC<Props> = memo(({ messages, username, avatar, sendMessage, en
     return (
         <Paper className={classes.messenger}>
             <div className={classes.messages} ref={setContainer}>
-                {messages.map((message, index) => (
+                {userStore.messages.map((message, index) => (
                     <div key={index} className={clsx(classes.messageContainer, { [classes.my]: message.isSelf })}>
                         {AvatarBox(message)}
                         <Chip
@@ -181,7 +182,11 @@ const Messenger: FC<Props> = memo(({ messages, username, avatar, sendMessage, en
                             <InsertPhotoIcon />
                         </IconButton>
                     </label>
-                    <IconButton color='primary' component='span' onClick={plusOne} disabled={!messages.length}>
+                    <IconButton
+                        color='primary'
+                        component='span'
+                        onClick={plusOne}
+                        disabled={!userStore.messages.length}>
                         <PlusOneIcon />
                     </IconButton>
                     <TextField

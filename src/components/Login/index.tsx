@@ -1,5 +1,7 @@
-import React, { ChangeEventHandler, FC, FormEventHandler, memo, useState } from 'react';
+import React, { ChangeEventHandler, FC, FormEventHandler, useState } from 'react';
 import { Redirect } from 'react-router-dom';
+
+import { observer } from 'mobx-react-lite';
 
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
@@ -9,24 +11,26 @@ import Progress from '../Progress';
 
 import { QR_CODE_URL } from '../../config/consts';
 
-import { Props } from '../../containers/Login';
-
 import logo from '../../images/logo.png';
 
+import { loginViaPassword, loginViaQRCode } from '../../apis/rest';
+import { useStores } from '../../hooks/useStores';
 import useStyles from '../../styles/login';
 
-const Login: FC<Props> = memo(({ loggedIn, isScanning, getQRCode, isLoading, weChatKey, login }) => {
+const Login: FC = observer(() => {
+    const { userStore, componentStateStore } = useStores();
+
     const classes = useStyles();
     const [phone, setPhone] = useState('');
     const [password, setPassword] = useState('');
     const [method, setMethod] = useState(0);
-    if (loggedIn) {
+    if (userStore.token) {
         return <Redirect to='/' />;
     }
     const handleLogin: FormEventHandler = (event) => {
         // use preventDefault to disable HTML form's auto redirect
         event.preventDefault();
-        login(phone, password);
+        return loginViaPassword(phone, password);
     };
 
     const handleMethod = (newMethod: number) => () => {
@@ -63,14 +67,14 @@ const Login: FC<Props> = memo(({ loggedIn, isScanning, getQRCode, isLoading, weC
     );
     const ByQRCode = (
         <>
-            {weChatKey && <img src={`${QR_CODE_URL}${weChatKey}`} alt='This is QRCode' />}
+            {userStore.qrCodePath && <img src={`${QR_CODE_URL}${userStore.qrCodePath}`} alt='This is QRCode' />}
             <Button
                 className={classes.button}
                 variant='contained'
                 color='default'
                 size='large'
-                onClick={getQRCode}
-                disabled={isScanning}>
+                onClick={loginViaQRCode}
+                disabled={!!userStore.qrCodePath}>
                 获取二维码
             </Button>
             <Button
@@ -118,7 +122,7 @@ const Login: FC<Props> = memo(({ loggedIn, isScanning, getQRCode, isLoading, weC
                     {[ChooseMethod, ByQRCode, ByPassword][method]}
                 </form>
             </Modal>
-            {isLoading && <Progress />}
+            {componentStateStore.progressOn && <Progress />}
         </div>
     );
 });

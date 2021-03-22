@@ -1,6 +1,8 @@
-import React, { ChangeEventHandler, FC, memo, MouseEventHandler, useContext, useMemo, useState } from 'react';
+import React, { ChangeEventHandler, MouseEventHandler, useContext, useMemo, useState } from 'react';
+import { RouteComponentProps, withRouter } from 'react-router-dom';
 
 import clsx from 'clsx';
+import { observer } from 'mobx-react-lite';
 
 import AppBar from '@material-ui/core/AppBar';
 import Collapse from '@material-ui/core/Collapse';
@@ -19,25 +21,28 @@ import RefreshIcon from '@material-ui/icons/Refresh';
 import Modal from '../Modal';
 import Select from '../Select';
 
+import Messenger from '../../components/Messenger';
 import { GROUPS, GROUPS_ } from '../../config/consts';
 import { Group } from '../../config/types';
-
-import { Props } from '../../containers/AppBar';
-import Messenger from '../../containers/Messenger';
 
 import useStyles from '../../styles/appBar';
 import { ThemeContext } from '../../styles/withRoot';
 
+import { useStores } from '../../hooks/useStores';
 import { localStorage } from '../../utils/storage';
 import { titleConverter } from '../../utils/titleConverter';
 
-const Bar: FC<Props> = memo(
-    ({ open, location: { pathname }, group, title, steps, logout, setSteps, setGroup, toggleDrawer }) => {
+const Bar = withRouter(
+    observer(({ location: { pathname } }: RouteComponentProps) => {
         const classes = useStyles();
+        const { componentStateStore, userStore, candidateStore, recruitmentStore } = useStores();
         const [anchorEl, setAnchorEl] = useState<Element | null>(null);
         const [modal, setModal] = useState(false);
         const [messenger, setMessenger] = useState(false);
         const { darkMode, setDarkMode } = useContext(ThemeContext);
+
+        const title = titleConverter(recruitmentStore.viewing);
+        const open = componentStateStore.drawerOpen;
 
         const handleClick: MouseEventHandler = ({ currentTarget }) => {
             setAnchorEl(currentTarget);
@@ -49,14 +54,14 @@ const Bar: FC<Props> = memo(
 
         const handleLogout = () => {
             handleClose();
-            logout();
+            userStore.logout();
         };
 
         const handleChange = (type: 'group' | 'step'): ChangeEventHandler<{ name?: string; value: unknown }> => ({
             target: { value },
         }) => {
-            type === 'group' && setGroup(value as Group);
-            type === 'step' && setSteps(+(value as string));
+            type === 'group' && candidateStore.setGroup(value as Group);
+            type === 'step' && candidateStore.setSteps(+(value as string));
         };
 
         const toggleModal = () => {
@@ -72,7 +77,6 @@ const Bar: FC<Props> = memo(
             globalThis.location.reload();
         };
 
-        title = titleConverter(title);
         const pathToTitle = {
             // tslint:disable-next-line:whitespace TODO: remove this after migrating to eslint
             '/': `Unique Studio Recruitment Dashboard v${import.meta.env.SNOWPACK_PUBLIC_VERSION}`,
@@ -129,7 +133,7 @@ const Bar: FC<Props> = memo(
                             () => (
                                 <IconButton
                                     color='inherit'
-                                    onClick={toggleDrawer}
+                                    onClick={componentStateStore.toggleDrawer}
                                     className={clsx(classes.menuButton, { [classes.hide]: open })}>
                                     <MenuIcon />
                                 </IconButton>
@@ -146,14 +150,14 @@ const Bar: FC<Props> = memo(
                                     data={['全部', '群面']}
                                     values={[0, 1]}
                                     onChange={handleChange('step')}
-                                    currentValue={steps.length === 6 ? 0 : 1}
+                                    currentValue={candidateStore.steps.length === 6 ? 0 : 1}
                                 />
-                                {steps.length === 6 && (
+                                {candidateStore.steps.length === 6 && (
                                     <Select
                                         data={GROUPS}
                                         values={GROUPS_}
                                         onChange={handleChange('group')}
-                                        currentValue={group}
+                                        currentValue={candidateStore.group}
                                     />
                                 )}
                             </>
@@ -194,7 +198,7 @@ const Bar: FC<Props> = memo(
                 </Modal>
             </>
         );
-    },
+    }),
 );
 
 export default Bar;

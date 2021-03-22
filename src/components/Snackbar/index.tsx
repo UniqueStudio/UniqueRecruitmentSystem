@@ -1,4 +1,4 @@
-import React, { FC, memo } from 'react';
+import React, { FC } from 'react';
 
 import clsx from 'clsx';
 
@@ -7,11 +7,12 @@ import { SnackbarProvider } from 'notistack';
 import useTheme from '@material-ui/core/styles/useTheme';
 import useMediaQuery from '@material-ui/core/useMediaQuery/useMediaQuery';
 
-import { Props } from '../../containers/Snackbar';
-
+import { observer } from 'mobx-react-lite';
+import { useStores } from '../../hooks/useStores';
 import useStyles from '../../styles/snackbar';
 
-const Snackbar: FC<Props> = memo(({ children, fabOn }) => {
+const Snackbar: FC = observer(({ children }) => {
+    const { componentStateStore } = useStores();
     const classes = useStyles();
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('xs'));
@@ -25,7 +26,7 @@ const Snackbar: FC<Props> = memo(({ children, fabOn }) => {
                 variantInfo: classes.info,
             }}
             autoHideDuration={3000}
-            className={clsx(classes.snackBar, { [classes.shrink]: fabOn !== -1 && isMobile })}>
+            className={clsx(classes.snackBar, { [classes.shrink]: componentStateStore.fabOn !== -1 && isMobile })}>
             <>{children}</>
         </SnackbarProvider>
     );

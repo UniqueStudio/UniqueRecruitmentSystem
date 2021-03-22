@@ -1,21 +1,10 @@
-import { createBrowserHistory as createHistory } from 'history';
+import { createBrowserHistory } from 'history';
 import React, { FC, memo, useEffect } from 'react';
-import { Provider } from 'react-redux';
-import { BrowserRouter as Router } from 'react-router-dom';
-import { applyMiddleware, createStore } from 'redux';
-import { composeWithDevTools } from 'redux-devtools-extension';
+import { BrowserRouter } from 'react-router-dom';
 
-import { epicMiddleware, epics } from './epics';
-import { reducers } from './reducers';
 import Index from './views/Index';
 
-createHistory();
-
-const middleware = [epicMiddleware];
-
-export const store = createStore(reducers, composeWithDevTools(applyMiddleware(...middleware)));
-
-epicMiddleware.run(epics);
+createBrowserHistory();
 
 const App: FC = memo(() => {
     useEffect(() => {
@@ -23,11 +12,9 @@ const App: FC = memo(() => {
     }, []);
 
     return (
-        <Provider store={store}>
-            <Router>
-                <Index />
-            </Router>
-        </Provider>
+        <BrowserRouter>
+            <Index />
+        </BrowserRouter>
     );
 });
 

@@ -1,23 +1,22 @@
-import React, { FC, lazy, memo, Suspense } from 'react';
+import React, { FC, lazy, Suspense } from 'react';
 import { Route, RouteComponentProps, Switch, withRouter } from 'react-router-dom';
 
+import PageFrame from '../components/Frame';
+import Login from '../components/Login';
+import Notifier from '../components/Notifier';
 import Progress from '../components/Progress';
-
-import PageFrame from '../containers/Frame';
-import Login from '../containers/Login';
-import Notifier from '../containers/Notifier';
-import Snackbar from '../containers/Snackbar';
+import Snackbar from '../components/Snackbar';
 
 import useStyles from '../styles/global';
 import withRoot from '../styles/withRoot';
 
-const Candidates = lazy(() => import('../containers/Candidates'));
-const Dashboard = lazy(() => import('../containers/Dashboard'));
-const Data = lazy(() => import('../containers/Data'));
+const Candidates = lazy(() => import('./Candidates'));
+const Dashboard = lazy(() => import('./Dashboard'));
+const Data = lazy(() => import('./Data'));
 const My = lazy(() => import('./My'));
 const NoMatch = lazy(() => import('./NoMatch'));
 
-const Index: FC = memo(() => {
+const Index: FC = () => {
     useStyles();
     const routeRender = (Component: JSX.Element) => (props: RouteComponentProps) => (
         <PageFrame {...props}>
@@ -39,6 +38,6 @@ const Index: FC = memo(() => {
             </Switch>
         </>
     );
-});
+};
 
 export default withRouter(withRoot(Index));
