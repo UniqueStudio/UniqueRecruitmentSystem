@@ -10,42 +10,57 @@ import { Candidate } from '../../config/types';
 import Comments from '../../components/Comments';
 import Detail from '../../components/Detail';
 
+import { usePrevious } from '../../hooks/usePrevious';
 import { useStores } from '../../hooks/useStores';
 import useStyles from '../../styles/slider';
 
 interface Props {
     index: number;
     candidate: Candidate;
-    handlePrev: (index: number) => void;
-    handleNext: (index: number) => void;
-    handleTodo: () => void;
+    handleLeft: () => void;
+    handleRight: () => void;
+    handleNextIndex: (index: number) => void;
 }
 
-const Slider: FC<Props> = observer(({ candidate: candidateP, handleTodo, handlePrev, handleNext, index }) => {
+enum Direction {
+    L,
+    R,
+}
+
+const Slider: FC<Props> = observer(({ candidate, handleNextIndex, handleLeft, handleRight, index }) => {
     const { componentStateStore } = useStores();
-    const [candidate, setCandidate] = useState(candidateP);
-    useEffect(() => {
-        setCandidate((prevCandidate) => candidate || prevCandidate);
-        return handleTodo;
-    }, [candidate]);
+    const prevCandidate = usePrevious(candidate);
+    const [nextIndex, setNextIndex] = useState(-1);
+    useEffect(
+        () => () => {
+            index < 0 && handleNextIndex(nextIndex);
+        },
+        [index],
+    );
     const classes = useStyles();
 
-    const { _id: cid, comments } = candidate;
+    const { _id: cid, comments } = candidate || prevCandidate;
 
-    const handleClick = (type: string) => () => {
+    const handleClick = (type: Direction) => () => {
         componentStateStore.recordInputtingComment(2, '');
-        type === 'prev' ? handlePrev(index) : handleNext(index);
+        if (type === Direction.L) {
+            handleLeft();
+            setNextIndex(index - 1);
+        } else {
+            handleRight();
+            setNextIndex(index + 1);
+        }
     };
     return (
         <div className={classes.detailContent}>
-            <IconButton className={classes.leftButton} onClick={handleClick('prev')}>
+            <IconButton className={classes.leftButton} onClick={handleClick(Direction.L)}>
                 <ExpandMoreIcon />
             </IconButton>
             <div className={classes.detailMain}>
-                <Detail info={candidate} />
+                <Detail info={candidate || prevCandidate} />
                 <Comments cid={cid} comments={comments} />
             </div>
-            <IconButton className={classes.rightButton} onClick={handleClick('next')}>
+            <IconButton className={classes.rightButton} onClick={handleClick(Direction.R)}>
                 <ExpandMoreIcon />
             </IconButton>
         </div>
