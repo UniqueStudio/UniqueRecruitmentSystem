@@ -1,4 +1,4 @@
-import React, { ChangeEventHandler, FC, memo, useState } from 'react';
+import React, { ChangeEventHandler, FC, useState } from 'react';
 
 import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
@@ -7,14 +7,16 @@ import Typography from '@material-ui/core/Typography';
 
 import { GENDERS, GROUPS, GROUPS_ } from '../../config/consts';
 
-import { Props } from '../../containers/User';
-
 import useStyles from '../../styles/user';
 
+import { observer } from 'mobx-react-lite';
+import { setUserInfo } from '../../apis/rest';
+import { useStores } from '../../hooks/useStores';
 import { titleConverter } from '../../utils/titleConverter';
 
-const User: FC<Props> = memo(({ userInfo, enqueueSnackbar, submitInfo }) => {
-    const { username, gender, group, isAdmin, isCaptain, phone: phoneP, mail: mailP, joinTime } = userInfo;
+const User: FC = observer(() => {
+    const { userStore, componentStateStore } = useStores();
+    const { username, gender, group, isAdmin, isCaptain, phone: phoneP, mail: mailP, joinTime } = userStore.info;
     const classes = useStyles();
     const [data, setData] = useState({
         phone: phoneP,
@@ -44,18 +46,18 @@ const User: FC<Props> = memo(({ userInfo, enqueueSnackbar, submitInfo }) => {
 
     const submitChange = () => {
         if (mail === mailP && phone === phoneP && !password) {
-            enqueueSnackbar('你没有做任何更改！', { variant: 'info' });
+            componentStateStore.enqueueSnackbar('你没有做任何更改！', 'info');
             return;
         }
         if (!checkMail(mail)) {
-            enqueueSnackbar('邮箱格式不正确！', { variant: 'warning' });
+            componentStateStore.enqueueSnackbar('邮箱格式不正确！', 'warning');
             return;
         }
         if (!checkPhone(phone)) {
-            enqueueSnackbar('手机号码格式不正确！', { variant: 'warning' });
+            componentStateStore.enqueueSnackbar('手机号码格式不正确！', 'warning');
             return;
         }
-        submitInfo({ phone, mail, password });
+        return setUserInfo({ phone, mail, password });
     };
 
     const textFields = [

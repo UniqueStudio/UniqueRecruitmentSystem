@@ -1,4 +1,4 @@
-import React, { ChangeEventHandler, FC, memo, useState } from 'react';
+import React, { ChangeEventHandler, FC, useState } from 'react';
 
 import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
@@ -10,15 +10,24 @@ import Stepper from '@material-ui/core/Stepper';
 import Detail from './Detail';
 import Picker from './Picker';
 
-import { Props } from '../../containers/SMS';
-import Verify from '../../containers/Verify';
+import Verify from '../../components/Verify';
 
+import { observer } from 'mobx-react-lite';
+import { sendSMS } from '../../apis/rest';
+import { Candidate } from '../../config/types';
+import { useStores } from '../../hooks/useStores';
 import useStyles from '../../styles/sms';
 
-const SMSTemplate: FC<Props> = memo(({ toggleOpen, enqueueSnackbar, selected: selectedP, sendSMS, deselect }) => {
+interface Props {
+    selected: Candidate[];
+    toggleOpen: () => void;
+    deselect: boolean;
+}
+
+const SMSTemplate: FC<Props> = observer(({ toggleOpen, selected: selectedP, deselect = false }) => {
+    const { componentStateStore, candidateStore } = useStores();
     const classes = useStyles();
     const [activeStep, setActiveStep] = useState(0);
-    // maintain `selected` state when `deselect` is not provided
     const [selected, setSelected] = useState(selectedP);
     const [content, setContent] = useState({
         type: 'accept',
@@ -36,7 +45,7 @@ const SMSTemplate: FC<Props> = memo(({ toggleOpen, enqueueSnackbar, selected: se
 
     const handleSend = () => {
         if (code === '') {
-            enqueueSnackbar('请填写验证码！', { variant: 'warning' });
+            componentStateStore.enqueueSnackbar('请填写验证码！', 'warning');
             return;
         }
 
@@ -49,22 +58,22 @@ const SMSTemplate: FC<Props> = memo(({ toggleOpen, enqueueSnackbar, selected: se
         if (activeStep === 1) {
             if (type === 'group' || type === 'team') {
                 if (!place) {
-                    enqueueSnackbar('请填写地点！', { variant: 'warning' });
+                    componentStateStore.enqueueSnackbar('请填写地点！', 'warning');
                     return;
                 }
             } else if (step === -1) {
-                enqueueSnackbar('请选择流程！', { variant: 'warning' });
+                componentStateStore.enqueueSnackbar('请选择流程！', 'warning');
                 return;
             } else if (next === -1) {
-                enqueueSnackbar('请选择下一轮！', { variant: 'warning' });
+                componentStateStore.enqueueSnackbar('请选择下一轮！', 'warning');
                 return;
             } else if ((next === 1 || next === 3) && type === 'accept' && !rest) {
                 if (!time) {
-                    enqueueSnackbar('请填写时间！', { variant: 'warning' });
+                    componentStateStore.enqueueSnackbar('请填写时间！', 'warning');
                     return;
                 }
                 if (!place) {
-                    enqueueSnackbar('请填写地点！', { variant: 'warning' });
+                    componentStateStore.enqueueSnackbar('请填写地点！', 'warning');
                     return;
                 }
             }
@@ -74,7 +83,7 @@ const SMSTemplate: FC<Props> = memo(({ toggleOpen, enqueueSnackbar, selected: se
 
     const handleDelete = (cid: string) => () => {
         setSelected((prevSelected) => prevSelected.filter(({ _id }) => _id !== cid));
-        deselect && deselect(cid);
+        deselect && candidateStore.deselectCandidate(cid);
     };
 
     const handleChange = (name: string): ChangeEventHandler<HTMLInputElement> => ({ target: { value } }) => {

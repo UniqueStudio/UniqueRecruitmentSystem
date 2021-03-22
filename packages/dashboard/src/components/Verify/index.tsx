@@ -1,15 +1,19 @@
-import React, { FC, memo, useEffect, useState } from 'react';
+import React, { ChangeEventHandler, FC, memo, useEffect, useState } from 'react';
 
 import clsx from 'clsx';
 
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 
-import { Props } from '../../containers/Verify';
-
+import { getVerifyCode } from '../../apis/rest';
 import useStyles from '../../styles/verify';
 
-const Verify: FC<Props> = memo(({ onChange, code, getVerifyCode }) => {
+interface Props {
+    code: string;
+    onChange: ChangeEventHandler<HTMLInputElement>;
+}
+
+const Verify: FC<Props> = memo(({ onChange, code }) => {
     const classes = useStyles();
     const [time, setTime] = useState(0);
     const [handle, setHandle] = useState(NaN);

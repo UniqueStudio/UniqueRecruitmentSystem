@@ -1,6 +1,7 @@
 import React, { FC } from 'react';
 
 import clsx from 'clsx';
+import { observer } from 'mobx-react-lite';
 
 import Divider from '@material-ui/core/Divider';
 import Drawer from '@material-ui/core/Drawer';
@@ -15,8 +16,7 @@ import HomeIcon from '@material-ui/icons/Home';
 import PeopleIcon from '@material-ui/icons/People';
 import PieChartIcon from '@material-ui/icons/PieChart';
 
-import { Props } from '../../containers/Drawer';
-
+import { useStores } from '../../hooks/useStores';
 import useStyles from '../../styles/drawer';
 
 import Anchor from '../Anchor';
@@ -28,16 +28,17 @@ const listItems = [
     { to: '/my', text: '组员信息', icon: <PeopleIcon /> },
 ];
 
-const Menu: FC<Props> = ({ open, toggleOpen }) => {
+const Menu: FC = observer(() => {
+    const { componentStateStore } = useStores();
     const classes = useStyles();
 
     return (
         <Drawer
             variant='permanent'
-            classes={{ paper: clsx(classes.drawerPaper, !open && classes.drawerPaperClose) }}
-            open={open}>
+            classes={{ paper: clsx(classes.drawerPaper, !componentStateStore.drawerOpen && classes.drawerPaperClose) }}
+            open={componentStateStore.drawerOpen}>
             <div className={classes.toolbar}>
-                <IconButton onClick={toggleOpen}>
+                <IconButton onClick={componentStateStore.toggleDrawer}>
                     <ChevronLeftIcon />
                 </IconButton>
             </div>
@@ -45,7 +46,9 @@ const Menu: FC<Props> = ({ open, toggleOpen }) => {
             <List>
                 {listItems.map(({ to, text, icon }, index) => (
                     <Anchor to={to} key={index}>
-                        <ListItem button onClick={open ? toggleOpen : undefined}>
+                        <ListItem
+                            button
+                            onClick={componentStateStore.drawerOpen ? componentStateStore.toggleDrawer : undefined}>
                             <ListItemIcon className={classes.icon}>{icon}</ListItemIcon>
                             <ListItemText primary={text} />
                         </ListItem>
@@ -54,6 +57,6 @@ const Menu: FC<Props> = ({ open, toggleOpen }) => {
             </List>
         </Drawer>
     );
-};
+});
 
 export default Menu;

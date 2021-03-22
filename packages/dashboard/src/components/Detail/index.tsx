@@ -1,4 +1,6 @@
-import React, { FC, memo, useState } from 'react';
+import React, { FC, useState } from 'react';
+
+import { observer } from 'mobx-react-lite';
 
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
@@ -7,15 +9,21 @@ import Modal from '../Modal';
 
 import { GENDERS, GRADES, GROUPS, GROUPS_, RANKS } from '../../config/consts';
 
-import { Props } from '../../containers/Detail';
-
+import { getResume } from '../../apis/rest';
+import { Candidate } from '../../config/types';
+import { useStores } from '../../hooks/useStores';
 import useStyles from '../../styles/detail';
 
-const Detail: FC<Props> = memo(({ info, downloadingResume, getResume }) => {
+interface Props {
+    info: Candidate;
+}
+
+const Detail: FC<Props> = observer(({ info }) => {
+    const { componentStateStore } = useStores();
     const classes = useStyles();
     const [modal, setModal] = useState(false);
 
-    const { cid, progress } = downloadingResume;
+    const { cid, progress } = componentStateStore.resume;
     const {
         _id,
         name,
@@ -62,9 +70,7 @@ const Detail: FC<Props> = memo(({ info, downloadingResume, getResume }) => {
         setModal((prevModal) => !prevModal);
     };
 
-    const downloadResume = () => {
-        getResume(_id);
-    };
+    const downloadResume = () => getResume(_id);
 
     return (
         <>

@@ -1,4 +1,4 @@
-import React, { FC, memo, useMemo, useState } from 'react';
+import React, { ChangeEventHandler, FC, memo, useMemo, useState } from 'react';
 
 import clsx from 'clsx';
 
@@ -23,9 +23,9 @@ import Modal from '../Modal';
 
 import { GROUPS, GROUPS_ } from '../../config/consts';
 
-import Template from '../../containers/SMS';
-import { Props } from '../../containers/Table';
+import Template from '../../components/SMS';
 
+import { allocateAll, allocateOne } from '../../apis/rest';
 import { Candidate } from '../../config/types';
 import useStyles from '../../styles/data';
 import { Order } from '../../utils/order';
@@ -33,7 +33,13 @@ import { stableSort } from '../../utils/reducerHelper';
 import { EnhancedTableHead, OrderBy } from './header';
 import { compareCandidate } from './order';
 
-const CandidateTable: FC<Props> = memo(({ candidates, changeType, interviewType, allocateAll, allocateOne }) => {
+interface Props {
+    candidates: Candidate[];
+    interviewType: 'group' | 'team';
+    changeType: ChangeEventHandler<{ name?: string; value: unknown }>;
+}
+
+const CandidateTable: FC<Props> = memo(({ candidates, changeType, interviewType }) => {
     const classes = useStyles();
     const [modal, setModal] = useState(false);
     const [dialog, setDialog] = useState(false);
@@ -47,7 +53,7 @@ const CandidateTable: FC<Props> = memo(({ candidates, changeType, interviewType,
     const [orderBy, setOrderBy] = useState<OrderBy>('分配结果');
 
     const handleAllocateOne = () => {
-        allocateOne(cid, time.setMilliseconds(0), interviewType);
+        allocateOne(interviewType, cid, time.setMilliseconds(0));
     };
 
     const handleAllocateAll = () => {
@@ -214,7 +220,11 @@ const CandidateTable: FC<Props> = memo(({ candidates, changeType, interviewType,
                 </div>
             </Dialog>
             <Modal open={modal} onClose={toggleModal} title='发送通知'>
-                <Template toggleOpen={toggleModal} selected={candidates.filter(({ _id }) => checked[_id])} />
+                <Template
+                    toggleOpen={toggleModal}
+                    selected={candidates.filter(({ _id }) => checked[_id])}
+                    deselect={false}
+                />
             </Modal>
         </Paper>
     );
