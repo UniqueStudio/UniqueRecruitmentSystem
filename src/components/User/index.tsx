@@ -1,17 +1,14 @@
-import React, { ChangeEventHandler, FC, useState } from 'react';
-
 import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
-
-import { GENDERS, GROUPS, GROUPS_ } from '../../config/consts';
-
-import useStyles from '../../styles/user';
-
 import { observer } from 'mobx-react-lite';
+import React, { ChangeEventHandler, FC, useState } from 'react';
+
 import { setUserInfo } from '../../apis/rest';
+import { GENDERS, GROUPS, GROUPS_ } from '../../config/consts';
 import { useStores } from '../../hooks/useStores';
+import useStyles from '../../styles/user';
 import { titleConverter } from '../../utils/titleConverter';
 
 const User: FC = observer(() => {
@@ -34,15 +31,12 @@ const User: FC = observer(() => {
         setData((prevData) => ({ ...prevData, [name]: value }));
     };
 
-    const checkMail = (value: string) => {
-        const re = /^(([^<>()[\].,;:\s@"]+(\.[^<>()[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/i;
-        return re.test(value);
-    };
+    const checkMail = (value: string) =>
+        /^(([^<>()[\].,;:\s@"]+(\.[^<>()[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/i.test(
+            value,
+        );
 
-    const checkPhone = (value: string) => {
-        const re = /^1[3-9]\d{9}$/i;
-        return re.test(value);
-    };
+    const checkPhone = (value: string) => /^1[3-9]\d{9}$/i.test(value);
 
     const submitChange = () => {
         if (mail === mailP && phone === phoneP && !password) {

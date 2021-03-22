@@ -1,16 +1,14 @@
-import React, { FC, useEffect, useState } from 'react';
-
 import SpeedDial from '@material-ui/lab/SpeedDial';
 import SpeedDialAction from '@material-ui/lab/SpeedDialAction';
 import SpeedDialIcon from '@material-ui/lab/SpeedDialIcon';
-
 import RemoveIcon from 'mdi-material-ui/AccountRemove';
 import CloseIcon from 'mdi-material-ui/EyeOff';
 import SelectAllIcon from 'mdi-material-ui/SelectAll';
 import SelectInverseIcon from 'mdi-material-ui/SelectInverse';
 import SendIcon from 'mdi-material-ui/Send';
-
 import { observer } from 'mobx-react-lite';
+import React, { FC, useEffect, useState } from 'react';
+
 import { Candidate } from '../../config/types';
 import { usePrevious } from '../../hooks/usePrevious';
 import { useStores } from '../../hooks/useStores';

@@ -1,8 +1,8 @@
-import { makeStyles } from '@material-ui/core';
+import { Color, makeStyles } from '@material-ui/core';
 
 import { getRainbow } from './index';
 
-const colors = (i: number) => {
+const colors = (i: keyof Color) => {
     const colorArray = getRainbow(i);
     const start = ~~(Math.random() * colorArray.length);
     return colorArray.slice(start).concat(colorArray.slice(0, start));

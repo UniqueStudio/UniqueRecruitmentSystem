@@ -1,6 +1,5 @@
-import React, { FC, memo } from 'react';
-
 import LinearProgress from '@material-ui/core/LinearProgress';
+import React, { FC, memo } from 'react';
 
 import useStyles from '../../styles/progress';
 

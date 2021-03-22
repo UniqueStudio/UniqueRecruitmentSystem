@@ -1,14 +1,7 @@
-import amber from '@material-ui/core/colors/amber';
-import blue from '@material-ui/core/colors/blue';
-import cyan from '@material-ui/core/colors/cyan';
-import green from '@material-ui/core/colors/green';
-import indigo from '@material-ui/core/colors/indigo';
-import orange from '@material-ui/core/colors/orange';
-import purple from '@material-ui/core/colors/purple';
-import red from '@material-ui/core/colors/red';
-import yellow from '@material-ui/core/colors/yellow';
+import { Color } from '@material-ui/core';
+import { amber, blue, cyan, green, indigo, orange, purple, red, yellow } from '@material-ui/core/colors';
 
-export const getRainbow = (variant: number) =>
+export const getRainbow = (variant: keyof Color) =>
     [red, purple, indigo, blue, cyan, green, yellow, amber, orange].map((color) => color[variant]);
 
 export const warningColor = amber[700];

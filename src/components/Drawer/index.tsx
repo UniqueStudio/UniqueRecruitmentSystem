@@ -1,8 +1,3 @@
-import React, { FC } from 'react';
-
-import clsx from 'clsx';
-import { observer } from 'mobx-react-lite';
-
 import Divider from '@material-ui/core/Divider';
 import Drawer from '@material-ui/core/Drawer';
 import IconButton from '@material-ui/core/IconButton';
@@ -15,10 +10,12 @@ import DashboardIcon from '@material-ui/icons/Dashboard';
 import HomeIcon from '@material-ui/icons/Home';
 import PeopleIcon from '@material-ui/icons/People';
 import PieChartIcon from '@material-ui/icons/PieChart';
+import clsx from 'clsx';
+import { observer } from 'mobx-react-lite';
+import React, { FC } from 'react';
 
 import { useStores } from '../../hooks/useStores';
 import useStyles from '../../styles/drawer';
-
 import Anchor from '../Anchor';
 
 const listItems = [
@@ -38,7 +35,7 @@ const Menu: FC = observer(() => {
             classes={{ paper: clsx(classes.drawerPaper, !$component.drawerOpen && classes.drawerPaperClose) }}
             open={$component.drawerOpen}>
             <div className={classes.toolbar}>
-                <IconButton onClick={$component.toggleDrawer}>
+                <IconButton onClick={() => $component.toggleDrawer()}>
                     <ChevronLeftIcon />
                 </IconButton>
             </div>
@@ -46,7 +43,7 @@ const Menu: FC = observer(() => {
             <List>
                 {listItems.map(({ to, text, icon }, index) => (
                     <Anchor to={to} key={index}>
-                        <ListItem button onClick={$component.drawerOpen ? $component.toggleDrawer : undefined}>
+                        <ListItem button onClick={$component.drawerOpen ? () => $component.toggleDrawer() : undefined}>
                             <ListItemIcon className={classes.icon}>{icon}</ListItemIcon>
                             <ListItemText primary={text} />
                         </ListItem>

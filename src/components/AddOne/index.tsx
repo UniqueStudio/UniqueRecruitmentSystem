@@ -1,28 +1,23 @@
-import React, { ChangeEventHandler, FC, useEffect, useState } from 'react';
-
-import { observer } from 'mobx-react-lite';
-
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import Paper from '@material-ui/core/Paper';
 import TextField from '@material-ui/core/TextField';
 import Tooltip from '@material-ui/core/Tooltip';
 import AddIcon from '@material-ui/icons/Add';
+import { observer } from 'mobx-react-lite';
+import React, { ChangeEventHandler, FC, useEffect, useState } from 'react';
 
+import { launchRecruitment } from '../../apis/rest';
+import Verify from '../../components/Verify';
+import { useStores } from '../../hooks/useStores';
+import useStyles from '../../styles/addOne';
+import { getMidnight } from '../../utils/getMidnight';
+import { titleConverter } from '../../utils/titleConverter';
 import Modal from '../Modal';
 import Schedule from '../Schedule';
 
-import Verify from '../../components/Verify';
-
-import useStyles from '../../styles/addOne';
-
-import { launchRecruitment } from '../../apis/rest';
-import { useStores } from '../../hooks/useStores';
-import { getMidnight } from '../../utils/getMidnight';
-import { titleConverter } from '../../utils/titleConverter';
-
 const generateTitle = (date: Date) => {
-    const year = date.getFullYear();
+    const year = date.getFullYear().toString();
     const month = date.getMonth() + 1;
     const type = month <= 5 ? 'S' : month >= 9 ? 'A' : 'C';
     return year + type;

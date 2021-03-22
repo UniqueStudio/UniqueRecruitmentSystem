@@ -1,8 +1,7 @@
-import React, { FC, memo } from 'react';
-
 import Modal from '@material-ui/core/Modal';
 import Slide, { SlideProps } from '@material-ui/core/Slide';
 import Typography from '@material-ui/core/Typography';
+import React, { FC, memo } from 'react';
 
 import useStyles from '../../styles/modal';
 

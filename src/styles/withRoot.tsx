@@ -1,10 +1,9 @@
-import React, { ComponentType, createContext, useEffect, useState } from 'react';
-
 import blue from '@material-ui/core/colors/blue';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import { ThemeProvider } from '@material-ui/core/styles';
 import createMuiTheme from '@material-ui/core/styles/createMuiTheme';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
+import React, { ComponentType, createContext, useEffect, useState } from 'react';
 
 interface ContextProps {
     darkMode: boolean;
@@ -46,6 +45,7 @@ const darkTheme = createMuiTheme({
         MuiCheckbox: {
             colorPrimary: {
                 // override the checked checkbox styles
+                // eslint-disable-next-line max-len
                 // ref: https://material-ui.com/customization/components/#use-rulename-to-reference-a-local-rule-within-the-same-style-sheet
                 '&$checked': 'inherit',
             },

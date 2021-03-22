@@ -6,7 +6,6 @@ import Login from '../components/Login';
 import Notifier from '../components/Notifier';
 import Progress from '../components/Progress';
 import Snackbar from '../components/Snackbar';
-
 import useStyles from '../styles/global';
 import withRoot from '../styles/withRoot';
 

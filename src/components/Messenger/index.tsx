@@ -1,16 +1,3 @@
-import React, {
-    ChangeEventHandler,
-    ClipboardEventHandler,
-    FC,
-    KeyboardEventHandler,
-    MouseEventHandler,
-    useEffect,
-    useState,
-} from 'react';
-
-import clsx from 'clsx';
-import { observer } from 'mobx-react-lite';
-
 import Avatar from '@material-ui/core/Avatar';
 import Chip from '@material-ui/core/Chip';
 import Divider from '@material-ui/core/Divider';
@@ -21,14 +8,23 @@ import PlusOneIcon from '@material-ui/icons/ExposurePlus1';
 import FaceIcon from '@material-ui/icons/Face';
 import InsertPhotoIcon from '@material-ui/icons/InsertPhoto';
 import SendIcon from '@material-ui/icons/Send';
-
-import EnlargeableImage from '../EnlargeableImg';
-
-import { Message } from '../../config/types';
+import clsx from 'clsx';
+import { observer } from 'mobx-react-lite';
+import React, {
+    ChangeEventHandler,
+    ClipboardEventHandler,
+    FC,
+    KeyboardEventHandler,
+    MouseEventHandler,
+    useEffect,
+    useState,
+} from 'react';
 
 import { sendMessage } from '../../apis/websocket';
+import { Message } from '../../config/types';
 import { useStores } from '../../hooks/useStores';
 import useStyles from '../../styles/messenger';
+import EnlargeableImage from '../EnlargeableImg';
 
 const Messenger: FC = observer(() => {
     const { $user, $component } = useStores();
@@ -58,14 +54,14 @@ const Messenger: FC = observer(() => {
         }
         if (!ctrlKey && charCode === 13) {
             event.preventDefault();
-            if (content && content.match(/\S+/)) {
+            if (/\S+/.exec(content)) {
                 send();
             }
         }
     };
 
     const handlePaste: ClipboardEventHandler = (event) => {
-        const items = (event.clipboardData || event['originalEvent'].clipboardData).items;
+        const items = event.clipboardData.items;
         let blob = null;
         for (const i of Object.values(items)) {
             if (i.type.indexOf('image') === 0) {
@@ -196,11 +192,7 @@ const Messenger: FC = observer(() => {
                         onKeyPress={handleKey}
                         onPaste={handlePaste}
                     />
-                    <IconButton
-                        color='primary'
-                        component='span'
-                        onClick={send}
-                        disabled={!(content && content.match(/\S+/))}>
+                    <IconButton color='primary' component='span' onClick={send} disabled={!/\S+/.exec(content)}>
                         <SendIcon />
                     </IconButton>
                 </div>

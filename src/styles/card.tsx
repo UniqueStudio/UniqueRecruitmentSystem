@@ -2,9 +2,9 @@ import { makeStyles } from '@material-ui/core';
 
 import { colorToAlpha, dangerColor, successColor, warningColor } from './index';
 
-const red = colorToAlpha(dangerColor, 0.1);
-const yellow = colorToAlpha(warningColor, 0.1);
-const green = colorToAlpha(successColor, 0.1);
+const R = colorToAlpha(dangerColor, 0.1);
+const Y = colorToAlpha(warningColor, 0.1);
+const G = colorToAlpha(successColor, 0.1);
 
 interface Props {
     disabled: boolean;
@@ -28,7 +28,7 @@ const useStyles = makeStyles(({ breakpoints, spacing, zIndex }) => ({
             ? 'rgba(0, 0, 0, 0.1)'
             : white
             ? 'rgba(0, 0, 0, 0)'
-            : `linear-gradient(to right, ${green}, ${green} ${good}%, ${yellow} ${good}%, ${yellow} ${soSo}%, ${red} ${soSo}%, ${red})`,
+            : `linear-gradient(to right, ${G}, ${G} ${good}%, ${Y} ${good}%, ${Y} ${soSo}%, ${R} ${soSo}%, ${R})`,
     }),
     cardAction: {
         justifyContent: 'center',

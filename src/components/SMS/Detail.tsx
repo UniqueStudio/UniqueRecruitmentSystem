@@ -1,16 +1,12 @@
-import React, { ChangeEventHandler, FC, memo } from 'react';
-
-import clsx from 'clsx';
-
 import MenuItem from '@material-ui/core/MenuItem';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
+import clsx from 'clsx';
+import React, { ChangeEventHandler, FC, memo } from 'react';
 
 import { STEPS } from '../../config/consts';
 import { Step } from '../../config/types';
-
 import useStyles from '../../styles/sms';
-
 import { generateModel } from '../../utils/generateModel';
 
 interface Props {

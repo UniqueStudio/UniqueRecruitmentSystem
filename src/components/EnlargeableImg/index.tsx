@@ -1,6 +1,5 @@
-import React, { FC, memo, useState } from 'react';
-
 import Dialog from '@material-ui/core/Dialog';
+import React, { FC, memo, useState } from 'react';
 
 import useStyles from '../../styles/enlargeableImg';
 

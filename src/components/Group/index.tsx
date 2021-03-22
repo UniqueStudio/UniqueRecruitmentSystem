@@ -1,6 +1,4 @@
 import Button from '@material-ui/core/Button';
-import React, { FC, useState } from 'react';
-
 import Checkbox from '@material-ui/core/Checkbox';
 import Paper from '@material-ui/core/Paper';
 import Table from '@material-ui/core/Table';
@@ -9,21 +7,20 @@ import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Typography from '@material-ui/core/Typography';
+import { observer } from 'mobx-react-lite';
+import React, { FC, useState } from 'react';
 
+import { setGroupAdmin } from '../../apis/rest';
 import { GENDERS } from '../../config/consts';
 import { User } from '../../config/types';
-
-import useStyles from '../../styles/group';
-
-import { observer } from 'mobx-react-lite';
-import { setGroupAdmin } from '../../apis/rest';
 import { useStores } from '../../hooks/useStores';
+import useStyles from '../../styles/group';
 import { titleConverter } from '../../utils/titleConverter';
 
 const heads = ['成员姓名', '性别', '电话号码', '邮箱', '加入时间', '组长？', '管理员？'];
 
 type SelectHandler = (name: string) => (event: React.ChangeEvent<HTMLInputElement>, checked: boolean) => void;
-const memberDataConverter = (handleSelect: SelectHandler, admin: object, disabled: boolean) => ({
+const memberDataConverter = (handleSelect: SelectHandler, admin: Record<string, boolean>, disabled: boolean) => ({
     username,
     gender,
     phone,
@@ -64,9 +61,11 @@ const Group: FC = observer(() => {
         setAdmin({ ...admin, [phone]: event.target.checked });
     };
 
-    const submitChange = () => {
-        setGroupAdmin({ group: $user.info.group, who: Object.keys(admin).filter((i) => admin[i]) });
-    };
+    const submitChange = () =>
+        setGroupAdmin({
+            group: $user.info.group,
+            who: Object.keys(admin).filter((i) => admin[i]),
+        });
 
     return (
         <div className={classes.infoContainer}>

@@ -1,9 +1,7 @@
-import React, { ChangeEventHandler, FC, memo, useEffect, useState } from 'react';
-
-import clsx from 'clsx';
-
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
+import clsx from 'clsx';
+import React, { ChangeEventHandler, FC, memo, useEffect, useState } from 'react';
 
 import { getVerifyCode } from '../../apis/rest';
 import useStyles from '../../styles/verify';
@@ -37,7 +35,7 @@ const Verify: FC<Props> = memo(({ onChange, code }) => {
     };
 
     const getCode = () => {
-        getVerifyCode();
+        void getVerifyCode();
         setTime(60);
         setHandle(window.setInterval(tick, 1000));
     };

@@ -39,7 +39,7 @@ export const sendMessage = (message: Message) => {
     $user.addMessage(message);
 };
 
-socket.on('disconnect', socket.close);
+socket.on('disconnect', () => socket.close());
 
 socket.on('removeCandidate', ({ cid, title }: { cid: string; title: string }) => {
     if (title === $recruitment.viewing) {

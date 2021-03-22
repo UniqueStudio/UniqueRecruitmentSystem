@@ -1,13 +1,10 @@
-import React, { FC } from 'react';
-
-import clsx from 'clsx';
-
-import { SnackbarProvider } from 'notistack';
-
 import useTheme from '@material-ui/core/styles/useTheme';
 import useMediaQuery from '@material-ui/core/useMediaQuery/useMediaQuery';
-
+import clsx from 'clsx';
 import { observer } from 'mobx-react-lite';
+import { SnackbarProvider } from 'notistack';
+import React, { FC } from 'react';
+
 import { useStores } from '../../hooks/useStores';
 import useStyles from '../../styles/snackbar';
 

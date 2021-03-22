@@ -1,18 +1,13 @@
+import { Button, TextField, TextFieldProps } from '@material-ui/core';
+import { observer } from 'mobx-react-lite';
 import React, { FC, useState } from 'react';
 
-import { observer } from 'mobx-react-lite';
-
-import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
-
-import Modal from '../Modal';
-
-import { GENDERS, GRADES, GROUPS, GROUPS_, RANKS } from '../../config/consts';
-
 import { getResume } from '../../apis/rest';
+import { GENDERS, GRADES, GROUPS, GROUPS_, RANKS } from '../../config/consts';
 import { Candidate } from '../../config/types';
 import { useStores } from '../../hooks/useStores';
 import useStyles from '../../styles/detail';
+import Modal from '../Modal';
 
 interface Props {
     info: Candidate;
@@ -41,7 +36,7 @@ const Detail: FC<Props> = observer(({ info }) => {
     } = info;
     const progress = $component.resumeProgresses[_id] || 0;
 
-    const items: {}[][] = [
+    const items: TextFieldProps[][] = [
         [
             { label: '姓名', value: name },
             { label: '组别', value: GROUPS[GROUPS_.indexOf(group)] },

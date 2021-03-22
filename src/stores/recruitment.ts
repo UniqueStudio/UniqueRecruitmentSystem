@@ -1,4 +1,5 @@
 import { makeAutoObservable } from 'mobx';
+
 import { Recruitment } from '../config/types';
 import { localStorage, updateStorage } from '../utils/storage';
 
@@ -7,7 +8,9 @@ const updateRecruitments = updateStorage('recruitments');
 
 export class RecruitmentStore {
     recruitments: Recruitment[] = [];
+
     viewing = localStorage.getItem('viewing') || '';
+
     shouldUpdateRecruitment = true;
 
     constructor() {
