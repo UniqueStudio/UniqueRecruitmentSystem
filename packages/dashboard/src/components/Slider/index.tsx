@@ -1,15 +1,11 @@
-import React, { FC, useEffect, useState } from 'react';
-
-import { observer } from 'mobx-react-lite';
-
 import IconButton from '@material-ui/core/IconButton';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-
-import { Candidate } from '../../config/types';
+import { observer } from 'mobx-react-lite';
+import React, { FC, useEffect, useState } from 'react';
 
 import Comments from '../../components/Comments';
 import Detail from '../../components/Detail';
-
+import { Candidate } from '../../config/types';
 import { usePrevious } from '../../hooks/usePrevious';
 import { useStores } from '../../hooks/useStores';
 import useStyles from '../../styles/slider';

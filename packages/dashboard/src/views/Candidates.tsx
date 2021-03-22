@@ -1,8 +1,6 @@
-import React, { FC, useState } from 'react';
-
-import { observer } from 'mobx-react-lite';
-
 import { SlideProps } from '@material-ui/core/Slide';
+import { observer } from 'mobx-react-lite';
+import React, { FC, useState } from 'react';
 
 import { removeCandidate } from '../apis/websocket';
 import Board from '../components/Board';

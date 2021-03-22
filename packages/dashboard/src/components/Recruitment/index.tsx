@@ -1,20 +1,15 @@
+import Button from '@material-ui/core/Button';
+import { observer } from 'mobx-react-lite';
 import React, { FC, useState } from 'react';
 
-import { observer } from 'mobx-react-lite';
-
-import Button from '@material-ui/core/Button';
-
-import Allocation from '../Allocation';
-import Schedule from '../Schedule';
-
+import { setRecruitment } from '../../apis/rest';
 import { GROUPS, GROUPS_ } from '../../config/consts';
 import { Group, Time } from '../../config/types';
-
-import useStyles from '../../styles/data';
-
-import { setRecruitment } from '../../apis/rest';
 import { useStores } from '../../hooks/useStores';
+import useStyles from '../../styles/data';
 import { getMidnight } from '../../utils/getMidnight';
+import Allocation from '../Allocation';
+import Schedule from '../Schedule';
 
 const Recruitment: FC = observer(() => {
     const { $recruitment, $component, $user } = useStores();

@@ -1,6 +1,5 @@
-import React, { ChangeEventHandler, FC, useState } from 'react';
-
 import { observer } from 'mobx-react-lite';
+import React, { ChangeEventHandler, FC, useState } from 'react';
 
 import Recruitment from '../components/Recruitment';
 import Table from '../components/Table';

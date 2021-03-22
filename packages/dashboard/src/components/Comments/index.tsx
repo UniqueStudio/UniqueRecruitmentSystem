@@ -1,18 +1,15 @@
-import React, { ChangeEventHandler, FC, KeyboardEventHandler, useState } from 'react';
-
 import Button from '@material-ui/core/Button';
 import MenuItem from '@material-ui/core/MenuItem';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
-
-import Chip from '../Chip';
-
-import { Comment, Evaluation } from '../../config/types';
-
 import { observer } from 'mobx-react-lite';
+import React, { ChangeEventHandler, FC, KeyboardEventHandler, useState } from 'react';
+
 import { addComment, removeComment } from '../../apis/websocket';
+import { Comment, Evaluation } from '../../config/types';
 import { useStores } from '../../hooks/useStores';
 import useStyles from '../../styles/comments';
+import Chip from '../Chip';
 
 interface Props {
     cid: string;

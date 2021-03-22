@@ -1,10 +1,4 @@
-import React, { ChangeEventHandler, FC, useEffect, useState } from 'react';
-
-import clsx from 'clsx';
-import { observer } from 'mobx-react-lite';
-
 import DateFnsUtils from '@date-io/date-fns';
-
 import Button from '@material-ui/core/Button';
 import Checkbox from '@material-ui/core/Checkbox';
 import Dialog from '@material-ui/core/Dialog';
@@ -19,19 +13,20 @@ import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import { DateTimePicker } from '@material-ui/pickers/DateTimePicker/DateTimePicker';
 import { MuiPickersUtilsProvider } from '@material-ui/pickers/MuiPickersUtilsProvider';
-
-import Modal from '../Modal';
-
-import { GROUPS, GROUPS_ } from '../../config/consts';
-
-import Template from '../../components/SMS';
+import clsx from 'clsx';
+import { observer } from 'mobx-react-lite';
+import React, { ChangeEventHandler, FC, useEffect, useState } from 'react';
 
 import { allocateAll, allocateOne } from '../../apis/rest';
+import Template from '../../components/SMS';
+import { GROUPS, GROUPS_ } from '../../config/consts';
 import { Candidate } from '../../config/types';
 import { useStores } from '../../hooks/useStores';
 import useStyles from '../../styles/data';
 import { Order } from '../../utils/order';
 import { stableSort } from '../../utils/reducerHelper';
+import Modal from '../Modal';
+
 import { EnhancedTableHead, OrderBy } from './header';
 import { compareCandidate } from './order';
 
@@ -59,7 +54,7 @@ const CandidateTable: FC<Props> = observer(({ candidates, changeType, interviewT
 
     const handleAllocateAll = () => allocateAll(interviewType);
 
-    const toggleDialog = (id: string = '') => () => {
+    const toggleDialog = (id = '') => () => {
         setDialog(!!id);
         setCid(id);
     };
@@ -74,7 +69,7 @@ const CandidateTable: FC<Props> = observer(({ candidates, changeType, interviewT
         value && setTime(value);
     };
 
-    const handleCheck = (id: string = '') => (event: React.ChangeEvent<HTMLInputElement>) => {
+    const handleCheck = (id = '') => (event: React.ChangeEvent<HTMLInputElement>) => {
         if (event.target.checked) {
             $candidate.selectCandidate(id);
         } else {

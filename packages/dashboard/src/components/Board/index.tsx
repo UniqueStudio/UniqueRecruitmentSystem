@@ -1,20 +1,15 @@
+import useTheme from '@material-ui/core/styles/useTheme';
+import useMediaQuery from '@material-ui/core/useMediaQuery/useMediaQuery';
+import { observer } from 'mobx-react-lite';
 import React, { FC, useCallback, useState } from 'react';
 import { DragDropContext, Droppable, DropResult } from 'react-beautiful-dnd';
 import SwipeableViews from 'react-swipeable-views';
 
-import { observer } from 'mobx-react-lite';
-
-import useTheme from '@material-ui/core/styles/useTheme';
-import useMediaQuery from '@material-ui/core/useMediaQuery/useMediaQuery';
-
+import { moveCandidate } from '../../apis/websocket';
+import Card from '../../components/Card';
 import Column from '../../components/Column';
-
 import { STEPS } from '../../config/consts';
 import { Candidate, Step } from '../../config/types';
-
-import Card from '../../components/Card';
-
-import { moveCandidate } from '../../apis/websocket';
 import { useStores } from '../../hooks/useStores';
 import useStyles from '../../styles/board';
 
@@ -35,13 +30,14 @@ const Board: FC<Props> = observer(({ candidates, toggleDetail }) => {
             const { droppableId, index } = destination;
 
             switch (type) {
-                case 'COLUMN':
+                case 'COLUMN': {
                     if (source.droppableId === droppableId && source.index === index) return;
                     const ordered = [...$candidate.steps];
                     const [removed] = ordered.splice(source.index, 1);
                     ordered.splice(index, 0, removed);
                     $candidate.setSteps(0, ordered);
                     return;
+                }
                 case 'CANDIDATE':
                     if (source.droppableId === droppableId) return;
                     moveCandidate(

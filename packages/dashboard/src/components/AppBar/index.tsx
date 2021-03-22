@@ -1,9 +1,3 @@
-import React, { ChangeEventHandler, MouseEventHandler, useContext, useMemo, useState } from 'react';
-import { useLocation } from 'react-router-dom';
-
-import clsx from 'clsx';
-import { observer } from 'mobx-react-lite';
-
 import AppBar from '@material-ui/core/AppBar';
 import Collapse from '@material-ui/core/Collapse';
 import IconButton from '@material-ui/core/IconButton';
@@ -17,20 +11,21 @@ import HelpIcon from '@material-ui/icons/HelpOutline';
 import MenuIcon from '@material-ui/icons/Menu';
 import PersonIcon from '@material-ui/icons/Person';
 import RefreshIcon from '@material-ui/icons/Refresh';
-
-import Modal from '../Modal';
-import Select from '../Select';
+import clsx from 'clsx';
+import { observer } from 'mobx-react-lite';
+import React, { ChangeEventHandler, MouseEventHandler, useContext, useMemo, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 
 import Messenger from '../../components/Messenger';
 import { GROUPS, GROUPS_ } from '../../config/consts';
 import { Group } from '../../config/types';
-
+import { useStores } from '../../hooks/useStores';
 import useStyles from '../../styles/appBar';
 import { ThemeContext } from '../../styles/withRoot';
-
-import { useStores } from '../../hooks/useStores';
 import { localStorage } from '../../utils/storage';
 import { titleConverter } from '../../utils/titleConverter';
+import Modal from '../Modal';
+import Select from '../Select';
 
 const Bar = observer(() => {
     const { pathname } = useLocation();
@@ -131,7 +126,7 @@ const Bar = observer(() => {
                         () => (
                             <IconButton
                                 color='inherit'
-                                onClick={$component.toggleDrawer}
+                                onClick={() => $component.toggleDrawer()}
                                 className={clsx(classes.menuButton, { [classes.hide]: open })}>
                                 <MenuIcon />
                             </IconButton>

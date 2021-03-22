@@ -1,13 +1,10 @@
-import React, { FC, ReactElement } from 'react';
-
-import clsx from 'clsx';
-import { observer } from 'mobx-react-lite';
-
 import Chip from '@material-ui/core/Chip';
 import Typography from '@material-ui/core/Typography';
+import clsx from 'clsx';
+import { observer } from 'mobx-react-lite';
+import React, { FC, ReactElement } from 'react';
 
 import { GRADES } from '../../config/consts';
-
 import { useStores } from '../../hooks/useStores';
 import useStyles from '../../styles/sms';
 

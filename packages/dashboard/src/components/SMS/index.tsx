@@ -1,21 +1,19 @@
-import React, { ChangeEventHandler, FC, useState } from 'react';
-
 import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
 import Step from '@material-ui/core/Step';
 import StepContent from '@material-ui/core/StepContent';
 import StepLabel from '@material-ui/core/StepLabel';
 import Stepper from '@material-ui/core/Stepper';
+import { observer } from 'mobx-react-lite';
+import React, { ChangeEventHandler, FC, useState } from 'react';
+
+import { sendSMS } from '../../apis/rest';
+import Verify from '../../components/Verify';
+import { useStores } from '../../hooks/useStores';
+import useStyles from '../../styles/sms';
 
 import Detail from './Detail';
 import Picker from './Picker';
-
-import Verify from '../../components/Verify';
-
-import { observer } from 'mobx-react-lite';
-import { sendSMS } from '../../apis/rest';
-import { useStores } from '../../hooks/useStores';
-import useStyles from '../../styles/sms';
 
 interface Props {
     toggleOpen: () => void;

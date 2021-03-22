@@ -1,14 +1,17 @@
 import { makeAutoObservable } from 'mobx';
-import { Candidate, Comment, Group, Step } from '../config/types';
 
+import { Candidate, Comment, Group, Step } from '../config/types';
 import { updateStorage } from '../utils/storage';
 
 const update = updateStorage('candidates');
 
 export class CandidateStore {
     candidates: Candidate[] = [];
+
     selected = new Map<string, Candidate>();
+
     group: Group = 'web';
+
     steps: Step[] = [0, 1, 2, 3, 4, 5];
 
     constructor() {
@@ -74,6 +77,7 @@ export class CandidateStore {
         update(this.candidates);
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     moveCandidate(id: string, from: Step, to: Step, position?: number) {
         const candidate = this.candidates.find(({ _id }) => _id === id);
         if (!candidate) {

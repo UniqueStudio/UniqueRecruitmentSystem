@@ -1,4 +1,5 @@
 import { makeAutoObservable } from 'mobx';
+
 import { setAuthToken } from '../apis/rest';
 import { QR_CODE_URL } from '../config/consts';
 import { Message, User } from '../config/types';
@@ -9,17 +10,26 @@ const updateGroup = updateStorage('group');
 
 export class UserStore {
     token: string;
+
     info = {} as User;
+
     qrCodeURL = '';
+
     messages: Message[] = [];
+
     groupInfo: User[] = [];
+
     firstLoad = true;
 
     constructor() {
         const storedToken = localStorage.getItem('token');
-        const payload = storedToken && storedToken.split('.')[1];
-        const time = payload && JSON.parse(atob(payload)).exp;
-        this.token = storedToken !== null && time > Date.now() / 1000 ? storedToken : '';
+        const payload = storedToken?.split('.')[1];
+        if (storedToken && payload) {
+            const { exp } = JSON.parse(atob(payload));
+            this.token = exp > Date.now() / 1000 ? storedToken : '';
+        } else {
+            this.token = '';
+        }
         setAuthToken(this.token);
         makeAutoObservable(this);
     }

@@ -1,4 +1,5 @@
 import axios, { AxiosResponse } from 'axios';
+
 import { API } from '../config/consts';
 import { Candidate, Group, Recruitment, Step, Time, User } from '../config/types';
 import { stores } from '../stores';
@@ -6,19 +7,31 @@ import { localStorage } from '../utils/storage';
 
 class Endpoint {
     static base = API;
+
     static recruitments = '/recruitment/';
+
     static verification = '/sms/verification/user';
+
     static sms = '/sms/';
+
     static user = '/user/';
+
     static group = '/user/group/';
+
     static login = '/user/login/';
+
     static admin = '/user/admin/';
+
     static interview = (interviewType: string, cid?: string) =>
         `/candidate/${cid ? `${cid}/` : ''}interview/${interviewType}`;
+
     static candidates = (title: string, group?: Group, step?: Step) =>
         `/candidate/${JSON.stringify({ title, step, group })}`;
+
     static resume = (cid: string) => `/candidate/${cid}/resume`;
+
     static recruitment = (title: string) => `/recruitment/title/${title}`;
+
     static qrCode = (key = '') => `/user/qrCode/${key}`;
 }
 
@@ -39,7 +52,7 @@ const client = axios.create({
 });
 
 export const setAuthToken = (token: string) => {
-    client.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+    (client.defaults.headers as { common: Record<string, string> }).common['Authorization'] = `Bearer ${token}`;
 };
 
 const apiWrapper = async <T>(
@@ -126,7 +139,7 @@ export const getResume = async (cid: string) => {
             },
         });
         let filename = 'resume';
-        const disposition: string = headers['content-disposition'];
+        const disposition = (headers as Record<string, string>)['content-disposition'];
         if (disposition && disposition.includes('attachment')) {
             const matches = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/.exec(disposition);
             if (matches?.[1]) {

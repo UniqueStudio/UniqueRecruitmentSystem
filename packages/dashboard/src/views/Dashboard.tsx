@@ -1,19 +1,14 @@
-import React, { FC, useEffect, useState } from 'react';
-import { Redirect } from 'react-router-dom';
-
-import { observer } from 'mobx-react-lite';
-
 import Divider from '@material-ui/core/Divider';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
-
-import Chart from '../components/Chart';
-
-import AddOne from '../components/AddOne';
-
-import { usePrevious } from '../hooks/usePrevious';
+import { observer } from 'mobx-react-lite';
+import React, { FC, useEffect, useState } from 'react';
+import { Redirect } from 'react-router-dom';
 
 import { getCandidates } from '../apis/rest';
+import AddOne from '../components/AddOne';
+import Chart from '../components/Chart';
+import { usePrevious } from '../hooks/usePrevious';
 import { useStores } from '../hooks/useStores';
 import useStyles from '../styles/dashboard';
 import { compareTitle } from '../utils/compareTitle';

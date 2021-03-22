@@ -1,5 +1,6 @@
 import { makeAutoObservable } from 'mobx';
 import { OptionsObject, SnackbarKey, SnackbarMessage, VariantType } from 'notistack';
+
 import { Evaluation } from '../config/types';
 
 interface Snackbar {
@@ -9,10 +10,15 @@ interface Snackbar {
 
 export class ComponentStateStore {
     progressOn = false;
+
     drawerOpen = false;
+
     snackbars: Record<SnackbarKey, Snackbar> = {};
+
     fabOn = -1;
+
     resumeProgresses: Record<string, number> = {};
+
     inputtingComment = {
         content: '',
         evaluation: 2 as Evaluation,

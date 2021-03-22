@@ -1,17 +1,14 @@
+import { observer } from 'mobx-react-lite';
 import React, { FC, useEffect } from 'react';
 import { Redirect } from 'react-router-dom';
 
-import Progress from '../Progress';
-
+import { getCandidates, getGroup, getRecruitments, getUserInfo } from '../../apis/rest';
 import AppBar from '../../components/AppBar';
 import Drawer from '../../components/Drawer';
-
 import { usePrevious } from '../../hooks/usePrevious';
-
-import { observer } from 'mobx-react-lite';
-import { getCandidates, getGroup, getRecruitments, getUserInfo } from '../../apis/rest';
 import { useStores } from '../../hooks/useStores';
 import useStyles from '../../styles/frame';
+import Progress from '../Progress';
 
 const Frame: FC = observer(({ children }) => {
     const { $component, $recruitment, $user } = useStores();
@@ -24,15 +21,15 @@ const Frame: FC = observer(({ children }) => {
 
     useEffect(() => {
         if ($user.token) {
-            getUserInfo();
-            getRecruitments();
-            getGroup();
+            void getUserInfo();
+            void getRecruitments();
+            void getGroup();
         }
     }, []);
 
     useEffect(() => {
         if (!prevTitle && $recruitment.viewing) {
-            getCandidates($recruitment.viewing);
+            void getCandidates($recruitment.viewing);
         }
     }, [prevTitle, $recruitment.viewing]);
 
