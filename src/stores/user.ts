@@ -1,11 +1,9 @@
-import { makeAutoObservable } from 'mobx';
+import { set } from 'idb-keyval';
+import { makeAutoObservable, toJS } from 'mobx';
 
 import { QR_CODE_URL } from '@config/consts';
 import { Message, User } from '@config/types';
-import { localStorage, updateStorage } from '@utils/storage';
-
-const updateUser = updateStorage('user');
-const updateGroup = updateStorage('group');
+import { localStorage } from '@utils/storage';
 
 export class UserStore {
     token: string;
@@ -46,25 +44,25 @@ export class UserStore {
     }
 
     logout() {
-        localStorage.removeItem('token');
         this.token = '';
+        localStorage.removeItem('token');
     }
 
     setUserInfo(userInfo: Partial<User>) {
         delete userInfo.password;
         Object.assign(this.info, userInfo);
-        updateUser(this.info);
-        const user = this.groupInfo.find(({ _id }) => userInfo._id === _id);
+        void set('user', toJS(this.info));
+        const user = this.groupInfo.find(({ _id }) => this.info._id === _id);
         if (user) {
             Object.assign(user, userInfo);
-            updateGroup(this.groupInfo);
+            void set('group', toJS(this.groupInfo));
         }
     }
 
     setGroupInfo(groupInfo: User[]) {
         this.groupInfo = groupInfo;
         this.firstLoad = false;
-        updateGroup(this.groupInfo);
+        void set('group', groupInfo);
     }
 
     addMessage(message: Message) {
@@ -78,6 +76,6 @@ export class UserStore {
                 user.isAdmin = true;
             }
         });
-        updateGroup(this.groupInfo);
+        void set('group', toJS(this.groupInfo));
     }
 }

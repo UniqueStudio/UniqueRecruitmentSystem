@@ -1,10 +1,8 @@
+import { set } from 'idb-keyval';
 import { makeAutoObservable } from 'mobx';
 
 import { Recruitment } from '@config/types';
-import { localStorage, updateStorage } from '@utils/storage';
-
-const updateViewing = updateStorage('viewing');
-const updateRecruitments = updateStorage('recruitments');
+import { localStorage } from '@utils/storage';
 
 export class RecruitmentStore {
     recruitments: Recruitment[] = [];
@@ -20,7 +18,7 @@ export class RecruitmentStore {
     setRecruitments(recruitments: Recruitment[]) {
         this.recruitments = recruitments;
         this.shouldUpdateRecruitment = false;
-        updateRecruitments(this.recruitments);
+        void set('recruitments', recruitments);
     }
 
     setShouldUpdateRecruitment(shouldUpdate = true) {
@@ -29,6 +27,6 @@ export class RecruitmentStore {
 
     setViewingRecruitment(title: string) {
         this.viewing = title;
-        updateViewing(title);
+        localStorage.setItem('viewing', title);
     }
 }

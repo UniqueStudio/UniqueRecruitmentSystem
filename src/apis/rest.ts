@@ -1,4 +1,5 @@
 import axios, { AxiosResponse } from 'axios';
+import { get } from 'idb-keyval';
 
 import { API } from '@config/consts';
 import { Candidate, Group, Recruitment, Step, Time, User } from '@config/types';
@@ -112,8 +113,8 @@ export const allocateOne = (interviewType: 'group' | 'team', cid: string, time: 
 
 export const getCandidates = (title: string, group?: Group, step?: Step) =>
     apiWrapper(
-        () => {
-            const candidates = localStorage.getItem('candidates');
+        async () => {
+            const candidates = await get<Candidate[]>('candidates');
             const viewing = localStorage.getItem('viewing');
             if (candidates && title === viewing) {
                 let data = candidates;
@@ -123,7 +124,7 @@ export const getCandidates = (title: string, group?: Group, step?: Step) =>
                 $component.toggleFabOff();
                 $component.enqueueSnackbar('成功获取候选人信息（缓存）', 'success');
             }
-            return client.get<R<{ data: Candidate[] }>>(Endpoint.candidates(title, group, step));
+            return await client.get<R<{ data: Candidate[] }>>(Endpoint.candidates(title, group, step));
         },
         ({ data }) => {
             $candidate.addCandidates(data);
@@ -170,8 +171,8 @@ export const getResume = async (cid: string) => {
     $component.setProgress(false);
 };
 
-export const getRecruitments = () => {
-    const recruitments = localStorage.getItem('recruitments');
+export const getRecruitments = async () => {
+    const recruitments = await get<Recruitment[]>('recruitments');
     const viewing = localStorage.getItem('viewing');
     const shouldUpdateRecruitment = $recruitment.shouldUpdateRecruitment;
     if (recruitments && !shouldUpdateRecruitment) {
@@ -231,8 +232,8 @@ export const sendSMS = (content: Record<string, unknown>) =>
         () => $component.enqueueSnackbar('已成功发送短信！', 'success'),
     );
 
-export const getGroup = () => {
-    const groupInfo = localStorage.getItem('group');
+export const getGroup = async () => {
+    const groupInfo = await get<User[]>('group');
     if (groupInfo && !$user.firstLoad) {
         $user.setGroupInfo(groupInfo);
         return;
@@ -243,8 +244,8 @@ export const getGroup = () => {
     );
 };
 
-export const getUserInfo = () => {
-    const user = localStorage.getItem('user');
+export const getUserInfo = async () => {
+    const user = await get<User>('user');
     if (user) {
         $user.setUserInfo(user);
         $candidate.setGroup(user.group);
