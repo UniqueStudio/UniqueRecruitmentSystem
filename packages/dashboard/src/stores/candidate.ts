@@ -7,7 +7,7 @@ const update = updateStorage('candidates');
 
 export class CandidateStore {
     candidates: Candidate[] = [];
-    selected: string[] = [];
+    selected = new Map<string, Candidate>();
     group: Group = 'web';
     steps: Step[] = [0, 1, 2, 3, 4, 5];
 
@@ -35,7 +35,7 @@ export class CandidateStore {
 
     addCandidates(candidates: Candidate[]) {
         this.candidates = candidates;
-        this.selected = [];
+        this.deselectAll();
         update(this.candidates);
     }
 
@@ -45,26 +45,32 @@ export class CandidateStore {
     }
 
     selectCandidate(id: string) {
-        if (!this.selected.includes(id)) {
-            this.selected.push(id);
-        }
+        this.selected.set(id, this.candidates.find(({ _id }) => id === _id)!);
     }
 
     selectCandidates(ids: string[]) {
-        this.selected = [...new Set([...this.selected, ...ids])];
+        for (const id of ids) {
+            this.selectCandidate(id);
+        }
     }
 
     deselectCandidate(id: string) {
-        this.selected = this.selected.filter((cid) => id !== cid);
+        this.selected.delete(id);
     }
 
     deselectCandidates(ids: string[]) {
-        this.selected = this.selected.filter((cid) => !ids.includes(cid));
+        for (const id of ids) {
+            this.deselectCandidate(id);
+        }
+    }
+
+    deselectAll() {
+        this.selected.clear();
     }
 
     removeCandidate(id: string) {
         this.candidates = this.candidates.filter(({ _id }) => _id !== id);
-        this.selected = this.selected.filter((cid) => cid !== id);
+        this.deselectCandidate(id);
         update(this.candidates);
     }
 

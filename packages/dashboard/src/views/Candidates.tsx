@@ -25,15 +25,11 @@ const Candidates: FC = observer(() => {
     const [direction, setDirection] = useState<SlideProps['direction']>('left');
 
     let candidates: Candidate[][] = [...new Array(STEPS.length)].map(() => []);
-    const selectedInfo: Candidate[] = [];
     if (candidateStore.steps.length !== 2) {
         // 全部面板
         for (const candidate of candidateStore.candidates) {
             if (candidate.group === candidateStore.group) {
                 candidates[candidate.step].push(candidate);
-            }
-            if (candidateStore.selected.includes(candidate._id)) {
-                selectedInfo.push(candidate);
             }
         }
     } else {
@@ -42,9 +38,6 @@ const Candidates: FC = observer(() => {
             if (candidate.step === candidateStore.steps[0] || candidate.step === candidateStore.steps[1]) {
                 // 位于群面或通过
                 candidates[candidate.step].push(candidate);
-            }
-            if (candidateStore.selected.includes(candidate._id)) {
-                selectedInfo.push(candidate);
             }
         }
         candidates = candidates.map((toSort) => toSort.sort(teamSort));
@@ -73,17 +66,17 @@ const Candidates: FC = observer(() => {
         setIndex(newIndex);
     };
 
-    const handleRemove = (toRemove: string[]) => () => {
+    const handleRemove = () => {
         toggleOpen('dialog')();
-        if (toRemove.length === 0) {
+        if (candidateStore.selected.size === 0) {
             componentStateStore.enqueueSnackbar('你没有选中任何人', 'info');
             return;
         }
-        toRemove.forEach((cid) => removeCandidate(cid));
+        candidateStore.selected.forEach(({ _id }) => removeCandidate(_id));
     };
 
     const toggleOpen = (name: string) => () => {
-        modal && candidateStore.deselectCandidates(candidateStore.selected);
+        modal && candidateStore.deselectAll();
         if (name === 'modal') setModal((prevModal) => !prevModal);
         if (name === 'dialog') setDialog((prevDialog) => !prevDialog);
     };
@@ -94,14 +87,14 @@ const Candidates: FC = observer(() => {
             <Fab candidates={candidates[componentStateStore.fabOn] || []} toggleOpen={toggleOpen} />
             <Dialog
                 open={dialog}
-                onClick={handleRemove(candidateStore.selected)}
+                onClick={handleRemove}
                 toggleOpen={toggleOpen('dialog')}
                 title='提醒'
                 content='这将永远移除该候选人，你确定吗？'
                 yes='确定移除'
             />
             <Modal open={modal} onClose={toggleOpen('modal')} title='发送通知'>
-                <Template toggleOpen={toggleOpen('modal')} selected={selectedInfo} deselect={true} />
+                <Template toggleOpen={toggleOpen('modal')} />
             </Modal>
             <Modal open={index >= 0} onClose={toggleDetail(0)(-1)} direction={direction} title='详细信息'>
                 {step >= 0 && (
