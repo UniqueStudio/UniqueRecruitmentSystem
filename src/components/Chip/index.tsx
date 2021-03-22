@@ -1,6 +1,4 @@
-import Chip from '@material-ui/core/Chip';
-import Paper from '@material-ui/core/Paper';
-import Popover from '@material-ui/core/Popover';
+import { Chip, Paper, Popover } from '@material-ui/core';
 import clsx from 'clsx';
 import React, { FC, memo, MouseEventHandler, useState } from 'react';
 

@@ -1,6 +1,4 @@
-import SpeedDial from '@material-ui/lab/SpeedDial';
-import SpeedDialAction from '@material-ui/lab/SpeedDialAction';
-import SpeedDialIcon from '@material-ui/lab/SpeedDialIcon';
+import { SpeedDial, SpeedDialAction, SpeedDialIcon } from '@material-ui/lab';
 import RemoveIcon from 'mdi-material-ui/AccountRemove';
 import CloseIcon from 'mdi-material-ui/EyeOff';
 import SelectAllIcon from 'mdi-material-ui/SelectAll';

@@ -1,13 +1,5 @@
-import Card from '@material-ui/core/Card';
-import Checkbox from '@material-ui/core/Checkbox';
-import amber from '@material-ui/core/colors/amber';
-import blue from '@material-ui/core/colors/blue';
-import orange from '@material-ui/core/colors/orange';
-import pink from '@material-ui/core/colors/pink';
-import IconButton from '@material-ui/core/IconButton';
-import useTheme from '@material-ui/core/styles/useTheme';
-import Typography from '@material-ui/core/Typography';
-import useMediaQuery from '@material-ui/core/useMediaQuery/useMediaQuery';
+import { Card, Checkbox, IconButton, Typography, useTheme, useMediaQuery } from '@material-ui/core';
+import { amber, blue, orange, pink } from '@material-ui/core/colors';
 import FlashOn from '@material-ui/icons/FlashOn';
 import InfoIcon from '@material-ui/icons/InfoOutlined';
 import Female from 'mdi-material-ui/GenderFemale';
