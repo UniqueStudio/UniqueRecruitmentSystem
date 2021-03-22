@@ -6,19 +6,62 @@ const useStyles = makeStyles(({ breakpoints }) => ({
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
-        height: '100%',
     },
     logo: {
         width: '50%',
         minWidth: 300,
         userSelect: 'none',
     },
-    fourOFour: {
-        [breakpoints.down('xs')]: {
-            display: 'none',
+    table: {
+        textAlign: 'center',
+        borderCollapse: 'collapse',
+        '& td': {
+            border: 'solid 1px darkGrey',
         },
-        width: '100%',
-        userSelect: 'none',
+        '& tr': {
+            height: '36px',
+        },
+        [breakpoints.down('sm')]: {
+            writingMode: 'vertical-lr',
+        },
+    },
+    bold: {
+        fontWeight: 1000,
+        textStroke: '1px',
+    },
+    alignBottom: {
+        verticalAlign: 'bottom',
+    },
+    large: {
+        fontSize: 20,
+        letterSpacing: 6,
+    },
+    extraLarge: {
+        fontSize: 54,
+        '& td': {
+            padding: '8px 24px',
+        },
+    },
+    bgWhite: {
+        background: 'white',
+    },
+    bgRed: {
+        background: 'red',
+    },
+    bgBlue: {
+        background: 'blue',
+    },
+    fgWhite: {
+        color: 'white',
+    },
+    fgRed: {
+        color: 'red',
+    },
+    fgBlue: {
+        color: 'blue',
+    },
+    fgBlack: {
+        color: 'black',
     },
 }));
 
