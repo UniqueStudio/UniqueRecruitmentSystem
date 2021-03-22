@@ -1,21 +1,23 @@
-import React, { FC, memo, useState } from 'react';
+import { Button, TextField, TextFieldProps } from '@material-ui/core';
+import { observer } from 'mobx-react-lite';
+import React, { FC, useState } from 'react';
 
-import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
+import { getResume } from '@apis/rest';
+import Modal from '@components/Modal';
+import { GENDERS, GRADES, GROUPS, GROUPS_, RANKS } from '@config/consts';
+import { Candidate } from '@config/types';
+import { useStores } from '@hooks/useStores';
+import useStyles from '@styles/detail';
 
-import Modal from '../Modal';
+interface Props {
+    info: Candidate;
+}
 
-import { GENDERS, GRADES, GROUPS, GROUPS_, RANKS } from '../../config/consts';
-
-import { Props } from '../../containers/Detail';
-
-import useStyles from '../../styles/detail';
-
-const Detail: FC<Props> = memo(({ info, downloadingResume, getResume }) => {
+const Detail: FC<Props> = observer(({ info }) => {
+    const { $component } = useStores();
     const classes = useStyles();
     const [modal, setModal] = useState(false);
 
-    const { cid, progress } = downloadingResume;
     const {
         _id,
         name,
@@ -32,8 +34,9 @@ const Detail: FC<Props> = memo(({ info, downloadingResume, getResume }) => {
         referrer,
         resume,
     } = info;
+    const progress = $component.resumeProgresses[_id] || 0;
 
-    const items: {}[][] = [
+    const items: TextFieldProps[][] = [
         [
             { label: '姓名', value: name },
             { label: '组别', value: GROUPS[GROUPS_.indexOf(group)] },
@@ -62,9 +65,7 @@ const Detail: FC<Props> = memo(({ info, downloadingResume, getResume }) => {
         setModal((prevModal) => !prevModal);
     };
 
-    const downloadResume = () => {
-        getResume(_id);
-    };
+    const downloadResume = () => getResume(_id);
 
     return (
         <>
@@ -81,7 +82,7 @@ const Detail: FC<Props> = memo(({ info, downloadingResume, getResume }) => {
                         自我介绍
                     </Button>
                     <Button size='large' color='primary' onClick={downloadResume} disabled={!resume || !!progress}>
-                        {progress ? (cid === _id ? `${(progress * 100).toFixed(2)}%` : '下载中') : '简历下载'}
+                        {progress ? `${(progress * 100).toFixed(2)}%` : '简历下载'}
                     </Button>
                 </div>
             </div>

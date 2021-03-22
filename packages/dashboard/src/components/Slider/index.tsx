@@ -1,63 +1,66 @@
-import React, { PureComponent } from 'react';
-
-import IconButton from '@material-ui/core/IconButton';
+import { IconButton } from '@material-ui/core';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import withStyles, { WithStyles } from '@material-ui/styles/withStyles';
+import { observer } from 'mobx-react-lite';
+import React, { FC, useEffect, useState } from 'react';
 
-import { Candidate } from '../../config/types';
+import Comments from '@components/Comments';
+import Detail from '@components/Detail';
+import { Candidate } from '@config/types';
+import { usePrevious } from '@hooks/usePrevious';
+import { useStores } from '@hooks/useStores';
+import useStyles from '@styles/slider';
 
-import Comments from '../../containers/Comments';
-import Detail from '../../containers/Detail';
-import { ConnectedProps } from '../../containers/Slider';
-
-import styles from '../../styles/slider';
-
-type Props = WithStyles<typeof styles> & ConnectedProps;
-
-interface State {
+interface Props {
+    index: number;
     candidate: Candidate;
+    handleLeft: () => void;
+    handleRight: () => void;
+    handleNextIndex: (index: number) => void;
 }
 
-class Slider extends PureComponent<Props, State> {
-    state = {
-        candidate: this.props.candidate,
+enum Direction {
+    L,
+    R,
+}
+
+const Slider: FC<Props> = observer(({ candidate, handleNextIndex, handleLeft, handleRight, index }) => {
+    const { $component } = useStores();
+    const prevCandidate = usePrevious(candidate);
+    const [nextIndex, setNextIndex] = useState(-1);
+    useEffect(
+        () => () => {
+            index < 0 && handleNextIndex(nextIndex);
+        },
+        [index],
+    );
+    const classes = useStyles();
+
+    const { _id: cid, comments } = candidate || prevCandidate;
+
+    const handleClick = (type: Direction) => () => {
+        $component.recordInputtingComment(2, '');
+        if (type === Direction.L) {
+            handleLeft();
+            setNextIndex(index - 1);
+        } else {
+            handleRight();
+            setNextIndex(index + 1);
+        }
     };
-
-    componentDidUpdate() {
-        this.setState((prevState, { candidate }) => ({
-            candidate: candidate || prevState.candidate,
-        }));
-    }
-
-    handleClick = (type: string) => () => {
-        const { handlePrev, handleNext, changeInputting, index } = this.props;
-        changeInputting('', 2);
-        type === 'prev' ? handlePrev(index) : handleNext(index);
-    };
-
-    componentWillUnmount() {
-        this.props.handleTodo();
-    }
-
-    render() {
-        const { classes } = this.props;
-        const { candidate } = this.state;
-        const { _id: cid, comments } = candidate;
-        return (
-            <div className={classes.detailContent}>
-                <IconButton className={classes.leftButton} onClick={this.handleClick('prev')}>
-                    <ExpandMoreIcon />
-                </IconButton>
-                <div className={classes.detailMain}>
-                    <Detail info={candidate} />
-                    <Comments cid={cid} comments={comments} />
-                </div>
-                <IconButton className={classes.rightButton} onClick={this.handleClick('next')}>
-                    <ExpandMoreIcon />
-                </IconButton>
+    return (
+        <div className={classes.detailContent}>
+            <IconButton className={classes.leftButton} onClick={handleClick(Direction.L)}>
+                <ExpandMoreIcon />
+            </IconButton>
+            <div className={classes.detailMain}>
+                <Detail info={candidate || prevCandidate} />
+                <Comments cid={cid} comments={comments} />
             </div>
-        );
-    }
-}
+            <IconButton className={classes.rightButton} onClick={handleClick(Direction.R)}>
+                <ExpandMoreIcon />
+            </IconButton>
+        </div>
+    );
+});
 
-export default withStyles(styles)(Slider);
+export default Slider;

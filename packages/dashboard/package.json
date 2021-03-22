@@ -1,6 +1,6 @@
 {
   "name": "unique-recruitment-dashboard",
-  "version": "3.0.0-epsilon",
+  "version": "3.0.0-zeta",
   "description": "the dashboard for recruitment of Unique Studio",
   "author": "@winderica",
   "private": true,
@@ -21,19 +21,18 @@
     "@material-ui/icons": "^4.11.2",
     "@material-ui/lab": "^4.0.0-alpha.57",
     "@material-ui/pickers": "^3.3.10",
+    "axios": "^0.21.1",
     "chart.js": "^2.9.4",
     "date-fns": "^2.19.0",
     "mdi-material-ui": "^6.22.0",
+    "mobx": "^6.1.8",
+    "mobx-react-lite": "^3.2.0",
     "notistack": "^1.0.5",
     "react": "^17.0.1",
     "react-beautiful-dnd": "^13.0.0",
     "react-dom": "^17.0.1",
-    "react-redux": "^7.2.2",
     "react-router-dom": "^5.2.0",
     "react-swipeable-views": "^0.13.9",
-    "redux": "^4.0.5",
-    "redux-observable": "^1.2.0",
-    "rxjs": "^6.6.6",
     "socket.io-client": "^2.4.0"
   },
   "devDependencies": {
@@ -43,16 +42,19 @@
     "@types/react": "^17.0.3",
     "@types/react-beautiful-dnd": "^13.0.0",
     "@types/react-dom": "^17.0.2",
-    "@types/react-redux": "^7.1.16",
     "@types/react-router-dom": "^5.1.7",
     "@types/react-swipeable-views": "^0.13.0",
     "@types/socket.io-client": "^1.4.36",
+    "@typescript-eslint/eslint-plugin": "^4.18.0",
+    "@typescript-eslint/parser": "^4.18.0",
+    "eslint": "^7.22.0",
+    "eslint-config-prettier": "^8.1.0",
+    "eslint-import-resolver-typescript": "^2.4.0",
+    "eslint-plugin-import": "^2.22.1",
     "husky": "^4.3.8",
     "lint-staged": "^10.5.4",
     "prettier": "^2.2.1",
-    "redux-devtools-extension": "^2.13.9",
     "snowpack": "3.0.13",
-    "tslint": "^6.1.3",
     "typescript": "^4.2.3"
   },
   "husky": {
@@ -70,7 +72,7 @@
   },
   "scripts": {
     "format": "prettier --write src",
-    "lint": "tslint --fix --project .",
+    "lint": "eslint --fix .",
     "start": "snowpack dev",
     "build": "snowpack build"
   }

@@ -1,25 +1,19 @@
-import React, { ChangeEventHandler, FC, memo, useEffect, useState } from 'react';
-
-import Button from '@material-ui/core/Button';
-import IconButton from '@material-ui/core/IconButton';
-import Paper from '@material-ui/core/Paper';
-import TextField from '@material-ui/core/TextField';
-import Tooltip from '@material-ui/core/Tooltip';
+import { Button, IconButton, Paper, TextField, Tooltip } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
+import { observer } from 'mobx-react-lite';
+import React, { ChangeEventHandler, FC, useEffect, useState } from 'react';
 
-import Modal from '../Modal';
-import Schedule from '../Schedule';
-
-import { Props } from '../../containers/AddOne';
-import Verify from '../../containers/Verify';
-
-import useStyles from '../../styles/addOne';
-
-import { getMidnight } from '../../utils/getMidnight';
-import { titleConverter } from '../../utils/titleConverter';
+import { launchRecruitment } from '@apis/rest';
+import Modal from '@components/Modal';
+import Schedule from '@components/Schedule';
+import Verify from '@components/Verify';
+import { useStores } from '@hooks/useStores';
+import useStyles from '@styles/addOne';
+import { getMidnight } from '@utils/getMidnight';
+import { titleConverter } from '@utils/titleConverter';
 
 const generateTitle = (date: Date) => {
-    const year = date.getFullYear();
+    const year = date.getFullYear().toString();
     const month = date.getMonth() + 1;
     const type = month <= 5 ? 'S' : month >= 9 ? 'A' : 'C';
     return year + type;
@@ -37,9 +31,16 @@ const initialState = () => {
     };
 };
 
-const AddOne: FC<Props> = memo(({ disabled, enqueueSnackbar, launchRecruitment, shouldClear }) => {
+interface Props {
+    shouldClear: boolean;
+}
+
+const AddOne: FC<Props> = observer(({ shouldClear }) => {
     const classes = useStyles();
+    const { $component, $user } = useStores();
     const [{ modal, title, begin, end, stop, code }, setState] = useState(initialState());
+
+    const disabled = !$user.isAdminOrCaptain;
 
     useEffect(() => {
         if (shouldClear) {
@@ -47,20 +48,20 @@ const AddOne: FC<Props> = memo(({ disabled, enqueueSnackbar, launchRecruitment, 
         }
     }, [shouldClear]);
 
-    const handleLaunch = () => {
+    const handleLaunch = async () => {
         if (!code || !begin || !end || !stop || !title) {
-            enqueueSnackbar('请完整填写信息！', { variant: 'warning' });
+            $component.enqueueSnackbar('请完整填写信息！', 'warning');
             return;
         }
         if (begin >= stop) {
-            enqueueSnackbar('截止时间必须大于开始时间！', { variant: 'warning' });
+            $component.enqueueSnackbar('截止时间必须大于开始时间！', 'warning');
             return;
         }
         if (stop >= end) {
-            enqueueSnackbar('结束时间必须大于截止时间！', { variant: 'warning' });
+            $component.enqueueSnackbar('结束时间必须大于截止时间！', 'warning');
             return;
         }
-        launchRecruitment({
+        await launchRecruitment({
             title,
             begin: getMidnight(begin),
             end: getMidnight(end),

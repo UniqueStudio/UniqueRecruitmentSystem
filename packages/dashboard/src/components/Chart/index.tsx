@@ -1,27 +1,16 @@
-import React, { FC, memo, useState } from 'react';
-
-import clsx from 'clsx';
-
-// import Grid from '@material-ui/core/Grid';
-import Box from '@material-ui/core/Box';
-import Button from '@material-ui/core/Button';
-import Paper from '@material-ui/core/Paper';
-// import Divider from '@material-ui/core/Divider';
-
-import Typography from '@material-ui/core/Typography';
+import { Box, Button, Paper, Typography, useTheme } from '@material-ui/core';
 import VisibilityIcon from '@material-ui/icons/Visibility';
 import VisibilityOffIcon from '@material-ui/icons/VisibilityOff';
+import clsx from 'clsx';
+import React, { FC, memo, useState } from 'react';
 
 import { ChartComponentProps, ChartElement, Doughnut } from './Doughnut';
 
-import { GROUPS, GROUPS_, STEPS } from '../../config/consts';
-import { Recruitment } from '../../config/types';
-
-import { getRainbow } from '../../styles';
-import useStyles from '../../styles/chart';
-
-import { useTheme } from '@material-ui/core';
-import { titleConverter } from '../../utils/titleConverter';
+import { GROUPS, GROUPS_, STEPS } from '@config/consts';
+import { Recruitment } from '@config/types';
+import useStyles from '@styles/chart';
+import { getRainbow } from '@styles/index';
+import { titleConverter } from '@utils/titleConverter';
 
 interface Props {
     data: Recruitment;
@@ -65,7 +54,7 @@ const Chart: FC<Props> = memo(({ data: { groups, total, title, end }, setViewing
             text,
         },
         legend: {
-            position: 'bottom' as 'bottom',
+            position: 'bottom' as const,
             labels: {
                 boxWidth: 12,
                 fontColor: theme.palette.text.primary,

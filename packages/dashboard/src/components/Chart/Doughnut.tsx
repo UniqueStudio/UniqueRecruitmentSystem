@@ -1,6 +1,5 @@
-import React, { MouseEventHandler, PureComponent } from 'react';
-
 import { Chart, ChartData, ChartDataSets, ChartOptions, helpers } from 'chart.js';
+import React, { MouseEventHandler, PureComponent } from 'react';
 
 type Meta = ReturnType<Chart['getDatasetMeta']>;
 type MetaData = Meta['data'][0];
@@ -24,6 +23,7 @@ export interface ChartComponentProps {
 
 export class Doughnut extends PureComponent<ChartComponentProps> {
     chartInstance!: Chart;
+
     element!: HTMLCanvasElement;
 
     componentDidMount() {
@@ -45,7 +45,7 @@ export class Doughnut extends PureComponent<ChartComponentProps> {
     updateChart() {
         const { options, data } = this.props;
 
-        this.chartInstance.options = helpers.configMerge(this.chartInstance.options, options);
+        this.chartInstance.options = (helpers.configMerge as <T>(a: T, b: T) => T)(this.chartInstance.options, options);
 
         const currentDatasets = this.getCurrentDatasets();
         const { datasets, labels } = data;

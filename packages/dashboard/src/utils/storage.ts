@@ -1,6 +1,6 @@
-import { Candidate, Recruitment, User } from '../config/types';
+import { Candidate, Recruitment, User } from '@config/types';
 
-interface LocalStorageRecord {
+interface LocalStorageRecord extends Record<string, unknown> {
     token: string;
     candidates: Candidate[];
     viewing: string;
@@ -11,13 +11,15 @@ interface LocalStorageRecord {
 
 type StringKeyOf<T> = Extract<keyof T, string>;
 
-const stringify = (data: any) => (typeof data === 'string' ? data : JSON.stringify(data));
+const stringify = <T>(data: T) => (typeof data === 'string' ? data : JSON.stringify(data));
 
-export class TypedStorage<T extends Record<string, any>> {
+export class TypedStorage<T extends Record<string, unknown>> {
     private storage: Storage;
+
     constructor(storage: Storage) {
         this.storage = storage;
     }
+
     get length() {
         return this.storage.length;
     }
@@ -37,18 +39,20 @@ export class TypedStorage<T extends Record<string, any>> {
     getItem<K extends StringKeyOf<T>>(key: K): T[K] | null {
         const item = this.storage.getItem(key);
         try {
-            return item ? JSON.parse(item) : null;
+            return item ? (JSON.parse(item) as T[K]) : null;
         } catch (e) {
-            // @ts-ignore
-            return item;
+            return (item as unknown) as T[K];
         }
     }
-    key(index: number): StringKeyOf<T> | null {
-        return this.storage.key(index) as any;
+
+    key(index: number) {
+        return this.storage.key(index) as StringKeyOf<T> | null;
     }
+
     removeItem(key: StringKeyOf<T>): void {
         this.storage.removeItem(key);
     }
+
     setItem<K extends StringKeyOf<T>>(key: K, value: T[K]) {
         this.storage.setItem(key, stringify(value));
     }

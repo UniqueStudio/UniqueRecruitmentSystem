@@ -1,8 +1,8 @@
 import { makeStyles } from '@material-ui/core';
 
-import { mergeKV } from '../utils/mergeKV';
-
 import { colorToAlpha, colorToShadow, dangerColor, infoColor, successColor, warningColor } from './index';
+
+import { mergeKV } from '@utils/mergeKV';
 
 export const colorStyles = mergeKV(
     ['info', 'success', 'warning', 'danger'],

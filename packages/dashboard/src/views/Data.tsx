@@ -1,14 +1,14 @@
-import React, { ChangeEventHandler, FC, memo, useState } from 'react';
+import { observer } from 'mobx-react-lite';
+import React, { ChangeEventHandler, FC, useState } from 'react';
 
-import { Props } from '../containers/Data';
-import Recruitment from '../containers/Recruitment';
-import Table from '../containers/Table';
+import Recruitment from '@components/Recruitment';
+import Table from '@components/Table';
+import { useStores } from '@hooks/useStores';
+import useStyles from '@styles/data';
+import { groupSort, teamSort } from '@utils/sortBySlot';
 
-import useStyles from '../styles/data';
-
-import { groupSort, teamSort } from '../utils/sortBySlot';
-
-const Data: FC<Props> = memo(({ recruitment, userGroup, candidates }) => {
+const Data: FC = observer(() => {
+    const { $candidate, $user, $recruitment } = useStores();
     const classes = useStyles();
     const [interviewType, setInterviewType] = useState<'group' | 'team'>('group');
 
@@ -18,10 +18,13 @@ const Data: FC<Props> = memo(({ recruitment, userGroup, candidates }) => {
 
     const sorted =
         interviewType === 'group'
-            ? candidates.filter(({ group, step }) => group === userGroup && step === 2).sort(groupSort)
-            : candidates.filter(({ step }) => step === 4).sort(teamSort);
+            ? $candidate.candidates
+                  .filter(({ group, step }) => group === $user.info.group && step === 2)
+                  .sort(groupSort)
+            : $candidate.candidates.filter(({ step }) => step === 4).sort(teamSort);
 
-    return !userGroup || !recruitment ? null : (
+    return !$user.info.group ||
+        !$recruitment.recruitments.find(({ title }) => title === $recruitment.viewing) ? null : (
         <div className={classes.container}>
             <Recruitment />
             <Table candidates={sorted} changeType={changeType} interviewType={interviewType} />

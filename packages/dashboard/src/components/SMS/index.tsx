@@ -1,25 +1,23 @@
-import React, { ChangeEventHandler, FC, memo, useState } from 'react';
-
-import Button from '@material-ui/core/Button';
-import Paper from '@material-ui/core/Paper';
-import Step from '@material-ui/core/Step';
-import StepContent from '@material-ui/core/StepContent';
-import StepLabel from '@material-ui/core/StepLabel';
-import Stepper from '@material-ui/core/Stepper';
+import { Button, Paper, Step, StepContent, StepLabel, Stepper } from '@material-ui/core';
+import { observer } from 'mobx-react-lite';
+import React, { ChangeEventHandler, FC, useState } from 'react';
 
 import Detail from './Detail';
 import Picker from './Picker';
 
-import { Props } from '../../containers/SMS';
-import Verify from '../../containers/Verify';
+import { sendSMS } from '@apis/rest';
+import Verify from '@components/Verify';
+import { useStores } from '@hooks/useStores';
+import useStyles from '@styles/sms';
 
-import useStyles from '../../styles/sms';
+interface Props {
+    toggleOpen: () => void;
+}
 
-const SMSTemplate: FC<Props> = memo(({ toggleOpen, enqueueSnackbar, selected: selectedP, sendSMS, deselect }) => {
+const SMSTemplate: FC<Props> = observer(({ toggleOpen }) => {
+    const { $component, $candidate } = useStores();
     const classes = useStyles();
     const [activeStep, setActiveStep] = useState(0);
-    // maintain `selected` state when `deselect` is not provided
-    const [selected, setSelected] = useState(selectedP);
     const [content, setContent] = useState({
         type: 'accept',
         step: -1 as -1,
@@ -36,12 +34,12 @@ const SMSTemplate: FC<Props> = memo(({ toggleOpen, enqueueSnackbar, selected: se
 
     const handleSend = () => {
         if (code === '') {
-            enqueueSnackbar('请填写验证码！', { variant: 'warning' });
+            $component.enqueueSnackbar('请填写验证码！', 'warning');
             return;
         }
 
-        sendSMS({ ...content, code, candidates: selected.map(({ _id }) => _id) });
         setCode('');
+        return sendSMS({ ...content, code, candidates: [...$candidate.selected.keys()] });
     };
 
     const handleNext = () => {
@@ -49,32 +47,27 @@ const SMSTemplate: FC<Props> = memo(({ toggleOpen, enqueueSnackbar, selected: se
         if (activeStep === 1) {
             if (type === 'group' || type === 'team') {
                 if (!place) {
-                    enqueueSnackbar('请填写地点！', { variant: 'warning' });
+                    $component.enqueueSnackbar('请填写地点！', 'warning');
                     return;
                 }
             } else if (step === -1) {
-                enqueueSnackbar('请选择流程！', { variant: 'warning' });
+                $component.enqueueSnackbar('请选择流程！', 'warning');
                 return;
             } else if (next === -1) {
-                enqueueSnackbar('请选择下一轮！', { variant: 'warning' });
+                $component.enqueueSnackbar('请选择下一轮！', 'warning');
                 return;
             } else if ((next === 1 || next === 3) && type === 'accept' && !rest) {
                 if (!time) {
-                    enqueueSnackbar('请填写时间！', { variant: 'warning' });
+                    $component.enqueueSnackbar('请填写时间！', 'warning');
                     return;
                 }
                 if (!place) {
-                    enqueueSnackbar('请填写地点！', { variant: 'warning' });
+                    $component.enqueueSnackbar('请填写地点！', 'warning');
                     return;
                 }
             }
         }
         setActiveStep((prevActiveStep) => prevActiveStep + 1);
-    };
-
-    const handleDelete = (cid: string) => () => {
-        setSelected((prevSelected) => prevSelected.filter(({ _id }) => _id !== cid));
-        deselect && deselect(cid);
     };
 
     const handleChange = (name: string): ChangeEventHandler<HTMLInputElement> => ({ target: { value } }) => {
@@ -88,7 +81,7 @@ const SMSTemplate: FC<Props> = memo(({ toggleOpen, enqueueSnackbar, selected: se
 
     const steps = ['发送对象', '消息模板', '确认发送'];
     const stepContent = [
-        <Picker selected={selected} onDelete={handleDelete} />,
+        <Picker />,
         <Detail content={content} handleChange={handleChange} />,
         <Verify code={code} onChange={handleCode} />,
     ];
@@ -110,7 +103,7 @@ const SMSTemplate: FC<Props> = memo(({ toggleOpen, enqueueSnackbar, selected: se
                                     color='primary'
                                     onClick={activeStep === steps.length - 1 ? handleSend : handleNext}
                                     className={classes.templateItem}
-                                    disabled={selected.length === 0}>
+                                    disabled={$candidate.selected.size === 0}>
                                     {activeStep === steps.length - 1 ? '发送通知' : '下一步'}
                                 </Button>
                             </div>
