@@ -1,5 +1,6 @@
 import { makeAutoObservable } from 'mobx';
 import { setAuthToken } from '../apis/rest';
+import { QR_CODE_URL } from '../config/consts';
 import { Message, User } from '../config/types';
 import { localStorage, updateStorage } from '../utils/storage';
 
@@ -9,7 +10,7 @@ const updateGroup = updateStorage('group');
 export class UserStore {
     token: string;
     info = {} as User;
-    qrCodePath = '';
+    qrCodeURL = '';
     messages: Message[] = [];
     groupInfo: User[] = [];
     firstLoad = true;
@@ -28,7 +29,7 @@ export class UserStore {
     }
 
     setQRCode(key: string) {
-        this.qrCodePath = key;
+        this.qrCodeURL = `${QR_CODE_URL}${key}`;
     }
 
     setToken(token: string) {

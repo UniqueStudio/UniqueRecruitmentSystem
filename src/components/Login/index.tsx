@@ -9,8 +9,6 @@ import TextField from '@material-ui/core/TextField';
 import Modal from '../Modal';
 import Progress from '../Progress';
 
-import { QR_CODE_URL } from '../../config/consts';
-
 import logo from '../../images/logo.png';
 
 import { loginViaPassword, loginViaQRCode } from '../../apis/rest';
@@ -67,14 +65,14 @@ const Login: FC = observer(() => {
     );
     const ByQRCode = (
         <>
-            {userStore.qrCodePath && <img src={`${QR_CODE_URL}${userStore.qrCodePath}`} alt='This is QRCode' />}
+            {userStore.qrCodeURL && <img className={classes.qrCode} src={userStore.qrCodeURL} alt='QRCode' />}
             <Button
                 className={classes.button}
                 variant='contained'
                 color='default'
                 size='large'
                 onClick={loginViaQRCode}
-                disabled={!!userStore.qrCodePath}>
+                disabled={!!userStore.qrCodeURL}>
                 获取二维码
             </Button>
             <Button

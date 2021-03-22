@@ -31,6 +31,9 @@ const useStyles = makeStyles(({ breakpoints, spacing }) => ({
         justifyContent: 'center',
         alignItems: 'center',
     },
+    qrCode: {
+        width: 200,
+    },
     textField: {
         width: '65%',
     },
