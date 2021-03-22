@@ -31,10 +31,7 @@ const User: FC = observer(() => {
         setData((prevData) => ({ ...prevData, [name]: value }));
     };
 
-    const checkMail = (value: string) =>
-        /^(([^<>()[\].,;:\s@"]+(\.[^<>()[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/i.test(
-            value,
-        );
+    const checkMail = (value: string) => /^\S+@\S+\.\S+$/.test(value);
 
     const checkPhone = (value: string) => /^1[3-9]\d{9}$/i.test(value);
 
