@@ -1,17 +1,10 @@
-import { useTheme, useMediaQuery } from '@material-ui/core';
-import clsx from 'clsx';
-import { observer } from 'mobx-react-lite';
 import { SnackbarProvider } from 'notistack';
 import React, { FC } from 'react';
 
-import { useStores } from '@hooks/useStores';
 import useStyles from '@styles/snackbar';
 
-const Snackbar: FC = observer(({ children }) => {
-    const { $component } = useStores();
+const Snackbar: FC = ({ children }) => {
     const classes = useStyles();
-    const theme = useTheme();
-    const isMobile = useMediaQuery(theme.breakpoints.down('xs'));
     return (
         <SnackbarProvider
             maxSnack={5}
@@ -21,11 +14,10 @@ const Snackbar: FC = observer(({ children }) => {
                 variantWarning: classes.warning,
                 variantInfo: classes.info,
             }}
-            autoHideDuration={3000}
-            className={clsx(classes.snackBar, { [classes.shrink]: $component.fabOn !== -1 && isMobile })}>
+            autoHideDuration={3000}>
             <>{children}</>
         </SnackbarProvider>
     );
-});
+};
 
 export default Snackbar;
