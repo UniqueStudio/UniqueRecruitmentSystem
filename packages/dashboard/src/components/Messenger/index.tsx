@@ -1,9 +1,4 @@
-import Avatar from '@material-ui/core/Avatar';
-import Chip from '@material-ui/core/Chip';
-import Divider from '@material-ui/core/Divider';
-import IconButton from '@material-ui/core/IconButton';
-import Paper from '@material-ui/core/Paper';
-import TextField from '@material-ui/core/TextField';
+import { Avatar, Chip, Divider, IconButton, Paper, TextField } from '@material-ui/core';
 import PlusOneIcon from '@material-ui/icons/ExposurePlus1';
 import FaceIcon from '@material-ui/icons/Face';
 import InsertPhotoIcon from '@material-ui/icons/InsertPhoto';

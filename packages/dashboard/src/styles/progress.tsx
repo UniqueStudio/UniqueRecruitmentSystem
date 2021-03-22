@@ -1,5 +1,5 @@
 import { makeStyles } from '@material-ui/core';
-import pink from '@material-ui/core/colors/pink';
+import { pink } from '@material-ui/core/colors';
 
 const useStyles = makeStyles(({ zIndex }) => ({
     progress: {

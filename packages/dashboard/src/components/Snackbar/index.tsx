@@ -1,5 +1,4 @@
-import useTheme from '@material-ui/core/styles/useTheme';
-import useMediaQuery from '@material-ui/core/useMediaQuery/useMediaQuery';
+import { useTheme, useMediaQuery } from '@material-ui/core';
 import clsx from 'clsx';
 import { observer } from 'mobx-react-lite';
 import { SnackbarProvider } from 'notistack';

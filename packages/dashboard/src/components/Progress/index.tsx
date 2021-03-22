@@ -1,4 +1,4 @@
-import LinearProgress from '@material-ui/core/LinearProgress';
+import { LinearProgress } from '@material-ui/core';
 import React, { FC, memo } from 'react';
 
 import useStyles from '@styles/progress';

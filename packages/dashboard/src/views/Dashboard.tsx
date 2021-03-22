@@ -1,6 +1,4 @@
-import Divider from '@material-ui/core/Divider';
-import Paper from '@material-ui/core/Paper';
-import Typography from '@material-ui/core/Typography';
+import { Divider, Paper, Typography } from '@material-ui/core';
 import { observer } from 'mobx-react-lite';
 import React, { FC, useEffect, useState } from 'react';
 import { Redirect } from 'react-router-dom';

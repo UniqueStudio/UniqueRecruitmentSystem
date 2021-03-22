@@ -1,5 +1,4 @@
-import Chip from '@material-ui/core/Chip';
-import Typography from '@material-ui/core/Typography';
+import { Chip, Typography } from '@material-ui/core';
 import clsx from 'clsx';
 import { observer } from 'mobx-react-lite';
 import React, { FC, ReactElement } from 'react';

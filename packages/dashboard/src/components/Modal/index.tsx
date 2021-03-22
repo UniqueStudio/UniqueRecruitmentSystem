@@ -1,6 +1,4 @@
-import Modal from '@material-ui/core/Modal';
-import Slide, { SlideProps } from '@material-ui/core/Slide';
-import Typography from '@material-ui/core/Typography';
+import { Modal, Slide, SlideProps, Typography } from '@material-ui/core';
 import React, { FC, memo } from 'react';
 
 import useStyles from '@styles/modal';

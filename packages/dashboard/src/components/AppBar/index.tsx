@@ -1,10 +1,4 @@
-import AppBar from '@material-ui/core/AppBar';
-import Collapse from '@material-ui/core/Collapse';
-import IconButton from '@material-ui/core/IconButton';
-import Menu from '@material-ui/core/Menu';
-import MenuItem from '@material-ui/core/MenuItem';
-import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
+import { AppBar, Collapse, IconButton, Menu, MenuItem, Toolbar, Typography } from '@material-ui/core';
 import Brightness4 from '@material-ui/icons/Brightness4';
 import ChatIcon from '@material-ui/icons/Chat';
 import HelpIcon from '@material-ui/icons/HelpOutline';
@@ -13,7 +7,7 @@ import PersonIcon from '@material-ui/icons/Person';
 import RefreshIcon from '@material-ui/icons/Refresh';
 import clsx from 'clsx';
 import { observer } from 'mobx-react-lite';
-import React, { ChangeEventHandler, MouseEventHandler, useContext, useMemo, useState } from 'react';
+import React, { ChangeEventHandler, FC, MouseEventHandler, useContext, useMemo, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 
 import Messenger from '@components/Messenger';
@@ -27,7 +21,7 @@ import { ThemeContext } from '@styles/withRoot';
 import { localStorage } from '@utils/storage';
 import { titleConverter } from '@utils/titleConverter';
 
-const Bar = observer(() => {
+const Bar: FC = observer(() => {
     const { pathname } = useLocation();
     const classes = useStyles();
     const { $component, $user, $candidate, $recruitment } = useStores();

@@ -1,8 +1,4 @@
-import Divider from '@material-ui/core/Divider';
-import Paper from '@material-ui/core/Paper';
-import useTheme from '@material-ui/core/styles/useTheme';
-import Typography from '@material-ui/core/Typography';
-import useMediaQuery from '@material-ui/core/useMediaQuery/useMediaQuery';
+import { Divider, Paper, Typography, useTheme, useMediaQuery } from '@material-ui/core';
 import React, { FC, memo } from 'react';
 import { Draggable, Droppable } from 'react-beautiful-dnd';
 

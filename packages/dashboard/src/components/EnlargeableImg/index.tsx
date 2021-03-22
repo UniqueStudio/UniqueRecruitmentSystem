@@ -1,4 +1,4 @@
-import Dialog from '@material-ui/core/Dialog';
+import { Dialog } from '@material-ui/core';
 import React, { FC, memo, useState } from 'react';
 
 import useStyles from '@styles/enlargeableImg';

@@ -54,7 +54,6 @@ module.exports = {
                 },
             },
         ],
-        'import/default': 'off',
     },
     settings: {
         'import/parsers': {
