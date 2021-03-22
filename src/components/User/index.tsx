@@ -15,8 +15,8 @@ import { useStores } from '../../hooks/useStores';
 import { titleConverter } from '../../utils/titleConverter';
 
 const User: FC = observer(() => {
-    const { userStore, componentStateStore } = useStores();
-    const { username, gender, group, isAdmin, isCaptain, phone: phoneP, mail: mailP, joinTime } = userStore.info;
+    const { $user, $component } = useStores();
+    const { username, gender, group, isAdmin, isCaptain, phone: phoneP, mail: mailP, joinTime } = $user.info;
     const classes = useStyles();
     const [data, setData] = useState({
         phone: phoneP,
@@ -46,15 +46,15 @@ const User: FC = observer(() => {
 
     const submitChange = () => {
         if (mail === mailP && phone === phoneP && !password) {
-            componentStateStore.enqueueSnackbar('你没有做任何更改！', 'info');
+            $component.enqueueSnackbar('你没有做任何更改！', 'info');
             return;
         }
         if (!checkMail(mail)) {
-            componentStateStore.enqueueSnackbar('邮箱格式不正确！', 'warning');
+            $component.enqueueSnackbar('邮箱格式不正确！', 'warning');
             return;
         }
         if (!checkPhone(phone)) {
-            componentStateStore.enqueueSnackbar('手机号码格式不正确！', 'warning');
+            $component.enqueueSnackbar('手机号码格式不正确！', 'warning');
             return;
         }
         return setUserInfo({ phone, mail, password });

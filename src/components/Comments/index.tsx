@@ -20,10 +20,10 @@ interface Props {
 }
 
 const Comments: FC<Props> = observer(({ comments, cid }) => {
-    const { componentStateStore, userStore } = useStores();
+    const { $component, $user } = useStores();
     const classes = useStyles();
-    const [evaluation, setEvaluation] = useState(componentStateStore.inputtingComment.evaluation);
-    const [content, setContent] = useState(componentStateStore.inputtingComment.content);
+    const [evaluation, setEvaluation] = useState($component.inputtingComment.evaluation);
+    const [content, setContent] = useState($component.inputtingComment.content);
 
     const handleKey: KeyboardEventHandler = (event) => {
         const { ctrlKey, charCode } = event;
@@ -39,26 +39,26 @@ const Comments: FC<Props> = observer(({ comments, cid }) => {
     const changeEvaluation: ChangeEventHandler<HTMLInputElement> = ({ target: { value } }) => {
         const newEvaluation = +value as Evaluation;
         setEvaluation(newEvaluation);
-        componentStateStore.recordInputtingComment(newEvaluation, content);
+        $component.recordInputtingComment(newEvaluation, content);
     };
 
     const changeContent: ChangeEventHandler<HTMLInputElement> = ({ target: { value } }) => {
         setContent(value);
-        componentStateStore.recordInputtingComment(evaluation, value);
+        $component.recordInputtingComment(evaluation, value);
     };
 
     const handleSubmit = () => {
         if (content && evaluation !== undefined) {
             addComment(cid, {
-                uid: userStore.info._id,
+                uid: $user.info._id,
                 content,
                 evaluation,
-                username: userStore.info.username,
+                username: $user.info.username,
             });
             setEvaluation(2);
             setContent('');
         } else {
-            componentStateStore.enqueueSnackbar('请完整填写评论！', 'warning');
+            $component.enqueueSnackbar('请完整填写评论！', 'warning');
         }
     };
 
@@ -101,8 +101,8 @@ const Comments: FC<Props> = observer(({ comments, cid }) => {
                 <Chip
                     comment={comment}
                     key={index}
-                    onRemove={userStore.info._id === comment.uid ? handleRemove(comment._id) : undefined}
-                    onCopy={userStore.info._id === comment.uid ? handleCopy(comment) : undefined}
+                    onRemove={$user.info._id === comment.uid ? handleRemove(comment._id) : undefined}
+                    onCopy={$user.info._id === comment.uid ? handleCopy(comment) : undefined}
                 />
             ))}
         </div>

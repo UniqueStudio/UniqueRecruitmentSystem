@@ -8,12 +8,10 @@ import logo from '../images/logo.png';
 const NoMatch: FC = memo(() => {
     const classes = useStyles();
     return (
-        <>
-            <div className={classes.container}>
-                <img src={logo} className={classes.logo} alt='logo' />
-                <img src={fourOFour} className={classes.fourOFour} alt='404!' />
-            </div>
-        </>
+        <div className={classes.container}>
+            <img src={logo} className={classes.logo} alt='logo' />
+            <img src={fourOFour} className={classes.fourOFour} alt='404!' />
+        </div>
     );
 });
 

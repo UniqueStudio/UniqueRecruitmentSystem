@@ -17,9 +17,9 @@ import { useStores } from '../../hooks/useStores';
 import { getMidnight } from '../../utils/getMidnight';
 
 const Recruitment: FC = observer(() => {
-    const { recruitmentStore, componentStateStore, userStore } = useStores();
-    const { begin, end, stop, title, groups, interview } = recruitmentStore.recruitments.find(
-        (recruitment) => recruitment.title === recruitmentStore.viewing,
+    const { $recruitment, $component, $user } = useStores();
+    const { begin, end, stop, title, groups, interview } = $recruitment.recruitments.find(
+        (recruitment) => recruitment.title === $recruitment.viewing,
     )!;
     const classes = useStyles();
     const [beginS, setBeginS] = useState(new Date(begin));
@@ -36,11 +36,11 @@ const Recruitment: FC = observer(() => {
 
     const setInterview = (type: 'team' | 'group', groupName?: Group) => (interviewTime: Time[]) => {
         if (beginS >= endS) {
-            componentStateStore.enqueueSnackbar('结束时间必须大于开始时间！', 'warning');
+            $component.enqueueSnackbar('结束时间必须大于开始时间！', 'warning');
             return;
         }
         if (stopS >= endS) {
-            componentStateStore.enqueueSnackbar('截止时间必须大于开始时间！', 'warning');
+            $component.enqueueSnackbar('截止时间必须大于开始时间！', 'warning');
             return;
         }
         return setRecruitment({
@@ -55,11 +55,11 @@ const Recruitment: FC = observer(() => {
 
     const setTime = () => {
         if (beginS >= endS) {
-            componentStateStore.enqueueSnackbar('结束时间必须大于开始时间！', 'warning');
+            $component.enqueueSnackbar('结束时间必须大于开始时间！', 'warning');
             return;
         }
         if (stopS >= endS) {
-            componentStateStore.enqueueSnackbar('截止时间必须大于开始时间！', 'warning');
+            $component.enqueueSnackbar('截止时间必须大于开始时间！', 'warning');
             return;
         }
         return setRecruitment({
@@ -78,16 +78,12 @@ const Recruitment: FC = observer(() => {
                     end={endS}
                     stop={stopS}
                     onChange={handleChange}
-                    disabled={!userStore.isAdminOrCaptain}
+                    disabled={!$user.isAdminOrCaptain}
                     disablePast={false}
                     className={classes.datePicker}
                 />
                 <div className={classes.buttonContainer}>
-                    <Button
-                        onClick={setTime}
-                        variant='contained'
-                        color='primary'
-                        disabled={!userStore.isAdminOrCaptain}>
+                    <Button onClick={setTime} variant='contained' color='primary' disabled={!$user.isAdminOrCaptain}>
                         修改时间
                     </Button>
                 </div>
@@ -97,14 +93,14 @@ const Recruitment: FC = observer(() => {
                     title={`${GROUPS[GROUPS_.indexOf(name)]}组组面时间/人数`}
                     key={index}
                     dates={groupInterview}
-                    disabled={!userStore.isAdminOrCaptain && userStore.info.group !== name}
+                    disabled={!$user.isAdminOrCaptain && $user.info.group !== name}
                     setRecruitment={setInterview('group', name)}
                 />
             ))}
             <Allocation
                 title='群面时间/人数'
                 dates={interview}
-                disabled={!userStore.isAdminOrCaptain}
+                disabled={!$user.isAdminOrCaptain}
                 setRecruitment={setInterview('team')}
             />
         </div>

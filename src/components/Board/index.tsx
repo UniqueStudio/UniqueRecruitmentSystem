@@ -25,7 +25,7 @@ interface Props {
 
 const Board: FC<Props> = observer(({ candidates, toggleDetail }) => {
     const classes = useStyles();
-    const { candidateStore } = useStores();
+    const { $candidate } = useStores();
     const [column, setColumn] = useState(0);
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('xs'));
@@ -37,10 +37,10 @@ const Board: FC<Props> = observer(({ candidates, toggleDetail }) => {
             switch (type) {
                 case 'COLUMN':
                     if (source.droppableId === droppableId && source.index === index) return;
-                    const ordered = [...candidateStore.steps];
+                    const ordered = [...$candidate.steps];
                     const [removed] = ordered.splice(source.index, 1);
                     ordered.splice(index, 0, removed);
-                    candidateStore.setSteps(0, ordered);
+                    $candidate.setSteps(0, ordered);
                     return;
                 case 'CANDIDATE':
                     if (source.droppableId === droppableId) return;
@@ -55,14 +55,14 @@ const Board: FC<Props> = observer(({ candidates, toggleDetail }) => {
         }
     }, []);
 
-    const Columns = candidateStore.steps.map((step, i) => (
+    const Columns = $candidate.steps.map((step, i) => (
         <Column title={STEPS[step]} key={STEPS[step]} dropIndex={i}>
             {candidates[step].map((candidate, j) => (
                 <Card
                     candidate={candidate}
                     index={j}
                     key={candidate._id}
-                    isTeamInterview={candidateStore.steps.length === 2}
+                    isTeamInterview={$candidate.steps.length === 2}
                     toggleDetail={toggleDetail(step)(j)}
                 />
             ))}

@@ -31,7 +31,7 @@ import { useStores } from '../../hooks/useStores';
 import useStyles from '../../styles/messenger';
 
 const Messenger: FC = observer(() => {
-    const { userStore, componentStateStore } = useStores();
+    const { $user, $component } = useStores();
     const classes = useStyles();
     const [content, setContent] = useState('');
     const [container, setContainer] = useState<Element | null>(null);
@@ -40,15 +40,15 @@ const Messenger: FC = observer(() => {
         if (container && container.scrollHeight - container.scrollTop < 1000) {
             container.scrollTop = container.scrollHeight;
         }
-    }, [userStore.messages, container]);
+    }, [$user.messages, container]);
 
     const generateMessage = (message: string | ArrayBuffer | null, isImage = false) => ({
         content: (message || '').toString(),
         isSelf: true,
         time: Date.now(),
         isImage,
-        name: userStore.info.username,
-        avatar: userStore.info.avatar,
+        name: $user.info.username,
+        avatar: $user.info.avatar,
     });
 
     const handleKey: KeyboardEventHandler = (event) => {
@@ -87,17 +87,17 @@ const Messenger: FC = observer(() => {
 
     const handleImage: ChangeEventHandler<HTMLInputElement> = ({ target: { files } }) => {
         if (!files) {
-            componentStateStore.enqueueSnackbar('你没有上传任何图片', 'info');
+            $component.enqueueSnackbar('你没有上传任何图片', 'info');
             return;
         }
         const file = files[0];
         const extension = file.name.split('.').slice(-1)[0];
         if (!['jpg', 'jpeg', 'png'].includes(extension)) {
-            componentStateStore.enqueueSnackbar('请上传jpg或png类型的图片', 'info');
+            $component.enqueueSnackbar('请上传jpg或png类型的图片', 'info');
             return;
         }
         if (file.size > 1024 * 1024 * 5) {
-            componentStateStore.enqueueSnackbar('图片大小必须小于5MB', 'info');
+            $component.enqueueSnackbar('图片大小必须小于5MB', 'info');
             return;
         }
         const reader = new FileReader();
@@ -112,7 +112,7 @@ const Messenger: FC = observer(() => {
     };
 
     const plusOne = () => {
-        const last = userStore.messages[userStore.messages.length - 1];
+        const last = $user.messages[$user.messages.length - 1];
         if (last) {
             sendMessage(generateMessage(last.content, last.isImage));
         }
@@ -156,7 +156,7 @@ const Messenger: FC = observer(() => {
     return (
         <Paper className={classes.messenger}>
             <div className={classes.messages} ref={setContainer}>
-                {userStore.messages.map((message, index) => (
+                {$user.messages.map((message, index) => (
                     <div key={index} className={clsx(classes.messageContainer, { [classes.my]: message.isSelf })}>
                         {AvatarBox(message)}
                         <Chip
@@ -182,11 +182,7 @@ const Messenger: FC = observer(() => {
                             <InsertPhotoIcon />
                         </IconButton>
                     </label>
-                    <IconButton
-                        color='primary'
-                        component='span'
-                        onClick={plusOne}
-                        disabled={!userStore.messages.length}>
+                    <IconButton color='primary' component='span' onClick={plusOne} disabled={!$user.messages.length}>
                         <PlusOneIcon />
                     </IconButton>
                     <TextField

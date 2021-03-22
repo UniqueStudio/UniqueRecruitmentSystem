@@ -19,7 +19,7 @@ interface Props {
 }
 
 const Detail: FC<Props> = observer(({ info }) => {
-    const { componentStateStore } = useStores();
+    const { $component } = useStores();
     const classes = useStyles();
     const [modal, setModal] = useState(false);
 
@@ -39,7 +39,7 @@ const Detail: FC<Props> = observer(({ info }) => {
         referrer,
         resume,
     } = info;
-    const progress = componentStateStore.resumeProgresses[_id] || 0;
+    const progress = $component.resumeProgresses[_id] || 0;
 
     const items: {}[][] = [
         [
