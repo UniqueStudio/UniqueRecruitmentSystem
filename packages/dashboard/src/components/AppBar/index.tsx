@@ -118,7 +118,7 @@ const Bar: FC = observer(() => {
     return (
         <>
             <AppBar position='fixed' className={clsx(classes.appBar, { [classes.appBarShift]: open })}>
-                <Toolbar disableGutters={!open} classes={{ gutters: classes.appBarGutters, regular: classes.regular }}>
+                <Toolbar disableGutters={!open} classes={{ gutters: classes.appBarGutters }}>
                     {useMemo(
                         () => (
                             <IconButton

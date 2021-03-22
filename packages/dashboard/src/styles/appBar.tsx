@@ -22,12 +22,6 @@ const useStyles = makeStyles(({ zIndex, palette, transitions, spacing, breakpoin
     appBarGutters: {
         paddingRight: 0,
     },
-    regular: {
-        minHeight: spacing(8),
-        [breakpoints.down('xs')]: {
-            minHeight: spacing(6),
-        },
-    },
     menuButton: {
         marginLeft: spacing(2),
         marginRight: spacing(4),
@@ -58,7 +52,7 @@ const useStyles = makeStyles(({ zIndex, palette, transitions, spacing, breakpoin
         position: 'fixed',
         top: spacing(8),
         [breakpoints.down('xs')]: {
-            top: spacing(6),
+            top: spacing(7),
         },
         right: 0,
     },
