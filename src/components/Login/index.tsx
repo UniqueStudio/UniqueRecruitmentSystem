@@ -69,7 +69,7 @@ const Login: FC = observer(() => {
             <Button
                 className={classes.button}
                 variant='contained'
-                color='default'
+                color='primary'
                 size='large'
                 onClick={loginViaQRCode}
                 disabled={!!userStore.qrCodeURL}>
@@ -78,7 +78,7 @@ const Login: FC = observer(() => {
             <Button
                 className={classes.button}
                 variant='contained'
-                color='primary'
+                color='default'
                 size='large'
                 onClick={handleMethod(2)}>
                 账号密码登录
@@ -104,10 +104,21 @@ const Login: FC = observer(() => {
                 onChange={handlePassword}
                 margin='normal'
             />
-            <Button variant='contained' color='default' size='large' type='submit' disabled={!phone || !password}>
+            <Button
+                className={classes.button}
+                variant='contained'
+                color='primary'
+                size='large'
+                type='submit'
+                disabled={!phone || !password}>
                 登录
             </Button>
-            <Button variant='contained' color='primary' size='large' onClick={handleMethod(1)}>
+            <Button
+                className={classes.button}
+                variant='contained'
+                color='default'
+                size='large'
+                onClick={handleMethod(1)}>
                 企业微信登录
             </Button>
         </>
