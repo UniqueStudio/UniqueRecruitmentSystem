@@ -125,7 +125,7 @@ export const getResume = async (cid: string) => {
         const { data, headers } = await client.get<Blob>(Endpoint.resume(cid), {
             responseType: 'blob',
             onDownloadProgress(event: ProgressEvent) {
-                stores.componentStateStore.resumeProgress(event.loaded / event.total, cid);
+                stores.componentStateStore.setResumeProgress(event.loaded / event.total, cid);
             },
         });
         let filename = 'resume';
@@ -149,7 +149,7 @@ export const getResume = async (cid: string) => {
         a.click();
         document.body.removeChild(a);
         URL.revokeObjectURL(url);
-        stores.componentStateStore.resumeProgress(0, '');
+        stores.componentStateStore.setResumeProgress(0, cid);
     } catch ({ message }) {
         stores.componentStateStore.enqueueSnackbar(message, 'error');
     }

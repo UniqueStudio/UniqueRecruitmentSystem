@@ -12,10 +12,7 @@ export class ComponentStateStore {
     drawerOpen = false;
     snackbars: Record<SnackbarKey, Snackbar> = {};
     fabOn = -1;
-    resume = {
-        progress: 0,
-        cid: '',
-    };
+    resumeProgresses: Record<string, number> = {};
     inputtingComment = {
         content: '',
         evaluation: 2 as Evaluation,
@@ -54,9 +51,8 @@ export class ComponentStateStore {
         this.fabOn = -1;
     }
 
-    resumeProgress(progress: number, cid: string) {
-        this.resume.progress = progress;
-        this.resume.cid = cid;
+    setResumeProgress(progress: number, cid: string) {
+        this.resumeProgresses[cid] = progress;
     }
 
     recordInputtingComment(evaluation: Evaluation, content: string) {
