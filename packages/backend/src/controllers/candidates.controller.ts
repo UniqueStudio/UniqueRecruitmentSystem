@@ -1,4 +1,6 @@
-import { Controller, Get, Post, Put } from '@nestjs/common';
+import { Controller, Get, Post, Put, UseGuards } from '@nestjs/common';
+
+import { JwtAuthGuard } from '@guards/jwtAuth.guard';
 
 @Controller('candidates')
 export class CandidatesController {
@@ -28,21 +30,25 @@ export class CandidatesController {
     }
 
     @Put(':cid/interview/:type')
+    @UseGuards(JwtAuthGuard)
     allocateOne() {
         // TODO
     }
 
     @Put('interview/:type')
+    @UseGuards(JwtAuthGuard)
     allocateAll() {
         // TODO
     }
 
     @Get(':query')
+    @UseGuards(JwtAuthGuard)
     getCandidates() {
         // TODO
     }
 
     @Get(':cid/resume')
+    @UseGuards(JwtAuthGuard)
     getResume() {
         // TODO
     }
