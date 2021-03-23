@@ -3,20 +3,35 @@
     "baseUrl": ".",
     "rootDir": ".",
     "paths": {
-      "@utils/*": [
-        "src/utils/*"
+      "@constants/*": [
+        "src/constants/*"
       ],
-      "@database/*": [
-        "src/database/*"
+      "@controllers/*": [
+        "src/controllers/*"
       ],
-      "@config/*": [
-        "src/config/*"
+      "@decorators/*": [
+        "src/decorators/*"
       ],
-      "@mw/*": [
+      "@entities/*": [
+        "src/entities/*"
+      ],
+      "@guards/*": [
+        "src/guards/*"
+      ],
+      "@interfaces/*": [
+        "src/interfaces/*"
+      ],
+      "@middlewares/*": [
         "src/middlewares/*"
       ],
-      "@actions/*": [
-        "src/actions/*"
+      "@modules/*": [
+        "src/modules/*"
+      ],
+      "@services/*": [
+        "src/services/*"
+      ],
+      "@utils/*": [
+        "src/utils/*"
       ]
     },
     "module": "commonjs",
@@ -27,11 +42,8 @@
     ],
     "sourceMap": true,
     "allowJs": true,
+    "strict": true,
     "moduleResolution": "node",
-    "typeRoots": [
-      "node_modules/@types",
-      "typings"
-    ],
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
@@ -41,15 +53,13 @@
     "strictNullChecks": true,
     "suppressImplicitAnyIndexErrors": true,
     "noUnusedLocals": true,
-    "experimentalDecorators": true
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "skipLibCheck": true
   },
-  "exclude": [
-    "node_modules",
-    "build",
-    "scripts",
-    "acceptance-tests",
-    "webpack",
-    "test",
-    "jest.config.js"
+  "include": [
+    "src",
+    "typings",
+    "test"
   ]
 }

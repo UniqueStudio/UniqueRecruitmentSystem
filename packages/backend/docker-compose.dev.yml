@@ -2,27 +2,18 @@ version: "3"
 services:
   redis:
     image: redis:alpine
-  mongodb:
-    image: mongo:latest
+  postgres:
+    image: postgres:alpine
     ports:
-    - "127.0.0.1:${DB_PORT}:${DB_PORT}"
-    command: "mongod --port ${DB_PORT}"
-    volumes:
-      - mongodb:/data/db
-  backend:
-    image: node:alpine
+      - "127.0.0.1:${POSTGRES_PORT}:5432"
+    user: postgres
     env_file:
       - .env
+  pgadmin:
+    image: dpage/pgadmin4:latest
     environment:
-      - NODE_ENV=development
+      PGADMIN_DEFAULT_EMAIL: a@b.c
+      PGADMIN_DEFAULT_PASSWORD: 123456
+      PGADMIN_LISTEN_PORT: 80
     ports:
-    - 5000:5000
-    links:
-    - mongodb
-    - redis
-    command: yarn startDev
-    working_dir: /usr/src/backend
-    volumes:
-      - ./:/usr/src/backend
-volumes:
-  mongodb:
+      - "9999:80"
