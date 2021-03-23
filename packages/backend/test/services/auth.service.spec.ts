@@ -48,4 +48,11 @@ describe('AuthService', () => {
             expect(user?.id).toBe(testUser.id);
         });
     });
+
+    describe('verify fake token', () => {
+        it('should return undefined', async () => {
+            const user = await authService.validateToken('fakeToken');
+            expect(user).toBeUndefined();
+        });
+    });
 });
