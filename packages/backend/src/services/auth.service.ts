@@ -6,15 +6,16 @@ import { verify } from '@utils/scrypt';
 
 @Injectable()
 export class AuthService {
-    constructor(private usersService: UsersService, private jwtService: JwtService) {}
+    constructor(
+        private readonly usersService: UsersService,
+        private readonly jwtService: JwtService,
+    ) {
+    }
 
     async validateUser(phone: string, password: string) {
         const user = await this.usersService.findIdentityByPhone(phone);
         if (user) {
-            const {
-                password: { hash, salt },
-                id,
-            } = user;
+            const { password: { hash, salt }, id } = user;
             if (await verify(hash, salt, password)) {
                 return id;
             }
@@ -30,7 +31,8 @@ export class AuthService {
         try {
             const { id } = await this.jwtService.verifyAsync<{ id: string }>(token);
             return await this.usersService.findOneById(id);
-        } catch {}
-        return;
+        } catch {
+            return;
+        }
     }
 }
