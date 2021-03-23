@@ -1,4 +1,4 @@
-import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
+import { MiddlewareConsumer, Module, ModuleMetadata, NestModule } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import Joi from 'joi';
@@ -11,11 +11,11 @@ import { AuthModule } from '@modules/auth.module';
 import { UsersModule } from '@modules/users.module';
 import { AppConfigService } from '@services/config.service';
 
-@Module({
+export const metadata: ModuleMetadata = {
     imports: [
         ConfigModule.forRoot({
             validationSchema: Joi.object({
-                NODE_ENV: Joi.string().valid(Env.dev, Env.prod).default(Env.dev),
+                NODE_ENV: Joi.string().valid(Env.dev, Env.prod, Env.test).default(Env.dev),
                 PORT: Joi.number().default(5000),
                 POSTGRES_HOST: Joi.string().default('postgres'),
                 POSTGRES_PORT: Joi.number().default(5432),
@@ -49,9 +49,11 @@ import { AppConfigService } from '@services/config.service';
         UsersModule,
     ],
     providers: [AppConfigService],
-})
+};
+
+@Module(metadata)
 export class AppModule implements NestModule {
-    constructor(private configService: AppConfigService) {}
+    constructor(private readonly configService: AppConfigService) {}
 
     configure(consumer: MiddlewareConsumer) {
         consumer
