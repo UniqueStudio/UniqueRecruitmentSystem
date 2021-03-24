@@ -2,13 +2,15 @@ import { Test } from '@nestjs/testing';
 
 import { Gender, Group } from '@constants/enums';
 import { UserEntity } from '@entities/user.entity';
-import { metadata } from '@modules/app.module';
+import { AppModule } from '@modules/app.module';
 import { UsersService } from '@services/users.service';
 
 describe('UsersService', () => {
     let usersService: UsersService;
     beforeAll(async () => {
-        const module = await Test.createTestingModule(metadata).compile();
+        const module = await Test.createTestingModule({
+            imports: [AppModule],
+        }).compile();
         usersService = module.get<UsersService>(UsersService);
         await usersService.clear();
     });
@@ -22,7 +24,7 @@ describe('UsersService', () => {
             testUser = await usersService.hashPasswordAndCreate({
                 weChatID: 'rika',
                 name: 'rika',
-                joinTime: 'rika',
+                joinTime: '2020C',
                 phone: '19876543210',
                 mail: 'rika@hinami.zawa',
                 gender: Gender.female,
@@ -53,7 +55,7 @@ describe('UsersService', () => {
                 await usersService.hashPasswordAndCreate({
                     weChatID: 'rika',
                     name: 'rikaWithNonUniqueFields',
-                    joinTime: 'rika',
+                    joinTime: '2020C',
                     phone: '19876543210',
                     mail: 'rika@hinami.zawa',
                     gender: Gender.female,
@@ -66,7 +68,7 @@ describe('UsersService', () => {
     describe('create user which has invalid fields', () => {
         it('should fail', async () => {
             await expect(async () => {
-                console.log(await usersService.hashPasswordAndCreate({
+                await usersService.hashPasswordAndCreate({
                     weChatID: 'rika',
                     name: 'rika',
                     joinTime: 'rika',
@@ -74,8 +76,12 @@ describe('UsersService', () => {
                     mail: 'invalid',
                     gender: 0.5,
                     group: -1 as unknown as Group,
-                }, password));
+                }, password);
             }).rejects.toThrow(/failed the validation/);
         });
+    });
+
+    afterAll(async () => {
+        await usersService.clear();
     });
 });

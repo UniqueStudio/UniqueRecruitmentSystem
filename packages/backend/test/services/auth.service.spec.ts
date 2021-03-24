@@ -2,7 +2,7 @@ import { Test } from '@nestjs/testing';
 
 import { Gender, Group } from '@constants/enums';
 import { UserEntity } from '@entities/user.entity';
-import { metadata } from '@modules/app.module';
+import { AppModule } from '@modules/app.module';
 import { AuthService } from '@services/auth.service';
 import { UsersService } from '@services/users.service';
 
@@ -13,14 +13,16 @@ describe('AuthService', () => {
 
     const password = 'P@ssw0rd';
     beforeAll(async () => {
-        const module = await Test.createTestingModule(metadata).compile();
+        const module = await Test.createTestingModule({
+            imports: [AppModule],
+        }).compile();
         usersService = module.get<UsersService>(UsersService);
         authService = module.get<AuthService>(AuthService);
         await usersService.clear();
         testUser = await usersService.hashPasswordAndCreate({
             weChatID: 'hanyuu',
             name: 'hanyuu',
-            joinTime: 'hanyuu',
+            joinTime: '2020C',
             phone: '19876543211',
             mail: 'hanyuu@hinami.zawa',
             gender: Gender.female,
@@ -54,5 +56,9 @@ describe('AuthService', () => {
             const user = await authService.validateToken('fakeToken');
             expect(user).toBeUndefined();
         });
+    });
+
+    afterAll(async () => {
+        await usersService.clear();
     });
 });
