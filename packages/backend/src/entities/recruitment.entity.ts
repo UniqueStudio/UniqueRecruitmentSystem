@@ -1,4 +1,4 @@
-import { IsDate, IsString } from 'class-validator';
+import { IsDate, IsString, Matches } from 'class-validator';
 import { Column, Entity, OneToMany } from 'typeorm';
 
 import { CandidateEntity } from '@entities/candidate.entity';
@@ -9,17 +9,18 @@ import { InterviewEntity } from '@entities/interview.entity';
 export class RecruitmentEntity extends CommonEntity {
     @Column({ unique: true })
     @IsString()
+    @Matches(/^\d{4}[ASC]$/)
     name!: string;
 
-    @Column('datetime')
+    @Column('timestamptz')
     @IsDate()
     begin!: Date;
 
-    @Column('datetime')
+    @Column('timestamptz')
     @IsDate()
     end!: Date;
 
-    @Column('datetime')
+    @Column('timestamptz')
     @IsDate()
     stop!: Date;
 

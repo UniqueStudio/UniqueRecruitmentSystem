@@ -12,7 +12,7 @@ class SelectionsAndAllocation {
     @JoinTable()
     selections!: InterviewEntity[];
 
-    @Column('datetime')
+    @Column('timestamptz')
     @IsDate()
     allocation!: Date;
 }
@@ -67,8 +67,7 @@ export class CandidateEntity extends CommonEntity {
     @IsString()
     intro!: string;
 
-    @Column({ default: false })
-    @IsOptional()
+    @Column()
     @IsBoolean()
     isQuick!: boolean;
 

@@ -1,4 +1,4 @@
-import { IsBoolean, IsEmail, IsEnum, IsOptional, IsPhoneNumber, IsString, IsUrl } from 'class-validator';
+import { IsBoolean, IsEmail, IsEnum, IsOptional, IsPhoneNumber, IsString, IsUrl, Matches } from 'class-validator';
 import { Column, Entity } from 'typeorm';
 
 import { Gender, Group } from '@constants/enums';
@@ -29,6 +29,7 @@ export class UserEntity extends CommonEntity {
 
     @Column()
     @IsString()
+    @Matches(/^\d{4}[ASC]$/)
     joinTime!: string;
 
     @Column({ default: false })

@@ -1,4 +1,4 @@
-import { IsDate, IsEnum, IsNumber, Min } from 'class-validator';
+import { IsDate, IsEnum, IsInt, Min } from 'class-validator';
 import { Column, Entity, ManyToOne, PrimaryColumn } from 'typeorm';
 
 import { GroupOrTeam, Period } from '@constants/enums';
@@ -6,12 +6,12 @@ import { RecruitmentEntity } from '@entities/recruitment.entity';
 
 class Slots {
     @Column('int')
-    @IsNumber()
+    @IsInt()
     @Min(0)
     total!: number;
 
     @Column('int')
-    @IsNumber()
+    @IsInt()
     @Min(0)
     occupied!: number;
 }
