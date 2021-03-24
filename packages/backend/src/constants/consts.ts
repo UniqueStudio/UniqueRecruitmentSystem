@@ -1,25 +1,27 @@
+import { Group } from '@constants/enums';
+
 export const QR_API = 'https://open.work.weixin.qq.com/wwopen/sso';
 export const WX_API = 'https://qyapi.weixin.qq.com/cgi-bin';
-export const ID_GROUP_MAP = {
-    2: 'web',
-    3: 'pm',
-    4: 'ai',
-    5: 'android',
-    6: 'game',
-    7: 'lab',
-    8: 'ios',
-    9: 'design',
-    15: 'web',
-    16: 'android',
-    17: 'ai',
-    18: 'game',
-    19: 'ios',
-    20: 'design',
-    21: 'lab',
-    22: 'lab',
-    23: 'lab',
-    24: 'lab',
-    25: 'pm',
+export const ID_GROUP_MAP: Record<number, Group> = {
+    2: Group.web,
+    3: Group.pm,
+    4: Group.ai,
+    5: Group.android,
+    6: Group.game,
+    7: Group.lab,
+    8: Group.ios,
+    9: Group.design,
+    15: Group.web,
+    16: Group.android,
+    17: Group.ai,
+    18: Group.game,
+    19: Group.ios,
+    20: Group.design,
+    21: Group.lab,
+    22: Group.lab,
+    23: Group.lab,
+    24: Group.lab,
+    25: Group.pm,
 };
 
 export const ZHANG_XIAO_LONG = new Map<'mother', never>();
