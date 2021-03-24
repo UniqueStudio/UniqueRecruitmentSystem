@@ -69,3 +69,15 @@ export enum Evaluation {
     fair,
     good,
 }
+
+export enum Status {
+    info = 'info',
+    success = 'success',
+    warning = 'warning',
+    error = 'error',
+}
+
+export enum Role {
+    user,
+    admin,
+}
