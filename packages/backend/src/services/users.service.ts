@@ -12,20 +12,19 @@ import { hash } from '@utils/scrypt';
 @Injectable()
 export class UsersService extends BasicCRUDService<UserEntity> {
     constructor(
-        @InjectRepository(UserEntity)
-        repository: Repository<UserEntity>
+        @InjectRepository(UserEntity) repository: Repository<UserEntity>,
     ) {
         super(repository);
     }
 
-    findIdentityByPhone(phone: string) {
+    findIdentityByPhone(phone: string): Promise<Pick<UserEntity, 'id' | 'password'> | undefined> {
         return this.findOne(
             {
                 phone,
             },
             {
                 select: ['id', 'password.hash' as keyof UserEntity, 'password.salt' as keyof UserEntity],
-            }
+            },
         );
     }
 
