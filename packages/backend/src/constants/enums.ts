@@ -16,15 +16,15 @@ export enum Group {
 }
 
 export enum GroupOrTeam {
-    web = 'Web',
-    lab = 'Lab',
-    ai = 'AI',
-    game = 'Game',
-    android = 'Android',
-    ios = 'iOS',
-    design = 'Design',
-    pm = 'PM',
-    unique = 'Unique',
+    web = 'web',
+    lab = 'lab',
+    ai = 'ai',
+    game = 'game',
+    android = 'android',
+    ios = 'ios',
+    design = 'design',
+    pm = 'pm',
+    unique = 'unique',
 }
 
 export enum Period {
