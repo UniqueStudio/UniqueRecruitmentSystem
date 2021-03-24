@@ -22,4 +22,4 @@ export const ID_GROUP_MAP = {
     25: 'pm',
 };
 
-export const ZHANG_XIAO_LONG = new Map<string, never>();
+export const ZHANG_XIAO_LONG = new Map<'mother', never>();
