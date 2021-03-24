@@ -3,7 +3,7 @@ import { validate } from 'class-validator';
 import { DeepPartial, FindConditions, FindManyOptions, FindOneOptions, ObjectLiteral, Repository } from 'typeorm';
 
 export abstract class BasicCRUDService<T extends ObjectLiteral> {
-    protected constructor(protected repository: Repository<T>) {
+    protected constructor(protected readonly repository: Repository<T>) {
     }
 
     async createAndSave(data: DeepPartial<T>) {
