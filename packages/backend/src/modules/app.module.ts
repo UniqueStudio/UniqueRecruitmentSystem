@@ -1,21 +1,31 @@
-import { MiddlewareConsumer, Module, ModuleMetadata, NestModule } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule, ValidationPipe } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import Joi from 'joi';
 
 import { Env } from '@constants/enums';
+import { ErrorFilter } from '@filters/error.filter';
+import { RoleGuard } from '@guards/role.guard';
+import { TransformInterceptor } from '@interceptors/transform.interceptor';
 import { AuthMiddleWare } from '@middlewares/auth';
 import { helmet } from '@middlewares/helmet';
 import { rateLimit } from '@middlewares/rateLimit';
 import { AuthModule } from '@modules/auth.module';
+import { CandidatesModule } from '@modules/candidates.module';
+import { ChatModule } from '@modules/chat.module';
+import { CommentsModule } from '@modules/comments.module';
+import { RecruitmentsModule } from '@modules/recruitments.module';
 import { UsersModule } from '@modules/users.module';
 import { AppConfigService } from '@services/config.service';
 
-export const metadata: ModuleMetadata = {
+@Module({
     imports: [
         ConfigModule.forRoot({
             validationSchema: Joi.object({
                 NODE_ENV: Joi.string().valid(Env.dev, Env.prod, Env.test).default(Env.dev),
+                RESUME_TEMPORARY_PATH: Joi.string().default('/tmp/resumes'),
+                RESUME_PERSISTENT_PATH: Joi.string().default('./data/resumes'),
                 PORT: Joi.number().default(5000),
                 POSTGRES_HOST: Joi.string().default('postgres'),
                 POSTGRES_PORT: Joi.number().default(5432),
@@ -46,14 +56,35 @@ export const metadata: ModuleMetadata = {
             }),
         }),
         AuthModule,
+        CandidatesModule,
+        ChatModule,
+        CommentsModule,
+        RecruitmentsModule,
         UsersModule,
     ],
-    providers: [AppConfigService],
-};
-
-@Module(metadata)
+    providers: [
+        AppConfigService,
+        {
+            provide: APP_GUARD,
+            useClass: RoleGuard,
+        },
+        {
+            provide: APP_PIPE,
+            useClass: ValidationPipe,
+        },
+        {
+            provide: APP_INTERCEPTOR,
+            useClass: TransformInterceptor,
+        },
+        {
+            provide: APP_FILTER,
+            useClass: ErrorFilter,
+        },
+    ],
+})
 export class AppModule implements NestModule {
-    constructor(private readonly configService: AppConfigService) {}
+    constructor(private readonly configService: AppConfigService) {
+    }
 
     configure(consumer: MiddlewareConsumer) {
         consumer
@@ -62,7 +93,7 @@ export class AppModule implements NestModule {
                 helmet({
                     contentSecurityPolicy: this.configService.isDev ? false : undefined,
                 }),
-                AuthMiddleWare
+                AuthMiddleWare,
             )
             .forRoutes('*');
     }
