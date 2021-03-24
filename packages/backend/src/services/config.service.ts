@@ -14,11 +14,15 @@ export class AppConfigService extends ConfigService {
         return this.get('NODE_ENV') === Env.dev;
     }
 
-    get qrCodeURL() {
+    get qrInitURL() {
         const APP_ID = this.get<string>('APP_ID')!;
         const AGENT_ID = this.get<string>('AGENT_ID')!;
         const REDIRECT_URI = this.get<string>('REDIRECT_URI')!;
         return `${QR_API}/qrConnect?appid=${APP_ID}&agentid=${AGENT_ID}&redirect_uri=${REDIRECT_URI}`;
+    }
+
+    qrImgURL(key: string) {
+        return `${QR_API}/qrImg?key=${key}`;
     }
 
     scanningURL(key: string) {

@@ -32,6 +32,11 @@ export class UsersService extends BasicCRUDService<UserEntity> {
         return this.find({ where: { group: Equal(group) } });
     }
 
+    async findOrCreate(data: Partial<UserEntity>) {
+        return (await this.findOne({ weChatID: data.weChatID }))
+            ?? (await this.hashPasswordAndCreate(data));
+    }
+
     hashPassword(password: string) {
         return hash(password);
     }
