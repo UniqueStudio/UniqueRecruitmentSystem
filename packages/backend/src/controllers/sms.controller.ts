@@ -1,6 +1,7 @@
-import { Controller, Get, Post, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post } from '@nestjs/common';
 
-import { JwtAuthGuard } from '@guards/jwtAuth.guard';
+import { Role } from '@constants/enums';
+import { AcceptRole } from '@decorators/role.decorator';
 
 @Controller('sms')
 export class SMSController {
@@ -10,13 +11,13 @@ export class SMSController {
     }
 
     @Get('verification/user')
-    @UseGuards(JwtAuthGuard)
+    @AcceptRole(Role.user)
     sendCodeToUser() {
         // TODO
     }
 
     @Post()
-    @UseGuards(JwtAuthGuard)
+    @AcceptRole(Role.user)
     sendSMSToCandidate() {
         // TODO
     }
