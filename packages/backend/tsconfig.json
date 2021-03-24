@@ -12,11 +12,23 @@
       "@decorators/*": [
         "src/decorators/*"
       ],
+      "@dtos/*": [
+        "src/dtos/*"
+      ],
       "@entities/*": [
         "src/entities/*"
       ],
+      "@filters/*": [
+        "src/filters/*"
+      ],
+      "@gateways/*": [
+        "src/gateways/*"
+      ],
       "@guards/*": [
         "src/guards/*"
+      ],
+      "@interceptors/*": [
+        "src/interceptors/*"
       ],
       "@interfaces/*": [
         "src/interfaces/*"
