@@ -23,8 +23,8 @@ export abstract class BasicCRUDService<T extends ObjectLiteral> {
         return this.repository.findOne(conditions, options);
     }
 
-    findOneById(id: string) {
-        return this.repository.findOne(id);
+    findOneById(id: string, options?: FindOneOptions<T>) {
+        return this.repository.findOne(id, options);
     }
 
     update: Repository<T>['update'] = (...args) => {
@@ -40,6 +40,6 @@ export abstract class BasicCRUDService<T extends ObjectLiteral> {
     }
 
     clear() {
-        return this.repository.clear();
+        return this.delete({});
     }
 }
