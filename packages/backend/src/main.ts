@@ -8,6 +8,7 @@ const config = new DocumentBuilder().setVersion('3.0').build();
 
 void (async () => {
     const app = await NestFactory.create(AppModule, { cors: true });
+    app.setGlobalPrefix('v3');
     SwaggerModule.setup('api', app, SwaggerModule.createDocument(app, config));
     await app.listen(app.get(ConfigService).get('PORT')!);
 })();
