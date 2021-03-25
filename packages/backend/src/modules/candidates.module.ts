@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MulterModule } from '@nestjs/platform-express';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -9,6 +9,7 @@ import { CandidatesGateway } from '@gateways/candidates.gateway';
 import { AuthModule } from '@modules/auth.module';
 import { CacheModule } from '@modules/cache.module';
 import { RecruitmentsModule } from '@modules/recruitments.module';
+import { SMSModule } from '@modules/sms.module';
 import { CandidatesService } from '@services/candidates.service';
 
 @Module({
@@ -24,8 +25,9 @@ import { CandidatesService } from '@services/candidates.service';
                 dest: conf.get('RESUME_TEMPORARY_PATH'),
             }),
         }),
-        AuthModule,
+        forwardRef(() => AuthModule),
         CacheModule,
+        SMSModule,
         RecruitmentsModule,
     ],
     controllers: [CandidatesController],
