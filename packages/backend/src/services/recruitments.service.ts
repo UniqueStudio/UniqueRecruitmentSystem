@@ -17,7 +17,7 @@ export class RecruitmentsService extends BasicCRUDService<RecruitmentEntity> {
         const now = new Date();
         return this.find({
             where: {
-                stop: MoreThanOrEqual(now),
+                end: MoreThanOrEqual(now),
                 begin: LessThanOrEqual(now),
             },
             select: ['id', 'name', 'begin', 'end', 'stop'],
