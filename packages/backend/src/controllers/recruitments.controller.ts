@@ -77,15 +77,11 @@ export class RecruitmentsController {
         if (!recruitment) {
             throw new BadRequestException(`Recruitment ${rid} does not exist`);
         }
-        // TODO: update when exists, also check slots: `total >= occupied`
-        await this.interviewsService.saveMany(body.map(({ date, period, slots }) => ({
+        await this.interviewsService.saveMany(body.map(({ date, period, slotNumber }) => ({
             date: new Date(date),
             period,
             name,
-            slots: {
-                total: slots,
-                occupied: 0,
-            },
+            slotNumber,
             recruitment,
         })));
         this.recruitmentsGateway.broadcastUpdate();

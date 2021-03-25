@@ -4,18 +4,6 @@ import { Column, Entity, ManyToOne, PrimaryColumn } from 'typeorm';
 import { GroupOrTeam, Period } from '@constants/enums';
 import { RecruitmentEntity } from '@entities/recruitment.entity';
 
-class Slots {
-    @Column('int')
-    @IsInt()
-    @Min(0)
-    total!: number;
-
-    @Column('int')
-    @IsInt()
-    @Min(0)
-    occupied!: number;
-}
-
 @Entity('interviews')
 export class InterviewEntity {
     @PrimaryColumn('date')
@@ -30,8 +18,10 @@ export class InterviewEntity {
     @IsEnum(GroupOrTeam)
     name!: GroupOrTeam;
 
-    @Column(() => Slots)
-    slots!: Slots;
+    @Column('int')
+    @IsInt()
+    @Min(0)
+    slotNumber!: number;
 
     @ManyToOne(() => RecruitmentEntity, ({ interviews }) => interviews)
     recruitment!: RecruitmentEntity;

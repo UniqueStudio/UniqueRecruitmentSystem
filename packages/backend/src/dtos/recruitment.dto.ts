@@ -22,7 +22,7 @@ export class SetRecruitmentInterviewsDto {
 
     @IsInt()
     @Min(0)
-    slots!: number;
+    slotNumber!: number;
 }
 
 export class CreateRecruitmentDto extends SetRecruitmentScheduleDto {
