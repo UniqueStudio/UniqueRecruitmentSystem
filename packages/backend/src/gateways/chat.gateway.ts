@@ -11,13 +11,10 @@ export class ChatGateway {
         @MessageBody() { message }: { message: Message },
         @ConnectedSocket() socket: Socket,
     ) {
-        socket.emit('sendMessage', {
-            status: Status.success,
-            payload: message,
-        });
         socket.broadcast.emit('receiveMessage', {
             status: Status.info,
             payload: message,
         });
+        return message;
     }
 }

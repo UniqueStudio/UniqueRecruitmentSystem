@@ -1,8 +1,8 @@
-import { IsBoolean, IsEmail, IsEnum, IsOptional, IsPhoneNumber, IsString, IsUUID } from 'class-validator';
+import { IsBoolean, IsDateString, IsEmail, IsEnum, IsOptional, IsPhoneNumber, IsString, IsUUID } from 'class-validator';
 
-import { Gender, Grade, Group, Rank } from '@constants/enums';
+import { Gender, Grade, Group, InterviewType, Rank, Step } from '@constants/enums';
 
-export class CreateCandidateDto {
+export class CreateCandidateBody {
     @IsString()
     name!: string;
 
@@ -42,4 +42,33 @@ export class CreateCandidateDto {
 
     @IsUUID(4)
     rid!: string;
+}
+
+export class AllocateOneBody {
+    @IsDateString()
+    time!: string;
+}
+
+export class AllocateOneParams {
+    @IsUUID()
+    cid!: string;
+
+    @IsEnum(InterviewType)
+    type!: InterviewType;
+}
+
+export class RemoveCandidateBody {
+    @IsUUID()
+    cid!: string;
+
+    @IsString()
+    token!: string;
+}
+
+export class MoveCandidateBody extends RemoveCandidateBody {
+    @IsEnum(Step)
+    from!: Step;
+
+    @IsEnum(Step)
+    to!: Step;
 }
