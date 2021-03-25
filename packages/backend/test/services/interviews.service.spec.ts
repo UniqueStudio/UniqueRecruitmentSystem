@@ -36,10 +36,7 @@ describe('RecruitmentsService', () => {
                 date: new Date(),
                 period: Period.morning,
                 name: GroupOrTeam.web,
-                slots: {
-                    total: 100,
-                    occupied: 0,
-                },
+                slotNumber: 100,
                 recruitment: testRecruitment,
             });
             expect(testInterview).toBeDefined();

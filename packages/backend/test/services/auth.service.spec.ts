@@ -1,6 +1,6 @@
 import { Test } from '@nestjs/testing';
 
-import { Gender, Group } from '@constants/enums';
+import { Gender, Group, Role } from '@constants/enums';
 import { UserEntity } from '@entities/user.entity';
 import { AppModule } from '@modules/app.module';
 import { AuthService } from '@services/auth.service';
@@ -45,7 +45,7 @@ describe('AuthService', () => {
 
     describe('verify generated token', () => {
         it('should return the same user', async () => {
-            const token = await authService.generateToken(testUser.id);
+            const token = await authService.generateToken(testUser.id, Role.user);
             const user = await authService.validateToken(token);
             expect(user?.id).toBe(testUser.id);
         });

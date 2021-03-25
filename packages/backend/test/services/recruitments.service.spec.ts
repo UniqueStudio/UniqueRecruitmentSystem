@@ -21,7 +21,7 @@ describe('RecruitmentsService', () => {
             testRecruitment = await recruitmentsService.createAndSave({
                 name: '2020C',
                 begin: new Date('1999'),
-                end: new Date(),
+                end: new Date('2099'),
                 stop: new Date('2099'),
             });
             expect(testRecruitment).toBeDefined();

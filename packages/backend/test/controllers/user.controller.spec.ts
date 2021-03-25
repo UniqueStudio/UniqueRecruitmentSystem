@@ -7,9 +7,10 @@ import { UserEntity } from '@entities/user.entity';
 import { AppModule } from '@modules/app.module';
 import { UsersService } from '@services/users.service';
 
-describe('AuthController e2e', () => {
+describe('UserController e2e', () => {
     let app: INestApplication;
     let testUser: UserEntity;
+    let jwt: string;
     const password = 'P@ssw0rd';
 
     beforeAll(async () => {
@@ -29,23 +30,19 @@ describe('AuthController e2e', () => {
             gender: Gender.female,
             group: Group.web,
         }, password);
+        const { body } = await agent(app.getHttpServer())
+            .post('/auth/user/login')
+            .send({ password, phone: testUser.phone });
+        const { payload } = body;
+        jwt = payload;
     });
 
-    describe('POST /auth/user/login with valid credential', () => {
-        it('should return jwt', async () => {
+    describe('GET /users/me with valid credential', () => {
+        it('should return user info', async () => {
             await agent(app.getHttpServer())
-                .post('/auth/user/login')
-                .send({ password, phone: testUser.phone })
-                .expect(201);
-        });
-    });
-
-    describe('POST /auth/user/login with invalid credential', () => {
-        it('should throw', async () => {
-            await agent(app.getHttpServer())
-                .post('/auth/user/login')
-                .send({ password: 'fakePassword', phone: testUser.phone })
-                .expect(401);
+                .get('/users/me')
+                .auth(jwt, { type: 'bearer' })
+                .expect(200);
         });
     });
 
