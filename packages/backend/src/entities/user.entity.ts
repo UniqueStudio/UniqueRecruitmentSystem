@@ -1,7 +1,8 @@
 import { IsBoolean, IsEmail, IsEnum, IsOptional, IsPhoneNumber, IsString, IsUrl, Matches } from 'class-validator';
-import { Column, Entity } from 'typeorm';
+import { Column, Entity, OneToMany } from 'typeorm';
 
 import { Gender, Group } from '@constants/enums';
+import { CommentEntity } from '@entities/comment.entity';
 import { CommonEntity } from '@entities/common.entity';
 
 class Password {
@@ -14,7 +15,7 @@ class Password {
     hash!: string;
 }
 
-@Entity()
+@Entity('users')
 export class UserEntity extends CommonEntity {
     @Column({ unique: true })
     @IsString()
@@ -62,4 +63,7 @@ export class UserEntity extends CommonEntity {
     @IsOptional()
     @IsUrl({ protocols: ['https'] })
     avatar?: string;
+
+    @OneToMany(() => CommentEntity, ({ user }) => user)
+    comments!: CommentEntity[];
 }

@@ -5,7 +5,7 @@ import { CandidateEntity } from '@entities/candidate.entity';
 import { CommonEntity } from '@entities/common.entity';
 import { InterviewEntity } from '@entities/interview.entity';
 
-@Entity()
+@Entity('recruitments')
 export class RecruitmentEntity extends CommonEntity {
     @Column({ unique: true })
     @IsString()

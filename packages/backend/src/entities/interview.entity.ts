@@ -16,7 +16,7 @@ class Slots {
     occupied!: number;
 }
 
-@Entity()
+@Entity('interviews')
 export class InterviewEntity {
     @PrimaryColumn('date')
     @IsDate()

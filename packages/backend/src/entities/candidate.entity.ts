@@ -25,7 +25,7 @@ class InterviewsOfCandidate {
     team!: SelectionsAndAllocation;
 }
 
-@Entity()
+@Entity('candidates')
 export class CandidateEntity extends CommonEntity {
     @Column()
     @IsString()
@@ -102,6 +102,6 @@ export class CandidateEntity extends CommonEntity {
     @ManyToOne(() => RecruitmentEntity, ({ candidates }) => candidates)
     recruitment!: RecruitmentEntity;
 
-    @OneToMany(() => CommentEntity, ({ user }) => user)
+    @OneToMany(() => CommentEntity, ({ candidate }) => candidate)
     comments!: CommentEntity[];
 }

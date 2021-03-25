@@ -4,11 +4,15 @@ import { Column, Entity, ManyToOne } from 'typeorm';
 import { Evaluation } from '@constants/enums';
 import { CandidateEntity } from '@entities/candidate.entity';
 import { CommonEntity } from '@entities/common.entity';
+import { UserEntity } from '@entities/user.entity';
 
-@Entity()
+@Entity('comments')
 export class CommentEntity extends CommonEntity {
     @ManyToOne(() => CandidateEntity, ({ comments }) => comments)
-    user!: CandidateEntity;
+    candidate!: CandidateEntity;
+
+    @ManyToOne(() => UserEntity, ({ comments }) => comments)
+    user!: UserEntity;
 
     @Column()
     @IsString()
