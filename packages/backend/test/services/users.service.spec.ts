@@ -77,7 +77,7 @@ describe('UsersService', () => {
                     gender: 0.5,
                     group: -1 as unknown as Group,
                 }, password);
-            }).rejects.toThrow(/failed the validation/);
+            }).rejects.toThrow();
         });
     });
 
