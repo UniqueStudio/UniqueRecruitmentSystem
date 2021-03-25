@@ -33,13 +33,14 @@ export enum Period {
     evening = 'evening',
 }
 
+// Feel free to submit a pull request if you can express ALL of them in NATIVE English
 export enum Step {
-    zeroth,
-    first,
-    second,
-    third,
-    fourth,
-    fifth,
+    报名,
+    笔试,
+    组面,
+    熬测,
+    群面,
+    通过,
 }
 
 export enum Gender {
@@ -85,4 +86,11 @@ export enum Status {
 export enum Role {
     user,
     admin,
+}
+
+export enum SMSType {
+    group = 'group',
+    team = 'team',
+    accept = 'accept',
+    reject = 'reject',
 }

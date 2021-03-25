@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 
-import { QR_API, WX_API } from '@constants/consts';
+import { QR_API, SMS_API, WX_API } from '@constants/consts';
 import { Env } from '@constants/enums';
 
 @Injectable()
@@ -41,5 +41,9 @@ export class AppConfigService extends ConfigService {
 
     userInfoURL(accessToken: string, uid: string) {
         return `${WX_API}/user/get?access_token=${accessToken}&userid=${uid}`;
+    }
+
+    get smsURL() {
+        return SMS_API;
     }
 }

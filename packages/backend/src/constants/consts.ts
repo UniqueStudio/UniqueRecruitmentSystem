@@ -2,6 +2,8 @@ import { Group } from '@constants/enums';
 
 export const QR_API = 'https://open.work.weixin.qq.com/wwopen/sso';
 export const WX_API = 'https://qyapi.weixin.qq.com/cgi-bin';
+export const SMS_API = 'https://open.hustunique.com/message/sms';
+export const STEPS = ['报名流程', '笔试流程', '面试流程', '熬测流程', '群面流程', '通过'];
 export const ID_GROUP_MAP: Record<number, Group> = {
     2: Group.web,
     3: Group.pm,
