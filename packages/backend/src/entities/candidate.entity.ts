@@ -52,11 +52,11 @@ export class CandidateEntity extends CommonEntity {
     @IsEnum(Rank)
     rank!: Rank;
 
-    @Column({ unique: true })
+    @Column()
     @IsEmail()
     mail!: string;
 
-    @Column({ unique: true })
+    @Column()
     @IsPhoneNumber('CN')
     phone!: string;
 
