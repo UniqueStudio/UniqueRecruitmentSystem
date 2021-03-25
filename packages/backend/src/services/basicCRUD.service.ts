@@ -27,13 +27,9 @@ export abstract class BasicCRUDService<T extends ObjectLiteral> {
         return this.repository.findOne(id, options);
     }
 
-    update: Repository<T>['update'] = (...args) => {
-        return this.repository.update(...args);
-    };
+    update: Repository<T>['update'] = (...args) => this.repository.update(...args);
 
-    delete: Repository<T>['delete'] = (...args) => {
-        return this.repository.delete(...args);
-    };
+    delete: Repository<T>['delete'] = (...args) => this.repository.delete(...args);
 
     count(options?: FindManyOptions<T>) {
         return this.repository.count(options);
