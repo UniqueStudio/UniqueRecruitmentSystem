@@ -12,4 +12,8 @@ export class CandidatesService extends BasicCRUDService<CandidateEntity> {
     ) {
         super(repository);
     }
+
+    findManyByIds(ids: string[]) {
+        return this.repository.findByIds(ids);
+    }
 }
