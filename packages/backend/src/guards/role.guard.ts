@@ -2,7 +2,7 @@ import { CanActivate, ExecutionContext, Injectable, InternalServerErrorException
 import { Reflector } from '@nestjs/core';
 
 import { Role } from '@constants/enums';
-import { RequestWithUser } from '@interfaces/request.interface';
+import { RequestWithIdentity } from '@interfaces/request.interface';
 
 @Injectable()
 export class RoleGuard implements CanActivate {
@@ -11,7 +11,7 @@ export class RoleGuard implements CanActivate {
 
     canActivate(context: ExecutionContext) {
         const role = this.reflector.get<Role>('role', context.getHandler());
-        const req = context.switchToHttp().getRequest<RequestWithUser>();
+        const req = context.switchToHttp().getRequest<RequestWithIdentity>();
         switch (role) {
             case Role.admin:
                 if (!req.user) {
@@ -20,6 +20,8 @@ export class RoleGuard implements CanActivate {
                 return req.user.isAdmin || req.user.isCaptain;
             case Role.user:
                 return !!req.user;
+            case Role.candidate:
+                return !!req.candidate;
             case undefined:
                 return true;
             default:
