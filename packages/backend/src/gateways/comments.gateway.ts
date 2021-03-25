@@ -3,6 +3,7 @@ import { Socket } from 'socket.io';
 
 import { Status } from '@constants/enums';
 import { AddCommentBody, RemoveCommentBody } from '@dtos/comment.dto';
+import { UserEntity } from '@entities/user.entity';
 import { AuthService } from '@services/auth.service';
 import { CandidatesService } from '@services/candidates.service';
 import { CommentsService } from '@services/comments.service';
@@ -22,12 +23,12 @@ export class CommentsGateway {
         @ConnectedSocket() socket: Socket,
     ) {
         const user = await this.authService.validateToken(token);
-        if (!user) {
+        if (!(user instanceof UserEntity)) {
             throw new WsException('Failed to authenticate user');
         }
         const candidate = await this.candidatesService.findOneById(cid);
         if (!candidate) {
-            throw new WsException(`Candidate of id ${cid} doesn't exist`);
+            throw new WsException(`Candidate with id ${cid} doesn't exist`);
         }
         const { content, evaluation } = comment;
         const data = {
@@ -52,12 +53,12 @@ export class CommentsGateway {
         @ConnectedSocket() socket: Socket,
     ) {
         const user = await this.authService.validateToken(token);
-        if (!user) {
+        if (!(user instanceof UserEntity)) {
             throw new WsException('Failed to authenticate user');
         }
         const comment = await this.commentsService.findOneById(id);
         if (!comment) {
-            throw new WsException(`Comment of id ${id} doesn't exist`);
+            throw new WsException(`Comment with id ${id} doesn't exist`);
         }
         if (comment.user.id !== user.id) {
             throw new WsException('You don\'t have permission to do this');

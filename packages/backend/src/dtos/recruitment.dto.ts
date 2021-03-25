@@ -2,7 +2,7 @@ import { IsDateString, IsEnum, IsInt, IsString, Matches, Min } from 'class-valid
 
 import { Period } from '@constants/enums';
 
-export class SetRecruitmentScheduleDto {
+export class SetRecruitmentScheduleBody {
     @IsDateString()
     begin!: string;
 
@@ -13,7 +13,7 @@ export class SetRecruitmentScheduleDto {
     stop!: string;
 }
 
-export class SetRecruitmentInterviewsDto {
+export class SetRecruitmentInterviewsBody {
     @IsDateString()
     date!: string;
 
@@ -25,7 +25,7 @@ export class SetRecruitmentInterviewsDto {
     slotNumber!: number;
 }
 
-export class CreateRecruitmentDto extends SetRecruitmentScheduleDto {
+export class CreateRecruitmentBody extends SetRecruitmentScheduleBody {
     @IsString()
     @Matches(/^\d{4}[ASC]$/)
     name!: string;

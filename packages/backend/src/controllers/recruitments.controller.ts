@@ -2,7 +2,7 @@ import { BadRequestException, Body, Controller, Get, Param, Post, Put, UseGuards
 
 import { GroupOrTeam, Role } from '@constants/enums';
 import { AcceptRole } from '@decorators/role.decorator';
-import { CreateRecruitmentDto, SetRecruitmentInterviewsDto, SetRecruitmentScheduleDto } from '@dtos/recruitment.dto';
+import { CreateRecruitmentBody, SetRecruitmentInterviewsBody, SetRecruitmentScheduleBody } from '@dtos/recruitment.dto';
 import { RecruitmentsGateway } from '@gateways/recruitments.gateway';
 import { CodeGuard } from '@guards/code.guard';
 import { InterviewsService } from '@services/interviews.service';
@@ -38,7 +38,7 @@ export class RecruitmentsController {
     @AcceptRole(Role.admin)
     @UseGuards(CodeGuard)
     async createRecruitment(
-        @Body() { name, begin, end, stop }: CreateRecruitmentDto,
+        @Body() { name, begin, end, stop }: CreateRecruitmentBody,
     ) {
         await this.recruitmentsService.createAndSave({
             name,
@@ -53,7 +53,7 @@ export class RecruitmentsController {
     @AcceptRole(Role.admin)
     async setRecruitmentSchedule(
         @Param('rid') rid: string,
-        @Body() { begin, end, stop }: SetRecruitmentScheduleDto,
+        @Body() { begin, end, stop }: SetRecruitmentScheduleBody,
     ) {
         const recruitment = await this.recruitmentsService.findOneById(rid);
         if (!recruitment) {
@@ -71,7 +71,7 @@ export class RecruitmentsController {
     async setRecruitmentInterviews(
         @Param('rid') rid: string,
         @Param('name') name: GroupOrTeam,
-        @Body() body: SetRecruitmentInterviewsDto[],
+        @Body() body: SetRecruitmentInterviewsBody[],
     ) {
         const recruitment = await this.recruitmentsService.findOneById(rid);
         if (!recruitment) {

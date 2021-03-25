@@ -12,6 +12,7 @@ import { Server, Socket } from 'socket.io';
 import { Status } from '@constants/enums';
 import { MoveCandidateBody, RemoveCandidateBody } from '@dtos/candidate.dto';
 import { CandidateEntity } from '@entities/candidate.entity';
+import { UserEntity } from '@entities/user.entity';
 import { RecruitmentsGateway } from '@gateways/recruitments.gateway';
 import { AuthService } from '@services/auth.service';
 import { CandidatesService } from '@services/candidates.service';
@@ -41,12 +42,12 @@ export class CandidatesGateway {
         @MessageBody() { cid, from, to, token }: MoveCandidateBody,
         @ConnectedSocket() socket: Socket,
     ) {
-        if (!await this.authService.validateToken(token)) {
+        if (!(await this.authService.validateToken(token) instanceof UserEntity)) {
             throw new WsException('Failed to authenticate user');
         }
         const candidate = await this.candidatesService.findOneById(cid);
         if (!candidate) {
-            throw new WsException(`Candidate of id ${cid} doesn't exist`);
+            throw new WsException(`Candidate with id ${cid} doesn't exist`);
         }
         const { step, recruitment: { name, end } } = candidate;
         if (+end < Date.now()) {
@@ -70,12 +71,12 @@ export class CandidatesGateway {
         @MessageBody() { cid, token }: RemoveCandidateBody,
         @ConnectedSocket() socket: Socket,
     ) {
-        if (!await this.authService.validateToken(token)) {
+        if (!(await this.authService.validateToken(token) instanceof UserEntity)) {
             throw new WsException('Failed to authenticate user');
         }
         const candidate = await this.candidatesService.findOneById(cid);
         if (!candidate) {
-            throw new WsException(`Candidate of id ${cid} doesn't exist`);
+            throw new WsException(`Candidate with id ${cid} doesn't exist`);
         }
         const { resume, recruitment: { name, end } } = candidate;
         if (+end < Date.now()) {

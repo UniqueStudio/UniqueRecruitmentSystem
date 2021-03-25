@@ -3,7 +3,7 @@ import { BadRequestException, Body, Controller, Get, Put } from '@nestjs/common'
 import { Role } from '@constants/enums';
 import { AcceptRole } from '@decorators/role.decorator';
 import { User } from '@decorators/user.decorator';
-import { SetUserInfoDto } from '@dtos/user.dto';
+import { SetUserInfoBody } from '@dtos/user.dto';
 import { UserEntity } from '@entities/user.entity';
 import { UsersService } from '@services/users.service';
 
@@ -14,17 +14,17 @@ export class UsersController {
     ) {
     }
 
-    @Get()
+    @Get('me')
     @AcceptRole(Role.user)
-    getInfo(@User() user: UserEntity) {
+    getMyInfo(@User() user: UserEntity) {
         return user;
     }
 
-    @Put()
+    @Put('me')
     @AcceptRole(Role.user)
-    async setInfo(
+    async setMyInfo(
         @User() user: UserEntity,
-        @Body() { phone, password, mail }: SetUserInfoDto,
+        @Body() { phone, password, mail }: SetUserInfoBody,
     ) {
         if (password) {
             user.password = await this.usersService.hashPassword(password);
@@ -36,8 +36,8 @@ export class UsersController {
 
     @Get('group')
     @AcceptRole(Role.user)
-    async getGroup(@User() user: UserEntity) {
-        return await this.usersService.findInGroup(user.group);
+    getMyGroup(@User() user: UserEntity) {
+        return this.usersService.findInGroup(user.group);
     }
 
     @Put('admin')

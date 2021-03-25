@@ -1,8 +1,8 @@
 import { IsEmail } from 'class-validator';
 
-import { AuthUserByPasswordDto } from '@dtos/auth.dto';
+import { AuthUserByPasswordBody } from '@dtos/auth.dto';
 
-export class SetUserInfoDto extends AuthUserByPasswordDto {
+export class SetUserInfoBody extends AuthUserByPasswordBody {
     @IsEmail()
     mail!: string;
 }
