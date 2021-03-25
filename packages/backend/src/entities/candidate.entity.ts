@@ -12,9 +12,10 @@ class SelectionsAndAllocation {
     @JoinTable()
     selections!: InterviewEntity[];
 
-    @Column('timestamptz')
+    @Column('timestamptz', { nullable: true })
+    @IsOptional()
     @IsDate()
-    allocation!: Date;
+    allocation?: Date;
 }
 
 class InterviewsOfCandidate {
