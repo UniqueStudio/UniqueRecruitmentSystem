@@ -23,4 +23,10 @@ export class RecruitmentsService extends BasicCRUDService<RecruitmentEntity> {
             select: ['id', 'name', 'begin', 'end', 'stop'],
         });
     }
+
+    findOneWithCandidates(id: string) {
+        return this.findOneById(id, {
+            relations: ['candidates', 'candidates.comments', 'candidates.interviews'],
+        });
+    }
 }

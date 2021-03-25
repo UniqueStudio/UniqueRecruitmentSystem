@@ -9,3 +9,5 @@ export const copyFile = async (from: string, toDirectory: string, toName: string
     await promises.copyFile(from, to);
     return to;
 };
+
+export const deleteFile = (filename: string) => promises.unlink(filename);

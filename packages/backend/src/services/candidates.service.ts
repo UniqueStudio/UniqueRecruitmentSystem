@@ -8,8 +8,8 @@ import { BasicCRUDService } from '@services/basicCRUD.service';
 @Injectable()
 export class CandidatesService extends BasicCRUDService<CandidateEntity> {
     constructor(
-        @InjectRepository(CandidateEntity) candidateRepository: Repository<CandidateEntity>,
+        @InjectRepository(CandidateEntity) repository: Repository<CandidateEntity>,
     ) {
-        super(candidateRepository);
+        super(repository);
     }
 }
