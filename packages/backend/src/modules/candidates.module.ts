@@ -6,7 +6,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { CandidatesController } from '@controllers/candidates.controller';
 import { CandidateEntity } from '@entities/candidate.entity';
 import { CandidatesGateway } from '@gateways/candidates.gateway';
-import { RecruitmentsGateway } from '@gateways/recruitments.gateway';
 import { AuthModule } from '@modules/auth.module';
 import { RecruitmentsModule } from '@modules/recruitments.module';
 import { CandidatesService } from '@services/candidates.service';
@@ -28,8 +27,8 @@ import { CandidatesService } from '@services/candidates.service';
         RecruitmentsModule,
     ],
     controllers: [CandidatesController],
-    providers: [CandidatesService, CandidatesGateway, RecruitmentsGateway],
-    exports: [CandidatesService],
+    providers: [CandidatesService, CandidatesGateway],
+    exports: [CandidatesService, CandidatesGateway],
 })
 export class CandidatesModule {
 }

@@ -12,7 +12,7 @@ import { RecruitmentsService } from '@services/recruitments.service';
     imports: [TypeOrmModule.forFeature([RecruitmentEntity, InterviewEntity])],
     controllers: [RecruitmentsController],
     providers: [RecruitmentsService, RecruitmentsGateway, InterviewsService],
-    exports: [RecruitmentsService],
+    exports: [RecruitmentsService, RecruitmentsGateway],
 })
 export class RecruitmentsModule {
 }

@@ -13,7 +13,8 @@ import { CommentsService } from '@services/comments.service';
         AuthModule,
         CandidatesModule,
     ],
-    providers: [CommentsGateway, CommentsService],
+    providers: [CommentsService, CommentsGateway],
+    exports: [CommentsService, CommentsGateway],
 })
 export class CommentsModule {
 }
