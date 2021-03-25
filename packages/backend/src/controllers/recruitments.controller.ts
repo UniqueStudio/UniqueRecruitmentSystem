@@ -1,13 +1,10 @@
-import { BadRequestException, Body, Controller, Get, Param, Post, Put } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Get, Param, Post, Put, UseGuards } from '@nestjs/common';
 
 import { GroupOrTeam, Role } from '@constants/enums';
 import { AcceptRole } from '@decorators/role.decorator';
-import {
-    CreateRecruitmentDto,
-    SetRecruitmentInterviewsDto,
-    SetRecruitmentScheduleDto,
-} from '@dtos/recruitment.dto';
+import { CreateRecruitmentDto, SetRecruitmentInterviewsDto, SetRecruitmentScheduleDto } from '@dtos/recruitment.dto';
 import { RecruitmentsGateway } from '@gateways/recruitments.gateway';
+import { CodeGuard } from '@guards/code.guard';
 import { InterviewsService } from '@services/interviews.service';
 import { RecruitmentsService } from '@services/recruitments.service';
 
@@ -39,6 +36,7 @@ export class RecruitmentsController {
 
     @Post()
     @AcceptRole(Role.admin)
+    @UseGuards(CodeGuard)
     async createRecruitment(
         @Body() { name, begin, end, stop }: CreateRecruitmentDto,
     ) {
