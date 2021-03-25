@@ -10,7 +10,7 @@ export abstract class BasicCRUDService<T extends ObjectLiteral> {
         const object = this.repository.create(data);
         const errors = await validate(object);
         if (errors.length) {
-            throw new BadRequestException(errors.join(''));
+            throw new BadRequestException(errors.join(', '));
         }
         return await this.repository.save(object);
     }
