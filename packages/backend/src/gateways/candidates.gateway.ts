@@ -12,6 +12,7 @@ import { Server, Socket } from 'socket.io';
 import { Status } from '@constants/enums';
 import { MoveCandidateBody, RemoveCandidateBody } from '@dtos/candidate.dto';
 import { CandidateEntity } from '@entities/candidate.entity';
+import { RecruitmentsGateway } from '@gateways/recruitments.gateway';
 import { AuthService } from '@services/auth.service';
 import { CandidatesService } from '@services/candidates.service';
 import { deleteFile } from '@utils/fs';
@@ -24,6 +25,7 @@ export class CandidatesGateway {
     constructor(
         private readonly candidatesService: CandidatesService,
         private readonly authService: AuthService,
+        private readonly recruitmentsGateway: RecruitmentsGateway,
     ) {
     }
 
@@ -59,9 +61,7 @@ export class CandidatesGateway {
             status: Status.info,
             payload: data,
         });
-        this.server.sockets.emit('updateRecruitment', {
-            status: Status.info,
-        });
+        this.recruitmentsGateway.broadcastUpdate();
         return data;
     }
 
@@ -88,9 +88,7 @@ export class CandidatesGateway {
             status: Status.info,
             payload: data,
         });
-        this.server.sockets.emit('updateRecruitment', {
-            status: Status.info,
-        });
+        this.recruitmentsGateway.broadcastUpdate();
         return data;
     }
 }
