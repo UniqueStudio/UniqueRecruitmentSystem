@@ -3,7 +3,7 @@ import { IsString, IsUUID, ValidateNested } from 'class-validator';
 import { CommentEntity } from '@entities/comment.entity';
 
 export class AddCommentBody {
-    @IsUUID()
+    @IsUUID(4)
     cid!: string;
 
     @ValidateNested()
@@ -14,7 +14,7 @@ export class AddCommentBody {
 }
 
 export class RemoveCommentBody {
-    @IsUUID()
+    @IsUUID(4)
     id!: string;
 
     @IsString()

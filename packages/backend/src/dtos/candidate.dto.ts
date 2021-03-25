@@ -50,7 +50,7 @@ export class AllocateOneBody {
 }
 
 export class AllocateOneParams {
-    @IsUUID()
+    @IsUUID(4)
     cid!: string;
 
     @IsEnum(InterviewType)
@@ -58,7 +58,7 @@ export class AllocateOneParams {
 }
 
 export class RemoveCandidateBody {
-    @IsUUID()
+    @IsUUID(4)
     cid!: string;
 
     @IsString()
