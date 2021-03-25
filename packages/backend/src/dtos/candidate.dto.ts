@@ -2,7 +2,7 @@ import { IsBoolean, IsDateString, IsEmail, IsEnum, IsOptional, IsPhoneNumber, Is
 
 import { Gender, Grade, Group, InterviewType, Rank, Step } from '@constants/enums';
 
-export class CreateCandidateBody {
+export class SetCandidateBody {
     @IsString()
     name!: string;
 
@@ -24,12 +24,6 @@ export class CreateCandidateBody {
     @IsEmail()
     mail!: string;
 
-    @IsPhoneNumber('CN')
-    phone!: string;
-
-    @IsEnum(Group)
-    group!: Group;
-
     @IsString()
     intro!: string;
 
@@ -39,6 +33,14 @@ export class CreateCandidateBody {
     @IsOptional()
     @IsString()
     referrer?: string;
+}
+
+export class CreateCandidateBody extends SetCandidateBody {
+    @IsPhoneNumber('CN')
+    phone!: string;
+
+    @IsEnum(Group)
+    group!: Group;
 
     @IsUUID(4)
     rid!: string;
