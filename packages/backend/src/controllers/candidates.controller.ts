@@ -11,6 +11,7 @@ import {
     Res,
     UnauthorizedException,
     UploadedFile,
+    UseGuards,
     UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -23,6 +24,7 @@ import { AllocateOneBody, AllocateOneParams, CreateCandidateBody } from '@dtos/c
 import { UserEntity } from '@entities/user.entity';
 import { CandidatesGateway } from '@gateways/candidates.gateway';
 import { RecruitmentsGateway } from '@gateways/recruitments.gateway';
+import { CodeGuard } from '@guards/code.guard';
 import { CandidatesService } from '@services/candidates.service';
 import { RecruitmentsService } from '@services/recruitments.service';
 import { compareJoinTime } from '@utils/compareJoinTime';
@@ -39,6 +41,7 @@ export class CandidatesController {
     }
 
     @Post()
+    @UseGuards(CodeGuard)
     @UseInterceptors(FileInterceptor('resume'))
     async createCandidate(
         @Body() {

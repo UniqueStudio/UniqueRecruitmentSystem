@@ -7,6 +7,7 @@ import { CandidatesController } from '@controllers/candidates.controller';
 import { CandidateEntity } from '@entities/candidate.entity';
 import { CandidatesGateway } from '@gateways/candidates.gateway';
 import { AuthModule } from '@modules/auth.module';
+import { CacheModule } from '@modules/cache.module';
 import { RecruitmentsModule } from '@modules/recruitments.module';
 import { CandidatesService } from '@services/candidates.service';
 
@@ -24,6 +25,7 @@ import { CandidatesService } from '@services/candidates.service';
             }),
         }),
         AuthModule,
+        CacheModule,
         RecruitmentsModule,
     ],
     controllers: [CandidatesController],
