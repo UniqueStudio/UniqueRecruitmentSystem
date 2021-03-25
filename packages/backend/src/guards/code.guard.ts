@@ -1,7 +1,8 @@
 import { CACHE_MANAGER, CanActivate, ExecutionContext, Inject, Injectable } from '@nestjs/common';
 import { Cache } from 'cache-manager';
 
-import { RequestWithUser } from '@interfaces/request.interface';
+import { AuthByCodeBody } from '@dtos/auth.dto';
+import { RequestWithIdentity } from '@interfaces/request.interface';
 import { cacheKey } from '@utils/cacheKey';
 
 @Injectable()
@@ -12,7 +13,7 @@ export class CodeGuard implements CanActivate {
     }
 
     async canActivate(context: ExecutionContext) {
-        const req = context.switchToHttp().getRequest<RequestWithUser<{ code: string; phone: string }>>();
+        const req = context.switchToHttp().getRequest<RequestWithIdentity<AuthByCodeBody>>();
         const { code } = req.body;
         const phone = req.user?.phone ?? req.body.phone;
         if (!code || !phone) {
