@@ -70,6 +70,11 @@ export enum Evaluation {
     good,
 }
 
+export enum InterviewType {
+    group = 'group',
+    team = 'team',
+}
+
 export enum Status {
     info = 'info',
     success = 'success',
