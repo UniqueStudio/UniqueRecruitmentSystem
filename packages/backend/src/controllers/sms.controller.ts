@@ -23,6 +23,7 @@ import { CodeGuard } from '@guards/code.guard';
 import { CandidatesService } from '@services/candidates.service';
 import { AppConfigService } from '@services/config.service';
 import { applySMSTemplate } from '@utils/applySMSTemplate';
+import { cacheKey } from '@utils/cacheKey';
 
 @Controller('sms')
 export class SMSController {
@@ -56,7 +57,7 @@ export class SMSController {
         const code = randomBytes(2).toString('hex');
         // 您{1}的验证码为：{2}，请于3分钟内填写。如非本人操作，请忽略本短信。
         await this.sendSMS(phone, 719160, ['报名本次招新', code]);
-        await this.cacheManager.set(`candidateCode:${phone}`, code, 180);
+        await this.cacheManager.set(cacheKey(phone, false), code, 180);
     }
 
     @Get('verification/user')
@@ -67,7 +68,7 @@ export class SMSController {
         const code = randomBytes(2).toString('hex');
         // 您{1}的验证码为：{2}，请于3分钟内填写。如非本人操作，请忽略本短信。
         await this.sendSMS(phone, 719160, ['dashboard中', code]);
-        await this.cacheManager.set(`userCode:${phone}`, code, 180);
+        await this.cacheManager.set(cacheKey(phone, true), code, 180);
     }
 
     @Post()

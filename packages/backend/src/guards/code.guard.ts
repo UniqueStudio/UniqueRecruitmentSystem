@@ -2,6 +2,7 @@ import { CACHE_MANAGER, CanActivate, ExecutionContext, Inject, Injectable } from
 import { Cache } from 'cache-manager';
 
 import { RequestWithUser } from '@interfaces/request.interface';
+import { cacheKey } from '@utils/cacheKey';
 
 @Injectable()
 export class CodeGuard implements CanActivate {
@@ -17,7 +18,7 @@ export class CodeGuard implements CanActivate {
         if (!code || !phone) {
             return false;
         }
-        const key = `${req.user ? 'userCode' : 'candidateCode'}${phone}`;
+        const key = cacheKey(phone, !!req.user);
         const result = code !== await this.cacheManager.get(key);
         await this.cacheManager.del(key);
         return result;
