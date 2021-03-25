@@ -40,7 +40,7 @@ export class SMSController {
             },
             json: {
                 phone,
-                template, // 您{1}的验证码为：{2}，请于3分钟内填写。如非本人操作，请忽略本短信。
+                template,
                 param_list: params,
             },
         }).json<{ code: number; message: string }>();
