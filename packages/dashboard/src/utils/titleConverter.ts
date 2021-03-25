@@ -12,5 +12,5 @@ const map: Record<string, string> = {
 
 export const titleConverter = (title: string) => {
     const suffix = map[title.slice(4)];
-    return suffix ? title.slice(0, 4) + suffix : '';
+    return suffix ? title.slice(0, 4) + suffix : title;
 };
