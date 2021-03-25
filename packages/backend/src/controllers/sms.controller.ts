@@ -9,10 +9,10 @@ import {
     Inject,
     InternalServerErrorException,
     Param,
-    Post, UseGuards,
+    Post,
+    UseGuards,
 } from '@nestjs/common';
 import { Cache } from 'cache-manager';
-import got from 'got';
 
 import { GroupOrTeam, Role, SMSType, Step } from '@constants/enums';
 import { AcceptRole } from '@decorators/role.decorator';
@@ -21,7 +21,7 @@ import { SendSMSToCandidateBody } from '@dtos/sms.dto';
 import { UserEntity } from '@entities/user.entity';
 import { CodeGuard } from '@guards/code.guard';
 import { CandidatesService } from '@services/candidates.service';
-import { AppConfigService } from '@services/config.service';
+import { SMSService } from '@services/sms.service';
 import { applySMSTemplate } from '@utils/applySMSTemplate';
 import { cacheKey } from '@utils/cacheKey';
 
@@ -29,25 +29,9 @@ import { cacheKey } from '@utils/cacheKey';
 export class SMSController {
     constructor(
         @Inject(CACHE_MANAGER) private readonly cacheManager: Cache,
-        private readonly configService: AppConfigService,
         private readonly candidatesService: CandidatesService,
+        private readonly smsService: SMSService,
     ) {
-    }
-
-    private async sendSMS(phone: string, template: number, params: string[]) {
-        const res = await got.post(this.configService.smsURL, {
-            headers: {
-                Token: this.configService.get('SMS_API_TOKEN'),
-            },
-            json: {
-                phone,
-                template,
-                param_list: params,
-            },
-        }).json<{ code: number; message: string }>();
-        if (res.code !== 200) {
-            throw new InternalServerErrorException(res.message);
-        }
     }
 
     @Get('verification/candidate/:phone')
@@ -55,8 +39,12 @@ export class SMSController {
         @Param('phone') phone: string,
     ) {
         const code = randomBytes(2).toString('hex');
-        // 您{1}的验证码为：{2}，请于3分钟内填写。如非本人操作，请忽略本短信。
-        await this.sendSMS(phone, 719160, ['报名本次招新', code]);
+        try {
+            // 您{1}的验证码为：{2}，请于3分钟内填写。如非本人操作，请忽略本短信。
+            await this.smsService.sendSMS(phone, 719160, ['报名本次招新', code]);
+        } catch ({ message }) {
+            throw new InternalServerErrorException(message);
+        }
         await this.cacheManager.set(cacheKey(phone, false), code, 180);
     }
 
@@ -66,8 +54,12 @@ export class SMSController {
         @User() { phone }: UserEntity,
     ) {
         const code = randomBytes(2).toString('hex');
-        // 您{1}的验证码为：{2}，请于3分钟内填写。如非本人操作，请忽略本短信。
-        await this.sendSMS(phone, 719160, ['dashboard中', code]);
+        try {
+            // 您{1}的验证码为：{2}，请于3分钟内填写。如非本人操作，请忽略本短信。
+            await this.smsService.sendSMS(phone, 719160, ['dashboard中', code]);
+        } catch ({ message }) {
+            throw new InternalServerErrorException(message);
+        }
         await this.cacheManager.set(cacheKey(phone, true), code, 180);
     }
 
@@ -128,7 +120,7 @@ export class SMSController {
                     time,
                     place,
                 });
-                await this.sendSMS(candidate.phone, template, params);
+                await this.smsService.sendSMS(candidate.phone, template, params);
             } catch ({ message }) {
                 errors.add(message);
             }

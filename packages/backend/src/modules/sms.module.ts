@@ -4,10 +4,12 @@ import { SMSController } from '@controllers/sms.controller';
 import { CacheModule } from '@modules/cache.module';
 import { CandidatesModule } from '@modules/candidates.module';
 import { AppConfigService } from '@services/config.service';
+import { SMSService } from '@services/sms.service';
 
 @Module({
     imports: [CacheModule, CandidatesModule],
-    providers: [SMSController, AppConfigService],
+    providers: [SMSController, SMSService, AppConfigService],
+    exports: [SMSService],
 })
 export class SMSModule {
 }
