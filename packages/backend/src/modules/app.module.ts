@@ -54,7 +54,6 @@ import { AppConfigService } from '@services/config.service';
                 database: conf.get('POSTGRES_DB'),
                 synchronize: true,
                 autoLoadEntities: true,
-                useUnifiedTopology: true,
             }),
         }),
         AuthModule,
