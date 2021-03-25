@@ -16,6 +16,7 @@ import { CandidatesModule } from '@modules/candidates.module';
 import { ChatModule } from '@modules/chat.module';
 import { CommentsModule } from '@modules/comments.module';
 import { RecruitmentsModule } from '@modules/recruitments.module';
+import { SMSModule } from '@modules/sms.module';
 import { UsersModule } from '@modules/users.module';
 import { AppConfigService } from '@services/config.service';
 
@@ -38,6 +39,7 @@ import { AppConfigService } from '@services/config.service';
                 REDIRECT_URI: Joi.string().required(),
                 CORP_ID: Joi.string().required(),
                 CORP_SECRET: Joi.string().required(),
+                SMS_API_TOKEN: Joi.string().required(),
             }),
         }),
         TypeOrmModule.forRootAsync({
@@ -59,6 +61,7 @@ import { AppConfigService } from '@services/config.service';
         CandidatesModule,
         ChatModule,
         CommentsModule,
+        SMSModule,
         RecruitmentsModule,
         UsersModule,
     ],
