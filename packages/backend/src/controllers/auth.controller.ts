@@ -1,19 +1,25 @@
 import {
+    BadRequestException,
     Body,
     Controller,
     Get,
     ImATeapotException,
     InternalServerErrorException,
+    NotImplementedException,
     Param,
     Post,
     RequestTimeoutException,
     UnauthorizedException,
+    UseGuards,
 } from '@nestjs/common';
 import got from 'got';
 
 import { ZHANG_XIAO_LONG } from '@constants/consts';
-import { AuthUserByPasswordDto } from '@dtos/auth.dto';
+import { Role } from '@constants/enums';
+import { AuthByCodeBody, AuthUserByPasswordBody } from '@dtos/auth.dto';
+import { CodeGuard } from '@guards/code.guard';
 import { AuthService } from '@services/auth.service';
+import { CandidatesService } from '@services/candidates.service';
 import { AppConfigService } from '@services/config.service';
 import { UsersService } from '@services/users.service';
 import { parseWeChatData } from '@utils/parseWeChatData';
@@ -24,10 +30,11 @@ export class AuthController {
         private readonly usersService: UsersService,
         private readonly authService: AuthService,
         private readonly configService: AppConfigService,
+        private readonly candidatesService: CandidatesService,
     ) {
     }
 
-    @Get('qrCode')
+    @Get('user/qrCode')
     async getQRCode() {
         const key = /(?<=key ?: ?")\w+/.exec(await got(this.configService.qrInitURL).text())?.[0];
         if (!key) {
@@ -36,7 +43,7 @@ export class AuthController {
         return this.configService.qrImgURL(key);
     }
 
-    @Get('qrCode/:key')
+    @Get('user/qrCode/:key')
     async authUserByQRCode(@Param('key') key: string) {
         while (!ZHANG_XIAO_LONG.has('mother')) {
             const scanResponse = await got(this.configService.scanningURL(key)).text();
@@ -50,7 +57,7 @@ export class AuthController {
                     if (data.isCaptain !== isCaptain) {
                         await this.usersService.update(id, { isCaptain: !isCaptain, isAdmin: !isCaptain });
                     }
-                    return this.authService.generateToken(id);
+                    return this.authService.generateToken(id, Role.user);
                 }
                 case 'QRCODE_SCAN_NEVER':
                 case 'QRCODE_SCAN_ING':
@@ -66,12 +73,26 @@ export class AuthController {
         throw new ImATeapotException('NO HE DOESN\'T');
     }
 
-    @Post('login')
-    async authUserByPassword(@Body() { phone, password }: AuthUserByPasswordDto) {
+    @Post('user/login')
+    async authUserByPassword(@Body() { phone, password }: AuthUserByPasswordBody) {
         const id = await this.authService.validateUser(phone, password);
         if (!id) {
             throw new UnauthorizedException('Failed to login');
         }
-        return this.authService.generateToken(id);
+        return this.authService.generateToken(id, Role.user);
+    }
+
+    @Post('candidate/login')
+    @UseGuards(CodeGuard)
+    async authCandidateByCode(@Body() { phone }: AuthByCodeBody) {
+        const candidates = await this.candidatesService.findInPendingRecruitments(phone);
+        if (!candidates.length) {
+            throw new BadRequestException(`Candidate with phone ${phone} doesn't exist`);
+        }
+        if (candidates.length > 1) {
+            throw new NotImplementedException('multiple candidates in pending recruitment(s) are not supported');
+        }
+        const { id } = candidates[0];
+        return this.authService.generateToken(id, Role.candidate);
     }
 }
