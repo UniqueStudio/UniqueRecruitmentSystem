@@ -16,7 +16,7 @@ import { RecruitmentsService } from '@services/recruitments.service';
     ],
     controllers: [RecruitmentsController],
     providers: [RecruitmentsService, RecruitmentsGateway, InterviewsService],
-    exports: [RecruitmentsService, RecruitmentsGateway],
+    exports: [RecruitmentsService, RecruitmentsGateway, InterviewsService],
 })
 export class RecruitmentsModule {
 }
