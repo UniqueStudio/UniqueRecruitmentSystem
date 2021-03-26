@@ -1,4 +1,10 @@
-import { CanActivate, ExecutionContext, Injectable, InternalServerErrorException } from '@nestjs/common';
+import {
+    CanActivate,
+    ExecutionContext,
+    ForbiddenException,
+    Injectable,
+    InternalServerErrorException,
+} from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 
 import { Role } from '@constants/enums';
@@ -21,7 +27,16 @@ export class RoleGuard implements CanActivate {
             case Role.user:
                 return !!req.user;
             case Role.candidate:
-                return !!req.candidate;
+                if (req.candidate) {
+                    if (req.candidate.abandoned) {
+                        throw new ForbiddenException('You have already abandoned');
+                    }
+                    if (req.candidate.rejected) {
+                        throw new ForbiddenException('You have already been rejected');
+                    }
+                    return true;
+                }
+                return false;
             case undefined:
                 return true;
             default:
