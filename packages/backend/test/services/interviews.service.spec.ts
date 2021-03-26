@@ -7,7 +7,7 @@ import { AppModule } from '@modules/app.module';
 import { InterviewsService } from '@services/interviews.service';
 import { RecruitmentsService } from '@services/recruitments.service';
 
-describe('RecruitmentsService', () => {
+describe('InterviewsService', () => {
     let interviewsService: InterviewsService;
     let recruitmentsService: RecruitmentsService;
     let testRecruitment: RecruitmentEntity;
