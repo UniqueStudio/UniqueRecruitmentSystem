@@ -256,7 +256,7 @@ export class CandidatesController {
 
     @Put('interview/:type/:rid')
     @AcceptRole(Role.user)
-    async allocateAll(
+    async allocateMany(
         @Param() { type }: AllocateManyParams,
         @Body() { cids }: AllocateManyBody,
         @User() user: UserEntity,
