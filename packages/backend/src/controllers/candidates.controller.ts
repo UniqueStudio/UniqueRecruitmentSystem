@@ -143,6 +143,7 @@ export class CandidatesController {
             candidate,
             { name, gender, grade, institute, intro, isQuick, mail, major, rank, referrer, resume },
         );
+        await candidate.save();
         // TODO: broadcast updateCandidate
     }
 
