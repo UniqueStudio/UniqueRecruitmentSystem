@@ -46,6 +46,16 @@ export class CreateCandidateBody extends SetCandidateBody {
     rid!: string;
 }
 
+export class SelectInterviewSlotsBody {
+    @IsBoolean()
+    abandon!: boolean;
+
+    @IsUUID(4, {
+        each: true,
+    })
+    interviewIds!: string[];
+}
+
 export class AllocateOneBody {
     @IsDateString()
     time!: string;

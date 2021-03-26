@@ -22,13 +22,20 @@ import { Group, GroupOrTeam, Role, Step } from '@constants/enums';
 import { Candidate } from '@decorators/candidate.decorator';
 import { AcceptRole } from '@decorators/role.decorator';
 import { User } from '@decorators/user.decorator';
-import { AllocateOneBody, AllocateOneParams, CreateCandidateBody, SetCandidateBody } from '@dtos/candidate.dto';
+import {
+    AllocateOneBody,
+    AllocateOneParams,
+    CreateCandidateBody,
+    SelectInterviewSlotsBody,
+    SetCandidateBody,
+} from '@dtos/candidate.dto';
 import { CandidateEntity } from '@entities/candidate.entity';
 import { UserEntity } from '@entities/user.entity';
 import { CandidatesGateway } from '@gateways/candidates.gateway';
 import { RecruitmentsGateway } from '@gateways/recruitments.gateway';
 import { CodeGuard } from '@guards/code.guard';
 import { CandidatesService } from '@services/candidates.service';
+import { InterviewsService } from '@services/interviews.service';
 import { RecruitmentsService } from '@services/recruitments.service';
 import { SMSService } from '@services/sms.service';
 import { compareJoinTime } from '@utils/compareJoinTime';
@@ -41,6 +48,7 @@ export class CandidatesController {
         private readonly recruitmentsGateway: RecruitmentsGateway,
         private readonly candidatesService: CandidatesService,
         private readonly recruitmentsService: RecruitmentsService,
+        private readonly interviewsService: InterviewsService,
         private readonly smsService: SMSService,
     ) {
     }
@@ -135,9 +143,9 @@ export class CandidatesController {
         // TODO: broadcast updateCandidate
     }
 
-    @Get('me/time')
+    @Get('me/slots')
     @AcceptRole(Role.candidate)
-    getMyTimeSelection(
+    getInterviewSlots(
         @Candidate() candidate: CandidateEntity,
     ) {
         const { recruitment, step, group } = candidate;
@@ -154,12 +162,43 @@ export class CandidatesController {
         }
     }
 
-    @Post('me/time')
+    @Post('me/slots')
     @AcceptRole(Role.candidate)
-    createMyTimeSelection(
-        // @Candidate() candidate: CandidateEntity,
+    async selectInterviewSlots(
+        @Candidate() candidate: CandidateEntity,
+        @Body() { interviewIds, abandon }: SelectInterviewSlotsBody,
     ) {
-        // TODO
+        const { recruitment, step, interviewSelections, group } = candidate;
+        if (+recruitment.end < Date.now()) {
+            throw new ForbiddenException('This recruitment has already ended');
+        }
+        if (abandon) {
+            candidate.abandoned = true;
+            await candidate.save();
+            return;
+        }
+        switch (step) {
+            case Step.组面时间选择: {
+                if (interviewSelections.find(({ name }) => name === GroupOrTeam[group])) {
+                    throw new ForbiddenException('You have already selected available time for the group interview');
+                }
+                const newSelections = await this.interviewsService.findManyByIds(interviewIds, GroupOrTeam[group]);
+                candidate.interviewSelections = [...interviewSelections, ...newSelections];
+                await candidate.save();
+                return;
+            }
+            case Step.群面时间选择: {
+                if (interviewSelections.find(({ name }) => name === GroupOrTeam.unique)) {
+                    throw new ForbiddenException('You have already selected available time for the team interview');
+                }
+                const newSelections = await this.interviewsService.findManyByIds(interviewIds, GroupOrTeam.unique);
+                candidate.interviewSelections = [...interviewSelections, ...newSelections];
+                await candidate.save();
+                return;
+            }
+            default:
+                throw new ForbiddenException('No need to select time in current step');
+        }
     }
 
     @Get(':cid/resume')
