@@ -11,7 +11,8 @@ import { SMSService } from '@services/sms.service';
         CacheModule,
         forwardRef(() => CandidatesModule),
     ],
-    providers: [SMSController, SMSService, AppConfigService],
+    controllers: [SMSController],
+    providers: [SMSService, AppConfigService],
     exports: [SMSService],
 })
 export class SMSModule {
