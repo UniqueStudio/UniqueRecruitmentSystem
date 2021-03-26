@@ -145,9 +145,9 @@ export class CandidatesController {
             throw new ForbiddenException('This recruitment has already ended');
         }
         switch (step) {
-            case Step.组面:
+            case Step.组面时间选择:
                 return recruitment.interviews.find(({ name }) => name === GroupOrTeam[group]);
-            case Step.群面:
+            case Step.群面时间选择:
                 return recruitment.interviews.find(({ name }) => name === GroupOrTeam.unique);
             default:
                 throw new ForbiddenException('No need to select time in current step');

@@ -37,8 +37,10 @@ export enum Period {
 export enum Step {
     报名,
     笔试,
+    组面时间选择,
     组面,
     熬测,
+    群面时间选择,
     群面,
     通过,
 }
@@ -90,8 +92,6 @@ export enum Role {
 }
 
 export enum SMSType {
-    group = 'group',
-    team = 'team',
     accept = 'accept',
     reject = 'reject',
 }

@@ -73,44 +73,24 @@ export class SMSController {
         const errors = new Set<string>();
         for (const candidate of candidates) {
             if (type === SMSType.accept) {
-                //TODO: 废弃formid的设定
-                // if (!recruitmentId) {
-                // 仅执行一次，用于生成含有recruitment id的formId
-                // 以后所有的candidates都可以复用这个formId
                 const { recruitment: { end, name, interviews }, group } = candidate;
                 if (+end < Date.now()) {
                     throw new BadRequestException(`Recruitment ${name} has already ended`);
                 }
-                if (next === Step.组面) {
+                if (next === Step.组面时间选择) {
                     if (!interviews.find(({ name }) => name === GroupOrTeam[group])) {
                         throw new BadRequestException(`No interviews are scheduled for ${group} group`);
                     }
-                } else if (next === Step.群面) {
+                } else if (next === Step.群面时间选择) {
                     if (!interviews.find(({ name }) => name === GroupOrTeam.unique)) {
                         throw new BadRequestException('No interviews are scheduled for the team');
                     }
                 }
-                // recruitmentId = `${recruitment._id}`;
-                // }
-                // const payload = {
-                //     recruitmentId,
-                //     id,
-                //     step: nextStep === 2 ? 'group' : 'team',
-                //     group,
-                // };
-                // hash = md5(payload);
-                // Promise.all([
-                //     PayloadRepo.createAndInsert({ ...payload, hash }),
-                //     redisAsync.set(`payload:${hash}`, id, 'EX', 60 * 60 * 24 * 2),
-                // ]).catch((e) => {
-                //     throw new Error(`Error in ${name}: ${e}`);
-                // });
             }
             if (type === SMSType.reject) {
                 candidate.rejected = true;
                 await candidate.save();
             }
-            // const url = recruitmentId ? await shortenURL(`${formURL}/${hash}`) : '';
             try {
                 const { template, params } = applySMSTemplate({
                     candidate,
