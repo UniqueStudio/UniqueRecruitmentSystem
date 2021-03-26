@@ -59,10 +59,10 @@ export class UserEntity extends CommonEntity {
     @IsEnum(Group)
     group!: Group;
 
-    @Column({ nullable: true })
+    @Column({ default: '' })
     @IsOptional()
     @IsUrl({ protocols: ['https'] })
-    avatar?: string;
+    avatar!: string;
 
     @OneToMany(() => CommentEntity, ({ user }) => user)
     comments!: CommentEntity[];
