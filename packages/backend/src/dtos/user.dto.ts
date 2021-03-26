@@ -1,8 +1,13 @@
-import { IsEmail } from 'class-validator';
+import { IsEmail, IsOptional, IsPhoneNumber, IsString } from 'class-validator';
 
-import { AuthUserByPasswordBody } from '@dtos/auth.dto';
-
-export class SetUserInfoBody extends AuthUserByPasswordBody {
+export class SetUserInfoBody {
     @IsEmail()
     mail!: string;
+
+    @IsPhoneNumber('CN')
+    phone!: string;
+
+    @IsOptional()
+    @IsString()
+    password?: string;
 }
