@@ -85,7 +85,7 @@ export class CandidateEntity extends CommonEntity {
     @Column({ default: false })
     @IsOptional()
     @IsBoolean()
-    abandon!: boolean;
+    abandoned!: boolean;
 
     @Column({ default: false })
     @IsOptional()
