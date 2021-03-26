@@ -7,23 +7,16 @@ import { CommonEntity } from '@entities/common.entity';
 import { InterviewEntity } from '@entities/interview.entity';
 import { RecruitmentEntity } from '@entities/recruitment.entity';
 
-class SelectionsAndAllocation {
-    @ManyToMany(() => InterviewEntity, { cascade: ['remove'] })
-    @JoinTable()
-    selections!: InterviewEntity[];
+class InterviewAllocations {
+    @Column('timestamptz', { nullable: true })
+    @IsOptional()
+    @IsDate()
+    group?: Date;
 
     @Column('timestamptz', { nullable: true })
     @IsOptional()
     @IsDate()
-    allocation?: Date;
-}
-
-class InterviewsOfCandidate {
-    @Column(() => SelectionsAndAllocation)
-    group!: SelectionsAndAllocation;
-
-    @Column(() => SelectionsAndAllocation)
-    team!: SelectionsAndAllocation;
+    team?: Date;
 }
 
 @Entity('candidates')
@@ -97,8 +90,12 @@ export class CandidateEntity extends CommonEntity {
     @IsEnum(Step)
     step!: Step;
 
-    @Column(() => InterviewsOfCandidate)
-    interviews!: InterviewsOfCandidate;
+    @ManyToMany(() => InterviewEntity, { cascade: ['remove'] })
+    @JoinTable()
+    interviewSelections!: InterviewEntity[];
+
+    @Column(() => InterviewAllocations)
+    interviewAllocations!: InterviewAllocations;
 
     @ManyToOne(() => RecruitmentEntity, ({ candidates }) => candidates)
     recruitment!: RecruitmentEntity;

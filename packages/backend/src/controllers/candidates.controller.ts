@@ -210,7 +210,7 @@ export class CandidatesController {
         if (+end < Date.now()) {
             throw new BadRequestException(`Recruitment ${name} has already ended`);
         }
-        candidate.interviews[type].allocation = new Date(time);
+        candidate.interviewAllocations[type] = new Date(time);
         await candidate.save();
     }
 

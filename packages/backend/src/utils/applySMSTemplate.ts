@@ -14,7 +14,7 @@ interface Model {
 }
 
 export const applySMSTemplate = (
-    { type, time, place, rest, next, candidate: { group, step, recruitment, name, interviews } }: Model,
+    { type, time, place, rest, next, candidate: { group, step, recruitment, name, interviewAllocations } }: Model,
 ) => {
     const suffix = ' (请勿回复本短信)';
     const recruitmentName = fullRecruitmentName(recruitment.name);
@@ -24,7 +24,7 @@ export const applySMSTemplate = (
             switch (next) {
                 case Step.组面:
                 case Step.群面: {
-                    const { allocation } = next === Step.组面 ? interviews.group : interviews.team;
+                    const allocation = next === Step.组面 ? interviewAllocations.group : interviewAllocations.team;
                     if (!place) throw new Error('Place is not provided!');
                     if (!allocation) throw new Error(`Interview time is not allocated for ${name}`);
                     // 2011年11月11日星期五中国标准时间 11:11:11
