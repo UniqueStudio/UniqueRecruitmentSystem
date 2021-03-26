@@ -1,5 +1,5 @@
-import { IsDate, IsEnum, IsInt, Min } from 'class-validator';
-import { Column, Entity, ManyToOne, PrimaryColumn } from 'typeorm';
+import { IsDate, IsEnum, IsInt, IsUUID, Min } from 'class-validator';
+import { Column, Entity, Generated, ManyToOne, PrimaryColumn } from 'typeorm';
 
 import { GroupOrTeam, Period } from '@constants/enums';
 import { RecruitmentEntity } from '@entities/recruitment.entity';
@@ -17,6 +17,10 @@ export class InterviewEntity {
     @PrimaryColumn({ enum: GroupOrTeam })
     @IsEnum(GroupOrTeam)
     name!: GroupOrTeam;
+
+    @Generated('uuid')
+    @IsUUID(4)
+    id!: string;
 
     @Column('int')
     @IsInt()
