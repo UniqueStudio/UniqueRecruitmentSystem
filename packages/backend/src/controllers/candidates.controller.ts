@@ -18,11 +18,14 @@ import {
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Response } from 'express';
 
-import { Group, GroupOrTeam, Role, Step } from '@constants/enums';
+import { SLOTS, STEP_MAP } from '@constants/consts';
+import { Group, GroupOrTeam, InterviewType, Role, Step } from '@constants/enums';
 import { Candidate } from '@decorators/candidate.decorator';
 import { AcceptRole } from '@decorators/role.decorator';
 import { User } from '@decorators/user.decorator';
 import {
+    AllocateManyBody,
+    AllocateManyParams,
     AllocateOneBody,
     AllocateOneParams,
     CreateCandidateBody,
@@ -240,22 +243,85 @@ export class CandidatesController {
     async allocateOne(
         @Body() { time }: AllocateOneBody,
         @Param() { cid, type }: AllocateOneParams,
+        @User() user: UserEntity,
     ) {
         const candidate = await this.candidatesService.findOneById(cid);
         if (!candidate) {
             throw new BadRequestException(`Candidate with id ${cid} doesn't exist`);
         }
-        const { recruitment: { name, end } } = candidate;
-        if (+end < Date.now()) {
-            throw new BadRequestException(`Recruitment ${name} has already ended`);
-        }
+        this.checkAllocationPermission(candidate, user, type);
         candidate.interviewAllocations[type] = new Date(time);
         await candidate.save();
     }
 
-    @Put('interview/:type')
+    @Put('interview/:type/:rid')
     @AcceptRole(Role.user)
-    allocateAll() {
-        // TODO
+    async allocateAll(
+        @Param() { type }: AllocateManyParams,
+        @Body() { cids }: AllocateManyBody,
+        @User() user: UserEntity,
+    ) {
+        const candidates = await this.candidatesService.findManyByIds(cids);
+        if (type === InterviewType.group) {
+            candidates.sort((a, b) =>
+                a.interviewSelections.filter(({ name }) => name === GroupOrTeam[a.group]).length
+                - b.interviewSelections.filter(({ name }) => name === GroupOrTeam[b.group]).length,
+            );
+        } else {
+            candidates.sort((a, b) =>
+                a.interviewSelections.filter(({ name }) => name === GroupOrTeam.unique).length
+                - b.interviewSelections.filter(({ name }) => name === GroupOrTeam.unique).length,
+            );
+        }
+        const interviewsMap = Object.fromEntries(candidates
+            .flatMap(({ recruitment }) => recruitment.interviews)
+            .map(({ id, period, slotNumber }) => [id, SLOTS[period].slice(0, slotNumber).reverse()]),
+        );
+        for (const candidate of candidates) {
+            this.checkAllocationPermission(candidate, user, type);
+        }
+        for (const candidate of candidates) {
+            for (const { id, date, name } of candidate.interviewSelections) {
+                if (
+                    (type === InterviewType.group && name === GroupOrTeam[candidate.group])
+                    || (type === InterviewType.team && name === GroupOrTeam.unique)
+                ) {
+                    const slots = interviewsMap[id];
+                    if (slots?.length) {
+                        const slot = slots.pop()!;
+                        const h = ~~slot;
+                        const m = (slot % 1) * 60;
+                        const allocation = new Date(date);
+                        allocation.setHours(h, m, 0, 0);
+                        candidate.interviewAllocations[type] = allocation;
+                        await candidate.save();
+                        break;
+                    }
+                }
+            }
+        }
+        return candidates.map(({ interviewAllocations }) => interviewAllocations[type]);
+    }
+
+    private checkAllocationPermission(candidate: CandidateEntity, user: UserEntity, type: InterviewType) {
+        const { recruitment: { name, end }, group, rejected, abandoned, step, id } = candidate;
+        if (rejected) {
+            throw new BadRequestException(`Candidate with id ${id} has already been rejected`);
+        }
+        if (abandoned) {
+            throw new BadRequestException(`Candidate with id ${id} has already abandoned`);
+        }
+        if (
+            (type === InterviewType.group && step !== Step.组面时间选择)
+            || (type === InterviewType.team && step !== Step.群面时间选择)
+        ) {
+            throw new BadRequestException(`You cannot allocate time for candidates in step ${STEP_MAP[step]}`);
+        }
+        if (type === InterviewType.group && user.group !== group) {
+            throw new ForbiddenException(`You cannot allocate time for candidates in group ${group}`);
+        }
+        if (+end < Date.now()) {
+            throw new BadRequestException(`Recruitment ${name} has already ended`);
+        }
     }
 }

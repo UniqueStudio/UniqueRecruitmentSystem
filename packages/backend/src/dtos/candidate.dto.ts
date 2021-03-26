@@ -61,12 +61,21 @@ export class AllocateOneBody {
     time!: string;
 }
 
-export class AllocateOneParams {
-    @IsUUID(4)
-    cid!: string;
-
+export class AllocateManyParams {
     @IsEnum(InterviewType)
     type!: InterviewType;
+}
+
+export class AllocateOneParams extends AllocateManyParams {
+    @IsUUID(4)
+    cid!: string;
+}
+
+export class AllocateManyBody {
+    @IsUUID(4, {
+        each: true,
+    })
+    cids!: string[];
 }
 
 export class RemoveCandidateBody {
