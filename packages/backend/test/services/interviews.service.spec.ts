@@ -22,9 +22,9 @@ describe('RecruitmentsService', () => {
         await recruitmentsService.clear();
         testRecruitment = await recruitmentsService.createAndSave({
             name: '2020C',
-            begin: new Date('1999'),
+            beginning: new Date('1999'),
             end: new Date(),
-            stop: new Date('2099'),
+            deadline: new Date('2099'),
         });
     });
 

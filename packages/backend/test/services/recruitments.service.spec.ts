@@ -20,9 +20,9 @@ describe('RecruitmentsService', () => {
         it('should succeed', async () => {
             testRecruitment = await recruitmentsService.createAndSave({
                 name: '2020C',
-                begin: new Date('1999'),
+                beginning: new Date('1999'),
                 end: new Date('2099'),
-                stop: new Date('2099'),
+                deadline: new Date('2099'),
             });
             expect(testRecruitment).toBeDefined();
         });

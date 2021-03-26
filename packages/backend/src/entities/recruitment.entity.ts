@@ -14,15 +14,15 @@ export class RecruitmentEntity extends CommonEntity {
 
     @Column('timestamptz')
     @IsDate()
-    begin!: Date;
+    beginning!: Date;
 
     @Column('timestamptz')
-    @IsDate()
+    @IsDate() // TODO: validate `deadline > beginning`
+    deadline!: Date;
+
+    @Column('timestamptz')
+    @IsDate() // TODO: validate `end > deadline`
     end!: Date;
-
-    @Column('timestamptz')
-    @IsDate()
-    stop!: Date;
 
     @OneToMany(() => InterviewEntity, ({ recruitment }) => recruitment)
     interviews!: InterviewEntity[];

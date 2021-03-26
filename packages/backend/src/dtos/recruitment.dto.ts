@@ -4,13 +4,13 @@ import { Period } from '@constants/enums';
 
 export class SetRecruitmentScheduleBody {
     @IsDateString()
-    begin!: string;
+    beginning!: string;
+
+    @IsDateString()
+    deadline!: string;
 
     @IsDateString()
     end!: string;
-
-    @IsDateString()
-    stop!: string;
 }
 
 export class SetRecruitmentInterviewsBody {

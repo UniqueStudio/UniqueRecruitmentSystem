@@ -38,13 +38,13 @@ export class RecruitmentsController {
     @AcceptRole(Role.admin)
     @UseGuards(CodeGuard)
     async createRecruitment(
-        @Body() { name, begin, end, stop }: CreateRecruitmentBody,
+        @Body() { name, beginning, end, deadline }: CreateRecruitmentBody,
     ) {
         await this.recruitmentsService.createAndSave({
             name,
-            begin: new Date(begin),
+            beginning: new Date(beginning),
             end: new Date(end),
-            stop: new Date(stop),
+            deadline: new Date(deadline),
         });
         this.recruitmentsGateway.broadcastUpdate();
     }
@@ -53,15 +53,15 @@ export class RecruitmentsController {
     @AcceptRole(Role.admin)
     async setRecruitmentSchedule(
         @Param('rid') rid: string,
-        @Body() { begin, end, stop }: SetRecruitmentScheduleBody,
+        @Body() { beginning, end, deadline }: SetRecruitmentScheduleBody,
     ) {
         const recruitment = await this.recruitmentsService.findOneById(rid);
         if (!recruitment) {
             throw new BadRequestException(`Recruitment ${rid} does not exist`);
         }
-        recruitment.begin = new Date(begin);
+        recruitment.beginning = new Date(beginning);
         recruitment.end = new Date(end);
-        recruitment.stop = new Date(stop);
+        recruitment.deadline = new Date(deadline);
         await recruitment.save();
         this.recruitmentsGateway.broadcastUpdate();
     }

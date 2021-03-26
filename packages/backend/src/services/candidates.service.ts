@@ -23,7 +23,7 @@ export class CandidatesService extends BasicCRUDService<CandidateEntity> {
             where: {
                 recruitment: {
                     end: MoreThanOrEqual(now),
-                    begin: LessThanOrEqual(now),
+                    beginning: LessThanOrEqual(now),
                 },
                 phone,
             },

@@ -13,14 +13,14 @@ export class RecruitmentsService extends BasicCRUDService<RecruitmentEntity> {
         super(repository);
     }
 
-    findPending(): Promise<Pick<RecruitmentEntity, 'id' | 'name' | 'begin' | 'end' | 'stop'>[]> {
+    findPending(): Promise<Pick<RecruitmentEntity, 'id' | 'name' | 'beginning' | 'end' | 'deadline'>[]> {
         const now = new Date();
         return this.find({
             where: {
                 end: MoreThanOrEqual(now),
-                begin: LessThanOrEqual(now),
+                beginning: LessThanOrEqual(now),
             },
-            select: ['id', 'name', 'begin', 'end', 'stop'],
+            select: ['id', 'name', 'beginning', 'end', 'deadline'],
         });
     }
 
