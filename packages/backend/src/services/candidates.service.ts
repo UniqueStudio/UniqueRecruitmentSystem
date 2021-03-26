@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { LessThanOrEqual, MoreThanOrEqual, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 
 import { CandidateEntity } from '@entities/candidate.entity';
 import { BasicCRUDService } from '@services/basicCRUD.service';
@@ -14,19 +14,19 @@ export class CandidatesService extends BasicCRUDService<CandidateEntity> {
     }
 
     findManyByIds(ids: string[]) {
-        return this.repository.findByIds(ids);
+        return this.repository.findByIds(ids, {
+            relations: ['recruitment', 'recruitment.interviews', 'interviewSelections', 'interviewAllocations'],
+        });
     }
 
     findInPendingRecruitments(phone: string) {
         const now = new Date();
-        return this.find({
-            where: {
-                recruitment: {
-                    end: MoreThanOrEqual(now),
-                    beginning: LessThanOrEqual(now),
-                },
-                phone,
-            },
-        });
+        return this.repository
+            .createQueryBuilder('candidate')
+            .leftJoinAndSelect('candidate.recruitment', 'recruitment')
+            .where('candidate.phone = :phone', {phone})
+            .andWhere('recruitment.beginning <= :now', {now})
+            .andWhere('recruitment.end >= :now', {now})
+            .getMany();
     }
 }

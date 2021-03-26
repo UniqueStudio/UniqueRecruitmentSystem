@@ -11,6 +11,10 @@ export class SMSService {
     }
 
     async sendSMS(phone: string, template: number, params: string[]) {
+        if (this.configService.isDev) {
+            console.log(params);
+            return;
+        }
         const res = await got.post(this.configService.smsURL, {
             headers: {
                 Token: this.configService.get('SMS_API_TOKEN'),

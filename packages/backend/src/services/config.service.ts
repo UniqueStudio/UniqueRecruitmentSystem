@@ -11,7 +11,8 @@ export class AppConfigService extends ConfigService {
     }
 
     get isDev() {
-        return this.get('NODE_ENV') === Env.dev;
+        const nodeEnv = this.get('NODE_ENV');
+        return nodeEnv === Env.dev || nodeEnv === Env.test;
     }
 
     get qrInitURL() {
