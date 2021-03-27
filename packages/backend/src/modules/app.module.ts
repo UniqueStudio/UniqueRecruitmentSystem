@@ -1,5 +1,4 @@
 import { MiddlewareConsumer, Module, NestModule, ValidationPipe } from '@nestjs/common';
-import { ConfigModule, ConfigService } from '@nestjs/config';
 import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import Joi from 'joi';
@@ -12,19 +11,21 @@ import { AuthMiddleWare } from '@middlewares/auth';
 import { helmet } from '@middlewares/helmet';
 import { rateLimit } from '@middlewares/rateLimit';
 import { AuthModule } from '@modules/auth.module';
+import { CacheModule } from '@modules/cache.module';
 import { CandidatesModule } from '@modules/candidates.module';
 import { ChatModule } from '@modules/chat.module';
 import { CommentsModule } from '@modules/comments.module';
+import { ConfigModule } from '@modules/config.module';
 import { RecruitmentsModule } from '@modules/recruitments.module';
 import { SMSModule } from '@modules/sms.module';
 import { UsersModule } from '@modules/users.module';
-import { AppConfigService } from '@services/config.service';
+import { ConfigService } from '@services/config.service';
 
 @Module({
     imports: [
         ConfigModule.forRoot({
             validationSchema: Joi.object({
-                NODE_ENV: Joi.string().valid(Env.dev, Env.prod, Env.test).default(Env.dev),
+                NODE_ENV: Joi.string().valid(Env.dev, Env.prod, Env.test, Env.migration).default(Env.dev),
                 RESUME_TEMPORARY_PATH: Joi.string().default('/tmp/resumes'),
                 RESUME_PERSISTENT_PATH: Joi.string().default('./data/resumes'),
                 PORT: Joi.number().default(5000),
@@ -52,12 +53,13 @@ import { AppConfigService } from '@services/config.service';
                 username: conf.get('POSTGRES_USER'),
                 password: conf.get('POSTGRES_PASSWORD'),
                 database: conf.get('POSTGRES_DB'),
-                synchronize: true,
+                synchronize: conf.isDev,
                 autoLoadEntities: true,
             }),
         }),
         AuthModule,
         CandidatesModule,
+        CacheModule,
         ChatModule,
         CommentsModule,
         SMSModule,
@@ -65,7 +67,7 @@ import { AppConfigService } from '@services/config.service';
         UsersModule,
     ],
     providers: [
-        AppConfigService,
+        ConfigService,
         {
             provide: APP_GUARD,
             useClass: RoleGuard,
@@ -85,7 +87,7 @@ import { AppConfigService } from '@services/config.service';
     ],
 })
 export class AppModule implements NestModule {
-    constructor(private readonly configService: AppConfigService) {
+    constructor(private readonly configService: ConfigService) {
     }
 
     configure(consumer: MiddlewareConsumer) {

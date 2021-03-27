@@ -1,18 +1,40 @@
 import { Injectable } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
+import { ConfigService as DefaultConfigService } from '@nestjs/config';
 
 import { QR_API, SMS_API, WX_API } from '@constants/consts';
 import { Env } from '@constants/enums';
 
 @Injectable()
-export class AppConfigService extends ConfigService {
+export class ConfigService extends DefaultConfigService {
     constructor() {
         super();
     }
 
     get isDev() {
-        const nodeEnv = this.get('NODE_ENV');
-        return nodeEnv === Env.dev || nodeEnv === Env.test;
+        return this.get<Env>('NODE_ENV') !== Env.prod;
+    }
+
+    get isMigration() {
+        return this.get<Env>('NODE_ENV') === Env.migration;
+    }
+
+    get backupPath() {
+        return this.get<string>('MIGRATION_BACKUP_PATH');
+    }
+
+    get jwtKey() {
+        return this.get<string>('JWT_KEY')!;
+    }
+
+    get port() {
+        return this.get<string>('PORT')!;
+    }
+
+    get resumePaths() {
+        return {
+            temporary: this.get<string>('RESUME_TEMPORARY_PATH')!,
+            persistent: this.get<string>('RESUME_PERSISTENT_PATH')!,
+        };
     }
 
     get qrInitURL() {

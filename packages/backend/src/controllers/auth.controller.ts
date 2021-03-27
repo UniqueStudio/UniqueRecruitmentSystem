@@ -20,7 +20,7 @@ import { AuthByCodeBody, AuthUserByPasswordBody } from '@dtos/auth.dto';
 import { CodeGuard } from '@guards/code.guard';
 import { AuthService } from '@services/auth.service';
 import { CandidatesService } from '@services/candidates.service';
-import { AppConfigService } from '@services/config.service';
+import { ConfigService } from '@services/config.service';
 import { UsersService } from '@services/users.service';
 import { parseWeChatData } from '@utils/parseWeChatData';
 
@@ -29,7 +29,7 @@ export class AuthController {
     constructor(
         private readonly usersService: UsersService,
         private readonly authService: AuthService,
-        private readonly configService: AppConfigService,
+        private readonly configService: ConfigService,
         private readonly candidatesService: CandidatesService,
     ) {
     }

@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import got from 'got';
 
-import { AppConfigService } from '@services/config.service';
+import { ConfigService } from '@services/config.service';
 
 @Injectable()
 export class SMSService {
     constructor(
-        private readonly configService: AppConfigService,
+        private readonly configService: ConfigService,
     ) {
     }
 

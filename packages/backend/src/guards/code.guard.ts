@@ -3,14 +3,14 @@ import { Cache } from 'cache-manager';
 
 import { AuthByCodeBody } from '@dtos/auth.dto';
 import { RequestWithIdentity } from '@interfaces/request.interface';
-import { AppConfigService } from '@services/config.service';
+import { ConfigService } from '@services/config.service';
 import { cacheKey } from '@utils/cacheKey';
 
 @Injectable()
 export class CodeGuard implements CanActivate {
     constructor(
         @Inject(CACHE_MANAGER) private readonly cacheManager: Cache,
-        private readonly configService: AppConfigService,
+        private readonly configService: ConfigService,
     ) {
     }
 

@@ -1,5 +1,6 @@
-import { CacheModule as DefaultCacheModule, Module } from '@nestjs/common';
+import { CacheModule as DefaultCacheModule, Global, Module } from '@nestjs/common';
 
+@Global()
 @Module({
     imports: [DefaultCacheModule.register()],
     exports: [DefaultCacheModule],
