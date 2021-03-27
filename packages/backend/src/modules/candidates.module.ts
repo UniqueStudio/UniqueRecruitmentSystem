@@ -11,6 +11,7 @@ import { CacheModule } from '@modules/cache.module';
 import { RecruitmentsModule } from '@modules/recruitments.module';
 import { SMSModule } from '@modules/sms.module';
 import { CandidatesService } from '@services/candidates.service';
+import { AppConfigService } from '@services/config.service';
 
 @Module({
     imports: [
@@ -31,7 +32,7 @@ import { CandidatesService } from '@services/candidates.service';
         RecruitmentsModule,
     ],
     controllers: [CandidatesController],
-    providers: [CandidatesService, CandidatesGateway],
+    providers: [CandidatesService, CandidatesGateway, AppConfigService],
     exports: [CandidatesService, CandidatesGateway],
 })
 export class CandidatesModule {
