@@ -1,4 +1,4 @@
-import { Group, Step } from '@constants/enums';
+import { Group, Period, Step } from '@constants/enums';
 
 export const QR_API = 'https://open.work.weixin.qq.com/wwopen/sso';
 export const WX_API = 'https://qyapi.weixin.qq.com/cgi-bin';
@@ -40,9 +40,9 @@ export const ID_GROUP_MAP: Record<number, Group> = {
     25: Group.pm,
 };
 export const SLOTS = {
-    morning: [9, 9.5, 10, 10.5, 11, 11.5, 8.5, 8, 7.5],
-    afternoon: [14.5, 15, 15.5, 16, 16.5, 17, 14, 13.5, 13, 12.5],
-    evening: [18.5, 19, 19.5, 20, 20.5, 21, 21.5, 18, 22],
+    [Period.morning]: [9, 9.5, 10, 10.5, 11, 11.5, 8.5, 8, 7.5],
+    [Period.afternoon]: [14.5, 15, 15.5, 16, 16.5, 17, 14, 13.5, 13, 12.5],
+    [Period.evening]: [18.5, 19, 19.5, 20, 20.5, 21, 21.5, 18, 22],
 };
 
 export const ZHANG_XIAO_LONG = new Map<'mother', never>();

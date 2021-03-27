@@ -28,9 +28,9 @@ export enum GroupOrTeam {
 }
 
 export enum Period {
-    morning = 'morning',
-    afternoon = 'afternoon',
-    evening = 'evening',
+    morning,
+    afternoon,
+    evening,
 }
 
 // Feel free to submit a pull request if you can express ALL of them in NATIVE English
