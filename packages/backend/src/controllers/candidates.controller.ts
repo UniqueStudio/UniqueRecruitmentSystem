@@ -115,7 +115,7 @@ export class CandidatesController {
     getMyInfo(
         @Candidate() candidate: CandidateEntity,
     ) {
-        return candidate;
+        return Object.fromEntries(Object.entries(candidate).filter(([, value]) => typeof value !== 'object'));
     }
 
     @Put('me')
@@ -250,7 +250,7 @@ export class CandidatesController {
         if (!candidate) {
             throw new BadRequestException(`Candidate with id ${cid} doesn't exist`);
         }
-        this.checkAllocationPermission(candidate, user, type);
+        CandidatesController.checkAllocationPermission(candidate, user, type);
         candidate.interviewAllocations[type] = new Date(time);
         await candidate.save();
     }
@@ -279,7 +279,7 @@ export class CandidatesController {
             .map(({ id, period, slotNumber }) => [id, SLOTS[period].slice(0, slotNumber).reverse()]),
         );
         for (const candidate of candidates) {
-            this.checkAllocationPermission(candidate, user, type);
+            CandidatesController.checkAllocationPermission(candidate, user, type);
         }
         for (const candidate of candidates) {
             for (const { id, date, name } of candidate.interviewSelections) {
@@ -304,7 +304,7 @@ export class CandidatesController {
         return candidates.map(({ interviewAllocations }) => interviewAllocations[type]);
     }
 
-    private checkAllocationPermission(candidate: CandidateEntity, user: UserEntity, type: InterviewType) {
+    private static checkAllocationPermission(candidate: CandidateEntity, user: UserEntity, type: InterviewType) {
         const { recruitment: { name, end }, group, rejected, abandoned, step, id } = candidate;
         if (rejected) {
             throw new BadRequestException(`Candidate with id ${id} has already been rejected`);
