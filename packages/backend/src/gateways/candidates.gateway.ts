@@ -1,3 +1,5 @@
+import { join } from 'path';
+
 import { BadRequestException } from '@nestjs/common';
 import {
     ConnectedSocket,
@@ -16,6 +18,7 @@ import { UserEntity } from '@entities/user.entity';
 import { RecruitmentsGateway } from '@gateways/recruitments.gateway';
 import { AuthService } from '@services/auth.service';
 import { CandidatesService } from '@services/candidates.service';
+import { ConfigService } from '@services/config.service';
 import { deleteFile } from '@utils/fs';
 
 @WebSocketGateway()
@@ -26,6 +29,7 @@ export class CandidatesGateway {
     constructor(
         private readonly candidatesService: CandidatesService,
         private readonly authService: AuthService,
+        private readonly configService: ConfigService,
         private readonly recruitmentsGateway: RecruitmentsGateway,
     ) {
     }
@@ -78,12 +82,12 @@ export class CandidatesGateway {
         if (!candidate) {
             throw new WsException(`Candidate with id ${cid} doesn't exist`);
         }
-        const { resume, recruitment: { name, end } } = candidate;
+        const { resume, recruitment: { name, end }, group } = candidate;
         if (+end < Date.now()) {
             throw new BadRequestException(`Recruitment ${name} has already ended`);
         }
         const data = { cid };
-        resume && await deleteFile(resume);
+        resume && await deleteFile(join(this.configService.resumePaths.persistent, name, group), resume);
         await candidate.remove();
         socket.broadcast.emit('removeCandidate', {
             status: Status.info,

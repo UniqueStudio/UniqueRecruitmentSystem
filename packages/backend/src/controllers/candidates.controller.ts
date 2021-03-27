@@ -1,4 +1,4 @@
-import { basename, join, resolve } from 'path';
+import { join } from 'path';
 
 import {
     BadRequestException,
@@ -40,6 +40,7 @@ import { CandidatesGateway } from '@gateways/candidates.gateway';
 import { RecruitmentsGateway } from '@gateways/recruitments.gateway';
 import { CodeGuard } from '@guards/code.guard';
 import { CandidatesService } from '@services/candidates.service';
+import { ConfigService } from '@services/config.service';
 import { InterviewsService } from '@services/interviews.service';
 import { RecruitmentsService } from '@services/recruitments.service';
 import { SMSService } from '@services/sms.service';
@@ -55,6 +56,7 @@ export class CandidatesController {
         private readonly recruitmentsService: RecruitmentsService,
         private readonly interviewsService: InterviewsService,
         private readonly smsService: SMSService,
+        private readonly configService: ConfigService,
     ) {
     }
 
@@ -85,7 +87,8 @@ export class CandidatesController {
         let resume;
         if (file) {
             const { originalname, path } = file;
-            resume = await copyFile(path, join('./data/resumes', recruitment.name, group), `${name} - ${originalname}`);
+            resume = `${name} - ${originalname}`;
+            await copyFile(path, join(this.configService.resumePaths.persistent, recruitment.name, group), resume);
         }
         const candidate = await this.candidatesService.createAndSave({
             name,
@@ -146,9 +149,11 @@ export class CandidatesController {
             throw new ForbiddenException(`Candidate without submitting resume cannot apply to group ${group}`);
         }
         if (file) {
-            resume && await deleteFile(resume);
+            const persistentPath = this.configService.resumePaths.persistent;
+            resume && await deleteFile(join(persistentPath, recruitment.name, candidate.group), resume);
             const { originalname, path } = file;
-            resume = await copyFile(path, join('./data/resumes', recruitment.name, group), `${name} - ${originalname}`);
+            resume = `${name} - ${originalname}`;
+            await copyFile(path, join(persistentPath, recruitment.name, group), resume);
         }
         Object.assign(
             candidate,
@@ -192,7 +197,7 @@ export class CandidatesController {
             await candidate.save();
             return;
         }
-        switch (step) {
+        switch (step) { // TODO: double check
             case Step.组面时间选择: {
                 if (interviewSelections.find(({ name }) => name === GroupOrTeam[group])) {
                     throw new ForbiddenException('You have already selected available time for the group interview');
@@ -223,14 +228,17 @@ export class CandidatesController {
         @Res() res: Response,
     ) {
         const candidate = await this.candidatesService.findOneById(cid);
-        if (!candidate?.resume) {
-            throw new BadRequestException(`Resume of candidate with id ${cid} doesn't exist`);
-        } else {
-            const path = resolve(candidate.resume);
-            // Filename is hex-encoded rather than base64-encoded. This fixes #21
-            const filename = Buffer.from(basename(path)).toString('hex');
-            res.header('Access-Control-Expose-Headers', 'Content-Length, Content-Disposition').download(path, filename);
+        if (!candidate) {
+            throw new BadRequestException(`Candidate with id ${cid} doesn't exist`);
         }
+        const { recruitment: { name }, resume, group } = candidate;
+        if (!resume) {
+            throw new BadRequestException(`Resume of candidate with id ${cid} doesn't exist`);
+        }
+        const path = join(this.configService.resumePaths.persistent, name, group, resume);
+        // Filename is hex-encoded rather than base64-encoded. This fixes #21
+        const filename = Buffer.from(resume).toString('hex');
+        res.header('Access-Control-Expose-Headers', 'Content-Length, Content-Disposition').download(path, filename);
     }
 
     @Get('recruitment/:rid')
