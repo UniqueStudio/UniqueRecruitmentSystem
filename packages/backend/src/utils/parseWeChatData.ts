@@ -30,6 +30,7 @@ export const parseWeChatData = (data: Data) => {
     if (!joinTime) {
         throw new Error('Please set join time in WeChat first!');
     }
+    joinTime = joinTime.replaceAll('年', '');
     if (joinTime.includes('春')) {
         joinTime = joinTime.replace(/春.*/g, 'S');
     } else if (joinTime.includes('秋')) {

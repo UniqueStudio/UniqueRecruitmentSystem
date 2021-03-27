@@ -2,6 +2,7 @@ export enum Env {
     dev = 'development',
     prod = 'production',
     test = 'test',
+    migration = 'migration',
 }
 
 export enum Group {

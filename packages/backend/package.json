@@ -71,6 +71,7 @@
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
     "lint": "eslint . --fix",
-    "format": "prettier -w ./src ./typings test"
+    "format": "prettier -w ./src ./typings test",
+    "migrate": "NODE_ENV=migration MIGRATION_BACKUP_PATH=./backup nest start"
   }
 }
