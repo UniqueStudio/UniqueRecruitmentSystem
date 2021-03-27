@@ -46,6 +46,7 @@ export class RecruitmentsService extends BasicCRUDService<RecruitmentEntity> {
             .addSelect('c.group', 'group')
             .addSelect('c.step', 'step')
             .addSelect('count(*)')
+            .where('c.step is not null')
             .leftJoin('r.candidates', 'c')
             .groupBy('c.group')
             .addGroupBy('c.step')

@@ -17,7 +17,7 @@ export class InterviewsService extends BasicCRUDService<InterviewEntity> {
 
     saveMany(interviews: Partial<InterviewEntity>[]) {
         return this.connection.transaction((manager) =>
-            Promise.all(interviews.map((interview) => manager.save(interview))),
+            Promise.all(interviews.map((interview) => manager.save(InterviewEntity, interview))),
         );
     }
 

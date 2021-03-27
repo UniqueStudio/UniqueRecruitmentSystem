@@ -65,13 +65,13 @@ export class RecruitmentsController {
     async setRecruitmentInterviews(
         @Param('rid') rid: string,
         @Param('name') name: GroupOrTeam,
-        @Body() body: SetRecruitmentInterviewsBody[],
+        @Body() { interviews }: SetRecruitmentInterviewsBody,
     ) {
         const recruitment = await this.recruitmentsService.findOneById(rid);
         if (!recruitment) {
             throw new BadRequestException(`Recruitment ${rid} does not exist`);
         }
-        await this.interviewsService.saveMany(body.map(({ date, period, slotNumber }) => ({
+        await this.interviewsService.saveMany(interviews.map(({ date, period, slotNumber }) => ({
             date: new Date(date),
             period,
             name,

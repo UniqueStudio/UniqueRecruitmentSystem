@@ -166,7 +166,7 @@ export class CandidatesController {
         }
     }
 
-    @Post('me/slots')
+    @Put('me/slots')
     @AcceptRole(Role.candidate)
     async selectInterviewSlots(
         @Candidate() candidate: CandidateEntity,

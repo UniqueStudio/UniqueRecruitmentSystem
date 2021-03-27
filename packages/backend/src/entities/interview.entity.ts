@@ -1,4 +1,4 @@
-import { IsDate, IsEnum, IsInt, IsUUID, Min } from 'class-validator';
+import { IsDate, IsEnum, IsInt, IsOptional, IsUUID, Min } from 'class-validator';
 import { Column, Entity, Generated, ManyToOne, PrimaryColumn } from 'typeorm';
 
 import { GroupOrTeam, Period } from '@constants/enums';
@@ -19,6 +19,7 @@ export class InterviewEntity {
     name!: GroupOrTeam;
 
     @Generated('uuid')
+    @IsOptional()
     @IsUUID(4)
     id!: string;
 
