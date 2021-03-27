@@ -25,11 +25,11 @@ export class CandidateEntity extends CommonEntity {
     @IsString()
     name!: string;
 
-    @Column({ enum: Gender })
+    @Column('enum', { enum: Gender })
     @IsEnum(Gender)
     gender!: Gender;
 
-    @Column({ enum: Grade })
+    @Column('enum', { enum: Grade })
     @IsEnum(Grade)
     grade!: Grade;
 
@@ -41,7 +41,7 @@ export class CandidateEntity extends CommonEntity {
     @IsString()
     major!: string;
 
-    @Column({ enum: Rank })
+    @Column('enum', { enum: Rank })
     @IsEnum(Rank)
     rank!: Rank;
 
@@ -53,7 +53,7 @@ export class CandidateEntity extends CommonEntity {
     @IsPhoneNumber('CN')
     phone!: string;
 
-    @Column({ enum: Group })
+    @Column('enum', { enum: Group })
     @IsEnum(Group)
     group!: Group;
 
@@ -85,13 +85,13 @@ export class CandidateEntity extends CommonEntity {
     @IsBoolean()
     rejected!: boolean;
 
-    @Column({ default: 0, enum: Step })
+    @Column('enum', { default: 0, enum: Step })
     @IsOptional()
     @IsEnum(Step)
     step!: Step;
 
     @ManyToMany(() => InterviewEntity, { cascade: ['remove'] })
-    @JoinTable()
+    @JoinTable({ name: 'interview_selections' })
     interviewSelections!: InterviewEntity[];
 
     @Column(() => InterviewAllocations)

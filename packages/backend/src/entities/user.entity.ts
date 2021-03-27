@@ -47,22 +47,23 @@ export class UserEntity extends CommonEntity {
     @IsPhoneNumber('CN')
     phone!: string;
 
-    @Column({ unique: true })
+    @Column({ unique: true, nullable: true })
+    @IsOptional()
     @IsEmail()
-    mail!: string;
+    mail?: string;
 
-    @Column({ enum: Gender })
+    @Column('enum', { enum: Gender })
     @IsEnum(Gender)
     gender!: Gender;
 
-    @Column({ enum: Group })
+    @Column('enum', { enum: Group })
     @IsEnum(Group)
     group!: Group;
 
-    @Column({ default: '' })
+    @Column({ nullable: true })
     @IsOptional()
     @IsUrl({ protocols: ['https'] })
-    avatar!: string;
+    avatar?: string;
 
     @OneToMany(() => CommentEntity, ({ user }) => user)
     comments!: CommentEntity[];

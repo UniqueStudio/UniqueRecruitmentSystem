@@ -1,27 +1,23 @@
-import { IsDate, IsEnum, IsInt, IsOptional, IsUUID, Min } from 'class-validator';
-import { Column, Entity, Generated, ManyToOne, PrimaryColumn } from 'typeorm';
+import { IsDate, IsEnum, IsInt, Min } from 'class-validator';
+import { Column, Entity, ManyToOne } from 'typeorm';
 
 import { GroupOrTeam, Period } from '@constants/enums';
+import { CommonEntity } from '@entities/common.entity';
 import { RecruitmentEntity } from '@entities/recruitment.entity';
 
 @Entity('interviews')
-export class InterviewEntity {
-    @PrimaryColumn('date')
+export class InterviewEntity extends CommonEntity {
+    @Column('date')
     @IsDate()
     date!: Date;
 
-    @PrimaryColumn({ enum: Period })
+    @Column('enum', { enum: Period })
     @IsEnum(Period)
     period!: Period;
 
-    @PrimaryColumn({ enum: GroupOrTeam })
+    @Column('enum', { enum: GroupOrTeam })
     @IsEnum(GroupOrTeam)
     name!: GroupOrTeam;
-
-    @Generated('uuid')
-    @IsOptional()
-    @IsUUID(4)
-    id!: string;
 
     @Column('int')
     @IsInt()

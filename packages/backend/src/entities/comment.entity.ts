@@ -18,7 +18,7 @@ export class CommentEntity extends CommonEntity {
     @IsString()
     content!: string;
 
-    @Column({ enum: Evaluation })
+    @Column('enum', { enum: Evaluation })
     @IsEnum(Evaluation)
     evaluation!: Evaluation;
 }
