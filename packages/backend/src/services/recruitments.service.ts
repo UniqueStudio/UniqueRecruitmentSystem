@@ -25,7 +25,7 @@ export class RecruitmentsService extends BasicCRUDService<RecruitmentEntity> {
 
     findOneWithCandidates(id: string): Promise<Omit<RecruitmentEntity, 'interviews' | 'statistics'> | undefined> {
         return this.findOneById(id, {
-            relations: ['candidates', 'candidates.comments', 'candidates.interviews'],
+            relations: ['candidates', 'candidates.comments', 'candidates.interviewSelections'],
         });
     }
 
