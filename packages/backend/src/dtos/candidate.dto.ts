@@ -1,15 +1,21 @@
+import { Type } from 'class-transformer';
 import { IsBoolean, IsDateString, IsEmail, IsEnum, IsOptional, IsPhoneNumber, IsString, IsUUID } from 'class-validator';
 
 import { Gender, Grade, Group, InterviewType, Rank, Step } from '@constants/enums';
 
-export class SetCandidateBody {
+export class SetMyInfoBody {
     @IsString()
     name!: string;
 
     @IsEnum(Gender)
+    @Type(() => Number)
     gender!: Gender;
 
+    @IsEnum(Group)
+    group!: Group;
+
     @IsEnum(Grade)
+    @Type(() => Number)
     grade!: Grade;
 
     @IsString()
@@ -19,6 +25,7 @@ export class SetCandidateBody {
     major!: string;
 
     @IsEnum(Rank)
+    @Type(() => Number)
     rank!: Rank;
 
     @IsEmail()
@@ -28,6 +35,7 @@ export class SetCandidateBody {
     intro!: string;
 
     @IsBoolean()
+    @Type(() => Boolean)
     isQuick!: boolean;
 
     @IsOptional()
@@ -35,12 +43,9 @@ export class SetCandidateBody {
     referrer?: string;
 }
 
-export class CreateCandidateBody extends SetCandidateBody {
+export class CreateCandidateBody extends SetMyInfoBody {
     @IsPhoneNumber('CN')
     phone!: string;
-
-    @IsEnum(Group)
-    group!: Group;
 
     @IsUUID(4)
     rid!: string;

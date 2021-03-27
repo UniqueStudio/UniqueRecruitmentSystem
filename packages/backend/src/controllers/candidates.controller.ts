@@ -14,6 +14,8 @@ import {
     UploadedFile,
     UseGuards,
     UseInterceptors,
+    UsePipes,
+    ValidationPipe,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Response } from 'express';
@@ -30,7 +32,7 @@ import {
     AllocateOneParams,
     CreateCandidateBody,
     SelectInterviewSlotsBody,
-    SetCandidateBody,
+    SetMyInfoBody,
 } from '@dtos/candidate.dto';
 import { CandidateEntity } from '@entities/candidate.entity';
 import { UserEntity } from '@entities/user.entity';
@@ -59,6 +61,7 @@ export class CandidatesController {
     @Post()
     @UseGuards(CodeGuard)
     @UseInterceptors(FileInterceptor('resume'))
+    @UsePipes(new ValidationPipe({ transform: true })) // FormData's value is always string and needs transformation
     async createCandidate(
         @Body() {
             name, grade, institute, major, rank, mail, phone, group, gender, intro, rid, isQuick, referrer,
@@ -115,18 +118,26 @@ export class CandidatesController {
     getMyInfo(
         @Candidate() candidate: CandidateEntity,
     ) {
-        return Object.fromEntries(Object.entries(candidate).filter(([, value]) => typeof value !== 'object'));
+        const bannedKeys = new Set([
+            'recruitment',
+            'comments',
+            'interviewSelections',
+            'interviewAllocations',
+            'resume',
+        ]);
+        return Object.fromEntries(Object.entries(candidate).filter(([key]) => !bannedKeys.has(key)));
     }
 
     @Put('me')
     @AcceptRole(Role.candidate)
     @UseInterceptors(FileInterceptor('resume'))
+    @UsePipes(new ValidationPipe({ transform: true })) // FormData's value is always string and needs transformation
     async setMyInfo(
         @Candidate() candidate: CandidateEntity,
-        @Body() { name, gender, grade, institute, intro, isQuick, mail, major, rank, referrer }: SetCandidateBody,
+        @Body() { name, gender, grade, group, institute, intro, isQuick, mail, major, rank, referrer }: SetMyInfoBody,
         @UploadedFile() file: Express.Multer.File,
     ) {
-        const { recruitment, group } = candidate;
+        const { recruitment } = candidate;
         let { resume } = candidate;
         if (+recruitment.deadline < Date.now()) {
             throw new ForbiddenException('The application deadline of this recruitment has already passed');
@@ -141,7 +152,7 @@ export class CandidatesController {
         }
         Object.assign(
             candidate,
-            { name, gender, grade, institute, intro, isQuick, mail, major, rank, referrer, resume },
+            { name, gender, grade, group, institute, intro, isQuick, mail, major, rank, referrer, resume },
         );
         await candidate.save();
         // TODO: broadcast updateCandidate
