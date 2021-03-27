@@ -13,7 +13,6 @@ import { AppConfigService } from '@services/config.service';
     imports: [
         UsersModule,
         CacheModule,
-        ConfigModule,
         CandidatesModule,
         JwtModule.registerAsync({
             imports: [ConfigModule],
