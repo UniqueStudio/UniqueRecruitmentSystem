@@ -68,7 +68,7 @@ const Allocation: FC<Props> = memo(({ disabled, title, dates, setRecruitment }) 
         if (period !== 'date') {
             setAllocation((prevAllocation) => {
                 const time = [...prevAllocation];
-                time[id][period] = +value;
+                time[id][period] = Math.max(+value, 0);
                 return time;
             });
         }
@@ -103,7 +103,7 @@ const Allocation: FC<Props> = memo(({ disabled, title, dates, setRecruitment }) 
                             />
                             <TextField
                                 label='上午'
-                                value={Math.max(morning, 0)}
+                                value={morning}
                                 onChange={setPeriod(index, 'morning')}
                                 className={classes.textField}
                                 type='number'
@@ -113,7 +113,7 @@ const Allocation: FC<Props> = memo(({ disabled, title, dates, setRecruitment }) 
                             />
                             <TextField
                                 label='下午'
-                                value={Math.max(afternoon, 0)}
+                                value={afternoon}
                                 onChange={setPeriod(index, 'afternoon')}
                                 className={classes.textField}
                                 type='number'
@@ -123,7 +123,7 @@ const Allocation: FC<Props> = memo(({ disabled, title, dates, setRecruitment }) 
                             />
                             <TextField
                                 label='晚上'
-                                value={Math.max(evening, 0)}
+                                value={evening}
                                 onChange={setPeriod(index, 'evening')}
                                 className={classes.textField}
                                 type='number'
