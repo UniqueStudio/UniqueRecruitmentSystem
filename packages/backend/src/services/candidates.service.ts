@@ -15,13 +15,13 @@ export class CandidatesService extends BasicCRUDService<CandidateEntity> {
 
     findOneById(id: string) {
         return super.findOneById(id, {
-            relations: ['recruitment', 'recruitment.interviews', 'interviewSelections', 'interviewAllocations'],
+            relations: ['recruitment', 'recruitment.interviews', 'interviewSelections'],
         });
     }
 
     findManyByIds(ids: string[]) {
         return this.repository.findByIds(ids, {
-            relations: ['recruitment', 'recruitment.interviews', 'interviewSelections', 'interviewAllocations'],
+            relations: ['recruitment', 'recruitment.interviews', 'interviewSelections'],
         });
     }
 
