@@ -35,6 +35,13 @@ describe('RecruitmentsService', () => {
         });
     });
 
+    describe('find recruitments with statistics', () => {
+        it('should return with statistics array',  async () => {
+            const recruitments = await recruitmentsService.findWithStatistics();
+            recruitments.forEach(({ statistics }) => expect(statistics).toHaveProperty('length'));
+        });
+    });
+
     afterAll(async () => {
         await recruitmentsService.clear();
     });

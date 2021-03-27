@@ -18,20 +18,14 @@ export class RecruitmentsController {
     }
 
     @Get('pending')
-    async getPendingRecruitments() {
-        return await this.recruitmentsService.findPending();
+    getPendingRecruitments() {
+        return this.recruitmentsService.findPending();
     }
 
     @Get()
     @AcceptRole(Role.user)
-    async getAllRecruitments() {
-        return await this.recruitmentsService.find();
-    }
-
-    @Get(':rid')
-    @AcceptRole(Role.user)
-    async getOneRecruitment(@Param('rid') rid: string) {
-        return await this.recruitmentsService.findOneById(rid);
+    getAllRecruitments() {
+        return this.recruitmentsService.findWithStatistics();
     }
 
     @Post()

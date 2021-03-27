@@ -1,6 +1,7 @@
 import { IsDate, IsString, Matches } from 'class-validator';
 import { Column, Entity, OneToMany } from 'typeorm';
 
+import { Group, Step } from '@constants/enums';
 import { CandidateEntity } from '@entities/candidate.entity';
 import { CommonEntity } from '@entities/common.entity';
 import { InterviewEntity } from '@entities/interview.entity';
@@ -29,4 +30,7 @@ export class RecruitmentEntity extends CommonEntity {
 
     @OneToMany(() => CandidateEntity, ({ recruitment }) => recruitment)
     candidates!: CandidateEntity[];
+
+    @Column('jsonb', { nullable: true })
+    statistics?: Record<Group, Record<Step, number | undefined> | undefined>;
 }
