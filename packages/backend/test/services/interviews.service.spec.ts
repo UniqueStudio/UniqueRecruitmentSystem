@@ -4,8 +4,11 @@ import { GroupOrTeam, Period } from '@constants/enums';
 import { InterviewEntity } from '@entities/interview.entity';
 import { RecruitmentEntity } from '@entities/recruitment.entity';
 import { AppModule } from '@modules/app.module';
+import { CandidatesService } from '@services/candidates.service';
+import { CommentsService } from '@services/comments.service';
 import { InterviewsService } from '@services/interviews.service';
 import { RecruitmentsService } from '@services/recruitments.service';
+import { UsersService } from '@services/users.service';
 
 describe('InterviewsService', () => {
     let interviewsService: InterviewsService;
@@ -16,10 +19,16 @@ describe('InterviewsService', () => {
         const module = await Test.createTestingModule({
             imports: [AppModule],
         }).compile();
-        interviewsService = module.get<InterviewsService>(InterviewsService);
-        recruitmentsService = module.get<RecruitmentsService>(RecruitmentsService);
+        const usersService = module.get(UsersService);
+        recruitmentsService = module.get(RecruitmentsService);
+        const candidatesService = module.get(CandidatesService);
+        interviewsService = module.get(InterviewsService);
+        const commentsService = module.get(CommentsService);
+        await commentsService.clear();
+        await candidatesService.clear();
         await interviewsService.clear();
         await recruitmentsService.clear();
+        await usersService.clear();
         testRecruitment = await recruitmentsService.createAndSave({
             name: '2020C',
             beginning: new Date('1999'),

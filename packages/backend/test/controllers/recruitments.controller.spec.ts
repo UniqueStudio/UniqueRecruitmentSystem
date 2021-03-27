@@ -7,6 +7,7 @@ import { RecruitmentEntity } from '@entities/recruitment.entity';
 import { UserEntity } from '@entities/user.entity';
 import { AppModule } from '@modules/app.module';
 import { CandidatesService } from '@services/candidates.service';
+import { CommentsService } from '@services/comments.service';
 import { InterviewsService } from '@services/interviews.service';
 import { RecruitmentsService } from '@services/recruitments.service';
 import { UsersService } from '@services/users.service';
@@ -25,14 +26,16 @@ describe('RecruitmentsController e2e', () => {
         }).compile();
         app = module.createNestApplication();
         await app.init();
-        const recruitmentsService = module.get<RecruitmentsService>(RecruitmentsService);
-        const interviewsService = module.get<InterviewsService>(InterviewsService);
-        const candidatesService = module.get<CandidatesService>(CandidatesService);
-        const usersService = module.get<UsersService>(UsersService);
-        await usersService.clear();
+        const usersService = app.get(UsersService);
+        const recruitmentsService = app.get(RecruitmentsService);
+        const candidatesService = app.get(CandidatesService);
+        const interviewsService = app.get(InterviewsService);
+        const commentsService = app.get(CommentsService);
+        await commentsService.clear();
         await candidatesService.clear();
         await interviewsService.clear();
         await recruitmentsService.clear();
+        await usersService.clear();
         testUser = await usersService.hashPasswordAndCreate({
             weChatID: 'hanyuu',
             name: 'hanyuu',
@@ -204,7 +207,7 @@ describe('RecruitmentsController e2e', () => {
                             {
                                 date: new Date(2001),
                                 period: Period.morning,
-                                slotNumber: 5,
+                                slotNumber: -1,
                             },
                         ],
                     })

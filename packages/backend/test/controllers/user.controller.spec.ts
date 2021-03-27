@@ -5,6 +5,10 @@ import { agent } from 'supertest';
 import { Gender, Group } from '@constants/enums';
 import { UserEntity } from '@entities/user.entity';
 import { AppModule } from '@modules/app.module';
+import { CandidatesService } from '@services/candidates.service';
+import { CommentsService } from '@services/comments.service';
+import { InterviewsService } from '@services/interviews.service';
+import { RecruitmentsService } from '@services/recruitments.service';
 import { UsersService } from '@services/users.service';
 
 describe('UserController e2e', () => {
@@ -21,7 +25,15 @@ describe('UserController e2e', () => {
         }).compile();
         app = module.createNestApplication();
         await app.init();
-        const usersService = module.get<UsersService>(UsersService);
+        const usersService = app.get(UsersService);
+        const recruitmentsService = app.get(RecruitmentsService);
+        const candidatesService = app.get(CandidatesService);
+        const interviewsService = app.get(InterviewsService);
+        const commentsService = app.get(CommentsService);
+        await commentsService.clear();
+        await candidatesService.clear();
+        await interviewsService.clear();
+        await recruitmentsService.clear();
         await usersService.clear();
         testUser = await usersService.hashPasswordAndCreate({
             weChatID: 'hanyuu',
