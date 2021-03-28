@@ -12,7 +12,7 @@ export class InterviewsService extends BasicCRUDService<InterviewEntity> {
         @InjectRepository(InterviewEntity) repository: Repository<InterviewEntity>,
         private readonly connection: Connection,
     ) {
-        super(repository);
+        super(repository, 'interviews');
     }
 
     saveMany(interviews: Partial<InterviewEntity>[]) {
