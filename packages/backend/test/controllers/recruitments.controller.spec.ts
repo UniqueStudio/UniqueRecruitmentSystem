@@ -206,8 +206,28 @@ describe('RecruitmentsController e2e', () => {
                             },
                             {
                                 date: new Date(2001),
-                                period: Period.morning,
+                                period: Period.afternoon,
                                 slotNumber: -1,
+                            },
+                        ],
+                    })
+                    .auth(adminJWT, { type: 'bearer' })
+                    .expect(400);
+            });
+            it('should also throw', async () => {
+                await agent(app.getHttpServer())
+                    .put(`/recruitments/${testRecruitment.id}/interviews/web`)
+                    .send({
+                        interviews: [
+                            {
+                                date: new Date(2005),
+                                period: Period.morning,
+                                slotNumber: 5,
+                            },
+                            {
+                                date: new Date(2005),
+                                period: Period.morning,
+                                slotNumber: 5,
                             },
                         ],
                     })

@@ -66,7 +66,7 @@ export class RecruitmentsController {
         @Param('rid') rid: string,
         @Param('name') name: GroupOrTeam,
         @Body() { interviews }: SetRecruitmentInterviewsBody,
-    ) { // TODO: fix me
+    ) {
         const recruitment = await this.recruitmentsService.findOneById(rid);
         if (!recruitment) {
             throw new BadRequestException(`Recruitment ${rid} does not exist`);

@@ -1,11 +1,12 @@
 import { IsDate, IsEnum, IsInt, Min } from 'class-validator';
-import { Column, Entity, ManyToOne } from 'typeorm';
+import { Column, Entity, ManyToOne, Unique } from 'typeorm';
 
 import { GroupOrTeam, Period } from '@constants/enums';
 import { CommonEntity } from '@entities/common.entity';
 import { RecruitmentEntity } from '@entities/recruitment.entity';
 
 @Entity('interviews')
+@Unique(['date', 'period', 'name'])
 export class InterviewEntity extends CommonEntity {
     @Column('date')
     @IsDate()
