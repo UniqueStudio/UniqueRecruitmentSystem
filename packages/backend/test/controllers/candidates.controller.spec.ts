@@ -16,12 +16,10 @@ import { UsersService } from '@services/users.service';
 
 describe('CandidatesController e2e', () => {
     let app: INestApplication;
-    let superAdmin: UserEntity;
     let testUser: UserEntity;
     let prevRecruitment: RecruitmentEntity;
     let testRecruitment: RecruitmentEntity;
     let adminJWT: string;
-    let userJWT: string;
     let candidateJWT: string;
     let testCandidate: CandidateEntity;
     let startTime: number;
@@ -45,20 +43,12 @@ describe('CandidatesController e2e', () => {
         await interviewsService.clear();
         await recruitmentsService.clear();
         await usersService.clear();
-        superAdmin = await usersService.hashPasswordAndCreate({
-            weChatID: 'superadmin',
-            name: 'a',
-            joinTime: '1970S',
-            phone: '13123456789',
-            mail: 'im@super.admin',
-            gender: Gender.other,
-            group: Group.web,
-        }, password);
+
         prevRecruitment = await recruitmentsService.createAndSave({
             name: '2018A',
             beginning: new Date('2018'),
-            end: new Date('2019'),
-            deadline: new Date('2020'),
+            deadline: new Date('2019'),
+            end: new Date('2020'),
         });
         // previous candidate
         await candidatesService.createAndSave({
@@ -75,6 +65,7 @@ describe('CandidatesController e2e', () => {
             intro: 'hi',
             isQuick: false,
         });
+        // create user before create recruitment
         testUser = await usersService.hashPasswordAndCreate({
             weChatID: 'hanyuu',
             name: 'hanyuu',
@@ -88,14 +79,9 @@ describe('CandidatesController e2e', () => {
         testRecruitment = await recruitmentsService.createAndSave({
             name: '2020C',
             beginning: new Date('1999'),
+            deadline: new Date('2077'),
             end: new Date('2099'),
-            deadline: new Date('2099'),
         });
-        adminJWT = (
-            await agent(app.getHttpServer())
-                .post('/auth/user/login')
-                .send({ password, phone: superAdmin.phone })
-        ).body.payload;
         const { body: { payload } } = await agent(app.getHttpServer())
             .post('/auth/user/login')
             .send({ password, phone: testUser.phone });
@@ -266,7 +252,7 @@ describe('CandidatesController e2e', () => {
             it('should throw 400', async () => {
                 await agent(app.getHttpServer())
                     .get('/candidates/recruitment/foo')
-                    .auth(userJWT, { type: 'bearer' })
+                    .auth(adminJWT, { type: 'bearer' })
                     .expect(400);
             } );
         });
@@ -274,7 +260,7 @@ describe('CandidatesController e2e', () => {
             it('should return empty', async () => {
                 const { body: { payload } } = await agent(app.getHttpServer())
                     .get(`/candidates/recruitment/${testRecruitment.id}`)
-                    .auth(userJWT, { type: 'bearer' })
+                    .auth(adminJWT, { type: 'bearer' })
                     .query({ updatedAt: new Date().getTime() }) // add this updatedAt query
                     .expect(200);
                 expect(payload).toHaveLength(0);
@@ -303,17 +289,10 @@ describe('CandidatesController e2e', () => {
         });
 
         describe('get candidates in previous recruitment than user', () => {
-            it('should have candidates in previous recruitment', async () => {
-                const { body: { payload } } = await agent(app.getHttpServer())
-                    .get(`/candidates/recruitment/${prevRecruitment.id}`)
-                    .auth(adminJWT, { type: 'bearer' })
-                    .expect(200);
-                expect(payload).toHaveLength(1);
-            });
             it('should throw 403', async () => {
                 await agent(app.getHttpServer())
                     .get(`/candidates/recruitment/${prevRecruitment.id}`)
-                    .auth(userJWT, { type: 'bearer' })
+                    .auth(adminJWT, { type: 'bearer' })
                     .expect(403);
             });
         });
