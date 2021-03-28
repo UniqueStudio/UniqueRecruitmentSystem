@@ -14,7 +14,7 @@ export class UsersService extends BasicCRUDService<UserEntity> {
     constructor(
         @InjectRepository(UserEntity) repository: Repository<UserEntity>,
     ) {
-        super(repository);
+        super(repository, 'user');
     }
 
     findIdentityByPhone(phone: string): Promise<Pick<UserEntity, 'id' | 'password'> | undefined> {

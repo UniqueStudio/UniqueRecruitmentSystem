@@ -10,6 +10,7 @@ import {
     Param,
     Post,
     Put,
+    Query,
     Res,
     UploadedFile,
     UseGuards,
@@ -39,13 +40,13 @@ import { UserEntity } from '@entities/user.entity';
 import { CandidatesGateway } from '@gateways/candidates.gateway';
 import { RecruitmentsGateway } from '@gateways/recruitments.gateway';
 import { CodeGuard } from '@guards/code.guard';
+import { UpdatedAtPipe } from '@pipes/updatedAt.pipe';
 import { CandidatesService } from '@services/candidates.service';
 import { ConfigService } from '@services/config.service';
 import { EmailService } from '@services/email.service';
 import { InterviewsService } from '@services/interviews.service';
 import { RecruitmentsService } from '@services/recruitments.service';
 import { SMSService } from '@services/sms.service';
-import { compareJoinTime } from '@utils/compareJoinTime';
 import { copyFile, deleteFile } from '@utils/fs';
 
 @Controller('candidates')
@@ -252,16 +253,22 @@ export class CandidatesController {
     async getCandidates(
         @User() user: UserEntity,
         @Param('rid') rid: string,
+        @Query('updatedAt', UpdatedAtPipe) updatedAt: Date,
     ) {
-        const { joinTime } = user;
-        const recruitment = await this.recruitmentsService.findOneWithCandidates(rid);
+        const recruitment = await this.recruitmentsService.findOneById(rid);
+
         if (!recruitment) {
             throw new BadRequestException(`Recruitment with id ${rid} doesn't exist`);
         }
-        if (compareJoinTime(joinTime, recruitment.name) >= 0) {
+
+        if (recruitment.createdAt < user.createdAt) {
             throw new ForbiddenException('You don\'t have permission to view this recruitment');
         }
-        return recruitment.candidates;
+
+        // find candidates WHERE c.updatedAt >= updatedAt AND r.rid = rid
+        const candidates = await this.candidatesService.findManyByRecruitmentId(rid, { updatedAt });
+
+        return candidates;
     }
 
     @Put(':cid/interview/:type')
