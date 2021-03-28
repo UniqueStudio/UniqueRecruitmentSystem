@@ -4,10 +4,10 @@ export abstract class CommonEntity extends BaseEntity {
     @PrimaryGeneratedColumn('uuid')
     id!: string;
 
-    @CreateDateColumn({ type: 'timestamp with time zone', select: true, update: false })
+    @CreateDateColumn({ type: 'timestamptz', select: true, update: false })
     createdAt!: Date;
 
-    @UpdateDateColumn({ type: 'timestamp with time zone', select: true })
+    @UpdateDateColumn({ type: 'timestamptz', select: true })
     @Index()
     updatedAt!: Date;
 }
