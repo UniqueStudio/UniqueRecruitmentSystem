@@ -162,7 +162,7 @@ export class CandidatesController {
             { name, gender, grade, group, institute, intro, isQuick, mail, major, rank, referrer, resume },
         );
         await candidate.save();
-        // TODO: broadcast updateCandidate
+        this.candidatesGateway.broadcastUpdate(candidate);
     }
 
     @Get('me/slots')

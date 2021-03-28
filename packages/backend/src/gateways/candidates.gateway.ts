@@ -41,6 +41,13 @@ export class CandidatesGateway {
         });
     };
 
+    broadcastUpdate(candidate: CandidateEntity) {
+        this.server.sockets.emit('updateCandidate', {
+            status: Status.info,
+            payload: candidate,
+        });
+    };
+
     @SubscribeMessage('moveCandidate')
     async moveCandidate(
         @MessageBody() { cid, from, to, token }: MoveCandidateBody,
