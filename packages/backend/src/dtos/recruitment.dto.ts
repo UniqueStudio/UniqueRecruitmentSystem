@@ -29,19 +29,9 @@ class InterviewsElement {
     slotNumber!: number;
 }
 
-class InterviewsElementWithId {
+class InterviewsElementWithId extends InterviewsElement {
     @IsUUID(4)
     id!: string;
-
-    @IsDateString()
-    date!: string;
-
-    @IsEnum(Period)
-    period!: Period;
-
-    @IsInt()
-    @Min(0)
-    slotNumber!: number;
 }
 
 export class CreateRecruitmentInterviewsBody {
