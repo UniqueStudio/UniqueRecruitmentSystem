@@ -176,9 +176,9 @@ export class CandidatesController {
         }
         switch (step) {
             case Step.组面时间选择:
-                return recruitment.interviews.find(({ name }) => name === GroupOrTeam[group]);
+                return recruitment.interviews.filter(({ name }) => name === GroupOrTeam[group]);
             case Step.群面时间选择:
-                return recruitment.interviews.find(({ name }) => name === GroupOrTeam.unique);
+                return recruitment.interviews.filter(({ name }) => name === GroupOrTeam.unique);
             default:
                 throw new ForbiddenException('No need to select time in current step');
         }
