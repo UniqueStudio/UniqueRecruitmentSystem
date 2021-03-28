@@ -249,11 +249,18 @@ export class CandidatesController {
         @Param('rid') rid: string,
         @Query('updatedAt', UpdatedAtPipe) updatedAt: Date,
     ) {
-        const { createdAt } = user;
+        const recruitment = await this.recruitmentsService.findOneById(rid);
 
-        // this use the fact that user is created before candidates
-        // which should have same effects with compareJoinTime
-        const candidates = await this.candidatesService.findManyByRecruitmentId(rid, { updatedAt, createdAt });
+        if (!recruitment) {
+            throw new BadRequestException('Recruitment with id ${rid} doesn\'t exist');
+        }
+
+        if (recruitment.createdAt < user.createdAt) {
+            throw new ForbiddenException('You don\'t have permission to view this recruitment');
+        }
+
+        // find candidates WHERE c.updatedAt >= updatedAt AND r.rid = rid
+        const candidates = await this.candidatesService.findManyByRecruitmentId(rid, { updatedAt });
 
         return candidates;
     }
