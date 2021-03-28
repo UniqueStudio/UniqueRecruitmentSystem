@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Cron } from '@nestjs/schedule';
+import { Cron, CronExpression } from '@nestjs/schedule';
 
 import { ConfigService } from '@services/config.service';
 import { deleteFile, listDir } from '@utils/fs';
@@ -11,8 +11,8 @@ export class TasksService {
     ) {
     }
 
-    @Cron('0 0 4 * * *')
-    async handleCron() {
+    @Cron(CronExpression.EVERY_DAY_AT_4AM)
+    async cleanTemps() {
         const directory = this.configService.resumePaths.temporary;
         for (const file of await listDir(directory)) {
             await deleteFile(directory, file);
