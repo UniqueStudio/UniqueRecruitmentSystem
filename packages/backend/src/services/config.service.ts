@@ -1,7 +1,9 @@
+import { createHmac } from 'crypto';
+
 import { Injectable } from '@nestjs/common';
 import { ConfigService as DefaultConfigService } from '@nestjs/config';
 
-import { QR_API, SMS_API, WX_API } from '@constants/consts';
+import { ACM_API, EMAIL_HOST, EMAIL_PORT, QR_API, SMS_API, WX_API } from '@constants/consts';
 import { Env } from '@constants/enums';
 
 @Injectable()
@@ -53,9 +55,9 @@ export class ConfigService extends DefaultConfigService {
     }
 
     get accessTokenURL() {
-        const CORP_ID = this.get<string>('CORP_ID')!;
+        const APP_ID = this.get<string>('APP_ID')!;
         const CORP_SECRET = this.get<string>('CORP_SECRET')!;
-        return `${WX_API}/gettoken?corpid=${CORP_ID}&corpsecret=${CORP_SECRET}`;
+        return `${WX_API}/gettoken?corpid=${APP_ID}&corpsecret=${CORP_SECRET}`;
     }
 
     uidURL(accessToken: string, code: string) {
@@ -68,5 +70,42 @@ export class ConfigService extends DefaultConfigService {
 
     get smsURL() {
         return SMS_API;
+    }
+
+    get acmEndpoint() {
+        return `${ACM_API}:8080/diamond-server/diamond`;
+    }
+
+    acmServer(ip: string) {
+        const DATA_ID = this.get<string>('ACM_DATA_ID')!;
+        const GROUP = this.get<string>('ACM_GROUP')!;
+        const NAMESPACE = this.get<string>('ACM_NAMESPACE')!;
+        return `http://${ip}:8080/diamond-server/config.co?dataId=${DATA_ID}&group=${GROUP}&tenant=${NAMESPACE}`;
+    }
+
+    get acmHeaders() {
+        const ACCESS_KEY = this.get<string>('ACM_ACCESS_KEY')!;
+        const SECRET_KEY = this.get<string>('ACM_SECRET_KEY')!;
+        const GROUP = this.get<string>('ACM_GROUP')!;
+        const NAMESPACE = this.get<string>('ACM_NAMESPACE')!;
+        const timestamp = Date.now();
+        const signature = createHmac('sha1', SECRET_KEY).update(`${NAMESPACE}+${GROUP}+${timestamp}`).digest('base64');
+        return {
+            'Spas-AccessKey': ACCESS_KEY,
+            'Spas-Signature': signature,
+            timeStamp: timestamp.toString(),
+        };
+    }
+
+    get emailConfig() {
+        return {
+            host: EMAIL_HOST,
+            port: EMAIL_PORT,
+            auth: {
+                user: this.get<string>('EMAIL_USER')!,
+                pass: this.get<string>('EMAIL_PASS')!,
+            },
+            secure: true,
+        };
     }
 }

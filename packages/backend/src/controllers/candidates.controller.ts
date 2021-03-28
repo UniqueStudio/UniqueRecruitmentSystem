@@ -41,6 +41,7 @@ import { RecruitmentsGateway } from '@gateways/recruitments.gateway';
 import { CodeGuard } from '@guards/code.guard';
 import { CandidatesService } from '@services/candidates.service';
 import { ConfigService } from '@services/config.service';
+import { EmailService } from '@services/email.service';
 import { InterviewsService } from '@services/interviews.service';
 import { RecruitmentsService } from '@services/recruitments.service';
 import { SMSService } from '@services/sms.service';
@@ -56,6 +57,7 @@ export class CandidatesController {
         private readonly recruitmentsService: RecruitmentsService,
         private readonly interviewsService: InterviewsService,
         private readonly smsService: SMSService,
+        private readonly emailService: EmailService,
         private readonly configService: ConfigService,
     ) {
     }
@@ -108,7 +110,7 @@ export class CandidatesController {
         });
         try {
             await this.smsService.sendSMS(phone, 670908, [name, '成功提交报名表单']);
-            // TODO: send email
+            await this.emailService.sendEmail(candidate);
         } catch ({ message }) {
             throw new InternalServerErrorException(message);
         }

@@ -17,6 +17,7 @@ import { CandidatesModule } from '@modules/candidates.module';
 import { ChatModule } from '@modules/chat.module';
 import { CommentsModule } from '@modules/comments.module';
 import { ConfigModule } from '@modules/config.module';
+import { EmailModule } from '@modules/email.module';
 import { RecruitmentsModule } from '@modules/recruitments.module';
 import { SMSModule } from '@modules/sms.module';
 import { TasksModule } from '@modules/tasks.module';
@@ -27,22 +28,33 @@ import { ConfigService } from '@services/config.service';
     imports: [
         ConfigModule.forRoot({
             validationSchema: Joi.object({
+                // app config
                 NODE_ENV: Joi.string().valid(Env.dev, Env.prod, Env.test, Env.migration).default(Env.dev),
                 RESUME_TEMPORARY_PATH: Joi.string().default('/tmp/resumes'),
                 RESUME_PERSISTENT_PATH: Joi.string().default('./data/resumes'),
                 PORT: Joi.number().default(5000),
+                JWT_KEY: Joi.string().required(),
+                // db config
                 POSTGRES_HOST: Joi.string().default('postgres'),
                 POSTGRES_PORT: Joi.number().default(5432),
                 POSTGRES_USER: Joi.string().required(),
                 POSTGRES_PASSWORD: Joi.string().required(),
                 POSTGRES_DB: Joi.string().required(),
-                JWT_KEY: Joi.string().required(),
+                // ali config
+                ACM_SECRET_KEY: Joi.string().required(),
+                ACM_ACCESS_KEY: Joi.string().required(),
+                ACM_DATA_ID: Joi.string().required(),
+                ACM_GROUP: Joi.string().required(),
+                ACM_NAMESPACE: Joi.string().required(),
+                // tencent config
                 APP_ID: Joi.string().required(),
                 AGENT_ID: Joi.string().required(),
                 REDIRECT_URI: Joi.string().required(),
-                CORP_ID: Joi.string().required(),
                 CORP_SECRET: Joi.string().required(),
+                // sms and email config
                 SMS_API_TOKEN: Joi.string().required(),
+                EMAIL_USER: Joi.string().required(),
+                EMAIL_PASS: Joi.string().required(),
             }),
         }),
         TypeOrmModule.forRootAsync({
@@ -69,6 +81,7 @@ import { ConfigService } from '@services/config.service';
         SMSModule,
         RecruitmentsModule,
         UsersModule,
+        EmailModule,
     ],
     providers: [
         ConfigService,

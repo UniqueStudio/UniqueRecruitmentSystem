@@ -3,6 +3,9 @@ import { Group, Period, Step } from '@constants/enums';
 export const QR_API = 'https://open.work.weixin.qq.com/wwopen/sso';
 export const WX_API = 'https://qyapi.weixin.qq.com/cgi-bin';
 export const SMS_API = 'https://open.hustunique.com/message/sms';
+export const ACM_API = 'http://acm.aliyun.com';
+export const EMAIL_HOST = 'smtpdm.aliyun.com';
+export const EMAIL_PORT = 465;
 export const STEP_MAP: Record<Step, string> = {
     [Step.报名]: '报名流程',
     [Step.笔试]: '笔试流程',
