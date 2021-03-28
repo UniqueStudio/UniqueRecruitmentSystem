@@ -90,7 +90,7 @@ export class CandidateEntity extends CommonEntity {
     @IsEnum(Step)
     step!: Step;
 
-    @ManyToMany(() => InterviewEntity, { cascade: ['remove'] })
+    @ManyToMany(() => InterviewEntity)
     @JoinTable({ name: 'interview_selections' })
     interviewSelections!: InterviewEntity[];
 
