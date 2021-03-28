@@ -73,12 +73,6 @@ describe('CandidatesController e2e', () => {
             intro: 'hi',
             isQuick: false,
         });
-        testRecruitment = await recruitmentsService.createAndSave({
-            name: '2020C',
-            beginning: new Date('1999'),
-            end: new Date('2099'),
-            deadline: new Date('2099'),
-        });
         testUser = await usersService.hashPasswordAndCreate({
             weChatID: 'hanyuu',
             name: 'hanyuu',
@@ -88,6 +82,12 @@ describe('CandidatesController e2e', () => {
             gender: Gender.female,
             group: Group.web,
         }, password);
+        testRecruitment = await recruitmentsService.createAndSave({
+            name: '2020C',
+            beginning: new Date('1999'),
+            end: new Date('2099'),
+            deadline: new Date('2099'),
+        });
         adminJWT = (
             await agent(app.getHttpServer())
                 .post('/auth/user/login')
@@ -267,6 +267,14 @@ describe('CandidatesController e2e', () => {
                     .expect(403);
             });
         });
+        describe('get candidates with invalid rid', () => {
+            it('should throw 400', async () => {
+                await agent(app.getHttpServer())
+                    .get('/candidates/recruitment/foo')
+                    .auth(userJWT, { type: 'bearer' })
+                    .expect(400);
+            } );
+        });
         describe('get candidates with updated at', () => {
             it('should return empty', async () => {
                 const { body: { payload } } = await agent(app.getHttpServer())
@@ -307,12 +315,11 @@ describe('CandidatesController e2e', () => {
                     .expect(200);
                 expect(payload).toHaveLength(1);
             });
-            it('should return empty', async () => {
-                const { body: { payload } } = await agent(app.getHttpServer())
+            it('should throw 403', async () => {
+                await agent(app.getHttpServer())
                     .get(`/candidates/recruitment/${prevRecruitment.id}`)
                     .auth(userJWT, { type: 'bearer' })
-                    .expect(200);
-                expect(payload).toHaveLength(0);
+                    .expect(403);
             });
         });
     });
