@@ -280,7 +280,7 @@ export class CandidatesController {
         await candidate.save();
     }
 
-    @Put('interview/:type/:rid')
+    @Put('interview/:type')
     @AcceptRole(Role.user)
     async allocateMany(
         @Param() { type }: AllocateManyParams,
@@ -299,10 +299,12 @@ export class CandidatesController {
                 - b.interviewSelections.filter(({ name }) => name === GroupOrTeam.unique).length,
             );
         }
-        const interviewsMap = Object.fromEntries(candidates
-            .flatMap(({ recruitment }) => recruitment.interviews)
-            .map(({ id, period, slotNumber }) => [id, SLOTS[period].slice(0, slotNumber).reverse()]),
-        );
+        const interviewsMap = new Map<string, number[]>();
+        for (const { recruitment: { interviews } } of candidates) {
+            for (const { id, period, slotNumber } of interviews) {
+                !interviewsMap.has(id) && interviewsMap.set(id, SLOTS[period].slice(0, slotNumber).reverse());
+            }
+        }
         for (const candidate of candidates) {
             CandidatesController.checkAllocationPermission(candidate, user, type);
         }
@@ -312,7 +314,7 @@ export class CandidatesController {
                     (type === InterviewType.group && name === GroupOrTeam[candidate.group])
                     || (type === InterviewType.team && name === GroupOrTeam.unique)
                 ) {
-                    const slots = interviewsMap[id];
+                    const slots = interviewsMap.get(id);
                     if (slots?.length) {
                         const slot = slots.pop()!;
                         const h = ~~slot;
