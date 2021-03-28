@@ -95,12 +95,14 @@ export const migrate = async (app: INestApplication) => {
         } else {
             password = await hash(randomBytes(512).toString('hex'));
         }
+        joinTime = joinTime === '2018年3月' ? '2018S' // two lucky guys
+            : joinTime === '2017日常招新' ? '2017A' // this kind of recruitments are not supported yet
+                : joinTime.replaceAll('年', '');
         await usersService.createAndSave({
+            createdAt: new Date(+joinTime.slice(0, 4), { S: 4, C: 8, A: 10 }[joinTime[4]]!, 1),
             weChatID,
             name: username,
-            joinTime: joinTime === '2018年3月' ? '2018S' // two lucky guys
-                : joinTime === '2017日常招新' ? '2017A' // this kind of recruitments are not supported yet
-                    : joinTime.replaceAll('年', ''),
+            joinTime,
             phone,
             mail: mail || undefined,
             gender,
