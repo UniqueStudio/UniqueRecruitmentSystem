@@ -1,8 +1,24 @@
-import { BadRequestException, Body, Controller, Get, Param, Post, Put, UseGuards } from '@nestjs/common';
+import {
+    BadRequestException,
+    Body,
+    Controller,
+    Delete,
+    Get,
+    NotImplementedException,
+    Param,
+    Post,
+    Put,
+    UseGuards,
+} from '@nestjs/common';
 
 import { GroupOrTeam, Role } from '@constants/enums';
 import { AcceptRole } from '@decorators/role.decorator';
-import { CreateRecruitmentBody, SetRecruitmentInterviewsBody, SetRecruitmentScheduleBody } from '@dtos/recruitment.dto';
+import {
+    CreateRecruitmentBody,
+    CreateRecruitmentInterviewsBody,
+    SetRecruitmentInterviewsBody,
+    SetRecruitmentScheduleBody,
+} from '@dtos/recruitment.dto';
 import { RecruitmentsGateway } from '@gateways/recruitments.gateway';
 import { CodeGuard } from '@guards/code.guard';
 import { InterviewsService } from '@services/interviews.service';
@@ -60,12 +76,12 @@ export class RecruitmentsController {
         this.recruitmentsGateway.broadcastUpdate();
     }
 
-    @Put(':rid/interviews/:name')
+    @Post(':rid/interviews/:name')
     @AcceptRole(Role.admin)
-    async setRecruitmentInterviews(
+    async createRecruitmentInterviews(
         @Param('rid') rid: string,
         @Param('name') name: GroupOrTeam,
-        @Body() { interviews }: SetRecruitmentInterviewsBody,
+        @Body() { interviews }: CreateRecruitmentInterviewsBody,
     ) {
         const recruitment = await this.recruitmentsService.findOneById(rid);
         if (!recruitment) {
@@ -79,5 +95,32 @@ export class RecruitmentsController {
             recruitment,
         })));
         this.recruitmentsGateway.broadcastUpdate();
+    }
+
+    @Put(':rid/interviews/:name')
+    @AcceptRole(Role.admin)
+    async setRecruitmentInterviews(
+        @Param('rid') rid: string,
+        @Param('name') name: GroupOrTeam,
+        @Body() { interviews }: SetRecruitmentInterviewsBody,
+    ) {
+        const recruitment = await this.recruitmentsService.findOneById(rid);
+        if (!recruitment) {
+            throw new BadRequestException(`Recruitment ${rid} does not exist`);
+        }
+        await this.interviewsService.updateMany(interviews.map(({ id, date, period, slotNumber }) => ({
+            id,
+            date: new Date(date),
+            period,
+            slotNumber,
+        })), recruitment, name);
+        this.recruitmentsGateway.broadcastUpdate();
+    }
+
+    @Delete(':rid/interviews/:name')
+    @AcceptRole(Role.admin)
+    deleteRecruitmentInterviews() {
+        // TODO: should we support deleting interviews, which may be selected by some candidates before deleting?
+        throw new NotImplementedException();
     }
 }
