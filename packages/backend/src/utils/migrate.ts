@@ -88,7 +88,7 @@ export const migrate = async (app: INestApplication) => {
     await recruitmentsService.clear();
     await usersService.clear();
     await Promise.all(users.map(async (
-        { weChatID, avatar, gender, group, isAdmin, isCaptain, joinTime, mail, password, phone, username },
+        { weChatID, avatar, gender, group, isAdmin, isCaptain, joinTime, mail, phone, username, password },
     ) => {
         if (password) {
             password.hash = Buffer.from(password.hash, 'utf-8').toString('base64');
@@ -110,10 +110,7 @@ export const migrate = async (app: INestApplication) => {
             avatar: avatar || undefined,
             isAdmin,
             isCaptain,
-            password: {
-                hash: password.hash,
-                salt: password.salt,
-            },
+            password: await hash(randomBytes(512).toString('hex')),
         });
     }));
     await Promise.all(recruitments.map(async (

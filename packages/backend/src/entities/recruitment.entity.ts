@@ -2,6 +2,7 @@ import { IsDate, IsString, Matches } from 'class-validator';
 import { Column, Entity, OneToMany } from 'typeorm';
 
 import { Group, Step } from '@constants/enums';
+import { GreaterThan, LessThan } from '@decorators/comparator.decorator';
 import { CandidateEntity } from '@entities/candidate.entity';
 import { CommonEntity } from '@entities/common.entity';
 import { InterviewEntity } from '@entities/interview.entity';
@@ -18,11 +19,13 @@ export class RecruitmentEntity extends CommonEntity {
     beginning!: Date;
 
     @Column('timestamptz')
-    @IsDate() // TODO: validate `deadline > beginning`
+    @IsDate()
+    @GreaterThan<RecruitmentEntity>('beginning', { message: '`deadline` must be greater than `beginning`' })
+    @LessThan<RecruitmentEntity>('end', { message: '`deadline` must be less than `end`' })
     deadline!: Date;
 
     @Column('timestamptz')
-    @IsDate() // TODO: validate `end > deadline`
+    @IsDate()
     end!: Date;
 
     @OneToMany(() => InterviewEntity, ({ recruitment }) => recruitment)

@@ -58,7 +58,7 @@ export class SelectInterviewSlotsBody {
     @IsUUID(4, {
         each: true,
     })
-    interviewIds!: string[];
+    iids!: string[];
 }
 
 export class AllocateOneBody {

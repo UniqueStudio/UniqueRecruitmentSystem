@@ -43,6 +43,7 @@ import { CodeGuard } from '@guards/code.guard';
 import { UpdatedAtPipe } from '@pipes/updatedAt.pipe';
 import { CandidatesService } from '@services/candidates.service';
 import { ConfigService } from '@services/config.service';
+import { EmailService } from '@services/email.service';
 import { InterviewsService } from '@services/interviews.service';
 import { RecruitmentsService } from '@services/recruitments.service';
 import { SMSService } from '@services/sms.service';
@@ -57,6 +58,7 @@ export class CandidatesController {
         private readonly recruitmentsService: RecruitmentsService,
         private readonly interviewsService: InterviewsService,
         private readonly smsService: SMSService,
+        private readonly emailService: EmailService,
         private readonly configService: ConfigService,
     ) {
     }
@@ -109,7 +111,7 @@ export class CandidatesController {
         });
         try {
             await this.smsService.sendSMS(phone, 670908, [name, '成功提交报名表单']);
-            // TODO: send email
+            await this.emailService.sendEmail(candidate);
         } catch ({ message }) {
             throw new InternalServerErrorException(message);
         }
@@ -161,7 +163,7 @@ export class CandidatesController {
             { name, gender, grade, group, institute, intro, isQuick, mail, major, rank, referrer, resume },
         );
         await candidate.save();
-        // TODO: broadcast updateCandidate
+        this.candidatesGateway.broadcastUpdate(candidate);
     }
 
     @Get('me/slots')
@@ -175,9 +177,9 @@ export class CandidatesController {
         }
         switch (step) {
             case Step.组面时间选择:
-                return recruitment.interviews.find(({ name }) => name === GroupOrTeam[group]);
+                return recruitment.interviews.filter(({ name }) => name === GroupOrTeam[group]);
             case Step.群面时间选择:
-                return recruitment.interviews.find(({ name }) => name === GroupOrTeam.unique);
+                return recruitment.interviews.filter(({ name }) => name === GroupOrTeam.unique);
             default:
                 throw new ForbiddenException('No need to select time in current step');
         }
@@ -187,7 +189,7 @@ export class CandidatesController {
     @AcceptRole(Role.candidate)
     async selectInterviewSlots(
         @Candidate() candidate: CandidateEntity,
-        @Body() { interviewIds, abandon }: SelectInterviewSlotsBody,
+        @Body() { iids, abandon }: SelectInterviewSlotsBody,
     ) {
         const { recruitment, step, interviewSelections, group } = candidate;
         if (+recruitment.end < Date.now()) {
@@ -198,13 +200,15 @@ export class CandidatesController {
             await candidate.save();
             return;
         }
-        switch (step) { // TODO: double check
+        switch (step) {
             case Step.组面时间选择: {
                 if (interviewSelections.find(({ name }) => name === GroupOrTeam[group])) {
                     throw new ForbiddenException('You have already selected available time for the group interview');
                 }
-                const newSelections = await this.interviewsService.findManyByIds(interviewIds, GroupOrTeam[group]);
-                candidate.interviewSelections = [...interviewSelections, ...newSelections];
+                candidate.interviewSelections = [
+                    ...interviewSelections,
+                    ...await this.interviewsService.findManyByIdsInRecruitment(iids, recruitment, GroupOrTeam[group]),
+                ];
                 await candidate.save();
                 return;
             }
@@ -212,8 +216,10 @@ export class CandidatesController {
                 if (interviewSelections.find(({ name }) => name === GroupOrTeam.unique)) {
                     throw new ForbiddenException('You have already selected available time for the team interview');
                 }
-                const newSelections = await this.interviewsService.findManyByIds(interviewIds, GroupOrTeam.unique);
-                candidate.interviewSelections = [...interviewSelections, ...newSelections];
+                candidate.interviewSelections = [
+                    ...interviewSelections,
+                    ...await this.interviewsService.findManyByIdsInRecruitment(iids, recruitment, GroupOrTeam.unique),
+                ];
                 await candidate.save();
                 return;
             }
@@ -281,7 +287,7 @@ export class CandidatesController {
         await candidate.save();
     }
 
-    @Put('interview/:type/:rid')
+    @Put('interview/:type')
     @AcceptRole(Role.user)
     async allocateMany(
         @Param() { type }: AllocateManyParams,
@@ -300,10 +306,12 @@ export class CandidatesController {
                 - b.interviewSelections.filter(({ name }) => name === GroupOrTeam.unique).length,
             );
         }
-        const interviewsMap = Object.fromEntries(candidates
-            .flatMap(({ recruitment }) => recruitment.interviews)
-            .map(({ id, period, slotNumber }) => [id, SLOTS[period].slice(0, slotNumber).reverse()]),
-        );
+        const interviewsMap = new Map<string, number[]>();
+        for (const { recruitment: { interviews } } of candidates) {
+            for (const { id, period, slotNumber } of interviews) {
+                !interviewsMap.has(id) && interviewsMap.set(id, SLOTS[period].slice(0, slotNumber).reverse());
+            }
+        }
         for (const candidate of candidates) {
             CandidatesController.checkAllocationPermission(candidate, user, type);
         }
@@ -313,7 +321,7 @@ export class CandidatesController {
                     (type === InterviewType.group && name === GroupOrTeam[candidate.group])
                     || (type === InterviewType.team && name === GroupOrTeam.unique)
                 ) {
-                    const slots = interviewsMap[id];
+                    const slots = interviewsMap.get(id);
                     if (slots?.length) {
                         const slot = slots.pop()!;
                         const h = ~~slot;
