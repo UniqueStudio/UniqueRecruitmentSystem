@@ -3,6 +3,7 @@ import { Test } from '@nestjs/testing';
 import { agent } from 'supertest';
 
 import { Gender, Group, Period } from '@constants/enums';
+import { InterviewEntity } from '@entities/interview.entity';
 import { RecruitmentEntity } from '@entities/recruitment.entity';
 import { UserEntity } from '@entities/user.entity';
 import { AppModule } from '@modules/app.module';
@@ -139,8 +140,9 @@ describe('RecruitmentsController e2e', () => {
         });
     });
 
-    describe('PUT /recruitments/:rid/interviews/:name', () => {
+    describe('POST and PUT /recruitments/:rid/interviews/:name', () => {
         let testRecruitment: RecruitmentEntity;
+        let interviews: InterviewEntity[];
         describe('get id of pending recruitment', () => {
             it('should return success', async () => {
                 const { body: { payload } } = await agent(app.getHttpServer())
@@ -153,7 +155,7 @@ describe('RecruitmentsController e2e', () => {
         describe('set recruitment interviews with valid credential', () => {
             it('should return success', async () => {
                 await agent(app.getHttpServer())
-                    .put(`/recruitments/${testRecruitment.id}/interviews/web`)
+                    .post(`/recruitments/${testRecruitment.id}/interviews/web`)
                     .send({
                         interviews: [
                             {
@@ -169,7 +171,7 @@ describe('RecruitmentsController e2e', () => {
                         ],
                     })
                     .auth(adminJWT, { type: 'bearer' })
-                    .expect(200);
+                    .expect(201);
             });
         });
 
@@ -179,7 +181,7 @@ describe('RecruitmentsController e2e', () => {
                     .get('/recruitments')
                     .auth(userJWT, { type: 'bearer' })
                     .expect(200);
-                const [{ interviews }] = payload;
+                [{ interviews }] = payload;
                 expect(interviews).toHaveLength(2);
             });
         });
@@ -187,7 +189,7 @@ describe('RecruitmentsController e2e', () => {
         describe('set recruitment interviews with invalid credential', () => {
             it('should throw', async () => {
                 await agent(app.getHttpServer())
-                    .put(`/recruitments/${testRecruitment.id}/interviews/web`)
+                    .post(`/recruitments/${testRecruitment.id}/interviews/web`)
                     .auth(userJWT, { type: 'bearer' })
                     .expect(403);
             });
@@ -196,7 +198,7 @@ describe('RecruitmentsController e2e', () => {
         describe('set recruitment interviews with invalid data', () => {
             it('should throw', async () => {
                 await agent(app.getHttpServer())
-                    .put(`/recruitments/${testRecruitment.id}/interviews/web`)
+                    .post(`/recruitments/${testRecruitment.id}/interviews/web`)
                     .send({
                         interviews: [
                             {
@@ -216,7 +218,7 @@ describe('RecruitmentsController e2e', () => {
             });
             it('should also throw', async () => {
                 await agent(app.getHttpServer())
-                    .put(`/recruitments/${testRecruitment.id}/interviews/web`)
+                    .post(`/recruitments/${testRecruitment.id}/interviews/web`)
                     .send({
                         interviews: [
                             {
@@ -233,6 +235,32 @@ describe('RecruitmentsController e2e', () => {
                     })
                     .auth(adminJWT, { type: 'bearer' })
                     .expect(400);
+            });
+        });
+
+        describe('update recruitment interviews with valid credential', () => {
+            it('should return success', async () => {
+                await agent(app.getHttpServer())
+                    .put(`/recruitments/${testRecruitment.id}/interviews/web`)
+                    .send({
+                        interviews: interviews.map((interview) => ({
+                            ...interview,
+                            slotNumber: 6,
+                        })),
+                    })
+                    .auth(adminJWT, { type: 'bearer' })
+                    .expect(200);
+            });
+        });
+
+        describe('get recruitments', () => {
+            it('should return recruitments with updated interviews', async () => {
+                const { body: { payload } } = await agent(app.getHttpServer())
+                    .get('/recruitments')
+                    .auth(userJWT, { type: 'bearer' })
+                    .expect(200);
+                [{ interviews }] = payload;
+                interviews.forEach(({ slotNumber }) => expect(slotNumber).toBe(6));
             });
         });
     });
