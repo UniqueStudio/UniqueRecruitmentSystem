@@ -36,6 +36,7 @@ export class RecruitmentsService extends BasicCRUDService<RecruitmentEntity> {
             .leftJoin(RecruitmentsService.aggregateRecruitments, 's', 's.id = r.id')
             .addSelect('s.jsonb_object_agg', 'r_statistics')
             .addSelect('r.*')
+            .orderBy('r.beginning', 'DESC')
             .getMany();
     }
 
