@@ -15,14 +15,19 @@ import { UsersService } from '@services/users.service';
 
 describe('CandidatesController e2e', () => {
     let app: INestApplication;
+    let superAdmin: UserEntity;
     let testUser: UserEntity;
+    let prevRecruitment: RecruitmentEntity;
     let testRecruitment: RecruitmentEntity;
+    let adminJWT: string;
     let userJWT: string;
     let candidateJWT: string;
     let testCandidate: CandidateEntity;
+    let startTime: number;
     const password = 'P@ssw0rd';
 
     beforeAll(async () => {
+        startTime = new Date().getTime();
         const module = await Test.createTestingModule({
             imports: [AppModule],
         }).compile();
@@ -38,6 +43,36 @@ describe('CandidatesController e2e', () => {
         await interviewsService.clear();
         await recruitmentsService.clear();
         await usersService.clear();
+        superAdmin = await usersService.hashPasswordAndCreate({
+            weChatID: 'superadmin',
+            name: 'a',
+            joinTime: '1970S',
+            phone: '13123456789',
+            mail: 'im@super.admin',
+            gender: Gender.other,
+            group: Group.web,
+        }, password);
+        prevRecruitment = await recruitmentsService.createAndSave({
+            name: '2018A',
+            beginning: new Date('2018'),
+            end: new Date('2019'),
+            deadline: new Date('2020'),
+        });
+        // previous candidate
+        await candidatesService.createAndSave({
+            name: 'foo',
+            phone: '13131111111',
+            mail: 'foo@bar.com',
+            group: Group.web,
+            gender:Gender.female,
+            grade: Grade.freshman,
+            recruitment: prevRecruitment,
+            rank: Rank.A,
+            institute: 'cs',
+            major: 'cs',
+            intro: 'hi',
+            isQuick: false,
+        });
         testRecruitment = await recruitmentsService.createAndSave({
             name: '2020C',
             beginning: new Date('1999'),
@@ -53,6 +88,11 @@ describe('CandidatesController e2e', () => {
             gender: Gender.female,
             group: Group.web,
         }, password);
+        adminJWT = (
+            await agent(app.getHttpServer())
+                .post('/auth/user/login')
+                .send({ password, phone: superAdmin.phone })
+        ).body.payload;
         const { body: { payload } } = await agent(app.getHttpServer())
             .post('/auth/user/login')
             .send({ password, phone: testUser.phone });
@@ -225,6 +265,54 @@ describe('CandidatesController e2e', () => {
                 await agent(app.getHttpServer())
                     .get(`/candidates/recruitment/${testRecruitment.id}`)
                     .expect(403);
+            });
+        });
+        describe('get candidates with updated at', () => {
+            it('should return empty', async () => {
+                const { body: { payload } } = await agent(app.getHttpServer())
+                    .get(`/candidates/recruitment/${testRecruitment.id}`)
+                    .auth(userJWT, { type: 'bearer' })
+                    .query({ updatedAt: new Date().getTime() }) // add this updatedAt query
+                    .expect(200);
+                expect(payload).toHaveLength(0);
+            });
+
+            it('should return updated candidates', async () => {
+                // update test candidate
+                app.get(CandidatesService).update(testCandidate.id, { name: 'newName' });
+
+                const { body: { payload } } = await agent(app.getHttpServer())
+                    .get(`/candidates/recruitment/${testRecruitment.id}`)
+                    .auth(adminJWT, { type: 'bearer' })
+                    .query({ updatedAt: startTime }) // add this updatedAt query
+                    .expect(200);
+                expect(payload).toHaveLength(1);
+                expect(payload[0].name).toBe('newName');
+            });
+
+            it('should get 400 with invalid updatedAt', async () => {
+                await agent(app.getHttpServer())
+                    .get(`/candidates/recruitment/${testRecruitment.id}`)
+                    .auth(adminJWT, { type: 'bearer' })
+                    .query({ updatedAt: 'foo' }) // add this updatedAt query
+                    .expect(400);
+            });
+        });
+
+        describe('get candidates in previous recruitment than user', () => {
+            it('should have candidates in previous recruitment', async () => {
+                const { body: { payload } } = await agent(app.getHttpServer())
+                    .get(`/candidates/recruitment/${prevRecruitment.id}`)
+                    .auth(adminJWT, { type: 'bearer' })
+                    .expect(200);
+                expect(payload).toHaveLength(1);
+            });
+            it('should return empty', async () => {
+                const { body: { payload } } = await agent(app.getHttpServer())
+                    .get(`/candidates/recruitment/${prevRecruitment.id}`)
+                    .auth(userJWT, { type: 'bearer' })
+                    .expect(200);
+                expect(payload).toHaveLength(0);
             });
         });
     });
