@@ -120,7 +120,7 @@ export class RecruitmentsController {
     @Delete(':rid/interviews/:name')
     @AcceptRole(Role.admin)
     deleteRecruitmentInterviews() {
-        // TODO: should we support deleting interviews, which may be selected by some candidates before deleting?
+        // should we support deleting interviews, which may be selected by some candidates before deleting?
         throw new NotImplementedException();
     }
 }
