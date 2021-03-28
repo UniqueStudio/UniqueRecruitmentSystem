@@ -252,7 +252,7 @@ export class CandidatesController {
         const recruitment = await this.recruitmentsService.findOneById(rid);
 
         if (!recruitment) {
-            throw new BadRequestException('Recruitment with id ${rid} doesn\'t exist');
+            throw new BadRequestException(`Recruitment with id ${rid} doesn't exist`);
         }
 
         if (recruitment.createdAt < user.createdAt) {
