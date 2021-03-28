@@ -4,6 +4,7 @@ import { Connection, Repository } from 'typeorm';
 
 import { GroupOrTeam } from '@constants/enums';
 import { InterviewEntity } from '@entities/interview.entity';
+import { RecruitmentEntity } from '@entities/recruitment.entity';
 import { BasicCRUDService } from '@services/basicCRUD.service';
 
 @Injectable()
@@ -21,10 +22,11 @@ export class InterviewsService extends BasicCRUDService<InterviewEntity> {
         );
     }
 
-    findManyByIds(ids: string[], name: GroupOrTeam) {
+    findManyByIdsInRecruitment(ids: string[], recruitment: RecruitmentEntity, name: GroupOrTeam) {
         return this.repository.findByIds(ids, {
             where: {
                 name,
+                recruitment,
             },
         });
     }

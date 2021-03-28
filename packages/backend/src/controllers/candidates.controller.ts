@@ -188,7 +188,7 @@ export class CandidatesController {
     @AcceptRole(Role.candidate)
     async selectInterviewSlots(
         @Candidate() candidate: CandidateEntity,
-        @Body() { interviewIds, abandon }: SelectInterviewSlotsBody,
+        @Body() { iids, abandon }: SelectInterviewSlotsBody,
     ) {
         const { recruitment, step, interviewSelections, group } = candidate;
         if (+recruitment.end < Date.now()) {
@@ -199,13 +199,15 @@ export class CandidatesController {
             await candidate.save();
             return;
         }
-        switch (step) { // TODO: double check
+        switch (step) {
             case Step.组面时间选择: {
                 if (interviewSelections.find(({ name }) => name === GroupOrTeam[group])) {
                     throw new ForbiddenException('You have already selected available time for the group interview');
                 }
-                const newSelections = await this.interviewsService.findManyByIds(interviewIds, GroupOrTeam[group]);
-                candidate.interviewSelections = [...interviewSelections, ...newSelections];
+                candidate.interviewSelections = [
+                    ...interviewSelections,
+                    ...await this.interviewsService.findManyByIdsInRecruitment(iids, recruitment, GroupOrTeam[group]),
+                ];
                 await candidate.save();
                 return;
             }
@@ -213,8 +215,10 @@ export class CandidatesController {
                 if (interviewSelections.find(({ name }) => name === GroupOrTeam.unique)) {
                     throw new ForbiddenException('You have already selected available time for the team interview');
                 }
-                const newSelections = await this.interviewsService.findManyByIds(interviewIds, GroupOrTeam.unique);
-                candidate.interviewSelections = [...interviewSelections, ...newSelections];
+                candidate.interviewSelections = [
+                    ...interviewSelections,
+                    ...await this.interviewsService.findManyByIdsInRecruitment(iids, recruitment, GroupOrTeam.unique),
+                ];
                 await candidate.save();
                 return;
             }
