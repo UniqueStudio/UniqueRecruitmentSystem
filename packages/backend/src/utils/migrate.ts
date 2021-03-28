@@ -120,6 +120,7 @@ export const migrate = async (app: INestApplication) => {
         { stop, begin, end, groups, interview, title },
     ) => {
         const recruitment = await recruitmentsService.createAndSave({
+            createdAt: new Date(begin),
             beginning: new Date(begin),
             end: new Date(end),
             deadline: new Date(stop),
