@@ -2,12 +2,15 @@ import { Type } from 'class-transformer';
 import { IsArray, IsDateString, IsEnum, IsInt, IsString, Matches, Min, ValidateNested } from 'class-validator';
 
 import { Period } from '@constants/enums';
+import { GreaterThan, LessThan } from '@decorators/comparator.decorator';
 
 export class SetRecruitmentScheduleBody {
     @IsDateString()
     beginning!: string;
 
     @IsDateString()
+    @GreaterThan<SetRecruitmentScheduleBody>('beginning', { message: '`deadline` must be greater than `beginning`' })
+    @LessThan<SetRecruitmentScheduleBody>('end', { message: '`deadline` must be less than `end`' })
     deadline!: string;
 
     @IsDateString()

@@ -251,12 +251,26 @@ describe('RecruitmentsController e2e', () => {
             });
         });
 
-        describe('set recruitment schedule with valid credential', () => {
+        describe('set recruitment schedule with invalid credential', () => {
             it('should throw', async () => {
                 await agent(app.getHttpServer())
                     .put(`/recruitments/${testRecruitment.id}/schedule`)
                     .auth(userJWT, { type: 'bearer' })
                     .expect(403);
+            });
+        });
+
+        describe('set recruitment schedule with invalid data', () => {
+            it('should throw', async () => {
+                await agent(app.getHttpServer())
+                    .put(`/recruitments/${testRecruitment.id}/schedule`)
+                    .send({
+                        beginning: new Date('1999'),
+                        end: new Date('1998'),
+                        deadline: new Date('2003'),
+                    })
+                    .auth(adminJWT, { type: 'bearer' })
+                    .expect(400);
             });
         });
     });
