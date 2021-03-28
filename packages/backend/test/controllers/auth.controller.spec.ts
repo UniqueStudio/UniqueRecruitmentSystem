@@ -40,7 +40,7 @@ describe('AuthController e2e', () => {
             name: '2020C',
             beginning: new Date('1999'),
             end: new Date('2099'),
-            deadline: new Date('2099'),
+            deadline: new Date('2048'),
         });
         testUser = await usersService.hashPasswordAndCreate({
             weChatID: 'hanyuu',

@@ -36,7 +36,7 @@ describe('RecruitmentsService', () => {
                 name: '2020C',
                 beginning: new Date('1999'),
                 end: new Date('2099'),
-                deadline: new Date('2099'),
+                deadline: new Date('2048'),
             });
             expect(testRecruitment).toBeDefined();
         });

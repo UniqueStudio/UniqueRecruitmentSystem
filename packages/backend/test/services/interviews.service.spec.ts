@@ -32,8 +32,8 @@ describe('InterviewsService', () => {
         testRecruitment = await recruitmentsService.createAndSave({
             name: '2020C',
             beginning: new Date('1999'),
-            end: new Date(),
-            deadline: new Date('2099'),
+            end: new Date('2099'),
+            deadline: new Date('2048'),
         });
     });
 
