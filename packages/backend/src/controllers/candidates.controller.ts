@@ -328,7 +328,10 @@ export class CandidatesController {
                 }
             }
         }
-        return candidates.map(({ interviewAllocations }) => interviewAllocations[type]);
+        return candidates.map(({ interviewAllocations, id }) => ({
+            id,
+            time: interviewAllocations[type],
+        }));
     }
 
     private static checkAllocationPermission(candidate: CandidateEntity, user: UserEntity, type: InterviewType) {
