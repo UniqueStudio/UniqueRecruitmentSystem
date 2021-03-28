@@ -163,6 +163,7 @@ export class CandidatesController {
         );
         await candidate.save();
         this.candidatesGateway.broadcastUpdate(candidate);
+        this.recruitmentsGateway.broadcastUpdate();
     }
 
     @Get('me/slots')
