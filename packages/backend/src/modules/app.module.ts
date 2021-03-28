@@ -1,4 +1,6 @@
-import { MiddlewareConsumer, Module, NestModule, ValidationPipe } from '@nestjs/common';
+import { promises } from 'fs';
+
+import { MiddlewareConsumer, Module, NestModule, OnModuleInit, ValidationPipe } from '@nestjs/common';
 import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
 import { ScheduleModule } from '@nestjs/schedule';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -103,7 +105,7 @@ import { ConfigService } from '@services/config.service';
         },
     ],
 })
-export class AppModule implements NestModule {
+export class AppModule implements NestModule, OnModuleInit {
     constructor(private readonly configService: ConfigService) {
     }
 
@@ -117,5 +119,10 @@ export class AppModule implements NestModule {
                 AuthMiddleWare,
             )
             .forRoutes('*');
+    }
+
+    async onModuleInit() {
+        await promises.mkdir(this.configService.resumePaths.temporary, { recursive: true });
+        await promises.mkdir(this.configService.resumePaths.persistent, { recursive: true });
     }
 }
