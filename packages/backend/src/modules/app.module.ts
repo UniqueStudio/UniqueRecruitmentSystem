@@ -1,5 +1,6 @@
 import { MiddlewareConsumer, Module, NestModule, ValidationPipe } from '@nestjs/common';
 import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
+import { ScheduleModule } from '@nestjs/schedule';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import Joi from 'joi';
 
@@ -18,6 +19,7 @@ import { CommentsModule } from '@modules/comments.module';
 import { ConfigModule } from '@modules/config.module';
 import { RecruitmentsModule } from '@modules/recruitments.module';
 import { SMSModule } from '@modules/sms.module';
+import { TasksModule } from '@modules/tasks.module';
 import { UsersModule } from '@modules/users.module';
 import { ConfigService } from '@services/config.service';
 
@@ -57,6 +59,8 @@ import { ConfigService } from '@services/config.service';
                 autoLoadEntities: true,
             }),
         }),
+        ScheduleModule.forRoot(),
+        TasksModule,
         AuthModule,
         CandidatesModule,
         CacheModule,
