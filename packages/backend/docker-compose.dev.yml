@@ -1,28 +1,9 @@
 version: "3"
 services:
-  redis:
-    image: redis:alpine
-  mongodb:
-    image: mongo:latest
+  postgres:
+    image: postgres:alpine
     ports:
-    - "127.0.0.1:${DB_PORT}:${DB_PORT}"
-    command: "mongod --port ${DB_PORT}"
-    volumes:
-      - mongodb:/data/db
-  backend:
-    image: node:alpine
+      - "${POSTGRES_PORT}:5432"
+    user: postgres
     env_file:
       - .env
-    environment:
-      - NODE_ENV=development
-    ports:
-    - 5000:5000
-    links:
-    - mongodb
-    - redis
-    command: yarn startDev
-    working_dir: /usr/src/backend
-    volumes:
-      - ./:/usr/src/backend
-volumes:
-  mongodb:

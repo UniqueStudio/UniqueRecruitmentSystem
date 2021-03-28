@@ -1,6 +1,6 @@
-declare module NodeJS {
+declare namespace NodeJS {
     interface Global {
-        acmConfig: Questions
+        acmConfig: Questions;
     }
 }
 interface Question {
