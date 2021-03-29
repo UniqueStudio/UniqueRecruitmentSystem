@@ -1,16 +1,17 @@
 import DateFnsUtils from '@date-io/date-fns';
-import { Button, Dialog, MenuItem, Paper, Select, Table, Typography } from '@material-ui/core';
+import { Button, Dialog, MenuItem, Paper, Select, Table as MuiTable, Typography } from '@material-ui/core';
 import { DateTimePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 import clsx from 'clsx';
 import { observer } from 'mobx-react-lite';
-import React, { ChangeEventHandler, FC, useEffect, useState } from 'react';
+import React, { ChangeEventHandler, MouseEvent, FC, useEffect, useState } from 'react';
 
 import { Body } from './body';
 import { Header, OrderBy } from './header';
 
-import { allocateAll, allocateOne } from '@apis/rest';
-import Modal from '@components/Modal';
-import Template from '@components/SMS';
+import { allocateMany, allocateOne } from '@apis/rest';
+import { Modal } from '@components/Modal';
+import { Template } from '@components/SMS';
+import { InterviewType } from '@config/enums';
 import { Candidate } from '@config/types';
 import { useStores } from '@hooks/useStores';
 import useStyles from '@styles/data';
@@ -18,11 +19,11 @@ import { Order } from '@utils/order';
 
 interface Props {
     candidates: Candidate[];
-    interviewType: 'group' | 'team';
+    type: InterviewType;
     changeType: ChangeEventHandler<{ name?: string; value: unknown }>;
 }
 
-const CandidateTable: FC<Props> = observer(({ candidates, changeType, interviewType }) => {
+export const Table: FC<Props> = observer(({ candidates, changeType, type: type }) => {
     const { $candidate } = useStores();
     const classes = useStyles();
     const [modal, setModal] = useState(false);
@@ -35,9 +36,13 @@ const CandidateTable: FC<Props> = observer(({ candidates, changeType, interviewT
         $candidate.deselectAll();
     }, []);
 
-    const handleAllocateOne = () => allocateOne(interviewType, cid, time.setMilliseconds(0));
+    const handleAllocateOne = () => {
+        const date = new Date(time);
+        date.setSeconds(0, 0);
+        return allocateOne(type, cid, date);
+    };
 
-    const handleAllocateAll = () => allocateAll(interviewType);
+    const handleAllocateAll = () => allocateMany(type, [...$candidate.selected.keys()]);
 
     const toggleDialog = (id = '') => () => {
         setDialog(!!id);
@@ -54,11 +59,11 @@ const CandidateTable: FC<Props> = observer(({ candidates, changeType, interviewT
         if ($candidate.selected.size === candidates.length) {
             $candidate.deselectAll();
         } else {
-            $candidate.selectCandidates(candidates.map(({ _id }) => _id));
+            $candidate.selectMany(candidates.map(({ id }) => id));
         }
     };
 
-    const handleRequestSort = (event: React.MouseEvent<unknown>, property: OrderBy) => {
+    const handleRequestSort = (event: MouseEvent<unknown>, property: OrderBy) => {
         const isAsc = orderBy === property && order === 'asc';
         setOrder(isAsc ? 'desc' : 'asc');
         setOrderBy(property);
@@ -69,7 +74,7 @@ const CandidateTable: FC<Props> = observer(({ candidates, changeType, interviewT
             <div className={classes.data}>
                 <div className={classes.title}>
                     <Typography variant='h6'>
-                        <Select value={interviewType} onChange={changeType}>
+                        <Select value={type} onChange={changeType}>
                             <MenuItem value='group'>组面</MenuItem>
                             <MenuItem value='team'>群面</MenuItem>
                         </Select>
@@ -77,7 +82,7 @@ const CandidateTable: FC<Props> = observer(({ candidates, changeType, interviewT
                     </Typography>
                 </div>
                 <div className={classes.tableContainer}>
-                    <Table className={classes.table}>
+                    <MuiTable className={classes.table}>
                         <Header
                             numSelected={$candidate.selected.size}
                             order={order}
@@ -90,10 +95,10 @@ const CandidateTable: FC<Props> = observer(({ candidates, changeType, interviewT
                             order={order}
                             orderBy={orderBy}
                             candidates={candidates}
-                            interviewType={interviewType}
+                            type={type}
                             toggleDialog={toggleDialog}
                         />
-                    </Table>
+                    </MuiTable>
                 </div>
                 <div className={clsx(classes.tableButtons, classes.buttonContainer)}>
                     <Button color='primary' variant='contained' onClick={handleAllocateAll}>
@@ -127,5 +132,3 @@ const CandidateTable: FC<Props> = observer(({ candidates, changeType, interviewT
         </Paper>
     );
 });
-
-export default CandidateTable;

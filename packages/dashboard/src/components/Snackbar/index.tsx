@@ -3,7 +3,7 @@ import React, { FC } from 'react';
 
 import useStyles from '@styles/snackbar';
 
-const Snackbar: FC = ({ children }) => {
+export const Snackbar: FC = ({ children }) => {
     const classes = useStyles();
     return (
         <SnackbarProvider
@@ -19,5 +19,3 @@ const Snackbar: FC = ({ children }) => {
         </SnackbarProvider>
     );
 };
-
-export default Snackbar;

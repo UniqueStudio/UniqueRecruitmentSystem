@@ -23,7 +23,7 @@ const heads = ['成员姓名', '性别', '电话号码', '邮箱', '加入时间
 
 type SelectHandler = (name: string) => (event: React.ChangeEvent<HTMLInputElement>, checked: boolean) => void;
 const memberDataConverter = (handleSelect: SelectHandler, admin: Record<string, boolean>, disabled: boolean) => ({
-    username,
+    name,
     gender,
     phone,
     mail,
@@ -31,7 +31,7 @@ const memberDataConverter = (handleSelect: SelectHandler, admin: Record<string, 
     isCaptain,
     isAdmin,
 }: User) => [
-    username,
+    name,
     GENDERS[gender],
     phone || '未知',
     mail || '未知',
@@ -45,7 +45,7 @@ const memberDataConverter = (handleSelect: SelectHandler, admin: Record<string, 
     />,
 ];
 
-const Group: FC = observer(() => {
+export const Group: FC = observer(() => {
     const { $user } = useStores();
     const classes = useStyles();
 
@@ -55,19 +55,15 @@ const Group: FC = observer(() => {
 
     // { user1: true, user2: false ...}
     const [admin, setAdmin] = useState(
-        // use phone instead of name to avoid same name in same group
-        Object.fromEntries($user.groupInfo.map((member) => [member.phone, member.isAdmin])),
+        // use id instead of name to avoid same name in same group
+        Object.fromEntries($user.groupInfo.map((member) => [member.id, member.isAdmin])),
     );
 
     const handleSelect = (phone: string) => (event: React.ChangeEvent<HTMLInputElement>) => {
         setAdmin({ ...admin, [phone]: event.target.checked });
     };
 
-    const submitChange = () =>
-        setGroupAdmin({
-            group: $user.info.group,
-            who: Object.keys(admin).filter((i) => admin[i]),
-        });
+    const submitChange = () => setGroupAdmin(Object.keys(admin).filter((i) => admin[i]));
 
     return (
         <div className={classes.infoContainer}>
@@ -110,5 +106,3 @@ const Group: FC = observer(() => {
         </div>
     );
 });
-
-export default Group;

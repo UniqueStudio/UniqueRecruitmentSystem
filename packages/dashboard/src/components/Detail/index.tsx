@@ -3,8 +3,8 @@ import { observer } from 'mobx-react-lite';
 import React, { FC, useState } from 'react';
 
 import { getResume } from '@apis/rest';
-import Modal from '@components/Modal';
-import { GENDERS, GRADES, GROUPS, GROUPS_, RANKS } from '@config/consts';
+import { Modal } from '@components/Modal';
+import { GENDERS, GRADES, GROUP_MAP, RANKS } from '@config/consts';
 import { Candidate } from '@config/types';
 import { useStores } from '@hooks/useStores';
 import useStyles from '@styles/detail';
@@ -13,13 +13,13 @@ interface Props {
     info: Candidate;
 }
 
-const Detail: FC<Props> = observer(({ info }) => {
+export const Detail: FC<Props> = observer(({ info }) => {
     const { $component } = useStores();
     const classes = useStyles();
     const [modal, setModal] = useState(false);
 
     const {
-        _id,
+        id,
         name,
         group,
         gender,
@@ -34,12 +34,12 @@ const Detail: FC<Props> = observer(({ info }) => {
         referrer,
         resume,
     } = info;
-    const progress = $component.resumeProgresses[_id] || 0;
+    const progress = $component.resumeProgresses[id] || 0;
 
     const items: TextFieldProps[][] = [
         [
             { label: '姓名', value: name },
-            { label: '组别', value: GROUPS[GROUPS_.indexOf(group)] },
+            { label: '组别', value: GROUP_MAP.get(group) },
             { label: '性别', value: GENDERS[gender] },
         ],
         [
@@ -61,11 +61,9 @@ const Detail: FC<Props> = observer(({ info }) => {
         [{ label: '预览', value: intro, fullWidth: true, multiline: true, rowsMax: 3 }],
     ];
 
-    const toggleModalOpen = () => {
-        setModal((prevModal) => !prevModal);
-    };
+    const toggleModalOpen = () => setModal((prevModal) => !prevModal);
 
-    const downloadResume = () => getResume(_id);
+    const downloadResume = () => getResume(id);
 
     return (
         <>
@@ -90,7 +88,7 @@ const Detail: FC<Props> = observer(({ info }) => {
                 <div className={classes.introContent}>
                     {intro
                         .split('\n')
-                        .filter((text) => text)
+                        .filter(Boolean)
                         .map((text, index) => (
                             <React.Fragment key={index}>
                                 {text}
@@ -102,5 +100,3 @@ const Detail: FC<Props> = observer(({ info }) => {
         </>
     );
 });
-
-export default Detail;

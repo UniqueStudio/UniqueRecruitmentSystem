@@ -7,7 +7,7 @@ interface Props {
     src: string;
 }
 
-const EnlargeableImage: FC<Props> = memo(({ src }) => {
+export const EnlargeableImage: FC<Props> = memo(({ src }) => {
     const classes = useStyles();
     const [open, setOpen] = useState(false);
 
@@ -32,5 +32,3 @@ const EnlargeableImage: FC<Props> = memo(({ src }) => {
         </>
     );
 });
-
-export default EnlargeableImage;

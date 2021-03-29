@@ -3,8 +3,9 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { observer } from 'mobx-react-lite';
 import React, { FC, useEffect, useState } from 'react';
 
-import Comments from '@components/Comments';
-import Detail from '@components/Detail';
+import { Comments } from '@components/Comments';
+import { Detail } from '@components/Detail';
+import { Evaluation } from '@config/enums';
 import { Candidate } from '@config/types';
 import { usePrevious } from '@hooks/usePrevious';
 import { useStores } from '@hooks/useStores';
@@ -23,7 +24,7 @@ enum Direction {
     R,
 }
 
-const Slider: FC<Props> = observer(({ candidate, handleNextIndex, handleLeft, handleRight, index }) => {
+export const Slider: FC<Props> = observer(({ candidate, handleNextIndex, handleLeft, handleRight, index }) => {
     const { $component } = useStores();
     const prevCandidate = usePrevious(candidate);
     const [nextIndex, setNextIndex] = useState(-1);
@@ -35,10 +36,10 @@ const Slider: FC<Props> = observer(({ candidate, handleNextIndex, handleLeft, ha
     );
     const classes = useStyles();
 
-    const { _id: cid, comments } = candidate || prevCandidate;
+    const { id, comments } = candidate || prevCandidate;
 
     const handleClick = (type: Direction) => () => {
-        $component.recordInputtingComment(2, '');
+        $component.recordInputtingComment(Evaluation.fair, '');
         if (type === Direction.L) {
             handleLeft();
             setNextIndex(index - 1);
@@ -54,7 +55,7 @@ const Slider: FC<Props> = observer(({ candidate, handleNextIndex, handleLeft, ha
             </IconButton>
             <div className={classes.detailMain}>
                 <Detail info={candidate || prevCandidate} />
-                <Comments cid={cid} comments={comments} />
+                <Comments cid={id} comments={comments} />
             </div>
             <IconButton className={classes.rightButton} onClick={handleClick(Direction.R)}>
                 <ExpandMoreIcon />
@@ -62,5 +63,3 @@ const Slider: FC<Props> = observer(({ candidate, handleNextIndex, handleLeft, ha
         </div>
     );
 });
-
-export default Slider;

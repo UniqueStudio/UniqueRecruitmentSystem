@@ -22,7 +22,7 @@
     "@material-ui/lab": "^4.0.0-alpha.57",
     "@material-ui/pickers": "^3.3.10",
     "axios": "^0.21.1",
-    "chart.js": "^2.9.4",
+    "chart.js": "^3.0.0-rc.6",
     "date-fns": "^2.19.0",
     "idb-keyval": "^5.0.4",
     "mdi-material-ui": "^6.22.0",
@@ -37,6 +37,7 @@
     "socket.io-client": "^2.4.0"
   },
   "devDependencies": {
+    "@snowpack/plugin-dotenv": "^2.0.5",
     "@snowpack/plugin-react-refresh": "^2.4.0",
     "@snowpack/plugin-typescript": "^1.2.1",
     "@types/chart.js": "^2.9.31",

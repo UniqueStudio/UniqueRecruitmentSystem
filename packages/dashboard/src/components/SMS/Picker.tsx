@@ -11,16 +11,16 @@ const SMSPicker: FC = observer(() => {
     const { $candidate } = useStores();
     const classes = useStyles();
     const handleDeselect = (id: string) => () => {
-        $candidate.deselectCandidate(id);
+        $candidate.deselectOne(id);
     };
 
     const chips: ReactElement[] = [];
-    $candidate.selected.forEach(({ _id, name, grade, institute }) =>
+    $candidate.selected.forEach(({ id, name, grade, institute }) =>
         chips.push(
             <Chip
-                key={_id}
+                key={id}
                 label={`${name} ${GRADES[grade]} ${institute}`}
-                onDelete={handleDeselect(_id)}
+                onDelete={handleDeselect(id)}
                 className={classes.templateItem}
                 color='primary'
             />,

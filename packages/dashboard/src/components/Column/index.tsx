@@ -2,20 +2,22 @@ import { Divider, Paper, Typography, useTheme, useMediaQuery } from '@material-u
 import React, { FC, memo } from 'react';
 import { Draggable, Droppable } from 'react-beautiful-dnd';
 
+import { STEP_MAP } from '@config/consts';
+import { Step } from '@config/enums';
 import useStyles from '@styles/column';
 
 interface Props {
-    title: string;
+    step: Step;
     dropIndex: number;
 }
 
-const Column: FC<Props> = memo(({ title, children, dropIndex }) => {
+export const Column: FC<Props> = memo(({ step, children, dropIndex }) => {
     const classes = useStyles();
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('xs'));
 
     const ColumnBody = (
-        <Droppable droppableId={title} type='CANDIDATE' isDropDisabled={isMobile}>
+        <Droppable droppableId={step.toString()} type='CANDIDATE' isDropDisabled={isMobile}>
             {({ innerRef, droppableProps, placeholder }) => (
                 <div className={classes.columnBody} ref={innerRef} {...droppableProps}>
                     {children}
@@ -26,13 +28,13 @@ const Column: FC<Props> = memo(({ title, children, dropIndex }) => {
     );
 
     return (
-        <Draggable draggableId={title} index={dropIndex} isDragDisabled={isMobile}>
+        <Draggable draggableId={step.toString()} index={dropIndex} isDragDisabled={isMobile}>
             {({ innerRef, dragHandleProps, draggableProps }) => (
                 <div ref={innerRef} {...draggableProps}>
                     <Paper className={classes.column}>
                         <div className={classes.columnHeader}>
                             <Typography variant='h6' className={classes.columnTitle} {...dragHandleProps}>
-                                {title}
+                                {STEP_MAP.get(step)}
                             </Typography>
                         </div>
                         <Divider />

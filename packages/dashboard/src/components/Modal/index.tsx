@@ -1,4 +1,4 @@
-import { Modal, Slide, SlideProps, Typography } from '@material-ui/core';
+import { Modal as MuiModal, Slide, SlideProps, Typography } from '@material-ui/core';
 import React, { FC, memo } from 'react';
 
 import useStyles from '@styles/modal';
@@ -11,11 +11,11 @@ interface Props {
     onClose?: () => void;
 }
 
-const InfoModal: FC<Props> = memo(({ open, onClose, title, children, direction, hideBackdrop }) => {
+export const Modal: FC<Props> = memo(({ open, onClose, title, children, direction, hideBackdrop }) => {
     const classes = useStyles();
     const leaveDirection = direction === 'left' ? 'right' : 'left';
     return (
-        <Modal
+        <MuiModal
             open={open}
             onClose={onClose}
             className={classes.modalContainer}
@@ -31,8 +31,6 @@ const InfoModal: FC<Props> = memo(({ open, onClose, title, children, direction, 
                     {children}
                 </div>
             </Slide>
-        </Modal>
+        </MuiModal>
     );
 });
-
-export default InfoModal;

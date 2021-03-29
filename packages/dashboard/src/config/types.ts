@@ -1,12 +1,7 @@
-export type Group = 'web' | 'lab' | 'ai' | 'game' | 'android' | 'ios' | 'design' | 'pm';
-export type Step = 0 | 1 | 2 | 3 | 4 | 5; // 0-5: from 报名 to 通过
-export type Gender = 0 | 1 | 2; // 1: Male, 2: Female, 0: Other
-export type Grade = 0 | 1 | 2 | 3 | 4 | 5 | 6; // 0-6: from 大一 to 研三
-export type Rank = 0 | 1 | 2 | 3 | 4; // 1: 10%, 2: 25%, 3: 50%, 4: 100%, 0: null
-export type Evaluation = 0 | 1 | 2; // 0: bad, 1: so-so, 2: good
+import { Evaluation, Gender, Grade, Group, GroupOrTeam, Period, Rank, Status, Step } from '@config/enums';
 
-export interface Candidate {
-    _id: string;
+export interface Candidate<T = Date> {
+    id: string;
     name: string;
     gender: Gender;
     grade: Grade;
@@ -16,72 +11,59 @@ export interface Candidate {
     mail: string;
     phone: string;
     group: Group;
-    title: string; // e.g. 2018A || 2018S (A: AUTUMN, S: SPRING, C: CAMP)
     intro: string;
     isQuick: boolean;
-    referrer: string;
-    resume: string; // file path
-    abandon: boolean;
+    referrer?: string;
+    resume?: string;
+    abandoned: boolean;
     rejected: boolean;
-    interviews: {
-        group: Interview;
-        team: Interview;
-    };
     step: Step;
+    interviewSelections: Interview<T>[];
+    interviewAllocations: {
+        group?: T;
+        team?: T;
+    };
     comments: Comment[];
 }
 
 export interface Comment {
-    _id: string;
-    uid: string;
-    username: string;
+    id: string;
+    user: User;
     content: string;
     evaluation: Evaluation;
 }
 
 export interface User {
-    _id: string;
+    id: string;
     weChatID: string;
-    username: string;
+    name: string;
     password?: string;
-    joinTime: string; // e.g. 2018A || 2018S (A: AUTUMN, S: SPRING, C: CAMP)
+    joinTime: string;
     isCaptain: boolean;
     isAdmin: boolean;
     phone: string;
-    mail: string;
+    mail?: string;
     gender: Gender;
     group: Group;
-    avatar: string;
+    avatar?: string;
 }
 
-export interface Time {
-    date: number;
-    morning: number;
-    afternoon: number;
-    evening: number;
+export interface Interview<T = Date> {
+    id: string;
+    date: T;
+    period: Period;
+    name: GroupOrTeam;
+    slotNumber: number;
 }
 
-export interface Interview {
-    selection: Time[];
-    allocation: number;
-}
-
-export interface Recruitment {
-    _id: string;
-    title: string; // e.g. 2018A || 2018S (A: AUTUMN, S: SPRING, C: CAMP)
-    begin: number;
-    end: number;
-    stop: number; // stop applying
-    total: number;
-    interview: Time[];
-    groups: GroupData[];
-}
-
-export interface GroupData {
-    name: Group;
-    total: number;
-    steps: number[];
-    interview: Time[];
+export interface Recruitment<T = Date> {
+    id: string;
+    name: string;
+    beginning: T;
+    deadline: T;
+    end: T;
+    interviews: Interview<T>[];
+    statistics?: Record<Group, Record<Step, number | undefined> | undefined>;
 }
 
 export interface Message {
@@ -92,3 +74,15 @@ export interface Message {
     avatar: string;
     content: string;
 }
+
+interface SuccessResponse<T> {
+    status: Status.success | Status.info;
+    payload: T;
+}
+
+interface FailureResponse {
+    status: Status.warning | Status.error;
+    message: string;
+}
+
+export type R<T = undefined> = SuccessResponse<T> | FailureResponse;

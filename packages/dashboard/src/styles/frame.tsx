@@ -10,8 +10,8 @@ const useStyles = makeStyles(({ spacing, breakpoints }) => ({
         height: 'calc(100vh - 64px)',
         overflowX: 'auto',
         [breakpoints.down('xs')]: {
-            marginTop: spacing(6),
-            height: 'calc(100vh - 48px)',
+            marginTop: spacing(7),
+            height: 'calc(100vh - 56px)',
         },
     },
 }));

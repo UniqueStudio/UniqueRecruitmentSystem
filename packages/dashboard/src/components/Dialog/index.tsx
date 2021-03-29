@@ -1,4 +1,11 @@
-import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@material-ui/core';
+import {
+    Button,
+    Dialog as MuiDialog,
+    DialogActions,
+    DialogContent,
+    DialogContentText,
+    DialogTitle,
+} from '@material-ui/core';
 import React, { FC, memo } from 'react';
 
 interface Props {
@@ -11,8 +18,8 @@ interface Props {
     onClick: () => void;
 }
 
-const CustomDialog: FC<Props> = memo(({ open, toggleOpen, onClick, content, title, yes = '是', no = '否' }) => (
-    <Dialog open={open} onClose={toggleOpen}>
+export const Dialog: FC<Props> = memo(({ open, toggleOpen, onClick, content, title, yes = '是', no = '否' }) => (
+    <MuiDialog open={open} onClose={toggleOpen}>
         <DialogTitle>{title}</DialogTitle>
         <DialogContent>
             <DialogContentText>{content}</DialogContentText>
@@ -25,7 +32,5 @@ const CustomDialog: FC<Props> = memo(({ open, toggleOpen, onClick, content, titl
                 {yes}
             </Button>
         </DialogActions>
-    </Dialog>
+    </MuiDialog>
 ));
-
-export default CustomDialog;

@@ -47,15 +47,6 @@ const useStyles = makeStyles(({ zIndex, palette, transitions, spacing, breakpoin
         padding: spacing(2),
         overflowY: 'auto',
     },
-    collapse: {
-        zIndex: zIndex.drawer + 1,
-        position: 'fixed',
-        top: spacing(8),
-        [breakpoints.down('xs')]: {
-            top: spacing(7),
-        },
-        right: 0,
-    },
 }));
 
 export default useStyles;

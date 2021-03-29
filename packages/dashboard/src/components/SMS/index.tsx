@@ -1,12 +1,13 @@
-import { Button, Paper, Step, StepContent, StepLabel, Stepper } from '@material-ui/core';
+import { Button, Paper, Step as MuiStep, StepContent, StepLabel, Stepper } from '@material-ui/core';
 import { observer } from 'mobx-react-lite';
 import React, { ChangeEventHandler, FC, useState } from 'react';
 
 import Detail from './Detail';
 import Picker from './Picker';
 
-import { sendSMS } from '@apis/rest';
-import Verify from '@components/Verify';
+import { sendSMSToCandidate } from '@apis/rest';
+import { Verify } from '@components/Verify';
+import { SMSType, Step } from '@config/enums';
 import { useStores } from '@hooks/useStores';
 import useStyles from '@styles/sms';
 
@@ -14,12 +15,12 @@ interface Props {
     toggleOpen: () => void;
 }
 
-const SMSTemplate: FC<Props> = observer(({ toggleOpen }) => {
+export const Template: FC<Props> = observer(({ toggleOpen }) => {
     const { $component, $candidate } = useStores();
     const classes = useStyles();
     const [activeStep, setActiveStep] = useState(0);
     const [content, setContent] = useState({
-        type: 'accept',
+        type: SMSType.accept,
         step: -1 as -1,
         next: -1 as -1,
         time: '',
@@ -34,35 +35,38 @@ const SMSTemplate: FC<Props> = observer(({ toggleOpen }) => {
 
     const handleSend = () => {
         if (code === '') {
-            $component.enqueueSnackbar('请填写验证码！', 'warning');
+            $component.enqueueSnackbar('请填写验证码', 'warning');
             return;
         }
 
         setCode('');
-        return sendSMS({ ...content, code, candidates: [...$candidate.selected.keys()] });
+        return sendSMSToCandidate({ ...content, code, cids: [...$candidate.selected.keys()] });
     };
 
     const handleNext = () => {
         const { step, type, time, place, rest, next } = content;
         if (activeStep === 1) {
-            if (type === 'group' || type === 'team') {
-                if (!place) {
-                    $component.enqueueSnackbar('请填写地点！', 'warning');
-                    return;
-                }
-            } else if (step === -1) {
-                $component.enqueueSnackbar('请选择流程！', 'warning');
+            if (step === -1) {
+                $component.enqueueSnackbar('请选择流程', 'warning');
                 return;
-            } else if (next === -1) {
-                $component.enqueueSnackbar('请选择下一轮！', 'warning');
+            }
+            if (next === -1) {
+                $component.enqueueSnackbar('请选择下一轮', 'warning');
                 return;
-            } else if ((next === 1 || next === 3) && type === 'accept' && !rest) {
+            }
+            if ((next === Step.笔试 || next === Step.熬测) && type === SMSType.accept && !rest) {
                 if (!time) {
-                    $component.enqueueSnackbar('请填写时间！', 'warning');
+                    $component.enqueueSnackbar('请填写时间', 'warning');
                     return;
                 }
                 if (!place) {
-                    $component.enqueueSnackbar('请填写地点！', 'warning');
+                    $component.enqueueSnackbar('请填写地点', 'warning');
+                    return;
+                }
+            }
+            if (next === Step.组面 || next === Step.群面) {
+                if (!place) {
+                    $component.enqueueSnackbar('请填写地点', 'warning');
                     return;
                 }
             }
@@ -90,7 +94,7 @@ const SMSTemplate: FC<Props> = observer(({ toggleOpen }) => {
         <div className={classes.template}>
             <Stepper activeStep={activeStep} classes={{ root: classes.stepper }} orientation='vertical'>
                 {steps.map((stepName, index) => (
-                    <Step key={index}>
+                    <MuiStep key={index}>
                         <StepLabel>{stepName}</StepLabel>
                         <StepContent classes={{ last: classes.verify }}>
                             {stepContent[index]}
@@ -108,7 +112,7 @@ const SMSTemplate: FC<Props> = observer(({ toggleOpen }) => {
                                 </Button>
                             </div>
                         </StepContent>
-                    </Step>
+                    </MuiStep>
                 ))}
             </Stepper>
             {activeStep === steps.length && (
@@ -124,5 +128,3 @@ const SMSTemplate: FC<Props> = observer(({ toggleOpen }) => {
         </div>
     );
 });
-
-export default SMSTemplate;
