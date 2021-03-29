@@ -28,6 +28,8 @@ export class CandidatesService extends BasicCRUDService<CandidateEntity> {
     findManyByRecruitmentId(rid: string, options: TimestampOptions) {
         return this.withTimestamp(options)
             .leftJoinAndSelect(`${this.alias}.recruitment`, 'r')
+            .leftJoinAndSelect(`${this.alias}.interviewSelections`, 'interviewSelections')
+            .leftJoinAndSelect(`${this.alias}.comments`, 'comments')
             .andWhere('r.id = :rid', { rid })
             .getMany();
     }
