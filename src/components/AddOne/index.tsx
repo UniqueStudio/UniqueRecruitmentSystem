@@ -1,12 +1,12 @@
 import { Button, IconButton, Paper, TextField, Tooltip } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import { observer } from 'mobx-react-lite';
-import React, { ChangeEventHandler, FC, useEffect, useState } from 'react';
+import React, { ChangeEventHandler, FC, useState } from 'react';
 
-import { launchRecruitment } from '@apis/rest';
-import Modal from '@components/Modal';
-import Schedule from '@components/Schedule';
-import Verify from '@components/Verify';
+import { createRecruitment } from '@apis/rest';
+import { Modal } from '@components/Modal';
+import { Schedule } from '@components/Schedule';
+import { Verify } from '@components/Verify';
 import { useStores } from '@hooks/useStores';
 import useStyles from '@styles/addOne';
 import { getMidnight } from '@utils/getMidnight';
@@ -23,51 +23,42 @@ const initialState = () => {
     const date = new Date();
     return {
         modal: false,
-        title: generateTitle(date),
-        begin: date,
+        name: generateTitle(date),
+        beginning: date,
         end: date,
-        stop: date,
+        deadline: date,
         code: '',
     };
 };
 
-interface Props {
-    shouldClear: boolean;
-}
-
-const AddOne: FC<Props> = observer(({ shouldClear }) => {
+export const AddOne: FC = observer(() => {
     const classes = useStyles();
     const { $component, $user } = useStores();
-    const [{ modal, title, begin, end, stop, code }, setState] = useState(initialState());
+    const [{ modal, name, beginning, end, deadline, code }, setState] = useState(initialState());
 
     const disabled = !$user.isAdminOrCaptain;
 
-    useEffect(() => {
-        if (shouldClear) {
-            setState(initialState());
-        }
-    }, [shouldClear]);
-
     const handleLaunch = async () => {
-        if (!code || !begin || !end || !stop || !title) {
-            $component.enqueueSnackbar('请完整填写信息！', 'warning');
+        if (!code || !beginning || !end || !deadline || !name) {
+            $component.enqueueSnackbar('请完整填写信息', 'warning');
             return;
         }
-        if (begin >= stop) {
-            $component.enqueueSnackbar('截止时间必须大于开始时间！', 'warning');
+        if (beginning >= deadline) {
+            $component.enqueueSnackbar('截止时间必须大于开始时间', 'warning');
             return;
         }
-        if (stop >= end) {
-            $component.enqueueSnackbar('结束时间必须大于截止时间！', 'warning');
+        if (deadline >= end) {
+            $component.enqueueSnackbar('结束时间必须大于截止时间', 'warning');
             return;
         }
-        await launchRecruitment({
-            title,
-            begin: getMidnight(begin),
+        await createRecruitment({
+            name,
+            beginning: getMidnight(beginning),
             end: getMidnight(end),
-            stop: getMidnight(stop),
+            deadline: getMidnight(deadline),
             code,
         });
+        setState(initialState());
     };
 
     const handleChange = (name: string): ChangeEventHandler<HTMLInputElement> => ({ target: { value } }) => {
@@ -82,7 +73,7 @@ const AddOne: FC<Props> = observer(({ shouldClear }) => {
             setState((prevState) => ({
                 ...prevState,
                 [name]: date,
-                title: name === 'begin' ? generateTitle(date) : prevState.title,
+                title: name === 'beginning' ? generateTitle(date) : prevState.name,
             }));
         }
     };
@@ -115,17 +106,11 @@ const AddOne: FC<Props> = observer(({ shouldClear }) => {
                     <TextField
                         label='招新名称'
                         className={classes.textField}
-                        value={titleConverter(title)}
+                        value={titleConverter(name)}
                         margin='normal'
                         disabled
                     />
-                    <Schedule
-                        onChange={handleChangeDate}
-                        begin={begin}
-                        end={end}
-                        stop={stop}
-                        className={classes.datePicker}
-                    />
+                    <Schedule onChange={handleChangeDate} beginning={beginning} end={end} deadline={deadline} />
                     <Verify onChange={handleChange('code')} code={code} />
                     <Button color='primary' variant='contained' onClick={handleLaunch}>
                         确定
@@ -135,5 +120,3 @@ const AddOne: FC<Props> = observer(({ shouldClear }) => {
         </>
     );
 });
-
-export default AddOne;

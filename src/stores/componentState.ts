@@ -1,7 +1,7 @@
 import { makeAutoObservable } from 'mobx';
 import { OptionsObject, SnackbarKey, SnackbarMessage, VariantType } from 'notistack';
 
-import { Evaluation } from '@config/types';
+import { Evaluation } from '@config/enums';
 
 interface Snackbar {
     message: SnackbarMessage;
@@ -13,6 +13,12 @@ export class ComponentStateStore {
 
     drawerOpen = false;
 
+    suggestionOpen = false;
+
+    messengerOpen = false;
+
+    recruitmentPanelOpen = false;
+
     snackbars: Record<SnackbarKey, Snackbar> = {};
 
     fabOn = -1;
@@ -21,7 +27,7 @@ export class ComponentStateStore {
 
     inputtingComment = {
         content: '',
-        evaluation: 2 as Evaluation,
+        evaluation: Evaluation.fair,
     };
 
     constructor() {
@@ -30,6 +36,18 @@ export class ComponentStateStore {
 
     setProgress(on: boolean) {
         this.progressOn = on;
+    }
+
+    toggleSuggestion() {
+        this.suggestionOpen = !this.suggestionOpen;
+    }
+
+    toggleMessenger() {
+        this.messengerOpen = !this.messengerOpen;
+    }
+
+    toggleRecruitmentPanel() {
+        this.recruitmentPanelOpen = !this.recruitmentPanelOpen;
     }
 
     toggleDrawer() {

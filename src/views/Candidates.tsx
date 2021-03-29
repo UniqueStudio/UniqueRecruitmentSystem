@@ -3,16 +3,14 @@ import { observer } from 'mobx-react-lite';
 import React, { FC, useState } from 'react';
 
 import { removeCandidate } from '@apis/websocket';
-import Board from '@components/Board';
-import Dialog from '@components/Dialog';
-import Fab from '@components/Fab';
-import Modal from '@components/Modal';
-import Slider from '@components/Slider';
-import Template from '@components/SMS';
-import { STEPS } from '@config/consts';
-import { Candidate } from '@config/types';
+import { Board } from '@components/Board';
+import { Dialog } from '@components/Dialog';
+import { Fab } from '@components/Fab';
+import { Modal } from '@components/Modal';
+import { Slider } from '@components/Slider';
+import { Template } from '@components/SMS';
 import { useStores } from '@hooks/useStores';
-import { teamSort } from '@utils/sortBySlot';
+// import { teamSort } from '@utils/sortBySlot';
 
 const Candidates: FC = observer(() => {
     const { $component, $candidate } = useStores();
@@ -22,25 +20,7 @@ const Candidates: FC = observer(() => {
     const [index, setIndex] = useState(-1);
     const [direction, setDirection] = useState<SlideProps['direction']>('left');
 
-    const candidates: Candidate[][] = [...new Array(STEPS.length)].map(() => []);
-    if ($candidate.steps.length !== 2) {
-        // 全部面板
-        for (const candidate of $candidate.candidates) {
-            if (candidate.group === $candidate.group) {
-                candidates[candidate.step].push(candidate);
-            }
-        }
-    } else {
-        // 群面面板
-        for (const candidate of $candidate.candidates) {
-            if (candidate.step === $candidate.steps[0] || candidate.step === $candidate.steps[1]) {
-                // 位于群面或通过
-                candidates[candidate.step].push(candidate);
-            }
-        }
-        // it's unnecessary to reassign because Array.prototype.sort is in-place
-        candidates.map((toSort) => toSort.sort(teamSort));
-    }
+    const candidates = $candidate.groupBySteps;
 
     const handleRight = () => {
         setDirection('left');
@@ -71,7 +51,7 @@ const Candidates: FC = observer(() => {
             $component.enqueueSnackbar('你没有选中任何人', 'info');
             return;
         }
-        $candidate.selected.forEach(({ _id }) => removeCandidate(_id));
+        $candidate.selected.forEach(({ id }) => removeCandidate(id));
     };
 
     const toggleOpen = (name: string) => () => {

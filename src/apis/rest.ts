@@ -2,7 +2,8 @@ import axios, { AxiosResponse } from 'axios';
 import { get } from 'idb-keyval';
 
 import { API } from '@config/consts';
-import { Candidate, Group, Recruitment, Step, Time, User } from '@config/types';
+import { GroupOrTeam, InterviewType, SMSType, Status, Step } from '@config/enums';
+import { Candidate, Interview, R, Recruitment, User } from '@config/types';
 import { stores } from '@stores/index';
 import { localStorage } from '@utils/storage';
 
@@ -11,44 +12,39 @@ const { $candidate, $component, $user, $recruitment } = stores;
 class Endpoint {
     static base = API;
 
-    static recruitments = '/recruitment/';
+    static auth = '/auth';
 
-    static verification = '/sms/verification/user';
+    static qrCode = (key = '') => `${Endpoint.auth}/user/qrCode/${key}`;
 
-    static sms = '/sms/';
+    static login = `${Endpoint.auth}/user/login/`;
 
-    static user = '/user/';
+    static candidate = '/candidates';
 
-    static group = '/user/group/';
+    static resume = (cid: string) => `${Endpoint.candidate}/${cid}/resume`;
 
-    static login = '/user/login/';
+    static candidates = (rid: string) => `${Endpoint.candidate}/recruitment/${rid}`;
 
-    static admin = '/user/admin/';
+    static allocation = (type: InterviewType, cid?: string) =>
+        `${Endpoint.candidate}/${cid ? `${cid}/` : ''}interview/${type}`;
 
-    static interview = (interviewType: string, cid?: string) =>
-        `/candidate/${cid ? `${cid}/` : ''}interview/${interviewType}`;
+    static recruitments = '/recruitments';
 
-    static candidates = (title: string, group?: Group, step?: Step) =>
-        `/candidate/${JSON.stringify({ title, step, group })}`;
+    static schedule = (rid: string) => `${Endpoint.recruitments}/${rid}/schedule`;
 
-    static resume = (cid: string) => `/candidate/${cid}/resume`;
+    static interviews = (rid: string, name: GroupOrTeam) => `${Endpoint.recruitments}/${rid}/interviews/${name}`;
 
-    static recruitment = (title: string) => `/recruitment/title/${title}`;
+    static sms = '/sms';
 
-    static qrCode = (key = '') => `/user/qrCode/${key}`;
+    static verification = `${Endpoint.sms}/verification/user`;
+
+    static users = '/users';
+
+    static me = `${Endpoint.users}/me`;
+
+    static group = `${Endpoint.users}/group`;
+
+    static admin = `${Endpoint.users}/admin`;
 }
-
-type SuccessResponse<T> = T & {
-    type: 'success';
-};
-
-interface FailureResponse {
-    type: 'warning' | 'error';
-    message?: string;
-    messages?: string[];
-}
-
-type R<T = Record<string, never>> = SuccessResponse<T> | FailureResponse;
 
 const client = axios.create({
     baseURL: Endpoint.base,
@@ -62,21 +58,23 @@ setAuthToken($user.token);
 
 const apiWrapper = async <T>(
     action: () => Promise<AxiosResponse<R<T>>>,
-    onSuccess: (data: SuccessResponse<T>) => void | Promise<void>,
+    onSuccess: (data: T) => void | Promise<void>,
     onFailure?: () => void | Promise<void>,
 ) => {
     $component.setProgress(true);
     try {
         const { data } = await action();
         $component.setProgress(false);
-        if (data.type === 'success') {
-            await onSuccess(data);
-        } else {
-            const messages = data.messages || [data.message!];
-            messages.forEach((message) => {
-                $component.enqueueSnackbar(message, data.type || 'error');
-            });
-            await onFailure?.();
+        switch (data.status) {
+            case Status.info:
+            case Status.success:
+                await onSuccess(data.payload);
+                break;
+            case Status.error:
+            case Status.warning:
+                $component.enqueueSnackbar(data.message, data.status);
+                await onFailure?.();
+                break;
         }
     } catch ({ message }) {
         $component.setProgress(false);
@@ -85,50 +83,62 @@ const apiWrapper = async <T>(
     }
 };
 
-export const allocateAll = (interviewType: 'group' | 'team') =>
+export const allocateMany = (type: InterviewType, cids: string[]) =>
     apiWrapper(
         () =>
-            client.put<R<{ allocations: { id: string; time: number }[] }>>(Endpoint.interview(interviewType), {
-                title: $recruitment.viewing,
+            client.put<R<{ id: string; time?: string }[]>>(Endpoint.allocation(type), {
+                cids,
             }),
-        ({ allocations }) => {
-            $candidate.allocateAll(allocations, interviewType);
+        (allocations) => {
+            $candidate.allocateMany(
+                allocations.map(({ id, time }) => ({ id, time: time ? new Date(time) : undefined })),
+                type,
+            );
             const failed = allocations.filter(({ time }) => !time).length;
             if (failed) {
-                $component.enqueueSnackbar(`有${failed}位候选人没有分配到时间！(不包括未选择时间的)`, 'info');
+                $component.enqueueSnackbar(`有${failed}位候选人没有分配到时间(不包括未选择时间的)`, 'info');
             } else {
-                $component.enqueueSnackbar('所有候选人均分配了时间！(不包括未选择时间的)', 'success');
+                $component.enqueueSnackbar('所有候选人均分配了时间(不包括未选择时间的)', 'success');
             }
         },
     );
 
-export const allocateOne = (interviewType: 'group' | 'team', cid: string, time: number) =>
+export const allocateOne = (type: InterviewType, cid: string, time: Date) =>
     apiWrapper(
-        () => client.put<R>(Endpoint.interview(interviewType, cid), { time }),
+        () => client.put<R>(Endpoint.allocation(type, cid), { time }),
         () => {
-            $candidate.allocateOne(interviewType, cid, time);
-            $component.enqueueSnackbar('设置成功！', 'success');
+            $candidate.allocateOne(type, cid, time);
+            $component.enqueueSnackbar('设置成功', 'success');
         },
     );
 
-export const getCandidates = (title: string, group?: Group, step?: Step) =>
+export const getCandidates = (rid: string) =>
     apiWrapper(
         async () => {
             const candidates = await get<Candidate[]>('candidates');
             const viewing = localStorage.getItem('viewing');
-            if (candidates && title === viewing) {
-                let data = candidates;
-                if (step) data = data.filter((candidate) => candidate.step === step);
-                if (group) data = data.filter((candidate) => candidate.group === group);
-                $candidate.addCandidates(data);
+            if (candidates && rid === viewing) {
+                $candidate.setAll(candidates);
                 $component.toggleFabOff();
                 $component.enqueueSnackbar('成功获取候选人信息（缓存）', 'success');
             }
-            return await client.get<R<{ data: Candidate[] }>>(Endpoint.candidates(title, group, step));
+            return await client.get<R<Candidate<string>[]>>(Endpoint.candidates(rid));
         },
-        ({ data }) => {
-            $candidate.addCandidates(data);
-            $recruitment.setViewingRecruitment(title);
+        (candidates) => {
+            $candidate.setAll(
+                candidates.map(({ interviewAllocations: { group, team }, interviewSelections, ...rest }) => ({
+                    ...rest,
+                    interviewAllocations: {
+                        group: group ? new Date(group) : undefined,
+                        team: team ? new Date(team) : undefined,
+                    },
+                    interviewSelections: interviewSelections.map(({ date, ...rest }) => ({
+                        ...rest,
+                        date: new Date(date),
+                    })),
+                })),
+            );
+            $recruitment.setViewingRecruitment(rid);
             $component.toggleFabOff();
             $component.enqueueSnackbar('成功获取候选人信息（线上）', 'success');
         },
@@ -148,12 +158,7 @@ export const getResume = async (cid: string) => {
         if (disposition && disposition.includes('attachment')) {
             const matches = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/.exec(disposition);
             if (matches?.[1]) {
-                filename = decodeURIComponent(
-                    atob(matches[1].replace(/['"]/g, ''))
-                        .split('')
-                        .map((c) => `%${c.charCodeAt(0).toString(16).padStart(2, '0')}`)
-                        .join(''),
-                );
+                filename = decodeURIComponent(matches[1].replace(/['"]/g, '').replace(/.{2}/g, '%$&'));
             }
         }
         const url = URL.createObjectURL(new Blob([data]));
@@ -171,7 +176,7 @@ export const getResume = async (cid: string) => {
     $component.setProgress(false);
 };
 
-export const getRecruitments = async () => {
+export const getAllRecruitments = async () => {
     const recruitments = await get<Recruitment[]>('recruitments');
     const viewing = localStorage.getItem('viewing');
     const shouldUpdateRecruitment = $recruitment.shouldUpdateRecruitment;
@@ -181,70 +186,113 @@ export const getRecruitments = async () => {
         return;
     }
     return apiWrapper(
-        () => client.get<R<{ data: Recruitment[] }>>(Endpoint.recruitments),
-        ({ data }) => {
-            data.sort((prev, next) => prev.begin - next.begin);
-            const newViewing = viewing ? viewing : data.slice(-1)[0] ? data.slice(-1)[0].title : '';
-            $recruitment.setRecruitments(data);
-            $recruitment.setViewingRecruitment(newViewing);
+        () => client.get<R<Recruitment<string>[]>>(Endpoint.recruitments),
+        (recruitments) => {
+            $recruitment.setRecruitments(
+                recruitments.map(({ beginning, end, deadline, interviews, ...rest }) => ({
+                    ...rest,
+                    beginning: new Date(beginning),
+                    end: new Date(end),
+                    deadline: new Date(deadline),
+                    interviews: interviews.map(({ date, ...rest }) => ({
+                        ...rest,
+                        date: new Date(date),
+                    })),
+                })),
+            );
+            $recruitment.setViewingRecruitment(viewing ?? recruitments[0]?.id ?? '');
             $component.enqueueSnackbar('成功获取招新信息', 'success');
         },
     );
 };
 
-export const launchRecruitment = (info: Partial<Recruitment & { code: string }>) =>
+export const createRecruitment = (
+    data: Pick<Recruitment, 'name' | 'beginning' | 'end' | 'deadline'> & { code: string },
+) =>
     apiWrapper(
-        () => client.post<R>(Endpoint.recruitments, info),
+        () => client.post<R>(Endpoint.recruitments, data),
         () => {
             $recruitment.setShouldUpdateRecruitment();
-            $component.enqueueSnackbar('已成功发起招新！', 'success');
-            return getRecruitments();
+            $component.enqueueSnackbar('已成功发起招新', 'success');
+            return getAllRecruitments();
         },
     );
 
-export const setRecruitment = (data: {
-    title: string;
-    begin: number;
-    end: number;
-    stop: number;
-    group?: Group;
-    groupInterview?: Time[];
-    teamInterview?: Time[];
-}) =>
+export const setRecruitmentSchedule = (rid: string, data: Pick<Recruitment, 'beginning' | 'end' | 'deadline'>) =>
     apiWrapper(
-        () => client.put<R>(Endpoint.recruitment(data.title), data),
+        () => client.put<R>(Endpoint.schedule(rid), data),
         () => {
             $recruitment.setShouldUpdateRecruitment();
-            $component.enqueueSnackbar('已成功修改招新信息！', 'success');
-            return getRecruitments();
+            $component.enqueueSnackbar('已成功修改招新信息', 'success');
+            return getAllRecruitments();
+        },
+    );
+
+export const createRecruitmentInterviews = (
+    rid: string,
+    name: GroupOrTeam,
+    data: {
+        interviews: Pick<Interview, 'date' | 'period' | 'slotNumber'>;
+    },
+) =>
+    apiWrapper(
+        () => client.post<R>(Endpoint.interviews(rid, name), data),
+        () => {
+            $recruitment.setShouldUpdateRecruitment();
+            $component.enqueueSnackbar('已成功设置面试安排', 'success');
+            return getAllRecruitments();
+        },
+    );
+
+export const setRecruitmentInterviews = (
+    rid: string,
+    name: GroupOrTeam,
+    data: {
+        interviews: Pick<Interview, 'id' | 'date' | 'period' | 'slotNumber'>;
+    },
+) =>
+    apiWrapper(
+        () => client.put<R>(Endpoint.interviews(rid, name), data),
+        () => {
+            $recruitment.setShouldUpdateRecruitment();
+            $component.enqueueSnackbar('已成功更新面试安排', 'success');
+            return getAllRecruitments();
         },
     );
 
 export const getVerifyCode = () =>
     apiWrapper(
         () => client.get<R>(Endpoint.verification),
-        () => $component.enqueueSnackbar('验证码已发送！', 'success'),
+        () => $component.enqueueSnackbar('验证码已发送', 'success'),
     );
 
-export const sendSMS = (content: Record<string, unknown>) =>
+export const sendSMSToCandidate = (content: {
+    type: SMSType;
+    time?: string;
+    place?: string;
+    rest?: string;
+    next: Step;
+    cids: string[];
+    code: string;
+}) =>
     apiWrapper(
         () => client.post<R>(Endpoint.sms, content),
-        () => $component.enqueueSnackbar('已成功发送短信！', 'success'),
+        () => $component.enqueueSnackbar('已成功发送短信', 'success'),
     );
 
-export const getGroup = async () => {
+export const getMyGroup = async () => {
     const groupInfo = await get<User[]>('group');
     if (groupInfo && !$user.firstLoad) {
         $user.setGroupInfo(groupInfo);
         return;
     }
     return apiWrapper(
-        () => client.get<R<{ data: User[] }>>(Endpoint.group),
-        ({ data }) => $user.setGroupInfo(data),
+        () => client.get<R<User[]>>(Endpoint.group),
+        (users) => $user.setGroupInfo(users),
     );
 };
 
-export const getUserInfo = async () => {
+export const getMyInfo = async () => {
     const user = await get<User>('user');
     if (user) {
         $user.setUserInfo(user);
@@ -252,56 +300,56 @@ export const getUserInfo = async () => {
         return;
     }
     return apiWrapper(
-        () => client.get<R<{ data: User }>>(Endpoint.user),
-        ({ data }) => {
-            $user.setUserInfo(data);
-            $candidate.setGroup(data.group);
+        () => client.get<R<User>>(Endpoint.me),
+        (user) => {
+            $user.setUserInfo(user);
+            $candidate.setGroup(user.group);
         },
     );
 };
 
-export const loginViaQRCode = () =>
+export const setMyInfo = (data: Pick<User, 'mail' | 'phone' | 'password'>) =>
     apiWrapper(
-        () => client.get<R<{ key: string }>>(Endpoint.qrCode()),
-        ({ key }) =>
+        () => client.put<R>(Endpoint.me, data),
+        () => {
+            $user.setUserInfo(data);
+            $component.enqueueSnackbar('已成功修改信息', 'success');
+        },
+    );
+
+export const setGroupAdmin = (uids: string[]) =>
+    apiWrapper(
+        () => client.put<R<string[]>>(Endpoint.admin, uids),
+        (uids) => {
+            $user.setGroupAdmins(uids);
+            $component.enqueueSnackbar('已成功设置管理员', 'success');
+        },
+    );
+
+export const loginByQRCode = () =>
+    apiWrapper(
+        () => client.get<R<string>>(Endpoint.qrCode()),
+        (url) =>
             apiWrapper(
                 () => {
-                    $user.setQRCode(key);
-                    $component.enqueueSnackbar('请尽快用企业微信扫描二维码！', 'success');
-                    return client.get<R<{ token: string }>>(Endpoint.qrCode(key));
+                    $user.setQRCode(url);
+                    $component.enqueueSnackbar('请尽快用企业微信扫描二维码', 'success');
+                    return client.get<R<string>>(Endpoint.qrCode(new URL(url).searchParams.get('key')!));
                 },
-                ({ token }) => {
+                (token) => {
                     setAuthToken(token);
                     $user.setToken(token);
-                    $component.enqueueSnackbar('已成功登录！', 'success');
+                    $component.enqueueSnackbar('已成功登录', 'success');
                 },
             ),
     );
 
-export const loginViaPassword = (phone: string, password: string) =>
+export const loginByPassword = (phone: string, password: string) =>
     apiWrapper(
-        () => client.post<R<{ token: string }>>(Endpoint.login, { phone, password }),
-        ({ token }) => {
+        () => client.post<R<string>>(Endpoint.login, { phone, password }),
+        (token) => {
             setAuthToken(token);
             $user.setToken(token);
-            $component.enqueueSnackbar('已成功登录！', 'success');
-        },
-    );
-
-export const setGroupAdmin = (data: { group: string; who: string[] }) =>
-    apiWrapper(
-        () => client.put<R<{ newAdmins: string[] }>>(Endpoint.admin, data),
-        ({ newAdmins }) => {
-            $user.setGroupAdmins(newAdmins);
-            $component.enqueueSnackbar('已成功修改管理员！', 'success');
-        },
-    );
-
-export const setUserInfo = (data: { phone: string; mail: string; password?: string }) =>
-    apiWrapper(
-        () => client.put<R<{ newAdmins: string[] }>>(Endpoint.user, data),
-        () => {
-            $user.setUserInfo(data);
-            $component.enqueueSnackbar('已成功修改信息！', 'success');
+            $component.enqueueSnackbar('已成功登录', 'success');
         },
     );

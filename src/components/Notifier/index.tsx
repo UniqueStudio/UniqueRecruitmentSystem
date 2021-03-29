@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 
 import { useStores } from '@hooks/useStores';
 
-const Notifier = () => {
+export const Notifier = () => {
     const [displayed, setDisplayed] = useState<SnackbarKey[]>([]);
     const { $component } = useStores();
     const { enqueueSnackbar, closeSnackbar } = useSnackbar();
@@ -21,5 +21,3 @@ const Notifier = () => {
     }, []);
     return null;
 };
-
-export default Notifier;

@@ -3,6 +3,7 @@ import { makeStyles } from '@material-ui/core';
 const useStyles = makeStyles(({ breakpoints }) => ({
     container: {
         display: 'flex',
+        minHeight: '100%',
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',

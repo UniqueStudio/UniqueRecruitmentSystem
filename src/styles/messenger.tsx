@@ -3,6 +3,15 @@ import { makeStyles } from '@material-ui/core';
 import { colorToAlpha } from './index';
 
 const useStyles = makeStyles(({ spacing, transitions, breakpoints, palette, zIndex }) => ({
+    collapse: {
+        zIndex: zIndex.drawer + 1,
+        position: 'fixed',
+        top: spacing(8),
+        [breakpoints.down('xs')]: {
+            top: spacing(7),
+        },
+        right: 0,
+    },
     messenger: {
         display: 'flex',
         flexDirection: 'column',

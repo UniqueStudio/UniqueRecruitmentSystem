@@ -5,10 +5,9 @@ import { DragDropContext, Droppable, DropResult } from 'react-beautiful-dnd';
 import SwipeableViews from 'react-swipeable-views';
 
 import { moveCandidate } from '@apis/websocket';
-import Card from '@components/Card';
-import Column from '@components/Column';
-import { STEPS } from '@config/consts';
-import { Candidate, Step } from '@config/types';
+import { Card } from '@components/Card';
+import { Column } from '@components/Column';
+import { Candidate } from '@config/types';
 import { useStores } from '@hooks/useStores';
 import useStyles from '@styles/board';
 
@@ -17,7 +16,7 @@ interface Props {
     toggleDetail: (detail: number) => (index: number) => () => void;
 }
 
-const Board: FC<Props> = observer(({ candidates, toggleDetail }) => {
+export const Board: FC<Props> = observer(({ candidates, toggleDetail }) => {
     const classes = useStyles();
     const { $candidate } = useStores();
     const [column, setColumn] = useState(0);
@@ -39,27 +38,16 @@ const Board: FC<Props> = observer(({ candidates, toggleDetail }) => {
                 }
                 case 'CANDIDATE':
                     if (source.droppableId === droppableId) return;
-                    moveCandidate(
-                        draggableId,
-                        STEPS.indexOf(source.droppableId) as Step,
-                        STEPS.indexOf(droppableId) as Step,
-                        index,
-                    );
+                    moveCandidate(draggableId, +source.droppableId, +droppableId);
                     return;
             }
         }
     }, []);
 
     const Columns = $candidate.steps.map((step, i) => (
-        <Column title={STEPS[step]} key={STEPS[step]} dropIndex={i}>
+        <Column step={step} key={step} dropIndex={i}>
             {candidates[step].map((candidate, j) => (
-                <Card
-                    candidate={candidate}
-                    index={j}
-                    key={candidate._id}
-                    isTeamInterview={$candidate.steps.length === 2}
-                    toggleDetail={toggleDetail(step)(j)}
-                />
+                <Card candidate={candidate} index={j} key={candidate.id} toggleDetail={toggleDetail(step)(j)} />
             ))}
         </Column>
     ));

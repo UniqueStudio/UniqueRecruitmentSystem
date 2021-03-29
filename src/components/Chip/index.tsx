@@ -1,4 +1,4 @@
-import { Chip, Paper, Popover } from '@material-ui/core';
+import { Chip as MuiChip, Paper, Popover } from '@material-ui/core';
 import clsx from 'clsx';
 import React, { FC, memo, MouseEventHandler, useState } from 'react';
 
@@ -11,7 +11,7 @@ interface Props {
     onCopy?: () => void;
 }
 
-const CommentChip: FC<Props> = memo(({ comment: { content, evaluation, username }, onCopy, onRemove }) => {
+export const Chip: FC<Props> = memo(({ comment: { content, evaluation, user }, onCopy, onRemove }) => {
     const classes = useStyles();
     const [anchorEl, setAnchorEl] = useState<Element | null>(null);
 
@@ -23,11 +23,11 @@ const CommentChip: FC<Props> = memo(({ comment: { content, evaluation, username 
         setAnchorEl(null);
     };
 
-    const text = `${username}： ${content}`;
+    const text = `${user.name}： ${content}`;
     const color = ['danger', 'warning', 'success'][evaluation];
     return (
         <>
-            <Chip
+            <MuiChip
                 label={text}
                 className={classes.chip}
                 classes={{
@@ -52,5 +52,3 @@ const CommentChip: FC<Props> = memo(({ comment: { content, evaluation, username 
         </>
     );
 });
-
-export default CommentChip;

@@ -1,21 +1,19 @@
 import DateFnsUtils from '@date-io/date-fns';
-import { DatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
+import { DatePicker as MuiDatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 import React, { FC, memo } from 'react';
 
 interface Props {
     value: Date;
-    className: string;
     label: string;
     disabled?: boolean;
     disablePast?: boolean;
     onChange: (date: Date | null) => void;
 }
 
-const Picker: FC<Props> = memo(({ className, onChange, value, label, disabled, disablePast = true }) => (
+export const DatePicker: FC<Props> = memo(({ onChange, value, label, disabled, disablePast = true }) => (
     <MuiPickersUtilsProvider utils={DateFnsUtils}>
-        <DatePicker
+        <MuiDatePicker
             label={label}
-            className={className}
             disablePast={disablePast}
             value={value}
             onChange={onChange}
@@ -24,5 +22,3 @@ const Picker: FC<Props> = memo(({ className, onChange, value, label, disabled, d
         />
     </MuiPickersUtilsProvider>
 ));
-
-export default Picker;

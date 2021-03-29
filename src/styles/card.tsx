@@ -10,7 +10,7 @@ interface Props {
     disabled: boolean;
     white: boolean;
     good: number;
-    soSo: number;
+    fair: number;
 }
 
 const useStyles = makeStyles(({ breakpoints, spacing, zIndex }) => ({
@@ -20,7 +20,7 @@ const useStyles = makeStyles(({ breakpoints, spacing, zIndex }) => ({
             padding: spacing(0.5),
         },
     },
-    card: ({ disabled, white, good, soSo }: Props) => ({
+    card: ({ disabled, white, good, fair }: Props) => ({
         position: 'relative',
         zIndex: zIndex.drawer,
         cursor: 'pointer',
@@ -28,7 +28,7 @@ const useStyles = makeStyles(({ breakpoints, spacing, zIndex }) => ({
             ? 'rgba(0, 0, 0, 0.1)'
             : white
             ? 'rgba(0, 0, 0, 0)'
-            : `linear-gradient(to right, ${G}, ${G} ${good}%, ${Y} ${good}%, ${Y} ${soSo}%, ${R} ${soSo}%, ${R})`,
+            : `linear-gradient(to right, ${G}, ${G} ${good}%, ${Y} ${good}%, ${Y} ${fair}%, ${R} ${fair}%, ${R})`,
     }),
     cardAction: {
         justifyContent: 'center',

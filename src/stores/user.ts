@@ -1,7 +1,6 @@
 import { set } from 'idb-keyval';
 import { makeAutoObservable, toJS } from 'mobx';
 
-import { QR_CODE_URL } from '@config/consts';
 import { Message, User } from '@config/types';
 import { localStorage } from '@utils/storage';
 
@@ -34,8 +33,8 @@ export class UserStore {
         return this.info.isAdmin || this.info.isCaptain;
     }
 
-    setQRCode(key: string) {
-        this.qrCodeURL = `${QR_CODE_URL}${key}`;
+    setQRCode(url: string) {
+        this.qrCodeURL = url;
     }
 
     setToken(token: string) {
@@ -52,7 +51,7 @@ export class UserStore {
         delete userInfo.password;
         Object.assign(this.info, userInfo);
         void set('user', toJS(this.info));
-        const user = this.groupInfo.find(({ _id }) => this.info._id === _id);
+        const user = this.groupInfo.find(({ id }) => this.info.id === id);
         if (user) {
             Object.assign(user, userInfo);
             void set('group', toJS(this.groupInfo));

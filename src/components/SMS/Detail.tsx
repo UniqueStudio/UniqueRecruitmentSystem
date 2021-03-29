@@ -2,14 +2,14 @@ import { MenuItem, TextField, Typography } from '@material-ui/core';
 import clsx from 'clsx';
 import React, { ChangeEventHandler, FC, memo } from 'react';
 
-import { STEPS } from '@config/consts';
-import { Step } from '@config/types';
+import { STEP_MAP } from '@config/consts';
+import { SMSType, Step } from '@config/enums';
 import useStyles from '@styles/sms';
 import { generateModel } from '@utils/generateModel';
 
 interface Props {
     content: {
-        type: string;
+        type: SMSType;
         step: Step | -1;
         next: Step | -1;
         time: string;
@@ -23,8 +23,8 @@ const SMSDetail: FC<Props> = memo(({ handleChange, content }) => {
     const classes = useStyles();
     const { type, step, time, place, rest, next } = content;
     const withRest = type === 'accept';
-    const withTime = withRest && (next === 1 || next === 3);
-    const withStep = !['group', 'team'].includes(type);
+    const withTime = withRest && (next === Step.笔试 || next === Step.熬测);
+    const withStep = step !== Step.群面时间选择 || step !== Step.组面时间选择;
     const withPlace = withTime || !withStep;
     return (
         <>
@@ -58,8 +58,8 @@ const SMSDetail: FC<Props> = memo(({ handleChange, content }) => {
                         className={clsx(classes.templateItem, classes.input)}
                         value={step}
                         onChange={handleChange('step')}>
-                        {STEPS.slice(0, 5).map((stepName, index) => (
-                            <MenuItem key={stepName} value={index}>
+                        {[...STEP_MAP.entries()].slice(0, -1).map(([index, stepName]) => (
+                            <MenuItem key={stepName} value={+index}>
                                 {stepName}
                             </MenuItem>
                         ))}
@@ -72,8 +72,8 @@ const SMSDetail: FC<Props> = memo(({ handleChange, content }) => {
                         className={clsx(classes.templateItem, classes.input)}
                         value={next}
                         onChange={handleChange('next')}>
-                        {STEPS.map((stepName, index) => (
-                            <MenuItem key={stepName} value={index}>
+                        {[...STEP_MAP.entries()].slice(1).map(([index, stepName]) => (
+                            <MenuItem key={stepName} value={+index}>
                                 {stepName}
                             </MenuItem>
                         ))}

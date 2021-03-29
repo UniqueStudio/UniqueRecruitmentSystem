@@ -10,17 +10,12 @@ interface Props {
     onChange: ChangeEventHandler<HTMLInputElement>;
 }
 
-const Verify: FC<Props> = memo(({ onChange, code }) => {
+export const Verify: FC<Props> = memo(({ onChange, code }) => {
     const classes = useStyles();
     const [time, setTime] = useState(0);
     const [handle, setHandle] = useState(NaN);
 
-    useEffect(
-        () => () => {
-            window.clearInterval(handle);
-        },
-        [handle],
-    );
+    useEffect(() => () => window.clearInterval(handle), [handle]);
 
     const tick = () => {
         setTime((prevTime) => {
@@ -52,5 +47,3 @@ const Verify: FC<Props> = memo(({ onChange, code }) => {
         </div>
     );
 });
-
-export default Verify;

@@ -2,11 +2,12 @@ import { Button, Checkbox, TableBody, TableCell, TableRow, TextField } from '@ma
 import { observer } from 'mobx-react-lite';
 import React, { FC, useState } from 'react';
 
-import Modal from '@components/Modal';
+import { Modal } from '@components/Modal';
 import { OrderBy } from '@components/Table/header';
 import { compareCandidate } from '@components/Table/order';
-import { GROUPS, GROUPS_ } from '@config/consts';
-import { Candidate, Time } from '@config/types';
+import { GROUP_MAP, PERIOD_MAP } from '@config/consts';
+import { GroupOrTeam, InterviewType } from '@config/enums';
+import { Candidate, Interview } from '@config/types';
 import { useStores } from '@hooks/useStores';
 import useStyles from '@styles/data';
 import { Order } from '@utils/order';
@@ -14,44 +15,45 @@ import { stableSort } from '@utils/reducerHelper';
 
 interface Props {
     candidates: Candidate[];
-    interviewType: 'group' | 'team';
+    type: InterviewType;
     order: Order;
     orderBy: OrderBy;
     toggleDialog: (id?: string) => () => void;
 }
 
-export const Body: FC<Props> = observer(({ order, orderBy, toggleDialog, candidates, interviewType }) => {
+export const Body: FC<Props> = observer(({ order, orderBy, toggleDialog, candidates, type }) => {
     const classes = useStyles();
     const { $candidate } = useStores();
-    const [viewing, setViewing] = useState<Time[]>([]);
+    const [viewing, setViewing] = useState<Interview[]>([]);
 
     const handleCheck = (id = '') => (event: React.ChangeEvent<HTMLInputElement>) => {
         if (event.target.checked) {
-            $candidate.selectCandidate(id);
+            $candidate.selectOne(id);
         } else {
-            $candidate.deselectCandidate(id);
+            $candidate.deselectOne(id);
         }
     };
-    const toggleViewing = (nextViewing: Time[]) => () => {
+    const toggleViewing = (nextViewing: Interview[]) => () => {
         setViewing(nextViewing);
     };
 
     return (
         <TableBody>
             {stableSort<Candidate>(candidates, compareCandidate(order, orderBy)).map(
-                ({ rejected, abandon, name, group, _id, interviews }) => {
-                    const { selection, allocation } = interviews[interviewType];
-                    const slotInfo = allocation
-                        ? new Date(allocation).toLocaleString('ja-JP', { hour12: false })
-                        : '未分配';
+                ({ rejected, abandoned, name, group, id, interviewAllocations, interviewSelections }) => {
+                    const allocation = interviewAllocations[type];
+                    const selections = interviewSelections.filter(
+                        ({ name }) => name === (type === InterviewType.group ? GroupOrTeam[group] : GroupOrTeam.unique),
+                    );
+                    const slotInfo = allocation ? new Date(allocation).toLocaleString('zh-CN') : '未分配';
                     const state = (
                         <div>
                             {rejected ? (
                                 '已淘汰'
-                            ) : abandon ? (
+                            ) : abandoned ? (
                                 '已放弃'
-                            ) : selection.length ? (
-                                <Button color='primary' onClick={toggleViewing(selection)}>
+                            ) : selections.length ? (
+                                <Button color='primary' onClick={toggleViewing(selections)}>
                                     查看
                                 </Button>
                             ) : (
@@ -60,15 +62,15 @@ export const Body: FC<Props> = observer(({ order, orderBy, toggleDialog, candida
                         </div>
                     );
                     const button = (
-                        <Button variant='contained' color='primary' onClick={toggleDialog(_id)}>
+                        <Button variant='contained' color='primary' onClick={toggleDialog(id)}>
                             设置
                         </Button>
                     );
-                    const items = [name, GROUPS[GROUPS_.indexOf(group)], slotInfo, state, button];
+                    const items = [name, GROUP_MAP.get(group), slotInfo, state, button];
                     return (
-                        <TableRow key={_id}>
+                        <TableRow key={id}>
                             <TableCell classes={{ root: classes.tableCell }} padding='checkbox'>
-                                <Checkbox checked={$candidate.selected.has(_id)} onChange={handleCheck(_id)} />
+                                <Checkbox checked={$candidate.selected.has(id)} onChange={handleCheck(id)} />
                             </TableCell>
                             {items.map((item, index) => (
                                 <TableCell classes={{ root: classes.tableCell }} key={index}>
@@ -80,18 +82,14 @@ export const Body: FC<Props> = observer(({ order, orderBy, toggleDialog, candida
                 },
             )}
             <Modal open={!!viewing.length} onClose={toggleViewing([])} title='选择情况'>
-                {viewing.map(({ date, afternoon, morning, evening }, index) => (
+                {viewing.map(({ date, period }, index) => (
                     <div className={classes.textFieldContainer} key={index}>
                         <TextField
                             label='日期'
-                            value={new Date(date).toLocaleDateString('zh-CN', {
-                                hour12: false,
-                            })}
+                            value={new Date(date).toLocaleDateString('zh-CN')}
                             className={classes.datePicker}
                         />
-                        <TextField label='上午' value={morning ? '是' : '否'} className={classes.textField} />
-                        <TextField label='下午' value={afternoon ? '是' : '否'} className={classes.textField} />
-                        <TextField label='晚上' value={evening ? '是' : '否'} className={classes.textField} />
+                        <TextField label='时间段' value={PERIOD_MAP.get(period)} className={classes.textField} />
                     </div>
                 ))}
             </Modal>

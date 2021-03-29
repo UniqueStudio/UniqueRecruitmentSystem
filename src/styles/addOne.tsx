@@ -37,13 +37,6 @@ const useStyles = makeStyles(({ spacing, typography: { button }, breakpoints }) 
         },
         margin: spacing(1),
     },
-    datePicker: {
-        width: 200,
-        [breakpoints.down('xs')]: {
-            width: 150,
-        },
-        margin: spacing(1),
-    },
 }));
 
 export default useStyles;

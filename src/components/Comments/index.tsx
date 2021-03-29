@@ -3,8 +3,9 @@ import { observer } from 'mobx-react-lite';
 import React, { ChangeEventHandler, FC, KeyboardEventHandler, useState } from 'react';
 
 import { addComment, removeComment } from '@apis/websocket';
-import Chip from '@components/Chip';
-import { Comment, Evaluation } from '@config/types';
+import { Chip } from '@components/Chip';
+import { Evaluation } from '@config/enums';
+import { Comment } from '@config/types';
 import { useStores } from '@hooks/useStores';
 import useStyles from '@styles/comments';
 
@@ -13,7 +14,7 @@ interface Props {
     comments: Comment[];
 }
 
-const Comments: FC<Props> = observer(({ comments, cid }) => {
+export const Comments: FC<Props> = observer(({ comments, cid }) => {
     const { $component, $user } = useStores();
     const classes = useStyles();
     const [evaluation, setEvaluation] = useState($component.inputtingComment.evaluation);
@@ -44,15 +45,13 @@ const Comments: FC<Props> = observer(({ comments, cid }) => {
     const handleSubmit = () => {
         if (content && evaluation !== undefined) {
             addComment(cid, {
-                uid: $user.info._id,
                 content,
                 evaluation,
-                username: $user.info.username,
             });
             setEvaluation(2);
             setContent('');
         } else {
-            $component.enqueueSnackbar('请完整填写评论！', 'warning');
+            $component.enqueueSnackbar('请完整填写评论', 'warning');
         }
     };
 
@@ -95,12 +94,10 @@ const Comments: FC<Props> = observer(({ comments, cid }) => {
                 <Chip
                     comment={comment}
                     key={index}
-                    onRemove={$user.info._id === comment.uid ? handleRemove(comment._id) : undefined}
-                    onCopy={$user.info._id === comment.uid ? handleCopy(comment) : undefined}
+                    onRemove={$user.info.id === comment.user.id ? handleRemove(comment.id) : undefined}
+                    onCopy={$user.info.id === comment.user.id ? handleCopy(comment) : undefined}
                 />
             ))}
         </div>
     );
 });
-
-export default Comments;

@@ -1,38 +1,34 @@
 import React, { FC, memo } from 'react';
 
-import DatePicker from '@components/DatePicker';
+import { DatePicker } from '@components/DatePicker';
 
 interface Props {
-    begin: Date;
+    beginning: Date;
     end: Date;
-    stop: Date;
-    className: string;
+    deadline: Date;
     disabled?: boolean;
     disablePast?: boolean;
     onChange: (name: string) => (date: Date | null) => void;
 }
 
-const Schedule: FC<Props> = memo(({ onChange, disablePast, disabled, begin, end, stop, className }) => {
+export const Schedule: FC<Props> = memo(({ onChange, disablePast, disabled, beginning, end, deadline }) => {
     const pickers = [
-        { label: '开始时间', name: 'begin', value: begin },
-        { label: '报名截止', name: 'stop', value: stop },
+        { label: '开始时间', name: 'beginning', value: beginning },
+        { label: '报名截止', name: 'deadline', value: deadline },
         { label: '结束时间', name: 'end', value: end },
     ];
     return (
         <>
-            {pickers.map(({ label, name, value }, index) => (
+            {pickers.map(({ label, name, value }) => (
                 <DatePicker
                     label={label}
                     value={value}
                     onChange={onChange(name)}
                     disablePast={disablePast}
                     disabled={disabled}
-                    className={className}
-                    key={index}
+                    key={label}
                 />
             ))}
         </>
     );
 });
-
-export default Schedule;

@@ -5,7 +5,7 @@ import { Recruitment } from '@config/types';
 import { localStorage } from '@utils/storage';
 
 export class RecruitmentStore {
-    recruitments: Recruitment[] = [];
+    recruitments = new Map<string, Recruitment>();
 
     viewing = localStorage.getItem('viewing') || '';
 
@@ -16,7 +16,9 @@ export class RecruitmentStore {
     }
 
     setRecruitments(recruitments: Recruitment[]) {
-        this.recruitments = recruitments;
+        for (const recruitment of recruitments) {
+            this.recruitments.set(recruitment.id, recruitment);
+        }
         this.shouldUpdateRecruitment = false;
         void set('recruitments', recruitments);
     }
@@ -25,8 +27,8 @@ export class RecruitmentStore {
         this.shouldUpdateRecruitment = shouldUpdate;
     }
 
-    setViewingRecruitment(title: string) {
-        this.viewing = title;
-        localStorage.setItem('viewing', title);
+    setViewingRecruitment(rid: string) {
+        this.viewing = rid;
+        localStorage.setItem('viewing', rid);
     }
 }
