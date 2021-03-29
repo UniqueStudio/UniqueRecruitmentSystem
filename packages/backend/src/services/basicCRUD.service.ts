@@ -8,7 +8,8 @@ export interface TimestampOptions {
 }
 
 export abstract class BasicCRUDService<T extends ObjectLiteral> {
-    protected constructor(protected readonly repository: Repository<T>, protected readonly alias: string) {}
+    protected constructor(protected readonly repository: Repository<T>, protected readonly alias: string) {
+    }
 
     async createAndSave(data: DeepPartial<T>) {
         const object = this.repository.create(data);
@@ -34,8 +35,8 @@ export abstract class BasicCRUDService<T extends ObjectLiteral> {
     withTimestamp({ updatedAt, createdAt }: TimestampOptions) {
         return this.repository
             .createQueryBuilder(this.alias)
-            .where(updatedAt ? `${this.alias}.updatedAt >= :updatedAt` : '1=1', {updatedAt})
-            .andWhere(createdAt ? `${this.alias}.createdAt >= :createdAt` : '1=1', {createdAt});
+            .where(updatedAt ? `${this.alias}.updatedAt >= :updatedAt` : '1=1', { updatedAt })
+            .andWhere(createdAt ? `${this.alias}.createdAt >= :createdAt` : '1=1', { createdAt });
     }
 
     update: Repository<T>['update'] = (...args) => this.repository.update(...args);
