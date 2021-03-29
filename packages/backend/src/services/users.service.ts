@@ -2,7 +2,7 @@ import { randomBytes } from 'crypto';
 
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Equal, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 
 import { Group } from '@constants/enums';
 import { UserEntity } from '@entities/user.entity';
@@ -29,7 +29,14 @@ export class UsersService extends BasicCRUDService<UserEntity> {
     }
 
     findInGroup(group: Group) {
-        return this.find({ where: { group: Equal(group) } });
+        return this.find({
+            where: {
+                group,
+            },
+            order: {
+                createdAt: 'ASC',
+            },
+        });
     }
 
     async findOrCreate(data: Partial<UserEntity>) {
