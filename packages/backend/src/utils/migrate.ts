@@ -245,7 +245,7 @@ export const migrate = async (app: INestApplication) => {
         }
         const candidate = await candidatesService.createAndSave({
             name,
-            grade: [Grade.freshman, Grade.sophomore, Grade.junior, Grade.senior][grade] || Grade.graduate,
+            grade: [Grade.freshman, Grade.sophomore, Grade.junior, Grade.senior][grade] ?? Grade.graduate,
             group,
             abandoned: abandon,
             rejected,
