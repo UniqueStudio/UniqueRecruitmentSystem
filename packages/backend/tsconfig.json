@@ -39,6 +39,9 @@
       "@modules/*": [
         "src/modules/*"
       ],
+      "@pipes/*": [
+        "src/pipes/*"
+      ],
       "@services/*": [
         "src/services/*"
       ],

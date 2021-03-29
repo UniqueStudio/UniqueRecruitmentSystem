@@ -3,14 +3,14 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
 import { CandidateEntity } from '@entities/candidate.entity';
-import { BasicCRUDService } from '@services/basicCRUD.service';
+import { BasicCRUDService, TimestampOptions } from '@services/basicCRUD.service';
 
 @Injectable()
 export class CandidatesService extends BasicCRUDService<CandidateEntity> {
     constructor(
         @InjectRepository(CandidateEntity) repository: Repository<CandidateEntity>,
     ) {
-        super(repository);
+        super(repository, 'candidate');
     }
 
     findOneById(id: string) {
@@ -23,6 +23,13 @@ export class CandidatesService extends BasicCRUDService<CandidateEntity> {
         return this.repository.findByIds(ids, {
             relations: ['recruitment', 'recruitment.interviews', 'interviewSelections'],
         });
+    }
+
+    findManyByRecruitmentId(rid: string, options: TimestampOptions) {
+        return this.withTimestamp(options)
+            .leftJoinAndSelect(`${this.alias}.recruitment`, 'r')
+            .andWhere('r.id = :rid', { rid })
+            .getMany();
     }
 
     findInPendingRecruitments(phone: string) {
