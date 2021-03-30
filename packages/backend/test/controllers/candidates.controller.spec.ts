@@ -268,7 +268,7 @@ describe('CandidatesController e2e', () => {
 
             it('should return updated candidates', async () => {
                 // update test candidate
-                app.get(CandidatesService).update(testCandidate.id, { name: 'newName' });
+                await candidatesService.update(testCandidate.id, { name: 'newName' });
 
                 const { body: { payload } } = await agent(app.getHttpServer())
                     .get(`/candidates/recruitment/${testRecruitment.id}`)
@@ -276,7 +276,8 @@ describe('CandidatesController e2e', () => {
                     .query({ updatedAt: startTime }) // add this updatedAt query
                     .expect(200);
                 expect(payload).toHaveLength(1);
-                expect(payload[0].name).toBe('newName');
+                const [{ name }] = payload;
+                expect(name).toBe('newName');
             });
 
             it('should get 400 with invalid updatedAt', async () => {
