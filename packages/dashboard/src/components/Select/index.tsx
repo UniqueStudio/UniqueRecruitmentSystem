@@ -1,5 +1,5 @@
-import { MenuItem, Select as MuiSelect } from '@material-ui/core';
-import React, { ChangeEventHandler, FC, memo } from 'react';
+import { MenuItem, Select as MuiSelect, SelectProps } from '@material-ui/core';
+import React, { FC, memo } from 'react';
 
 import useStyles from '@styles/select';
 
@@ -7,7 +7,7 @@ interface Props {
     data: (string | number)[];
     values: (string | number)[];
     currentValue: string | number;
-    onChange?: ChangeEventHandler<{ name?: string; value: unknown }>;
+    onChange?: SelectProps['onChange'];
 }
 
 export const Select: FC<Props> = memo(({ data, values, onChange, currentValue }) => {

@@ -110,6 +110,7 @@ export const AddOne: FC = observer(() => {
                         margin='normal'
                         disabled
                     />
+                    {/*TODO: fixme*/}
                     <Schedule onChange={handleChangeDate} beginning={beginning} end={end} deadline={deadline} />
                     <Verify onChange={handleChange('code')} code={code} />
                     <Button color='primary' variant='contained' onClick={handleLaunch}>

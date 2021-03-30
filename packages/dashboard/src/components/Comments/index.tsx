@@ -48,7 +48,7 @@ export const Comments: FC<Props> = observer(({ comments, cid }) => {
                 content,
                 evaluation,
             });
-            setEvaluation(2);
+            setEvaluation(Evaluation.fair);
             setContent('');
         } else {
             $component.enqueueSnackbar('请完整填写评论', 'warning');
@@ -56,7 +56,7 @@ export const Comments: FC<Props> = observer(({ comments, cid }) => {
     };
 
     const handleRemove = (id: string) => () => {
-        removeComment(cid, id);
+        removeComment(id);
     };
 
     const handleCopy = (comment: Comment) => () => {
@@ -68,9 +68,9 @@ export const Comments: FC<Props> = observer(({ comments, cid }) => {
         <div className={classes.comments}>
             <div className={classes.evaluation}>
                 <TextField select label='评价' value={evaluation} onChange={changeEvaluation}>
-                    <MenuItem value={2}>好</MenuItem>
-                    <MenuItem value={1}>中</MenuItem>
-                    <MenuItem value={0}>差</MenuItem>
+                    <MenuItem value={2}>👍</MenuItem>
+                    <MenuItem value={1}>🤔</MenuItem>
+                    <MenuItem value={0}>👎</MenuItem>
                 </TextField>
                 <TextField
                     label='输入评论'

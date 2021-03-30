@@ -50,18 +50,27 @@ export class CandidateStore {
         void set('candidates', toJS(this.candidates));
     }
 
-    setAll(candidates: Candidate[]) {
-        this.candidates.clear();
+    setOne(candidate: Candidate) {
+        this.candidates.set(candidate.id, candidate);
+        void set('candidates', toJS(this.candidates));
+    }
+
+    setMany(candidates: Candidate[]) {
         for (const candidate of candidates) {
             this.candidates.set(candidate.id, candidate);
         }
         this.deselectAll();
-        void set('candidates', candidates);
+        void set('candidates', toJS(this.candidates));
     }
 
-    addOne(candidate: Candidate) {
-        this.candidates.set(candidate.id, candidate);
+    setAll(candidates: Map<string, Candidate>) {
+        this.candidates = candidates;
+        this.deselectAll();
         void set('candidates', toJS(this.candidates));
+    }
+
+    clear() {
+        this.candidates.clear();
     }
 
     selectOne(cid: string) {

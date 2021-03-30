@@ -4,7 +4,7 @@ import React, { FC, useCallback, useState } from 'react';
 import { DragDropContext, Droppable, DropResult } from 'react-beautiful-dnd';
 import SwipeableViews from 'react-swipeable-views';
 
-import { moveCandidate } from '@apis/websocket';
+import { moveCandidate } from '@apis/rest';
 import { Card } from '@components/Card';
 import { Column } from '@components/Column';
 import { Candidate } from '@config/types';
@@ -38,7 +38,7 @@ export const Board: FC<Props> = observer(({ candidates, toggleDetail }) => {
                 }
                 case 'CANDIDATE':
                     if (source.droppableId === droppableId) return;
-                    moveCandidate(draggableId, +source.droppableId, +droppableId);
+                    void moveCandidate(draggableId, +source.droppableId, +droppableId);
                     return;
             }
         }
