@@ -25,7 +25,7 @@ export class CandidatesService extends BasicCRUDService<CandidateEntity> {
         });
     }
 
-    findManyByRecruitmentId(rid: string, since = new Date(0)) {
+    findManyByRecruitmentId(rid: string, since: Date) {
         return this.find({
             where: {
                 recruitment: {
