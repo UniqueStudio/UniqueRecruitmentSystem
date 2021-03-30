@@ -25,6 +25,8 @@ export class ComponentStateStore {
 
     resumeProgresses: Record<string, number> = {};
 
+    darkMode?: boolean = undefined;
+
     inputtingComment = {
         content: '',
         evaluation: Evaluation.fair,
@@ -73,6 +75,10 @@ export class ComponentStateStore {
 
     toggleFabOff() {
         this.fabOn = -1;
+    }
+
+    setDarkMode(darkMode?: boolean) {
+        this.darkMode = darkMode;
     }
 
     setResumeProgress(progress: number, cid: string) {
