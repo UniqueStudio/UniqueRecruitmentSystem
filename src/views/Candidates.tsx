@@ -2,7 +2,7 @@ import { SlideProps } from '@material-ui/core';
 import { observer } from 'mobx-react-lite';
 import React, { FC, useState } from 'react';
 
-import { removeCandidate } from '@apis/websocket';
+import { removeCandidate } from '@apis/rest';
 import { Board } from '@components/Board';
 import { Dialog } from '@components/Dialog';
 import { Fab } from '@components/Fab';
@@ -51,7 +51,7 @@ const Candidates: FC = observer(() => {
             $component.enqueueSnackbar('你没有选中任何人', 'info');
             return;
         }
-        $candidate.selected.forEach(({ id }) => removeCandidate(id));
+        $candidate.selected.forEach(({ id }) => void removeCandidate(id));
     };
 
     const toggleOpen = (name: string) => () => {
