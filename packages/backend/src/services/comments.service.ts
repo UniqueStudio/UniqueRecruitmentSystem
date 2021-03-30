@@ -12,4 +12,10 @@ export class CommentsService extends BasicCRUDService<CommentEntity> {
     ) {
         super(repository);
     }
+
+    findOneById(id: string) {
+        return super.findOneById(id, {
+            relations: ['user', 'candidate'],
+        });
+    }
 }
