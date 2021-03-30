@@ -1,6 +1,7 @@
 import { Evaluation, Gender, Grade, Group, GroupOrTeam, Period, Rank, Status, Step } from '@config/enums';
 
 export interface Candidate<T = Date> {
+    updatedAt: T;
     id: string;
     name: string;
     gender: Gender;
