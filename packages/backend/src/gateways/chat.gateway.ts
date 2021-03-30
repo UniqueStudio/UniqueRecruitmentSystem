@@ -15,6 +15,5 @@ export class ChatGateway {
             status: Status.info,
             payload: message,
         });
-        return message;
     }
 }

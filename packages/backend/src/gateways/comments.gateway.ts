@@ -44,7 +44,10 @@ export class CommentsGateway {
             status: Status.info,
             payload: data,
         });
-        return data;
+        socket.emit('addComment', {
+            status: Status.success,
+            payload: data,
+        });
     }
 
     @SubscribeMessage('removeComment')
@@ -72,6 +75,9 @@ export class CommentsGateway {
             status: Status.info,
             payload: data,
         });
-        return data;
+        socket.emit('removeComment', {
+            status: Status.success,
+            payload: data,
+        });
     }
 }
