@@ -38,4 +38,4 @@ export const PERIOD_MAP = new Map([
 export const RANKS = ['暂无', '前10%', '前25%', '前50%', '前100%'];
 export const GRADES = ['大一', '大二', '大三', '大四', '研一', '研二', '研三'];
 export const GENDERS = ['其他', '男', '女'];
-export const API = import.meta.env.SNOWPACK_PUBLIC_API || 'https://hustunique.com:5000/v3';
+export const API = import.meta.env.SNOWPACK_PUBLIC_API || 'https://hustunique.com:5000';
