@@ -1,5 +1,7 @@
 import { makeStyles } from '@material-ui/core';
 
+import { colorToAlpha } from '@styles/index';
+
 const useStyles = makeStyles(({ spacing, palette }) => ({
     blocksContainer: {
         marginTop: spacing(1),
@@ -35,7 +37,7 @@ const useStyles = makeStyles(({ spacing, palette }) => ({
         boxShadow: `inset 0px 0px 0px 4px ${palette.primary.light}`,
     },
     expired: {
-        background: palette.grey[200],
+        background: colorToAlpha(palette.grey[200], 0.5),
     },
     centerText: {
         marginLeft: 'auto',
