@@ -7,7 +7,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import Joi from 'joi';
 
 import { Env } from '@constants/enums';
-import { ErrorFilter } from '@filters/error.filter';
+import { HttpErrorFilter } from '@filters/httpError.filter';
 import { RoleGuard } from '@guards/role.guard';
 import { TransformInterceptor } from '@interceptors/transform.interceptor';
 import { AuthMiddleWare } from '@middlewares/auth';
@@ -102,7 +102,7 @@ import { ConfigService } from '@services/config.service';
         },
         {
             provide: APP_FILTER,
-            useClass: ErrorFilter,
+            useClass: HttpErrorFilter,
         },
     ],
 })

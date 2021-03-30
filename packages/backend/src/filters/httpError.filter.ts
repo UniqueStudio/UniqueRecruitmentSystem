@@ -6,7 +6,7 @@ import { Status } from '@constants/enums';
 import { FailureResponse } from '@interfaces/response.interface';
 
 @Catch()
-export class ErrorFilter<T extends Error = Error> implements ExceptionFilter<T> {
+export class HttpErrorFilter<T extends Error = Error> implements ExceptionFilter<T> {
     catch(exception: T, host: ArgumentsHost) {
         const res = host.switchToHttp().getResponse<Response<FailureResponse>>();
 
