@@ -4,6 +4,7 @@ import {
     BadRequestException,
     Body,
     Controller,
+    Delete,
     ForbiddenException,
     Get,
     InternalServerErrorException,
@@ -19,6 +20,7 @@ import {
     ValidationPipe,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { WsException } from '@nestjs/websockets';
 import { Response } from 'express';
 
 import { SLOTS, STEP_MAP } from '@constants/consts';
@@ -32,6 +34,7 @@ import {
     AllocateOneBody,
     AllocateOneParams,
     CreateCandidateBody,
+    MoveCandidateBody,
     SelectInterviewSlotsBody,
     SetMyInfoBody,
 } from '@dtos/candidate.dto';
@@ -268,6 +271,47 @@ export class CandidatesController {
 
         // find candidates WHERE c.updatedAt >= updatedAt AND r.rid = rid
         return await this.candidatesService.findManyByRecruitmentId(rid, updatedAt);
+    }
+
+    @Put(':cid/step')
+    @AcceptRole(Role.user)
+    async moveCandidate(
+        @Param('cid') cid: string,
+        @Body() { from, to }: MoveCandidateBody,
+    ) {
+        const candidate = await this.candidatesService.findOneById(cid);
+        if (!candidate) {
+            throw new BadRequestException(`Candidate with id ${cid} doesn't exist`);
+        }
+        const { step, recruitment: { name, end } } = candidate;
+        if (+end < Date.now()) {
+            throw new BadRequestException(`Recruitment ${name} has already ended`);
+        }
+        if (step !== from) {
+            throw new BadRequestException(`Candidate of id ${cid} has been moved by others`);
+        }
+        await this.candidatesService.update(cid, { step: to });
+        this.candidatesGateway.broadcastMove(cid, to);
+        this.recruitmentsGateway.broadcastUpdate();
+    }
+
+    @Delete(':cid')
+    @AcceptRole(Role.user)
+    async removeCandidate(
+        @Param('cid') cid: string,
+    ) {
+        const candidate = await this.candidatesService.findOneById(cid);
+        if (!candidate) {
+            throw new WsException(`Candidate with id ${cid} doesn't exist`);
+        }
+        const { resume, recruitment: { name, end }, group } = candidate;
+        if (+end < Date.now()) {
+            throw new WsException(`Recruitment ${name} has already ended`);
+        }
+        resume && await deleteFile(join(this.configService.resumePaths.persistent, name, group), resume);
+        await candidate.remove();
+        this.candidatesGateway.broadcastRemove(cid);
+        this.recruitmentsGateway.broadcastUpdate();
     }
 
     @Put(':cid/interview/:type')

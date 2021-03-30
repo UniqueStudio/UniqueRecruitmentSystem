@@ -61,6 +61,14 @@ export class SelectInterviewSlotsBody {
     iids!: string[];
 }
 
+export class MoveCandidateBody {
+    @IsEnum(Step)
+    from!: Step;
+
+    @IsEnum(Step)
+    to!: Step;
+}
+
 export class AllocateOneBody {
     @IsDateString()
     time!: string;
@@ -81,20 +89,4 @@ export class AllocateManyBody {
         each: true,
     })
     cids!: string[];
-}
-
-export class RemoveCandidateBody {
-    @IsUUID(4)
-    cid!: string;
-
-    @IsString()
-    token!: string;
-}
-
-export class MoveCandidateBody extends RemoveCandidateBody {
-    @IsEnum(Step)
-    from!: Step;
-
-    @IsEnum(Step)
-    to!: Step;
 }
