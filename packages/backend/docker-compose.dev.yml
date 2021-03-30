@@ -7,3 +7,10 @@ services:
     user: postgres
     env_file:
       - .env
+  postgres-test:
+    image: postgres:alpine
+    ports:
+      - "${POSTGRES_PORT_TEST}:5432"
+    user: postgres
+    env_file:
+      - .env

@@ -16,6 +16,10 @@ export class ConfigService extends DefaultConfigService {
         return this.get<Env>('NODE_ENV') !== Env.prod;
     }
 
+    get isTest() {
+        return this.get<Env>('NODE_ENV') === Env.test;
+    }
+
     get isMigration() {
         return this.get<Env>('NODE_ENV') === Env.migration;
     }

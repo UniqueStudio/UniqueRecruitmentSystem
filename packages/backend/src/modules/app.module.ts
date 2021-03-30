@@ -39,6 +39,7 @@ import { ConfigService } from '@services/config.service';
                 // db config
                 POSTGRES_HOST: Joi.string().default('postgres'),
                 POSTGRES_PORT: Joi.number().default(5432),
+                POSTGRES_PORT_TEST: Joi.number().default(2345),
                 POSTGRES_USER: Joi.string().required(),
                 POSTGRES_PASSWORD: Joi.string().required(),
                 POSTGRES_DB: Joi.string().required(),
@@ -65,7 +66,7 @@ import { ConfigService } from '@services/config.service';
             useFactory: (conf: ConfigService) => ({
                 type: 'postgres',
                 host: conf.get('POSTGRES_HOST'),
-                port: conf.get('POSTGRES_PORT'),
+                port: conf.isTest ? conf.get('POSTGRES_PORT_TEST') : conf.get('POSTGRES_PORT'),
                 username: conf.get('POSTGRES_USER'),
                 password: conf.get('POSTGRES_PASSWORD'),
                 database: conf.get('POSTGRES_DB'),
@@ -114,7 +115,7 @@ export class AppModule implements NestModule, OnModuleInit {
             .apply(
                 rateLimit(60000, 2048),
                 helmet({
-                    contentSecurityPolicy: this.configService.isDev ? false : undefined,
+                    contentSecurityPolicy: this.configService.isNotProd ? false : undefined,
                 }),
                 AuthMiddleWare,
             )
