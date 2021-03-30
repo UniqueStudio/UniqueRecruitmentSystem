@@ -6,6 +6,7 @@ export const listDir = async (directory: string) => {
 };
 
 export const copyFile = async (from: string, toDirectory: string, toName: string) => {
+    await promises.mkdir(toDirectory, { recursive: true });
     await promises.copyFile(from, join(toDirectory, toName));
 };
 
