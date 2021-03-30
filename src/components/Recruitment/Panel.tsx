@@ -13,7 +13,7 @@ import { GROUP_MAP, STEP_SHORT_MAP } from '@config/consts';
 import { Group } from '@config/enums';
 import { Recruitment } from '@config/types';
 import { useStores } from '@hooks/useStores';
-import useStyles from '@styles/recruitmentSelection';
+import useStyles from '@styles/recruitmentPanel';
 import { compareTitle } from '@utils/compareTitle';
 import { titleConverter } from '@utils/titleConverter';
 

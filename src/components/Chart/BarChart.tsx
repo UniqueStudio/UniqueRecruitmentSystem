@@ -26,6 +26,7 @@ export const BarChart: FC<Props> = memo(({ data, labels, title }) => {
                 ],
             }}
             options={{
+                indexAxis: 'y',
                 maintainAspectRatio: false,
                 plugins: {
                     title: {

@@ -18,14 +18,19 @@ class Endpoint {
 
     static login = `${Endpoint.auth}/user/login/`;
 
-    static candidate = '/candidates';
+    static candidates = '/candidates';
 
-    static resume = (cid: string) => `${Endpoint.candidate}/${cid}/resume`;
+    static candidate = (cid: string) => `${Endpoint.candidates}/${cid}`;
 
-    static candidates = (rid: string) => `${Endpoint.candidate}/recruitment/${rid}`;
+    static candidateStep = (cid: string) => `${Endpoint.candidates}/${cid}/step`;
 
-    static allocation = (type: InterviewType, cid?: string) =>
-        `${Endpoint.candidate}/${cid ? `${cid}/` : ''}interview/${type}`;
+    static resume = (cid: string) => `${Endpoint.candidates}/${cid}/resume`;
+
+    static candidatesInRecruitment = (rid: string, now: Date) =>
+        `${Endpoint.candidates}/recruitment/${rid}?updatedAt=${+now}`;
+
+    static candidateAllocation = (type: InterviewType, cid?: string) =>
+        `${Endpoint.candidates}/${cid ? `${cid}/` : ''}interview/${type}`;
 
     static recruitments = '/recruitments';
 
@@ -48,6 +53,7 @@ class Endpoint {
 
 const client = axios.create({
     baseURL: Endpoint.base,
+    validateStatus: () => true,
 });
 
 export const setAuthToken = (token: string) => {
@@ -86,7 +92,7 @@ const apiWrapper = async <T>(
 export const allocateMany = (type: InterviewType, cids: string[]) =>
     apiWrapper(
         () =>
-            client.put<R<{ id: string; time?: string }[]>>(Endpoint.allocation(type), {
+            client.put<R<{ id: string; time?: string }[]>>(Endpoint.candidateAllocation(type), {
                 cids,
             }),
         (allocations) => {
@@ -105,29 +111,40 @@ export const allocateMany = (type: InterviewType, cids: string[]) =>
 
 export const allocateOne = (type: InterviewType, cid: string, time: Date) =>
     apiWrapper(
-        () => client.put<R>(Endpoint.allocation(type, cid), { time }),
+        () => client.put<R>(Endpoint.candidateAllocation(type, cid), { time }),
         () => {
             $candidate.allocateOne(type, cid, time);
             $component.enqueueSnackbar('设置成功', 'success');
         },
     );
 
-export const getCandidates = (rid: string) =>
-    apiWrapper(
+export const getCandidates = (rid: string) => {
+    const viewing = localStorage.getItem('viewing');
+    return apiWrapper(
         async () => {
-            const candidates = await get<Candidate[]>('candidates');
-            const viewing = localStorage.getItem('viewing');
+            const candidates = await get<Map<string, Candidate>>('candidates');
             if (candidates && rid === viewing) {
                 $candidate.setAll(candidates);
                 $component.toggleFabOff();
                 $component.enqueueSnackbar('成功获取候选人信息（缓存）', 'success');
+                let maxUpdatedAt = new Date(0);
+                for (const [, { updatedAt }] of candidates) {
+                    if (maxUpdatedAt < updatedAt) {
+                        maxUpdatedAt = updatedAt;
+                    }
+                }
+                return await client.get<R<Candidate<string>[]>>(Endpoint.candidatesInRecruitment(rid, maxUpdatedAt));
             }
-            return await client.get<R<Candidate<string>[]>>(Endpoint.candidates(rid));
+            return await client.get<R<Candidate<string>[]>>(Endpoint.candidatesInRecruitment(rid, new Date(0)));
         },
         (candidates) => {
-            $candidate.setAll(
-                candidates.map(({ interviewAllocations: { group, team }, interviewSelections, ...rest }) => ({
-                    ...rest,
+            if (rid !== viewing) {
+                $candidate.clear();
+            }
+            $candidate.setMany(
+                candidates.map(({ interviewAllocations: { group, team }, interviewSelections, updatedAt, ...r }) => ({
+                    ...r,
+                    updatedAt: new Date(updatedAt),
                     interviewAllocations: {
                         group: group ? new Date(group) : undefined,
                         team: team ? new Date(team) : undefined,
@@ -140,7 +157,31 @@ export const getCandidates = (rid: string) =>
             );
             $recruitment.setViewingRecruitment(rid);
             $component.toggleFabOff();
-            $component.enqueueSnackbar('成功获取候选人信息（线上）', 'success');
+            $component.enqueueSnackbar('成功获取候选人信息', 'success');
+        },
+    );
+};
+
+export const moveCandidate = (cid: string, from: Step, to: Step) =>
+    apiWrapper(
+        () => {
+            $candidate.moveOne(cid, to);
+            return client.put<R>(Endpoint.candidateStep(cid), { from, to });
+        },
+        () => {
+            $component.enqueueSnackbar('移动成功', 'success');
+        },
+        () => {
+            $candidate.moveOne(cid, from);
+        },
+    );
+
+export const removeCandidate = (cid: string) =>
+    apiWrapper(
+        () => client.delete<R>(Endpoint.candidate(cid)),
+        () => {
+            $candidate.removeOne(cid);
+            $component.enqueueSnackbar('移除成功', 'success');
         },
     );
 

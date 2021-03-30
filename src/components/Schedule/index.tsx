@@ -1,6 +1,16 @@
+import {
+    Timeline,
+    TimelineConnector,
+    TimelineContent,
+    TimelineDot,
+    TimelineItem,
+    TimelineOppositeContent,
+    TimelineSeparator,
+} from '@material-ui/lab';
+import { DatePicker } from '@material-ui/pickers';
 import React, { FC, memo } from 'react';
 
-import { DatePicker } from '@components/DatePicker';
+import useStyles from '@styles/schedule';
 
 interface Props {
     beginning: Date;
@@ -11,24 +21,35 @@ interface Props {
     onChange: (name: string) => (date: Date | null) => void;
 }
 
-export const Schedule: FC<Props> = memo(({ onChange, disablePast, disabled, beginning, end, deadline }) => {
-    const pickers = [
-        { label: '开始时间', name: 'beginning', value: beginning },
+export const Schedule: FC<Props> = memo(({ beginning, end, deadline, disabled, onChange }) => {
+    const classes = useStyles();
+    const items = [
+        { label: '招新开始', name: 'beginning', value: beginning },
         { label: '报名截止', name: 'deadline', value: deadline },
-        { label: '结束时间', name: 'end', value: end },
+        { label: '招新结束', name: 'end', value: end },
     ];
     return (
-        <>
-            {pickers.map(({ label, name, value }) => (
-                <DatePicker
-                    label={label}
-                    value={value}
-                    onChange={onChange(name)}
-                    disablePast={disablePast}
-                    disabled={disabled}
-                    key={label}
-                />
+        <Timeline align='left' classes={{ root: classes.root }}>
+            {items.map(({ label, name, value }) => (
+                <TimelineItem key={label}>
+                    <TimelineOppositeContent className={classes.item} classes={{ root: classes.itemRoot }}>
+                        {label}
+                    </TimelineOppositeContent>
+                    <TimelineSeparator>
+                        <TimelineConnector />
+                        <TimelineDot />
+                        <TimelineConnector />
+                    </TimelineSeparator>
+                    <TimelineContent className={classes.item}>
+                        <DatePicker
+                            value={value}
+                            onChange={onChange(name)}
+                            disabled={disabled}
+                            inputVariant='outlined'
+                        />
+                    </TimelineContent>
+                </TimelineItem>
             ))}
-        </>
+        </Timeline>
     );
 });

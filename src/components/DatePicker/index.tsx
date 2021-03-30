@@ -1,5 +1,4 @@
-import DateFnsUtils from '@date-io/date-fns';
-import { DatePicker as MuiDatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
+import { DatePicker as MuiDatePicker } from '@material-ui/pickers';
 import React, { FC, memo } from 'react';
 
 interface Props {
@@ -11,14 +10,12 @@ interface Props {
 }
 
 export const DatePicker: FC<Props> = memo(({ onChange, value, label, disabled, disablePast = true }) => (
-    <MuiPickersUtilsProvider utils={DateFnsUtils}>
-        <MuiDatePicker
-            label={label}
-            disablePast={disablePast}
-            value={value}
-            onChange={onChange}
-            format='yyyy/MM/dd'
-            disabled={disabled}
-        />
-    </MuiPickersUtilsProvider>
+    <MuiDatePicker
+        label={label}
+        disablePast={disablePast}
+        value={value}
+        onChange={onChange}
+        format='yyyy/MM/dd'
+        disabled={disabled}
+    />
 ));

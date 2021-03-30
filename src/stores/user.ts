@@ -22,7 +22,7 @@ export class UserStore {
         const payload = storedToken?.split('.')[1];
         if (storedToken && payload) {
             const { exp } = JSON.parse(atob(payload));
-            this.token = exp > Date.now() / 1000 ? storedToken : '';
+            this.token = exp * 1000 > Date.now() ? storedToken : '';
         } else {
             this.token = '';
         }
