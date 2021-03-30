@@ -1,16 +1,16 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { MoreThan, Repository } from 'typeorm';
 
 import { CandidateEntity } from '@entities/candidate.entity';
-import { BasicCRUDService, TimestampOptions } from '@services/basicCRUD.service';
+import { BasicCRUDService } from '@services/basicCRUD.service';
 
 @Injectable()
 export class CandidatesService extends BasicCRUDService<CandidateEntity> {
     constructor(
         @InjectRepository(CandidateEntity) repository: Repository<CandidateEntity>,
     ) {
-        super(repository, 'candidate');
+        super(repository);
     }
 
     findOneById(id: string) {
@@ -25,13 +25,16 @@ export class CandidatesService extends BasicCRUDService<CandidateEntity> {
         });
     }
 
-    findManyByRecruitmentId(rid: string, options: TimestampOptions) {
-        return this.withTimestamp(options)
-            .leftJoinAndSelect(`${this.alias}.recruitment`, 'r')
-            .leftJoinAndSelect(`${this.alias}.interviewSelections`, 'interviewSelections')
-            .leftJoinAndSelect(`${this.alias}.comments`, 'comments')
-            .andWhere('r.id = :rid', { rid })
-            .getMany();
+    findManyByRecruitmentId(rid: string, since = new Date(0)) {
+        return this.find({
+            where: {
+                recruitment: {
+                    id: rid,
+                },
+                updatedAt: MoreThan(since)
+            },
+            relations: ['recruitment', 'interviewSelections', 'comments', 'comments.user']
+        })
     }
 
     findInPendingRecruitments(phone: string) {

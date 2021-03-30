@@ -2,13 +2,8 @@ import { BadRequestException } from '@nestjs/common';
 import { validate } from 'class-validator';
 import { DeepPartial, FindConditions, FindManyOptions, FindOneOptions, ObjectLiteral, Repository } from 'typeorm';
 
-export interface TimestampOptions {
-    createdAt?: Date;
-    updatedAt?: Date;
-}
-
 export abstract class BasicCRUDService<T extends ObjectLiteral> {
-    protected constructor(protected readonly repository: Repository<T>, protected readonly alias: string) {
+    protected constructor(protected readonly repository: Repository<T>) {
     }
 
     async createAndSave(data: DeepPartial<T>) {
@@ -30,13 +25,6 @@ export abstract class BasicCRUDService<T extends ObjectLiteral> {
 
     findOneById(id: string, options?: FindOneOptions<T>) {
         return this.repository.findOne(id, options);
-    }
-
-    withTimestamp({ updatedAt, createdAt }: TimestampOptions) {
-        return this.repository
-            .createQueryBuilder(this.alias)
-            .where(updatedAt ? `${this.alias}.updatedAt >= :updatedAt` : '1=1', { updatedAt })
-            .andWhere(createdAt ? `${this.alias}.createdAt >= :createdAt` : '1=1', { createdAt });
     }
 
     update: Repository<T>['update'] = (...args) => this.repository.update(...args);

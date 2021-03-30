@@ -10,6 +10,6 @@ export class CommentsService extends BasicCRUDService<CommentEntity> {
     constructor(
         @InjectRepository(CommentEntity) repository: Repository<CommentEntity>,
     ) {
-        super(repository, 'comment');
+        super(repository);
     }
 }

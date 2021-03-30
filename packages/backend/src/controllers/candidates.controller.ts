@@ -267,7 +267,7 @@ export class CandidatesController {
         }
 
         // find candidates WHERE c.updatedAt >= updatedAt AND r.rid = rid
-        return await this.candidatesService.findManyByRecruitmentId(rid, { updatedAt });
+        return await this.candidatesService.findManyByRecruitmentId(rid, updatedAt);
     }
 
     @Put(':cid/interview/:type')

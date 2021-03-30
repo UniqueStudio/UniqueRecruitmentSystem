@@ -10,7 +10,7 @@ export class RecruitmentsService extends BasicCRUDService<RecruitmentEntity> {
     constructor(
         @InjectRepository(RecruitmentEntity) repository: Repository<RecruitmentEntity>,
     ) {
-        super(repository, 'recruitment');
+        super(repository);
     }
 
     findPending(): Promise<Omit<RecruitmentEntity, 'interviews' | 'candidates' | 'statistics'>[]> {
