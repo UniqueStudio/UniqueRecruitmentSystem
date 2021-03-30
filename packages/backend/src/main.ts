@@ -12,7 +12,6 @@ void (async () => {
         await app.close();
         return;
     }
-    app.setGlobalPrefix('v3');
     SwaggerModule.setup('api', app, SwaggerModule.createDocument(app, new DocumentBuilder().setVersion('3.0').build()));
     await app.listen(app.get(ConfigService).port);
 })();
