@@ -25,8 +25,8 @@ const getProportion = (evaluations: Evaluation[]) => {
             fair++;
         }
     }
-    good = ~~((good * 100) / evaluations.length);
-    fair = ~~((fair * 100) / evaluations.length) + good;
+    good = (good * 100) / evaluations.length;
+    fair = (fair * 100) / evaluations.length + good;
     return { good, fair };
 };
 
