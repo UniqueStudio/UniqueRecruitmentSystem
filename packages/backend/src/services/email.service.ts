@@ -31,7 +31,7 @@ export class EmailService {
     }
 
     async sendEmail({ name, group, recruitment, mail }: CandidateEntity) {
-        if (this.configService.isDev) {
+        if (this.configService.isNotProd) {
             return;
         }
         const questionnaires = await this.getQuestionnaires();

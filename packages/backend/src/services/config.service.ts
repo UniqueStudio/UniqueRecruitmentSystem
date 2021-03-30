@@ -12,7 +12,7 @@ export class ConfigService extends DefaultConfigService {
         super();
     }
 
-    get isDev() {
+    get isNotProd() {
         return this.get<Env>('NODE_ENV') !== Env.prod;
     }
 

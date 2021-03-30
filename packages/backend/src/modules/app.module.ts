@@ -69,7 +69,7 @@ import { ConfigService } from '@services/config.service';
                 username: conf.get('POSTGRES_USER'),
                 password: conf.get('POSTGRES_PASSWORD'),
                 database: conf.get('POSTGRES_DB'),
-                synchronize: conf.isDev,
+                synchronize: conf.isNotProd,
                 autoLoadEntities: true,
             }),
         }),

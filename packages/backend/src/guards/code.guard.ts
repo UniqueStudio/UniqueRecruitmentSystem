@@ -15,7 +15,7 @@ export class CodeGuard implements CanActivate {
     }
 
     async canActivate(context: ExecutionContext) {
-        if (this.configService.isDev) {
+        if (this.configService.isNotProd) {
             return true;
         }
         const req = context.switchToHttp().getRequest<RequestWithIdentity<AuthByCodeBody>>();

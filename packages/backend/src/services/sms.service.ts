@@ -11,7 +11,7 @@ export class SMSService {
     }
 
     async sendSMS(phone: string, template: number, params: string[]) {
-        if (this.configService.isDev) {
+        if (this.configService.isNotProd) {
             return;
         }
         const res = await got.post(this.configService.smsURL, {
