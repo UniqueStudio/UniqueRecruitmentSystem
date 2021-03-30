@@ -8,10 +8,10 @@ import { UserEntity } from '@entities/user.entity';
 
 @Entity('comments')
 export class CommentEntity extends CommonEntity {
-    @ManyToOne(() => CandidateEntity, ({ comments }) => comments)
+    @ManyToOne(() => CandidateEntity, ({ comments }) => comments, { onDelete: 'CASCADE' })
     candidate!: CandidateEntity;
 
-    @ManyToOne(() => UserEntity, ({ comments }) => comments)
+    @ManyToOne(() => UserEntity, ({ comments }) => comments, { onDelete: 'CASCADE' })
     user!: UserEntity;
 
     @Column()

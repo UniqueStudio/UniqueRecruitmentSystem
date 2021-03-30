@@ -25,6 +25,6 @@ export class InterviewEntity extends CommonEntity {
     @Min(0)
     slotNumber!: number;
 
-    @ManyToOne(() => RecruitmentEntity, ({ interviews }) => interviews)
+    @ManyToOne(() => RecruitmentEntity, ({ interviews }) => interviews, { onDelete: 'CASCADE' })
     recruitment!: RecruitmentEntity;
 }

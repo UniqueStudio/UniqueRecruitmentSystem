@@ -97,7 +97,7 @@ export class CandidateEntity extends CommonEntity {
     @Column(() => InterviewAllocations)
     interviewAllocations!: InterviewAllocations;
 
-    @ManyToOne(() => RecruitmentEntity, ({ candidates }) => candidates)
+    @ManyToOne(() => RecruitmentEntity, ({ candidates }) => candidates, { onDelete: 'CASCADE' })
     recruitment!: RecruitmentEntity;
 
     @OneToMany(() => CommentEntity, ({ candidate }) => candidate)
