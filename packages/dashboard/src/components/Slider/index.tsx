@@ -3,17 +3,12 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { observer } from 'mobx-react-lite';
 import React, { FC, useEffect, useState } from 'react';
 
-import { Comments } from '@components/Comments';
-import { Detail } from '@components/Detail';
 import { Evaluation } from '@config/enums';
-import { Candidate } from '@config/types';
-import { usePrevious } from '@hooks/usePrevious';
 import { useStores } from '@hooks/useStores';
 import useStyles from '@styles/slider';
 
 interface Props {
     index: number;
-    candidate: Candidate;
     handleLeft: () => void;
     handleRight: () => void;
     handleNextIndex: (index: number) => void;
@@ -24,9 +19,9 @@ enum Direction {
     R,
 }
 
-export const Slider: FC<Props> = observer(({ candidate, handleNextIndex, handleLeft, handleRight, index }) => {
+export const Slider: FC<Props> = observer(({ handleNextIndex, handleLeft, handleRight, index, children }) => {
+    const classes = useStyles();
     const { $component } = useStores();
-    const prevCandidate = usePrevious(candidate);
     const [nextIndex, setNextIndex] = useState(-1);
     useEffect(
         () => () => {
@@ -34,9 +29,6 @@ export const Slider: FC<Props> = observer(({ candidate, handleNextIndex, handleL
         },
         [index],
     );
-    const classes = useStyles();
-
-    const { id, comments } = candidate || prevCandidate;
 
     const handleClick = (type: Direction) => () => {
         $component.recordInputtingComment(Evaluation.fair, '');
@@ -53,10 +45,7 @@ export const Slider: FC<Props> = observer(({ candidate, handleNextIndex, handleL
             <IconButton className={classes.leftButton} onClick={handleClick(Direction.L)}>
                 <ExpandMoreIcon />
             </IconButton>
-            <div className={classes.detailMain}>
-                <Detail info={candidate || prevCandidate} />
-                <Comments cid={id} comments={comments} />
-            </div>
+            <div className={classes.detailMain}>{children}</div>
             <IconButton className={classes.rightButton} onClick={handleClick(Direction.R)}>
                 <ExpandMoreIcon />
             </IconButton>

@@ -5,16 +5,15 @@ import React, { ChangeEventHandler, FC, KeyboardEventHandler, useState } from 'r
 import { addComment, removeComment } from '@apis/websocket';
 import { Chip } from '@components/Chip';
 import { Evaluation } from '@config/enums';
-import { Comment } from '@config/types';
+import { Candidate, Comment } from '@config/types';
 import { useStores } from '@hooks/useStores';
 import useStyles from '@styles/comments';
 
 interface Props {
-    cid: string;
-    comments: Comment[];
+    candidate: Candidate;
 }
 
-export const Comments: FC<Props> = observer(({ comments, cid }) => {
+export const Comments: FC<Props> = observer(({ candidate: { comments, id } }) => {
     const { $component, $user } = useStores();
     const classes = useStyles();
     const [evaluation, setEvaluation] = useState($component.inputtingComment.evaluation);
@@ -44,7 +43,7 @@ export const Comments: FC<Props> = observer(({ comments, cid }) => {
 
     const handleSubmit = () => {
         if (content && evaluation !== undefined) {
-            addComment(cid, {
+            addComment(id, {
                 content,
                 evaluation,
             });

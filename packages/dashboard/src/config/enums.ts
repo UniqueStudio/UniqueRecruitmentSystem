@@ -86,5 +86,6 @@ export enum SMSType {
 
 export enum StepType {
     all,
-    interview,
+    groupInterview,
+    teamInterview,
 }

@@ -100,7 +100,7 @@ export const Card: FC<Props> = observer(({ candidate, index, toggleDetail }) => 
     const Profile = () => (
         <span className={classes.cardTitle}>
             <Typography variant='h6'>
-                {$candidate.stepType === StepType.interview ? `${GROUP_MAP.get(group)!} - ${name}` : name}
+                {$candidate.stepType === StepType.teamInterview ? `${GROUP_MAP.get(group)!} - ${name}` : name}
                 <span className={classes.svg}>
                     {genderIcons[gender]}
                     {isQuick && <FlashOn htmlColor={amber[500]} fontSize='small' />}
@@ -111,7 +111,7 @@ export const Card: FC<Props> = observer(({ candidate, index, toggleDetail }) => 
                 {abandoned && ' - 已放弃'}
                 {rejected && ' - 已淘汰'}
             </Typography>
-            {interviewAllocations.team && $candidate.stepType === StepType.interview && (
+            {interviewAllocations.team && $candidate.stepType === StepType.teamInterview && (
                 <Typography color='textSecondary' variant='caption' display='block'>
                     {new Date(interviewAllocations.team).toLocaleString('zh-CN')}
                 </Typography>

@@ -31,8 +31,6 @@ export const generateModel = ({ type, time = '{{时间}}', place = '{{地点}}',
                 case Step.群面时间选择:
                     defaultRest = '，请进入选手dashboard系统选择面试时间';
                     break;
-                default:
-                    throw new Error('Next step is invalid!');
             }
             rest = rest || defaultRest;
             return `${prefix}你通过了{{招新名称}}{{组别}}组${STEP_MAP.get(step) || '{{xx流程}}'}审核${rest}`;

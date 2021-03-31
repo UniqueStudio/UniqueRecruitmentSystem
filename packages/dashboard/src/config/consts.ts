@@ -1,4 +1,4 @@
-import { Group, Period, Step } from '@config/enums';
+import { Group, Period, Step, StepType } from '@config/enums';
 
 export const GROUP_MAP = new Map([
     [Group.web, 'Web'],
@@ -30,12 +30,17 @@ export const STEP_SHORT_MAP = new Map([
     [Step.群面, '群面'],
     [Step.通过, '通过'],
 ]);
+export const STEP_TYPE_MAP = new Map([
+    [StepType.all, '全部'],
+    [StepType.groupInterview, '组面'],
+    [StepType.teamInterview, '群面'],
+]);
 export const PERIOD_MAP = new Map([
     [Period.morning, '上午'],
     [Period.afternoon, '下午'],
     [Period.evening, '晚上'],
 ]);
 export const RANKS = ['暂无', '前10%', '前25%', '前50%', '前100%'];
-export const GRADES = ['大一', '大二', '大三', '大四', '研一', '研二', '研三'];
+export const GRADES = ['大一', '大二', '大三', '大四', '研究生'];
 export const GENDERS = ['其他', '男', '女'];
 export const API = import.meta.env.SNOWPACK_PUBLIC_API || 'https://hustunique.com:5000';

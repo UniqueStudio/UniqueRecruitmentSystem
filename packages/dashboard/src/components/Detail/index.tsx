@@ -1,6 +1,6 @@
 import { Button, TextField, TextFieldProps } from '@material-ui/core';
 import { observer } from 'mobx-react-lite';
-import React, { FC, useState } from 'react';
+import React, { FC, Fragment, useState } from 'react';
 
 import { getResume } from '@apis/rest';
 import { Modal } from '@components/Modal';
@@ -10,13 +10,13 @@ import { useStores } from '@hooks/useStores';
 import useStyles from '@styles/detail';
 
 interface Props {
-    info: Candidate;
+    candidate: Candidate;
 }
 
-export const Detail: FC<Props> = observer(({ info }) => {
+export const Detail: FC<Props> = observer(({ candidate }) => {
     const { $component } = useStores();
     const classes = useStyles();
-    const [modal, setModal] = useState(false);
+    const [introModal, setIntroModal] = useState(false);
 
     const {
         id,
@@ -33,8 +33,8 @@ export const Detail: FC<Props> = observer(({ info }) => {
         isQuick,
         referrer,
         resume,
-    } = info;
-    const progress = $component.resumeProgresses[id] || 0;
+    } = candidate;
+    const progress = $component.resumeProgresses[id];
 
     const items: TextFieldProps[][] = [
         [
@@ -61,7 +61,7 @@ export const Detail: FC<Props> = observer(({ info }) => {
         [{ label: '预览', value: intro, fullWidth: true, multiline: true, rowsMax: 3 }],
     ];
 
-    const toggleModalOpen = () => setModal((prevModal) => !prevModal);
+    const toggleIntroModalOpen = () => setIntroModal((prevModal) => !prevModal);
 
     const downloadResume = () => getResume(id);
 
@@ -76,7 +76,7 @@ export const Detail: FC<Props> = observer(({ info }) => {
                     </div>
                 ))}
                 <div className={classes.detailRow}>
-                    <Button size='large' color='primary' onClick={toggleModalOpen}>
+                    <Button size='large' color='primary' onClick={toggleIntroModalOpen}>
                         自我介绍
                     </Button>
                     <Button size='large' color='primary' onClick={downloadResume} disabled={!resume || !!progress}>
@@ -84,16 +84,16 @@ export const Detail: FC<Props> = observer(({ info }) => {
                     </Button>
                 </div>
             </div>
-            <Modal open={modal} onClose={toggleModalOpen} title='自我介绍'>
+            <Modal open={introModal} onClose={toggleIntroModalOpen} title='自我介绍'>
                 <div className={classes.introContent}>
                     {intro
                         .split('\n')
                         .filter(Boolean)
                         .map((text, index) => (
-                            <React.Fragment key={index}>
+                            <Fragment key={index}>
                                 {text}
                                 <br />
-                            </React.Fragment>
+                            </Fragment>
                         ))}
                 </div>
             </Modal>

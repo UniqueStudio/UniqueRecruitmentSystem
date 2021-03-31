@@ -93,7 +93,6 @@ socket.on('removeCandidate', (res: R<string>) => {
                 $candidate.removeOne(id);
                 $component.enqueueSnackbar(`${group}组的${name}被移除了`, res.status);
             }
-            return;
         }
     }
 });
@@ -108,7 +107,6 @@ socket.on('moveCandidate', (res: R<{ cid: string; to: Step }>) => {
                 $candidate.moveOne(id, to);
                 $component.enqueueSnackbar(`${group}组的${name}被移动到了${STEP_MAP.get(to)!}`, res.status);
             }
-            return;
         }
     }
 });
