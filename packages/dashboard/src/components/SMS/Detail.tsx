@@ -5,41 +5,30 @@ import React, { ChangeEventHandler, FC, memo } from 'react';
 import { STEP_MAP } from '@config/consts';
 import { SMSType, Step } from '@config/enums';
 import useStyles from '@styles/sms';
-import { generateModel } from '@utils/generateModel';
 
 interface Props {
     content: {
         type: SMSType;
-        step: Step | -1;
         next: Step | -1;
         time: string;
         place: string;
         rest: string;
     };
+    message: string;
     handleChange: (name: string) => ChangeEventHandler<HTMLInputElement>;
 }
 
-const SMSDetail: FC<Props> = memo(({ handleChange, content }) => {
+const SMSDetail: FC<Props> = memo(({ handleChange, content, message }) => {
     const classes = useStyles();
-    const { type, step, time, place, rest, next } = content;
+    const { type, time, place, rest, next } = content;
     return (
         <div className={clsx(classes.templateItem, classes.inputContainer)}>
             <Typography variant='body1' className={classes.fullWidth}>
-                {generateModel({ type, step, time, place, rest, next })}
+                {message}
             </Typography>
             <TextField select label='类型' value={type} onChange={handleChange('type')}>
                 <MenuItem value='accept'>通过</MenuItem>
                 <MenuItem value='reject'>拒绝</MenuItem>
-            </TextField>
-            <TextField select label='轮次' value={step === -1 ? '' : step} onChange={handleChange('step')}>
-                {[...STEP_MAP.entries()].map(([index, stepName]) => (
-                    <MenuItem
-                        key={stepName}
-                        value={index}
-                        disabled={[Step.组面时间选择, Step.群面时间选择, Step.通过].includes(index)}>
-                        {stepName}
-                    </MenuItem>
-                ))}
             </TextField>
             <TextField
                 select
@@ -48,7 +37,7 @@ const SMSDetail: FC<Props> = memo(({ handleChange, content }) => {
                 onChange={handleChange('next')}
                 disabled={type === SMSType.reject}>
                 {[...STEP_MAP.entries()].map(([index, stepName]) => (
-                    <MenuItem key={stepName} value={+index} disabled={index <= step}>
+                    <MenuItem key={stepName} value={+index} disabled={index === Step.报名}>
                         {stepName}
                     </MenuItem>
                 ))}

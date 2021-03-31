@@ -7,77 +7,61 @@ import Picker from './Picker';
 
 import { sendSMSToCandidate } from '@apis/rest';
 import { Verify } from '@components/Verify';
-import { SMSType, Step } from '@config/enums';
+import { SMSType } from '@config/enums';
 import { useStores } from '@hooks/useStores';
 import useStyles from '@styles/sms';
+import { generateModel } from '@utils/generateModel';
 
 interface Props {
     toggleOpen: () => void;
 }
 
+const initialContent = {
+    type: SMSType.accept,
+    next: -1 as -1,
+    time: '',
+    place: '',
+    rest: '',
+};
+
 export const Template: FC<Props> = observer(({ toggleOpen }) => {
     const { $component, $candidate } = useStores();
     const classes = useStyles();
     const [activeStep, setActiveStep] = useState(0);
-    const [content, setContent] = useState({
-        type: SMSType.accept,
-        step: -1 as -1,
-        next: -1 as -1,
-        time: '',
-        place: '',
-        rest: '',
-    });
+    const [content, setContent] = useState(initialContent);
+    const [message, setMessage] = useState(generateModel(initialContent));
     const [code, setCode] = useState('');
 
     const handleBack = () => {
         setActiveStep((prevActiveStep) => prevActiveStep - 1);
     };
 
-    const handleSend = () => {
+    const handleSend = async () => {
         if (code === '') {
             $component.enqueueSnackbar('请填写验证码', 'warning');
             return;
         }
 
-        setCode('');
-        return sendSMSToCandidate({ ...content, code, cids: [...$candidate.selected.keys()] });
+        if (await sendSMSToCandidate({ ...content, code, cids: [...$candidate.selected.keys()] })) {
+            setCode('');
+        }
     };
 
     const handleNext = () => {
-        const { step, type, time, place, rest, next } = content;
-        if (activeStep === 1) {
-            if (step === -1) {
-                $component.enqueueSnackbar('请选择流程', 'warning');
-                return;
-            }
-            if (next === -1) {
-                // TODO: fixme
-                $component.enqueueSnackbar('请选择下一轮', 'warning');
-                return;
-            }
-            if ((next === Step.笔试 || next === Step.熬测) && type === SMSType.accept && !rest) {
-                if (!time) {
-                    $component.enqueueSnackbar('请填写时间', 'warning');
-                    return;
-                }
-                if (!place) {
-                    $component.enqueueSnackbar('请填写地点', 'warning');
-                    return;
-                }
-            }
-            if (next === Step.组面 || next === Step.群面) {
-                if (!place) {
-                    $component.enqueueSnackbar('请填写地点', 'warning');
-                    return;
-                }
-            }
+        if (activeStep === 1 && message.includes('{{!')) {
+            $component.enqueueSnackbar('请完整填写模板', 'warning');
+            return;
         }
         setActiveStep((prevActiveStep) => prevActiveStep + 1);
     };
 
     const handleChange = (name: string): ChangeEventHandler<HTMLInputElement> => ({ target: { value } }) => {
         // `value` is defined as string but can be number here
-        setContent((prevContent) => ({ ...prevContent, [name]: value }));
+        setContent((prevContent) => {
+            const newContent = { ...prevContent, [name]: value };
+            setMessage(generateModel(newContent));
+            return newContent;
+        });
     };
 
     const handleCode: ChangeEventHandler<HTMLInputElement> = ({ target: { value } }) => {
@@ -87,7 +71,7 @@ export const Template: FC<Props> = observer(({ toggleOpen }) => {
     const steps = ['发送对象', '消息模板', '确认发送'];
     const stepContent = [
         <Picker />,
-        <Detail content={content} handleChange={handleChange} />,
+        <Detail content={content} handleChange={handleChange} message={message} />,
         <Verify code={code} onChange={handleCode} />,
     ];
 
