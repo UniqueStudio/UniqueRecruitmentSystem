@@ -21,7 +21,7 @@ const useStyles = makeStyles(({ palette, shadows, spacing, breakpoints }) => ({
             maxWidth: '100%',
         },
         maxHeight: '90%',
-        maxWidth: '75%',
+        maxWidth: '80%',
     },
     modalHeader: {
         background: palette.primary.light,

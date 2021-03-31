@@ -17,7 +17,7 @@ import { logger } from '@utils/console';
 
 const Candidates = lazy(() => import('./Candidates'));
 const Dashboard = lazy(() => import('./Dashboard'));
-const Data = lazy(() => import('./Data'));
+const Interviews = lazy(() => import('./Interviews'));
 const My = lazy(() => import('./My'));
 const Welcome = lazy(() => import('./Welcome'));
 
@@ -52,8 +52,8 @@ const App: FC = () => {
                     <Switch>
                         <Route path='/login' component={Login} />
                         <Route path='/' exact render={routeRender(<Welcome />)} />
-                        <Route path='/dashboard' exact render={routeRender(<Dashboard />)} />
-                        <Route path='/data' render={routeRender(<Data />)} />
+                        <Route path='/dashboard' render={routeRender(<Dashboard />)} />
+                        <Route path='/interviews' render={routeRender(<Interviews />)} />
                         <Route path='/candidates' render={routeRender(<Candidates />)} />
                         <Route path='/my' render={routeRender(<My />)} />
                         <Route render={routeRender(<Welcome easterEgg={true} />)} />

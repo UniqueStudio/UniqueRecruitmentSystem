@@ -19,6 +19,9 @@ const useStyles = makeStyles(({ breakpoints, spacing }) => ({
         margin: spacing(1),
     },
     comments: {
+        [breakpoints.up('md')]: {
+            width: 600,
+        },
         [breakpoints.up('lg')]: {
             width: 400,
         },

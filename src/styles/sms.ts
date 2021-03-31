@@ -2,31 +2,15 @@ import { makeStyles } from '@material-ui/core';
 
 const useStyles = makeStyles(({ breakpoints, spacing }) => ({
     template: {
-        margin: spacing(2),
-        width: spacing(100),
         overflowY: 'auto',
-        [breakpoints.down('md')]: {
-            width: spacing(80),
-        },
         [breakpoints.down('sm')]: {
-            width: 'auto',
-        },
-        [breakpoints.down('xs')]: {
-            margin: spacing(1),
+            margin: spacing(2),
         },
     },
     stepper: {
         [breakpoints.down('xs')]: {
             padding: 0,
         },
-    },
-    templateContent: {
-        minHeight: spacing(3),
-        display: 'flex',
-        alignItems: 'baseline',
-    },
-    templateParams: {
-        display: 'flex',
     },
     templateItem: {
         [breakpoints.down('xs')]: {
@@ -57,17 +41,20 @@ const useStyles = makeStyles(({ breakpoints, spacing }) => ({
         paddingLeft: 0,
     },
     inputContainer: {
-        display: 'flex',
-        flexWrap: 'wrap',
-    },
-    input: {
-        [breakpoints.down('xs')]: {
-            width: spacing(12),
+        display: 'grid',
+        gridTemplateColumns: 'repeat(5, minmax(auto, 160px))',
+        [breakpoints.down('sm')]: {
+            display: 'flex',
+            flexDirection: 'column',
         },
-        width: spacing(15),
+        rowGap: spacing(2),
+        columnGap: spacing(1),
     },
-    picker: {
-        display: 'block',
+    fullWidth: {
+        overflowWrap: 'anywhere',
+        [breakpoints.up('md')]: {
+            gridColumn: '1 / 6',
+        },
     },
 }));
 

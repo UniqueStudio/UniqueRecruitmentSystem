@@ -1,16 +1,32 @@
 import { SlideProps } from '@material-ui/core';
 import { observer } from 'mobx-react-lite';
-import React, { FC, useState } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 
 import { removeCandidate } from '@apis/rest';
 import { Board } from '@components/Board';
+import { Comments } from '@components/Comments';
+import { Detail } from '@components/Detail';
 import { Dialog } from '@components/Dialog';
 import { Fab } from '@components/Fab';
 import { Modal } from '@components/Modal';
 import { Slider } from '@components/Slider';
 import { Template } from '@components/SMS';
+import { StepType } from '@config/enums';
+import { Candidate } from '@config/types';
+import { usePrevious } from '@hooks/usePrevious';
 import { useStores } from '@hooks/useStores';
 // import { teamSort } from '@utils/sortBySlot';
+
+const Candidate: FC<{ candidate: Candidate }> = ({ candidate }) => {
+    const prevCandidate = usePrevious(candidate);
+    candidate = candidate || prevCandidate;
+    return (
+        <>
+            <Detail candidate={candidate} />
+            <Comments candidate={candidate} />
+        </>
+    );
+};
 
 const Candidates: FC = observer(() => {
     const { $component, $candidate } = useStores();
@@ -19,6 +35,9 @@ const Candidates: FC = observer(() => {
     const [step, setStep] = useState(0);
     const [index, setIndex] = useState(-1);
     const [direction, setDirection] = useState<SlideProps['direction']>('left');
+    useEffect(() => {
+        $candidate.setSteps(StepType.all);
+    }, []);
 
     const candidates = $candidate.groupBySteps;
 
@@ -79,11 +98,11 @@ const Candidates: FC = observer(() => {
                 {step >= 0 && (
                     <Slider
                         index={index}
-                        candidate={candidates[step][index]}
                         handleLeft={handleLeft}
                         handleRight={handleRight}
-                        handleNextIndex={handleNextIndex}
-                    />
+                        handleNextIndex={handleNextIndex}>
+                        <Candidate candidate={candidates[step][index]} />
+                    </Slider>
                 )}
             </Modal>
         </>

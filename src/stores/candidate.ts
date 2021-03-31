@@ -16,6 +16,7 @@ const allSteps = [
     Step.通过,
 ];
 const teamInterviewSteps = [Step.群面, Step.通过];
+const groupInterviewSteps = [Step.组面, Step.熬测];
 
 export class CandidateStore {
     candidates = new Map<string, Candidate>();
@@ -121,7 +122,17 @@ export class CandidateStore {
         if (steps) {
             this.steps = steps;
         } else {
-            this.steps = stepType === StepType.interview ? teamInterviewSteps : allSteps;
+            switch (stepType) {
+                case StepType.all:
+                    this.steps = allSteps;
+                    break;
+                case StepType.groupInterview:
+                    this.steps = groupInterviewSteps;
+                    break;
+                case StepType.teamInterview:
+                    this.steps = teamInterviewSteps;
+                    break;
+            }
         }
     }
 
@@ -147,19 +158,20 @@ export class CandidateStore {
 
     get groupBySteps() {
         const candidates: Candidate[][] = [...new Array(STEP_MAP.size)].map(() => []);
-        if (this.stepType === StepType.all) {
-            for (const [, candidate] of this.candidates) {
-                if (candidate.group === this.group) {
+        switch (this.stepType) {
+            case StepType.all:
+            case StepType.groupInterview:
+                for (const [, candidate] of this.candidates) {
+                    if (candidate.group === this.group) {
+                        candidates[candidate.step].push(candidate);
+                    }
+                }
+                break;
+            case StepType.teamInterview:
+                for (const [, candidate] of this.candidates) {
                     candidates[candidate.step].push(candidate);
                 }
-            }
-        } else {
-            for (const [, candidate] of this.candidates) {
-                if (candidate.step === Step.群面 || candidate.step === Step.通过) {
-                    // 位于群面或通过
-                    candidates[candidate.step].push(candidate);
-                }
-            }
+                break;
         }
         return candidates;
     }

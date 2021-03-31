@@ -1,5 +1,4 @@
 import { Chip, Typography } from '@material-ui/core';
-import clsx from 'clsx';
 import { observer } from 'mobx-react-lite';
 import React, { FC, ReactElement } from 'react';
 
@@ -27,14 +26,8 @@ const SMSPicker: FC = observer(() => {
         ),
     );
     return (
-        <div className={clsx(classes.templateContent, classes.templateItem, classes.picker)}>
-            {chips.length ? (
-                chips
-            ) : (
-                <Typography variant='h6' className={classes.templateItem}>
-                    你未选中任何人!
-                </Typography>
-            )}
+        <div className={classes.templateItem}>
+            {chips.length ? chips : <Typography variant='body1'>你未选中任何人!</Typography>}
         </div>
     );
 });

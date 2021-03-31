@@ -22,11 +22,12 @@ const useStyles = makeStyles(({ breakpoints, spacing }) => ({
         },
         minHeight: 450,
         justifyContent: 'space-around',
+        alignItems: 'center',
     },
     detailRow: {
         display: 'flex',
         [breakpoints.up('md')]: {
-            width: 500,
+            width: 600,
         },
         [breakpoints.up('lg')]: {
             width: 400,

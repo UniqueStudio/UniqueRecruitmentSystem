@@ -88,7 +88,7 @@ export const Fab: FC<Props> = observer(({ candidates, toggleOpen }) => {
     const enabled =
         selectedInColumn.length &&
         ($user.info.isCaptain ||
-            ($candidate.stepType === StepType.interview
+            ($candidate.stepType === StepType.teamInterview
                 ? $user.info.isCaptain
                 : $candidate.group === $user.info.group));
     return (

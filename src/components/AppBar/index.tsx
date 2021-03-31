@@ -16,7 +16,7 @@ import { useLocation } from 'react-router-dom';
 
 import { setAuthToken } from '@apis/rest';
 import { Select } from '@components/Select';
-import { GROUP_MAP } from '@config/consts';
+import { GROUP_MAP, STEP_TYPE_MAP } from '@config/consts';
 import { Group, StepType } from '@config/enums';
 import { useStores } from '@hooks/useStores';
 import useStyles from '@styles/appBar';
@@ -66,13 +66,11 @@ export const AppBar: FC = observer(() => {
         location.reload();
     };
 
-    const defaultTitle = `Unique Studio Recruitment Dashboard v${import.meta.env.SNOWPACK_PUBLIC_VERSION}`;
-
     const pathToTitle = {
-        '/': defaultTitle,
-        '/dashboard': title ? `${title}・数据展示` : defaultTitle,
-        '/data': title ? `${title}・/*TODO*/` : defaultTitle,
-        '/candidates': title ? `${title}・选手信息` : defaultTitle,
+        '/': `Unique Studio Recruitment Dashboard v${import.meta.env.SNOWPACK_PUBLIC_VERSION}`,
+        '/dashboard': title ? `${title}・数据展示` : '数据展示',
+        '/interviews': title ? `${title}・面试分配` : '面试分配',
+        '/candidates': title ? `${title}・选手信息` : '选手信息',
         '/my': '组员信息',
     };
 
@@ -94,18 +92,16 @@ export const AppBar: FC = observer(() => {
                 <Typography variant='h6' color='inherit' noWrap>
                     {pathToTitle[pathname] || '808 / 2 = ?'}
                 </Typography>
-                {pathname === '/candidates' && (
+                {(pathname === '/candidates' || pathname === '/interviews') && (
                     <>
                         <Select
-                            data={['全部', '群面']}
-                            values={[StepType.all, StepType.interview]}
+                            data={[...STEP_TYPE_MAP.entries()].map(([value, item]) => ({ value, item }))}
                             onChange={({ target }) => $candidate.setSteps(+(target.value as StepType))}
                             currentValue={$candidate.stepType}
                         />
-                        {$candidate.stepType === StepType.all && (
+                        {$candidate.stepType !== StepType.teamInterview && (
                             <Select
-                                data={[...GROUP_MAP.values()]}
-                                values={[...GROUP_MAP.keys()]}
+                                data={[...GROUP_MAP.entries()].map(([value, item]) => ({ value, item }))}
                                 onChange={({ target }) => $candidate.setGroup(target.value as Group)}
                                 currentValue={$candidate.group}
                             />

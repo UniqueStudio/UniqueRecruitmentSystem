@@ -33,7 +33,7 @@ export const Board: FC<Props> = observer(({ candidates, toggleDetail }) => {
                     const ordered = [...$candidate.steps];
                     const [removed] = ordered.splice(source.index, 1);
                     ordered.splice(index, 0, removed);
-                    $candidate.setSteps(0, ordered);
+                    $candidate.setSteps($candidate.stepType, ordered);
                     return;
                 }
                 case 'CANDIDATE':

@@ -25,8 +25,8 @@ import useStyles from '@styles/drawer';
 
 const listItems = [
     { to: '/', text: '首页', icon: <HomeIcon /> },
-    { to: '/dashboard', text: 'Dashboard', icon: <TimelineIcon /> },
-    { to: '/data', text: '招新数据', icon: <PieChartIcon /> },
+    { to: '/dashboard', text: '招新数据', icon: <TimelineIcon /> },
+    { to: '/interviews', text: '面试信息', icon: <PieChartIcon /> },
     { to: '/candidates', text: '选手信息', icon: <DashboardIcon /> },
     { to: '/my', text: '组员信息', icon: <PeopleIcon /> },
 ];
