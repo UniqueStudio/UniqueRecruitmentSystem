@@ -44,7 +44,7 @@ export const Table: FC = observer(() => {
             flex: 3,
             sortable: false,
             disableClickEventBubbling: true,
-            cellClassName: classes.test,
+            cellClassName: classes.cell,
             renderCell(params) {
                 const { interviewSelections, group, rejected, abandoned } = params.row as Candidate;
                 const selections = interviewSelections.filter(
@@ -61,7 +61,7 @@ export const Table: FC = observer(() => {
                             : selections.map(({ date, period }, index) => (
                                   <Chip
                                       key={index}
-                                      className={classes.test2}
+                                      className={classes.chip}
                                       color='primary'
                                       variant='outlined'
                                       label={new Date(date).toLocaleDateString('zh-CN') + PERIOD_MAP.get(period)!}
@@ -80,7 +80,7 @@ export const Table: FC = observer(() => {
                 const { interviewAllocations } = params.row as Candidate;
                 return interviewAllocations[type]?.toLocaleString('zh-CN');
             },
-            sortComparator: (v1, v2) => v1?.[type] - v2?.[type],
+            sortComparator: (a, b) => a?.[type] - b?.[type],
         },
         {
             field: '',
