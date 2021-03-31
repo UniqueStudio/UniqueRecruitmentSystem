@@ -33,7 +33,7 @@ const SMSDetail: FC<Props> = memo(({ handleChange, content, message }) => {
             <TextField
                 select
                 label='下一轮'
-                value={next === -1 ? '' : next}
+                value={next >= 0 ? next : ''}
                 onChange={handleChange('next')}
                 disabled={type === SMSType.reject}>
                 {[...STEP_MAP.entries()].map(([index, stepName]) => (

@@ -28,11 +28,11 @@ const useStyles = makeStyles(({ spacing, breakpoints }) => ({
         display: 'flex',
         alignItems: 'baseline',
     },
-    test: {
+    cell: {
         flexWrap: 'wrap',
         overflowY: 'auto !important' as 'auto',
     },
-    test2: {
+    chip: {
         margin: `${spacing(1)}px ${spacing(0.5)}px`,
     },
 }));
