@@ -17,7 +17,7 @@ export class UsersService extends BasicCRUDService<UserEntity> {
         super(repository);
     }
 
-    findIdentityByPhone(phone: string): Promise<Pick<UserEntity, 'id' | 'password'> | undefined> {
+    findIdentityByPhone(phone: string) {
         return this.findOne(
             {
                 phone,

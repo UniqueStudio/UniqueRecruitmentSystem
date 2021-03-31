@@ -88,8 +88,11 @@ export const migrate = async (app: INestApplication) => {
     await recruitmentsService.clear();
     await usersService.clear();
     await Promise.all(users.map(async (
-        { weChatID, avatar, gender, group, isAdmin, isCaptain, joinTime, mail, phone, username },
+        { weChatID, avatar, gender, group, isAdmin, isCaptain, joinTime, mail, phone, username, password },
     ) => {
+        if (password) {
+            password.hash = Buffer.from(password.hash).toString('base64');
+        }
         joinTime = joinTime === '2018年3月' ? '2018S' // two lucky guys
             : joinTime === '2017日常招新' ? '2017A' // this kind of recruitments are not supported yet
                 : joinTime.replaceAll('年', '');
@@ -105,7 +108,7 @@ export const migrate = async (app: INestApplication) => {
             avatar: avatar || undefined,
             isAdmin,
             isCaptain,
-            password: await hash(randomBytes(512).toString('hex')),
+            password: password || await hash(randomBytes(512).toString('hex')),
         });
     }));
     await Promise.all(recruitments.map(async (

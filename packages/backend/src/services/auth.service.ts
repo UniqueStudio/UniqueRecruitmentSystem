@@ -5,7 +5,7 @@ import { Role } from '@constants/enums';
 import { JwtPayload } from '@interfaces/jwt.interface';
 import { CandidatesService } from '@services/candidates.service';
 import { UsersService } from '@services/users.service';
-import { verify } from '@utils/scrypt';
+import { backwardCompatibleVerify, verify } from '@utils/scrypt';
 
 @Injectable()
 export class AuthService {
@@ -20,7 +20,11 @@ export class AuthService {
         const user = await this.usersService.findIdentityByPhone(phone);
         if (user) {
             const { password: { hash, salt }, id } = user;
-            if (await verify(hash, salt, password)) {
+            if (Buffer.from(salt, 'base64').length !== 16 && await verify(hash, salt, password)) {
+                return id;
+            } else if (await backwardCompatibleVerify(Buffer.from(hash, 'base64').toString(), salt, password)) {
+                user.password = await this.usersService.hashPassword(password);
+                await user.save();
                 return id;
             }
         }
