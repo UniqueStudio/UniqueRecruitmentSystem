@@ -75,18 +75,18 @@ const apiWrapper = async <T>(
             case Status.info:
             case Status.success:
                 await onSuccess(data.payload);
-                break;
+                return true;
             case Status.error:
             case Status.warning:
                 $component.enqueueSnackbar(data.message, data.status);
                 await onFailure?.();
-                break;
         }
     } catch ({ message }) {
         $component.setProgress(false);
         $component.enqueueSnackbar(message, 'error');
         await onFailure?.();
     }
+    return false;
 };
 
 export const allocateMany = (type: InterviewType, cids: string[]) =>
@@ -252,20 +252,20 @@ export const createRecruitment = (
 ) =>
     apiWrapper(
         () => client.post<R>(Endpoint.recruitments, data),
-        () => {
+        async () => {
             $recruitment.setShouldUpdateRecruitment();
             $component.enqueueSnackbar('已成功发起招新', 'success');
-            return getAllRecruitments();
+            await getAllRecruitments();
         },
     );
 
 export const setRecruitmentSchedule = (rid: string, data: Pick<Recruitment, 'beginning' | 'end' | 'deadline'>) =>
     apiWrapper(
         () => client.put<R>(Endpoint.schedule(rid), data),
-        () => {
+        async () => {
             $recruitment.setShouldUpdateRecruitment();
             $component.enqueueSnackbar('已成功修改招新信息', 'success');
-            return getAllRecruitments();
+            await getAllRecruitments();
         },
     );
 
@@ -278,10 +278,10 @@ export const createRecruitmentInterviews = (
 ) =>
     apiWrapper(
         () => client.post<R>(Endpoint.interviews(rid, name), data),
-        () => {
+        async () => {
             $recruitment.setShouldUpdateRecruitment();
             $component.enqueueSnackbar('已成功设置面试安排', 'success');
-            return getAllRecruitments();
+            await getAllRecruitments();
         },
     );
 
@@ -294,10 +294,10 @@ export const setRecruitmentInterviews = (
 ) =>
     apiWrapper(
         () => client.put<R>(Endpoint.interviews(rid, name), data),
-        () => {
+        async () => {
             $recruitment.setShouldUpdateRecruitment();
             $component.enqueueSnackbar('已成功更新面试安排', 'success');
-            return getAllRecruitments();
+            await getAllRecruitments();
         },
     );
 
@@ -370,8 +370,8 @@ export const setGroupAdmin = (uids: string[]) =>
 export const loginByQRCode = () =>
     apiWrapper(
         () => client.get<R<string>>(Endpoint.qrCode()),
-        (url) =>
-            apiWrapper(
+        async (url) => {
+            await apiWrapper(
                 () => {
                     $user.setQRCode(url);
                     $component.enqueueSnackbar('请尽快用企业微信扫描二维码', 'success');
@@ -382,7 +382,8 @@ export const loginByQRCode = () =>
                     $user.setToken(token);
                     $component.enqueueSnackbar('已成功登录', 'success');
                 },
-            ),
+            );
+        },
     );
 
 export const loginByPassword = (phone: string, password: string) =>
