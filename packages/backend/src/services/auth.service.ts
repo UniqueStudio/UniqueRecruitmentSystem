@@ -20,11 +20,13 @@ export class AuthService {
         const user = await this.usersService.findIdentityByPhone(phone);
         if (user) {
             const { password: { hash, salt }, id } = user;
-            if (Buffer.from(salt, 'base64').length !== 16 && await verify(hash, salt, password)) {
-                return id;
-            } else if (await backwardCompatibleVerify(Buffer.from(hash, 'base64').toString(), salt, password)) {
-                user.password = await this.usersService.hashPassword(password);
-                await user.save();
+            if (Buffer.from(salt, 'base64').length === 16) {
+                if (await backwardCompatibleVerify(Buffer.from(hash, 'base64').toString(), salt, password)) {
+                    user.password = await this.usersService.hashPassword(password);
+                    await user.save();
+                    return id;
+                }
+            } else if (await verify(hash, salt, password)) {
                 return id;
             }
         }
