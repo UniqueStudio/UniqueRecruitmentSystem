@@ -9,7 +9,7 @@ interface Snackbar {
 }
 
 export class ComponentStateStore {
-    progressOn = false;
+    progressNumber = 0;
 
     drawerOpen = false;
 
@@ -37,7 +37,15 @@ export class ComponentStateStore {
     }
 
     setProgress(on: boolean) {
-        this.progressOn = on;
+        if (on) {
+            this.progressNumber++;
+        } else {
+            this.progressNumber = Math.max(0, this.progressNumber - 1);
+        }
+    }
+
+    get progressOn() {
+        return !!this.progressNumber;
     }
 
     toggleSuggestion() {
