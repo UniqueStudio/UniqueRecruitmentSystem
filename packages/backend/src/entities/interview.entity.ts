@@ -1,7 +1,8 @@
 import { IsDate, IsEnum, IsInt, Min } from 'class-validator';
-import { Column, Entity, ManyToOne, Unique } from 'typeorm';
+import { Column, Entity, ManyToMany, ManyToOne, Unique } from 'typeorm';
 
 import { GroupOrTeam, Period } from '@constants/enums';
+import { CandidateEntity } from '@entities/candidate.entity';
 import { CommonEntity } from '@entities/common.entity';
 import { RecruitmentEntity } from '@entities/recruitment.entity';
 
@@ -27,4 +28,7 @@ export class InterviewEntity extends CommonEntity {
 
     @ManyToOne(() => RecruitmentEntity, ({ interviews }) => interviews, { onDelete: 'CASCADE' })
     recruitment!: RecruitmentEntity;
+
+    @ManyToMany(() => CandidateEntity, ({ interviewSelections }) => interviewSelections)
+    candidates!: CandidateEntity[];
 }

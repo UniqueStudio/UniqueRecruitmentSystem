@@ -2,7 +2,7 @@ import { INestApplication } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import { agent } from 'supertest';
 
-import { Gender, Group, Period } from '@constants/enums';
+import { Gender, Grade, Group, Period, Rank } from '@constants/enums';
 import { InterviewEntity } from '@entities/interview.entity';
 import { RecruitmentEntity } from '@entities/recruitment.entity';
 import { UserEntity } from '@entities/user.entity';
@@ -19,6 +19,8 @@ describe('RecruitmentsController e2e', () => {
     let testAdmin: UserEntity;
     let userJWT: string;
     let adminJWT: string;
+    let candidatesService: CandidatesService;
+    let interviewsService: InterviewsService;
     const password = 'P@ssw0rd';
 
     beforeAll(async () => {
@@ -29,8 +31,8 @@ describe('RecruitmentsController e2e', () => {
         await app.init();
         const usersService = app.get(UsersService);
         const recruitmentsService = app.get(RecruitmentsService);
-        const candidatesService = app.get(CandidatesService);
-        const interviewsService = app.get(InterviewsService);
+        candidatesService = app.get(CandidatesService);
+        interviewsService = app.get(InterviewsService);
         const commentsService = app.get(CommentsService);
         await commentsService.clear();
         await candidatesService.clear();
@@ -195,6 +197,29 @@ describe('RecruitmentsController e2e', () => {
             });
         });
 
+        describe('set recruitment interviews for another group', () => {
+            it('should throw', async () => {
+                await agent(app.getHttpServer())
+                    .post(`/recruitments/${testRecruitment.id}/interviews/ai`)
+                    .send({
+                        interviews: [
+                            {
+                                date: new Date('2001'),
+                                period: Period.morning,
+                                slotNumber: 5,
+                            },
+                            {
+                                date: new Date('2001'),
+                                period: Period.evening,
+                                slotNumber: 5,
+                            },
+                        ],
+                    })
+                    .auth(adminJWT, { type: 'bearer' })
+                    .expect(403);
+            });
+        });
+
         describe('set recruitment interviews with invalid data', () => {
             it('should throw', async () => {
                 await agent(app.getHttpServer())
@@ -261,6 +286,67 @@ describe('RecruitmentsController e2e', () => {
                     .expect(200);
                 [{ interviews }] = payload;
                 interviews.forEach(({ slotNumber }) => expect(slotNumber).toBe(6));
+            });
+        });
+
+        describe('create candidate and select slots', () => {
+            it('should return success', async () => {
+                await candidatesService.createAndSave({
+                    name: 'foo',
+                    phone: '13131111111',
+                    mail: 'foo@bar.com',
+                    group: Group.web,
+                    gender: Gender.female,
+                    grade: Grade.freshman,
+                    recruitment: testRecruitment,
+                    rank: Rank.A,
+                    institute: 'cs',
+                    major: 'cs',
+                    intro: 'hi',
+                    isQuick: false,
+                    interviewSelections: await interviewsService.find(),
+                });
+            });
+        });
+
+        describe('update recruitment interview again', () => {
+            it('should throw', async () => {
+                await agent(app.getHttpServer())
+                    .put(`/recruitments/${testRecruitment.id}/interviews/web`)
+                    .send({
+                        interviews: interviews.map((interview) => ({
+                            ...interview,
+                            date: new Date(2099),
+                        })),
+                    })
+                    .auth(adminJWT, { type: 'bearer' })
+                    .expect(400);
+            });
+        });
+
+        describe('delete all the interviews', () => {
+            it('should throw', async () => {
+                await agent(app.getHttpServer())
+                    .delete(`/recruitments/${testRecruitment.id}/interviews/web`)
+                    .send(interviews.map(({ id }) => id))
+                    .auth(adminJWT, { type: 'bearer' })
+                    .expect(400);
+            });
+        });
+
+        describe('remove all candidates', () => {
+            it('should return success', async () => {
+                await candidatesService.clear();
+            });
+        });
+
+        describe('delete all the interviews again', () => {
+            it('should return success', async () => {
+                await agent(app.getHttpServer())
+                    .delete(`/recruitments/${testRecruitment.id}/interviews/web`)
+                    .send(interviews.map(({ id }) => id))
+                    .auth(adminJWT, { type: 'bearer' })
+                    .expect(200);
             });
         });
     });

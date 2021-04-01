@@ -3,8 +3,8 @@ import {
     Body,
     Controller,
     Delete,
+    ForbiddenException,
     Get,
-    NotImplementedException,
     Param,
     Post,
     Put,
@@ -13,12 +13,14 @@ import {
 
 import { GroupOrTeam, Role } from '@constants/enums';
 import { AcceptRole } from '@decorators/role.decorator';
+import { User } from '@decorators/user.decorator';
 import {
     CreateRecruitmentBody,
     CreateRecruitmentInterviewsBody,
     SetRecruitmentInterviewsBody,
     SetRecruitmentScheduleBody,
 } from '@dtos/recruitment.dto';
+import { UserEntity } from '@entities/user.entity';
 import { RecruitmentsGateway } from '@gateways/recruitments.gateway';
 import { CodeGuard } from '@guards/code.guard';
 import { InterviewsService } from '@services/interviews.service';
@@ -69,6 +71,17 @@ export class RecruitmentsController {
         if (!recruitment) {
             throw new BadRequestException(`Recruitment ${rid} does not exist`);
         }
+        if (+recruitment.end < Date.now()) {
+            /*
+              * If somebody extends the end date, he can bypass the restrictions on many operations,
+              * and may change some data of previous recruitments/candidates.
+              * They are recommended to modify the end date BEFORE it comes.
+              */
+            throw new ForbiddenException('This recruitment has already ended. '
+                + 'If you want to extend the end date of this recruitment, please contact maintainers. '
+                + 'This is not a bug.',
+            );
+        }
         recruitment.beginning = new Date(beginning);
         recruitment.end = new Date(end);
         recruitment.deadline = new Date(deadline);
@@ -79,6 +92,7 @@ export class RecruitmentsController {
     @Post(':rid/interviews/:name')
     @AcceptRole(Role.admin)
     async createRecruitmentInterviews(
+        @User() user: UserEntity,
         @Param('rid') rid: string,
         @Param('name') name: GroupOrTeam,
         @Body() { interviews }: CreateRecruitmentInterviewsBody,
@@ -86,6 +100,12 @@ export class RecruitmentsController {
         const recruitment = await this.recruitmentsService.findOneById(rid);
         if (!recruitment) {
             throw new BadRequestException(`Recruitment ${rid} does not exist`);
+        }
+        if (+recruitment.end < Date.now()) {
+            throw new ForbiddenException('This recruitment has already ended');
+        }
+        if (name !== GroupOrTeam.unique && GroupOrTeam[user.group] !== name) {
+            throw new ForbiddenException(`You cannot create interviews for group ${name}`);
         }
         await this.interviewsService.saveMany(interviews.map(({ date, period, slotNumber }) => ({
             date: new Date(date),
@@ -100,6 +120,7 @@ export class RecruitmentsController {
     @Put(':rid/interviews/:name')
     @AcceptRole(Role.admin)
     async setRecruitmentInterviews(
+        @User() user: UserEntity,
         @Param('rid') rid: string,
         @Param('name') name: GroupOrTeam,
         @Body() { interviews }: SetRecruitmentInterviewsBody,
@@ -108,19 +129,54 @@ export class RecruitmentsController {
         if (!recruitment) {
             throw new BadRequestException(`Recruitment ${rid} does not exist`);
         }
-        await this.interviewsService.updateMany(interviews.map(({ id, date, period, slotNumber }) => ({
-            id,
-            date: new Date(date),
-            period,
-            slotNumber,
-        })), recruitment, name);
-        this.recruitmentsGateway.broadcastUpdate();
+        if (+recruitment.end < Date.now()) {
+            throw new ForbiddenException('This recruitment has already ended');
+        }
+        if (name !== GroupOrTeam.unique && GroupOrTeam[user.group] !== name) {
+            throw new ForbiddenException(`You cannot update interviews for group ${name}`);
+        }
+        const result = await Promise.all(
+            interviews.map(({ id, date, period, slotNumber }) => this.interviewsService.updateOne({
+                id,
+                date: new Date(date),
+                period,
+                slotNumber,
+            }, recruitment, name)),
+        );
+        if (result.includes(true)) {
+            this.recruitmentsGateway.broadcastUpdate();
+        }
+        if (result.includes(false)) {
+            throw new BadRequestException('Some of the interview slots are already selected by candidates');
+        }
     }
 
     @Delete(':rid/interviews/:name')
     @AcceptRole(Role.admin)
-    deleteRecruitmentInterviews() {
-        // should we support deleting interviews, which may be selected by some candidates before deleting?
-        throw new NotImplementedException();
+    async deleteRecruitmentInterviews(
+        @User() user: UserEntity,
+        @Param('rid') rid: string,
+        @Param('name') name: GroupOrTeam,
+        @Body() interviews: string[],
+    ) {
+        const recruitment = await this.recruitmentsService.findOneById(rid);
+        if (!recruitment) {
+            throw new BadRequestException(`Recruitment ${rid} does not exist`);
+        }
+        if (+recruitment.end < Date.now()) {
+            throw new ForbiddenException('This recruitment has already ended');
+        }
+        if (name !== GroupOrTeam.unique && GroupOrTeam[user.group] !== name) {
+            throw new ForbiddenException(`You cannot delete interviews for group ${name}`);
+        }
+        const result = await Promise.all(
+            interviews.map((id) => this.interviewsService.deleteOne(id, recruitment, name)),
+        );
+        if (result.includes(true)) {
+            this.recruitmentsGateway.broadcastUpdate();
+        }
+        if (result.includes(false)) {
+            throw new BadRequestException('Some of the interview slots are already selected by candidates');
+        }
     }
 }
