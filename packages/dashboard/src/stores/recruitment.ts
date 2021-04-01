@@ -2,6 +2,7 @@ import { set } from 'idb-keyval';
 import { makeAutoObservable } from 'mobx';
 
 import { Recruitment } from '@config/types';
+import { compareTitle } from '@utils/compareTitle';
 import { localStorage } from '@utils/storage';
 
 export class RecruitmentStore {
@@ -13,6 +14,10 @@ export class RecruitmentStore {
 
     constructor() {
         makeAutoObservable(this);
+    }
+
+    get recruitmentsArray() {
+        return [...this.recruitments.values()].sort((a, b) => compareTitle(b.name, a.name));
     }
 
     setRecruitments(recruitments: Recruitment[]) {
