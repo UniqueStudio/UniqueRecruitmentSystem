@@ -83,10 +83,6 @@ export class CandidatesController {
         if (+recruitment.deadline < Date.now()) {
             throw new ForbiddenException('The application deadline of this recruitment has already passed');
         }
-        const candidates = await this.candidatesService.findInPendingRecruitments(phone);
-        if (candidates.length) {
-            throw new BadRequestException(`Candidate with phone ${phone} exists in pending recruitment(s)`);
-        }
         if (group === Group.design && !file) {
             throw new ForbiddenException(`Candidate without submitting resume cannot apply to group ${group}`);
         }

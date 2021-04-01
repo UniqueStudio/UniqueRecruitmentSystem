@@ -110,6 +110,27 @@ describe('CandidatesController e2e', () => {
                     .expect(201);
             });
         });
+        describe('create the same candidate again', () => {
+            it('should throw', async () => {
+                await agent(app.getHttpServer())
+                    .post('/candidates')
+                    .field('phone', '13344445555')
+                    .field('group', Group.web)
+                    .field('rid', testRecruitment.id)
+                    .field('name', 'rika')
+                    .field('gender', Gender.female)
+                    .field('grade', Grade.freshman)
+                    .field('institute', 'test')
+                    .field('major', 'test')
+                    .field('rank', Rank.A)
+                    .field('mail', 'aa@bb.cc')
+                    .field('intro', 'no')
+                    .field('isQuick', true)
+                    .field('referrer', 'hanyuu')
+                    .attach('resume', '/etc/hosts')
+                    .expect(400);
+            });
+        });
 
         describe('create new candidate with invalid data', () => {
             it('should throw', async () => {

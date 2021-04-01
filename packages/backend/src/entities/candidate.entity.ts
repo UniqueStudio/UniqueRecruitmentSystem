@@ -1,5 +1,5 @@
 import { IsBoolean, IsDate, IsEmail, IsEnum, IsOptional, IsPhoneNumber, IsString } from 'class-validator';
-import { Column, Entity, JoinTable, ManyToMany, ManyToOne, OneToMany } from 'typeorm';
+import { Column, Entity, JoinTable, ManyToMany, ManyToOne, OneToMany, Unique } from 'typeorm';
 
 import { Gender, Grade, Group, Rank, Step } from '@constants/enums';
 import { CommentEntity } from '@entities/comment.entity';
@@ -20,6 +20,7 @@ class InterviewAllocations {
 }
 
 @Entity('candidates')
+@Unique(['phone', 'recruitment'])
 export class CandidateEntity extends CommonEntity {
     @Column()
     @IsString()
