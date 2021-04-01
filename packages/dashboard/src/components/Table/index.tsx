@@ -10,6 +10,7 @@ import { GroupOrTeam, InterviewType, Step, StepType } from '@config/enums';
 import { Candidate } from '@config/types';
 import { useStores } from '@hooks/useStores';
 import useStyles from '@styles/table';
+import { sortByAllocation } from '@utils/sortByAllocation';
 
 export const Table: FC = observer(() => {
     const { $candidate } = useStores();
@@ -80,7 +81,9 @@ export const Table: FC = observer(() => {
                 const { interviewAllocations } = params.row as Candidate;
                 return interviewAllocations[type]?.toLocaleString('zh-CN');
             },
-            sortComparator: (a, b) => a?.[type] - b?.[type],
+            sortComparator(a, b) {
+                return sortByAllocation(a?.[type], b?.[type]);
+            },
         },
         {
             field: '',

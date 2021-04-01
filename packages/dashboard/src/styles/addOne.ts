@@ -1,6 +1,6 @@
 import { makeStyles } from '@material-ui/core';
 
-const useStyles = makeStyles(({ spacing, typography: { button }, breakpoints }) => ({
+const useStyles = makeStyles(({ spacing, typography: { button } }) => ({
     paper: {
         display: 'flex',
         margin: spacing(1),
@@ -28,14 +28,10 @@ const useStyles = makeStyles(({ spacing, typography: { button }, breakpoints }) 
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-        padding: `0 ${spacing(2)}px ${spacing(2)}px`,
+        padding: spacing(1),
     },
-    textField: {
-        width: 200,
-        [breakpoints.down('xs')]: {
-            width: 150,
-        },
-        margin: spacing(1),
+    button: {
+        marginTop: spacing(2),
     },
 }));
 

@@ -42,18 +42,18 @@ const useStyles = makeStyles(({ breakpoints, spacing }) => ({
     },
     inputContainer: {
         display: 'grid',
-        gridTemplateColumns: 'repeat(5, minmax(auto, 160px))',
+        gridTemplateColumns: 'repeat(4, minmax(auto, 160px))',
         [breakpoints.down('sm')]: {
-            display: 'flex',
-            flexDirection: 'column',
+            gridTemplateColumns: 'repeat(2, minmax(auto, 160px))',
         },
         rowGap: spacing(2),
         columnGap: spacing(1),
     },
     fullWidth: {
         overflowWrap: 'anywhere',
-        [breakpoints.up('md')]: {
-            gridColumn: '1 / 6',
+        gridColumn: '1 / 5',
+        [breakpoints.down('sm')]: {
+            gridColumn: '1 / 3',
         },
     },
 }));

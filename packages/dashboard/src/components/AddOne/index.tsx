@@ -1,4 +1,4 @@
-import { Button, IconButton, Paper, TextField, Tooltip } from '@material-ui/core';
+import { Button, IconButton, Paper, Tooltip, Typography } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import { observer } from 'mobx-react-lite';
 import React, { ChangeEventHandler, FC, useState } from 'react';
@@ -20,10 +20,10 @@ const generateTitle = (date: Date) => {
 };
 
 const initialState = () => {
+    console.log('ddd');
     const date = new Date();
     return {
         modal: false,
-        name: generateTitle(date),
         beginning: date,
         end: date,
         deadline: date,
@@ -34,12 +34,12 @@ const initialState = () => {
 export const AddOne: FC = observer(() => {
     const classes = useStyles();
     const { $component, $user } = useStores();
-    const [{ modal, name, beginning, end, deadline, code }, setState] = useState(initialState());
+    const [{ modal, beginning, end, deadline, code }, setState] = useState(initialState());
 
     const disabled = !$user.isAdminOrCaptain;
 
     const handleLaunch = async () => {
-        if (!code || !beginning || !end || !deadline || !name) {
+        if (!code || !beginning || !end || !deadline) {
             $component.enqueueSnackbar('请完整填写信息', 'warning');
             return;
         }
@@ -51,30 +51,25 @@ export const AddOne: FC = observer(() => {
             $component.enqueueSnackbar('结束时间必须大于截止时间', 'warning');
             return;
         }
-        await createRecruitment({
-            name,
+        const ok = await createRecruitment({
+            name: generateTitle(beginning),
             beginning: getMidnight(beginning),
             end: getMidnight(end),
             deadline: getMidnight(deadline),
             code,
         });
-        setState(initialState());
+        if (ok) {
+            setState(initialState());
+        }
     };
 
     const handleChange = (name: string): ChangeEventHandler<HTMLInputElement> => ({ target: { value } }) => {
-        setState((prevState) => ({
-            ...prevState,
-            [name]: value,
-        }));
+        setState((prevState) => ({ ...prevState, [name]: value }));
     };
 
     const handleChangeDate = (name: string) => (date: Date | null) => {
         if (date) {
-            setState((prevState) => ({
-                ...prevState,
-                [name]: date,
-                title: name === 'beginning' ? generateTitle(date) : prevState.name,
-            }));
+            setState((prevState) => ({ ...prevState, [name]: date }));
         }
     };
 
@@ -103,17 +98,10 @@ export const AddOne: FC = observer(() => {
             </Tooltip>
             <Modal title='发起招新' open={modal} onClose={toggleModal}>
                 <div className={classes.newContainer}>
-                    <TextField
-                        label='招新名称'
-                        className={classes.textField}
-                        value={titleConverter(name)}
-                        margin='normal'
-                        disabled
-                    />
-                    {/*TODO: fixme*/}
+                    <Typography variant='h6'>{titleConverter(generateTitle(beginning))}</Typography>
                     <Schedule onChange={handleChangeDate} beginning={beginning} end={end} deadline={deadline} />
                     <Verify onChange={handleChange('code')} code={code} />
-                    <Button color='primary' variant='contained' onClick={handleLaunch}>
+                    <Button className={classes.button} color='primary' variant='contained' onClick={handleLaunch}>
                         确定
                     </Button>
                 </div>
