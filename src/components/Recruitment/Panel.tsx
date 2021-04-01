@@ -102,7 +102,7 @@ export const RecruitmentPanel: FC = observer(() => {
                 <div className={classes.block}>
                     <AddOne />
                 </div>
-                {[...$recruitment.recruitments.values()].map((recruitment) => (
+                {$recruitment.recruitmentsArray.map((recruitment) => (
                     <RecruitmentOverview recruitment={recruitment} key={recruitment.id} />
                 ))}
             </div>
