@@ -6,7 +6,7 @@ import Female from 'mdi-material-ui/GenderFemale';
 import Male from 'mdi-material-ui/GenderMale';
 import TransGender from 'mdi-material-ui/GenderTransgender';
 import { observer } from 'mobx-react-lite';
-import React, { ChangeEventHandler, FC, MouseEventHandler, useMemo } from 'react';
+import React, { ChangeEventHandler, FC, MouseEventHandler } from 'react';
 import { Draggable, DraggableProvided } from 'react-beautiful-dnd';
 
 import { GRADES, GROUP_MAP } from '@config/consts';
@@ -87,7 +87,7 @@ export const Card: FC<Props> = observer(({ candidate, index, toggleDetail }) => 
 
     const disableCheck = abandoned || rejected || disabled;
 
-    const Check = () => (
+    const Check = (
         <Checkbox
             color='primary'
             onClick={stopPropagation}
@@ -97,7 +97,7 @@ export const Card: FC<Props> = observer(({ candidate, index, toggleDetail }) => 
         />
     );
 
-    const Profile = () => (
+    const Profile = (
         <span className={classes.cardTitle}>
             <Typography variant='h6'>
                 {$candidate.stepType === StepType.teamInterview ? `${GROUP_MAP.get(group)!} - ${name}` : name}
@@ -111,15 +111,14 @@ export const Card: FC<Props> = observer(({ candidate, index, toggleDetail }) => 
                 {abandoned && ' - 已放弃'}
                 {rejected && ' - 已淘汰'}
             </Typography>
-            {interviewAllocations.team && $candidate.stepType === StepType.teamInterview && (
-                <Typography color='textSecondary' variant='caption' display='block'>
-                    {new Date(interviewAllocations.team).toLocaleString('zh-CN')}
-                </Typography>
-            )}
+            <Typography color='textSecondary' variant='caption' display='block'>
+                {$candidate.stepType === StepType.groupInterview && interviewAllocations.group?.toLocaleString('zh-CN')}
+                {$candidate.stepType === StepType.teamInterview && interviewAllocations.team?.toLocaleString('zh-CN')}
+            </Typography>
         </span>
     );
 
-    const Info = () => (
+    const Info = (
         <IconButton className={classes.iconButton} onClick={handleToggle}>
             <InfoIcon />
         </IconButton>
@@ -128,9 +127,9 @@ export const Card: FC<Props> = observer(({ candidate, index, toggleDetail }) => 
     const CardContent = (
         <MuiCard className={classes.card} onClick={handleToggle}>
             <div className={classes.cardContent}>
-                {useMemo(Check, [checked, disableCheck])}
-                {useMemo(Profile, [abandoned, rejected])}
-                {useMemo(Info, [])}
+                {Check}
+                {Profile}
+                {Info}
             </div>
         </MuiCard>
     );

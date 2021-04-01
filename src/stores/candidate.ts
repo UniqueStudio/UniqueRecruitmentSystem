@@ -4,6 +4,7 @@ import { makeAutoObservable, toJS } from 'mobx';
 import { STEP_MAP } from '@config/consts';
 import { Group, InterviewType, Step, StepType } from '@config/enums';
 import { Candidate, Comment } from '@config/types';
+import { groupSort, teamSort } from '@utils/sortByAllocation';
 
 const allSteps = [
     Step.报名,
@@ -173,6 +174,8 @@ export class CandidateStore {
                 }
                 break;
         }
+        candidates[Step.组面].sort(groupSort);
+        candidates[Step.群面].sort(teamSort);
         return candidates;
     }
 }
