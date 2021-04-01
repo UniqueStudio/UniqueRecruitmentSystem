@@ -23,44 +23,14 @@ export class InterviewsService extends BasicCRUDService<InterviewEntity> {
         );
     }
 
-    async updateOne(
-        newInterview: Omit<InterviewEntity, Exclude<keyof CommonEntity, 'id'> | 'name' | 'recruitment' | 'candidates'>,
-        recruitment: RecruitmentEntity,
-        name: GroupOrTeam,
-    ) {
-        const { date, id, period, slotNumber } = newInterview;
-        const interview = await this.repository
+    async findManyWithCandidates(rid: string, name: GroupOrTeam) {
+        return await this.repository
             .createQueryBuilder('interview')
             .leftJoinAndSelect('interview.candidates', 'candidates')
             .leftJoinAndSelect('interview.recruitment', 'recruitment')
-            .where('interview.id = :id', { id })
-            .andWhere('recruitment.id = :rid', { rid: recruitment.id })
+            .where('recruitment.id = :rid', { rid })
             .andWhere('interview.name = :name', { name })
-            .getOneOrFail();
-        if (interview.candidates.length && (+interview.date !== +date || interview.period !== period)) {
-            return false;
-        }
-        interview.slotNumber = slotNumber;
-        interview.date = date;
-        interview.period = period;
-        await interview.save();
-        return true;
-    }
-
-    async deleteOne(id: string, recruitment: RecruitmentEntity, name: GroupOrTeam) {
-        const interview = await this.repository
-            .createQueryBuilder('interview')
-            .leftJoinAndSelect('interview.candidates', 'candidates')
-            .leftJoinAndSelect('interview.recruitment', 'recruitment')
-            .where('interview.id = :id', { id })
-            .andWhere('recruitment.id = :rid', { rid: recruitment.id })
-            .andWhere('interview.name = :name', { name })
-            .getOneOrFail();
-        if (interview.candidates.length) {
-            return false;
-        }
-        await interview.remove();
-        return true;
+            .getMany();
     }
 
     findManyByIdsInRecruitment(ids: string[], recruitment: RecruitmentEntity, name: GroupOrTeam) {

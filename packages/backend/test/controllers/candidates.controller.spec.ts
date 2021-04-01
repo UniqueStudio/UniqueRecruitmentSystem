@@ -350,7 +350,7 @@ describe('CandidatesController e2e', () => {
         describe('prepare interview slots', () => {
             it('should return success', async () => {
                 await agent(app.getHttpServer())
-                    .post(`/recruitments/${testRecruitment.id}/interviews/ai`)
+                    .put(`/recruitments/${testRecruitment.id}/interviews/ai`)
                     .send({
                         interviews: [
                             {
@@ -366,7 +366,7 @@ describe('CandidatesController e2e', () => {
                         ],
                     })
                     .auth(adminJWT, { type: 'bearer' })
-                    .expect(201);
+                    .expect(200);
             });
         });
         let interviews: InterviewEntity[];

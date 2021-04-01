@@ -142,7 +142,7 @@ describe('RecruitmentsController e2e', () => {
         });
     });
 
-    describe('POST and PUT /recruitments/:rid/interviews/:name', () => {
+    describe('PUT /recruitments/:rid/interviews/:name', () => {
         let testRecruitment: RecruitmentEntity;
         let interviews: InterviewEntity[];
         describe('get id of pending recruitment', () => {
@@ -157,7 +157,7 @@ describe('RecruitmentsController e2e', () => {
         describe('set recruitment interviews with valid credential', () => {
             it('should return success', async () => {
                 await agent(app.getHttpServer())
-                    .post(`/recruitments/${testRecruitment.id}/interviews/web`)
+                    .put(`/recruitments/${testRecruitment.id}/interviews/web`)
                     .send({
                         interviews: [
                             {
@@ -173,7 +173,7 @@ describe('RecruitmentsController e2e', () => {
                         ],
                     })
                     .auth(adminJWT, { type: 'bearer' })
-                    .expect(201);
+                    .expect(200);
             });
         });
 
@@ -191,7 +191,7 @@ describe('RecruitmentsController e2e', () => {
         describe('set recruitment interviews with invalid credential', () => {
             it('should throw', async () => {
                 await agent(app.getHttpServer())
-                    .post(`/recruitments/${testRecruitment.id}/interviews/web`)
+                    .put(`/recruitments/${testRecruitment.id}/interviews/web`)
                     .auth(userJWT, { type: 'bearer' })
                     .expect(403);
             });
@@ -200,7 +200,7 @@ describe('RecruitmentsController e2e', () => {
         describe('set recruitment interviews for another group', () => {
             it('should throw', async () => {
                 await agent(app.getHttpServer())
-                    .post(`/recruitments/${testRecruitment.id}/interviews/ai`)
+                    .put(`/recruitments/${testRecruitment.id}/interviews/ai`)
                     .send({
                         interviews: [
                             {
@@ -223,16 +223,12 @@ describe('RecruitmentsController e2e', () => {
         describe('set recruitment interviews with invalid data', () => {
             it('should throw', async () => {
                 await agent(app.getHttpServer())
-                    .post(`/recruitments/${testRecruitment.id}/interviews/web`)
+                    .put(`/recruitments/${testRecruitment.id}/interviews/web`)
                     .send({
                         interviews: [
+                            ...interviews,
                             {
-                                date: new Date(2001),
-                                period: Period.morning,
-                                slotNumber: 5,
-                            },
-                            {
-                                date: new Date(2001),
+                                date: new Date('2001'),
                                 period: Period.afternoon,
                                 slotNumber: -1,
                             },
@@ -243,17 +239,13 @@ describe('RecruitmentsController e2e', () => {
             });
             it('should also throw', async () => {
                 await agent(app.getHttpServer())
-                    .post(`/recruitments/${testRecruitment.id}/interviews/web`)
+                    .put(`/recruitments/${testRecruitment.id}/interviews/web`)
                     .send({
                         interviews: [
+                            ...interviews,
                             {
-                                date: new Date(2005),
-                                period: Period.morning,
-                                slotNumber: 5,
-                            },
-                            {
-                                date: new Date(2005),
-                                period: Period.morning,
+                                date: new Date('2001'),
+                                period: Period.evening,
                                 slotNumber: 5,
                             },
                         ],
@@ -327,8 +319,10 @@ describe('RecruitmentsController e2e', () => {
         describe('delete all the interviews', () => {
             it('should throw', async () => {
                 await agent(app.getHttpServer())
-                    .delete(`/recruitments/${testRecruitment.id}/interviews/web`)
-                    .send(interviews.map(({ id }) => id))
+                    .put(`/recruitments/${testRecruitment.id}/interviews/web`)
+                    .send({
+                        interviews: [],
+                    })
                     .auth(adminJWT, { type: 'bearer' })
                     .expect(400);
             });
@@ -343,8 +337,10 @@ describe('RecruitmentsController e2e', () => {
         describe('delete all the interviews again', () => {
             it('should return success', async () => {
                 await agent(app.getHttpServer())
-                    .delete(`/recruitments/${testRecruitment.id}/interviews/web`)
-                    .send(interviews.map(({ id }) => id))
+                    .put(`/recruitments/${testRecruitment.id}/interviews/web`)
+                    .send({
+                        interviews: [],
+                    })
                     .auth(adminJWT, { type: 'bearer' })
                     .expect(200);
             });

@@ -1,5 +1,16 @@
 import { Type } from 'class-transformer';
-import { IsArray, IsDateString, IsEnum, IsInt, IsString, IsUUID, Matches, Min, ValidateNested } from 'class-validator';
+import {
+    IsArray,
+    IsDateString,
+    IsEnum,
+    IsInt,
+    IsOptional,
+    IsString,
+    IsUUID,
+    Matches,
+    Min,
+    ValidateNested,
+} from 'class-validator';
 
 import { Period } from '@constants/enums';
 import { GreaterThan, LessThan } from '@decorators/comparator.decorator';
@@ -18,6 +29,10 @@ export class SetRecruitmentScheduleBody {
 }
 
 class InterviewsElement {
+    @IsOptional()
+    @IsUUID(4)
+    id!: string;
+
     @IsDateString()
     date!: string;
 
@@ -29,23 +44,11 @@ class InterviewsElement {
     slotNumber!: number;
 }
 
-class InterviewsElementWithId extends InterviewsElement {
-    @IsUUID(4)
-    id!: string;
-}
-
-export class CreateRecruitmentInterviewsBody {
+export class SetRecruitmentInterviewsBody {
     @IsArray()
     @ValidateNested({ each: true })
     @Type(() => InterviewsElement)
     interviews!: InterviewsElement[];
-}
-
-export class SetRecruitmentInterviewsBody {
-    @IsArray()
-    @ValidateNested({ each: true })
-    @Type(() => InterviewsElementWithId)
-    interviews!: InterviewsElementWithId[];
 }
 
 export class CreateRecruitmentBody extends SetRecruitmentScheduleBody {

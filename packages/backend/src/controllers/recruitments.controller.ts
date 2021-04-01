@@ -2,7 +2,6 @@ import {
     BadRequestException,
     Body,
     Controller,
-    Delete,
     ForbiddenException,
     Get,
     Param,
@@ -16,10 +15,10 @@ import { AcceptRole } from '@decorators/role.decorator';
 import { User } from '@decorators/user.decorator';
 import {
     CreateRecruitmentBody,
-    CreateRecruitmentInterviewsBody,
     SetRecruitmentInterviewsBody,
     SetRecruitmentScheduleBody,
 } from '@dtos/recruitment.dto';
+import { InterviewEntity } from '@entities/interview.entity';
 import { UserEntity } from '@entities/user.entity';
 import { RecruitmentsGateway } from '@gateways/recruitments.gateway';
 import { CodeGuard } from '@guards/code.guard';
@@ -89,34 +88,6 @@ export class RecruitmentsController {
         this.recruitmentsGateway.broadcastUpdate();
     }
 
-    @Post(':rid/interviews/:name')
-    @AcceptRole(Role.admin)
-    async createRecruitmentInterviews(
-        @User() user: UserEntity,
-        @Param('rid') rid: string,
-        @Param('name') name: GroupOrTeam,
-        @Body() { interviews }: CreateRecruitmentInterviewsBody,
-    ) {
-        const recruitment = await this.recruitmentsService.findOneById(rid);
-        if (!recruitment) {
-            throw new BadRequestException(`Recruitment ${rid} does not exist`);
-        }
-        if (+recruitment.end < Date.now()) {
-            throw new ForbiddenException('This recruitment has already ended');
-        }
-        if (name !== GroupOrTeam.unique && GroupOrTeam[user.group] !== name) {
-            throw new ForbiddenException(`You cannot create interviews for group ${name}`);
-        }
-        await this.interviewsService.saveMany(interviews.map(({ date, period, slotNumber }) => ({
-            date: new Date(date),
-            period,
-            name,
-            slotNumber,
-            recruitment,
-        })));
-        this.recruitmentsGateway.broadcastUpdate();
-    }
-
     @Put(':rid/interviews/:name')
     @AcceptRole(Role.admin)
     async setRecruitmentInterviews(
@@ -135,48 +106,56 @@ export class RecruitmentsController {
         if (name !== GroupOrTeam.unique && GroupOrTeam[user.group] !== name) {
             throw new ForbiddenException(`You cannot update interviews for group ${name}`);
         }
-        const result = await Promise.all(
-            interviews.map(({ id, date, period, slotNumber }) => this.interviewsService.updateOne({
-                id,
-                date: new Date(date),
-                period,
-                slotNumber,
-            }, recruitment, name)),
-        );
-        if (result.includes(true)) {
-            this.recruitmentsGateway.broadcastUpdate();
+        const errors = new Set<string>();
+        const updatedInterviews = new Map<string, Pick<InterviewEntity, 'date' | 'period' | 'slotNumber'>>();
+        const newInterviews: Pick<InterviewEntity, 'date' | 'period' | 'slotNumber'>[] = [];
+        for (const { id, date, period, slotNumber } of interviews) {
+            if (id) {
+                updatedInterviews.set(id, { date: new Date(date), period, slotNumber });
+            } else {
+                newInterviews.push({ date: new Date(date), period, slotNumber });
+            }
         }
-        if (result.includes(false)) {
-            throw new BadRequestException('Some of the interview slots are already selected by candidates');
+        for (const interview of await this.interviewsService.findManyWithCandidates(rid, name)) {
+            const updatedInterview = updatedInterviews.get(interview.id);
+            try {
+                if (updatedInterview) {
+                    const { date, period, slotNumber } = updatedInterview;
+                    if (interview.candidates.length && (+interview.date !== +date || interview.period !== period)) {
+                        errors.add('Some of the interview slots are already selected by candidates');
+                    } else {
+                        interview.slotNumber = slotNumber;
+                        interview.date = date;
+                        interview.period = period;
+                        await interview.save();
+                    }
+                } else {
+                    if (interview.candidates.length) {
+                        errors.add('Some of the interview slots are already selected by candidates');
+                    } else {
+                        await interview.remove();
+                    }
+                }
+            } catch ({ message }) {
+                errors.add(message);
+            }
         }
-    }
-
-    @Delete(':rid/interviews/:name')
-    @AcceptRole(Role.admin)
-    async deleteRecruitmentInterviews(
-        @User() user: UserEntity,
-        @Param('rid') rid: string,
-        @Param('name') name: GroupOrTeam,
-        @Body() interviews: string[],
-    ) {
-        const recruitment = await this.recruitmentsService.findOneById(rid);
-        if (!recruitment) {
-            throw new BadRequestException(`Recruitment ${rid} does not exist`);
+        for (const { date, period, slotNumber } of newInterviews) {
+            try {
+                await this.interviewsService.createAndSave({
+                    date,
+                    period,
+                    name,
+                    slotNumber,
+                    recruitment,
+                });
+            } catch ({ message }) {
+                errors.add(message);
+            }
         }
-        if (+recruitment.end < Date.now()) {
-            throw new ForbiddenException('This recruitment has already ended');
-        }
-        if (name !== GroupOrTeam.unique && GroupOrTeam[user.group] !== name) {
-            throw new ForbiddenException(`You cannot delete interviews for group ${name}`);
-        }
-        const result = await Promise.all(
-            interviews.map((id) => this.interviewsService.deleteOne(id, recruitment, name)),
-        );
-        if (result.includes(true)) {
-            this.recruitmentsGateway.broadcastUpdate();
-        }
-        if (result.includes(false)) {
-            throw new BadRequestException('Some of the interview slots are already selected by candidates');
+        this.recruitmentsGateway.broadcastUpdate();
+        if (errors.size) {
+            throw new BadRequestException([...errors].join(', '));
         }
     }
 }
