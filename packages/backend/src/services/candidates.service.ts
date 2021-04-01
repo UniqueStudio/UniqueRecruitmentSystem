@@ -31,10 +31,10 @@ export class CandidatesService extends BasicCRUDService<CandidateEntity> {
                 recruitment: {
                     id: rid,
                 },
-                updatedAt: MoreThan(since)
+                updatedAt: MoreThan(since),
             },
-            relations: ['recruitment', 'interviewSelections', 'comments', 'comments.user']
-        })
+            relations: ['recruitment', 'interviewSelections', 'comments', 'comments.user'],
+        });
     }
 
     findInPendingRecruitments(phone: string) {
