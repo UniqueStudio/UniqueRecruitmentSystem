@@ -25,7 +25,7 @@ const memberDataConverter = (handleSelect: SelectHandler, admin: Record<string, 
     GENDERS[gender],
     phone || '未知',
     mail || '未知',
-    titleConverter(joinTime),
+    titleConverter(joinTime).slice(0, 5),
     isCaptain ? '是' : '否',
     <Checkbox
         checked={admin[phone] || isAdmin}
