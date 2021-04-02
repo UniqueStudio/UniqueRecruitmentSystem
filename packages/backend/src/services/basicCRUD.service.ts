@@ -24,7 +24,7 @@ export abstract class BasicCRUDService<T extends ObjectLiteral> {
     }
 
     findOneById(id: string, options?: FindOneOptions<T>) {
-        return this.repository.findOne(id, options);
+        return this.repository.findOneOrFail(id, options);
     }
 
     update: Repository<T>['update'] = (...args) => this.repository.update(...args);

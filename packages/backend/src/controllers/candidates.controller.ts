@@ -235,9 +235,6 @@ export class CandidatesController {
         @Res() res: Response,
     ) {
         const candidate = await this.candidatesService.findOneById(cid);
-        if (!candidate) {
-            throw new BadRequestException(`Candidate with id ${cid} doesn't exist`);
-        }
         const { recruitment: { name }, resume, group } = candidate;
         if (!resume) {
             throw new BadRequestException(`Resume of candidate with id ${cid} doesn't exist`);
@@ -257,10 +254,6 @@ export class CandidatesController {
     ) {
         const recruitment = await this.recruitmentsService.findOneById(rid);
 
-        if (!recruitment) {
-            throw new BadRequestException(`Recruitment with id ${rid} doesn't exist`);
-        }
-
         if (recruitment.createdAt < user.createdAt) {
             throw new ForbiddenException('You don\'t have permission to view this recruitment');
         }
@@ -276,10 +269,7 @@ export class CandidatesController {
         @Body() { from, to }: MoveCandidateBody,
     ) {
         const candidate = await this.candidatesService.findOneById(cid);
-        if (!candidate) {
-            throw new BadRequestException(`Candidate with id ${cid} doesn't exist`);
-        }
-        const { step, recruitment: { name, end } } = candidate;
+        const { step, recruitment: { name, end, id } } = candidate;
         if (+end < Date.now()) {
             throw new BadRequestException(`Recruitment ${name} has already ended`);
         }
@@ -297,10 +287,7 @@ export class CandidatesController {
         @Param('cid') cid: string,
     ) {
         const candidate = await this.candidatesService.findOneById(cid);
-        if (!candidate) {
-            throw new WsException(`Candidate with id ${cid} doesn't exist`);
-        }
-        const { resume, recruitment: { name, end }, group } = candidate;
+        const { resume, recruitment: { name, end, id }, group } = candidate;
         if (+end < Date.now()) {
             throw new WsException(`Recruitment ${name} has already ended`);
         }
@@ -318,9 +305,6 @@ export class CandidatesController {
         @User() user: UserEntity,
     ) {
         const candidate = await this.candidatesService.findOneById(cid);
-        if (!candidate) {
-            throw new BadRequestException(`Candidate with id ${cid} doesn't exist`);
-        }
         CandidatesController.checkAllocationPermission(candidate, user, type);
         candidate.interviewAllocations[type] = new Date(time);
         await candidate.save();

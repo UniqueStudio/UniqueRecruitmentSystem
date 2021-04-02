@@ -57,7 +57,7 @@ describe('UsersService', () => {
     describe('find by id and return data without password', () => {
         it('should return an object without password', async () => {
             const user = await usersService.findOneById(testUser.id);
-            expect(user?.password).toBeUndefined();
+            expect(user.password).toBeUndefined();
         });
     });
 

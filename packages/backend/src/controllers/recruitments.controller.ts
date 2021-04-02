@@ -67,9 +67,6 @@ export class RecruitmentsController {
         @Body() { beginning, end, deadline }: SetRecruitmentScheduleBody,
     ) {
         const recruitment = await this.recruitmentsService.findOneById(rid);
-        if (!recruitment) {
-            throw new BadRequestException(`Recruitment ${rid} does not exist`);
-        }
         if (+recruitment.end < Date.now()) {
             /*
               * If somebody extends the end date, he can bypass the restrictions on many operations,
@@ -97,9 +94,6 @@ export class RecruitmentsController {
         @Body() { interviews }: SetRecruitmentInterviewsBody,
     ) {
         const recruitment = await this.recruitmentsService.findOneById(rid);
-        if (!recruitment) {
-            throw new BadRequestException(`Recruitment ${rid} does not exist`);
-        }
         if (+recruitment.end < Date.now()) {
             throw new ForbiddenException('This recruitment has already ended');
         }
