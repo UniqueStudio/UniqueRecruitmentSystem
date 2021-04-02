@@ -9,7 +9,7 @@ import { RecruitmentEntity } from '@entities/recruitment.entity';
 @Entity('interviews')
 @Unique(['date', 'period', 'name'])
 export class InterviewEntity extends CommonEntity {
-    @Column('date')
+    @Column('timestamptz')
     @IsDate()
     date!: Date;
 
