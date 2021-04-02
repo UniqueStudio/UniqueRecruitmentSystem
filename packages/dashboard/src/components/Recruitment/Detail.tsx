@@ -1,5 +1,4 @@
-import { Button, Paper, Tab } from '@material-ui/core';
-import { TabContext, TabList, TabPanel } from '@material-ui/lab';
+import { Button } from '@material-ui/core';
 import { observer } from 'mobx-react-lite';
 import React, { FC, useEffect, useState } from 'react';
 
@@ -9,6 +8,7 @@ import { Schedule } from '@components/Schedule';
 import { GROUP_MAP, STEP_MAP } from '@config/consts';
 import { Group } from '@config/enums';
 import { useStores } from '@hooks/useStores';
+import { TabLayout } from '@layouts/TabLayout';
 import useStyles from '@styles/recruitmentDetail';
 import { roundToDay } from '@utils/time';
 
@@ -18,9 +18,8 @@ export const RecruitmentDetail: FC = observer(() => {
     const [beginningState, setBeginning] = useState(new Date());
     const [endState, setEnd] = useState(new Date());
     const [deadlineState, setDeadline] = useState(new Date());
-    const [tab, setTab] = useState<Group>($user.info.group);
-    useEffect(() => {
-        const recruitment = $recruitment.recruitments.get($recruitment.viewing);
+    const init = () => {
+        const recruitment = $recruitment.viewingRecruitment;
         if (!recruitment) {
             return;
         }
@@ -28,9 +27,10 @@ export const RecruitmentDetail: FC = observer(() => {
         setBeginning(beginning);
         setEnd(end);
         setDeadline(deadline);
-    }, [$recruitment.viewing]);
+    };
+    useEffect(init, [$recruitment.viewingId]);
 
-    const recruitment = $recruitment.recruitments.get($recruitment.viewing);
+    const recruitment = $recruitment.viewingRecruitment;
     if (!recruitment) {
         return null;
     }
@@ -84,25 +84,14 @@ export const RecruitmentDetail: FC = observer(() => {
                     修改时间
                 </Button>
             </div>
-            <Paper className={classes.tabsContainer}>
-                <TabContext value={tab}>
-                    <TabList
-                        onChange={(event, newValue) => setTab(newValue)}
-                        indicatorColor='primary'
-                        textColor='primary'
-                        variant='scrollable'
-                        scrollButtons='on'>
-                        {[...GROUP_MAP.entries()].map(([key, name]) => (
-                            <Tab label={name} key={key} value={key} />
-                        ))}
-                    </TabList>
-                    {[...GROUP_MAP.keys()].map((key) => (
-                        <TabPanel value={key} key={key}>
-                            <BarChart data={result[key]} labels={[...STEP_MAP.values()]} title='各轮选手分布' />
-                        </TabPanel>
-                    ))}
-                </TabContext>
-            </Paper>
+            <TabLayout
+                variant='scrollable'
+                items={[...GROUP_MAP.entries()].map(([value, label]) => ({
+                    value,
+                    label,
+                    component: <BarChart data={result[value]} labels={[...STEP_MAP.values()]} title='各轮选手分布' />,
+                }))}
+            />
         </div>
     );
 });

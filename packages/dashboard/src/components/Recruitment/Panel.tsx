@@ -43,7 +43,7 @@ const RecruitmentOverview: FC<Props> = observer(({ recruitment: { statistics, en
             $component.enqueueSnackbar('你不能查看本次招新', 'info');
             return;
         }
-        if ($recruitment.viewing === id) {
+        if ($recruitment.viewingId === id) {
             $component.enqueueSnackbar('你正在查看本次招新', 'info');
             return;
         }
@@ -53,40 +53,39 @@ const RecruitmentOverview: FC<Props> = observer(({ recruitment: { statistics, en
     const data = group ? result[group].slice(0, -1) : Object.values(result).map((t) => t[STEP_SHORT_MAP.size]);
     const title = group ? `${GROUP_MAP.get(group)!}组各轮情况` : titleConverter(name);
     const labels = group ? [...STEP_SHORT_MAP.values()] : [...GROUP_MAP.values()];
-    const selected = $recruitment.viewing === id;
-    const EyeIcon = $recruitment.viewing === id ? VisibilityIcon : VisibilityOffIcon;
+    const selected = $recruitment.viewingId === id;
+    const EyeIcon = $recruitment.viewingId === id ? VisibilityIcon : VisibilityOffIcon;
     return (
-        <div key={id} className={classes.block}>
-            <Paper
-                className={clsx(classes.container, {
-                    [classes.selected]: selected,
-                    [classes.expired]: Date.now() > +end,
-                })}>
-                <Box className={classes.chartContainer}>
-                    <div className={classes.chart}>
-                        <DoughnutChart
-                            data={data}
-                            title={title}
-                            labels={labels}
-                            onClick={(event, elements) => {
-                                const element = elements[0];
-                                if (!element) {
-                                    return;
-                                }
-                                setGroup((group) => (group ? undefined : [...GROUP_MAP.keys()][element.index]));
-                            }}
-                        />
-                    </div>
-                    <Typography variant='body1' className={classes.centerText}>
-                        总计：{group ? result[group][STEP_SHORT_MAP.size] : total}人
-                    </Typography>
-                </Box>
-                <Button className={classes.btn} onClick={handleSet} fullWidth disabled={selected}>
-                    <EyeIcon color='inherit' />
-                    {selected ? '当前招新' : '查看招新'}
-                </Button>
-            </Paper>
-        </div>
+        <Paper
+            key={id}
+            className={clsx(classes.container, {
+                [classes.selected]: selected,
+                [classes.expired]: Date.now() > +end,
+            })}>
+            <Box className={classes.chartContainer}>
+                <div className={classes.chart}>
+                    <DoughnutChart
+                        data={data}
+                        title={title}
+                        labels={labels}
+                        onClick={(event, elements) => {
+                            const element = elements[0];
+                            if (!element) {
+                                return;
+                            }
+                            setGroup((group) => (group ? undefined : [...GROUP_MAP.keys()][element.index]));
+                        }}
+                    />
+                </div>
+                <Typography variant='body1' className={classes.centerText}>
+                    总计：{group ? result[group][STEP_SHORT_MAP.size] : total}人
+                </Typography>
+            </Box>
+            <Button onClick={handleSet} fullWidth disabled={selected}>
+                <EyeIcon color='inherit' />
+                {selected ? '当前招新' : '查看招新'}
+            </Button>
+        </Paper>
     );
 });
 
@@ -99,9 +98,7 @@ export const RecruitmentPanel: FC = observer(() => {
             open={$component.recruitmentPanelOpen}
             onClose={() => $component.toggleRecruitmentPanel()}>
             <div className={classes.blocksContainer}>
-                <div className={classes.block}>
-                    <AddOne />
-                </div>
+                <AddOne />
                 {$recruitment.recruitmentsArray.map((recruitment) => (
                     <RecruitmentOverview recruitment={recruitment} key={recruitment.id} />
                 ))}
