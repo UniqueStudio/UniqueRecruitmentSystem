@@ -1,6 +1,6 @@
 import { makeStyles } from '@material-ui/core';
 
-const useStyles = makeStyles(({ spacing }) => ({
+const useStyles = makeStyles(({ spacing, breakpoints }) => ({
     tableContainer: {
         overflowX: 'auto',
     },
@@ -10,7 +10,10 @@ const useStyles = makeStyles(({ spacing }) => ({
     },
     tableCell: {
         textAlign: 'center',
-        overflowWrap: 'anywhere',
+        [breakpoints.down('xs')]: {
+            padding: spacing(0.5),
+            minWidth: spacing(10),
+        },
     },
 }));
 
