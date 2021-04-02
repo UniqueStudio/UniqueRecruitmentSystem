@@ -3,7 +3,7 @@ import { makeStyles } from '@material-ui/core';
 const useStyles = makeStyles(({ spacing }) => ({
     container: {
         display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 300px))',
+        gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))',
     },
     slotContainer: {
         display: 'flex',
