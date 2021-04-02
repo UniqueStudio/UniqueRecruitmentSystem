@@ -3,14 +3,14 @@ import { observer } from 'mobx-react-lite';
 import React, { ChangeEventHandler, FC, FormEventHandler, useState } from 'react';
 import { Redirect } from 'react-router-dom';
 
-import { loginViaPassword, loginViaQRCode } from '@apis/rest';
-import Modal from '@components/Modal';
-import Progress from '@components/Progress';
+import { loginByPassword, loginByQRCode } from '@apis/rest';
+import { Modal } from '@components/Modal';
+import { Progress } from '@components/Progress';
 import { useStores } from '@hooks/useStores';
 import logo from '@images/logo.png';
 import useStyles from '@styles/login';
 
-const Login: FC = observer(() => {
+export const Login: FC = observer(() => {
     const { $user, $component } = useStores();
 
     const classes = useStyles();
@@ -23,7 +23,7 @@ const Login: FC = observer(() => {
     const handleLogin: FormEventHandler = (event) => {
         // use preventDefault to disable HTML form's auto redirect
         event.preventDefault();
-        return loginViaPassword(phone, password);
+        return loginByPassword(phone, password);
     };
 
     const handleMethod = (newMethod: number) => () => {
@@ -66,7 +66,7 @@ const Login: FC = observer(() => {
                 variant='contained'
                 color='primary'
                 size='large'
-                onClick={loginViaQRCode}
+                onClick={loginByQRCode}
                 disabled={!!$user.qrCodeURL}>
                 获取二维码
             </Button>
@@ -130,5 +130,3 @@ const Login: FC = observer(() => {
         </div>
     );
 });
-
-export default Login;

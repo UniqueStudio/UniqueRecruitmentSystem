@@ -5,7 +5,7 @@ interface Props {
     to: string;
 }
 
-const Anchor: FC<Props> = memo(({ to, children }) => (
+export const Anchor: FC<Props> = memo(({ to, children }) => (
     <Link
         to={to}
         style={{
@@ -16,5 +16,3 @@ const Anchor: FC<Props> = memo(({ to, children }) => (
         {children}
     </Link>
 ));
-
-export default Anchor;

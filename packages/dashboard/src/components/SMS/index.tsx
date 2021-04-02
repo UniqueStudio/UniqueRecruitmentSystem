@@ -1,78 +1,67 @@
-import { Button, Paper, Step, StepContent, StepLabel, Stepper } from '@material-ui/core';
+import { Button, Paper, Step as MuiStep, StepContent, StepLabel, Stepper } from '@material-ui/core';
 import { observer } from 'mobx-react-lite';
 import React, { ChangeEventHandler, FC, useState } from 'react';
 
-import Detail from './Detail';
-import Picker from './Picker';
+import { SMSDetail } from './Detail';
+import { SMSPicker } from './Picker';
 
-import { sendSMS } from '@apis/rest';
-import Verify from '@components/Verify';
+import { sendSMSToCandidate } from '@apis/rest';
+import { Verify } from '@components/Verify';
+import { SMSType } from '@config/enums';
 import { useStores } from '@hooks/useStores';
 import useStyles from '@styles/sms';
+import { generateModel } from '@utils/generateModel';
 
 interface Props {
     toggleOpen: () => void;
 }
 
-const SMSTemplate: FC<Props> = observer(({ toggleOpen }) => {
+const initialContent = {
+    type: SMSType.accept,
+    next: -1 as -1,
+    time: '',
+    place: '',
+    rest: '',
+};
+
+export const Template: FC<Props> = observer(({ toggleOpen }) => {
     const { $component, $candidate } = useStores();
     const classes = useStyles();
     const [activeStep, setActiveStep] = useState(0);
-    const [content, setContent] = useState({
-        type: 'accept',
-        step: -1 as -1,
-        next: -1 as -1,
-        time: '',
-        place: '',
-        rest: '',
-    });
+    const [content, setContent] = useState(initialContent);
+    const [message, setMessage] = useState(generateModel(initialContent));
     const [code, setCode] = useState('');
 
     const handleBack = () => {
         setActiveStep((prevActiveStep) => prevActiveStep - 1);
     };
 
-    const handleSend = () => {
+    const handleSend = async () => {
         if (code === '') {
-            $component.enqueueSnackbar('请填写验证码！', 'warning');
+            $component.enqueueSnackbar('请填写验证码', 'warning');
             return;
         }
 
-        setCode('');
-        return sendSMS({ ...content, code, candidates: [...$candidate.selected.keys()] });
+        if (await sendSMSToCandidate({ ...content, code, cids: [...$candidate.selected.keys()] })) {
+            setCode('');
+        }
     };
 
     const handleNext = () => {
-        const { step, type, time, place, rest, next } = content;
-        if (activeStep === 1) {
-            if (type === 'group' || type === 'team') {
-                if (!place) {
-                    $component.enqueueSnackbar('请填写地点！', 'warning');
-                    return;
-                }
-            } else if (step === -1) {
-                $component.enqueueSnackbar('请选择流程！', 'warning');
-                return;
-            } else if (next === -1) {
-                $component.enqueueSnackbar('请选择下一轮！', 'warning');
-                return;
-            } else if ((next === 1 || next === 3) && type === 'accept' && !rest) {
-                if (!time) {
-                    $component.enqueueSnackbar('请填写时间！', 'warning');
-                    return;
-                }
-                if (!place) {
-                    $component.enqueueSnackbar('请填写地点！', 'warning');
-                    return;
-                }
-            }
+        if (activeStep === 1 && message.includes('{{!')) {
+            $component.enqueueSnackbar('请完整填写模板', 'warning');
+            return;
         }
         setActiveStep((prevActiveStep) => prevActiveStep + 1);
     };
 
     const handleChange = (name: string): ChangeEventHandler<HTMLInputElement> => ({ target: { value } }) => {
         // `value` is defined as string but can be number here
-        setContent((prevContent) => ({ ...prevContent, [name]: value }));
+        setContent((prevContent) => {
+            const newContent = { ...prevContent, [name]: value };
+            setMessage(generateModel(newContent));
+            return newContent;
+        });
     };
 
     const handleCode: ChangeEventHandler<HTMLInputElement> = ({ target: { value } }) => {
@@ -81,8 +70,8 @@ const SMSTemplate: FC<Props> = observer(({ toggleOpen }) => {
 
     const steps = ['发送对象', '消息模板', '确认发送'];
     const stepContent = [
-        <Picker />,
-        <Detail content={content} handleChange={handleChange} />,
+        <SMSPicker />,
+        <SMSDetail content={content} handleChange={handleChange} message={message} />,
         <Verify code={code} onChange={handleCode} />,
     ];
 
@@ -90,7 +79,7 @@ const SMSTemplate: FC<Props> = observer(({ toggleOpen }) => {
         <div className={classes.template}>
             <Stepper activeStep={activeStep} classes={{ root: classes.stepper }} orientation='vertical'>
                 {steps.map((stepName, index) => (
-                    <Step key={index}>
+                    <MuiStep key={index}>
                         <StepLabel>{stepName}</StepLabel>
                         <StepContent classes={{ last: classes.verify }}>
                             {stepContent[index]}
@@ -108,7 +97,7 @@ const SMSTemplate: FC<Props> = observer(({ toggleOpen }) => {
                                 </Button>
                             </div>
                         </StepContent>
-                    </Step>
+                    </MuiStep>
                 ))}
             </Stepper>
             {activeStep === steps.length && (
@@ -124,5 +113,3 @@ const SMSTemplate: FC<Props> = observer(({ toggleOpen }) => {
         </div>
     );
 });
-
-export default SMSTemplate;

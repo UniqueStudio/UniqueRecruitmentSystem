@@ -1,36 +1,22 @@
-import { VariantType } from 'notistack';
 import io from 'socket.io-client';
 
-import { API } from '@config/consts';
-import { Candidate, Comment, Message, Step } from '@config/types';
+import { getOneRecruitment } from '@apis/rest';
+import { API, STEP_MAP } from '@config/consts';
+import { Status, Step } from '@config/enums';
+import { Candidate, Comment, Message, R, Recruitment } from '@config/types';
 import { stores } from '@stores/index';
-
-// TODO: in current implementation, we cannot distinguish whether the incoming event is fired by the user,
-// and it may bring some surprising bugs. Fixes should first be done in the backend.
 
 const { $component, $recruitment, $candidate, $user } = stores;
 
 const socket = io(API);
 
-export const addComment = (cid: string, comment: Partial<Comment>) => {
+export const addComment = (cid: string, comment: Pick<Comment, 'evaluation' | 'content'>) => {
     socket.emit('addComment', { cid, comment, token: $user.token });
     $component.setProgress(true);
 };
 
-export const removeComment = (cid: string, id: string) => {
-    socket.emit('removeComment', { cid, id, token: $user.token });
-    $component.setProgress(true);
-};
-
-export const moveCandidate = (cid: string, from: Step, to: Step, position?: number) => {
-    socket.emit('moveCandidate', { cid, from, to, token: $user.token });
-    // Try to move, move back if failed
-    $candidate.moveCandidate(cid, from, to, position);
-    $component.setProgress(true);
-};
-
-export const removeCandidate = (cid: string) => {
-    socket.emit('removeCandidate', { cid, token: $user.token });
+export const removeComment = (id: string) => {
+    socket.emit('removeComment', { id, token: $user.token });
     $component.setProgress(true);
 };
 
@@ -41,82 +27,110 @@ export const sendMessage = (message: Message) => {
 
 socket.on('disconnect', () => socket.close());
 
-socket.on('removeCandidate', ({ cid, title }: { cid: string; title: string }) => {
-    if (title === $recruitment.viewing) {
-        $candidate.removeCandidate(cid);
-        $recruitment.setShouldUpdateRecruitment();
-        $component.enqueueSnackbar('有候选人被移除了！', 'info');
-        $component.setProgress(false);
-    }
-});
-socket.on('removeCandidateError', ({ message, type }: { message: string; type: VariantType }) => {
-    $component.enqueueSnackbar(message, type || 'error');
-    $component.setProgress(false);
-});
-
-socket.on('moveCandidate', ({ cid, from, to, title }: { cid: string; from: Step; to: Step; title: string }) => {
-    if (title === $recruitment.viewing) {
-        $candidate.moveCandidate(cid, from, to);
-        $recruitment.setShouldUpdateRecruitment();
-        $component.enqueueSnackbar('有候选人被移动了！', 'info');
-        $component.setProgress(false);
-    }
-});
-socket.on('moveCandidateSuccess', () => {
-    $recruitment.setShouldUpdateRecruitment();
-    $component.setProgress(false);
-});
-socket.on(
-    'moveCandidateError',
-    ({
-        message,
-        type,
-        data: { to, from, cid },
-    }: {
-        message: string;
-        type: VariantType;
-        data: { to: Step; from: Step; cid: string };
-    }) => {
-        $candidate.moveCandidate(cid, to, from);
-        $component.enqueueSnackbar(message, type || 'error');
-        $component.setProgress(false);
-    },
-);
-
-socket.on('addComment', ({ cid, comment, title }: { cid: string; comment: Comment; title: string }) => {
-    if (title === $recruitment.viewing) {
-        $candidate.addComment(cid, comment);
-        $component.setProgress(false);
-    }
-});
-socket.on('addCommentError', ({ message, type }: { message: string; type: VariantType }) => {
-    $component.enqueueSnackbar(message, type || 'error');
-    $component.setProgress(false);
-});
-
-socket.on('removeComment', ({ cid, id, title }: { cid: string; id: string; title: string }) => {
-    if (title === $recruitment.viewing) {
-        $candidate.removeComment(cid, id);
-        $component.setProgress(false);
-    }
-});
-socket.on('removeCommentError', ({ message, type }: { message: string; type: VariantType }) => {
-    $component.enqueueSnackbar(message, type || 'error');
-    $component.setProgress(false);
-});
-
-socket.on('addCandidate', ({ candidate }: { candidate: Candidate }) => {
-    const { title, group } = candidate;
-    if (title === $recruitment.viewing) {
-        $candidate.addCandidate(candidate);
-        $component.enqueueSnackbar(`${group}组多了一名报名选手！`, 'info');
+socket.on('addComment', (res: R<{ cid: string; comment: Comment }>) => {
+    switch (res.status) {
+        case Status.success:
+            $component.setProgress(false);
+        // eslint-disable-next-line no-fallthrough
+        case Status.info: {
+            const { cid, comment } = res.payload;
+            $candidate.addComment(cid, comment);
+        }
     }
 });
 
-socket.on('updateRecruitment', () => {
-    $recruitment.setShouldUpdateRecruitment();
+socket.on('removeComment', (res: R<{ cid: string; id: string }>) => {
+    switch (res.status) {
+        case Status.success:
+            $component.setProgress(false);
+        // eslint-disable-next-line no-fallthrough
+        case Status.info: {
+            const { cid, id } = res.payload;
+            $candidate.removeComment(cid, id);
+        }
+    }
 });
 
-socket.on('receiveMessage', ({ message }: { message: Message }) => {
-    $user.addMessage({ ...message, isSelf: false });
+socket.on('newCandidate', (res: R<Candidate & { recruitment: Recruitment }>) => {
+    switch (res.status) {
+        case Status.info: {
+            const candidate = res.payload;
+            const {
+                group,
+                name,
+                recruitment: { id },
+            } = candidate;
+            if (id === $recruitment.viewingId) {
+                $candidate.setOne(candidate);
+                $component.enqueueSnackbar(`${name}报名了${group}组`, Status.info);
+            }
+        }
+    }
+});
+
+socket.on('updateCandidate', (res: R<Candidate & { recruitment: Recruitment }>) => {
+    switch (res.status) {
+        case Status.info: {
+            const candidate = res.payload;
+            const {
+                group,
+                name,
+                recruitment: { id },
+            } = candidate;
+            if (id === $recruitment.viewingId) {
+                $candidate.setOne(candidate);
+                $component.enqueueSnackbar(`${group}组的${name}更新了个人信息`, Status.info);
+            }
+        }
+    }
+});
+
+socket.on('removeCandidate', (res: R<string>) => {
+    switch (res.status) {
+        case Status.info: {
+            const candidate = $candidate.candidates.get(res.payload);
+            if (candidate) {
+                const { group, name, id } = candidate;
+                $candidate.removeOne(id);
+                $component.enqueueSnackbar(`${group}组的${name}被移除了`, res.status);
+            }
+        }
+    }
+});
+
+socket.on('moveCandidate', (res: R<{ cid: string; to: Step }>) => {
+    switch (res.status) {
+        case Status.info: {
+            const { cid, to } = res.payload;
+            const candidate = $candidate.candidates.get(cid);
+            if (candidate && candidate.step !== to) {
+                const { group, name, id } = candidate;
+                $candidate.moveOne(id, to);
+                $component.enqueueSnackbar(`${group}组的${name}被移动到了${STEP_MAP.get(to)!}`, res.status);
+            }
+        }
+    }
+});
+
+socket.on('updateRecruitment', (res: R<string>) => {
+    switch (res.status) {
+        case Status.info:
+            void getOneRecruitment(res.payload);
+    }
+});
+
+socket.on('receiveMessage', (res: R<Message>) => {
+    switch (res.status) {
+        case Status.info:
+            $user.addMessage({ ...res.payload, isSelf: false });
+    }
+});
+
+socket.on('exception', (res: R) => {
+    switch (res.status) {
+        case Status.error:
+        case Status.warning:
+            $component.enqueueSnackbar(res.message, res.status);
+            $component.setProgress(false);
+    }
 });

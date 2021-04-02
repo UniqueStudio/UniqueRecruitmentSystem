@@ -23,8 +23,6 @@ Visit [https://hr.hustunique.com](https://hr.hustunique.com) for more details
 
 1. `TypeScript`
 2. `React`
-3. `Redux`
+3. `Mobx`
 4. `Material UI`
-5. `Create-react-app`
-6. `RxJS` && `redux-observable`
-
+5. `Snowpack`

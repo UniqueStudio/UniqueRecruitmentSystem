@@ -1,7 +1,7 @@
 import { makeAutoObservable } from 'mobx';
 import { OptionsObject, SnackbarKey, SnackbarMessage, VariantType } from 'notistack';
 
-import { Evaluation } from '@config/types';
+import { Evaluation } from '@config/enums';
 
 interface Snackbar {
     message: SnackbarMessage;
@@ -9,9 +9,15 @@ interface Snackbar {
 }
 
 export class ComponentStateStore {
-    progressOn = false;
+    progressNumber = 0;
 
     drawerOpen = false;
+
+    suggestionOpen = false;
+
+    messengerOpen = false;
+
+    recruitmentPanelOpen = false;
 
     snackbars: Record<SnackbarKey, Snackbar> = {};
 
@@ -19,9 +25,11 @@ export class ComponentStateStore {
 
     resumeProgresses: Record<string, number> = {};
 
+    darkMode?: boolean = undefined;
+
     inputtingComment = {
         content: '',
-        evaluation: 2 as Evaluation,
+        evaluation: Evaluation.fair,
     };
 
     constructor() {
@@ -29,7 +37,27 @@ export class ComponentStateStore {
     }
 
     setProgress(on: boolean) {
-        this.progressOn = on;
+        if (on) {
+            this.progressNumber++;
+        } else {
+            this.progressNumber = Math.max(0, this.progressNumber - 1);
+        }
+    }
+
+    get progressOn() {
+        return !!this.progressNumber;
+    }
+
+    toggleSuggestion() {
+        this.suggestionOpen = !this.suggestionOpen;
+    }
+
+    toggleMessenger() {
+        this.messengerOpen = !this.messengerOpen;
+    }
+
+    toggleRecruitmentPanel() {
+        this.recruitmentPanelOpen = !this.recruitmentPanelOpen;
     }
 
     toggleDrawer() {
@@ -55,6 +83,10 @@ export class ComponentStateStore {
 
     toggleFabOff() {
         this.fabOn = -1;
+    }
+
+    setDarkMode(darkMode?: boolean) {
+        this.darkMode = darkMode;
     }
 
     setResumeProgress(progress: number, cid: string) {
