@@ -51,13 +51,13 @@ export class RecruitmentsController {
     async createRecruitment(
         @Body() { name, beginning, end, deadline }: CreateRecruitmentBody,
     ) {
-        await this.recruitmentsService.createAndSave({
+        const recruitment = await this.recruitmentsService.createAndSave({
             name,
             beginning: new Date(beginning),
             end: new Date(end),
             deadline: new Date(deadline),
         });
-        this.recruitmentsGateway.broadcastUpdate();
+        this.recruitmentsGateway.broadcastUpdate(recruitment.id);
     }
 
     @Put(':rid/schedule')
@@ -82,7 +82,7 @@ export class RecruitmentsController {
         recruitment.end = new Date(end);
         recruitment.deadline = new Date(deadline);
         await recruitment.save();
-        this.recruitmentsGateway.broadcastUpdate();
+        this.recruitmentsGateway.broadcastUpdate(rid);
     }
 
     @Put(':rid/interviews/:name')
@@ -147,7 +147,7 @@ export class RecruitmentsController {
                 errors.add(message);
             }
         }
-        this.recruitmentsGateway.broadcastUpdate();
+        this.recruitmentsGateway.broadcastUpdate(rid);
         if (errors.size) {
             throw new BadRequestException([...errors].join(', '));
         }

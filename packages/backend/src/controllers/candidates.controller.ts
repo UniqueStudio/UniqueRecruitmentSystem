@@ -114,7 +114,7 @@ export class CandidatesController {
             throw new InternalServerErrorException(message);
         }
         this.candidatesGateway.broadcastNew(candidate);
-        this.recruitmentsGateway.broadcastUpdate();
+        this.recruitmentsGateway.broadcastUpdate(rid);
     }
 
     @Get('me')
@@ -162,7 +162,7 @@ export class CandidatesController {
         );
         await candidate.save();
         this.candidatesGateway.broadcastUpdate(candidate);
-        this.recruitmentsGateway.broadcastUpdate();
+        this.recruitmentsGateway.broadcastUpdate(recruitment.id);
     }
 
     @Get('me/slots')
@@ -277,7 +277,7 @@ export class CandidatesController {
         }
         await this.candidatesService.update(cid, { step: to });
         this.candidatesGateway.broadcastMove(cid, to);
-        this.recruitmentsGateway.broadcastUpdate();
+        this.recruitmentsGateway.broadcastUpdate(id);
     }
 
     @Delete(':cid')
@@ -293,7 +293,7 @@ export class CandidatesController {
         resume && await deleteFile(join(this.configService.resumePaths.persistent, name, group), resume);
         await candidate.remove();
         this.candidatesGateway.broadcastRemove(cid);
-        this.recruitmentsGateway.broadcastUpdate();
+        this.recruitmentsGateway.broadcastUpdate(id);
     }
 
     @Put(':cid/interview/:type')
