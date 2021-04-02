@@ -34,6 +34,8 @@ class Endpoint {
 
     static recruitments = '/recruitments';
 
+    static recruitment = (rid: string) => `${Endpoint.recruitments}/${rid}`;
+
     static schedule = (rid: string) => `${Endpoint.recruitments}/${rid}/schedule`;
 
     static interviews = (rid: string, name: GroupOrTeam) => `${Endpoint.recruitments}/${rid}/interviews/${name}`;
@@ -119,7 +121,7 @@ export const allocateOne = (type: InterviewType, cid: string, time: Date) =>
     );
 
 export const getCandidates = (rid: string) => {
-    const viewing = localStorage.getItem('viewing');
+    const viewing = localStorage.getItem('viewingId');
     return apiWrapper(
         async () => {
             const candidates = await get<Map<string, Candidate>>('candidates');
@@ -218,11 +220,10 @@ export const getResume = async (cid: string) => {
 };
 
 export const getAllRecruitments = async () => {
-    const recruitments = await get<Recruitment[]>('recruitments');
-    const viewing = localStorage.getItem('viewing');
-    const shouldUpdateRecruitment = $recruitment.shouldUpdateRecruitment;
-    if (recruitments && !shouldUpdateRecruitment) {
-        $recruitment.setRecruitments(recruitments);
+    const recruitments = await get<Map<string, Recruitment>>('recruitments');
+    const viewing = localStorage.getItem('viewingId');
+    if (recruitments) {
+        $recruitment.setAll(recruitments);
         $component.enqueueSnackbar('成功获取招新信息', 'success');
         return;
     }
@@ -247,57 +248,50 @@ export const getAllRecruitments = async () => {
     );
 };
 
+export const getOneRecruitment = async (rid: string) =>
+    apiWrapper(
+        () => client.get<R<Recruitment<string>>>(Endpoint.recruitment(rid)),
+        ({ beginning, end, deadline, interviews, ...rest }) => {
+            $recruitment.setRecruitment({
+                ...rest,
+                beginning: new Date(beginning),
+                end: new Date(end),
+                deadline: new Date(deadline),
+                interviews: interviews.map(({ date, ...rest }) => ({
+                    ...rest,
+                    date: new Date(date),
+                })),
+            });
+        },
+    );
+
 export const createRecruitment = (
     data: Pick<Recruitment, 'name' | 'beginning' | 'end' | 'deadline'> & { code: string },
 ) =>
     apiWrapper(
         () => client.post<R>(Endpoint.recruitments, data),
-        async () => {
-            $recruitment.setShouldUpdateRecruitment();
+        () => {
             $component.enqueueSnackbar('已成功发起招新', 'success');
-            await getAllRecruitments();
         },
     );
 
 export const setRecruitmentSchedule = (rid: string, data: Pick<Recruitment, 'beginning' | 'end' | 'deadline'>) =>
     apiWrapper(
         () => client.put<R>(Endpoint.schedule(rid), data),
-        async () => {
-            $recruitment.setShouldUpdateRecruitment();
+        () => {
             $component.enqueueSnackbar('已成功修改招新信息', 'success');
-            await getAllRecruitments();
-        },
-    );
-
-export const createRecruitmentInterviews = (
-    rid: string,
-    name: GroupOrTeam,
-    data: {
-        interviews: Pick<Interview, 'date' | 'period' | 'slotNumber'>;
-    },
-) =>
-    apiWrapper(
-        () => client.post<R>(Endpoint.interviews(rid, name), data),
-        async () => {
-            $recruitment.setShouldUpdateRecruitment();
-            $component.enqueueSnackbar('已成功设置面试安排', 'success');
-            await getAllRecruitments();
         },
     );
 
 export const setRecruitmentInterviews = (
     rid: string,
     name: GroupOrTeam,
-    data: {
-        interviews: Pick<Interview, 'id' | 'date' | 'period' | 'slotNumber'>;
-    },
+    interviews: Omit<Interview, 'name' | 'id'>[],
 ) =>
     apiWrapper(
-        () => client.put<R>(Endpoint.interviews(rid, name), data),
-        async () => {
-            $recruitment.setShouldUpdateRecruitment();
+        () => client.put<R>(Endpoint.interviews(rid, name), { interviews }),
+        () => {
             $component.enqueueSnackbar('已成功更新面试安排', 'success');
-            await getAllRecruitments();
         },
     );
 
