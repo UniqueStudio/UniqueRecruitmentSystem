@@ -1,4 +1,4 @@
-import { Divider, Paper, Typography, useTheme, useMediaQuery } from '@material-ui/core';
+import { Divider, Paper, Typography } from '@material-ui/core';
 import React, { FC, memo } from 'react';
 import { Draggable, Droppable } from 'react-beautiful-dnd';
 
@@ -13,22 +13,9 @@ interface Props {
 
 export const Column: FC<Props> = memo(({ step, children, dropIndex }) => {
     const classes = useStyles();
-    const theme = useTheme();
-    const isMobile = useMediaQuery(theme.breakpoints.down('xs'));
-
-    const ColumnBody = (
-        <Droppable droppableId={step.toString()} type='CANDIDATE' isDropDisabled={isMobile}>
-            {({ innerRef, droppableProps, placeholder }) => (
-                <div className={classes.columnBody} ref={innerRef} {...droppableProps}>
-                    {children}
-                    {placeholder}
-                </div>
-            )}
-        </Droppable>
-    );
 
     return (
-        <Draggable draggableId={step.toString()} index={dropIndex} isDragDisabled={isMobile}>
+        <Draggable draggableId={step.toString()} index={dropIndex}>
             {({ innerRef, dragHandleProps, draggableProps }) => (
                 <div ref={innerRef} {...draggableProps}>
                     <Paper className={classes.column}>
@@ -38,12 +25,17 @@ export const Column: FC<Props> = memo(({ step, children, dropIndex }) => {
                             </Typography>
                         </div>
                         <Divider />
-                        {ColumnBody}
+                        <Droppable droppableId={step.toString()} type='CANDIDATE'>
+                            {({ innerRef, droppableProps, placeholder }) => (
+                                <div className={classes.columnBody} ref={innerRef} {...droppableProps}>
+                                    {children}
+                                    {placeholder}
+                                </div>
+                            )}
+                        </Droppable>
                     </Paper>
                 </div>
             )}
         </Draggable>
     );
 });
-
-export default Column;

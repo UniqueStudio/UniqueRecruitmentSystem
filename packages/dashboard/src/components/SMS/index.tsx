@@ -2,8 +2,8 @@ import { Button, Paper, Step as MuiStep, StepContent, StepLabel, Stepper } from 
 import { observer } from 'mobx-react-lite';
 import React, { ChangeEventHandler, FC, useState } from 'react';
 
-import Detail from './Detail';
-import Picker from './Picker';
+import { SMSDetail } from './Detail';
+import { SMSPicker } from './Picker';
 
 import { sendSMSToCandidate } from '@apis/rest';
 import { Verify } from '@components/Verify';
@@ -70,8 +70,8 @@ export const Template: FC<Props> = observer(({ toggleOpen }) => {
 
     const steps = ['发送对象', '消息模板', '确认发送'];
     const stepContent = [
-        <Picker />,
-        <Detail content={content} handleChange={handleChange} message={message} />,
+        <SMSPicker />,
+        <SMSDetail content={content} handleChange={handleChange} message={message} />,
         <Verify code={code} onChange={handleCode} />,
     ];
 

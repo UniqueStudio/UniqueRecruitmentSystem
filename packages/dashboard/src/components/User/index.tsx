@@ -1,4 +1,4 @@
-import { Button, Paper, TextField, Typography } from '@material-ui/core';
+import { Button, TextField } from '@material-ui/core';
 import { observer } from 'mobx-react-lite';
 import React, { ChangeEventHandler, FC, useState } from 'react';
 
@@ -62,31 +62,18 @@ export const User: FC = observer(() => {
         { label: '密码', value: password, name: 'password', autoComplete: 'new-password', type: 'password' },
     ];
     return (
-        <form>
-            <Paper className={classes.container}>
-                <div className={classes.title}>
-                    <Typography variant='h6'>我的信息</Typography>
-                </div>
+        <form className={classes.container}>
+            <div className={classes.textFieldContainer}>
                 {textFields.map((props, index) => (
-                    <TextField margin='normal' className={classes.userInfo} disabled key={index} {...props} />
+                    <TextField margin='normal' disabled key={index} {...props} />
                 ))}
                 {editableFields.map(({ name, ...otherProps }, index) => (
-                    <TextField
-                        onChange={handleChange(name)}
-                        margin='normal'
-                        className={classes.userInfo}
-                        key={index}
-                        {...otherProps}
-                    />
+                    <TextField onChange={handleChange(name)} margin='normal' key={index} {...otherProps} />
                 ))}
-                <div>
-                    <Button size='large' onClick={submitChange} color='primary'>
-                        修改
-                    </Button>
-                </div>
-            </Paper>
+            </div>
+            <Button size='large' onClick={submitChange} color='primary'>
+                修改
+            </Button>
         </form>
     );
 });
-
-export default User;

@@ -5,12 +5,12 @@ import { observer } from 'mobx-react-lite';
 import React, { FC, lazy, Suspense } from 'react';
 import { BrowserRouter, Route, RouteComponentProps, Switch } from 'react-router-dom';
 
-import { Frame } from '@components/Frame';
 import { Login } from '@components/Login';
 import { Notifier } from '@components/Notifier';
 import { Progress } from '@components/Progress';
 import { Snackbar } from '@components/Snackbar';
 import { useStores } from '@hooks/useStores';
+import { MainLayout } from '@layouts/MainLayout';
 import useStyles from '@styles/global';
 import { useTheme } from '@styles/theme';
 import { logger } from '@utils/console';
@@ -35,12 +35,12 @@ const Theme: FC = observer(({ children }) => {
     );
 });
 
-const App: FC = () => {
+export const App: FC = () => {
     useStyles();
     const routeRender = (Component: JSX.Element) => (props: RouteComponentProps) => (
-        <Frame {...props}>
+        <MainLayout {...props}>
             <Suspense fallback={<Progress />}>{Component}</Suspense>
-        </Frame>
+        </MainLayout>
     );
     return (
         <Theme>
@@ -63,5 +63,3 @@ const App: FC = () => {
         </Theme>
     );
 };
-
-export default App;

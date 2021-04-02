@@ -6,7 +6,7 @@ import { GRADES } from '@config/consts';
 import { useStores } from '@hooks/useStores';
 import useStyles from '@styles/sms';
 
-const SMSPicker: FC = observer(() => {
+export const SMSPicker: FC = observer(() => {
     const { $candidate } = useStores();
     const classes = useStyles();
     const handleDeselect = (id: string) => () => {
@@ -31,5 +31,3 @@ const SMSPicker: FC = observer(() => {
         </div>
     );
 });
-
-export default SMSPicker;
