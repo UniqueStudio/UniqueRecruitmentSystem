@@ -1,15 +1,6 @@
 import { makeStyles } from '@material-ui/core';
 
 const useStyles = makeStyles(({ spacing, breakpoints }) => ({
-    paper: {
-        margin: spacing(2),
-        padding: spacing(2),
-        [breakpoints.down('sm')]: {
-            margin: `${spacing(2)}px ${spacing(1)}px`,
-            padding: spacing(1),
-            flex: '1 1 0',
-        },
-    },
     dateSelection: {
         margin: spacing(1),
         width: 150,

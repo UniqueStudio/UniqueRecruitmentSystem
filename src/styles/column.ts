@@ -2,13 +2,9 @@ import { makeStyles } from '@material-ui/core';
 
 import { colorToShadow } from './index';
 
-const useStyles = makeStyles(({ spacing, palette, breakpoints }) => ({
+const useStyles = makeStyles(({ spacing, palette }) => ({
     column: {
         margin: spacing(1),
-        [breakpoints.down('xs')]: {
-            margin: `${spacing(2)}px ${spacing(0.5)}px`,
-            height: `calc(100vh - ${spacing(14)}px)`,
-        },
         padding: spacing(1),
         position: 'relative',
         display: 'flex',
@@ -30,11 +26,6 @@ const useStyles = makeStyles(({ spacing, palette, breakpoints }) => ({
         margin: spacing(1),
     },
     columnBody: {
-        marginBottom: spacing(1),
-        [breakpoints.down('xs')]: {
-            overflowY: 'auto',
-            width: '100%',
-        },
         width: 360,
         paddingTop: spacing(1),
     },

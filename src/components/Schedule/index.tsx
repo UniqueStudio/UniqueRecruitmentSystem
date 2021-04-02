@@ -45,6 +45,7 @@ export const Schedule: FC<Props> = memo(({ beginning, end, deadline, disabled, o
                             value={value}
                             onChange={onChange(name)}
                             disabled={disabled}
+                            format='yyyy/MM/dd'
                             inputVariant='outlined'
                         />
                     </TimelineContent>

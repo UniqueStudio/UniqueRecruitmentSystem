@@ -1,4 +1,4 @@
-import { Button, Chip, Dialog, Paper, Typography } from '@material-ui/core';
+import { Button, Chip, Dialog } from '@material-ui/core';
 import { DataGrid, GridColDef } from '@material-ui/data-grid';
 import { DateTimePicker } from '@material-ui/pickers';
 import { observer } from 'mobx-react-lite';
@@ -120,10 +120,7 @@ export const Table: FC = observer(() => {
     };
 
     return (
-        <Paper className={classes.paper}>
-            <Typography variant='h6' align='center'>
-                {type === InterviewType.team ? '群面时间选择' : '组面时间选择'}阶段候选人信息
-            </Typography>
+        <>
             <DataGrid
                 rows={candidates}
                 columns={columns}
@@ -163,6 +160,6 @@ export const Table: FC = observer(() => {
                     </Button>
                 </div>
             </Dialog>
-        </Paper>
+        </>
     );
 });

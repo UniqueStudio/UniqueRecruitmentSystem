@@ -5,9 +5,7 @@ const useStyles = makeStyles(({ spacing, typography: { button } }) => ({
         display: 'flex',
         margin: spacing(1),
         width: 300,
-        height: '100%',
-        verticalAlign: 'top',
-        position: 'relative',
+        minHeight: 300,
     },
     newButton: {
         alignSelf: 'center',
