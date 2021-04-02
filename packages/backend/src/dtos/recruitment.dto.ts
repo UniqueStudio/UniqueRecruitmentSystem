@@ -31,7 +31,7 @@ export class SetRecruitmentScheduleBody {
 class InterviewsElement {
     @IsOptional()
     @IsUUID(4)
-    id!: string;
+    id?: string;
 
     @IsDateString()
     date!: string;
