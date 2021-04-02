@@ -42,6 +42,9 @@
       "@images/*": [
         "./src/images/*"
       ],
+      "@layouts/*": [
+        "./src/layouts/*"
+      ],
       "@stores/*": [
         "./src/stores/*"
       ],
