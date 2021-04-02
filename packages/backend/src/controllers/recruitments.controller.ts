@@ -39,10 +39,18 @@ export class RecruitmentsController {
         return this.recruitmentsService.findPending();
     }
 
+    @Get(':rid')
+    @AcceptRole(Role.user)
+    getOneRecruitment(
+        @Param('rid') rid: string,
+    ) {
+        return this.recruitmentsService.findOneWithStatistics(rid);
+    }
+
     @Get()
     @AcceptRole(Role.user)
     getAllRecruitments() {
-        return this.recruitmentsService.findWithStatistics();
+        return this.recruitmentsService.findAllWithStatistics();
     }
 
     @Post()
