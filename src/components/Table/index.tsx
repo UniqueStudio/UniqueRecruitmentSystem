@@ -11,6 +11,7 @@ import { Candidate } from '@config/types';
 import { useStores } from '@hooks/useStores';
 import useStyles from '@styles/table';
 import { sortByAllocation } from '@utils/sortByAllocation';
+import { roundToMinute } from '@utils/time';
 
 export const Table: FC = observer(() => {
     const { $candidate } = useStores();
@@ -102,11 +103,7 @@ export const Table: FC = observer(() => {
         },
     ];
 
-    const handleAllocateOne = () => {
-        const date = new Date(time);
-        date.setSeconds(0, 0);
-        return allocateOne(type, cid, date);
-    };
+    const handleAllocateOne = () => allocateOne(type, cid, roundToMinute(time));
 
     const handleAllocateAll = async () => {
         await allocateMany(type, [...$candidate.selected.keys()]);

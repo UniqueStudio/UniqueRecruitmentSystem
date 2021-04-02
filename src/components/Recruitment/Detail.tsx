@@ -10,7 +10,7 @@ import { GROUP_MAP, STEP_MAP } from '@config/consts';
 import { Group } from '@config/enums';
 import { useStores } from '@hooks/useStores';
 import useStyles from '@styles/recruitmentDetail';
-import { getMidnight } from '@utils/getMidnight';
+import { roundToDay } from '@utils/time';
 
 export const RecruitmentDetail: FC = observer(() => {
     const { $recruitment, $component, $user } = useStores();
@@ -55,9 +55,9 @@ export const RecruitmentDetail: FC = observer(() => {
             return;
         }
         return setRecruitmentSchedule(id, {
-            beginning: getMidnight(beginningState),
-            deadline: getMidnight(deadlineState),
-            end: getMidnight(endState),
+            beginning: roundToDay(beginningState),
+            deadline: roundToDay(deadlineState),
+            end: roundToDay(endState),
         });
     };
     const result = {} as Record<Group, number[]>;

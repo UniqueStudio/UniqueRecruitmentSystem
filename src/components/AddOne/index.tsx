@@ -9,7 +9,7 @@ import { Schedule } from '@components/Schedule';
 import { Verify } from '@components/Verify';
 import { useStores } from '@hooks/useStores';
 import useStyles from '@styles/addOne';
-import { getMidnight } from '@utils/getMidnight';
+import { roundToDay } from '@utils/time';
 import { titleConverter } from '@utils/titleConverter';
 
 const generateTitle = (date: Date) => {
@@ -53,9 +53,9 @@ export const AddOne: FC = observer(() => {
         }
         const ok = await createRecruitment({
             name: generateTitle(beginning),
-            beginning: getMidnight(beginning),
-            end: getMidnight(end),
-            deadline: getMidnight(deadline),
+            beginning: roundToDay(beginning),
+            end: roundToDay(end),
+            deadline: roundToDay(deadline),
             code,
         });
         if (ok) {
