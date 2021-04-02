@@ -16,5 +16,3 @@ export const Anchor: FC<Props> = memo(({ to, children }) => (
         {children}
     </Link>
 ));
-
-export default Anchor;

@@ -18,7 +18,7 @@ interface Props {
     handleChange: (name: string) => ChangeEventHandler<HTMLInputElement>;
 }
 
-const SMSDetail: FC<Props> = memo(({ handleChange, content, message }) => {
+export const SMSDetail: FC<Props> = memo(({ handleChange, content, message }) => {
     const classes = useStyles();
     const { type, time, place, rest, next } = content;
     return (
@@ -67,5 +67,3 @@ const SMSDetail: FC<Props> = memo(({ handleChange, content, message }) => {
         </div>
     );
 });
-
-export default SMSDetail;
