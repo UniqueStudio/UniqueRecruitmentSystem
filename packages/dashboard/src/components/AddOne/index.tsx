@@ -20,7 +20,6 @@ const generateTitle = (date: Date) => {
 };
 
 const initialState = () => {
-    console.log('ddd');
     const date = new Date();
     return {
         modal: false,
