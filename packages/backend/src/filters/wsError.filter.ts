@@ -25,6 +25,11 @@ export class WsErrorFilter<T extends Error = Error> extends BaseWsExceptionFilte
                 status: Status.error,
                 message: exception.message,
             });
+        } else {
+            res.emit('exception', {
+                status: Status.error,
+                message: exception.message || 'Internal server error',
+            });
         }
     }
 }
