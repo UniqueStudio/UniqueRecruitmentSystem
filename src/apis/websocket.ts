@@ -1,5 +1,6 @@
 import io from 'socket.io-client';
 
+import { getOneRecruitment } from '@apis/rest';
 import { API, STEP_MAP } from '@config/consts';
 import { Status, Step } from '@config/enums';
 import { Candidate, Comment, Message, R, Recruitment } from '@config/types';
@@ -59,7 +60,7 @@ socket.on('newCandidate', (res: R<Candidate & { recruitment: Recruitment }>) => 
                 name,
                 recruitment: { id },
             } = candidate;
-            if (id === $recruitment.viewing) {
+            if (id === $recruitment.viewingId) {
                 $candidate.setOne(candidate);
                 $component.enqueueSnackbar(`${name}报名了${group}组`, Status.info);
             }
@@ -76,7 +77,7 @@ socket.on('updateCandidate', (res: R<Candidate & { recruitment: Recruitment }>) 
                 name,
                 recruitment: { id },
             } = candidate;
-            if (id === $recruitment.viewing) {
+            if (id === $recruitment.viewingId) {
                 $candidate.setOne(candidate);
                 $component.enqueueSnackbar(`${group}组的${name}更新了个人信息`, Status.info);
             }
@@ -111,8 +112,11 @@ socket.on('moveCandidate', (res: R<{ cid: string; to: Step }>) => {
     }
 });
 
-socket.on('updateRecruitment', () => {
-    $recruitment.setShouldUpdateRecruitment();
+socket.on('updateRecruitment', (res: R<string>) => {
+    switch (res.status) {
+        case Status.info:
+            void getOneRecruitment(res.payload);
+    }
 });
 
 socket.on('receiveMessage', (res: R<Message>) => {
