@@ -17,7 +17,6 @@ interface Props {
     end: Date;
     deadline: Date;
     disabled?: boolean;
-    disablePast?: boolean;
     onChange: (name: string) => (date: Date | null) => void;
 }
 

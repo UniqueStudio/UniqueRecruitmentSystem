@@ -14,6 +14,15 @@ const useStyles = makeStyles(({ spacing, palette }) => ({
         width: 300,
         margin: spacing(1),
     },
+    buttonsContainer: {
+        display: 'flex',
+    },
+    timelineContainer: {
+        display: 'flex',
+        padding: spacing(1),
+        flexDirection: 'column',
+        alignItems: 'center',
+    },
     chartContainer: {
         display: 'flex',
         height: 300,
