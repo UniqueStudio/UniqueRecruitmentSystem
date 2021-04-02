@@ -20,7 +20,6 @@ import {
     ValidationPipe,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { WsException } from '@nestjs/websockets';
 import { Response } from 'express';
 
 import { SLOTS, STEP_MAP } from '@constants/consts';
@@ -289,7 +288,7 @@ export class CandidatesController {
         const candidate = await this.candidatesService.findOneById(cid);
         const { resume, recruitment: { name, end, id }, group } = candidate;
         if (+end < Date.now()) {
-            throw new WsException(`Recruitment ${name} has already ended`);
+            throw new BadRequestException(`Recruitment ${name} has already ended`);
         }
         resume && await deleteFile(join(this.configService.resumePaths.persistent, name, group), resume);
         await candidate.remove();
