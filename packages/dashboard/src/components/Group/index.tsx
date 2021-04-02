@@ -1,14 +1,4 @@
-import {
-    Button,
-    Checkbox,
-    Paper,
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableRow,
-    Typography,
-} from '@material-ui/core';
+import { Button, Checkbox, Table, TableBody, TableCell, TableHead, TableRow } from '@material-ui/core';
 import { observer } from 'mobx-react-lite';
 import React, { FC, useState } from 'react';
 
@@ -19,7 +9,7 @@ import { useStores } from '@hooks/useStores';
 import useStyles from '@styles/group';
 import { titleConverter } from '@utils/titleConverter';
 
-const heads = ['成员姓名', '性别', '电话号码', '邮箱', '加入时间', '组长？', '管理员？'];
+const heads = ['姓名', '性别', '电话号码', '邮箱', '加入时间', '组长？', '管理员？'];
 
 type SelectHandler = (name: string) => (event: React.ChangeEvent<HTMLInputElement>, checked: boolean) => void;
 const memberDataConverter = (handleSelect: SelectHandler, admin: Record<string, boolean>, disabled: boolean) => ({
@@ -66,43 +56,34 @@ export const Group: FC = observer(() => {
     const submitChange = () => setGroupAdmin(Object.keys(admin).filter((i) => admin[i]));
 
     return (
-        <div className={classes.infoContainer}>
-            <Paper className={classes.paper}>
-                <div className={classes.title}>
-                    <Typography variant='h6'>本组成员信息</Typography>
-                </div>
-                <div className={classes.tableContainer}>
-                    <Table className={classes.table}>
-                        <TableHead>
-                            <TableRow>
-                                {heads.map((head, index) => (
-                                    <TableCell key={index} classes={{ root: classes.tableCell }}>
-                                        {head}
+        <div className={classes.tableContainer}>
+            <Table className={classes.table}>
+                <TableHead>
+                    <TableRow>
+                        {heads.map((head, index) => (
+                            <TableCell key={index} classes={{ root: classes.tableCell }}>
+                                {head}
+                            </TableCell>
+                        ))}
+                    </TableRow>
+                </TableHead>
+                <TableBody>
+                    {$user.groupInfo
+                        .map(memberDataConverter(handleSelect, admin, !$user.isAdminOrCaptain))
+                        .map((member, index) => (
+                            <TableRow key={index}>
+                                {member.map((item, idx) => (
+                                    <TableCell classes={{ root: classes.tableCell }} key={idx}>
+                                        {item}
                                     </TableCell>
                                 ))}
                             </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {$user.groupInfo
-                                .map(memberDataConverter(handleSelect, admin, !$user.isAdminOrCaptain))
-                                .map((member, index) => (
-                                    <TableRow key={index}>
-                                        {member.map((item, idx) => (
-                                            <TableCell classes={{ root: classes.tableCell }} key={idx}>
-                                                {item}
-                                            </TableCell>
-                                        ))}
-                                    </TableRow>
-                                ))}
-                        </TableBody>
-                    </Table>
-                </div>
-                <div>
-                    <Button size='large' onClick={submitChange} color='primary'>
-                        修改
-                    </Button>
-                </div>
-            </Paper>
+                        ))}
+                </TableBody>
+            </Table>
+            <Button size='large' onClick={submitChange} color='primary'>
+                修改
+            </Button>
         </div>
     );
 });

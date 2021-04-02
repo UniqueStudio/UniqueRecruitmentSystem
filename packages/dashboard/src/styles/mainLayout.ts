@@ -5,13 +5,17 @@ const useStyles = makeStyles(({ spacing, breakpoints }) => ({
         display: 'flex',
     },
     content: {
+        display: 'flex',
+        flexDirection: 'column',
         flexGrow: 1,
-        marginTop: spacing(8),
-        height: 'calc(100vh - 64px)',
+        height: '100vh',
         overflowX: 'auto',
+        [breakpoints.down('sm')]: {
+            minWidth: 'calc(100vw - 1px)',
+        },
+        padding: spacing(2),
         [breakpoints.down('xs')]: {
-            marginTop: spacing(7),
-            height: 'calc(100vh - 56px)',
+            padding: spacing(1),
         },
     },
 }));

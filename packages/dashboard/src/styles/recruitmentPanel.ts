@@ -10,24 +10,13 @@ const useStyles = makeStyles(({ spacing, palette }) => ({
         overflow: 'auto',
         justifyContent: 'center',
     },
-    block: {
-        display: 'inline-flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        verticalAlign: 'bottom',
-    },
     container: {
         width: 300,
         margin: spacing(1),
     },
-    btn: {
-        width: '100%',
-    },
     chartContainer: {
         display: 'flex',
         height: 300,
-        width: '100%',
-        verticalAlign: 'top',
         position: 'relative',
     },
     chart: {
