@@ -1,18 +1,32 @@
 import { SlideProps } from '@material-ui/core';
 import { observer } from 'mobx-react-lite';
-import React, { FC, useState } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 
-import { removeCandidate } from '@apis/websocket';
-import Board from '@components/Board';
-import Dialog from '@components/Dialog';
-import Fab from '@components/Fab';
-import Modal from '@components/Modal';
-import Slider from '@components/Slider';
-import Template from '@components/SMS';
-import { STEPS } from '@config/consts';
+import { removeCandidate } from '@apis/rest';
+import { Board } from '@components/Board';
+import { Comments } from '@components/Comments';
+import { Detail } from '@components/Detail';
+import { Dialog } from '@components/Dialog';
+import { Fab } from '@components/Fab';
+import { Modal } from '@components/Modal';
+import { Slider } from '@components/Slider';
+import { Template } from '@components/SMS';
+import { StepType } from '@config/enums';
 import { Candidate } from '@config/types';
+import { usePrevious } from '@hooks/usePrevious';
 import { useStores } from '@hooks/useStores';
-import { teamSort } from '@utils/sortBySlot';
+// import { teamSort } from '@utils/sortBySlot';
+
+const Candidate: FC<{ candidate: Candidate }> = ({ candidate }) => {
+    const prevCandidate = usePrevious(candidate);
+    candidate = candidate || prevCandidate;
+    return (
+        <>
+            <Detail candidate={candidate} />
+            <Comments candidate={candidate} />
+        </>
+    );
+};
 
 const Candidates: FC = observer(() => {
     const { $component, $candidate } = useStores();
@@ -21,26 +35,11 @@ const Candidates: FC = observer(() => {
     const [step, setStep] = useState(0);
     const [index, setIndex] = useState(-1);
     const [direction, setDirection] = useState<SlideProps['direction']>('left');
+    useEffect(() => {
+        $candidate.setSteps(StepType.all);
+    }, []);
 
-    const candidates: Candidate[][] = [...new Array(STEPS.length)].map(() => []);
-    if ($candidate.steps.length !== 2) {
-        // 全部面板
-        for (const candidate of $candidate.candidates) {
-            if (candidate.group === $candidate.group) {
-                candidates[candidate.step].push(candidate);
-            }
-        }
-    } else {
-        // 群面面板
-        for (const candidate of $candidate.candidates) {
-            if (candidate.step === $candidate.steps[0] || candidate.step === $candidate.steps[1]) {
-                // 位于群面或通过
-                candidates[candidate.step].push(candidate);
-            }
-        }
-        // it's unnecessary to reassign because Array.prototype.sort is in-place
-        candidates.map((toSort) => toSort.sort(teamSort));
-    }
+    const candidates = $candidate.groupBySteps;
 
     const handleRight = () => {
         setDirection('left');
@@ -71,7 +70,7 @@ const Candidates: FC = observer(() => {
             $component.enqueueSnackbar('你没有选中任何人', 'info');
             return;
         }
-        $candidate.selected.forEach(({ _id }) => removeCandidate(_id));
+        $candidate.selected.forEach(({ id }) => void removeCandidate(id));
     };
 
     const toggleOpen = (name: string) => () => {
@@ -99,11 +98,11 @@ const Candidates: FC = observer(() => {
                 {step >= 0 && (
                     <Slider
                         index={index}
-                        candidate={candidates[step][index]}
                         handleLeft={handleLeft}
                         handleRight={handleRight}
-                        handleNextIndex={handleNextIndex}
-                    />
+                        handleNextIndex={handleNextIndex}>
+                        <Candidate candidate={candidates[step][index]} />
+                    </Slider>
                 )}
             </Modal>
         </>

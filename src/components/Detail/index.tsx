@@ -1,25 +1,25 @@
 import { Button, TextField, TextFieldProps } from '@material-ui/core';
 import { observer } from 'mobx-react-lite';
-import React, { FC, useState } from 'react';
+import React, { FC, Fragment, useState } from 'react';
 
 import { getResume } from '@apis/rest';
-import Modal from '@components/Modal';
-import { GENDERS, GRADES, GROUPS, GROUPS_, RANKS } from '@config/consts';
+import { Modal } from '@components/Modal';
+import { GENDERS, GRADES, GROUP_MAP, RANKS } from '@config/consts';
 import { Candidate } from '@config/types';
 import { useStores } from '@hooks/useStores';
 import useStyles from '@styles/detail';
 
 interface Props {
-    info: Candidate;
+    candidate: Candidate;
 }
 
-const Detail: FC<Props> = observer(({ info }) => {
+export const Detail: FC<Props> = observer(({ candidate }) => {
     const { $component } = useStores();
     const classes = useStyles();
-    const [modal, setModal] = useState(false);
+    const [introModal, setIntroModal] = useState(false);
 
     const {
-        _id,
+        id,
         name,
         group,
         gender,
@@ -33,13 +33,13 @@ const Detail: FC<Props> = observer(({ info }) => {
         isQuick,
         referrer,
         resume,
-    } = info;
-    const progress = $component.resumeProgresses[_id] || 0;
+    } = candidate;
+    const progress = $component.resumeProgresses[id];
 
     const items: TextFieldProps[][] = [
         [
             { label: '姓名', value: name },
-            { label: '组别', value: GROUPS[GROUPS_.indexOf(group)] },
+            { label: '组别', value: GROUP_MAP.get(group) },
             { label: '性别', value: GENDERS[gender] },
         ],
         [
@@ -61,11 +61,9 @@ const Detail: FC<Props> = observer(({ info }) => {
         [{ label: '预览', value: intro, fullWidth: true, multiline: true, rowsMax: 3 }],
     ];
 
-    const toggleModalOpen = () => {
-        setModal((prevModal) => !prevModal);
-    };
+    const toggleIntroModalOpen = () => setIntroModal((prevModal) => !prevModal);
 
-    const downloadResume = () => getResume(_id);
+    const downloadResume = () => getResume(id);
 
     return (
         <>
@@ -78,7 +76,7 @@ const Detail: FC<Props> = observer(({ info }) => {
                     </div>
                 ))}
                 <div className={classes.detailRow}>
-                    <Button size='large' color='primary' onClick={toggleModalOpen}>
+                    <Button size='large' color='primary' onClick={toggleIntroModalOpen}>
                         自我介绍
                     </Button>
                     <Button size='large' color='primary' onClick={downloadResume} disabled={!resume || !!progress}>
@@ -86,21 +84,19 @@ const Detail: FC<Props> = observer(({ info }) => {
                     </Button>
                 </div>
             </div>
-            <Modal open={modal} onClose={toggleModalOpen} title='自我介绍'>
+            <Modal open={introModal} onClose={toggleIntroModalOpen} title='自我介绍'>
                 <div className={classes.introContent}>
                     {intro
                         .split('\n')
-                        .filter((text) => text)
+                        .filter(Boolean)
                         .map((text, index) => (
-                            <React.Fragment key={index}>
+                            <Fragment key={index}>
                                 {text}
                                 <br />
-                            </React.Fragment>
+                            </Fragment>
                         ))}
                 </div>
             </Modal>
         </>
     );
 });
-
-export default Detail;

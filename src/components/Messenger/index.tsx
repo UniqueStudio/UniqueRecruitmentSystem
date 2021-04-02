@@ -1,4 +1,4 @@
-import { Avatar, Chip, Divider, IconButton, Paper, TextField } from '@material-ui/core';
+import { Avatar, Chip, Collapse, Divider, IconButton, Paper, TextField } from '@material-ui/core';
 import PlusOneIcon from '@material-ui/icons/ExposurePlus1';
 import FaceIcon from '@material-ui/icons/Face';
 import InsertPhotoIcon from '@material-ui/icons/InsertPhoto';
@@ -16,12 +16,12 @@ import React, {
 } from 'react';
 
 import { sendMessage } from '@apis/websocket';
-import EnlargeableImage from '@components/EnlargeableImg';
+import { EnlargeableImage } from '@components/EnlargeableImg';
 import { Message } from '@config/types';
 import { useStores } from '@hooks/useStores';
 import useStyles from '@styles/messenger';
 
-const Messenger: FC = observer(() => {
+export const Messenger: FC = observer(() => {
     const { $user, $component } = useStores();
     const classes = useStyles();
     const [content, setContent] = useState('');
@@ -38,8 +38,8 @@ const Messenger: FC = observer(() => {
         isSelf: true,
         time: Date.now(),
         isImage,
-        name: $user.info.username,
-        avatar: $user.info.avatar,
+        name: $user.info.name,
+        avatar: $user.info.avatar || '',
     });
 
     const handleKey: KeyboardEventHandler = (event) => {
@@ -145,55 +145,59 @@ const Messenger: FC = observer(() => {
         <Avatar alt={name} src={messageAvatar} className={classes.avatar} children={<FaceIcon />} />
     );
     return (
-        <Paper className={classes.messenger}>
-            <div className={classes.messages} ref={setContainer}>
-                {$user.messages.map((message, index) => (
-                    <div key={index} className={clsx(classes.messageContainer, { [classes.my]: message.isSelf })}>
-                        {AvatarBox(message)}
-                        <Chip
-                            label={MessageChip(message)}
-                            classes={{ root: clsx(classes.chipRoot, { [classes.myChip]: message.isSelf }) }}
-                        />
-                    </div>
-                ))}
-            </div>
-            <div className={classes.input}>
-                <Divider />
-                <div className={classes.inputContent}>
-                    <input
-                        accept='image/png, image/jpeg'
-                        className={classes.hidden}
-                        id='file'
-                        type='file'
-                        onChange={handleImage}
-                        onClick={resetInput}
-                    />
-                    <label htmlFor='file'>
-                        <IconButton color='primary' component='span'>
-                            <InsertPhotoIcon />
-                        </IconButton>
-                    </label>
-                    <IconButton color='primary' component='span' onClick={plusOne} disabled={!$user.messages.length}>
-                        <PlusOneIcon />
-                    </IconButton>
-                    <TextField
-                        multiline
-                        rowsMax={4}
-                        value={content}
-                        placeholder={placeHolders[~~(Math.random() * placeHolders.length)]}
-                        className={classes.textField}
-                        margin='normal'
-                        onChange={handleChange}
-                        onKeyPress={handleKey}
-                        onPaste={handlePaste}
-                    />
-                    <IconButton color='primary' component='span' onClick={send} disabled={!/\S+/.exec(content)}>
-                        <SendIcon />
-                    </IconButton>
+        <Collapse in={$component.messengerOpen} classes={{ container: classes.collapse }}>
+            <Paper className={classes.messenger}>
+                <div className={classes.messages} ref={setContainer}>
+                    {$user.messages.map((message, index) => (
+                        <div key={index} className={clsx(classes.messageContainer, { [classes.my]: message.isSelf })}>
+                            {AvatarBox(message)}
+                            <Chip
+                                label={MessageChip(message)}
+                                classes={{ root: clsx(classes.chipRoot, { [classes.myChip]: message.isSelf }) }}
+                            />
+                        </div>
+                    ))}
                 </div>
-            </div>
-        </Paper>
+                <div className={classes.input}>
+                    <Divider />
+                    <div className={classes.inputContent}>
+                        <input
+                            accept='image/png, image/jpeg'
+                            className={classes.hidden}
+                            id='file'
+                            type='file'
+                            onChange={handleImage}
+                            onClick={resetInput}
+                        />
+                        <label htmlFor='file'>
+                            <IconButton color='primary' component='span'>
+                                <InsertPhotoIcon />
+                            </IconButton>
+                        </label>
+                        <IconButton
+                            color='primary'
+                            component='span'
+                            onClick={plusOne}
+                            disabled={!$user.messages.length}>
+                            <PlusOneIcon />
+                        </IconButton>
+                        <TextField
+                            multiline
+                            rowsMax={4}
+                            value={content}
+                            placeholder={placeHolders[~~(Math.random() * placeHolders.length)]}
+                            className={classes.textField}
+                            margin='normal'
+                            onChange={handleChange}
+                            onKeyPress={handleKey}
+                            onPaste={handlePaste}
+                        />
+                        <IconButton color='primary' component='span' onClick={send} disabled={!/\S+/.exec(content)}>
+                            <SendIcon />
+                        </IconButton>
+                    </div>
+                </div>
+            </Paper>
+        </Collapse>
     );
 });
-
-export default Messenger;

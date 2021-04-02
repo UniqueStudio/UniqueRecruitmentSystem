@@ -1,23 +1,41 @@
 import { set } from 'idb-keyval';
 import { makeAutoObservable, toJS } from 'mobx';
 
-import { Candidate, Comment, Group, Step } from '@config/types';
+import { STEP_MAP } from '@config/consts';
+import { Group, InterviewType, Step, StepType } from '@config/enums';
+import { Candidate, Comment } from '@config/types';
+import { groupSort, teamSort } from '@utils/sortByAllocation';
+
+const allSteps = [
+    Step.报名,
+    Step.笔试,
+    Step.组面时间选择,
+    Step.组面,
+    Step.熬测,
+    Step.群面时间选择,
+    Step.群面,
+    Step.通过,
+];
+const teamInterviewSteps = [Step.群面, Step.通过];
+const groupInterviewSteps = [Step.组面, Step.熬测];
 
 export class CandidateStore {
-    candidates: Candidate[] = [];
+    candidates = new Map<string, Candidate>();
 
     selected = new Map<string, Candidate>();
 
-    group: Group = 'web';
+    group = Group.web;
 
-    steps: Step[] = [0, 1, 2, 3, 4, 5];
+    stepType = StepType.all;
+
+    steps: Step[] = allSteps;
 
     constructor() {
         makeAutoObservable(this);
     }
 
     addComment(cid: string, comment: Comment) {
-        const candidate = this.candidates.find(({ _id }) => _id === cid);
+        const candidate = this.candidates.get(cid);
         if (!candidate) {
             return;
         }
@@ -25,43 +43,55 @@ export class CandidateStore {
         void set('candidates', toJS(this.candidates));
     }
 
-    removeComment(cid: string, id: string) {
-        const candidate = this.candidates.find(({ _id }) => _id === cid);
+    removeComment(cid: string, commendId: string) {
+        const candidate = this.candidates.get(cid);
         if (!candidate) {
             return;
         }
-        candidate.comments = candidate.comments.filter(({ _id }) => _id !== id);
+        candidate.comments = candidate.comments.filter(({ id }) => id !== commendId);
         void set('candidates', toJS(this.candidates));
     }
 
-    addCandidates(candidates: Candidate[]) {
+    setOne(candidate: Candidate) {
+        this.candidates.set(candidate.id, candidate);
+        void set('candidates', toJS(this.candidates));
+    }
+
+    setMany(candidates: Candidate[]) {
+        for (const candidate of candidates) {
+            this.candidates.set(candidate.id, candidate);
+        }
+        this.deselectAll();
+        void set('candidates', toJS(this.candidates));
+    }
+
+    setAll(candidates: Map<string, Candidate>) {
         this.candidates = candidates;
         this.deselectAll();
-        void set('candidates', candidates);
-    }
-
-    addCandidate(candidate: Candidate) {
-        this.candidates.push(candidate);
         void set('candidates', toJS(this.candidates));
     }
 
-    selectCandidate(id: string) {
-        this.selected.set(id, this.candidates.find(({ _id }) => id === _id)!);
+    clear() {
+        this.candidates.clear();
     }
 
-    selectCandidates(ids: string[]) {
-        for (const id of ids) {
-            this.selectCandidate(id);
+    selectOne(cid: string) {
+        this.selected.set(cid, this.candidates.get(cid)!);
+    }
+
+    selectMany(cids: string[]) {
+        for (const cid of cids) {
+            this.selectOne(cid);
         }
     }
 
-    deselectCandidate(id: string) {
-        this.selected.delete(id);
+    deselectOne(cid: string) {
+        this.selected.delete(cid);
     }
 
-    deselectCandidates(ids: string[]) {
-        for (const id of ids) {
-            this.deselectCandidate(id);
+    deselectMany(cids: string[]) {
+        for (const cid of cids) {
+            this.deselectOne(cid);
         }
     }
 
@@ -69,15 +99,14 @@ export class CandidateStore {
         this.selected.clear();
     }
 
-    removeCandidate(id: string) {
-        this.candidates = this.candidates.filter(({ _id }) => _id !== id);
-        this.deselectCandidate(id);
+    removeOne(cid: string) {
+        this.candidates.delete(cid);
+        this.deselectOne(cid);
         void set('candidates', toJS(this.candidates));
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    moveCandidate(id: string, from: Step, to: Step, position?: number) {
-        const candidate = this.candidates.find(({ _id }) => _id === id);
+    moveOne(cid: string, to: Step) {
+        const candidate = this.candidates.get(cid);
         if (!candidate) {
             return;
         }
@@ -89,31 +118,64 @@ export class CandidateStore {
         this.group = group;
     }
 
-    setSteps(stepType: number, steps?: Step[]) {
+    setSteps(stepType: StepType, steps?: Step[]) {
+        this.stepType = stepType;
         if (steps) {
             this.steps = steps;
         } else {
-            this.steps = stepType === 1 ? [4, 5] : [0, 1, 2, 3, 4, 5];
+            switch (stepType) {
+                case StepType.all:
+                    this.steps = allSteps;
+                    break;
+                case StepType.groupInterview:
+                    this.steps = groupInterviewSteps;
+                    break;
+                case StepType.teamInterview:
+                    this.steps = teamInterviewSteps;
+                    break;
+            }
         }
     }
 
-    allocateOne(interviewType: 'group' | 'team', id: string, time: number) {
-        const candidate = this.candidates.find(({ _id }) => _id === id);
+    allocateOne(type: InterviewType, cid: string, time: Date) {
+        const candidate = this.candidates.get(cid);
         if (!candidate) {
             return;
         }
-        candidate.interviews[interviewType].allocation = time;
+        candidate.interviewAllocations[type] = time;
         void set('candidates', toJS(this.candidates));
     }
 
-    allocateAll(allocations: { id: string; time: number }[], interviewType: 'group' | 'team') {
+    allocateMany(allocations: { id: string; time?: Date }[], type: InterviewType) {
         allocations.forEach(({ id, time }) => {
-            const candidate = this.candidates.find(({ _id }) => _id === id);
+            const candidate = this.candidates.get(id);
             if (!candidate) {
                 return;
             }
-            candidate.interviews[interviewType].allocation = time;
+            candidate.interviewAllocations[type] = time;
         });
         void set('candidates', toJS(this.candidates));
+    }
+
+    get groupBySteps() {
+        const candidates: Candidate[][] = [...new Array(STEP_MAP.size)].map(() => []);
+        switch (this.stepType) {
+            case StepType.all:
+            case StepType.groupInterview:
+                for (const [, candidate] of this.candidates) {
+                    if (candidate.group === this.group) {
+                        candidates[candidate.step].push(candidate);
+                    }
+                }
+                break;
+            case StepType.teamInterview:
+                for (const [, candidate] of this.candidates) {
+                    candidates[candidate.step].push(candidate);
+                }
+                break;
+        }
+        candidates[Step.组面].sort(groupSort);
+        candidates[Step.群面].sort(teamSort);
+        return candidates;
     }
 }

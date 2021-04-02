@@ -3,17 +3,17 @@ import { observer } from 'mobx-react-lite';
 import React, { ChangeEventHandler, FC, KeyboardEventHandler, useState } from 'react';
 
 import { addComment, removeComment } from '@apis/websocket';
-import Chip from '@components/Chip';
-import { Comment, Evaluation } from '@config/types';
+import { Chip } from '@components/Chip';
+import { Evaluation } from '@config/enums';
+import { Candidate, Comment } from '@config/types';
 import { useStores } from '@hooks/useStores';
 import useStyles from '@styles/comments';
 
 interface Props {
-    cid: string;
-    comments: Comment[];
+    candidate: Candidate;
 }
 
-const Comments: FC<Props> = observer(({ comments, cid }) => {
+export const Comments: FC<Props> = observer(({ candidate: { comments, id } }) => {
     const { $component, $user } = useStores();
     const classes = useStyles();
     const [evaluation, setEvaluation] = useState($component.inputtingComment.evaluation);
@@ -43,21 +43,19 @@ const Comments: FC<Props> = observer(({ comments, cid }) => {
 
     const handleSubmit = () => {
         if (content && evaluation !== undefined) {
-            addComment(cid, {
-                uid: $user.info._id,
+            addComment(id, {
                 content,
                 evaluation,
-                username: $user.info.username,
             });
-            setEvaluation(2);
+            setEvaluation(Evaluation.fair);
             setContent('');
         } else {
-            $component.enqueueSnackbar('请完整填写评论！', 'warning');
+            $component.enqueueSnackbar('请完整填写评论', 'warning');
         }
     };
 
     const handleRemove = (id: string) => () => {
-        removeComment(cid, id);
+        removeComment(id);
     };
 
     const handleCopy = (comment: Comment) => () => {
@@ -69,9 +67,9 @@ const Comments: FC<Props> = observer(({ comments, cid }) => {
         <div className={classes.comments}>
             <div className={classes.evaluation}>
                 <TextField select label='评价' value={evaluation} onChange={changeEvaluation}>
-                    <MenuItem value={2}>好</MenuItem>
-                    <MenuItem value={1}>中</MenuItem>
-                    <MenuItem value={0}>差</MenuItem>
+                    <MenuItem value={2}>👍</MenuItem>
+                    <MenuItem value={1}>🤔</MenuItem>
+                    <MenuItem value={0}>👎</MenuItem>
                 </TextField>
                 <TextField
                     label='输入评论'
@@ -95,12 +93,10 @@ const Comments: FC<Props> = observer(({ comments, cid }) => {
                 <Chip
                     comment={comment}
                     key={index}
-                    onRemove={$user.info._id === comment.uid ? handleRemove(comment._id) : undefined}
-                    onCopy={$user.info._id === comment.uid ? handleCopy(comment) : undefined}
+                    onRemove={$user.info.id === comment.user.id ? handleRemove(comment.id) : undefined}
+                    onCopy={$user.info.id === comment.user.id ? handleCopy(comment) : undefined}
                 />
             ))}
         </div>
     );
 });
-
-export default Comments;

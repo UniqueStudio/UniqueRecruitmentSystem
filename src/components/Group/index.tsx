@@ -1,14 +1,4 @@
-import {
-    Button,
-    Checkbox,
-    Paper,
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableRow,
-    Typography,
-} from '@material-ui/core';
+import { Button, Checkbox, Table, TableBody, TableCell, TableHead, TableRow } from '@material-ui/core';
 import { observer } from 'mobx-react-lite';
 import React, { FC, useState } from 'react';
 
@@ -19,11 +9,11 @@ import { useStores } from '@hooks/useStores';
 import useStyles from '@styles/group';
 import { titleConverter } from '@utils/titleConverter';
 
-const heads = ['成员姓名', '性别', '电话号码', '邮箱', '加入时间', '组长？', '管理员？'];
+const heads = ['姓名', '性别', '电话号码', '邮箱', '加入时间', '组长？', '管理员？'];
 
 type SelectHandler = (name: string) => (event: React.ChangeEvent<HTMLInputElement>, checked: boolean) => void;
 const memberDataConverter = (handleSelect: SelectHandler, admin: Record<string, boolean>, disabled: boolean) => ({
-    username,
+    name,
     gender,
     phone,
     mail,
@@ -31,7 +21,7 @@ const memberDataConverter = (handleSelect: SelectHandler, admin: Record<string, 
     isCaptain,
     isAdmin,
 }: User) => [
-    username,
+    name,
     GENDERS[gender],
     phone || '未知',
     mail || '未知',
@@ -45,7 +35,7 @@ const memberDataConverter = (handleSelect: SelectHandler, admin: Record<string, 
     />,
 ];
 
-const Group: FC = observer(() => {
+export const Group: FC = observer(() => {
     const { $user } = useStores();
     const classes = useStyles();
 
@@ -55,60 +45,45 @@ const Group: FC = observer(() => {
 
     // { user1: true, user2: false ...}
     const [admin, setAdmin] = useState(
-        // use phone instead of name to avoid same name in same group
-        Object.fromEntries($user.groupInfo.map((member) => [member.phone, member.isAdmin])),
+        // use id instead of name to avoid same name in same group
+        Object.fromEntries($user.groupInfo.map((member) => [member.id, member.isAdmin])),
     );
 
     const handleSelect = (phone: string) => (event: React.ChangeEvent<HTMLInputElement>) => {
         setAdmin({ ...admin, [phone]: event.target.checked });
     };
 
-    const submitChange = () =>
-        setGroupAdmin({
-            group: $user.info.group,
-            who: Object.keys(admin).filter((i) => admin[i]),
-        });
+    const submitChange = () => setGroupAdmin(Object.keys(admin).filter((i) => admin[i]));
 
     return (
-        <div className={classes.infoContainer}>
-            <Paper className={classes.paper}>
-                <div className={classes.title}>
-                    <Typography variant='h6'>本组成员信息</Typography>
-                </div>
-                <div className={classes.tableContainer}>
-                    <Table className={classes.table}>
-                        <TableHead>
-                            <TableRow>
-                                {heads.map((head, index) => (
-                                    <TableCell key={index} classes={{ root: classes.tableCell }}>
-                                        {head}
+        <div className={classes.tableContainer}>
+            <Table className={classes.table}>
+                <TableHead>
+                    <TableRow>
+                        {heads.map((head, index) => (
+                            <TableCell key={index} classes={{ root: classes.tableCell }}>
+                                {head}
+                            </TableCell>
+                        ))}
+                    </TableRow>
+                </TableHead>
+                <TableBody>
+                    {$user.groupInfo
+                        .map(memberDataConverter(handleSelect, admin, !$user.isAdminOrCaptain))
+                        .map((member, index) => (
+                            <TableRow key={index}>
+                                {member.map((item, idx) => (
+                                    <TableCell classes={{ root: classes.tableCell }} key={idx}>
+                                        {item}
                                     </TableCell>
                                 ))}
                             </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {$user.groupInfo
-                                .map(memberDataConverter(handleSelect, admin, !$user.isAdminOrCaptain))
-                                .map((member, index) => (
-                                    <TableRow key={index}>
-                                        {member.map((item, idx) => (
-                                            <TableCell classes={{ root: classes.tableCell }} key={idx}>
-                                                {item}
-                                            </TableCell>
-                                        ))}
-                                    </TableRow>
-                                ))}
-                        </TableBody>
-                    </Table>
-                </div>
-                <div>
-                    <Button size='large' onClick={submitChange} color='primary'>
-                        修改
-                    </Button>
-                </div>
-            </Paper>
+                        ))}
+                </TableBody>
+            </Table>
+            <Button size='large' onClick={submitChange} color='primary'>
+                修改
+            </Button>
         </div>
     );
 });
-
-export default Group;

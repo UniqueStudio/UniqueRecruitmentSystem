@@ -5,7 +5,7 @@
 
 interface LocalStorageRecord {
     token: string;
-    viewing: string;
+    viewingId: string;
 }
 
 export class TypedStorage<T extends string> {

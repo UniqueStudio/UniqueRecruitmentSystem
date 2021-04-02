@@ -1,5 +1,4 @@
 import { Chip, Typography } from '@material-ui/core';
-import clsx from 'clsx';
 import { observer } from 'mobx-react-lite';
 import React, { FC, ReactElement } from 'react';
 
@@ -7,36 +6,28 @@ import { GRADES } from '@config/consts';
 import { useStores } from '@hooks/useStores';
 import useStyles from '@styles/sms';
 
-const SMSPicker: FC = observer(() => {
+export const SMSPicker: FC = observer(() => {
     const { $candidate } = useStores();
     const classes = useStyles();
     const handleDeselect = (id: string) => () => {
-        $candidate.deselectCandidate(id);
+        $candidate.deselectOne(id);
     };
 
     const chips: ReactElement[] = [];
-    $candidate.selected.forEach(({ _id, name, grade, institute }) =>
+    $candidate.selected.forEach(({ id, name, grade, institute }) =>
         chips.push(
             <Chip
-                key={_id}
+                key={id}
                 label={`${name} ${GRADES[grade]} ${institute}`}
-                onDelete={handleDeselect(_id)}
+                onDelete={handleDeselect(id)}
                 className={classes.templateItem}
                 color='primary'
             />,
         ),
     );
     return (
-        <div className={clsx(classes.templateContent, classes.templateItem, classes.picker)}>
-            {chips.length ? (
-                chips
-            ) : (
-                <Typography variant='h6' className={classes.templateItem}>
-                    你未选中任何人!
-                </Typography>
-            )}
+        <div className={classes.templateItem}>
+            {chips.length ? chips : <Typography variant='body1'>你未选中任何人!</Typography>}
         </div>
     );
 });
-
-export default SMSPicker;

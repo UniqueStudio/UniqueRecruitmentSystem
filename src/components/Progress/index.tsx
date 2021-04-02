@@ -3,7 +3,7 @@ import React, { FC, memo } from 'react';
 
 import useStyles from '@styles/progress';
 
-const Progress: FC = memo(() => {
+export const Progress: FC = memo(() => {
     const classes = useStyles();
     return (
         <LinearProgress
@@ -16,5 +16,3 @@ const Progress: FC = memo(() => {
         />
     );
 });
-
-export default Progress;
