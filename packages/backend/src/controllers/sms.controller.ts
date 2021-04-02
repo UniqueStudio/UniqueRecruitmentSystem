@@ -72,34 +72,26 @@ export class SMSController {
         const candidates = await this.candidatesService.findManyByIds(cids);
         const errors = new Set<string>();
         for (const candidate of candidates) {
-            if (type === SMSType.accept) {
-                const { recruitment: { end, name, interviews }, group } = candidate;
-                if (+end < Date.now()) {
-                    throw new BadRequestException(`Recruitment ${name} has already ended`);
-                }
-                if (next === Step.组面时间选择) {
-                    if (!interviews.find(({ name }) => name === GroupOrTeam[group])) {
-                        throw new BadRequestException(`No interviews are scheduled for ${group} group`);
-                    }
-                } else if (next === Step.群面时间选择) {
-                    if (!interviews.find(({ name }) => name === GroupOrTeam.unique)) {
-                        throw new BadRequestException('No interviews are scheduled for the team');
-                    }
-                }
-            }
-            if (type === SMSType.reject) {
-                candidate.rejected = true;
-                await candidate.save();
-            }
             try {
-                const { template, params } = applySMSTemplate({
-                    candidate,
-                    type,
-                    rest,
-                    next,
-                    time,
-                    place,
-                });
+                if (type === SMSType.accept) {
+                    const { recruitment: { end, name, interviews }, group } = candidate;
+                    if (+end < Date.now()) {
+                        throw new BadRequestException(`Recruitment ${name} has already ended`);
+                    }
+                    if (next === Step.组面时间选择) {
+                        if (!interviews.find(({ name }) => name === GroupOrTeam[group])) {
+                            throw new BadRequestException(`No interviews are scheduled for ${group} group`);
+                        }
+                    } else if (next === Step.群面时间选择) {
+                        if (!interviews.find(({ name }) => name === GroupOrTeam.unique)) {
+                            throw new BadRequestException('No interviews are scheduled for the team');
+                        }
+                    }
+                } else {
+                    candidate.rejected = true;
+                    await candidate.save();
+                }
+                const { template, params } = applySMSTemplate({ candidate, type, rest, next, time, place });
                 await this.smsService.sendSMS(candidate.phone, template, params);
             } catch ({ message }) {
                 errors.add(message);

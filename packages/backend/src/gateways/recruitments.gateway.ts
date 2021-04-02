@@ -10,9 +10,10 @@ export class RecruitmentsGateway {
     @WebSocketServer()
     server!: Server;
 
-    broadcastUpdate() {
+    broadcastUpdate(rid: string) {
         this.server.sockets.emit('updateRecruitment', {
             status: Status.info,
+            payload: rid,
         });
     }
 }

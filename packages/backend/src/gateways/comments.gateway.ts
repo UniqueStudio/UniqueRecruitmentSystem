@@ -27,9 +27,6 @@ export class CommentsGateway {
             throw new WsException('Failed to authenticate user');
         }
         const candidate = await this.candidatesService.findOneById(cid);
-        if (!candidate) {
-            throw new WsException(`Candidate with id ${cid} doesn't exist`);
-        }
         const { content, evaluation } = comment;
         const data = {
             cid,
@@ -60,9 +57,6 @@ export class CommentsGateway {
             throw new WsException('Failed to authenticate user');
         }
         const comment = await this.commentsService.findOneById(id);
-        if (!comment) {
-            throw new WsException(`Comment with id ${id} doesn't exist`);
-        }
         if (comment.user.id !== user.id) {
             throw new WsException('You don\'t have permission to do this');
         }

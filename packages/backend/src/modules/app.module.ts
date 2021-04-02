@@ -63,16 +63,7 @@ import { ConfigService } from '@services/config.service';
         TypeOrmModule.forRootAsync({
             imports: [ConfigModule],
             inject: [ConfigService],
-            useFactory: (conf: ConfigService) => ({
-                type: 'postgres',
-                host: conf.get('POSTGRES_HOST'),
-                port: conf.isTest ? conf.get('POSTGRES_PORT_TEST') : conf.get('POSTGRES_PORT'),
-                username: conf.get('POSTGRES_USER'),
-                password: conf.get('POSTGRES_PASSWORD'),
-                database: conf.get('POSTGRES_DB'),
-                synchronize: conf.isNotProd,
-                autoLoadEntities: true,
-            }),
+            useFactory: (conf: ConfigService) => conf.postgresConfig,
         }),
         ScheduleModule.forRoot(),
         TasksModule,

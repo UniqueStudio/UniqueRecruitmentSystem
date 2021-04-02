@@ -39,10 +39,18 @@ export class RecruitmentsController {
         return this.recruitmentsService.findPending();
     }
 
+    @Get(':rid')
+    @AcceptRole(Role.user)
+    getOneRecruitment(
+        @Param('rid') rid: string,
+    ) {
+        return this.recruitmentsService.findOneWithStatistics(rid);
+    }
+
     @Get()
     @AcceptRole(Role.user)
     getAllRecruitments() {
-        return this.recruitmentsService.findWithStatistics();
+        return this.recruitmentsService.findAllWithStatistics();
     }
 
     @Post()
@@ -51,13 +59,13 @@ export class RecruitmentsController {
     async createRecruitment(
         @Body() { name, beginning, end, deadline }: CreateRecruitmentBody,
     ) {
-        await this.recruitmentsService.createAndSave({
+        const recruitment = await this.recruitmentsService.createAndSave({
             name,
             beginning: new Date(beginning),
             end: new Date(end),
             deadline: new Date(deadline),
         });
-        this.recruitmentsGateway.broadcastUpdate();
+        this.recruitmentsGateway.broadcastUpdate(recruitment.id);
     }
 
     @Put(':rid/schedule')
@@ -67,9 +75,6 @@ export class RecruitmentsController {
         @Body() { beginning, end, deadline }: SetRecruitmentScheduleBody,
     ) {
         const recruitment = await this.recruitmentsService.findOneById(rid);
-        if (!recruitment) {
-            throw new BadRequestException(`Recruitment ${rid} does not exist`);
-        }
         if (+recruitment.end < Date.now()) {
             /*
               * If somebody extends the end date, he can bypass the restrictions on many operations,
@@ -85,7 +90,7 @@ export class RecruitmentsController {
         recruitment.end = new Date(end);
         recruitment.deadline = new Date(deadline);
         await recruitment.save();
-        this.recruitmentsGateway.broadcastUpdate();
+        this.recruitmentsGateway.broadcastUpdate(rid);
     }
 
     @Put(':rid/interviews/:name')
@@ -97,9 +102,6 @@ export class RecruitmentsController {
         @Body() { interviews }: SetRecruitmentInterviewsBody,
     ) {
         const recruitment = await this.recruitmentsService.findOneById(rid);
-        if (!recruitment) {
-            throw new BadRequestException(`Recruitment ${rid} does not exist`);
-        }
         if (+recruitment.end < Date.now()) {
             throw new ForbiddenException('This recruitment has already ended');
         }
@@ -153,7 +155,7 @@ export class RecruitmentsController {
                 errors.add(message);
             }
         }
-        this.recruitmentsGateway.broadcastUpdate();
+        this.recruitmentsGateway.broadcastUpdate(rid);
         if (errors.size) {
             throw new BadRequestException([...errors].join(', '));
         }

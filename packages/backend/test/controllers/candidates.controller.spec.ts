@@ -340,7 +340,7 @@ describe('CandidatesController e2e', () => {
         });
         describe('get his group interview', () => {
             it('should be allocated', async () => {
-                const { interviewAllocations: { group } } = (await candidatesService.findOneById(testCandidate.id))!;
+                const { interviewAllocations: { group } } = await candidatesService.findOneById(testCandidate.id);
                 expect(group).toStrictEqual(time);
             });
         });
@@ -406,7 +406,7 @@ describe('CandidatesController e2e', () => {
         });
         describe('get his selection', () => {
             it('should be equal to what he selected', async () => {
-                const { interviewSelections } = (await candidatesService.findOneById(testCandidate.id))!;
+                const { interviewSelections } = await candidatesService.findOneById(testCandidate.id);
                 expect(interviewSelections).toHaveLength(2);
             });
         });

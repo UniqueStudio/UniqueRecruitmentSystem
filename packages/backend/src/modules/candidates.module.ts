@@ -17,12 +17,7 @@ import { ConfigService } from '@services/config.service';
         TypeOrmModule.forFeature([CandidateEntity]),
         MulterModule.registerAsync({
             inject: [ConfigService],
-            useFactory: (conf: ConfigService) => ({
-                limits: {
-                    fileSize: 104857600, // 100MB
-                },
-                dest: conf.resumePaths.temporary,
-            }),
+            useFactory: (conf: ConfigService) => conf.multerConfig,
         }),
         forwardRef(() => AuthModule),
         SMSModule,

@@ -23,21 +23,21 @@ export class RecruitmentsService extends BasicCRUDService<RecruitmentEntity> {
         });
     }
 
-    findOneWithCandidates(id: string): Promise<Omit<RecruitmentEntity, 'interviews' | 'statistics'> | undefined> {
-        return this.findOneById(id, {
-            relations: ['candidates', 'candidates.comments', 'candidates.interviewSelections'],
-        });
+    async findOneWithStatistics(id: string): Promise<Omit<RecruitmentEntity, 'candidates'>> {
+        return await this.withStatistics().where('r.id = :id', { id }).getOneOrFail();
     }
 
-    async findWithStatistics(): Promise<Omit<RecruitmentEntity, 'candidates'>[]> {
+    async findAllWithStatistics(): Promise<Omit<RecruitmentEntity, 'candidates'>[]> {
+        return await this.withStatistics().orderBy('r.beginning', 'DESC').getMany();
+    }
+
+    private withStatistics() {
         return this.repository
             .createQueryBuilder('r')
             .leftJoinAndSelect('r.interviews', 'interviews')
             .leftJoin(RecruitmentsService.aggregateRecruitments, 's', 's.id = r.id')
             .addSelect('s.jsonb_object_agg', 'r_statistics')
-            .addSelect('r.*')
-            .orderBy('r.beginning', 'DESC')
-            .getMany();
+            .addSelect('r.*');
     }
 
     private static aggregateSteps(this: void, qb: SelectQueryBuilder<unknown>) {

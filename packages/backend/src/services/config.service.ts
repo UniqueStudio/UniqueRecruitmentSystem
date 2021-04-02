@@ -2,6 +2,9 @@ import { createHmac } from 'crypto';
 
 import { Injectable } from '@nestjs/common';
 import { ConfigService as DefaultConfigService } from '@nestjs/config';
+import { JwtModuleOptions } from '@nestjs/jwt';
+import { MulterModuleOptions } from '@nestjs/platform-express';
+import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 
 import { ACM_API, EMAIL_HOST, EMAIL_PORT, QR_API, SMS_API, WX_API } from '@constants/consts';
 import { Env } from '@constants/enums';
@@ -26,10 +29,6 @@ export class ConfigService extends DefaultConfigService {
 
     get backupPath() {
         return this.get<string>('MIGRATION_BACKUP_PATH');
-    }
-
-    get jwtKey() {
-        return this.get<string>('JWT_KEY')!;
     }
 
     get port() {
@@ -110,6 +109,37 @@ export class ConfigService extends DefaultConfigService {
                 pass: this.get<string>('EMAIL_PASS')!,
             },
             secure: true,
+        };
+    }
+
+    get postgresConfig(): TypeOrmModuleOptions {
+        return {
+            type: 'postgres',
+            host: this.get<string>('POSTGRES_HOST'),
+            port: this.isTest ? this.get<number>('POSTGRES_PORT_TEST') : this.get<number>('POSTGRES_PORT'),
+            username: this.get<string>('POSTGRES_USER'),
+            password: this.get<string>('POSTGRES_PASSWORD'),
+            database: this.get<string>('POSTGRES_DB'),
+            synchronize: this.isNotProd,
+            autoLoadEntities: true,
+        };
+    }
+
+    get jwtConfig(): JwtModuleOptions {
+        return {
+            secret: this.get<string>('JWT_KEY'),
+            signOptions: {
+                expiresIn: '7 days',
+            },
+        };
+    }
+
+    get multerConfig(): MulterModuleOptions {
+        return {
+            limits: {
+                fileSize: 104857600, // 100MB
+            },
+            dest: this.resumePaths.temporary,
         };
     }
 }

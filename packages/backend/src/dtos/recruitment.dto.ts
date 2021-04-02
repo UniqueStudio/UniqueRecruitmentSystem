@@ -5,10 +5,10 @@ import {
     IsEnum,
     IsInt,
     IsOptional,
+    IsPositive,
     IsString,
     IsUUID,
     Matches,
-    Min,
     ValidateNested,
 } from 'class-validator';
 
@@ -31,7 +31,7 @@ export class SetRecruitmentScheduleBody {
 class InterviewsElement {
     @IsOptional()
     @IsUUID(4)
-    id!: string;
+    id?: string;
 
     @IsDateString()
     date!: string;
@@ -40,7 +40,7 @@ class InterviewsElement {
     period!: Period;
 
     @IsInt()
-    @Min(0)
+    @IsPositive()
     slotNumber!: number;
 }
 
