@@ -30,7 +30,7 @@ export const AppBar: FC = observer(() => {
     const [logoutMenu, setLogoutMenu] = useState<Element | null>(null);
     const [darkModeMenu, setDarkModeMenu] = useState<Element | null>(null);
 
-    const title = titleConverter($recruitment.recruitments.get($recruitment.viewing)?.name ?? '');
+    const title = titleConverter($recruitment.viewingRecruitment?.name ?? '');
     const open = $component.drawerOpen;
 
     const openLogoutMenu: MouseEventHandler = ({ currentTarget }) => {
