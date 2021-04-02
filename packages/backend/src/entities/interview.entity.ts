@@ -1,4 +1,4 @@
-import { IsDate, IsEnum, IsInt, Min } from 'class-validator';
+import { IsDate, IsEnum, IsInt, IsPositive } from 'class-validator';
 import { Column, Entity, ManyToMany, ManyToOne, Unique } from 'typeorm';
 
 import { GroupOrTeam, Period } from '@constants/enums';
@@ -23,7 +23,7 @@ export class InterviewEntity extends CommonEntity {
 
     @Column('int')
     @IsInt()
-    @Min(0)
+    @IsPositive()
     slotNumber!: number;
 
     @ManyToOne(() => RecruitmentEntity, ({ interviews }) => interviews, { onDelete: 'CASCADE' })

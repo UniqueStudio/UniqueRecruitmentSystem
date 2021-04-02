@@ -5,10 +5,10 @@ import {
     IsEnum,
     IsInt,
     IsOptional,
+    IsPositive,
     IsString,
     IsUUID,
     Matches,
-    Min,
     ValidateNested,
 } from 'class-validator';
 
@@ -40,7 +40,7 @@ class InterviewsElement {
     period!: Period;
 
     @IsInt()
-    @Min(0)
+    @IsPositive()
     slotNumber!: number;
 }
 

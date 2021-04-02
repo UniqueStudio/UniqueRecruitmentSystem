@@ -124,24 +124,24 @@ export const migrate = async (app: INestApplication) => {
         for (const { date, afternoon, evening, morning } of interview) {
             const d = new Date(date);
             d.setHours(0, 0, 0, 0);
-            await interviewsService.createAndSave({
+            morning > 0 && await interviewsService.createAndSave({
                 date: d,
                 period: Period.morning,
-                slotNumber: Math.max(morning, 0),
+                slotNumber: morning,
                 name: GroupOrTeam.unique,
                 recruitment,
             });
-            await interviewsService.createAndSave({
+            afternoon > 0 && await interviewsService.createAndSave({
                 date: d,
                 period: Period.afternoon,
-                slotNumber: Math.max(afternoon, 0),
+                slotNumber: afternoon,
                 name: GroupOrTeam.unique,
                 recruitment,
             });
-            await interviewsService.createAndSave({
+            evening > 0 && await interviewsService.createAndSave({
                 date: d,
                 period: Period.evening,
-                slotNumber: Math.max(evening, 0),
+                slotNumber: evening,
                 name: GroupOrTeam.unique,
                 recruitment,
             });
@@ -150,24 +150,24 @@ export const migrate = async (app: INestApplication) => {
             for (const { date, afternoon, evening, morning } of interview) {
                 const d = new Date(date);
                 d.setHours(0, 0, 0, 0);
-                await interviewsService.createAndSave({
+                morning > 0 && await interviewsService.createAndSave({
                     date: d,
                     period: Period.morning,
-                    slotNumber: Math.max(morning, 0),
+                    slotNumber: morning,
                     name: GroupOrTeam[name],
                     recruitment,
                 });
-                await interviewsService.createAndSave({
+                afternoon > 0 && await interviewsService.createAndSave({
                     date: d,
                     period: Period.afternoon,
-                    slotNumber: Math.max(afternoon, 0),
+                    slotNumber: afternoon,
                     name: GroupOrTeam[name],
                     recruitment,
                 });
-                await interviewsService.createAndSave({
+                evening > 0 && await interviewsService.createAndSave({
                     date: d,
                     period: Period.evening,
-                    slotNumber: Math.max(evening, 0),
+                    slotNumber: evening,
                     name: GroupOrTeam[name],
                     recruitment,
                 });
