@@ -13,12 +13,7 @@ import { ConfigService } from '@services/config.service';
         CandidatesModule,
         JwtModule.registerAsync({
             inject: [ConfigService],
-            useFactory: (conf: ConfigService) => ({
-                secret: conf.jwtKey,
-                signOptions: {
-                    expiresIn: '7 days',
-                },
-            }),
+            useFactory: (conf: ConfigService) => conf.jwtConfig,
         }),
     ],
     controllers: [AuthController],
