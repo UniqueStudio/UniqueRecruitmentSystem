@@ -24,7 +24,7 @@ export const TabLayout: FC<Props> = ({ items, variant = 'standard', classes }) =
         setTab(items[0].value);
     }, [items]);
 
-    return (
+    return items.find(({ value }) => value === tab) ? (
         <Paper className={classes?.paper}>
             <TabContext value={tab}>
                 <TabList
@@ -45,5 +45,5 @@ export const TabLayout: FC<Props> = ({ items, variant = 'standard', classes }) =
                 ))}
             </TabContext>
         </Paper>
-    );
+    ) : null;
 };
