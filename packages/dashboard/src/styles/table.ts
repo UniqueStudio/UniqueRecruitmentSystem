@@ -16,6 +16,9 @@ const useStyles = makeStyles(({ spacing, breakpoints }) => ({
     },
     tableButton: {
         margin: `${spacing(1)}px ${spacing(2)}px`,
+        [breakpoints.down('xs')]: {
+            margin: `0 ${spacing(2)}px ${spacing(2)}px`,
+        },
     },
     dialog: {
         margin: spacing(2),

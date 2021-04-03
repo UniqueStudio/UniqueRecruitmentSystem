@@ -141,6 +141,7 @@ export const Table: FC = observer(() => {
                         <Button
                             color='primary'
                             variant='contained'
+                            size={isMobile ? 'small' : 'medium'}
                             disabled={!$candidate.selected.size}
                             onClick={handleAllocateAll}
                             className={classes.tableButton}>
