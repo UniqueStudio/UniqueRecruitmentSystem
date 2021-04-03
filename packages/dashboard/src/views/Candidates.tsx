@@ -1,6 +1,6 @@
 import { SlideProps } from '@material-ui/core';
 import { observer } from 'mobx-react-lite';
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, useEffect, useMemo, useState } from 'react';
 
 import { removeCandidate } from '@apis/rest';
 import { Board } from '@components/Board';
@@ -15,7 +15,6 @@ import { StepType } from '@config/enums';
 import { Candidate } from '@config/types';
 import { usePrevious } from '@hooks/usePrevious';
 import { useStores } from '@hooks/useStores';
-// import { teamSort } from '@utils/sortBySlot';
 
 const Candidate: FC<{ candidate: Candidate }> = ({ candidate }) => {
     const prevCandidate = usePrevious(candidate);
@@ -81,7 +80,12 @@ const Candidates: FC = observer(() => {
 
     return (
         <>
-            <Board candidates={candidates} toggleDetail={toggleDetail} />
+            {useMemo(
+                () => (
+                    <Board candidates={candidates} toggleDetail={toggleDetail} />
+                ),
+                [candidates],
+            )}
             <Fab candidates={candidates[$component.fabOn] || []} toggleOpen={toggleOpen} />
             <Dialog
                 open={dialog}
