@@ -4,7 +4,7 @@ import VisibilityIcon from '@material-ui/icons/Visibility';
 import VisibilityOffIcon from '@material-ui/icons/VisibilityOff';
 import clsx from 'clsx';
 import { observer } from 'mobx-react-lite';
-import React, { FC, MouseEventHandler, useState } from 'react';
+import React, { FC, MouseEventHandler, useMemo, useState } from 'react';
 
 import { getCandidates, setRecruitmentSchedule } from '@apis/rest';
 import { AddOne } from '@components/AddOne';
@@ -47,10 +47,6 @@ const RecruitmentOverview: FC<Props> = observer(({ recruitment: { statistics, en
             $component.enqueueSnackbar('你不能查看本次招新', 'info');
             return;
         }
-        if ($recruitment.viewingId === id) {
-            $component.enqueueSnackbar('你正在查看本次招新', 'info');
-            return;
-        }
         $component.enqueueSnackbar('设置成功，正在获取候选人信息', 'success');
         return getCandidates(id);
     };
@@ -58,7 +54,7 @@ const RecruitmentOverview: FC<Props> = observer(({ recruitment: { statistics, en
     const title = group ? `${GROUP_MAP.get(group)!}组各轮情况` : titleConverter(name);
     const labels = group ? [...STEP_SHORT_MAP.values()] : [...GROUP_MAP.values()];
     const selected = $recruitment.viewingId === id;
-    const EyeIcon = $recruitment.viewingId === id ? VisibilityIcon : VisibilityOffIcon;
+    const EyeIcon = selected ? VisibilityIcon : VisibilityOffIcon;
     const expired = Date.now() > +end;
     return (
         <Paper
@@ -67,25 +63,30 @@ const RecruitmentOverview: FC<Props> = observer(({ recruitment: { statistics, en
                 [classes.selected]: selected,
                 [classes.expired]: expired,
             })}>
-            <Box className={classes.chartContainer}>
-                <div className={classes.chart}>
-                    <DoughnutChart
-                        data={data}
-                        title={title}
-                        labels={labels}
-                        onClick={(event, elements) => {
-                            const element = elements[0];
-                            if (!element) {
-                                return;
-                            }
-                            setGroup((group) => (group ? undefined : [...GROUP_MAP.keys()][element.index]));
-                        }}
-                    />
-                </div>
-                <Typography variant='body1' className={classes.centerText}>
-                    总计：{group ? result[group][STEP_SHORT_MAP.size] : total}人
-                </Typography>
-            </Box>
+            {useMemo(
+                () => (
+                    <Box className={classes.chartContainer}>
+                        <div className={classes.chart}>
+                            <DoughnutChart
+                                data={data}
+                                title={title}
+                                labels={labels}
+                                onClick={(event, elements) => {
+                                    const element = elements[0];
+                                    if (!element) {
+                                        return;
+                                    }
+                                    setGroup((group) => (group ? undefined : [...GROUP_MAP.keys()][element.index]));
+                                }}
+                            />
+                        </div>
+                        <Typography variant='body1' className={classes.centerText}>
+                            总计：{group ? result[group][STEP_SHORT_MAP.size] : total}人
+                        </Typography>
+                    </Box>
+                ),
+                [statistics, group],
+            )}
             <div className={classes.buttonsContainer}>
                 <Button onClick={handleSet} fullWidth disabled={selected}>
                     <EyeIcon color='inherit' />
