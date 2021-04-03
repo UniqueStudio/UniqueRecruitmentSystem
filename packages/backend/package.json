@@ -64,12 +64,12 @@
   },
   "scripts": {
     "test": "jest -i",
-    "prebuild": "rm -rf dist",
+    "prebuild": "rm -rf build",
     "build": "nest build",
     "start": "nest start",
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
-    "start:prod": "node dist/main",
+    "start:prod": "node build/main.js",
     "lint": "eslint . --fix",
     "format": "prettier -w ./src ./typings test",
     "migrate": "NODE_ENV=migration MIGRATION_BACKUP_PATH=./backup nest start"
