@@ -1,6 +1,12 @@
 import { makeStyles } from '@material-ui/core';
 
 const useStyles = makeStyles(({ spacing, breakpoints }) => ({
+    table: {
+        overflowX: 'auto',
+        '& > div': {
+            minWidth: 660,
+        },
+    },
     dateSelection: {
         margin: spacing(1),
         width: 150,
@@ -25,6 +31,9 @@ const useStyles = makeStyles(({ spacing, breakpoints }) => ({
     },
     chip: {
         margin: `${spacing(1)}px ${spacing(0.5)}px`,
+        [breakpoints.down('xs')]: {
+            margin: spacing(0.5),
+        },
     },
 }));
 
