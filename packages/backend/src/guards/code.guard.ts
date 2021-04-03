@@ -25,7 +25,7 @@ export class CodeGuard implements CanActivate {
             return false;
         }
         const key = cacheKey(phone, !!req.user);
-        const result = code !== await this.cacheManager.get(key);
+        const result = code === await this.cacheManager.get(key);
         await this.cacheManager.del(key);
         return result;
     }
