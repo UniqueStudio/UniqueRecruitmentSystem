@@ -1,6 +1,6 @@
 import { Paper, Tab } from '@material-ui/core';
 import { TabContext, TabList, TabListProps, TabPanel } from '@material-ui/lab';
-import React, { FC, useState } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 
 import useStyles from '@styles/tabLayout';
 
@@ -19,6 +19,10 @@ interface Props {
 export const TabLayout: FC<Props> = ({ items, variant = 'standard', classes }) => {
     const defaultClasses = useStyles();
     const [tab, setTab] = useState(items[0].value);
+
+    useEffect(() => {
+        setTab(items[0].value);
+    }, [items]);
 
     return (
         <Paper className={classes?.paper}>
