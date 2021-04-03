@@ -1,14 +1,14 @@
 version: "3"
 services:
-  redis:
-    image: redis:alpine
-  mongodb:
-    image: mongo:latest
+  postgres:
+    image: postgres:alpine
     ports:
-    - "127.0.0.1:${DB_PORT}:${DB_PORT}"
-    command: "mongod --port ${DB_PORT}"
+      - "127.0.0.1:${POSTGRES_PORT}:5432"
+    user: postgres
+    env_file:
+      - .env
     volumes:
-      - mongodb:/data/db
+      - postgres-data:/var/lib/postgresql/data
   backend:
     build: .
     env_file:
@@ -16,14 +16,12 @@ services:
     environment:
       - NODE_ENV=production
     ports:
-    - 5000:5000
+      - 5000:5000
     links:
-    - mongodb
-    - redis
+      - postgres
     volumes:
-      # - ./server.key:/usr/src/backend/uniqcert.key
-      # - ./server.crt:/usr/src/backend/uniqcert.fullchain
       - ./data/resumes:/usr/src/backend/data/resumes
       - ./logs:/usr/src/backend/logs
+      - ./backup:/usr/src/backend/backup
 volumes:
-  mongodb:
+  postgres-data:
