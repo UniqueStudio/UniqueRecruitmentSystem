@@ -1,4 +1,4 @@
-import { Button, Chip, Dialog } from '@material-ui/core';
+import { Button, Chip, Dialog, useMediaQuery, useTheme } from '@material-ui/core';
 import { DataGrid, GridColDef } from '@material-ui/data-grid';
 import { DateTimePicker } from '@material-ui/pickers';
 import { observer } from 'mobx-react-lite';
@@ -19,6 +19,8 @@ export const Table: FC = observer(() => {
     const [dialog, setDialog] = useState(false);
     const [cid, setCid] = useState('');
     const [time, setTime] = useState(new Date());
+    const theme = useTheme();
+    const isMobile = useMediaQuery(theme.breakpoints.down('xs'));
     useEffect(() => {
         $candidate.deselectAll();
     }, [$candidate.stepType]);
@@ -31,19 +33,19 @@ export const Table: FC = observer(() => {
         {
             field: 'name',
             headerName: '姓名',
-            flex: 1,
+            width: 90,
             disableClickEventBubbling: true,
         },
         {
             field: 'group',
             headerName: '组别',
-            flex: 1,
+            width: 90,
             disableClickEventBubbling: true,
         },
         {
             field: 'interviewSelections',
             headerName: '面试选择',
-            flex: 3,
+            flex: 1,
             sortable: false,
             disableClickEventBubbling: true,
             cellClassName: classes.cell,
@@ -66,6 +68,7 @@ export const Table: FC = observer(() => {
                                       className={classes.chip}
                                       color='primary'
                                       variant='outlined'
+                                      size={isMobile ? 'small' : 'medium'}
                                       label={new Date(date).toLocaleDateString('zh-CN') + PERIOD_MAP.get(period)!}
                                   />
                               ))}
@@ -76,26 +79,25 @@ export const Table: FC = observer(() => {
         {
             field: 'interviewAllocations',
             headerName: '面试分配',
-            flex: 2,
+            width: 180,
             disableClickEventBubbling: true,
             valueFormatter(params) {
                 const { interviewAllocations } = params.row as Candidate;
-                return interviewAllocations[type]?.toLocaleString('zh-CN');
+                return interviewAllocations[type]?.toLocaleString('zh-CN', { timeStyle: 'short', dateStyle: 'short' });
             },
             sortComparator(a, b) {
                 return sortByAllocation(a?.[type], b?.[type]);
             },
         },
         {
-            field: '',
+            field: 'NOT_A_FIELD',
             headerName: '手动分配',
-            flex: 1,
             sortable: false,
             disableClickEventBubbling: true,
             renderCell(params) {
                 const { id } = params.row as Candidate;
                 return (
-                    <Button variant='contained' color='primary' onClick={toggleDialog(id)}>
+                    <Button color='primary' size={isMobile ? 'small' : 'medium'} onClick={toggleDialog(id)}>
                         设置
                     </Button>
                 );
@@ -127,11 +129,13 @@ export const Table: FC = observer(() => {
                 checkboxSelection
                 autoHeight
                 disableColumnMenu
+                density={isMobile ? 'compact' : 'standard'}
                 selectionModel={[...$candidate.selected.keys()]}
                 onSelectionModelChange={({ selectionModel }) => {
                     $candidate.deselectAll();
                     $candidate.selectMany(selectionModel as string[]);
                 }}
+                className={classes.table}
                 components={{
                     Footer: () => (
                         <Button
