@@ -45,7 +45,7 @@ export class SMSController {
         } catch ({ message }) {
             throw new InternalServerErrorException(message);
         }
-        await this.cacheManager.set(cacheKey(phone, false), code, 180);
+        await this.cacheManager.set(cacheKey(phone, false), code, { ttl: 180 });
     }
 
     @Get('verification/user')
@@ -60,7 +60,7 @@ export class SMSController {
         } catch ({ message }) {
             throw new InternalServerErrorException(message);
         }
-        await this.cacheManager.set(cacheKey(phone, true), code, 180);
+        await this.cacheManager.set(cacheKey(phone, true), code, { ttl: 180 });
     }
 
     @Post()
