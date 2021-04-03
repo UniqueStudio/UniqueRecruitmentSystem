@@ -13,8 +13,8 @@ import {
     Home as HomeIcon,
     People as PeopleIcon,
     Timeline as TimelineIcon,
+    DateRange as DateRangeIcon,
 } from '@material-ui/icons';
-import PieChartIcon from '@material-ui/icons/PieChart';
 import clsx from 'clsx';
 import { observer } from 'mobx-react-lite';
 import React, { FC } from 'react';
@@ -26,7 +26,7 @@ import useStyles from '@styles/drawer';
 const listItems = [
     { to: '/', text: '首页', icon: <HomeIcon /> },
     { to: '/dashboard', text: '招新数据', icon: <TimelineIcon /> },
-    { to: '/interviews', text: '面试信息', icon: <PieChartIcon /> },
+    { to: '/interviews', text: '面试信息', icon: <DateRangeIcon /> },
     { to: '/candidates', text: '选手信息', icon: <DashboardIcon /> },
     { to: '/my', text: '组员信息', icon: <PeopleIcon /> },
 ];
