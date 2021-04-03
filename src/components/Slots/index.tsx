@@ -24,7 +24,7 @@ interface Props {
 
 const TipButton: FC<Props> = ({ name, onClick, disabled, children }) => (
     <Tooltip title={name}>
-        <IconButton onClick={onClick} color='primary' disabled={disabled} size='small'>
+        <IconButton onClick={onClick} color='primary' disabled={disabled}>
             {children}
         </IconButton>
     </Tooltip>
@@ -144,7 +144,7 @@ export const Slots: FC = observer(() => {
                     </div>
                 ))}
             </div>
-            <div>
+            <div className={classes.buttonsContainer}>
                 <TipButton name='提交' onClick={submit} disabled={!$user.isAdminOrCaptain}>
                     <CheckIcon />
                 </TipButton>

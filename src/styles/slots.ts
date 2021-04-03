@@ -16,6 +16,10 @@ const useStyles = makeStyles(({ spacing }) => ({
     numberTextField: {
         width: spacing(5),
     },
+    buttonsContainer: {
+        display: 'flex',
+        justifyContent: 'center',
+    },
 }));
 
 export default useStyles;
