@@ -2,7 +2,7 @@ import { observer } from 'mobx-react-lite';
 import React, { FC } from 'react';
 
 import { BarChart } from '@components/Chart/BarChart';
-import { GROUP_MAP, STEP_MAP } from '@config/consts';
+import { GROUP_MAP, STEP_MAP, STEP_SHORT_MAP } from '@config/consts';
 import { Group } from '@config/enums';
 import { useStores } from '@hooks/useStores';
 import { TabLayout } from '@layouts/TabLayout';
@@ -31,7 +31,7 @@ export const RecruitmentDetail: FC = observer(() => {
             items={[...GROUP_MAP.entries()].map(([value, label]) => ({
                 value,
                 label,
-                component: <BarChart data={result[value]} labels={[...STEP_MAP.values()]} title='各轮选手分布' />,
+                component: <BarChart data={result[value]} labels={[...STEP_SHORT_MAP.values()]} title='各轮选手分布' />,
             }))}
         />
     );
