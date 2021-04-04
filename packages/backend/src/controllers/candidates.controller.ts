@@ -271,12 +271,18 @@ export class CandidatesController {
         @Body() { from, to }: MoveCandidateBody,
     ) {
         const candidate = await this.candidatesService.findOneById(cid);
-        const { step, recruitment: { name, end, id }, group } = candidate;
+        const { step, recruitment: { name, end, id }, group, rejected, abandoned } = candidate;
         if (+end < Date.now()) {
             throw new BadRequestException(`Recruitment ${name} has already ended`);
         }
         if (step !== from) {
             throw new BadRequestException(`Candidate of id ${cid} has been moved by others`);
+        }
+        if (rejected) {
+            throw new BadRequestException('Candidate has already been rejected');
+        }
+        if (abandoned) {
+            throw new BadRequestException('Candidate has already abandoned');
         }
         if (user.group !== group) {
             throw new ForbiddenException(`You cannot move candidates in group ${group}`);
@@ -374,12 +380,12 @@ export class CandidatesController {
     }
 
     private static checkAllocationPermission(candidate: CandidateEntity, user: UserEntity, type: InterviewType) {
-        const { recruitment: { name, end }, group, rejected, abandoned, step, id } = candidate;
+        const { recruitment: { name, end }, group, rejected, abandoned, step } = candidate;
         if (rejected) {
-            throw new BadRequestException(`Candidate with id ${id} has already been rejected`);
+            throw new BadRequestException(`Candidate ${candidate.name} has already been rejected`);
         }
         if (abandoned) {
-            throw new BadRequestException(`Candidate with id ${id} has already abandoned`);
+            throw new BadRequestException(`Candidate ${candidate.name} has already abandoned`);
         }
         if (
             (type === InterviewType.group && step !== Step.组面时间选择)

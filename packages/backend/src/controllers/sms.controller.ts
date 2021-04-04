@@ -77,13 +77,21 @@ export class SMSController {
         const candidates = await this.candidatesService.findManyByIds(cids);
         const errors = new Set<string>();
         for (const candidate of candidates) {
-            const { recruitment: { end, name, interviews }, group, rejected, phone } = candidate;
+            const { recruitment: { end, name, interviews }, group, rejected, phone, abandoned } = candidate;
             if (+end < Date.now()) {
                 errors.add(`Recruitment ${name} has already ended`);
                 continue;
             }
             if (user.group !== group) {
                 errors.add(`You cannot send SMS to candidates in group ${group}`);
+                continue;
+            }
+            if (rejected) {
+                errors.add(`Candidate ${candidate.name} has already been rejected`);
+                continue;
+            }
+            if (abandoned) {
+                errors.add(`Candidate ${candidate.name} has already abandoned`);
                 continue;
             }
             if (type === SMSType.accept) {
@@ -96,10 +104,6 @@ export class SMSController {
                     continue;
                 }
             } else {
-                if (rejected) {
-                    errors.add(`Candidate ${candidate.name} has already been rejected`);
-                    continue;
-                }
                 candidate.rejected = true;
                 await candidate.save();
             }
