@@ -266,16 +266,20 @@ export class CandidatesController {
     @Put(':cid/step')
     @AcceptRole(Role.user)
     async moveCandidate(
+        @User() user: UserEntity,
         @Param('cid') cid: string,
         @Body() { from, to }: MoveCandidateBody,
     ) {
         const candidate = await this.candidatesService.findOneById(cid);
-        const { step, recruitment: { name, end, id } } = candidate;
+        const { step, recruitment: { name, end, id }, group } = candidate;
         if (+end < Date.now()) {
             throw new BadRequestException(`Recruitment ${name} has already ended`);
         }
         if (step !== from) {
             throw new BadRequestException(`Candidate of id ${cid} has been moved by others`);
+        }
+        if (user.group !== group) {
+            throw new ForbiddenException(`You cannot move candidates in group ${group}`);
         }
         await this.candidatesService.update(cid, { step: to });
         this.candidatesGateway.broadcastMove(cid, to);
@@ -285,12 +289,16 @@ export class CandidatesController {
     @Delete(':cid')
     @AcceptRole(Role.user)
     async removeCandidate(
+        @User() user: UserEntity,
         @Param('cid') cid: string,
     ) {
         const candidate = await this.candidatesService.findOneById(cid);
         const { resume, recruitment: { name, end, id }, group } = candidate;
         if (+end < Date.now()) {
             throw new BadRequestException(`Recruitment ${name} has already ended`);
+        }
+        if (user.group !== group) {
+            throw new ForbiddenException(`You cannot remove candidates in group ${group}`);
         }
         resume && await deleteFile(join(this.configService.resumePaths.persistent, name, group), resume);
         await candidate.remove();

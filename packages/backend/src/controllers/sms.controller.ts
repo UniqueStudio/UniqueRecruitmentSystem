@@ -72,31 +72,40 @@ export class SMSController {
     @UseGuards(CodeGuard)
     async sendSMSToCandidate(
         @Body() { type, time, place, rest, next, cids }: SendSMSToCandidateBody,
+        @User() user: UserEntity,
     ) {
         const candidates = await this.candidatesService.findManyByIds(cids);
         const errors = new Set<string>();
         for (const candidate of candidates) {
-            try {
-                if (type === SMSType.accept) {
-                    const { recruitment: { end, name, interviews }, group } = candidate;
-                    if (+end < Date.now()) {
-                        throw new BadRequestException(`Recruitment ${name} has already ended`);
-                    }
-                    if (next === Step.组面时间选择) {
-                        if (!interviews.find(({ name }) => name === GroupOrTeam[group])) {
-                            throw new BadRequestException(`No interviews are scheduled for ${group} group`);
-                        }
-                    } else if (next === Step.群面时间选择) {
-                        if (!interviews.find(({ name }) => name === GroupOrTeam.unique)) {
-                            throw new BadRequestException('No interviews are scheduled for the team');
-                        }
-                    }
-                } else {
-                    candidate.rejected = true;
-                    await candidate.save();
+            const { recruitment: { end, name, interviews }, group, rejected, phone } = candidate;
+            if (+end < Date.now()) {
+                errors.add(`Recruitment ${name} has already ended`);
+                continue;
+            }
+            if (user.group !== group) {
+                errors.add(`You cannot send SMS to candidates in group ${group}`);
+                continue;
+            }
+            if (type === SMSType.accept) {
+                if (next === Step.组面时间选择 && !interviews.find(({ name }) => name === GroupOrTeam[group])) {
+                    errors.add(`No interviews are scheduled for ${group} group`);
+                    continue;
                 }
+                if (next === Step.群面时间选择 && !interviews.find(({ name }) => name === GroupOrTeam.unique)) {
+                    errors.add('No interviews are scheduled for the team');
+                    continue;
+                }
+            } else {
+                if (rejected) {
+                    errors.add(`Candidate ${candidate.name} has already been rejected`);
+                    continue;
+                }
+                candidate.rejected = true;
+                await candidate.save();
+            }
+            try {
                 const { template, params } = applySMSTemplate({ candidate, type, rest, next, time, place });
-                await this.smsService.sendSMS(candidate.phone, template, params);
+                await this.smsService.sendSMS(phone, template, params);
             } catch ({ message }) {
                 errors.add(message);
             }
