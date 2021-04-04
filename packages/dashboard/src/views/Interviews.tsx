@@ -11,6 +11,7 @@ const Interviews: FC = observer(() => {
     const { $candidate } = useStores();
 
     useEffect(() => {
+        $candidate.deselectAll();
         if ($candidate.stepType === StepType.all) {
             $candidate.setSteps(StepType.groupInterview);
         }
