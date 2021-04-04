@@ -1,11 +1,6 @@
+import { Delete, SelectAll, ArrowBack, ArrowForward, Send } from '@material-ui/icons';
 import { SpeedDial, SpeedDialAction, SpeedDialIcon } from '@material-ui/lab';
-import RemoveIcon from 'mdi-material-ui/AccountRemove';
-import ArrowLeftBoldIcon from 'mdi-material-ui/ArrowLeftBold';
-import ArrowRightBoldIcon from 'mdi-material-ui/ArrowRightBold';
-import CloseIcon from 'mdi-material-ui/EyeOff';
-import SelectAllIcon from 'mdi-material-ui/SelectAll';
-import SelectInverseIcon from 'mdi-material-ui/SelectInverse';
-import SendIcon from 'mdi-material-ui/Send';
+import { SelectInverse } from 'mdi-material-ui';
 import { observer } from 'mobx-react-lite';
 import React, { FC, useState } from 'react';
 
@@ -24,93 +19,51 @@ interface Props {
     toggleOpen: (component: string) => () => void;
 }
 
-// TODO: fixme
+const selectable = ({ abandoned, rejected }: Candidate) => !abandoned && !rejected;
+
 export const Fab: FC<Props> = observer(({ candidates, toggleOpen }) => {
-    const { $component, $candidate, $user } = useStores();
+    const { $candidate, $user, $component } = useStores();
     const classes = useStyles();
     const [fabOpen, setFabOpen] = useState(false);
 
-    const handleSelectAll = (all: string[]) => () => {
-        $candidate.selectMany(all.filter((cid) => selectable(cid)));
+    const handleSelectAll = () => $candidate.selectMany(candidates.filter(selectable).map(({ id }) => id));
+
+    const handleInverse = () => {
+        const selected = [...$candidate.selected.keys()];
+        $candidate.selectMany(candidates.filter(selectable).map(({ id }) => id));
+        $candidate.deselectMany(selected);
     };
 
-    const handleInverse = (all: string[], toDeselect: string[]) => () => {
-        $candidate.deselectMany(toDeselect.filter((cid) => selectable(cid)));
-        $candidate.selectMany(all.filter((cid) => !toDeselect.includes(cid) && selectable(cid)));
+    const openFab = () => setFabOpen(true);
+
+    const closeFab = () => setFabOpen(false);
+
+    const changeProcess = (delta: -1 | 1) => () => {
+        $candidate.selected.forEach(({ id, step }) => void moveCandidate(id, step, delta + step));
     };
 
-    const selectable = (cid: string) => {
-        const candidate = candidates.find(({ id }) => id === cid);
-        return candidate && !(candidate.abandoned || candidate.rejected);
-    };
+    const disabled = !$candidate.selected.size || $candidate.group !== $user.info.group;
 
-    const hideFab = () => {
-        $candidate.deselectAll();
-        $component.toggleFabOff();
-    };
-
-    const sendNotification = () => {
-        toggleOpen('modal')();
-        toggleFabButtons();
-    };
-
-    const confirmRemove = () => {
-        toggleOpen('dialog')();
-        toggleFabButtons();
-    };
-
-    const toggleFabButtons = () => {
-        setFabOpen((prevFabOpen) => !prevFabOpen);
-    };
-
-    const openFab = () => {
-        setFabOpen(true);
-    };
-
-    const closeFab = () => {
-        setFabOpen(false);
-    };
-
-    const changeProcess = (dir: 'prev' | 'next') => () => {
-        if ($candidate.selected.size === 0) return;
-        $candidate.selected.forEach(({ id, step }) => {
-            const to = ((dir === 'prev' ? -1 : +1) + step) as Step;
-            if (to < Step.报名 || to > Step.通过) {
-                return;
-            }
-            void moveCandidate(id, step, to);
-        });
-        $candidate.deselectAll();
-    };
-
-    const ids = candidates.map(({ id }) => id);
-    const selectedInColumn = [...$candidate.selected.keys()].filter((cid) => ids.includes(cid));
-    const enabled =
-        selectedInColumn.length &&
-        ($user.info.isCaptain ||
-            ($candidate.stepType === StepType.teamInterview
-                ? $user.info.isCaptain
-                : $candidate.group === $user.info.group));
     return (
         <SpeedDial
             ariaLabel='fab'
             className={classes.fab}
-            hidden={$component.fabOn === -1}
+            hidden={!$candidate.selected.size || $candidate.stepType === StepType.teamInterview}
             icon={<SpeedDialIcon />}
-            onBlur={closeFab}
-            onClick={toggleFabButtons}
             onClose={closeFab}
-            onFocus={openFab}
-            onMouseEnter={openFab}
-            onMouseLeave={closeFab}
-            open={fabOpen}>
-            {ButtonGenerator('隐藏Fab', <CloseIcon />, hideFab)}
-            {ButtonGenerator('移除', <RemoveIcon />, confirmRemove, !enabled)}
-            {ButtonGenerator('下一流程', <ArrowRightBoldIcon />, changeProcess('next'), !enabled)}
-            {ButtonGenerator('上一流程', <ArrowLeftBoldIcon />, changeProcess('prev'), !enabled)}
-            {ButtonGenerator('发送通知', <SendIcon />, sendNotification, !enabled)}
-            {ButtonGenerator('反选', <SelectInverseIcon />, handleInverse(ids, selectedInColumn))}
-            {ButtonGenerator('全选', <SelectAllIcon />, handleSelectAll(ids))}
+            onOpen={openFab}
+            open={fabOpen && !!$candidate.selected.size}>
+            {ButtonGenerator('移除', <Delete />, toggleOpen('dialog'), disabled || !$user.isAdminOrCaptain)}
+            {ButtonGenerator('发送通知', <Send />, toggleOpen('modal'), disabled || !$user.isAdminOrCaptain)}
+            {ButtonGenerator(
+                '下一流程',
+                <ArrowForward />,
+                changeProcess(1),
+                disabled || $component.fabOn === Step.通过,
+            )}
+            {ButtonGenerator('上一流程', <ArrowBack />, changeProcess(-1), disabled || $component.fabOn === Step.报名)}
+            {ButtonGenerator('反选', <SelectInverse />, handleInverse)}
+            {ButtonGenerator('全选', <SelectAll />, handleSelectAll)}
         </SpeedDial>
     );
 });

@@ -72,7 +72,7 @@ export const Card: FC<Props> = observer(({ candidate, index, toggleDetail }) => 
     const handleCheck: ChangeEventHandler<HTMLInputElement> = ({ target }) => {
         if (target.checked) {
             $candidate.selectOne(id);
-            $component.toggleFabOn(step);
+            $component.setFabOn(step);
         } else {
             $candidate.deselectOne(id);
         }
@@ -85,15 +85,13 @@ export const Card: FC<Props> = observer(({ candidate, index, toggleDetail }) => 
 
     const stopPropagation: MouseEventHandler = (event) => event.stopPropagation();
 
-    const disableCheck = abandoned || rejected || disabled;
-
     const Check = (
         <Checkbox
             color='primary'
             onClick={stopPropagation}
             onChange={handleCheck}
             checked={checked}
-            disabled={disableCheck}
+            disabled={abandoned || rejected || disabled || $candidate.stepType === StepType.teamInterview}
         />
     );
 
