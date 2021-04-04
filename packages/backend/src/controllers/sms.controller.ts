@@ -68,7 +68,7 @@ export class SMSController {
     }
 
     @Post()
-    @AcceptRole(Role.user)
+    @AcceptRole(Role.admin)
     @UseGuards(CodeGuard)
     async sendSMSToCandidate(
         @Body() { type, time, place, rest, next, cids }: SendSMSToCandidateBody,

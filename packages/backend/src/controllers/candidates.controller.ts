@@ -287,7 +287,7 @@ export class CandidatesController {
     }
 
     @Delete(':cid')
-    @AcceptRole(Role.user)
+    @AcceptRole(Role.admin)
     async removeCandidate(
         @User() user: UserEntity,
         @Param('cid') cid: string,
