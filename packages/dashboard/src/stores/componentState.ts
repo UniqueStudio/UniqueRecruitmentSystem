@@ -1,7 +1,7 @@
 import { makeAutoObservable } from 'mobx';
 import { OptionsObject, SnackbarKey, SnackbarMessage, VariantType } from 'notistack';
 
-import { Evaluation } from '@config/enums';
+import { Evaluation, Step } from '@config/enums';
 
 interface Snackbar {
     message: SnackbarMessage;
@@ -21,7 +21,7 @@ export class ComponentStateStore {
 
     snackbars: Record<SnackbarKey, Snackbar> = {};
 
-    fabOn = -1;
+    fabOn: Step = Step.报名;
 
     resumeProgresses: Record<string, number> = {};
 
@@ -77,12 +77,8 @@ export class ComponentStateStore {
         delete this.snackbars[key];
     }
 
-    toggleFabOn(step: number) {
+    setFabOn(step: Step) {
         this.fabOn = step;
-    }
-
-    toggleFabOff() {
-        this.fabOn = -1;
     }
 
     setDarkMode(darkMode?: boolean) {

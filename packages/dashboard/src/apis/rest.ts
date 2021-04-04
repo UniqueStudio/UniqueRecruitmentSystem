@@ -127,7 +127,6 @@ export const getCandidates = (rid: string) => {
             const candidates = await get<Map<string, Candidate>>('candidates');
             if (candidates && rid === viewing) {
                 $candidate.setAll(candidates);
-                $component.toggleFabOff();
                 $component.enqueueSnackbar('成功获取候选人信息（缓存）', 'success');
                 let maxUpdatedAt = new Date(0);
                 for (const [, { updatedAt }] of candidates) {
@@ -158,7 +157,6 @@ export const getCandidates = (rid: string) => {
                 })),
             );
             $recruitment.setViewingRecruitment(rid);
-            $component.toggleFabOff();
             $component.enqueueSnackbar('成功获取候选人信息', 'success');
         },
     );
