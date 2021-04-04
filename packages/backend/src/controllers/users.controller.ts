@@ -1,4 +1,5 @@
-import { BadRequestException, Body, Controller, Get, Put } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Get, Put, UseGuards } from '@nestjs/common';
+import { ThrottlerGuard } from '@nestjs/throttler';
 
 import { Role } from '@constants/enums';
 import { AcceptRole } from '@decorators/role.decorator';
@@ -8,6 +9,7 @@ import { UserEntity } from '@entities/user.entity';
 import { UsersService } from '@services/users.service';
 
 @Controller('users')
+@UseGuards(ThrottlerGuard)
 export class UsersController {
     constructor(
         private readonly usersService: UsersService,

@@ -9,6 +9,7 @@ import {
     Put,
     UseGuards,
 } from '@nestjs/common';
+import { ThrottlerGuard } from '@nestjs/throttler';
 
 import { GroupOrTeam, Role } from '@constants/enums';
 import { AcceptRole } from '@decorators/role.decorator';
@@ -26,6 +27,7 @@ import { InterviewsService } from '@services/interviews.service';
 import { RecruitmentsService } from '@services/recruitments.service';
 
 @Controller('recruitments')
+@UseGuards(ThrottlerGuard)
 export class RecruitmentsController {
     constructor(
         private readonly recruitmentsGateway: RecruitmentsGateway,

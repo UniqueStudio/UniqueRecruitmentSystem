@@ -12,6 +12,7 @@ import {
     UnauthorizedException,
     UseGuards,
 } from '@nestjs/common';
+import { ThrottlerGuard } from '@nestjs/throttler';
 import got from 'got';
 
 import { ZHANG_XIAO_LONG } from '@constants/consts';
@@ -25,6 +26,7 @@ import { UsersService } from '@services/users.service';
 import { parseWeChatData } from '@utils/parseWeChatData';
 
 @Controller('auth')
+@UseGuards(ThrottlerGuard)
 export class AuthController {
     constructor(
         private readonly usersService: UsersService,

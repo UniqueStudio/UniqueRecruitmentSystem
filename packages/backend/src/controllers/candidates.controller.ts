@@ -20,6 +20,7 @@ import {
     ValidationPipe,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { ThrottlerGuard } from '@nestjs/throttler';
 import { Response } from 'express';
 
 import { SLOTS, STEP_MAP } from '@constants/consts';
@@ -52,6 +53,7 @@ import { SMSService } from '@services/sms.service';
 import { copyFile, deleteFile } from '@utils/fs';
 
 @Controller('candidates')
+@UseGuards(ThrottlerGuard)
 export class CandidatesController {
     constructor(
         private readonly candidatesGateway: CandidatesGateway,

@@ -3,6 +3,7 @@ import { promises } from 'fs';
 import { MiddlewareConsumer, Module, NestModule, OnModuleInit, ValidationPipe } from '@nestjs/common';
 import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
 import { ScheduleModule } from '@nestjs/schedule';
+import { ThrottlerModule } from '@nestjs/throttler';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import Joi from 'joi';
 
@@ -12,7 +13,6 @@ import { RoleGuard } from '@guards/role.guard';
 import { TransformInterceptor } from '@interceptors/transform.interceptor';
 import { AuthMiddleWare } from '@middlewares/auth';
 import { helmet } from '@middlewares/helmet';
-import { rateLimit } from '@middlewares/rateLimit';
 import { AuthModule } from '@modules/auth.module';
 import { CacheModule } from '@modules/cache.module';
 import { CandidatesModule } from '@modules/candidates.module';
@@ -66,6 +66,10 @@ import { ConfigService } from '@services/config.service';
             useFactory: (conf: ConfigService) => conf.postgresConfig,
         }),
         ScheduleModule.forRoot(),
+        ThrottlerModule.forRoot({
+            ttl: 60,
+            limit: 256,
+        }),
         TasksModule,
         AuthModule,
         CandidatesModule,
@@ -104,7 +108,6 @@ export class AppModule implements NestModule, OnModuleInit {
     configure(consumer: MiddlewareConsumer) {
         consumer
             .apply(
-                rateLimit(60000, 2048),
                 helmet({
                     contentSecurityPolicy: this.configService.isNotProd ? false : undefined,
                 }),

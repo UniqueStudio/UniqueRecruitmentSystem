@@ -12,6 +12,7 @@ import {
     Post,
     UseGuards,
 } from '@nestjs/common';
+import { Throttle, ThrottlerGuard } from '@nestjs/throttler';
 import { Cache } from 'cache-manager';
 
 import { GroupOrTeam, Role, SMSType, Step } from '@constants/enums';
@@ -26,6 +27,7 @@ import { applySMSTemplate } from '@utils/applySMSTemplate';
 import { cacheKey } from '@utils/cacheKey';
 
 @Controller('sms')
+@UseGuards(ThrottlerGuard)
 export class SMSController {
     constructor(
         @Inject(CACHE_MANAGER) private readonly cacheManager: Cache,
@@ -35,6 +37,7 @@ export class SMSController {
     }
 
     @Get('verification/candidate/:phone')
+    @Throttle(1, 60)
     async sendCodeToCandidate(
         @Param('phone') phone: string,
     ) {
@@ -49,6 +52,7 @@ export class SMSController {
     }
 
     @Get('verification/user')
+    @Throttle(1, 60)
     @AcceptRole(Role.user)
     async sendCodeToUser(
         @User() { phone }: UserEntity,

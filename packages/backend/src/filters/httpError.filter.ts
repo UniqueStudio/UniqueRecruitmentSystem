@@ -15,7 +15,7 @@ export class HttpErrorFilter<T extends Error = Error> implements ExceptionFilter
             const status = exception.getStatus();
             res.status(status).json({
                 status: status < HttpStatus.INTERNAL_SERVER_ERROR ? Status.warning : Status.error,
-                message: Array.isArray(message) ? message.join(', ') : message.toString(),
+                message: Array.isArray(message) ? message.join(', ') : message?.toString() || exception.message,
             });
         } else if (exception instanceof QueryFailedError) {
             res.status(HttpStatus.BAD_REQUEST).json({
