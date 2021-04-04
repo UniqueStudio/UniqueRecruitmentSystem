@@ -110,6 +110,7 @@ export class CandidateStore {
         if (!candidate) {
             return;
         }
+        this.deselectOne(cid);
         candidate.step = to;
         void set('candidates', toJS(this.candidates));
     }
