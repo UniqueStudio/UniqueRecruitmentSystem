@@ -1,16 +1,5 @@
-import {
-  Button,
-  Card,
-  Container,
-  FormControlLabel,
-  Grid,
-  GridSize,
-  IconButton,
-  Switch,
-  TextField,
-} from '@material-ui/core';
+import { Button, Card, Container, Grid, GridSize, TextField } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import { HelpOutline } from '@material-ui/icons';
 import { useMemo, useEffect } from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
 import clsx from 'clsx';
@@ -21,12 +10,12 @@ import type { CandidateForm } from 'config/types';
 
 import AutoComplete, { MajorAutoComplete } from 'components/AutoComplete';
 import { Input } from 'components/Input';
-import { GROUPS, GRADES, GENDERS, RANKS, IS_QUICK_DESC } from 'config/consts';
+import { IsQuickSwitch } from 'components/IsQuickSwitch';
+import { GROUPS, GRADES, GENDERS, RANKS } from 'config/consts';
 import { useAppDispatch, useAppSelector } from 'store';
 import { setLayoutTitle } from 'store/component';
 import { fetchCandidate, updateCandidate } from 'store/candidate';
 import { Departments } from 'config/departments';
-import { usePopover } from 'hooks/usePopover';
 
 const useStyle = makeStyles((theme) => ({
   center: {
@@ -55,12 +44,6 @@ const useStyle = makeStyles((theme) => ({
   },
   item: {
     minHeight: theme.spacing(10),
-  },
-  popover: {
-    pointerEvents: 'none',
-  },
-  paper: {
-    padding: theme.spacing(1),
   },
 }));
 
@@ -91,47 +74,6 @@ const SelectInputs: ReadonlyArray<InputField & { options: string[] }> = [
   { name: 'grade', label: '所属年级', required: true, options: GRADES },
   { name: 'group', label: '组别', required: true, options: GROUPS },
 ] as const;
-
-const IsQuickSwitch = () => {
-  const classes = useStyle();
-  // Popover
-  const { handlePopoverClose, handlePopoverOpen, Pop } = usePopover({
-    content: IS_QUICK_DESC,
-    id: 'isquick-popover',
-    className: classes.popover,
-    classes: { paper: classes.paper },
-    anchorOrigin: {
-      vertical: 'bottom',
-      horizontal: 'center',
-    },
-    transformOrigin: {
-      vertical: 'top',
-      horizontal: 'center',
-    },
-  });
-
-  return (
-    <FormControlLabel
-      className={classes.center}
-      control={
-        <Controller
-          name='isQuick'
-          render={({ field: { ref, ...props } }) => <Switch inputRef={ref} {...props} size='small' />}
-        />
-      }
-      label={
-        <div className={classes.center}>
-          <span>快速通道</span>
-          <IconButton size='small' onMouseEnter={handlePopoverOpen} onMouseLeave={handlePopoverClose}>
-            <HelpOutline fontSize='small' />
-          </IconButton>
-          {Pop}
-        </div>
-      }
-      labelPlacement='start'
-    />
-  );
-};
 
 const Edit: NextPage = () => {
   const dispatch = useAppDispatch();
