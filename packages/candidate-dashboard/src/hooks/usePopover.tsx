@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo } from 'react';
+import { useState, useCallback } from 'react';
 import { Popover, PopoverProps, Typography } from '@material-ui/core';
 
 export const usePopover = ({ content, ...props }: Partial<PopoverProps> & { content: string }) => {
@@ -8,14 +8,10 @@ export const usePopover = ({ content, ...props }: Partial<PopoverProps> & { cont
   };
   const handlePopoverClose = useCallback(() => void setAnchorEl(null), []);
 
-  const Pop = useMemo(
-    () => (
-      <Popover {...props} open={Boolean(anchorEl)} anchorEl={anchorEl} onClose={handlePopoverClose} disableRestoreFocus>
-        <Typography>{content}</Typography>
-      </Popover>
-    ),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [anchorEl, content],
+  const Pop = (
+    <Popover {...props} open={Boolean(anchorEl)} anchorEl={anchorEl} onClose={handlePopoverClose}>
+      <Typography>{content}</Typography>
+    </Popover>
   );
 
   return { handlePopoverOpen, handlePopoverClose, Pop };

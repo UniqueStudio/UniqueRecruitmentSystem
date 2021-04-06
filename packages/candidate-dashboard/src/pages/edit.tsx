@@ -21,7 +21,7 @@ import type { CandidateForm } from 'config/types';
 
 import AutoComplete from 'components/AutoComplete';
 import { Input } from 'components/Input';
-import { GROUPS, GRADES, GENDERS, RANKS } from 'config/consts';
+import { GROUPS, GRADES, GENDERS, RANKS, IS_QUICK_DESC } from 'config/consts';
 import { useAppDispatch, useAppSelector } from 'store';
 import { setLayoutTitle } from 'store/component';
 import { fetchCandidate, updateCandidate } from 'store/candidate';
@@ -92,22 +92,50 @@ const SelectInputs: ReadonlyArray<InputField & { options: string[] }> = [
   { name: 'group', label: '组别', required: true, options: GROUPS },
 ] as const;
 
-const Edit: NextPage = () => {
-  const dispatch = useAppDispatch();
+const IsQuickSwitch = () => {
   const classes = useStyle();
-
   // Popover
   const { handlePopoverClose, handlePopoverOpen, Pop } = usePopover({
-    content: '所谓的快速通道 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
+    content: IS_QUICK_DESC,
+    id: 'isquick-popover',
+    className: classes.popover,
+    classes: { paper: classes.paper },
     anchorOrigin: {
       vertical: 'bottom',
-      horizontal: 'left',
+      horizontal: 'center',
     },
     transformOrigin: {
       vertical: 'top',
-      horizontal: 'left',
+      horizontal: 'center',
     },
   });
+
+  return (
+    <FormControlLabel
+      className={classes.center}
+      control={
+        <Controller
+          name='isQuick'
+          render={({ field: { ref, ...props } }) => <Switch inputRef={ref} {...props} size='small' />}
+        />
+      }
+      label={
+        <div className={classes.center}>
+          <span>快速通道</span>
+          <IconButton size='small' onMouseEnter={handlePopoverOpen} onMouseLeave={handlePopoverClose}>
+            <HelpOutline fontSize='small' />
+          </IconButton>
+          {Pop}
+        </div>
+      }
+      labelPlacement='start'
+    />
+  );
+};
+
+const Edit: NextPage = () => {
+  const dispatch = useAppDispatch();
+  const classes = useStyle();
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { abandon, rejected, interviews, step, ...defaultValues } = useAppSelector(({ candidate }) => candidate);
@@ -160,25 +188,7 @@ const Edit: NextPage = () => {
                 </Grid>
               ))}
               <Grid item className={clsx(classes.item, classes.center)} {...grid}>
-                <FormControlLabel
-                  className={classes.center}
-                  control={
-                    <Controller
-                      name='isQuick'
-                      render={({ field: { ref, ...props } }) => <Switch inputRef={ref} {...props} size='small' />}
-                    />
-                  }
-                  label={
-                    <div className={classes.center}>
-                      <span>快速通道</span>
-                      <IconButton size='small' onMouseEnter={handlePopoverOpen} onMouseLeave={handlePopoverClose}>
-                        <HelpOutline fontSize='small' />
-                      </IconButton>
-                      {Pop}
-                    </div>
-                  }
-                  labelPlacement='start'
-                />
+                <IsQuickSwitch />
               </Grid>
               <Grid item className={clsx(classes.item, classes.center)} {...grid}>
                 <Input name='resume' label='上传简历/作品集' type='file' />
