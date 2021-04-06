@@ -12,7 +12,7 @@ import {
 import { makeStyles } from '@material-ui/core/styles';
 import { HelpOutline } from '@material-ui/icons';
 import { useMemo, useEffect } from 'react';
-import { Controller, FormProvider, useForm } from 'react-hook-form';
+import { Controller, FormProvider, useForm, useWatch } from 'react-hook-form';
 import clsx from 'clsx';
 
 import type { Breakpoint } from '@material-ui/core/styles/createBreakpoints';
@@ -133,6 +133,15 @@ const IsQuickSwitch = () => {
   );
 };
 
+const MajorAutoComplete: React.FC<{ className?: string }> = ({ className }) => {
+  const institute = useWatch({ name: 'institute' });
+  const Majors = useMemo(
+    () => Departments[institute as keyof typeof Departments] ?? Object.values(Departments).flat(),
+    [institute],
+  );
+  return <AutoComplete name='major' label='专业' required className={className} options={Majors} />;
+};
+
 const Edit: NextPage = () => {
   const dispatch = useAppDispatch();
   const classes = useStyle();
@@ -152,11 +161,6 @@ const Edit: NextPage = () => {
   };
 
   // AutoComplete options
-  const institute = methods.watch('institute', /* defaultValue */ '');
-  const Majors = useMemo(
-    () => Departments[institute as keyof typeof Departments] ?? Object.values(Departments).flat(),
-    [institute],
-  );
   const Deps = useMemo(() => Object.keys(Departments), []);
 
   return (
@@ -174,7 +178,7 @@ const Edit: NextPage = () => {
                 <AutoComplete name='institute' label='学院' required className={classes.input} options={Deps} />
               </Grid>
               <Grid item className={clsx(classes.item, classes.center)} {...grid}>
-                <AutoComplete name='major' label='专业' required className={classes.input} options={Majors} />
+                <MajorAutoComplete className={classes.input} />
               </Grid>
               {SelectInputs.map(({ label, name, required, options }, index) => (
                 <Grid item className={clsx(classes.item, classes.center)} key={index} {...grid}>
