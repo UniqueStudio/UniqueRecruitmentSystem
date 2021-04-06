@@ -12,14 +12,14 @@ import {
 import { makeStyles } from '@material-ui/core/styles';
 import { HelpOutline } from '@material-ui/icons';
 import { useMemo, useEffect } from 'react';
-import { Controller, FormProvider, useForm, useWatch } from 'react-hook-form';
+import { Controller, FormProvider, useForm } from 'react-hook-form';
 import clsx from 'clsx';
 
 import type { Breakpoint } from '@material-ui/core/styles/createBreakpoints';
 import type { NextPage } from 'next';
 import type { CandidateForm } from 'config/types';
 
-import AutoComplete from 'components/AutoComplete';
+import AutoComplete, { MajorAutoComplete } from 'components/AutoComplete';
 import { Input } from 'components/Input';
 import { GROUPS, GRADES, GENDERS, RANKS, IS_QUICK_DESC } from 'config/consts';
 import { useAppDispatch, useAppSelector } from 'store';
@@ -131,15 +131,6 @@ const IsQuickSwitch = () => {
       labelPlacement='start'
     />
   );
-};
-
-const MajorAutoComplete: React.FC<{ className?: string }> = ({ className }) => {
-  const institute = useWatch({ name: 'institute' });
-  const Majors = useMemo(
-    () => Departments[institute as keyof typeof Departments] ?? Object.values(Departments).flat(),
-    [institute],
-  );
-  return <AutoComplete name='major' label='专业' required className={className} options={Majors} />;
 };
 
 const Edit: NextPage = () => {

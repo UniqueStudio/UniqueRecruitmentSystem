@@ -54,4 +54,6 @@ function AutoComplete<Option = string>({
   );
 }
 
+export { MajorAutoComplete } from './major';
+
 export default AutoComplete;
