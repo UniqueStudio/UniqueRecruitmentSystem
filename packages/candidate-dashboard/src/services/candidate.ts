@@ -62,6 +62,9 @@ export const submitCandidateForm: (
   if (candidaiteForm.group === 'design' && !candidaiteForm.resume) {
     return { type: 'warning', message: '填报Design组需要上交作品集' };
   }
+  if (candidaiteForm.resume instanceof FileList) {
+    candidaiteForm.resume = candidaiteForm.resume[0];
+  }
   const formData = new FormData();
   // number|boolean will be convert to string in formdata.
   // we need to use FormData as we need to upload file...

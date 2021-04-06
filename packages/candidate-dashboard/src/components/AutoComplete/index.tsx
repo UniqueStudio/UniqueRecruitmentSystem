@@ -1,14 +1,13 @@
-import React, { ChangeEvent, useState } from 'react';
 import { TextField } from '@material-ui/core';
 import { Autocomplete } from '@material-ui/lab';
+import { useState } from 'react';
+import { useController } from 'react-hook-form';
 
-type AutoCompleteChange = ChangeEvent<Record<string, unknown>>;
 export interface AutoCompleteProps<Option = string> {
+  name: string;
   className?: string;
   label: string;
   options: Option[];
-  value?: string;
-  onChange?: (e: AutoCompleteChange, value: string | Option | null) => void;
   required?: boolean;
 }
 
@@ -18,39 +17,41 @@ export interface AutoCompleteProps<Option = string> {
  * @remark The inputValue will be writen back to value onClose.
  */
 function AutoComplete<Option = string>({
+  name,
   label,
   options,
-  value,
-  onChange,
   required,
   className,
 }: AutoCompleteProps<Option>): JSX.Element {
-  const [inputValue, setInputValue] = useState('');
+  const {
+    field: { onBlur, onChange, value },
+  } = useController({
+    name,
+    defaultValue: '',
+    rules: { required },
+  });
+
+  const [inputValue, setInputValue] = useState<string>('');
 
   return (
     <Autocomplete<Option, false, false, true>
+      value={value}
+      inputValue={inputValue}
+      onChange={(_, value) => void onChange(value)}
+      onInputChange={(_, value) => void setInputValue(value)}
+      onBlur={() => {
+        if (inputValue !== value) {
+          onChange(inputValue);
+        }
+        onBlur();
+      }}
       className={className}
       options={options}
       autoHighlight
       freeSolo
-      value={value}
-      inputValue={inputValue}
-      onChange={(event, value, reason) => {
-        if (reason === 'select-option') {
-          setInputValue((value ?? '') as string);
-        }
-
-        onChange && onChange(event, value);
-      }}
-      onInputChange={(_, v) => void setInputValue(v)}
       renderInput={(params) => <TextField {...params} required={required} label={label} variant='outlined' />}
     />
   );
 }
-
-AutoComplete.defaultProps = {
-  value: '',
-  required: true,
-};
 
 export default AutoComplete;

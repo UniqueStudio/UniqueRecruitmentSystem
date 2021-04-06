@@ -64,11 +64,21 @@ const updateCandidate = createAsyncThunk<
   {
     rejectValue: string;
   }
->('candidate/update', async (form, { rejectWithValue, dispatch, getState }) => {
+>('candidate/update', async ({ resume: fileList, ...form }, { rejectWithValue, dispatch, getState }) => {
+  let resume: File | string = '';
+  if (fileList instanceof File) {
+    resume = fileList;
+  } else if (fileList instanceof FileList) {
+    [resume] = fileList;
+  }
   const { recruitment, candidate } = getState() as RootState;
+  // use deconstract to omit values
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { abandon, rejected, interviews, step, ...stateForm } = candidate;
-  const { type, message } = await submitCandidateForm({ ...form, ...stateForm, title: recruitment.title }, true);
+  const { type, message } = await submitCandidateForm(
+    { ...stateForm, ...form, resume, title: recruitment.title },
+    true,
+  );
 
   if (type === 'success') {
     dispatch(showSnackbar({ type: 'success', message: '修改成功' }));

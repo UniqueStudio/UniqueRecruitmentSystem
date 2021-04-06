@@ -2,13 +2,10 @@ import {
   Button,
   Card,
   Container,
-  FormControl,
   FormControlLabel,
-  FormHelperText,
   Grid,
   GridSize,
   IconButton,
-  NativeSelect,
   Switch,
   TextField,
   Typography,
@@ -16,7 +13,8 @@ import {
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { HelpOutline } from '@material-ui/icons';
-import { ChangeEvent, FormEventHandler, useState, useCallback, useMemo, useEffect } from 'react';
+import { useState, useCallback, useMemo, useEffect } from 'react';
+import { Controller, FormProvider, useForm } from 'react-hook-form';
 import clsx from 'clsx';
 
 import type { Breakpoint } from '@material-ui/core/styles/createBreakpoints';
@@ -24,10 +22,11 @@ import type { NextPage } from 'next';
 import type { CandidateForm } from 'config/types';
 
 import AutoComplete from 'components/AutoComplete';
+import { Input } from 'components/Input';
 import { GROUPS, GRADES, GENDERS, RANKS } from 'config/consts';
 import { useAppDispatch, useAppSelector } from 'store';
-import { setLayoutTitle, showSnackbar } from 'store/component';
-import { fetchCandidate, setCandidateField, updateCandidate } from 'store/candidate';
+import { setLayoutTitle } from 'store/component';
+import { fetchCandidate, updateCandidate } from 'store/candidate';
 import { Departments } from 'config/departments';
 
 const useStyle = makeStyles((theme) => ({
@@ -74,6 +73,26 @@ const grid: Partial<Record<Breakpoint, boolean | GridSize>> = {
 
 type InputKeys = keyof CandidateForm;
 
+interface InputField {
+  name: InputKeys;
+  label: string;
+  required?: boolean;
+}
+
+const TextInputs: ReadonlyArray<InputField> = [
+  { name: 'name', label: '姓名', required: true },
+  { name: 'mail', label: '邮箱', required: true },
+  { name: 'referrer', label: '推荐人' },
+  { name: 'phone', label: '电话', required: true },
+] as const;
+
+const SelectInputs: ReadonlyArray<InputField & { options: string[] }> = [
+  { name: 'rank', label: '成绩排名', required: true, options: RANKS },
+  { name: 'gender', label: '性别', required: true, options: GENDERS },
+  { name: 'grade', label: '所属年级', required: true, options: GRADES },
+  { name: 'group', label: '组别', required: true, options: GROUPS },
+] as const;
+
 const Edit: NextPage = () => {
   const dispatch = useAppDispatch();
   const classes = useStyle();
@@ -84,56 +103,15 @@ const Edit: NextPage = () => {
   };
   const handlePopoverClose = useCallback(() => void setAnchorEl(null), []);
 
-  const [resume, setResume] = useState<File | string>('');
-  // all form value
-  const inputValue = useAppSelector(({ candidate }) => candidate);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { abandon, rejected, interviews, step, ...defaultValues } = useAppSelector(({ candidate }) => candidate);
+  const methods = useForm({ defaultValues });
 
   // fetch candidate data
   useEffect(() => void dispatch(fetchCandidate()), [dispatch]);
 
   // title
   useEffect(() => void dispatch(setLayoutTitle('编辑信息')), [dispatch]);
-
-  const handleInput = useCallback(
-    (id: InputKeys) => (e: ChangeEvent<{ name?: string; value: CandidateForm[InputKeys] }>) =>
-      void dispatch(setCandidateField({ key: id, value: e.target.value })),
-    [dispatch],
-  );
-
-  // use `<T extends xxx>` to aviod conflict with jsx `<T>`
-  // see: https://stackoverflow.com/questions/32308370/what-is-the-syntax-for-typescript-arrow-functions-with-generics
-  const setField = useCallback(
-    (key: InputKeys) => <T extends CandidateForm[InputKeys] | null>(_: unknown, value: T) =>
-      void dispatch(setCandidateField({ key, value: value ?? '' })),
-    [dispatch],
-  );
-
-  const handleFile = useCallback(
-    ({ target: { files } }: ChangeEvent<HTMLInputElement>) => {
-      if (!files?.length) {
-        return dispatch(showSnackbar({ message: '你没有上传任何文件', type: 'warning' }));
-      }
-      const resume = files[0];
-      if (resume.size > 1024 * 1024 * 100) {
-        return dispatch(showSnackbar({ message: '文件大小必须小于100MB', type: 'warning' }));
-      }
-
-      setResume(resume);
-    },
-    [dispatch],
-  );
-
-  const handleSubmit: FormEventHandler = async (event) => {
-    event.preventDefault();
-    dispatch(updateCandidate({ resume }));
-  };
-
-  const Majors = useMemo(
-    () => Departments[inputValue.institute as keyof typeof Departments] ?? Object.values(Departments).flat(),
-    [inputValue.institute],
-  );
-
-  const popOpen = Boolean(anchorEl);
 
   const Pop = (
     <Popover
@@ -142,7 +120,7 @@ const Edit: NextPage = () => {
       classes={{
         paper: classes.paper,
       }}
-      open={popOpen}
+      open={Boolean(anchorEl)}
       anchorEl={anchorEl}
       anchorOrigin={{
         vertical: 'bottom',
@@ -160,170 +138,101 @@ const Edit: NextPage = () => {
     </Popover>
   );
 
+  const handleSubmit = (data: CandidateForm) => {
+    dispatch(updateCandidate(data));
+  };
+
+  const institute = methods.watch('institute', /* defaultValue */ '');
+
+  const Majors = useMemo(
+    () => Departments[institute as keyof typeof Departments] ?? Object.values(Departments).flat(),
+    [institute],
+  );
+  const Deps = useMemo(() => Object.keys(Departments), []);
+
   return (
     <Container className={clsx(classes.root, classes.center)}>
       <Card className={classes.card}>
-        <form onSubmit={handleSubmit}>
-          <Grid container justify='space-evenly' direction='row'>
-            <Grid item className={clsx(classes.item, classes.center)} {...grid}>
-              <TextField
-                required
-                label='姓名'
-                variant='outlined'
-                className={classes.input}
-                value={inputValue.name || ''}
-                onChange={handleInput('name')}
-              />
+        <FormProvider {...methods}>
+          <form onSubmit={methods.handleSubmit(handleSubmit)}>
+            <Grid container justify='space-evenly' direction='row'>
+              {TextInputs.map(({ label, name, required }, index) => (
+                <Grid item className={clsx(classes.item, classes.center)} key={index} {...grid}>
+                  <Input label={label} name={name} required={required} type='text' />
+                </Grid>
+              ))}
+              <Grid item className={clsx(classes.item, classes.center)} {...grid}>
+                <AutoComplete name='institute' label='学院' required className={classes.input} options={Deps} />
+              </Grid>
+              <Grid item className={clsx(classes.item, classes.center)} {...grid}>
+                <AutoComplete name='major' label='专业' required className={classes.input} options={Majors} />
+              </Grid>
+              {SelectInputs.map(({ label, name, required, options }, index) => (
+                <Grid item className={clsx(classes.item, classes.center)} key={index} {...grid}>
+                  <Input name={name} label={label} required={required} type='select'>
+                    {options.map((opt, index) => (
+                      <option value={index} key={opt}>
+                        {opt}
+                      </option>
+                    ))}
+                  </Input>
+                </Grid>
+              ))}
+              <Grid item className={clsx(classes.item, classes.center)} {...grid}>
+                <FormControlLabel
+                  className={classes.center}
+                  control={
+                    <Controller
+                      name='isQuick'
+                      render={({ field: { ref, ...props } }) => <Switch inputRef={ref} {...props} size='small' />}
+                    />
+                  }
+                  label={
+                    <div className={classes.center}>
+                      <span>快速通道</span>
+                      <IconButton size='small' onMouseEnter={handlePopoverOpen} onMouseLeave={handlePopoverClose}>
+                        <HelpOutline fontSize='small' />
+                      </IconButton>
+                      {Pop}
+                    </div>
+                  }
+                  labelPlacement='start'
+                />
+              </Grid>
+              <Grid item className={clsx(classes.item, classes.center)} {...grid}>
+                <Input name='resume' label='上传简历/作品集' type='file' />
+              </Grid>
+              <Grid item className={clsx(classes.item, classes.center)} xs={12}>
+                <Controller
+                  name='intro'
+                  render={({ field: { ref, ...props } }) => (
+                    <TextField
+                      {...props}
+                      required
+                      multiline
+                      rows={4}
+                      rowsMax={8}
+                      inputRef={ref}
+                      label='自我介绍'
+                      className={clsx(classes.input, classes.intro)}
+                      variant='outlined'
+                    />
+                  )}
+                />
+              </Grid>
             </Grid>
-            <Grid item className={clsx(classes.item, classes.center)} {...grid}>
-              <TextField
-                required
-                label='邮箱'
-                variant='outlined'
-                className={classes.input}
-                value={inputValue.mail || ''}
-                onChange={handleInput('mail')}
-              />
+            <Grid container justify='space-evenly'>
+              <Grid item>
+                <Button variant='contained' color='primary' type='submit'>
+                  保存
+                </Button>
+              </Grid>
+              <Grid item>
+                <Button variant='contained'>取消</Button>
+              </Grid>
             </Grid>
-            <Grid item className={clsx(classes.item, classes.center)} {...grid}>
-              <TextField
-                label='推荐人'
-                variant='outlined'
-                className={classes.input}
-                value={inputValue.referrer || ''}
-                onChange={handleInput('referrer')}
-              />
-            </Grid>
-            <Grid item className={clsx(classes.item, classes.center)} {...grid}>
-              <TextField
-                required
-                label='电话'
-                className={classes.input}
-                variant='outlined'
-                value={inputValue.phone || ''}
-                onChange={handleInput('phone')}
-              />
-            </Grid>
-            <Grid item className={clsx(classes.item, classes.center)} {...grid}>
-              <AutoComplete
-                label='学院'
-                className={classes.input}
-                options={Object.keys(Departments)}
-                value={inputValue.institute}
-                onChange={setField('institute')}
-              />
-            </Grid>
-            <Grid item className={clsx(classes.item, classes.center)} {...grid}>
-              <AutoComplete
-                label='专业'
-                className={classes.input}
-                options={Majors}
-                value={inputValue.major}
-                onChange={setField('major')}
-              />
-            </Grid>
-            <Grid item className={clsx(classes.item, classes.center)} {...grid}>
-              <FormControl className={classes.input}>
-                <FormHelperText>成绩排名</FormHelperText>
-                <NativeSelect variant='outlined' value={inputValue.rank || 0} onChange={handleInput('rank')}>
-                  {RANKS.map((rank, index) => (
-                    <option value={index} key={rank}>
-                      {rank}
-                    </option>
-                  ))}
-                </NativeSelect>
-              </FormControl>
-            </Grid>
-            <Grid item className={clsx(classes.item, classes.center)} {...grid}>
-              <FormControl className={classes.input}>
-                <FormHelperText>性别</FormHelperText>
-                <NativeSelect variant='outlined' value={inputValue.gender || 0} onChange={handleInput('gender')}>
-                  {GENDERS.map((gender, index) => (
-                    <option value={index} key={gender}>
-                      {gender}
-                    </option>
-                  ))}
-                </NativeSelect>
-              </FormControl>
-            </Grid>
-            <Grid item className={clsx(classes.item, classes.center)} {...grid}>
-              <FormControl className={classes.input}>
-                <FormHelperText>所属年级</FormHelperText>
-                <NativeSelect variant='outlined' value={inputValue.grade || 0} onChange={handleInput('grade')}>
-                  {GRADES.map((grade, index) => (
-                    <option value={index} key={grade}>
-                      {grade}
-                    </option>
-                  ))}
-                </NativeSelect>
-              </FormControl>
-            </Grid>
-            <Grid item className={clsx(classes.item, classes.center)} {...grid}>
-              <FormControl className={classes.input}>
-                <FormHelperText>组别</FormHelperText>
-                <NativeSelect variant='outlined' value={inputValue.group || 'web'} onChange={handleInput('group')}>
-                  {GROUPS.map((group) => (
-                    <option value={group.toLowerCase()} key={group}>
-                      {group}
-                    </option>
-                  ))}
-                </NativeSelect>
-              </FormControl>
-            </Grid>
-            <Grid item className={clsx(classes.item, classes.center)} {...grid}>
-              <FormControlLabel
-                className={classes.center}
-                control={
-                  <Switch
-                    inputProps={{ name: 'isQuick' }}
-                    size='small'
-                    checked={inputValue.isQuick}
-                    onChange={setField('isQuick')}
-                  />
-                }
-                label={
-                  <div className={classes.center}>
-                    <span>快速通道</span>
-                    <IconButton size='small' onMouseEnter={handlePopoverOpen} onMouseLeave={handlePopoverClose}>
-                      <HelpOutline fontSize='small' />
-                    </IconButton>
-                    {Pop}
-                  </div>
-                }
-                labelPlacement='start'
-              />
-            </Grid>
-            <Grid item className={clsx(classes.item, classes.center)} {...grid}>
-              <Button variant='contained' component='label' color='secondary'>
-                上传简历/作品集
-                <input id='resume' name='resume' type='file' hidden onChange={handleFile} />
-              </Button>
-            </Grid>
-            <Grid item className={clsx(classes.item, classes.center)} xs={12}>
-              <TextField
-                required
-                multiline
-                rows={4}
-                rowsMax={8}
-                label='自我介绍'
-                className={clsx(classes.input, classes.intro)}
-                variant='outlined'
-                value={inputValue.intro || ''}
-                onChange={handleInput('intro')}
-              />
-            </Grid>
-          </Grid>
-          <Grid container justify='space-evenly'>
-            <Grid item>
-              <Button variant='contained' color='primary' type='submit'>
-                保存
-              </Button>
-            </Grid>
-            <Grid item>
-              <Button variant='contained'>取消</Button>
-            </Grid>
-          </Grid>
-        </form>
+          </form>
+        </FormProvider>
       </Card>
     </Container>
   );
