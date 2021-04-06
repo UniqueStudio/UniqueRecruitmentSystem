@@ -8,12 +8,10 @@ import {
   IconButton,
   Switch,
   TextField,
-  Typography,
-  Popover,
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { HelpOutline } from '@material-ui/icons';
-import { useState, useCallback, useMemo, useEffect } from 'react';
+import { useMemo, useEffect } from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
 import clsx from 'clsx';
 
@@ -28,6 +26,7 @@ import { useAppDispatch, useAppSelector } from 'store';
 import { setLayoutTitle } from 'store/component';
 import { fetchCandidate, updateCandidate } from 'store/candidate';
 import { Departments } from 'config/departments';
+import { usePopover } from 'hooks/usePopover';
 
 const useStyle = makeStyles((theme) => ({
   center: {
@@ -97,11 +96,18 @@ const Edit: NextPage = () => {
   const dispatch = useAppDispatch();
   const classes = useStyle();
 
-  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null); // popover
-  const handlePopoverOpen = (event: React.MouseEvent<HTMLElement, MouseEvent>) => {
-    setAnchorEl(event.currentTarget);
-  };
-  const handlePopoverClose = useCallback(() => void setAnchorEl(null), []);
+  // Popover
+  const { handlePopoverClose, handlePopoverOpen, Pop } = usePopover({
+    content: '所谓的快速通道 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
+    anchorOrigin: {
+      vertical: 'bottom',
+      horizontal: 'left',
+    },
+    transformOrigin: {
+      vertical: 'top',
+      horizontal: 'left',
+    },
+  });
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { abandon, rejected, interviews, step, ...defaultValues } = useAppSelector(({ candidate }) => candidate);
@@ -113,37 +119,12 @@ const Edit: NextPage = () => {
   // title
   useEffect(() => void dispatch(setLayoutTitle('编辑信息')), [dispatch]);
 
-  const Pop = (
-    <Popover
-      id='quick-helper-popover'
-      className={classes.popover}
-      classes={{
-        paper: classes.paper,
-      }}
-      open={Boolean(anchorEl)}
-      anchorEl={anchorEl}
-      anchorOrigin={{
-        vertical: 'bottom',
-        horizontal: 'left',
-      }}
-      transformOrigin={{
-        vertical: 'top',
-        horizontal: 'left',
-      }}
-      onClose={handlePopoverClose}
-      disableRestoreFocus
-    >
-      {/* TODO(colinaaa): intro to quick */}
-      <Typography>所谓的快速通道 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</Typography>
-    </Popover>
-  );
-
   const handleSubmit = (data: CandidateForm) => {
     dispatch(updateCandidate(data));
   };
 
+  // AutoComplete options
   const institute = methods.watch('institute', /* defaultValue */ '');
-
   const Majors = useMemo(
     () => Departments[institute as keyof typeof Departments] ?? Object.values(Departments).flat(),
     [institute],
