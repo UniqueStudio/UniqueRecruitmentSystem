@@ -9,10 +9,11 @@ import {
   useTheme,
   List,
 } from '@material-ui/core';
-import { Home as HomeIcon, Menu as MenuIcon } from '@material-ui/icons';
+import { Home as HomeIcon, Menu as MenuIcon, Edit as EditIcon } from '@material-ui/icons';
 import clsx from 'clsx';
 import ListItemLink from 'components/ListItemLink';
 import { FC, useEffect, useState } from 'react';
+import { useAppSelector } from 'store';
 
 const drawerWidth = 300;
 
@@ -85,6 +86,7 @@ const Layout: FC = (props) => {
   const theme = useTheme();
   const classes = useStyles();
   const matchMedia = useMediaQuery(theme.breakpoints.up('lg'));
+  const title = useAppSelector((state) => state.component.layout.title);
   const [open, setOpen] = useState<boolean>(matchMedia);
 
   const handleClose = () => setOpen(false);
@@ -107,7 +109,7 @@ const Layout: FC = (props) => {
             <MenuIcon />
           </IconButton>
           <Typography variant='h6' className={classes.title}>
-            首页
+            {title}
           </Typography>
         </Toolbar>
       </AppBar>
@@ -126,7 +128,8 @@ const Layout: FC = (props) => {
             </Typography>
           </header>
           <List className={classes.drawerList}>
-            <ListItemLink href='/' primary='首页' icon={<HomeIcon />} />
+            <ListItemLink href='/' primary='首页' icon={<HomeIcon />} onClick={handleClose} />
+            <ListItemLink href='/edit' primary='编辑信息' icon={<EditIcon />} onClick={handleClose} />
           </List>
         </nav>
       </SwipeableDrawer>

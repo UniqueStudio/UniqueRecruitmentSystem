@@ -1,5 +1,5 @@
 import { HOST } from 'config/consts';
-import { CandidateForm, MessageType, Time } from 'config/types';
+import { Candidate, CandidateForm, MessageType, Time } from 'config/types';
 import { getToken } from 'utils/token';
 import { checkMail, checkPhone } from 'utils/validators';
 
@@ -42,9 +42,10 @@ export interface SubmitCandidateFormResp {
   message?: string;
 }
 
-export const submitCandidateForm: (candidateForm: CandidateForm) => Promise<SubmitCandidateFormResp> = async (
-  candidaiteForm,
-) => {
+export const submitCandidateForm: (
+  candidateForm: CandidateForm,
+  update?: boolean,
+) => Promise<SubmitCandidateFormResp> = async (candidaiteForm, update = false) => {
   if (!checkMail(candidaiteForm.mail)) {
     return { type: 'warning', message: '邮箱格式不正确！' };
   }
@@ -61,6 +62,9 @@ export const submitCandidateForm: (candidateForm: CandidateForm) => Promise<Subm
   if (candidaiteForm.group === 'design' && !candidaiteForm.resume) {
     return { type: 'warning', message: '填报Design组需要上交作品集' };
   }
+  if (candidaiteForm.resume instanceof FileList) {
+    candidaiteForm.resume = candidaiteForm.resume[0];
+  }
   const formData = new FormData();
   // number|boolean will be convert to string in formdata.
   // we need to use FormData as we need to upload file...
@@ -68,7 +72,7 @@ export const submitCandidateForm: (candidateForm: CandidateForm) => Promise<Subm
   Object.entries(candidaiteForm).forEach(([key, value]) => formData.append(key, value as string | File));
 
   const resp = await fetch(`${HOST}/${prefix}`, {
-    method: 'POST',
+    method: update ? 'PUT' : 'POST',
     body: formData,
     headers: {
       Authorization: `Bearer ${getToken()}`,
@@ -84,3 +88,20 @@ export interface GetInterviewFormResp {
   token?: string;
   message?: string;
 }
+
+export interface GetCandidateInfoResp {
+  data: Candidate;
+  type: MessageType;
+  message?: string;
+}
+
+export const getCandidateInfo: () => Promise<GetCandidateInfoResp> = async () => {
+  const resp = await fetch(`${HOST}/${prefix}`, {
+    method: 'GET',
+    headers: {
+      Authorization: `Bearer ${getToken()}`,
+    },
+  });
+
+  return resp.json();
+};

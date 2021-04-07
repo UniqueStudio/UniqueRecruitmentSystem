@@ -31,7 +31,7 @@ export interface CandidateForm {
   intro: string;
   isQuick: boolean;
   referrer: string;
-  resume: string | File;
+  resume: string | File | FileList;
   // code: string; we don't need code field in dashboard
 }
 
@@ -43,4 +43,11 @@ export interface Candidate extends CandidateForm {
     team: Interview;
   };
   step: Step;
+}
+
+export interface Recruitment {
+  title: string; // e.g. 2018A || 2018S (A: AUTUMN, S: SPRING, C: CAMP)
+  begin: number;
+  end: number;
+  stop: number;
 }
