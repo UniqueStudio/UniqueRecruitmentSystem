@@ -1,2 +1,5 @@
-/* eslint-disable no-undef */
-module.exports = {};
+module.exports = {
+  future: {
+    webpack5: true,
+  },
+};
