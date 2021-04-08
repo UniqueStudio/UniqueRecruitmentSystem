@@ -10,6 +10,7 @@
     "prepare": "husky install"
   },
   "dependencies": {
+    "@lingui/react": "^3.8.3",
     "@material-ui/core": "^4.11.3",
     "@material-ui/icons": "^4.11.2",
     "@material-ui/lab": "^4.0.0-alpha.57",
@@ -24,12 +25,16 @@
   },
   "devDependencies": {
     "@babel/core": "^7.13.14",
+    "@lingui/cli": "^3.8.3",
+    "@lingui/loader": "^3.8.3",
+    "@lingui/macro": "^3.8.3",
     "@types/node": "^14.14.37",
     "@types/react": "^17.0.3",
     "@types/react-dom": "^17.0.3",
     "@types/react-redux": "^7.1.16",
     "@typescript-eslint/eslint-plugin": "^4.21.0",
     "@typescript-eslint/parser": "^4.21.0",
+    "babel-plugin-macros": "^3.0.1",
     "eslint": "^7.23.0",
     "eslint-config-prettier": "^8.1.0",
     "eslint-plugin-prettier": "^3.3.1",
@@ -39,7 +44,8 @@
     "lint-staged": ">=10",
     "prettier": "^2.2.1",
     "rimraf": "^3.0.2",
-    "typescript": "^4.2.3"
+    "typescript": "^4.2.3",
+    "webpack": "^5.31.0"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
