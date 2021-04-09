@@ -1,10 +1,10 @@
-import { HOST } from 'config/consts';
-import { MessageType } from 'config/types';
+import { Status } from '@uniqs/config';
 
+import { HOST } from 'config/consts';
 const prefix = 'sms';
 
 export interface GetVerificationCodeResp {
-  type: MessageType;
+  type: Status;
   message?: string;
 }
 

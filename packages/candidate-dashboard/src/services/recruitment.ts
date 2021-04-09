@@ -1,6 +1,6 @@
-import { HOST } from 'config/consts';
 import { Status } from '@uniqs/config';
 
+const HOST = process.env.HOST;
 const prefix = 'recruitment';
 
 export interface GetPendingTitlesResp {

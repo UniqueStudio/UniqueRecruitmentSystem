@@ -1,9 +1,9 @@
-import { HOST } from 'config/consts';
 import { Candidate, CandidateForm } from '@uniqs/api';
 import { Status } from '@uniqs/config';
 import { getToken } from 'utils/token';
 import { checkMail, checkPhone } from 'utils/validators';
 
+const HOST = process.env.HOST;
 const prefix = 'candidate';
 const translator: Map<keyof CandidateForm, string> = new Map([
   ['name', '姓名'],
@@ -48,20 +48,20 @@ export const submitCandidateForm: (
   update?: boolean,
 ) => Promise<SubmitCandidateFormResp> = async (candidaiteForm, update = false) => {
   if (!checkMail(candidaiteForm.mail)) {
-    return { type: 'warning', message: '邮箱格式不正确！' };
+    return { type: Status.warning, message: '邮箱格式不正确！' };
   }
   if (!checkPhone(candidaiteForm.phone)) {
-    return { type: 'warning', message: '手机号码格式不正确！' };
+    return { type: Status.warning, message: '手机号码格式不正确！' };
   }
   // check if some fields are undefined
   for (const [key, value] of translator.entries()) {
     if (candidaiteForm[key] === undefined) {
-      return { type: 'warning', message: `请填写${value}` };
+      return { type: Status.warning, message: `请填写${value}` };
     }
   }
 
   if (candidaiteForm.group === 'design' && !candidaiteForm.resume) {
-    return { type: 'warning', message: '填报Design组需要上交作品集' };
+    return { type: Status.warning, message: '填报Design组需要上交作品集' };
   }
   if (candidaiteForm.resume instanceof FileList) {
     candidaiteForm.resume = candidaiteForm.resume[0];
