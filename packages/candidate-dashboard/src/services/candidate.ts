@@ -1,5 +1,11 @@
-import { Candidate, CandidateForm } from '@uniqs/api';
-import { Status } from '@uniqs/config';
+import type {
+  CandidateForm,
+  LoginCandidate,
+  LoginCandidateResp,
+  SubmitCandidateFormResp,
+  GetInterviewSlotsResp,
+  GetCandidateInfoResp,
+} from '@uniqs/api';
 import { getToken } from 'utils/token';
 import { checkMail, checkPhone } from 'utils/validators';
 
@@ -19,100 +25,88 @@ const translator: Map<keyof CandidateForm, string> = new Map([
   ['intro', '自我介绍'],
 ]);
 
-export interface LoginCandidateResp {
-  type: Status;
-  token?: string;
-  message?: string;
-}
-
-export const loginCandidate: (phone: string, code: string) => Promise<LoginCandidateResp> = async (
-  phone: string,
-  code: string,
-) => {
-  const resp = await fetch(`${HOST}/${prefix}/login`, {
-    method: 'POST',
-    body: JSON.stringify({ phone, code }),
-    headers: { 'Content-Type': 'application/json' },
-  });
-  const result: LoginCandidateResp = await resp.json();
-  return result;
+export const loginCandidate: (data: LoginCandidate) => Promise<LoginCandidateResp> = async ({ phone, code }) => {
+  try {
+    const resp = await fetch(`${HOST}/${prefix}/login`, {
+      method: 'POST',
+      body: JSON.stringify({ phone, code }),
+      headers: { 'Content-Type': 'application/json' },
+    });
+    return await resp.json();
+  } catch (error) {
+    return { status: 'error', message: error?.message };
+  }
 };
-
-export interface SubmitCandidateFormResp {
-  type: Status;
-  message?: string;
-}
 
 export const submitCandidateForm: (
   candidateForm: CandidateForm,
   update?: boolean,
 ) => Promise<SubmitCandidateFormResp> = async (candidaiteForm, update = false) => {
-  if (!checkMail(candidaiteForm.mail)) {
-    return { type: Status.warning, message: '邮箱格式不正确！' };
-  }
-  if (!checkPhone(candidaiteForm.phone)) {
-    return { type: Status.warning, message: '手机号码格式不正确！' };
-  }
-  // check if some fields are undefined
-  for (const [key, value] of translator.entries()) {
-    if (candidaiteForm[key] === undefined) {
-      return { type: Status.warning, message: `请填写${value}` };
+  try {
+    if (!checkMail(candidaiteForm.mail)) {
+      return { status: 'warning', message: '邮箱格式不正确！' };
     }
-  }
+    if (!checkPhone(candidaiteForm.phone)) {
+      return { status: 'warning', message: '手机号码格式不正确！' };
+    }
+    // check if some fields are undefined
+    for (const [key, value] of translator.entries()) {
+      if (candidaiteForm[key] === undefined) {
+        return { status: 'warning', message: `请填写${value}` };
+      }
+    }
 
-  if (candidaiteForm.group === 'design' && !candidaiteForm.resume) {
-    return { type: Status.warning, message: '填报Design组需要上交作品集' };
-  }
-  if (candidaiteForm.resume instanceof FileList) {
-    candidaiteForm.resume = candidaiteForm.resume[0];
-  }
-  const formData = new FormData();
-  // number|boolean will be convert to string in formdata.
-  // we need to use FormData as we need to upload file...
-  // Todo: make this convert more clear
-  Object.entries(candidaiteForm).forEach(([key, value]) => formData.append(key, value as string | File));
+    if (candidaiteForm.group === 'design' && !candidaiteForm.resume) {
+      return { status: 'warning', message: '填报Design组需要上交作品集' };
+    }
+    if (candidaiteForm.resume instanceof FileList) {
+      candidaiteForm.resume = candidaiteForm.resume[0];
+    }
+    const formData = new FormData();
+    // number|boolean will be convert to string in formdata.
+    // we need to use FormData as we need to upload file...
+    // Todo: make this convert more clear
+    Object.entries(candidaiteForm).forEach(([key, value]) => formData.append(key, value as string | File));
 
-  const resp = await fetch(`${HOST}/${prefix}`, {
-    method: update ? 'PUT' : 'POST',
-    body: formData,
-    headers: {
-      Authorization: `Bearer ${getToken()}`,
-    },
-  });
-  const result: SubmitCandidateFormResp = await resp.json();
-  return result;
+    const resp = await fetch(`${HOST}/${prefix}`, {
+      method: update ? 'PUT' : 'POST',
+      body: formData,
+      headers: {
+        Authorization: `Bearer ${getToken()}`,
+      },
+    });
+    return await resp.json();
+  } catch (error) {
+    return { status: 'error', message: error?.error };
+  }
 };
 
-export interface GetInterviewSlotsResp {
-  type: Status;
-  token?: string;
-  message?: string;
-}
+export const getInterviewSlots: () => Promise<GetInterviewSlotsResp<string>> = async () => {
+  try {
+    const resp = await fetch(`${HOST}/${prefix}/me/slots`, {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${getToken()}`,
+      },
+    });
 
-export const getInterviewSlots = async (): Promise<GetInterviewSlotsResp> => {
-  const resp = await fetch(`${HOST}/${prefix}/me/slots`, {
-    method: 'GET',
-    headers: {
-      Authorization: `Bearer ${getToken()}`,
-    },
-  });
-
-  return await resp.json();
+    return await resp.json();
+  } catch (error) {
+    return { status: 'error', message: error?.message };
+  }
 };
-
-export interface GetCandidateInfoResp {
-  data: Candidate;
-  type: Status;
-  message?: string;
-}
 
 export const getCandidateInfo: () => Promise<GetCandidateInfoResp> = async () => {
-  const resp = await fetch(`${HOST}/${prefix}`, {
-    method: 'GET',
-    headers: {
-      Authorization: `Bearer ${getToken()}`,
-    },
-  });
+  try {
+    const resp = await fetch(`${HOST}/${prefix}`, {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${getToken()}`,
+      },
+    });
 
-  return await resp.json();
+    return await resp.json();
+  } catch (error) {
+    return { status: 'error', message: error?.message };
+  }
 };

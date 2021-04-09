@@ -1,6 +1,5 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { Candidate, CandidateForm } from '@uniqs/api';
+import { Candidate, CandidateForm, isSuccess } from '@uniqs/api';
 import { Group } from '@uniqs/config';
 import { getCandidateInfo, getInterviewSlots, submitCandidateForm } from 'services';
 import { showSnackbar } from './component';
@@ -36,27 +35,24 @@ type SetFieldPayload = {
   value: CandidateForm[keyof CandidateForm];
 };
 
-const fetchCandidate = createAsyncThunk<
-  Candidate,
-  void,
-  {
-    rejectValue: string;
-  }
->('candidate/fetch', async (_, { rejectWithValue, dispatch }) => {
-  const { type, message, data } = await getCandidateInfo();
+const fetchCandidate = createAsyncThunk<CandidateForm, void, { rejectValue: string }>(
+  'candidate/fetch',
+  async (_, { rejectWithValue, dispatch }) => {
+    const res = await getCandidateInfo();
 
-  if (type === 'success') {
-    return data;
-  }
+    if (isSuccess(res)) {
+      return res.payload;
+    }
 
-  dispatch(showSnackbar({ type, message }));
+    dispatch(showSnackbar({ type: res.status, message: res.message }));
 
-  return rejectWithValue(message ?? '网络错误');
-});
+    return rejectWithValue(res.message ?? '网络错误');
+  },
+);
 
 const updateCandidate = createAsyncThunk<
   void,
-  Partial<CandidateForm>,
+  CandidateForm,
   {
     rejectValue: string;
   }
@@ -67,40 +63,28 @@ const updateCandidate = createAsyncThunk<
   } else if (fileList instanceof FileList) {
     [resume] = fileList;
   }
-  const { recruitment, candidate } = getState() as RootState;
+  const { recruitment } = getState() as RootState;
   // use deconstract to omit values
-  const {
-    abandoned,
-    rejected,
-    interviewAllocations,
-    interviewSelections,
-    updatedAt,
-    id,
-    step,
-    ...stateForm
-  } = candidate;
-  const { type, message } = await submitCandidateForm(
-    { ...stateForm, ...form, resume, title: recruitment.title },
-    true,
-  );
+  const res = await submitCandidateForm({ ...form, resume, name: recruitment.name }, true);
 
-  if (type === 'success') {
+  if (isSuccess(res)) {
     dispatch(showSnackbar({ type: 'success', message: '修改成功' }));
     return;
   }
-  dispatch(showSnackbar({ type, message }));
+  const { status, message } = res;
+  dispatch(showSnackbar({ type: status, message }));
 
   return rejectWithValue(message ?? '网络错误');
 });
 
 const fetchInterviewSlots = createAsyncThunk('candidate/fetch/slots', async (_, { rejectWithValue }) => {
-  const { type, message, ...data } = await getInterviewSlots();
+  const res = await getInterviewSlots();
 
-  if (type === 'success') {
-    return data;
+  if (isSuccess(res)) {
+    return res.payload;
   }
 
-  return rejectWithValue(message ?? '网络错误');
+  return rejectWithValue(res.message ?? '网络错误');
 });
 
 const candidateSlice = createSlice({
@@ -119,7 +103,7 @@ const candidateSlice = createSlice({
    */
   extraReducers: (builder) => {
     builder
-      .addCase(fetchCandidate.fulfilled, (_, { payload }) => payload)
+      .addCase(fetchCandidate.fulfilled, (state, { payload }) => ({ ...state, ...payload }))
       .addCase(fetchCandidate.rejected, (_, { payload }) => {
         if (payload === 'JWT is invalid!') {
           // TODO: find better solution
@@ -130,6 +114,12 @@ const candidateSlice = createSlice({
         //
       })
       .addCase(updateCandidate.fulfilled, () => {
+        //
+      })
+      .addCase(fetchInterviewSlots.fulfilled, () => {
+        //
+      })
+      .addCase(fetchInterviewSlots.rejected, () => {
         //
       });
   },
