@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { Candidate, CandidateForm, isSuccess } from '@uniqs/api';
+import { Candidate, isSuccess, SetCandidateInfo } from '@uniqs/api';
 import { Group } from '@uniqs/config';
 import { getCandidateInfo, getInterviewSlots, submitCandidateForm } from 'services';
 import { showSnackbar } from './component';
@@ -30,29 +30,21 @@ const initialState: Candidate = {
   comments: [],
 };
 
-type SetFieldPayload = {
-  key: keyof CandidateForm;
-  value: CandidateForm[keyof CandidateForm];
-};
+const fetchCandidate = createAsyncThunk('candidate/fetch', async (_, { rejectWithValue, dispatch }) => {
+  const res = await getCandidateInfo();
 
-const fetchCandidate = createAsyncThunk<CandidateForm, void, { rejectValue: string }>(
-  'candidate/fetch',
-  async (_, { rejectWithValue, dispatch }) => {
-    const res = await getCandidateInfo();
+  if (isSuccess(res)) {
+    return res.payload;
+  }
 
-    if (isSuccess(res)) {
-      return res.payload;
-    }
+  dispatch(showSnackbar({ type: res.status, message: res.message }));
 
-    dispatch(showSnackbar({ type: res.status, message: res.message }));
-
-    return rejectWithValue(res.message ?? '网络错误');
-  },
-);
+  return rejectWithValue(res.message ?? '网络错误');
+});
 
 const updateCandidate = createAsyncThunk<
   void,
-  CandidateForm,
+  SetCandidateInfo,
   {
     rejectValue: string;
   }
@@ -91,11 +83,8 @@ const candidateSlice = createSlice({
   name: 'candidate',
   initialState,
   reducers: {
-    setCandidate(state, { payload }: PayloadAction<CandidateForm>) {
+    setCandidate(state, { payload }: PayloadAction<Candidate>) {
       return { ...state, ...payload };
-    },
-    setCandidateField(state, { payload }: PayloadAction<SetFieldPayload>) {
-      return { ...state, [payload.key]: payload.value };
     },
   },
   /**
@@ -126,5 +115,5 @@ const candidateSlice = createSlice({
 });
 
 export default candidateSlice.reducer;
-export const { setCandidate, setCandidateField } = candidateSlice.actions;
+export const { setCandidate } = candidateSlice.actions;
 export { fetchCandidate, updateCandidate };

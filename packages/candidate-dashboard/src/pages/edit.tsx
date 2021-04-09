@@ -7,7 +7,7 @@ import clsx from 'clsx';
 
 import type { Breakpoint } from '@material-ui/core/styles/createBreakpoints';
 import type { NextPage } from 'next';
-import type { CandidateForm } from '@uniqs/api';
+import type { SetCandidateInfo } from '@uniqs/api';
 import { Departments, GROUPS, GRADES, GENDERS, RANKS } from '@uniqs/config';
 
 import AutoComplete, { MajorAutoComplete } from 'components/AutoComplete';
@@ -53,7 +53,7 @@ const grid: Partial<Record<Breakpoint, boolean | GridSize>> = {
   md: 4,
 };
 
-type InputKeys = keyof CandidateForm;
+type InputKeys = keyof SetCandidateInfo;
 
 interface InputField {
   name: InputKeys;
@@ -65,7 +65,7 @@ const TextInputs: ReadonlyArray<InputField> = [
   { name: 'name', label: '姓名', required: true },
   { name: 'mail', label: '邮箱', required: true },
   { name: 'referrer', label: '推荐人' },
-  { name: 'phone', label: '电话', required: true },
+  // { name: 'phone', label: '电话', required: true },
 ] as const;
 
 const SelectInputs: ReadonlyArray<InputField & { options: ReadonlyArray<string> }> = [
@@ -97,7 +97,7 @@ const Edit: NextPage = () => {
   // title
   useEffect(() => void dispatch(setLayoutTitle('编辑信息')), [dispatch]);
 
-  const handleSubmit = (data: CandidateForm) => {
+  const handleSubmit = (data: SetCandidateInfo) => {
     dispatch(updateCandidate(data));
   };
 

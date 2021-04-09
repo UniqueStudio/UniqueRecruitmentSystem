@@ -584,10 +584,10 @@
     "@typescript-eslint/types" "4.21.0"
     eslint-visitor-keys "^2.0.0"
 
-"@uniqs/api@^0.0.4":
-  version "0.0.4"
-  resolved "https://registry.npmjs.org/@uniqs/api/-/api-0.0.4.tgz#e76c5e2faf62e315e0aa8602d311e32179034be7"
-  integrity sha512-HLjg6IqyrGW4kdtLXVyyD/kPUAXn/cBhT6m1mv1kiO9dssVdkCSFs6DcFQTrgwoGo2K0zJK7VCeA4iwFo3vKCQ==
+"@uniqs/api@^0.1.0":
+  version "0.1.0"
+  resolved "https://registry.npmjs.org/@uniqs/api/-/api-0.1.0.tgz#853c9b02a45c9963a106da14c88b58b39e59adb8"
+  integrity sha512-4vw5Ma4+k0lQ7bg9KyZnsgHwIB905YXZk7vjhk8dNWK+s/F5njVpo3xIgPRl4fy6c0vw0F6JZmHF/0T1PcLw5w==
   dependencies:
     "@uniqs/config" "^0.0.3"
 

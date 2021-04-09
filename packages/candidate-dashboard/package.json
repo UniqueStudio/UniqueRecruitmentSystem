@@ -14,7 +14,7 @@
     "@material-ui/icons": "^4.11.2",
     "@material-ui/lab": "^4.0.0-alpha.57",
     "@reduxjs/toolkit": "^1.5.1",
-    "@uniqs/api": "^0.0.4",
+    "@uniqs/api": "^0.1.0",
     "@uniqs/config": "^0.0.3",
     "@uniqs/storage": "^0.1.1",
     "@uniqs/utils": "^0.1.0",
