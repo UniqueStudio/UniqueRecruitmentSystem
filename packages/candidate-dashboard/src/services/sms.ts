@@ -1,6 +1,6 @@
 import { Status } from '@uniqs/config';
 
-import { HOST } from 'config/consts';
+const HOST = process.env.HOST;
 const prefix = 'sms';
 
 export interface GetVerificationCodeResp {
