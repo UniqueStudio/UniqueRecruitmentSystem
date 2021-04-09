@@ -1,11 +1,14 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { Candidate, CandidateForm } from 'config/types';
-import { getCandidateInfo, submitCandidateForm } from 'services';
+import { Candidate, CandidateForm } from '@uniqs/api';
+import { Group } from '@uniqs/config';
+import { getCandidateInfo, getInterviewSlots, submitCandidateForm } from 'services';
 import { showSnackbar } from './component';
 
 import type { RootState } from './index';
 
 const initialState: Candidate = {
+  id: '',
   name: '',
   gender: 0,
   grade: 0,
@@ -14,25 +17,18 @@ const initialState: Candidate = {
   rank: 0,
   mail: '',
   phone: '',
-  group: 'web',
-  title: '',
+  group: Group.web,
   intro: '',
   isQuick: false,
   referrer: '',
   resume: '',
-  abandon: false,
+  abandoned: false,
   rejected: false,
-  interviews: {
-    group: {
-      selection: [],
-      allocation: 0,
-    },
-    team: {
-      selection: [],
-      allocation: 0,
-    },
-  },
+  interviewAllocations: {},
+  interviewSelections: [],
   step: 0,
+  updatedAt: new Date(0),
+  comments: [],
 };
 
 type SetFieldPayload = {
@@ -73,8 +69,16 @@ const updateCandidate = createAsyncThunk<
   }
   const { recruitment, candidate } = getState() as RootState;
   // use deconstract to omit values
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { abandon, rejected, interviews, step, ...stateForm } = candidate;
+  const {
+    abandoned,
+    rejected,
+    interviewAllocations,
+    interviewSelections,
+    updatedAt,
+    id,
+    step,
+    ...stateForm
+  } = candidate;
   const { type, message } = await submitCandidateForm(
     { ...stateForm, ...form, resume, title: recruitment.title },
     true,
@@ -85,6 +89,16 @@ const updateCandidate = createAsyncThunk<
     return;
   }
   dispatch(showSnackbar({ type, message }));
+
+  return rejectWithValue(message ?? '网络错误');
+});
+
+const fetchInterviewSlots = createAsyncThunk('candidate/fetch/slots', async (_, { rejectWithValue }) => {
+  const { type, message, ...data } = await getInterviewSlots();
+
+  if (type === 'success') {
+    return data;
+  }
 
   return rejectWithValue(message ?? '网络错误');
 });

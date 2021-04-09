@@ -565,6 +565,30 @@
     "@typescript-eslint/types" "4.21.0"
     eslint-visitor-keys "^2.0.0"
 
+"@uniqs/api@^0.0.2":
+  version "0.0.2"
+  resolved "https://registry.npmjs.org/@uniqs/api/-/api-0.0.2.tgz#fe493303ad4edbc7a92a5781b722bf4d6681ac8e"
+  integrity sha512-Fpot7o1cpUH1ifmjnh4zo5r1d9auSefnJgUoV/kVRFaKY0iKptz9nXE/2YQv1u24ohyt1D/v9M3DYpXfMW0BbA==
+  dependencies:
+    "@uniqs/config" "^0.0.3"
+
+"@uniqs/config@^0.0.3":
+  version "0.0.3"
+  resolved "https://registry.npmjs.org/@uniqs/config/-/config-0.0.3.tgz#bd48016410ce819b336ffddf3bd1bf829eea4519"
+  integrity sha512-CRZbcKPkm2ZfStRv4WPu2HFy07qmctm7yTRVRlTV/BFBL0SHNZ/xu0SjM3Q4+Gt1yo2qoKtGFFFEBpidbTFFvw==
+
+"@uniqs/storage@^0.1.1":
+  version "0.1.1"
+  resolved "https://registry.npmjs.org/@uniqs/storage/-/storage-0.1.1.tgz#d54b80588f3fc99ab7d4d836e92824aaa0482450"
+  integrity sha512-y2Ct8gy+jaZ1oCL0zqZjDexpc2PE3AzNP7rayDtQkMngoFZD3v4UQ7WvtsqQanjvXiq/n/giJd6pwpBYbV6Bpg==
+  dependencies:
+    idb-keyval "^5.0.4"
+
+"@uniqs/utils@^0.1.0":
+  version "0.1.0"
+  resolved "https://registry.npmjs.org/@uniqs/utils/-/utils-0.1.0.tgz#c24517e4d209f77ef83a9de42a7a8757d413e006"
+  integrity sha512-pu9IUvVVZqmQYEXbvhU38mU+EijGVoxM8KTSkhMEQGhI81/E2cDG/+pGhTlnYVgQgnGSkz7BYUCxV4TpFJd0Lw==
+
 acorn-jsx@^5.3.1:
   version "5.3.1"
   resolved "https://registry.yarnpkg.com/acorn-jsx/-/acorn-jsx-5.3.1.tgz#fc8661e11b7ac1539c47dbfea2e72b3af34d267b"
@@ -1867,6 +1891,11 @@ iconv-lite@^0.6.2:
   integrity sha512-2y91h5OpQlolefMPmUlivelittSWy0rP+oYVpn6A7GwVHNE8AWzoYOBNmlwks3LobaJxgHCYZAnyNo2GgpNRNQ==
   dependencies:
     safer-buffer ">= 2.1.2 < 3.0.0"
+
+idb-keyval@^5.0.4:
+  version "5.0.4"
+  resolved "https://registry.npmjs.org/idb-keyval/-/idb-keyval-5.0.4.tgz#182881b1eafbb47d11a269422ae6d5243f0db0c7"
+  integrity sha512-qS0kplHuadZujoE90ze0NUkhW0/Fbfib7d+mYNMXNEn45NSh2NWY3fBewoX4GZUsKkGHBgc8JiAwMx0zrfL3LQ==
 
 ieee754@^1.1.4:
   version "1.2.1"

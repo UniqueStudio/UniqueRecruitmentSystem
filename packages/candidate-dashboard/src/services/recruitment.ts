@@ -1,10 +1,10 @@
 import { HOST } from 'config/consts';
-import { MessageType } from 'config/types';
+import { Status } from '@uniqs/config';
 
 const prefix = 'recruitment';
 
 export interface GetPendingTitlesResp {
-  type: MessageType;
+  type: Status;
   data?: string[];
   message?: string;
 }

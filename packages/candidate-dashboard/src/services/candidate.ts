@@ -1,5 +1,6 @@
 import { HOST } from 'config/consts';
-import { Candidate, CandidateForm, MessageType, Time } from 'config/types';
+import { Candidate, CandidateForm } from '@uniqs/api';
+import { Status } from '@uniqs/config';
 import { getToken } from 'utils/token';
 import { checkMail, checkPhone } from 'utils/validators';
 
@@ -19,7 +20,7 @@ const translator: Map<keyof CandidateForm, string> = new Map([
 ]);
 
 export interface LoginCandidateResp {
-  type: MessageType;
+  type: Status;
   token?: string;
   message?: string;
 }
@@ -38,7 +39,7 @@ export const loginCandidate: (phone: string, code: string) => Promise<LoginCandi
 };
 
 export interface SubmitCandidateFormResp {
-  type: MessageType;
+  type: Status;
   message?: string;
 }
 
@@ -82,16 +83,26 @@ export const submitCandidateForm: (
   return result;
 };
 
-export interface GetInterviewFormResp {
-  type: MessageType;
-  time?: Time[];
+export interface GetInterviewSlotsResp {
+  type: Status;
   token?: string;
   message?: string;
 }
 
+export const getInterviewSlots = async (): Promise<GetInterviewSlotsResp> => {
+  const resp = await fetch(`${HOST}/${prefix}/me/slots`, {
+    method: 'GET',
+    headers: {
+      Authorization: `Bearer ${getToken()}`,
+    },
+  });
+
+  return await resp.json();
+};
+
 export interface GetCandidateInfoResp {
   data: Candidate;
-  type: MessageType;
+  type: Status;
   message?: string;
 }
 
@@ -103,5 +114,5 @@ export const getCandidateInfo: () => Promise<GetCandidateInfoResp> = async () =>
     },
   });
 
-  return resp.json();
+  return await resp.json();
 };

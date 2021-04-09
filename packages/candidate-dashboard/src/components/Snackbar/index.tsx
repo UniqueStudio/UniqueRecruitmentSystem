@@ -1,10 +1,10 @@
 import { Snackbar, SnackbarCloseReason } from '@material-ui/core';
 import Alert from '@material-ui/lab/Alert';
-import { MessageType } from 'config/types';
+import { Status } from '@uniqs/config';
 import { FC, useCallback, useEffect, useState } from 'react';
 
 export interface SnackbarState {
-  type: MessageType | undefined;
+  type: Status | undefined;
   message: string | undefined;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   _key?: any;
