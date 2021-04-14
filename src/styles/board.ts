@@ -4,7 +4,8 @@ const useStyles = makeStyles(({ spacing, breakpoints }) => ({
     columnsContainer: {
         [breakpoints.up('sm')]: {
             paddingTop: spacing(1),
-            display: 'inline-flex',
+            display: 'flex',
+            width: 'max-content',
         },
         [breakpoints.down('xs')]: {
             flexGrow: 1,
