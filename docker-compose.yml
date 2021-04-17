@@ -5,7 +5,7 @@ services:
     ports:
       - 7341:7341
     volumes:
-      - ./build:/usr/share/nginx/dashboard
+      - .:/usr/share/nginx/dashboard
       - type: bind
         source: ./nginx/nginx.conf
         target: /etc/nginx/nginx.conf
