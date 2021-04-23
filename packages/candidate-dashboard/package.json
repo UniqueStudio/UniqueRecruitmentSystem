@@ -53,6 +53,7 @@
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
+      "yarn extract",
       "eslint --cache --fix",
       "prettier --write"
     ],
