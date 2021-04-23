@@ -3,6 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "extract": "NODE_ENV=development lingui extract",
+    "compile": "lingui compile",
     "dev": "next dev",
     "build": "next build && next export",
     "start": "next start",
@@ -10,7 +12,9 @@
     "prepare": "husky install"
   },
   "dependencies": {
-    "@lingui/react": "^3.8.3",
+    "@lingui/core": "^3.8.10",
+    "@lingui/detect-locale": "^3.8.10",
+    "@lingui/react": "^3.8.10",
     "@material-ui/core": "^4.11.3",
     "@material-ui/icons": "^4.11.2",
     "@material-ui/lab": "^4.0.0-alpha.57",
@@ -25,9 +29,9 @@
   },
   "devDependencies": {
     "@babel/core": "^7.13.14",
-    "@lingui/cli": "^3.8.3",
-    "@lingui/loader": "^3.8.3",
-    "@lingui/macro": "^3.8.3",
+    "@lingui/cli": "^3.8.10",
+    "@lingui/loader": "^3.8.10",
+    "@lingui/macro": "^3.8.10",
     "@types/node": "^14.14.37",
     "@types/react": "^17.0.3",
     "@types/react-dom": "^17.0.3",
@@ -53,5 +57,20 @@
       "prettier --write"
     ],
     "*.{css,scss,json}": "prettier --write"
+  },
+  "lingui": {
+    "locales": [
+      "zh",
+      "en"
+    ],
+    "catalogs": [
+      {
+        "path": "src/locales/{locale}/messages",
+        "include": [
+          "src"
+        ]
+      }
+    ],
+    "format": "po"
   }
 }

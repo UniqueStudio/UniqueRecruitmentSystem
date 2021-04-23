@@ -4,11 +4,14 @@ import { useRouter } from 'next/router';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import { ThemeProvider } from '@material-ui/core';
 import { Provider } from 'react-redux';
-import { FC } from 'react';
+import { FC, useEffect } from 'react';
+import { I18nProvider } from '@lingui/react';
+import { i18n } from '@lingui/core';
 
 import Snackbar from 'components/Snackbar';
 import theme from 'styles/theme';
 import Layout from 'layout';
+import { defaultLocale, dynamicActivate } from 'locales';
 
 import store, { useAppDispatch, useAppSelector } from 'store';
 import { resetSnackbar } from 'store/component';
@@ -26,9 +29,10 @@ const SnackbarWapper: FC = () => {
 
 function MyApp({ Component, pageProps }: AppProps) {
   const router = useRouter();
+  useEffect(() => void dynamicActivate(defaultLocale()), []);
 
   return (
-    <>
+    <I18nProvider i18n={i18n}>
       <Head>
         <title>联创团队招新选手Dashboard</title>
         <meta name='viewport' content='width=device-width, initial-scale=1.0' />
@@ -46,7 +50,7 @@ function MyApp({ Component, pageProps }: AppProps) {
           <SnackbarWapper />
         </ThemeProvider>
       </Provider>
-    </>
+    </I18nProvider>
   );
 }
 
