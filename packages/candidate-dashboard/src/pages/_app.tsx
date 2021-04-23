@@ -6,6 +6,7 @@ import { ThemeProvider } from '@material-ui/core';
 import { Provider } from 'react-redux';
 import { FC, useEffect } from 'react';
 import { I18nProvider } from '@lingui/react';
+import { Trans } from '@lingui/macro';
 import { i18n } from '@lingui/core';
 
 import Snackbar from 'components/Snackbar';
@@ -34,7 +35,9 @@ function MyApp({ Component, pageProps }: AppProps) {
   return (
     <I18nProvider i18n={i18n}>
       <Head>
-        <title>联创团队招新选手Dashboard</title>
+        <title>
+          <Trans>联创团队招新选手Dashboard</Trans>
+        </title>
         <meta name='viewport' content='width=device-width, initial-scale=1.0' />
       </Head>
       <CssBaseline />
