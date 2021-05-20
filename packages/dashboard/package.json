@@ -65,6 +65,7 @@
     ]
   },
   "scripts": {
+    "prepare": "husky install",
     "format": "prettier --write src",
     "lint": "eslint --fix .",
     "start": "vite --host",
