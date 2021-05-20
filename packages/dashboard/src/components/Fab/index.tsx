@@ -1,5 +1,5 @@
+import { SpeedDial, SpeedDialAction, SpeedDialIcon } from '@material-ui/core';
 import { Delete, SelectAll, ArrowBack, ArrowForward, Send } from '@material-ui/icons';
-import { SpeedDial, SpeedDialAction, SpeedDialIcon } from '@material-ui/lab';
 import { observer } from 'mobx-react-lite';
 import React, { FC, useState } from 'react';
 
@@ -52,7 +52,8 @@ export const Fab: FC<Props> = observer(({ candidates, toggleOpen }) => {
             icon={<SpeedDialIcon />}
             onClose={closeFab}
             onOpen={openFab}
-            open={fabOpen && !!$candidate.selected.size}>
+            open={fabOpen && !!$candidate.selected.size}
+        >
             {ButtonGenerator('移除', <Delete />, toggleOpen('dialog'), disabled || !$user.isAdminOrCaptain)}
             {ButtonGenerator('发送通知', <Send />, toggleOpen('modal'), disabled || !$user.isAdminOrCaptain)}
             {ButtonGenerator(

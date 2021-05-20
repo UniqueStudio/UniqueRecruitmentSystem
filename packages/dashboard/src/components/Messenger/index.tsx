@@ -1,7 +1,7 @@
 import { Avatar, Chip, Collapse, Divider, IconButton, Paper, TextField } from '@material-ui/core';
-import PlusOneIcon from '@material-ui/icons/ExposurePlus1';
 import FaceIcon from '@material-ui/icons/Face';
 import InsertPhotoIcon from '@material-ui/icons/InsertPhoto';
+import PlusOneIcon from '@material-ui/icons/PlusOne';
 import SendIcon from '@material-ui/icons/Send';
 import clsx from 'clsx';
 import { observer } from 'mobx-react-lite';
