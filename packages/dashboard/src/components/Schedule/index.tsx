@@ -1,4 +1,6 @@
+import { TextField } from '@material-ui/core';
 import {
+    DatePicker,
     Timeline,
     TimelineConnector,
     TimelineContent,
@@ -7,7 +9,6 @@ import {
     TimelineOppositeContent,
     TimelineSeparator,
 } from '@material-ui/lab';
-import { DatePicker } from '@material-ui/pickers';
 import React, { FC, memo } from 'react';
 
 import useStyles from '@styles/schedule';
@@ -17,7 +18,7 @@ interface Props {
     end: Date;
     deadline: Date;
     disabled?: boolean;
-    onChange: (name: string) => (date: Date | null) => void;
+    onChange: (name: string) => (date: unknown) => void;
 }
 
 export const Schedule: FC<Props> = memo(({ beginning, end, deadline, disabled, onChange }) => {
@@ -28,7 +29,7 @@ export const Schedule: FC<Props> = memo(({ beginning, end, deadline, disabled, o
         { label: '招新结束', name: 'end', value: end },
     ];
     return (
-        <Timeline align='left' classes={{ root: classes.root }}>
+        <Timeline position='left' classes={{ root: classes.root }}>
             {items.map(({ label, name, value }) => (
                 <TimelineItem key={label}>
                     <TimelineOppositeContent className={classes.item} classes={{ root: classes.itemRoot }}>
@@ -44,8 +45,8 @@ export const Schedule: FC<Props> = memo(({ beginning, end, deadline, disabled, o
                             value={value}
                             onChange={onChange(name)}
                             disabled={disabled}
-                            format='yyyy/MM/dd'
-                            inputVariant='outlined'
+                            mask='____/__/__'
+                            renderInput={(params) => <TextField {...params} />}
                         />
                     </TimelineContent>
                 </TimelineItem>

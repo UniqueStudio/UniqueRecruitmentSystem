@@ -121,8 +121,8 @@ export const RecruitmentPanel: FC = observer(() => {
         setDeadline(deadline);
     };
 
-    const handleChange = (name: string) => (date: Date | null) => {
-        if (!date) {
+    const handleChange = (name: string) => (date: unknown) => {
+        if (!(date instanceof Date)) {
             return;
         }
         if (name === 'begin') setBeginning(date);

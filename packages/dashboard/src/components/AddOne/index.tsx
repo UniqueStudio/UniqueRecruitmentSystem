@@ -66,8 +66,8 @@ export const AddOne: FC = observer(() => {
         setState((prevState) => ({ ...prevState, [name]: value }));
     };
 
-    const handleChangeDate = (name: string) => (date: Date | null) => {
-        if (date) {
+    const handleChangeDate = (name: string) => (date: unknown) => {
+        if (date instanceof Date) {
             setState((prevState) => ({ ...prevState, [name]: date }));
         }
     };

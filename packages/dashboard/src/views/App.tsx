@@ -1,6 +1,5 @@
-import DateFnsUtils from '@date-io/date-fns';
-import { CssBaseline, ThemeProvider, useMediaQuery } from '@material-ui/core';
-import { MuiPickersUtilsProvider } from '@material-ui/pickers';
+import { LocalizationProvider } from '@material-ui/lab';
+import AdapterDateFns from '@material-ui/lab/AdapterDateFns';
 import { observer } from 'mobx-react-lite';
 import React, { FC, lazy, Suspense } from 'react';
 import { BrowserRouter, Route, RouteComponentProps, Switch } from 'react-router-dom';
@@ -44,7 +43,7 @@ export const App: FC = () => {
     );
     return (
         <Theme>
-            <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                <LocalizationProvider dateAdapter={AdapterDateFns}>
                 <BrowserRouter>
                     <Snackbar>
                         <Notifier />
@@ -59,7 +58,7 @@ export const App: FC = () => {
                         <Route render={routeRender(<Welcome easterEgg={true} />)} />
                     </Switch>
                 </BrowserRouter>
-            </MuiPickersUtilsProvider>
+                </LocalizationProvider>
         </Theme>
     );
 };

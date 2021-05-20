@@ -1,6 +1,6 @@
-import { Button, Chip, Dialog, useMediaQuery, useTheme } from '@material-ui/core';
+import { Button, Chip, Dialog, TextField, useMediaQuery, useTheme } from '@material-ui/core';
 import { DataGrid, GridColDef } from '@material-ui/data-grid';
-import { DateTimePicker } from '@material-ui/pickers';
+import { DateTimePicker } from '@material-ui/lab';
 import { observer } from 'mobx-react-lite';
 import React, { FC, useEffect, useState } from 'react';
 
@@ -117,8 +117,8 @@ export const Table: FC = observer(() => {
         setCid(id);
     };
 
-    const handleChange = (value: Date | null) => {
-        value && setTime(value);
+    const handleChange = (value: unknown) => {
+        value instanceof Date && setTime(value);
     };
 
     return (
@@ -158,7 +158,8 @@ export const Table: FC = observer(() => {
                         ampm={false}
                         value={time}
                         onChange={handleChange}
-                        format='yyyy/MM/dd HH:mm'
+                        mask='____/__/__ __:__'
+                        renderInput={(params) => <TextField variant='standard' {...params} />}
                     />
                     <Button color='primary' variant='contained' onClick={handleAllocateOne} disabled={!time}>
                         确定

@@ -3,7 +3,7 @@ import AddIcon from '@material-ui/icons/AddCircleOutline';
 import CancelIcon from '@material-ui/icons/CancelOutlined';
 import CheckIcon from '@material-ui/icons/CheckCircleOutlined';
 import RemoveIcon from '@material-ui/icons/RemoveCircleOutline';
-import { DatePicker } from '@material-ui/pickers';
+import { DatePicker } from '@material-ui/lab';
 import { toJS } from 'mobx';
 import { observer } from 'mobx-react-lite';
 import React, { ChangeEventHandler, FC, useEffect, useState } from 'react';
@@ -69,8 +69,8 @@ export const Slots: FC = observer(() => {
         setSlots((prevSlots) => prevSlots.filter((_, i) => i !== index));
     };
 
-    const setDate = (index: number) => (date: Date | null) => {
-        if (!date) {
+    const setDate = (index: number) => (date: unknown) => {
+        if (!(date instanceof Date)) {
             return;
         }
         setSlots((prevSlots) => [
@@ -112,9 +112,9 @@ export const Slots: FC = observer(() => {
                             label='日期'
                             value={date}
                             onChange={setDate(index)}
-                            format='yyyy/MM/dd'
-                            margin='normal'
+                            mask='____/__/__'
                             className={classes.dateTextField}
+                            renderInput={(params) => <TextField variant='standard' {...params} />}
                         />
                         <TextField
                             select
