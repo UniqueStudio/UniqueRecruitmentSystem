@@ -1,3 +1,4 @@
+import { CssBaseline, StyledEngineProvider, ThemeProvider, useMediaQuery } from '@material-ui/core';
 import { LocalizationProvider } from '@material-ui/lab';
 import AdapterDateFns from '@material-ui/lab/AdapterDateFns';
 import { observer } from 'mobx-react-lite';
@@ -42,23 +43,25 @@ export const App: FC = () => {
         </MainLayout>
     );
     return (
-        <Theme>
+        <StyledEngineProvider injectFirst>
+            <Theme>
                 <LocalizationProvider dateAdapter={AdapterDateFns}>
-                <BrowserRouter>
-                    <Snackbar>
-                        <Notifier />
-                    </Snackbar>
-                    <Switch>
-                        <Route path='/login' component={Login} />
-                        <Route path='/' exact render={routeRender(<Welcome />)} />
-                        <Route path='/dashboard' render={routeRender(<Dashboard />)} />
-                        <Route path='/interviews' render={routeRender(<Interviews />)} />
-                        <Route path='/candidates' render={routeRender(<Candidates />)} />
-                        <Route path='/my' render={routeRender(<My />)} />
-                        <Route render={routeRender(<Welcome easterEgg={true} />)} />
-                    </Switch>
-                </BrowserRouter>
+                    <BrowserRouter>
+                        <Snackbar>
+                            <Notifier />
+                        </Snackbar>
+                        <Switch>
+                            <Route path='/login' component={Login} />
+                            <Route path='/' exact render={routeRender(<Welcome />)} />
+                            <Route path='/dashboard' render={routeRender(<Dashboard />)} />
+                            <Route path='/interviews' render={routeRender(<Interviews />)} />
+                            <Route path='/candidates' render={routeRender(<Candidates />)} />
+                            <Route path='/my' render={routeRender(<My />)} />
+                            <Route render={routeRender(<Welcome easterEgg={true} />)} />
+                        </Switch>
+                    </BrowserRouter>
                 </LocalizationProvider>
-        </Theme>
+            </Theme>
+        </StyledEngineProvider>
     );
 };
