@@ -102,7 +102,7 @@ export const AddOne: FC = observer(() => {
                     <Typography variant='h6'>{titleConverter(generateTitle(beginning))}</Typography>
                     <Schedule onChange={handleChangeDate} beginning={beginning} end={end} deadline={deadline} />
                     <Verify onChange={handleChange('code')} code={code} />
-                    <Button className={classes.button} color='primary' variant='contained' onClick={handleLaunch}>
+                    <Button className={classes.button} variant='contained' onClick={handleLaunch}>
                         确定
                     </Button>
                 </div>

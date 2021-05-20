@@ -77,7 +77,7 @@ export const User: FC = observer(() => {
                     />
                 ))}
             </div>
-            <Button size='large' onClick={submitChange} color='primary'>
+            <Button size='large' onClick={submitChange}>
                 修改
             </Button>
         </form>

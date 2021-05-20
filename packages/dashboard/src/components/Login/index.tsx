@@ -40,20 +40,10 @@ export const Login: FC = observer(() => {
 
     const ChooseMethod = (
         <>
-            <Button
-                className={classes.button}
-                variant='contained'
-                color='default'
-                size='large'
-                onClick={handleMethod(1)}>
+            <Button className={classes.button} size='large' onClick={handleMethod(1)}>
                 企业微信登录
             </Button>
-            <Button
-                className={classes.button}
-                variant='contained'
-                color='primary'
-                size='large'
-                onClick={handleMethod(2)}>
+            <Button className={classes.button} size='large' onClick={handleMethod(2)}>
                 账号密码登录
             </Button>
         </>
@@ -64,18 +54,13 @@ export const Login: FC = observer(() => {
             <Button
                 className={classes.button}
                 variant='contained'
-                color='primary'
                 size='large'
                 onClick={loginByQRCode}
-                disabled={!!$user.qrCodeURL}>
+                disabled={!!$user.qrCodeURL}
+            >
                 获取二维码
             </Button>
-            <Button
-                className={classes.button}
-                variant='contained'
-                color='default'
-                size='large'
-                onClick={handleMethod(2)}>
+            <Button className={classes.button} size='large' onClick={handleMethod(2)}>
                 账号密码登录
             </Button>
         </>
@@ -83,6 +68,7 @@ export const Login: FC = observer(() => {
     const ByPassword = (
         <>
             <TextField
+                variant='standard'
                 label='手机号'
                 className={classes.textField}
                 value={phone}
@@ -91,6 +77,7 @@ export const Login: FC = observer(() => {
                 margin='normal'
             />
             <TextField
+                variant='standard'
                 label='密码'
                 className={classes.textField}
                 value={password}
@@ -102,18 +89,13 @@ export const Login: FC = observer(() => {
             <Button
                 className={classes.button}
                 variant='contained'
-                color='primary'
                 size='large'
                 type='submit'
-                disabled={!phone || !password}>
+                disabled={!phone || !password}
+            >
                 登录
             </Button>
-            <Button
-                className={classes.button}
-                variant='contained'
-                color='default'
-                size='large'
-                onClick={handleMethod(1)}>
+            <Button className={classes.button} size='large' onClick={handleMethod(1)}>
                 企业微信登录
             </Button>
         </>

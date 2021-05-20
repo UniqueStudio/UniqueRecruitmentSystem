@@ -87,7 +87,7 @@ export const Comments: FC<Props> = observer(({ candidate: { comments, id } }) =>
                     onChange={changeContent}
                     onKeyPress={handleKey}
                 />
-                <Button color='primary' size='large' onClick={handleSubmit}>
+                <Button size='large' onClick={handleSubmit}>
                     发表评论
                 </Button>
             </div>

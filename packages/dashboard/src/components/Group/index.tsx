@@ -31,7 +31,6 @@ const memberDataConverter = (handleSelect: SelectHandler, admin: Record<string, 
         checked={admin[phone] || isAdmin}
         onChange={handleSelect(phone)}
         disabled={disabled || isAdmin}
-        color='primary'
     />,
 ];
 
@@ -81,7 +80,7 @@ export const Group: FC = observer(() => {
                         ))}
                 </TableBody>
             </Table>
-            <Button size='large' onClick={submitChange} color='primary'>
+            <Button size='large' onClick={submitChange}>
                 修改
             </Button>
         </div>

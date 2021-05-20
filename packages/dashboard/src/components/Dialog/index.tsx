@@ -25,10 +25,10 @@ export const Dialog: FC<Props> = memo(({ open, toggleOpen, onClick, content, tit
             <DialogContentText>{content}</DialogContentText>
         </DialogContent>
         <DialogActions>
-            <Button onClick={toggleOpen} color='primary' autoFocus>
+            <Button onClick={toggleOpen} autoFocus>
                 {no}
             </Button>
-            <Button onClick={onClick} color='primary'>
+            <Button onClick={onClick}>
                 {yes}
             </Button>
         </DialogActions>

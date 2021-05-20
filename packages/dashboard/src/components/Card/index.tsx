@@ -85,7 +85,6 @@ export const Card: FC<Props> = observer(({ candidate, index, toggleDetail }) => 
 
     const Check = (
         <Checkbox
-            color='primary'
             onClick={stopPropagation}
             onChange={handleCheck}
             checked={checked}

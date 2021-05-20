@@ -89,12 +89,12 @@ const RecruitmentOverview: FC<Props> = observer(({ recruitment: { statistics, en
                 [statistics, group],
             )}
             <div className={classes.buttonsContainer}>
-                <Button onClick={handleSet} fullWidth disabled={selected}>
-                    <EyeIcon color='inherit' />
+                <Button color='inherit' onClick={handleSet} fullWidth disabled={selected}>
+                    <EyeIcon />
                     {selected ? '当前招新' : '查看招新'}
                 </Button>
-                <Button onClick={onToggle(id)} fullWidth disabled={!$user.isAdminOrCaptain || expired}>
-                    <EditIcon color='inherit' />
+                <Button color='inherit' onClick={onToggle(id)} fullWidth disabled={!$user.isAdminOrCaptain || expired}>
+                    <EditIcon />
                     修改时间
                 </Button>
             </div>
@@ -169,7 +169,7 @@ export const RecruitmentPanel: FC = observer(() => {
                         onChange={handleChange}
                         disabled={!$user.isAdminOrCaptain}
                     />
-                    <Button onClick={setTime} variant='contained' color='primary' disabled={!$user.isAdminOrCaptain}>
+                    <Button onClick={setTime} variant='contained' disabled={!$user.isAdminOrCaptain}>
                         修改时间
                     </Button>
                 </div>

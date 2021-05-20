@@ -84,12 +84,15 @@ export const Template: FC<Props> = observer(({ toggleOpen }) => {
                         <StepContent classes={{ last: classes.verify }}>
                             {stepContent[index]}
                             <div>
-                                <Button onClick={activeStep ? handleBack : toggleOpen} className={classes.templateItem}>
+                                <Button
+                                    color='inherit'
+                                    onClick={activeStep ? handleBack : toggleOpen}
+                                    className={classes.templateItem}
+                                >
                                     {activeStep ? '上一步' : '关闭'}
                                 </Button>
                                 <Button
                                     variant='contained'
-                                    color='primary'
                                     onClick={activeStep === steps.length - 1 ? handleSend : handleNext}
                                     className={classes.templateItem}
                                     disabled={$candidate.selected.size === 0}
@@ -103,10 +106,10 @@ export const Template: FC<Props> = observer(({ toggleOpen }) => {
             </Stepper>
             {activeStep === steps.length && (
                 <Paper square elevation={0} className={classes.templateEnd}>
-                    <Button onClick={handleBack} className={classes.templateItem}>
+                    <Button color='inherit' onClick={handleBack} className={classes.templateItem}>
                         上一步
                     </Button>
-                    <Button variant='contained' color='primary' onClick={toggleOpen} className={classes.templateItem}>
+                    <Button variant='contained' onClick={toggleOpen} className={classes.templateItem}>
                         关闭
                     </Button>
                 </Paper>

@@ -29,8 +29,6 @@ export const TabLayout: FC<Props> = ({ items, variant = 'standard', classes }) =
             <TabContext value={tab}>
                 <TabList
                     onChange={(event, newValue) => setTab(newValue)}
-                    indicatorColor='primary'
-                    textColor='primary'
                     centered={variant === 'standard'}
                     variant={variant}
                     scrollButtons

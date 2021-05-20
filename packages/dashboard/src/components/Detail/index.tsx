@@ -82,10 +82,10 @@ export const Detail: FC<Props> = observer(({ candidate }) => {
                     </div>
                 ))}
                 <div className={classes.detailRow}>
-                    <Button size='large' color='primary' onClick={toggleIntroModalOpen}>
+                    <Button size='large' onClick={toggleIntroModalOpen}>
                         自我介绍
                     </Button>
-                    <Button size='large' color='primary' onClick={downloadResume} disabled={!resume || !!progress}>
+                    <Button size='large' onClick={downloadResume} disabled={!resume || !!progress}>
                         {progress ? `${(progress * 100).toFixed(2)}%` : '简历下载'}
                     </Button>
                 </div>

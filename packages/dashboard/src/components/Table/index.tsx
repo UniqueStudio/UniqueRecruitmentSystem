@@ -97,7 +97,7 @@ export const Table: FC = observer(() => {
             renderCell(params) {
                 const { id } = params.row as Candidate;
                 return (
-                    <Button color='primary' size={isMobile ? 'small' : 'medium'} onClick={toggleDialog(id)}>
+                    <Button size={isMobile ? 'small' : 'medium'} onClick={toggleDialog(id)}>
                         设置
                     </Button>
                 );
@@ -139,7 +139,6 @@ export const Table: FC = observer(() => {
                 components={{
                     Footer: () => (
                         <Button
-                            color='primary'
                             variant='contained'
                             size={isMobile ? 'small' : 'medium'}
                             disabled={!$candidate.selected.size}
@@ -162,7 +161,7 @@ export const Table: FC = observer(() => {
                         mask='____/__/__ __:__'
                         renderInput={(params) => <TextField variant='standard' {...params} />}
                     />
-                    <Button color='primary' variant='contained' onClick={handleAllocateOne} disabled={!time}>
+                    <Button variant='contained' onClick={handleAllocateOne} disabled={!time}>
                         确定
                     </Button>
                 </div>

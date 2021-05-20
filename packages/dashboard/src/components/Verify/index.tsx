@@ -34,7 +34,7 @@ export const Verify: FC<Props> = memo(({ onChange, code }) => {
     };
     return (
         <div className={classes.content}>
-            <Button color='primary' onClick={getCode} disabled={time > 0}>
+            <Button onClick={getCode} disabled={time > 0}>
                 {time > 0 ? `${time}秒后重新获取` : '获取验证码'}
             </Button>
             <TextField
