@@ -12,7 +12,7 @@ interface Props<T = string | number> {
 export const Select: FC<Props> = memo(({ data, onChange, currentValue }) => {
     const classes = useStyles();
     return (
-        <MuiSelect value={currentValue} onChange={onChange} className={classes.select}>
+        <MuiSelect variant='standard' value={currentValue} onChange={onChange} className={classes.select}>
             {data.map(({ item, value, disabled }, index) => (
                 <MenuItem value={value} key={index} disabled={disabled}>
                     {item}
