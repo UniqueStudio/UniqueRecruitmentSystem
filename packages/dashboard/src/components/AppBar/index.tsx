@@ -67,7 +67,7 @@ export const AppBar: FC = observer(() => {
     };
 
     const pathToTitle = {
-        '/': `Unique Studio Recruitment Dashboard v${import.meta.env.SNOWPACK_PUBLIC_VERSION}`,
+        '/': `Unique Studio Recruitment Dashboard v${__APP_VERSION__}`,
         '/dashboard': title ? `${title}・数据展示` : '数据展示',
         '/interviews': title ? `${title}・面试分配` : '面试分配',
         '/candidates': title ? `${title}・选手信息` : '选手信息',
