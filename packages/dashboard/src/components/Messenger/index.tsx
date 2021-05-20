@@ -145,7 +145,7 @@ export const Messenger: FC = observer(() => {
         <Avatar alt={name} src={messageAvatar} className={classes.avatar} children={<FaceIcon />} />
     );
     return (
-        <Collapse in={$component.messengerOpen} classes={{ container: classes.collapse }}>
+        <Collapse in={$component.messengerOpen} classes={{ root: classes.collapse }}>
             <Paper className={classes.messenger}>
                 <div className={classes.messages} ref={setContainer}>
                     {$user.messages.map((message, index) => (
