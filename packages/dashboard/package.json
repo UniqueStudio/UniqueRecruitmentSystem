@@ -26,7 +26,6 @@
     "chart.js": "^3.0.0-rc.6",
     "date-fns": "^2.19.0",
     "idb-keyval": "^5.0.4",
-    "mdi-material-ui": "^6.22.0",
     "mobx": "^6.1.8",
     "mobx-react-lite": "^3.2.0",
     "notistack": "^1.0.5",

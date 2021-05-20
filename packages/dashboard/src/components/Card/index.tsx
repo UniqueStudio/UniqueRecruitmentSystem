@@ -2,13 +2,11 @@ import { Card as MuiCard, Checkbox, IconButton, Typography, useMediaQuery, useTh
 import { amber, blue, orange, pink } from '@material-ui/core/colors';
 import FlashOn from '@material-ui/icons/FlashOn';
 import InfoIcon from '@material-ui/icons/InfoOutlined';
-import Female from 'mdi-material-ui/GenderFemale';
-import Male from 'mdi-material-ui/GenderMale';
-import TransGender from 'mdi-material-ui/GenderTransgender';
 import { observer } from 'mobx-react-lite';
 import React, { ChangeEventHandler, FC, MouseEventHandler } from 'react';
 import { Draggable, DraggableProvided } from 'react-beautiful-dnd';
 
+import { Female, Male, TransGender } from '@components/Icons';
 import { GRADES, GROUP_MAP } from '@config/consts';
 import { Evaluation, StepType } from '@config/enums';
 import { Candidate as CandidateType } from '@config/types';

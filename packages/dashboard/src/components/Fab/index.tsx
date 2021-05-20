@@ -1,10 +1,10 @@
 import { Delete, SelectAll, ArrowBack, ArrowForward, Send } from '@material-ui/icons';
 import { SpeedDial, SpeedDialAction, SpeedDialIcon } from '@material-ui/lab';
-import { SelectInverse } from 'mdi-material-ui';
 import { observer } from 'mobx-react-lite';
 import React, { FC, useState } from 'react';
 
 import { moveCandidate } from '@apis/rest';
+import { SelectInverse } from '@components/Icons';
 import { Step, StepType } from '@config/enums';
 import { Candidate } from '@config/types';
 import { useStores } from '@hooks/useStores';
