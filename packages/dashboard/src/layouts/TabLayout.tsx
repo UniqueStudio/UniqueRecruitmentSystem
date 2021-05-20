@@ -33,7 +33,9 @@ export const TabLayout: FC<Props> = ({ items, variant = 'standard', classes }) =
                     textColor='primary'
                     centered={variant === 'standard'}
                     variant={variant}
-                    scrollButtons='on'>
+                    scrollButtons
+                    allowScrollButtonsMobile
+                >
                     {items.map(({ label, value }) => (
                         <Tab label={label} value={value} key={value} />
                     ))}
