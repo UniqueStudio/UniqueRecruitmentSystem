@@ -16,7 +16,7 @@ import { Candidate } from '@config/types';
 import { usePrevious } from '@hooks/usePrevious';
 import { useStores } from '@hooks/useStores';
 
-const Candidate: FC<{ candidate: Candidate }> = ({ candidate }) => {
+const SliderContent: FC<{ candidate: Candidate }> = ({ candidate }) => {
     const prevCandidate = usePrevious(candidate);
     candidate = candidate || prevCandidate;
     return (
@@ -110,7 +110,7 @@ const Candidates: FC = observer(() => {
                         handleLeft={handleLeft}
                         handleRight={handleRight}
                         handleNextIndex={handleNextIndex}>
-                        <Candidate candidate={candidates[step][index]} />
+                        <SliderContent candidate={candidates[step][index]} />
                     </Slider>
                 )}
             </Modal>
