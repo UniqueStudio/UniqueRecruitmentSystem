@@ -142,7 +142,9 @@ export const Messenger: FC = observer(() => {
         </div>
     );
     const AvatarBox = ({ avatar: messageAvatar, name }: Message) => (
-        <Avatar alt={name} src={messageAvatar} className={classes.avatar} children={<FaceIcon />} />
+        <Avatar alt={name} src={messageAvatar} className={classes.avatar}>
+            <FaceIcon />
+        </Avatar>
     );
     return (
         <Collapse in={$component.messengerOpen} classes={{ root: classes.collapse }}>
@@ -178,7 +180,8 @@ export const Messenger: FC = observer(() => {
                             color='primary'
                             component='span'
                             onClick={plusOne}
-                            disabled={!$user.messages.length}>
+                            disabled={!$user.messages.length}
+                        >
                             <PlusOneIcon />
                         </IconButton>
                         <TextField

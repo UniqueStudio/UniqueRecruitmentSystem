@@ -46,7 +46,8 @@ export const Chip: FC<Props> = memo(({ comment: { content, evaluation, user }, o
                 transformOrigin={{ vertical: 'top', horizontal: 'center' }}
                 onClose={handleClose}
                 disableRestoreFocus
-                disableEnforceFocus>
+                disableEnforceFocus
+            >
                 <Paper className={clsx(classes.content, classes[color])}>{content}</Paper>
             </Popover>
         </>

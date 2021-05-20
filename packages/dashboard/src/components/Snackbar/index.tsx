@@ -14,7 +14,8 @@ export const Snackbar: FC = ({ children }) => {
                 variantWarning: classes.warning,
                 variantInfo: classes.info,
             }}
-            autoHideDuration={3000}>
+            autoHideDuration={3000}
+        >
             <>{children}</>
         </SnackbarProvider>
     );

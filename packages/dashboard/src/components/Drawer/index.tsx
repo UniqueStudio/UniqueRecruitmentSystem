@@ -39,7 +39,8 @@ export const Drawer: FC = observer(() => {
         <MuiDrawer
             variant='permanent'
             classes={{ paper: clsx(classes.drawerPaper, !$component.drawerOpen && classes.drawerPaperClose) }}
-            open={$component.drawerOpen}>
+            open={$component.drawerOpen}
+        >
             <div className={classes.toolbar}>
                 <IconButton onClick={() => $component.toggleDrawer()}>
                     <ChevronLeftIcon />

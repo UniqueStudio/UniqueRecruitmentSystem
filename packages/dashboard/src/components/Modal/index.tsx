@@ -20,7 +20,8 @@ export const Modal: FC<Props> = memo(({ open, onClose, title, children, directio
             onClose={onClose}
             className={classes.modalContainer}
             hideBackdrop={hideBackdrop}
-            disableEnforceFocus>
+            disableEnforceFocus
+        >
             <Slide direction={open ? direction || 'right' : leaveDirection} in={open} mountOnEnter unmountOnExit>
                 <div className={classes.modal}>
                     <div className={classes.modalHeader}>

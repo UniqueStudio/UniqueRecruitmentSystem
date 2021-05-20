@@ -109,7 +109,8 @@ const Candidates: FC = observer(() => {
                         index={index}
                         handleLeft={handleLeft}
                         handleRight={handleRight}
-                        handleNextIndex={handleNextIndex}>
+                        handleNextIndex={handleNextIndex}
+                    >
                         <SliderContent candidate={candidates[step][index]} />
                     </Slider>
                 )}

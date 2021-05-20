@@ -144,7 +144,8 @@ export const Table: FC = observer(() => {
                             size={isMobile ? 'small' : 'medium'}
                             disabled={!$candidate.selected.size}
                             onClick={handleAllocateAll}
-                            className={classes.tableButton}>
+                            className={classes.tableButton}
+                        >
                             为{$candidate.selected.size}名候选人自动分配
                         </Button>
                     ),

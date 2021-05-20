@@ -84,13 +84,15 @@ export const AddOne: FC = observer(() => {
             <Tooltip
                 title={disabled ? '只有组长或管理员能发起招新' : '发起招新'}
                 classes={{ tooltip: classes.tooltip }}
-                placement='top'>
+                placement='top'
+            >
                 <Paper className={classes.paper}>
                     <IconButton
                         className={classes.newButton}
                         classes={{ root: classes.newButtonRoot }}
                         onClick={toggleModal}
-                        disabled={disabled}>
+                        disabled={disabled}
+                    >
                         <AddIcon color='primary' className={classes.newIcon} />
                     </IconButton>
                 </Paper>

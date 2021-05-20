@@ -82,7 +82,8 @@ export const AppBar: FC = observer(() => {
                         <IconButton
                             color='inherit'
                             onClick={() => $component.toggleDrawer()}
-                            className={clsx(classes.menuButton, { [classes.hide]: open })}>
+                            className={clsx(classes.menuButton, { [classes.hide]: open })}
+                        >
                             <MenuIcon />
                         </IconButton>
                     ),

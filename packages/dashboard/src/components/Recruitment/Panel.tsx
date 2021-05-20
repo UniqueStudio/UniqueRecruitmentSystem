@@ -62,7 +62,8 @@ const RecruitmentOverview: FC<Props> = observer(({ recruitment: { statistics, en
             className={clsx(classes.container, {
                 [classes.selected]: selected,
                 [classes.expired]: expired,
-            })}>
+            })}
+        >
             {useMemo(
                 () => (
                     <Box className={classes.chartContainer}>
@@ -150,7 +151,8 @@ export const RecruitmentPanel: FC = observer(() => {
             <Modal
                 title='全部招新'
                 open={$component.recruitmentPanelOpen}
-                onClose={() => $component.toggleRecruitmentPanel()}>
+                onClose={() => $component.toggleRecruitmentPanel()}
+            >
                 <div className={classes.blocksContainer}>
                     <AddOne />
                     {$recruitment.recruitmentsArray.map((recruitment) => (

@@ -92,7 +92,8 @@ export const Template: FC<Props> = observer(({ toggleOpen }) => {
                                     color='primary'
                                     onClick={activeStep === steps.length - 1 ? handleSend : handleNext}
                                     className={classes.templateItem}
-                                    disabled={$candidate.selected.size === 0}>
+                                    disabled={$candidate.selected.size === 0}
+                                >
                                     {activeStep === steps.length - 1 ? '发送通知' : '下一步'}
                                 </Button>
                             </div>

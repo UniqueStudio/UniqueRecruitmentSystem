@@ -26,7 +26,8 @@ export const EnlargeableImage: FC<Props> = memo(({ src }) => {
                 open={open}
                 onClose={handleClose}
                 maxWidth={false}
-                classes={{ paper: classes.imageLayer, root: classes.imageRoot }}>
+                classes={{ paper: classes.imageLayer, root: classes.imageRoot }}
+            >
                 <img src={src} onClick={handleClose} className={classes.image} alt='original' />
             </Dialog>
         </>
