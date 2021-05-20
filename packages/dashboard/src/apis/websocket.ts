@@ -1,4 +1,4 @@
-import io from 'socket.io-client';
+import { io } from 'socket.io-client';
 
 import { getOneRecruitment } from '@apis/rest';
 import { API, STEP_MAP } from '@config/consts';
