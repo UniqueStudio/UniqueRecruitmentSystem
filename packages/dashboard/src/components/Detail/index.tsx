@@ -58,7 +58,7 @@ export const Detail: FC<Props> = observer(({ candidate }) => {
             { label: '是否快通', value: isQuick ? '是' : '否' },
             { label: '推荐人', value: referrer || '无' },
         ],
-        [{ label: '预览', value: intro, fullWidth: true, multiline: true, rowsMax: 3 }],
+        [{ label: '预览', value: intro, fullWidth: true, multiline: true, maxRows: 3 }],
     ];
 
     const toggleIntroModalOpen = () => setIntroModal((prevModal) => !prevModal);
@@ -71,7 +71,13 @@ export const Detail: FC<Props> = observer(({ candidate }) => {
                 {items.map((row, i) => (
                     <div className={classes.detailRow} key={i}>
                         {row.map((props, j) => (
-                            <TextField margin='normal' key={j} InputProps={{ readOnly: true }} {...props} />
+                            <TextField
+                                variant='standard'
+                                margin='normal'
+                                key={j}
+                                InputProps={{ readOnly: true }}
+                                {...props}
+                            />
                         ))}
                     </div>
                 ))}

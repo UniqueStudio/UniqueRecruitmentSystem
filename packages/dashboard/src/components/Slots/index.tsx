@@ -117,12 +117,14 @@ export const Slots: FC = observer(() => {
                             renderInput={(params) => <TextField variant='standard' {...params} />}
                         />
                         <TextField
+                            variant='standard'
                             select
                             label='时间段'
                             value={period}
                             InputLabelProps={{ shrink: true }}
                             onChange={setPeriod(index)}
-                            margin='normal'>
+                            margin='normal'
+                        >
                             {[...PERIOD_MAP.entries()].map(([value, item]) => (
                                 <MenuItem value={value} key={value}>
                                     {item}
@@ -130,6 +132,7 @@ export const Slots: FC = observer(() => {
                             ))}
                         </TextField>
                         <TextField
+                            variant='standard'
                             label='人数'
                             value={slotNumber}
                             onChange={setSlotNumber(index)}

@@ -66,15 +66,22 @@ export const Comments: FC<Props> = observer(({ candidate: { comments, id } }) =>
     return (
         <div className={classes.comments}>
             <div className={classes.evaluation}>
-                <TextField select label='评价' value={evaluation} onChange={changeEvaluation}>
+                <TextField
+                    variant='standard'
+                    select
+                    label='评价'
+                    value={evaluation}
+                    onChange={changeEvaluation}
+                >
                     <MenuItem value={2}>👍</MenuItem>
                     <MenuItem value={1}>🤔</MenuItem>
                     <MenuItem value={0}>👎</MenuItem>
                 </TextField>
                 <TextField
+                    variant='standard'
                     label='输入评论'
                     multiline
-                    rowsMax={4}
+                    maxRows={4}
                     className={classes.comment}
                     value={content}
                     onChange={changeContent}

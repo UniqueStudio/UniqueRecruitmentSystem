@@ -182,8 +182,9 @@ export const Messenger: FC = observer(() => {
                             <PlusOneIcon />
                         </IconButton>
                         <TextField
+                            variant='standard'
                             multiline
-                            rowsMax={4}
+                            maxRows={4}
                             value={content}
                             placeholder={placeHolders[~~(Math.random() * placeHolders.length)]}
                             className={classes.textField}

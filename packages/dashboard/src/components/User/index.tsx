@@ -65,10 +65,16 @@ export const User: FC = observer(() => {
         <form className={classes.container}>
             <div className={classes.textFieldContainer}>
                 {textFields.map((props, index) => (
-                    <TextField margin='normal' disabled key={index} {...props} />
+                    <TextField variant='standard' margin='normal' disabled key={index} {...props} />
                 ))}
                 {editableFields.map(({ name, ...otherProps }, index) => (
-                    <TextField onChange={handleChange(name)} margin='normal' key={index} {...otherProps} />
+                    <TextField
+                        variant='standard'
+                        onChange={handleChange(name)}
+                        margin='normal'
+                        key={index}
+                        {...otherProps}
+                    />
                 ))}
             </div>
             <Button size='large' onClick={submitChange} color='primary'>

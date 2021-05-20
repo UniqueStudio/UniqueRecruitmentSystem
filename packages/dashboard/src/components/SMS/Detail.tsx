@@ -26,16 +26,18 @@ export const SMSDetail: FC<Props> = memo(({ handleChange, content, message }) =>
             <Typography variant='body1' className={classes.fullWidth}>
                 {message}
             </Typography>
-            <TextField select label='类型' value={type} onChange={handleChange('type')}>
+            <TextField variant='standard' select label='类型' value={type} onChange={handleChange('type')}>
                 <MenuItem value='accept'>通过</MenuItem>
                 <MenuItem value='reject'>拒绝</MenuItem>
             </TextField>
             <TextField
+                variant='standard'
                 select
                 label='下一轮'
                 value={next >= 0 ? next : ''}
                 onChange={handleChange('next')}
-                disabled={type === SMSType.reject}>
+                disabled={type === SMSType.reject}
+            >
                 {[...STEP_MAP.entries()].map(([index, stepName]) => (
                     <MenuItem key={stepName} value={+index} disabled={index === Step.报名}>
                         {stepName}
@@ -43,6 +45,7 @@ export const SMSDetail: FC<Props> = memo(({ handleChange, content, message }) =>
                 ))}
             </TextField>
             <TextField
+                variant='standard'
                 label='时间'
                 value={time}
                 InputLabelProps={{ shrink: true }}
@@ -50,6 +53,7 @@ export const SMSDetail: FC<Props> = memo(({ handleChange, content, message }) =>
                 disabled={![Step.熬测, Step.笔试].includes(next)}
             />
             <TextField
+                variant='standard'
                 label='地点'
                 value={place}
                 InputLabelProps={{ shrink: true }}
@@ -57,6 +61,7 @@ export const SMSDetail: FC<Props> = memo(({ handleChange, content, message }) =>
                 disabled={![Step.群面, Step.组面, Step.熬测, Step.笔试].includes(next)}
             />
             <TextField
+                variant='standard'
                 label='自定义'
                 value={rest}
                 className={classes.fullWidth}
