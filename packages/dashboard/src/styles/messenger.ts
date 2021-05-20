@@ -38,7 +38,7 @@ const useStyles = makeStyles(({ spacing, transitions, breakpoints, palette, zInd
     },
     messageContainer: {
         display: 'flex',
-        margin: `${spacing(1)}px 0`,
+        margin: `${spacing(1)} 0`,
     },
     input: {
         marginTop: 'auto',

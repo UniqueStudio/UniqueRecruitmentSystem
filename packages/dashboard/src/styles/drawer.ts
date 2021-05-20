@@ -30,11 +30,11 @@ const useStyles = makeStyles(({ transitions, mixins, spacing, breakpoints }) => 
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'flex-end',
-        padding: `0 ${spacing(1)}px`,
+        padding: `0 ${spacing(1)}`,
         ...mixins.toolbar,
     },
     icon: {
-        margin: `0 ${spacing(1)}px`,
+        margin: `0 ${spacing(1)}`,
     },
 }));
 

@@ -15,9 +15,9 @@ const useStyles = makeStyles(({ spacing, breakpoints }) => ({
         },
     },
     tableButton: {
-        margin: `${spacing(1)}px ${spacing(2)}px`,
+        margin: `${spacing(1)} ${spacing(2)}`,
         [breakpoints.down('xs')]: {
-            margin: `0 ${spacing(2)}px ${spacing(2)}px`,
+            margin: `0 ${spacing(2)} ${spacing(2)}`,
         },
     },
     dialog: {
@@ -33,7 +33,7 @@ const useStyles = makeStyles(({ spacing, breakpoints }) => ({
         overflowY: 'auto !important' as 'auto',
     },
     chip: {
-        margin: `${spacing(1)}px ${spacing(0.5)}px`,
+        margin: `${spacing(1)} ${spacing(0.5)}`,
         [breakpoints.down('xs')]: {
             margin: spacing(0.5),
         },

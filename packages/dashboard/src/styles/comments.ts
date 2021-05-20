@@ -6,7 +6,7 @@ const useStyles = makeStyles(({ breakpoints, spacing }) => ({
         alignItems: 'center',
         display: 'flex',
         [breakpoints.down('sm')]: {
-            margin: `${spacing(1)}px 0`,
+            margin: `${spacing(1)} 0`,
             '& button': {
                 padding: spacing(1),
                 minWidth: 80,

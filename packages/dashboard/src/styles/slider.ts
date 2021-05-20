@@ -4,7 +4,7 @@ const useStyles = makeStyles(({ spacing, breakpoints }) => ({
     detailContent: {
         display: 'flex',
         [breakpoints.down('sm')]: {
-            margin: `${spacing(1)}px ${spacing(2)}px`,
+            margin: `${spacing(1)} ${spacing(2)}`,
             '& button': {
                 width: 'auto',
                 height: 'auto',

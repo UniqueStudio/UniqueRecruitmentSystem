@@ -13,7 +13,7 @@ const useStyles = makeStyles(({ spacing, palette }) => ({
     columnHeader: {
         background: palette.primary.light,
         borderRadius: 3,
-        marginTop: -spacing(3),
+        marginTop: spacing(-3),
         marginLeft: spacing(5),
         marginRight: spacing(5),
         marginBottom: spacing(1),
