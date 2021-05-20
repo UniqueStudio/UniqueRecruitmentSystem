@@ -7,11 +7,9 @@ module.exports = {
             jsx: true,
         },
     },
-    plugins: [
-        '@typescript-eslint',
-    ],
     extends: [
         'eslint:recommended',
+        'plugin:react/recommended',
         'plugin:import/errors',
         'plugin:import/warnings',
         'plugin:import/typescript',
@@ -23,12 +21,29 @@ module.exports = {
     rules: {
         'max-len': ['warn', { code: 120 }],
         'quote-props': ['warn', 'as-needed'],
+        'jsx-quotes': ['warn', 'prefer-single'],
         'arrow-parens': ['warn', 'always'],
         'no-empty': ['warn', { allowEmptyCatch: true }],
         'padded-blocks': ['warn', 'never'],
-        'lines-between-class-members': ['warn', 'always'],
+        'lines-between-class-members': ['warn', 'always', { exceptAfterSingleLine: true }],
         'no-trailing-spaces': ['warn'],
         'no-multiple-empty-lines': ['warn', { max: 1, maxBOF: 0, maxEOF: 1 }],
+        'object-curly-spacing': ['warn', 'always'],
+        'react/prop-types': 'off',
+        'react/display-name': 'off',
+        'react/jsx-closing-bracket-location': ['warn'],
+        'react/jsx-closing-tag-location': ['warn'],
+        'react/jsx-curly-newline': ['warn'],
+        'react/jsx-first-prop-new-line': ['warn'],
+        'react/jsx-tag-spacing': [
+            'warn',
+            {
+                closingSlash: 'never',
+                beforeSelfClosing: 'always',
+                afterOpening: 'never',
+                beforeClosing: 'never',
+            },
+        ],
         '@typescript-eslint/explicit-function-return-type': 'off',
         '@typescript-eslint/explicit-module-boundary-types': 'off',
         '@typescript-eslint/no-unsafe-assignment': 'off',
@@ -61,6 +76,9 @@ module.exports = {
         },
         'import/resolver': {
             typescript: {},
+        },
+        react: {
+            version: 'detect',
         },
     },
     env: {
