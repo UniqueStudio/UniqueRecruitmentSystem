@@ -1,6 +1,6 @@
 import { Button, Checkbox, Table, TableBody, TableCell, TableHead, TableRow } from '@material-ui/core';
 import { observer } from 'mobx-react-lite';
-import React, { FC, useState } from 'react';
+import React, { ChangeEventHandler, FC, useState } from 'react';
 
 import { setGroupAdmin } from '@apis/rest';
 import { GENDERS } from '@config/consts';
@@ -11,7 +11,7 @@ import { titleConverter } from '@utils/titleConverter';
 
 const heads = ['姓名', '性别', '电话号码', '邮箱', '加入时间', '组长？', '管理员？'];
 
-type SelectHandler = (name: string) => (event: React.ChangeEvent<HTMLInputElement>, checked: boolean) => void;
+type SelectHandler = (name: string) => ChangeEventHandler<HTMLInputElement>;
 const memberDataConverter = (handleSelect: SelectHandler, admin: Record<string, boolean>, disabled: boolean) => ({
     name,
     gender,
