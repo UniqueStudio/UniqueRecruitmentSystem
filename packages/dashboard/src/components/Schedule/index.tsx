@@ -1,6 +1,6 @@
 import { TextField } from '@material-ui/core';
 import {
-    DatePicker,
+    MobileDatePicker,
     Timeline,
     TimelineConnector,
     TimelineContent,
@@ -41,11 +41,10 @@ export const Schedule: FC<Props> = memo(({ beginning, end, deadline, disabled, o
                         <TimelineConnector />
                     </TimelineSeparator>
                     <TimelineContent className={classes.item}>
-                        <DatePicker
+                        <MobileDatePicker
                             value={value}
                             onChange={onChange(name)}
                             disabled={disabled}
-                            mask='____/__/__'
                             renderInput={(params) => <TextField {...params} />}
                         />
                     </TimelineContent>

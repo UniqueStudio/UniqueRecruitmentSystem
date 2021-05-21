@@ -1,6 +1,6 @@
 import { Button, Chip, Dialog, TextField, useMediaQuery, useTheme } from '@material-ui/core';
 import { DataGrid, GridColDef } from '@material-ui/data-grid';
-import { DateTimePicker } from '@material-ui/lab';
+import { StaticDateTimePicker } from '@material-ui/lab';
 import { observer } from 'mobx-react-lite';
 import React, { FC, useEffect, useState } from 'react';
 
@@ -16,14 +16,11 @@ import { roundToMinute } from '@utils/time';
 export const Table: FC = observer(() => {
     const { $candidate } = useStores();
     const classes = useStyles();
-    const [dialog, setDialog] = useState(false);
     const [cid, setCid] = useState('');
     const [time, setTime] = useState(new Date());
     const theme = useTheme();
-    const isMobile = useMediaQuery(theme.breakpoints.down('xs'));
-    useEffect(() => {
-        $candidate.deselectAll();
-    }, [$candidate.stepType]);
+    const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+    useEffect(() => $candidate.deselectAll(), [$candidate.stepType]);
 
     const candidates =
         $candidate.groupBySteps[$candidate.stepType === StepType.teamInterview ? Step.群面时间选择 : Step.组面时间选择];
@@ -63,15 +60,15 @@ export const Table: FC = observer(() => {
                             : !selections.length
                             ? '未选择'
                             : selections.map(({ date, period }, index) => (
-                                  <Chip
-                                      key={index}
-                                      className={classes.chip}
-                                      color='primary'
-                                      variant='outlined'
-                                      size={isMobile ? 'small' : 'medium'}
-                                      label={new Date(date).toLocaleDateString('zh-CN') + PERIOD_MAP.get(period)!}
-                                  />
-                              ))}
+                                <Chip
+                                    key={index}
+                                    className={classes.chip}
+                                    color='primary'
+                                    variant='outlined'
+                                    size={isMobile ? 'small' : 'medium'}
+                                    label={new Date(date).toLocaleDateString('zh-CN') + PERIOD_MAP.get(period)!}
+                                />
+                            ))}
                     </>
                 );
             },
@@ -97,7 +94,7 @@ export const Table: FC = observer(() => {
             renderCell(params) {
                 const { id } = params.row as Candidate;
                 return (
-                    <Button size={isMobile ? 'small' : 'medium'} onClick={toggleDialog(id)}>
+                    <Button size={isMobile ? 'small' : 'medium'} onClick={() => setCid(id)}>
                         设置
                     </Button>
                 );
@@ -105,16 +102,15 @@ export const Table: FC = observer(() => {
         },
     ];
 
-    const handleAllocateOne = () => allocateOne(type, cid, roundToMinute(time));
+    const handleAllocateOne = async () => {
+        if (await allocateOne(type, cid, roundToMinute(time))) {
+            setCid('');
+        }
+    };
 
     const handleAllocateAll = async () => {
         await allocateMany(type, [...$candidate.selected.keys()]);
         $candidate.deselectAll();
-    };
-
-    const toggleDialog = (id = '') => () => {
-        setDialog(!!id);
-        setCid(id);
     };
 
     const handleChange = (value: unknown) => {
@@ -150,21 +146,18 @@ export const Table: FC = observer(() => {
                     ),
                 }}
             />
-            <Dialog open={dialog} onClose={toggleDialog()}>
-                <div className={classes.dialog}>
-                    <DateTimePicker
-                        label='选择时间'
-                        className={classes.dateSelection}
-                        ampm={false}
-                        value={time}
-                        onChange={handleChange}
-                        mask='____/__/__ __:__'
-                        renderInput={(params) => <TextField variant='standard' {...params} />}
-                    />
-                    <Button variant='contained' onClick={handleAllocateOne} disabled={!time}>
-                        确定
-                    </Button>
-                </div>
+            <Dialog open={!!cid} onClose={() => setCid('')}>
+                <StaticDateTimePicker
+                    label='选择时间'
+                    ampm={false}
+                    ampmInClock={false}
+                    value={time}
+                    onChange={handleChange}
+                    renderInput={(params) => <TextField {...params} helperText={undefined} />}
+                />
+                <Button fullWidth onClick={handleAllocateOne} disabled={!time}>
+                    确定
+                </Button>
             </Dialog>
         </>
     );
