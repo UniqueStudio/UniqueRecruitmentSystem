@@ -20,12 +20,5 @@
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
     <script type="module" src="/src/index.tsx"></script>
-    <script>
-        // Now service worker only works under `/`, and cannot handle subroutes like `/dashboard` well.
-        // One feasible solution is using `HashRouter` rather than `BrowserRouter`
-        window.addEventListener('load', () => {
-            navigator.serviceWorker?.register('/serviceWorker.js');
-        });
-    </script>
 </body>
 </html>
