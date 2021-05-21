@@ -16,7 +16,7 @@ import { Group } from '@config/enums';
 import { Recruitment } from '@config/types';
 import { useStores } from '@hooks/useStores';
 import useStyles from '@styles/recruitmentPanel';
-import { compareTitle } from '@utils/compareTitle';
+import { compareTitle } from '@utils/comparators';
 import { roundToDay } from '@utils/time';
 import { titleConverter } from '@utils/titleConverter';
 

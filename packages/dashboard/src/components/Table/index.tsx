@@ -10,7 +10,7 @@ import { GroupOrTeam, InterviewType, Step, StepType } from '@config/enums';
 import { Candidate } from '@config/types';
 import { useStores } from '@hooks/useStores';
 import useStyles from '@styles/table';
-import { sortByAllocation } from '@utils/sortByAllocation';
+import { compareAllocation } from '@utils/comparators';
 import { roundToMinute } from '@utils/time';
 
 export const Table: FC = observer(() => {
@@ -83,7 +83,7 @@ export const Table: FC = observer(() => {
                 return interviewAllocations[type]?.toLocaleString('zh-CN', { timeStyle: 'short', dateStyle: 'short' });
             },
             sortComparator(a, b) {
-                return sortByAllocation(a?.[type], b?.[type]);
+                return compareAllocation(a?.[type], b?.[type]);
             },
         },
         {

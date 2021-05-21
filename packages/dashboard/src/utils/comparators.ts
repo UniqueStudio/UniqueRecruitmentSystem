@@ -15,3 +15,7 @@ export const compareTitle = (prev: string, next: string) => {
     }
     return 0;
 };
+
+export const compareAllocation = (a?: Date, b?: Date) => {
+    return a ? (b ? +a - +b : -1) : b ? 1 : 0;
+};

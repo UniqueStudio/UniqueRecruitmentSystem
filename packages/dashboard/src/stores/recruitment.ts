@@ -2,7 +2,7 @@ import { set } from 'idb-keyval';
 import { makeAutoObservable, toJS } from 'mobx';
 
 import { Recruitment } from '@config/types';
-import { compareTitle } from '@utils/compareTitle';
+import { compareTitle } from '@utils/comparators';
 import { localStorage } from '@utils/storage';
 
 export class RecruitmentStore {
