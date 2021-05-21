@@ -1,4 +1,4 @@
-import { Button, Paper, Step as MuiStep, StepContent, StepLabel, Stepper } from '@material-ui/core';
+import { Button, Step as MuiStep, StepContent, StepLabel, Stepper } from '@material-ui/core';
 import { observer } from 'mobx-react-lite';
 import React, { ChangeEventHandler, FC, useState } from 'react';
 
@@ -69,51 +69,37 @@ export const Template: FC<Props> = observer(({ toggleOpen }) => {
     };
 
     const steps = ['发送对象', '消息模板', '确认发送'];
-    const stepContent = [
-        <SMSPicker />,
-        <SMSDetail content={content} handleChange={handleChange} message={message} />,
-        <Verify code={code} onChange={handleCode} />,
-    ];
+    const stepContent = {
+        0: <SMSPicker />,
+        1: <SMSDetail content={content} handleChange={handleChange} message={message} />,
+        2: <Verify code={code} onChange={handleCode} />,
+    };
 
     return (
-        <div className={classes.template}>
-            <Stepper activeStep={activeStep} classes={{ root: classes.stepper }} orientation='vertical'>
-                {steps.map((stepName, index) => (
-                    <MuiStep key={index}>
-                        <StepLabel>{stepName}</StepLabel>
-                        <StepContent classes={{ last: classes.verify }}>
-                            {stepContent[index]}
-                            <div>
-                                <Button
-                                    color='inherit'
-                                    onClick={activeStep ? handleBack : toggleOpen}
-                                    className={classes.templateItem}
-                                >
-                                    {activeStep ? '上一步' : '关闭'}
-                                </Button>
-                                <Button
-                                    variant='contained'
-                                    onClick={activeStep === steps.length - 1 ? handleSend : handleNext}
-                                    className={classes.templateItem}
-                                    disabled={$candidate.selected.size === 0}
-                                >
-                                    {activeStep === steps.length - 1 ? '发送通知' : '下一步'}
-                                </Button>
-                            </div>
-                        </StepContent>
-                    </MuiStep>
-                ))}
-            </Stepper>
-            {activeStep === steps.length && (
-                <Paper square elevation={0} className={classes.templateEnd}>
-                    <Button color='inherit' onClick={handleBack} className={classes.templateItem}>
-                        上一步
-                    </Button>
-                    <Button variant='contained' onClick={toggleOpen} className={classes.templateItem}>
-                        关闭
-                    </Button>
-                </Paper>
-            )}
-        </div>
+        <Stepper activeStep={activeStep} className={classes.template} orientation='vertical'>
+            {steps.map((stepName, index) => (
+                <MuiStep key={index}>
+                    <StepLabel>{stepName}</StepLabel>
+                    <StepContent classes={{ last: classes.lastStep }}>
+                        {stepContent[index]}
+                        <Button
+                            color='inherit'
+                            onClick={activeStep ? handleBack : toggleOpen}
+                            className={classes.templateItem}
+                        >
+                            {activeStep ? '上一步' : '关闭'}
+                        </Button>
+                        <Button
+                            variant='contained'
+                            onClick={activeStep === steps.length - 1 ? handleSend : handleNext}
+                            className={classes.templateItem}
+                            disabled={$candidate.selected.size === 0}
+                        >
+                            {activeStep === steps.length - 1 ? '发送通知' : '下一步'}
+                        </Button>
+                    </StepContent>
+                </MuiStep>
+            ))}
+        </Stepper>
     );
 });

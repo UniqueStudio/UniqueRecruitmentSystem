@@ -28,11 +28,11 @@ const getProportion = (evaluations: Evaluation[]) => {
     return { good, fair };
 };
 
-const genderIcons = [
-    <TransGender htmlColor={orange[500]} fontSize='small' />,
-    <Male htmlColor={blue[500]} fontSize='small' />,
-    <Female htmlColor={pink[500]} fontSize='small' />,
-];
+const genderIcons = {
+    0: <TransGender htmlColor={orange[500]} fontSize='small' />,
+    1: <Male htmlColor={blue[500]} fontSize='small' />,
+    2: <Female htmlColor={pink[500]} fontSize='small' />,
+};
 
 interface Props {
     candidate: CandidateType;
