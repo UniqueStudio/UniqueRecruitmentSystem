@@ -25,12 +25,8 @@ export const Dialog: FC<Props> = memo(({ open, toggleOpen, onClick, content, tit
             <DialogContentText>{content}</DialogContentText>
         </DialogContent>
         <DialogActions>
-            <Button onClick={toggleOpen} autoFocus>
-                {no}
-            </Button>
-            <Button onClick={onClick}>
-                {yes}
-            </Button>
+            <Button onClick={toggleOpen} autoFocus>{no}</Button>
+            <Button onClick={onClick}>{yes}</Button>
         </DialogActions>
     </MuiDialog>
 ));
