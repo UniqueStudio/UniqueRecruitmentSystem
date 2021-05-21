@@ -3,14 +3,7 @@ import { makeStyles } from '@material-ui/core';
 const useStyles = makeStyles(({ breakpoints, spacing }) => ({
     template: {
         overflowY: 'auto',
-        [breakpoints.down('sm')]: {
-            margin: spacing(2),
-        },
-    },
-    stepper: {
-        [breakpoints.down('xs')]: {
-            padding: 0,
-        },
+        margin: spacing(2),
     },
     templateItem: {
         [breakpoints.down('sm')]: {
@@ -18,26 +11,7 @@ const useStyles = makeStyles(({ breakpoints, spacing }) => ({
         },
         margin: spacing(1),
     },
-    templateColumn: {
-        flexDirection: 'column',
-    },
-    templateEnd: {
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-    },
-    formGroup: {
-        flexDirection: 'row',
-    },
-    dateSelect: {
-        display: 'flex',
-        alignItems: 'center',
-        flexWrap: 'wrap',
-        [breakpoints.down('xs')]: {
-            marginTop: spacing(1),
-        },
-    },
-    verify: {
+    lastStep: {
         paddingLeft: 0,
     },
     inputContainer: {

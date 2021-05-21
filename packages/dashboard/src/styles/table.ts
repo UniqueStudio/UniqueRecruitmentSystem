@@ -20,14 +20,6 @@ const useStyles = makeStyles(({ spacing, breakpoints }) => ({
             margin: `0 ${spacing(2)} ${spacing(2)}`,
         },
     },
-    dialog: {
-        margin: spacing(2),
-        [breakpoints.down('xs')]: {
-            margin: spacing(1),
-        },
-        display: 'flex',
-        alignItems: 'baseline',
-    },
     cell: {
         flexWrap: 'wrap',
         overflowY: 'auto !important' as 'auto',

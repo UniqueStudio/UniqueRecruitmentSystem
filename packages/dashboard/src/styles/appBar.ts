@@ -43,10 +43,6 @@ const useStyles = makeStyles(({ zIndex, palette, transitions, spacing, breakpoin
     hide: {
         display: 'none',
     },
-    suggestion: {
-        padding: spacing(2),
-        overflowY: 'auto',
-    },
 }));
 
 export default useStyles;
