@@ -1,3 +1,4 @@
+import { Box } from '@material-ui/core';
 import { observer } from 'mobx-react-lite';
 import React, { FC } from 'react';
 
@@ -8,7 +9,7 @@ export const Suggestion: FC = observer(() => {
     const { $component } = useStores();
     return (
         <Modal title='面试问题提示' open={$component.suggestionOpen} onClose={() => $component.toggleSuggestion()}>
-            <div>
+            <Box m={2}>
                 当你想不出什么问题的时候，不妨参照这里：
                 <br />
                 <ul>
@@ -39,7 +40,7 @@ export const Suggestion: FC = observer(() => {
                     <li>团队风气（如互膜）</li>
                     <li>你有什么问题要问我们吗</li>
                 </ul>
-            </div>
+            </Box>
         </Modal>
     );
 });
