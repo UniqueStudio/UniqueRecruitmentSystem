@@ -185,22 +185,17 @@ export const removeCandidate = (cid: string) =>
         },
     );
 
-export const getResume = async (cid: string) => {
+export const getResume = async (cid: string, filename = 'resume') => {
     $component.setProgress(true);
     try {
-        const { data, headers } = await client.get<Blob>(Endpoint.resume(cid), {
+        const { data, status } = await client.get<Blob>(Endpoint.resume(cid), {
             responseType: 'blob',
             onDownloadProgress(event: ProgressEvent) {
                 $component.setResumeProgress(event.loaded / event.total, cid);
             },
         });
-        let filename = 'resume';
-        const disposition = (headers as Record<string, string>)['content-disposition'];
-        if (disposition && disposition.includes('attachment')) {
-            const matches = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/.exec(disposition);
-            if (matches?.[1]) {
-                filename = decodeURIComponent(matches[1].replace(/['"]/g, '').replace(/.{2}/g, '%$&'));
-            }
+        if (status >= 400) {
+            throw JSON.parse(await data.text());
         }
         const url = URL.createObjectURL(new Blob([data]));
         const a = document.createElement('a');
@@ -210,10 +205,10 @@ export const getResume = async (cid: string) => {
         a.click();
         document.body.removeChild(a);
         URL.revokeObjectURL(url);
-        $component.setResumeProgress(0, cid);
-    } catch ({ message }) {
-        $component.enqueueSnackbar(message, 'error');
+    } catch ({ message, status }) {
+        $component.enqueueSnackbar(message, status ?? 'error');
     }
+    $component.setResumeProgress(0, cid);
     $component.setProgress(false);
 };
 
