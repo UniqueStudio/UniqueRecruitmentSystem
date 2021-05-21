@@ -1,5 +1,5 @@
 import { IconButton } from '@material-ui/core';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import { ChevronLeft as ChevronLeftIcon, ChevronRight as ChevronRightIcon } from '@material-ui/icons';
 import { observer } from 'mobx-react-lite';
 import React, { FC, useEffect, useState } from 'react';
 
@@ -42,12 +42,12 @@ export const Slider: FC<Props> = observer(({ handleNextIndex, handleLeft, handle
     };
     return (
         <div className={classes.detailContent}>
-            <IconButton className={classes.leftButton} onClick={handleClick(Direction.L)}>
-                <ExpandMoreIcon />
+            <IconButton className={classes.button} onClick={handleClick(Direction.L)}>
+                <ChevronLeftIcon />
             </IconButton>
             <div className={classes.detailMain}>{children}</div>
-            <IconButton className={classes.rightButton} onClick={handleClick(Direction.R)}>
-                <ExpandMoreIcon />
+            <IconButton className={classes.button} onClick={handleClick(Direction.R)}>
+                <ChevronRightIcon />
             </IconButton>
         </div>
     );

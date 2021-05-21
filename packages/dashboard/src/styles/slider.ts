@@ -3,40 +3,26 @@ import { makeStyles } from '@material-ui/core';
 const useStyles = makeStyles(({ spacing, breakpoints }) => ({
     detailContent: {
         display: 'flex',
-        [breakpoints.down('sm')]: {
+        overflow: 'hidden',
+        [breakpoints.down('md')]: {
             margin: `${spacing(1)} ${spacing(2)}`,
-            '& button': {
-                width: 'auto',
-                height: 'auto',
-            },
         },
-        [breakpoints.down('xs')]: {
+        [breakpoints.down('sm')]: {
             margin: spacing(1),
         },
-        overflowY: 'auto',
         margin: spacing(2),
     },
     detailMain: {
-        display: 'flex',
-        flexDirection: 'column',
-        height: '100%',
-        [breakpoints.up('lg')]: {
-            flexDirection: 'row',
-        },
+        display: 'grid',
+        gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
+        columnGap: spacing(1),
+        width: spacing(100),
+        overflowY: 'auto',
     },
-    leftButton: {
-        transform: 'rotate(90deg)',
+    button: {
         alignSelf: 'center',
         padding: spacing(1),
-        [breakpoints.down('sm')]: {
-            padding: 0,
-        },
-    },
-    rightButton: {
-        transform: 'rotate(-90deg)',
-        alignSelf: 'center',
-        padding: spacing(1),
-        [breakpoints.down('sm')]: {
+        [breakpoints.down('md')]: {
             padding: 0,
         },
     },

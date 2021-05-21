@@ -1,32 +1,12 @@
 import { makeStyles } from '@material-ui/core';
 
-const useStyles = makeStyles(({ breakpoints, spacing }) => ({
+const useStyles = makeStyles(() => ({
     evaluation: {
-        justifyContent: 'center',
-        alignItems: 'center',
+        alignItems: 'baseline',
         display: 'flex',
-        [breakpoints.down('sm')]: {
-            margin: `${spacing(1)} 0`,
-            '& button': {
-                padding: spacing(1),
-                minWidth: 80,
-            },
-        },
     },
     comment: {
-        minWidth: '35%',
-        flex: '1 1 0',
-        margin: spacing(1),
-    },
-    comments: {
-        [breakpoints.up('md')]: {
-            width: 600,
-        },
-        [breakpoints.up('lg')]: {
-            width: 400,
-        },
-        margin: spacing(1),
-        width: '100%',
+        flex: '1',
     },
 }));
 

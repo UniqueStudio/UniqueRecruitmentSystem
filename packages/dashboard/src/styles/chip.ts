@@ -35,7 +35,7 @@ const useStyles = makeStyles(({ spacing }) => ({
     chip: {
         margin: spacing(1),
         cursor: 'pointer',
-        maxWidth: 250,
+        maxWidth: '90%',
     },
     popover: {
         pointerEvents: 'none',

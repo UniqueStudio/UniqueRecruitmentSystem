@@ -64,12 +64,13 @@ export const Comments: FC<Props> = observer(({ candidate: { comments, id } }) =>
     };
 
     return (
-        <div className={classes.comments}>
+        <div>
             <div className={classes.evaluation}>
                 <TextField
                     variant='standard'
                     select
                     label='评价'
+                    margin='normal'
                     value={evaluation}
                     onChange={changeEvaluation}
                 >
@@ -80,8 +81,9 @@ export const Comments: FC<Props> = observer(({ candidate: { comments, id } }) =>
                 <TextField
                     variant='standard'
                     label='输入评论'
+                    margin='normal'
                     multiline
-                    maxRows={4}
+                    maxRows={3}
                     className={classes.comment}
                     value={content}
                     onChange={changeContent}
