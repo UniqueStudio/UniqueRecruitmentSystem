@@ -1,4 +1,4 @@
-import { Button, TextField } from '@material-ui/core';
+import { Button, ButtonGroup, TextField } from '@material-ui/core';
 import { observer } from 'mobx-react-lite';
 import React, { ChangeEventHandler, FC, FormEventHandler, useState } from 'react';
 import { Redirect } from 'react-router-dom';
@@ -26,87 +26,52 @@ export const Login: FC = observer(() => {
         return loginByPassword(phone, password);
     };
 
-    const handleMethod = (newMethod: number) => () => {
-        setMethod(newMethod);
-    };
+    const handleMethod = (newMethod: number) => () => setMethod(newMethod);
 
-    const handlePassword: ChangeEventHandler<HTMLInputElement> = ({ target: { value } }) => {
-        setPassword(value);
-    };
+    const handlePassword: ChangeEventHandler<HTMLInputElement> = ({ target: { value } }) => setPassword(value);
 
-    const handlePhone: ChangeEventHandler<HTMLInputElement> = ({ target: { value } }) => {
-        setPhone(value);
-    };
+    const handlePhone: ChangeEventHandler<HTMLInputElement> = ({ target: { value } }) => setPhone(value);
 
     const ChooseMethod = (
-        <>
-            <Button className={classes.button} size='large' onClick={handleMethod(1)}>
-                企业微信登录
-            </Button>
-            <Button className={classes.button} size='large' onClick={handleMethod(2)}>
-                账号密码登录
-            </Button>
-        </>
+        <ButtonGroup orientation='vertical' variant='text' size='large'>
+            <Button onClick={handleMethod(2)}>账号密码登录</Button>
+            <Button onClick={handleMethod(1)}>企业微信登录</Button>
+        </ButtonGroup>
     );
     const ByQRCode = (
         <>
             {$user.qrCodeURL && <img className={classes.qrCode} src={$user.qrCodeURL} alt='QRCode' />}
-            <Button
-                className={classes.button}
-                variant='contained'
-                size='large'
-                onClick={loginByQRCode}
-                disabled={!!$user.qrCodeURL}
-            >
-                获取二维码
-            </Button>
-            <Button className={classes.button} size='large' onClick={handleMethod(2)}>
-                账号密码登录
-            </Button>
+            <ButtonGroup variant='outlined' size='large'>
+                <Button onClick={loginByQRCode} disabled={!!$user.qrCodeURL}>获取二维码</Button>
+                <Button onClick={handleMethod(0)}>返回</Button>
+            </ButtonGroup>
         </>
     );
     const ByPassword = (
         <>
+            <TextField label='手机号' value={phone} autoComplete='tel-national' onChange={handlePhone} />
             <TextField
-                variant='standard'
-                label='手机号'
-                className={classes.textField}
-                value={phone}
-                autoComplete='tel-national'
-                onChange={handlePhone}
-                margin='normal'
-            />
-            <TextField
-                variant='standard'
                 label='密码'
-                className={classes.textField}
                 value={password}
                 type='password'
                 autoComplete='current-password'
                 onChange={handlePassword}
-                margin='normal'
             />
-            <Button
-                className={classes.button}
-                variant='contained'
-                size='large'
-                type='submit'
-                disabled={!phone || !password}
-            >
-                登录
-            </Button>
-            <Button className={classes.button} size='large' onClick={handleMethod(1)}>
-                企业微信登录
-            </Button>
+            <ButtonGroup variant='outlined' size='large'>
+                <Button type='submit' disabled={!phone || !password}>登录</Button>
+                <Button onClick={handleMethod(0)}>返回</Button>
+            </ButtonGroup>
         </>
     );
     return (
-        <div className={classes.container}>
+        <div className={classes.background}>
             <img src={logo} className={classes.logoImage} alt='UNIQUE STUDIO' />
             <Modal open title='登录' hideBackdrop>
-                <form className={classes.login} onSubmit={handleLogin}>
-                    {[ChooseMethod, ByQRCode, ByPassword][method]}
-                </form>
+                <div className={classes.container}>
+                    <form className={classes.form} onSubmit={handleLogin}>
+                        {[ChooseMethod, ByQRCode, ByPassword][method]}
+                    </form>
+                </div>
             </Modal>
             {$component.progressOn && <Progress />}
         </div>

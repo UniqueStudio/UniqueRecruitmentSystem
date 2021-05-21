@@ -14,38 +14,36 @@ const useStyles = makeStyles(({ breakpoints, spacing }) => ({
         '50%': { backgroundPosition: '100% 20%' },
         '100%': { backgroundPosition: '0% 80%' },
     },
-    container: {
+    background: {
         height: '100vh',
         background: `linear-gradient(45deg, ${colors(200).join()})`,
-        animation: 'rainbow 50s ease infinite',
+        animation: '$rainbow 50s ease infinite',
         backgroundSize: '1800% 1800%',
     },
-    login: {
+    container: {
         height: 400,
-        [breakpoints.down('xs')]: {
-            width: 300,
+        [breakpoints.down('sm')]: {
+            width: '80vw',
         },
         width: 400,
         display: 'flex',
-        flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
     },
-    qrCode: {
-        width: 200,
+    form: {
+        display: 'grid',
+        gap: spacing(2),
+        justifyItems: 'center',
     },
-    textField: {
-        width: '65%',
+    qrCode: {
+        width: '100%',
+        maxWidth: spacing(30),
     },
     logoImage: {
         width: '10%',
         minWidth: 100,
-        height: 'auto',
         margin: spacing(1),
         userSelect: 'none',
-    },
-    button: {
-        marginTop: spacing(1),
     },
 }));
 
