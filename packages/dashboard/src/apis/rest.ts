@@ -357,8 +357,8 @@ export const setGroupAdmin = (uids: string[]) =>
 export const loginByQRCode = () =>
     apiWrapper(
         () => client.get<R<string>>(Endpoint.qrCode()),
-        async (url) => {
-            await apiWrapper(
+        (url) => {
+            void apiWrapper(
                 () => {
                     $user.setQRCode(url);
                     $component.enqueueSnackbar('请尽快用企业微信扫描二维码', 'success');
@@ -369,7 +369,10 @@ export const loginByQRCode = () =>
                     $user.setToken(token);
                     $component.enqueueSnackbar('已成功登录', 'success');
                 },
+                () => $user.setQRCode(''),
             );
+            // Toggle progress bar off immediately when users are scanning QRCode
+            $component.setProgress(false);
         },
     );
 
