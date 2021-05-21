@@ -22,7 +22,7 @@ const useStyles = makeStyles(({ breakpoints }) => ({
         '& tr': {
             height: '36px',
         },
-        [breakpoints.down('sm')]: {
+        [breakpoints.down('md')]: {
             writingMode: 'vertical-lr',
         },
     },

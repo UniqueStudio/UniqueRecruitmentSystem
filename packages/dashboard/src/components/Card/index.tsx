@@ -62,7 +62,7 @@ export const Card: FC<Props> = observer(({ candidate, index, toggleDetail }) => 
     const classes = useStyles({ disabled: abandoned, white: !evaluations.length, good, fair });
 
     const theme = useTheme();
-    const isMobile = useMediaQuery(theme.breakpoints.down('xs'));
+    const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
     const checked = $candidate.selected.has(id);
     const disabled = $candidate.selected.size !== 0 && $component.fabOn !== step;

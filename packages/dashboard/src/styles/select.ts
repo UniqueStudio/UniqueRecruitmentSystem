@@ -12,7 +12,7 @@ const useStyles = makeStyles(({ spacing, breakpoints }) => ({
         '& *:focus': {
             background: 'none',
         },
-        [breakpoints.down('xs')]: {
+        [breakpoints.down('sm')]: {
             marginLeft: 0,
         },
     },

@@ -7,7 +7,7 @@ const useStyles = makeStyles(({ spacing, transitions, breakpoints, palette, zInd
         zIndex: zIndex.drawer + 1,
         position: 'fixed',
         top: spacing(8),
-        [breakpoints.down('xs')]: {
+        [breakpoints.down('sm')]: {
             top: spacing(7),
         },
         right: 0,
@@ -21,7 +21,7 @@ const useStyles = makeStyles(({ spacing, transitions, breakpoints, palette, zInd
         [breakpoints.up('sm')]: {
             width: 400,
         },
-        [breakpoints.down('xs')]: {
+        [breakpoints.down('sm')]: {
             height: '75vh',
         },
         flex: '1',

@@ -21,7 +21,7 @@ const useStyles = makeStyles(({ transitions, mixins, spacing, breakpoints }) => 
             duration: transitions.duration.leavingScreen,
         }),
         width: spacing(9),
-        [breakpoints.down('sm')]: {
+        [breakpoints.down('md')]: {
             border: 0,
             width: '1px', // bugs in 0px, iOS <- I think it is fixed now
         },

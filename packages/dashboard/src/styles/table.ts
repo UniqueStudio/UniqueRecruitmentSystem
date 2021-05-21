@@ -10,13 +10,13 @@ const useStyles = makeStyles(({ spacing, breakpoints }) => ({
     dateSelection: {
         margin: spacing(1),
         width: 150,
-        [breakpoints.down('xs')]: {
+        [breakpoints.down('sm')]: {
             margin: spacing(0.5),
         },
     },
     tableButton: {
         margin: `${spacing(1)} ${spacing(2)}`,
-        [breakpoints.down('xs')]: {
+        [breakpoints.down('sm')]: {
             margin: `0 ${spacing(2)} ${spacing(2)}`,
         },
     },
@@ -34,7 +34,7 @@ const useStyles = makeStyles(({ spacing, breakpoints }) => ({
     },
     chip: {
         margin: `${spacing(1)} ${spacing(0.5)}`,
-        [breakpoints.down('xs')]: {
+        [breakpoints.down('sm')]: {
             margin: spacing(0.5),
         },
     },

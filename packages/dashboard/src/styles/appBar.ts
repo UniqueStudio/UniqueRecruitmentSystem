@@ -25,7 +25,7 @@ const useStyles = makeStyles(({ zIndex, palette, transitions, spacing, breakpoin
     menuButton: {
         marginLeft: spacing(2),
         marginRight: spacing(4),
-        [breakpoints.down('xs')]: {
+        [breakpoints.down('sm')]: {
             marginLeft: 0,
             marginRight: 0,
             padding: spacing(1),
@@ -35,7 +35,7 @@ const useStyles = makeStyles(({ zIndex, palette, transitions, spacing, breakpoin
         marginLeft: 'auto',
         display: 'flex',
         '& button': {
-            [breakpoints.down('xs')]: {
+            [breakpoints.down('sm')]: {
                 padding: spacing(1),
             },
         },

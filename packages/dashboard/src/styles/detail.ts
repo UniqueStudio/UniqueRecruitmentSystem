@@ -4,7 +4,7 @@ const useStyles = makeStyles(({ breakpoints, spacing }) => ({
     introContent: {
         display: 'flex',
         maxWidth: 720,
-        [breakpoints.down('sm')]: {
+        [breakpoints.down('md')]: {
             margin: spacing(1),
             '& button': {
                 width: 'auto',

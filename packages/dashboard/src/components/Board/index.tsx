@@ -22,7 +22,7 @@ export const Board: FC<Props> = observer(({ candidates, toggleDetail }) => {
     const classes = useStyles();
     const { $candidate } = useStores();
     const theme = useTheme();
-    const isMobile = useMediaQuery(theme.breakpoints.down('xs'));
+    const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
     const onDragEnd = useCallback(({ destination, source, type, draggableId }: DropResult) => {
         if (!destination) {

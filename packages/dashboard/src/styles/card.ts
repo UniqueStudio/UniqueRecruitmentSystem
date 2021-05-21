@@ -16,7 +16,7 @@ interface Props {
 const useStyles = makeStyles(({ breakpoints, spacing, zIndex }) => ({
     cardContainer: {
         padding: `${spacing(0.5)} ${spacing(1)}`,
-        [breakpoints.down('xs')]: {
+        [breakpoints.down('sm')]: {
             padding: spacing(0.5),
         },
     },
@@ -34,7 +34,7 @@ const useStyles = makeStyles(({ breakpoints, spacing, zIndex }) => ({
         justifyContent: 'center',
         alignItems: 'center',
         display: 'flex',
-        [breakpoints.down('sm')]: {
+        [breakpoints.down('md')]: {
             margin: `${spacing(1)} 0`,
             '& button': {
                 padding: spacing(1),

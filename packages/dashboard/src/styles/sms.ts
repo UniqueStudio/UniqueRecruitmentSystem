@@ -13,7 +13,7 @@ const useStyles = makeStyles(({ breakpoints, spacing }) => ({
         },
     },
     templateItem: {
-        [breakpoints.down('xs')]: {
+        [breakpoints.down('sm')]: {
             margin: spacing(0.5),
         },
         margin: spacing(1),
@@ -43,7 +43,7 @@ const useStyles = makeStyles(({ breakpoints, spacing }) => ({
     inputContainer: {
         display: 'grid',
         gridTemplateColumns: 'repeat(4, minmax(auto, 160px))',
-        [breakpoints.down('sm')]: {
+        [breakpoints.down('md')]: {
             gridTemplateColumns: 'repeat(2, minmax(auto, 160px))',
         },
         rowGap: spacing(2),
@@ -52,7 +52,7 @@ const useStyles = makeStyles(({ breakpoints, spacing }) => ({
     fullWidth: {
         overflowWrap: 'anywhere',
         gridColumn: '1 / 5',
-        [breakpoints.down('sm')]: {
+        [breakpoints.down('md')]: {
             gridColumn: '1 / 3',
         },
     },

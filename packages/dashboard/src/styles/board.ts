@@ -7,7 +7,7 @@ const useStyles = makeStyles(({ spacing, breakpoints }) => ({
             display: 'flex',
             width: 'max-content',
         },
-        [breakpoints.down('xs')]: {
+        [breakpoints.down('sm')]: {
             flexGrow: 1,
         },
     },

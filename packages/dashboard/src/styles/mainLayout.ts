@@ -10,11 +10,11 @@ const useStyles = makeStyles(({ spacing, breakpoints }) => ({
         flexGrow: 1,
         height: '100vh',
         overflowX: 'auto',
-        [breakpoints.down('sm')]: {
+        [breakpoints.down('md')]: {
             minWidth: 'calc(100vw - 1px)',
         },
         padding: spacing(2),
-        [breakpoints.down('xs')]: {
+        [breakpoints.down('sm')]: {
             padding: spacing(1),
         },
     },

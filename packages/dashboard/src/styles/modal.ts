@@ -17,7 +17,7 @@ const useStyles = makeStyles(({ palette, shadows, spacing, breakpoints }) => ({
         boxShadow: shadows[5],
         padding: spacing(1),
         outline: 'none',
-        [breakpoints.down('xs')]: {
+        [breakpoints.down('sm')]: {
             maxWidth: '100%',
         },
         maxHeight: '90%',

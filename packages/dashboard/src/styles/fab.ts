@@ -5,7 +5,7 @@ const useStyles = makeStyles(({ spacing, breakpoints, zIndex }) => ({
         position: 'fixed',
         right: spacing(5),
         bottom: spacing(5),
-        [breakpoints.down('xs')]: {
+        [breakpoints.down('sm')]: {
             right: spacing(3),
             bottom: spacing(3),
         },

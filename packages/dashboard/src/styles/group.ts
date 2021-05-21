@@ -10,7 +10,7 @@ const useStyles = makeStyles(({ spacing, breakpoints }) => ({
     },
     tableCell: {
         textAlign: 'center',
-        [breakpoints.down('xs')]: {
+        [breakpoints.down('sm')]: {
             padding: spacing(0.5),
             minWidth: spacing(10),
         },
