@@ -66,8 +66,8 @@ setAuthToken($user.token);
 
 const apiWrapper = async <T>(
     action: () => Promise<AxiosResponse<R<T>>>,
-    onSuccess: (data: T) => void | Promise<void>,
-    onFailure?: () => void | Promise<void>,
+    onSuccess: (data: T) => unknown,
+    onFailure?: () => unknown,
 ) => {
     $component.setProgress(true);
     try {
@@ -93,10 +93,7 @@ const apiWrapper = async <T>(
 
 export const allocateMany = (type: InterviewType, cids: string[]) =>
     apiWrapper(
-        () =>
-            client.put<R<{ id: string; time?: string }[]>>(Endpoint.candidateAllocation(type), {
-                cids,
-            }),
+        () => client.put<R<{ id: string; time?: string }[]>>(Endpoint.candidateAllocation(type), { cids }),
         (allocations) => {
             $candidate.allocateMany(
                 allocations.map(({ id, time }) => ({ id, time: time ? new Date(time) : undefined })),
@@ -168,12 +165,8 @@ export const moveCandidate = (cid: string, from: Step, to: Step) =>
             $candidate.moveOne(cid, to);
             return client.put<R>(Endpoint.candidateStep(cid), { from, to });
         },
-        () => {
-            $component.enqueueSnackbar('移动成功', 'success');
-        },
-        () => {
-            $candidate.moveOne(cid, from);
-        },
+        () => $component.enqueueSnackbar('移动成功', 'success'),
+        () => $candidate.moveOne(cid, from),
     );
 
 export const removeCandidate = (cid: string) =>
@@ -244,7 +237,7 @@ export const getAllRecruitments = async () => {
 export const getOneRecruitment = async (rid: string) =>
     apiWrapper(
         () => client.get<R<Recruitment<string>>>(Endpoint.recruitment(rid)),
-        ({ beginning, end, deadline, interviews, ...rest }) => {
+        ({ beginning, end, deadline, interviews, ...rest }) =>
             $recruitment.setRecruitment({
                 ...rest,
                 beginning: new Date(beginning),
@@ -254,8 +247,7 @@ export const getOneRecruitment = async (rid: string) =>
                     ...rest,
                     date: new Date(date),
                 })),
-            });
-        },
+            }),
     );
 
 export const createRecruitment = (
@@ -263,17 +255,13 @@ export const createRecruitment = (
 ) =>
     apiWrapper(
         () => client.post<R>(Endpoint.recruitments, data),
-        () => {
-            $component.enqueueSnackbar('已成功发起招新', 'success');
-        },
+        () => $component.enqueueSnackbar('已成功发起招新', 'success'),
     );
 
 export const setRecruitmentSchedule = (rid: string, data: Pick<Recruitment, 'beginning' | 'end' | 'deadline'>) =>
     apiWrapper(
         () => client.put<R>(Endpoint.schedule(rid), data),
-        () => {
-            $component.enqueueSnackbar('已成功修改招新信息', 'success');
-        },
+        () => $component.enqueueSnackbar('已成功修改招新信息', 'success'),
     );
 
 export const setRecruitmentInterviews = (
@@ -283,9 +271,7 @@ export const setRecruitmentInterviews = (
 ) =>
     apiWrapper(
         () => client.put<R>(Endpoint.interviews(rid, name), { interviews }),
-        () => {
-            $component.enqueueSnackbar('已成功更新面试安排', 'success');
-        },
+        () => $component.enqueueSnackbar('已成功更新面试安排', 'success'),
     );
 
 export const getVerifyCode = () =>
