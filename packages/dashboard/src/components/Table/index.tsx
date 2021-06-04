@@ -2,7 +2,7 @@ import { Button, Chip, Dialog, TextField, useMediaQuery, useTheme } from '@mater
 import { DataGrid, GridColDef } from '@material-ui/data-grid';
 import { StaticDateTimePicker } from '@material-ui/lab';
 import { observer } from 'mobx-react-lite';
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, useState } from 'react';
 
 import { allocateMany, allocateOne } from '@apis/rest';
 import { PERIOD_MAP } from '@config/consts';
@@ -20,7 +20,6 @@ export const Table: FC = observer(() => {
     const [time, setTime] = useState(new Date());
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-    useEffect(() => $candidate.deselectAll(), [$candidate.stepType]);
 
     const candidates =
         $candidate.groupBySteps[$candidate.stepType === StepType.teamInterview ? Step.群面时间选择 : Step.组面时间选择];

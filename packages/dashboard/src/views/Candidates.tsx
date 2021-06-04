@@ -33,15 +33,9 @@ const Candidates: FC = observer(() => {
     const [modal, setModal] = useState(false);
     const [step, setStep] = useState(0);
     const [index, setIndex] = useState(-1);
-    const [direction, setDirection] = useState<SlideProps['direction']>('left');
-    useEffect(() => {
-        $candidate.deselectAll();
-        $candidate.setSteps(StepType.all);
-    }, []);
+    const [direction, setDirection] = useState<SlideProps['direction']>('right');
 
-    useEffect(() => {
-        $candidate.deselectAll();
-    }, [$candidate.stepType, $candidate.group]);
+    useEffect(() => $candidate.setSteps(StepType.all), []);
 
     const candidates = $candidate.groupBySteps;
 

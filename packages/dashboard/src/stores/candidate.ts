@@ -116,10 +116,12 @@ export class CandidateStore {
     }
 
     setGroup(group: Group) {
+        this.deselectAll();
         this.group = group;
     }
 
     setSteps(stepType: StepType, steps?: Step[]) {
+        this.deselectAll();
         this.stepType = stepType;
         if (steps) {
             this.steps = steps;
