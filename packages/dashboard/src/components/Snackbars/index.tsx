@@ -23,7 +23,11 @@ export const Snackbars: FC<Props> = observer(({ maxItems = 5, autoHideDuration =
                     autoHideDuration={autoHideDuration}
                     variant={variant}
                     message={message}
-                    onExited={() => $component.removeSnackbar(key)}
+                    TransitionProps={{
+                        onExited() {
+                            $component.removeSnackbar(key);
+                        },
+                    }}
                 />
             ))}
         </div>
