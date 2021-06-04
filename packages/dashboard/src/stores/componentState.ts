@@ -82,7 +82,11 @@ export class ComponentStateStore {
 
     setDarkMode(darkMode?: boolean) {
         this.darkMode = darkMode;
-        primitiveStorage.setItem('darkMode', darkMode);
+        if (darkMode === undefined) {
+            primitiveStorage.removeItem('darkMode');
+        } else {
+            primitiveStorage.setItem('darkMode', darkMode);
+        }
     }
 
     setResumeProgress(progress: number, cid: string) {
