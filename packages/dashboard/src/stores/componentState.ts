@@ -2,6 +2,7 @@ import { makeAutoObservable } from 'mobx';
 import { OptionsObject, SnackbarKey, SnackbarMessage, VariantType } from 'notistack';
 
 import { Evaluation, Step } from '@config/enums';
+import { primitiveStorage } from '@utils/storage';
 
 interface Snackbar {
     message: SnackbarMessage;
@@ -21,11 +22,11 @@ export class ComponentStateStore {
 
     snackbars: Record<SnackbarKey, Snackbar> = {};
 
-    fabOn: Step = Step.报名;
+    fabOn = Step.报名;
 
     resumeProgresses: Record<string, number> = {};
 
-    darkMode?: boolean = undefined;
+    darkMode = primitiveStorage.getItem('darkMode');
 
     inputtingComment = {
         content: '',
@@ -83,6 +84,7 @@ export class ComponentStateStore {
 
     setDarkMode(darkMode?: boolean) {
         this.darkMode = darkMode;
+        primitiveStorage.setItem('darkMode', darkMode);
     }
 
     setResumeProgress(progress: number, cid: string) {
