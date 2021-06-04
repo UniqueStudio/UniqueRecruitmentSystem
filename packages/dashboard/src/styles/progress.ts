@@ -1,5 +1,4 @@
 import { makeStyles } from '@material-ui/core';
-import { pink } from '@material-ui/core/colors';
 
 const useStyles = makeStyles(({ zIndex }) => ({
     progress: {
@@ -8,12 +7,6 @@ const useStyles = makeStyles(({ zIndex }) => ({
         top: 0,
         left: 0,
         width: '100%',
-    },
-    color: {
-        backgroundColor: pink[500],
-    },
-    barColor: {
-        backgroundColor: pink[100],
     },
 }));
 

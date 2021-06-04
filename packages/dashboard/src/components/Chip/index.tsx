@@ -1,5 +1,4 @@
 import { Chip as MuiChip, Paper, Popover } from '@material-ui/core';
-import clsx from 'clsx';
 import React, { FC, memo, MouseEventHandler, useState } from 'react';
 
 import { Comment } from '@config/types';
@@ -12,7 +11,7 @@ interface Props {
 }
 
 export const Chip: FC<Props> = memo(({ comment: { content, evaluation, user }, onCopy, onRemove }) => {
-    const classes = useStyles();
+    const classes = useStyles({ evaluation });
     const [anchorEl, setAnchorEl] = useState<Element | null>(null);
 
     const handleOpen: MouseEventHandler = ({ currentTarget }) => {
@@ -24,15 +23,12 @@ export const Chip: FC<Props> = memo(({ comment: { content, evaluation, user }, o
     };
 
     const text = `${user.name}： ${content}`;
-    const color = ['danger', 'warning', 'success'][evaluation];
     return (
         <>
             <MuiChip
                 label={text}
                 className={classes.chip}
-                classes={{
-                    root: clsx(classes[color], classes[`root-${color}`]),
-                }}
+                clickable
                 onMouseOver={handleOpen}
                 onMouseOut={handleClose}
                 onClick={onCopy}
@@ -48,7 +44,7 @@ export const Chip: FC<Props> = memo(({ comment: { content, evaluation, user }, o
                 disableRestoreFocus
                 disableEnforceFocus
             >
-                <Paper className={clsx(classes.content, classes[color])}>{content}</Paper>
+                <Paper className={classes.content}>{content}</Paper>
             </Popover>
         </>
     );

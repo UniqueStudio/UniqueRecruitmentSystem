@@ -1,52 +1,35 @@
-import { makeStyles } from '@material-ui/core';
+import { alpha, makeStyles } from '@material-ui/core';
 
-import { colorToAlpha, colorToShadow, dangerColor, infoColor, successColor, warningColor } from './index';
+import { Evaluation } from '@config/enums';
 
-import { mergeKV } from '@utils/mergeKV';
-
-export const colorStyles = mergeKV(
-    ['info', 'success', 'warning', 'danger'],
-    [infoColor, successColor, warningColor, dangerColor].map((color) => ({
-        background: color,
-        color: 'white',
-        boxShadow: colorToShadow(color),
-    })),
-);
-
-const rootColorStyles = mergeKV(
-    ['root-info', 'root-success', 'root-warning', 'root-danger'],
-    [infoColor, successColor, warningColor, dangerColor].map((color) => ({
-        '& span': {
+const useStyles = makeStyles(({ spacing, palette }) => {
+    const colors = {
+        [Evaluation.good]: palette.success.main,
+        [Evaluation.fair]: palette.warning.main,
+        [Evaluation.poor]: palette.error.main,
+    };
+    return {
+        chip: ({ evaluation }: { evaluation: Evaluation }) => ({
+            margin: spacing(1),
+            cursor: 'pointer',
+            maxWidth: '90%',
+            background: colors[evaluation],
+            color: 'white',
+            '&:hover': {
+                background: alpha(colors[evaluation], 0.6),
+            },
+        }),
+        popover: {
             pointerEvents: 'none',
-            textOverflow: 'ellipsis',
-            overflow: 'hidden',
-            display: 'inline-block',
         },
-        '&:hover': {
-            background: colorToAlpha(color, 0.6),
-        },
-        '&:focus, &:active': {
-            background: color,
-        },
-    })),
-);
-
-const useStyles = makeStyles(({ spacing }) => ({
-    chip: {
-        margin: spacing(1),
-        cursor: 'pointer',
-        maxWidth: '90%',
-    },
-    popover: {
-        pointerEvents: 'none',
-    },
-    content: {
-        maxWidth: 400,
-        padding: spacing(2),
-        wordWrap: 'break-word',
-    },
-    ...colorStyles,
-    ...rootColorStyles,
-}));
+        content: ({ evaluation }: { evaluation: Evaluation }) => ({
+            maxWidth: 400,
+            background: colors[evaluation],
+            color: 'white',
+            padding: spacing(2),
+            wordWrap: 'break-word',
+        }),
+    };
+});
 
 export default useStyles;
