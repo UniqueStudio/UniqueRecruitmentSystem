@@ -20,7 +20,13 @@ class TypedStorage<T extends { [key: string]: unknown }> {
     }
 
     getItem<K extends string & keyof T>(key: K) {
-        return JSON.parse(this.storage.getItem(key) ?? 'undefined') as T[K] | undefined;
+        const value = this.storage.getItem(key);
+        if (value) {
+            try {
+                return JSON.parse(value) as T[K];
+            } catch {}
+        }
+        return undefined;
     }
 
     key(index: number) {
