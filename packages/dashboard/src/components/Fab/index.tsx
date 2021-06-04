@@ -5,7 +5,7 @@ import React, { FC, useState } from 'react';
 
 import { moveCandidate } from '@apis/rest';
 import { SelectInverse } from '@components/Icons';
-import { Step, StepType } from '@config/enums';
+import { Step } from '@config/enums';
 import { Candidate } from '@config/types';
 import { useStores } from '@hooks/useStores';
 import useStyles from '@styles/fab';
@@ -48,7 +48,7 @@ export const Fab: FC<Props> = observer(({ candidates, toggleOpen }) => {
         <SpeedDial
             ariaLabel='fab'
             className={classes.fab}
-            hidden={!$candidate.selected.size || $candidate.stepType === StepType.teamInterview}
+            hidden={!$candidate.selected.size}
             icon={<SpeedDialIcon />}
             onClose={closeFab}
             onOpen={openFab}
