@@ -1,6 +1,7 @@
-import { makeStyles } from '@material-ui/core';
+import { Theme } from '@material-ui/core';
+import { makeStyles } from '@material-ui/styles';
 
-const useStyles = makeStyles(({ spacing, transitions, breakpoints, palette, zIndex }) => ({
+const useStyles = makeStyles(({ spacing, transitions, breakpoints, palette, zIndex }: Theme) => ({
     collapse: {
         zIndex: zIndex.drawer + 1,
         position: 'fixed',

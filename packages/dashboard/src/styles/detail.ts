@@ -1,6 +1,7 @@
-import { makeStyles } from '@material-ui/core';
+import { Theme } from '@material-ui/core';
+import { makeStyles } from '@material-ui/styles';
 
-const useStyles = makeStyles(({ breakpoints, spacing }) => ({
+const useStyles = makeStyles(({ breakpoints, spacing }: Theme) => ({
     introContent: {
         maxWidth: 720,
         [breakpoints.down('md')]: {

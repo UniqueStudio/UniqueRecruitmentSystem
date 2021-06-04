@@ -1,4 +1,5 @@
-import { Color, makeStyles } from '@material-ui/core';
+import { Color, Theme } from '@material-ui/core';
+import { makeStyles } from '@material-ui/styles';
 
 import { getRainbow } from './index';
 
@@ -8,7 +9,7 @@ const colors = (i: keyof Color) => {
     return colorArray.slice(start).concat(colorArray.slice(0, start));
 };
 
-const useStyles = makeStyles(({ breakpoints, spacing }) => ({
+const useStyles = makeStyles(({ breakpoints, spacing }: Theme) => ({
     '@keyframes rainbow': {
         '0%': { backgroundPosition: '0% 80%' },
         '50%': { backgroundPosition: '100% 20%' },

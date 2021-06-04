@@ -1,6 +1,7 @@
-import { makeStyles } from '@material-ui/core';
+import { Theme } from '@material-ui/core';
+import { makeStyles } from '@material-ui/styles';
 
-const useStyles = makeStyles(({ spacing, typography: { button } }) => ({
+const useStyles = makeStyles(({ spacing, typography: { button } }: Theme) => ({
     paper: {
         display: 'flex',
         margin: spacing(1),

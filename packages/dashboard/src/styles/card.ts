@@ -1,4 +1,5 @@
-import { alpha, makeStyles } from '@material-ui/core';
+import { alpha, Theme } from '@material-ui/core';
+import { makeStyles } from '@material-ui/styles';
 
 interface Props {
     disabled: boolean;
@@ -7,7 +8,7 @@ interface Props {
     fair: number;
 }
 
-const useStyles = makeStyles(({ breakpoints, spacing, zIndex, palette }) => {
+const useStyles = makeStyles(({ breakpoints, spacing, zIndex, palette }: Theme) => {
     const R = alpha(palette.error.main, 0.1);
     const Y = alpha(palette.warning.main, 0.1);
     const G = alpha(palette.success.main, 0.1);

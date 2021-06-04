@@ -1,8 +1,9 @@
-import { alpha, makeStyles } from '@material-ui/core';
+import { alpha, Theme } from '@material-ui/core';
+import { makeStyles } from '@material-ui/styles';
 
 import { Evaluation } from '@config/enums';
 
-const useStyles = makeStyles(({ spacing, palette }) => {
+const useStyles = makeStyles(({ spacing, palette }: Theme) => {
     const colors = {
         [Evaluation.good]: palette.success.main,
         [Evaluation.fair]: palette.warning.main,

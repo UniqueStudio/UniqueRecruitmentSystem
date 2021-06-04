@@ -1,8 +1,9 @@
-import { makeStyles } from '@material-ui/core';
+import { Theme } from '@material-ui/core';
+import { makeStyles } from '@material-ui/styles';
 
 import { drawerWidth } from './index';
 
-const useStyles = makeStyles(({ zIndex, transitions, spacing, breakpoints }) => ({
+const useStyles = makeStyles(({ zIndex, transitions, spacing, breakpoints }: Theme) => ({
     appBar: {
         zIndex: zIndex.drawer + 1,
         transition: transitions.create(['width', 'margin'], {

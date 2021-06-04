@@ -1,6 +1,7 @@
-import { makeStyles } from '@material-ui/core';
+import { Theme } from '@material-ui/core';
+import { makeStyles } from '@material-ui/styles';
 
-const useStyles = makeStyles(({ spacing, breakpoints, zIndex }) => ({
+const useStyles = makeStyles(({ spacing, breakpoints, zIndex }: Theme) => ({
     fab: {
         position: 'fixed',
         right: spacing(5),

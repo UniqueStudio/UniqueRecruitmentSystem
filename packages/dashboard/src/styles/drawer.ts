@@ -1,8 +1,9 @@
-import { makeStyles } from '@material-ui/core';
+import { Theme } from '@material-ui/core';
+import { makeStyles } from '@material-ui/styles';
 
 import { drawerWidth } from './index';
 
-const useStyles = makeStyles(({ transitions, mixins, spacing, breakpoints }) => ({
+const useStyles = makeStyles(({ transitions, mixins, spacing, breakpoints }: Theme) => ({
     drawerPaper: {
         position: 'sticky',
         top: 0,

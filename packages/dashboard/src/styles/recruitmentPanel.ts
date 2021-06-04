@@ -1,6 +1,7 @@
-import { alpha, makeStyles } from '@material-ui/core';
+import { alpha, Theme } from '@material-ui/core';
+import { makeStyles } from '@material-ui/styles';
 
-const useStyles = makeStyles(({ spacing, palette }) => ({
+const useStyles = makeStyles(({ spacing, palette }: Theme) => ({
     blocksContainer: {
         marginTop: spacing(1),
         display: 'flex',
