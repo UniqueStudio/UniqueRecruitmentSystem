@@ -2,7 +2,7 @@ import { set } from 'idb-keyval';
 import { makeAutoObservable, toJS } from 'mobx';
 
 import { Message, User } from '@config/types';
-import { localStorage } from '@utils/storage';
+import { primitiveStorage } from '@utils/storage';
 
 export class UserStore {
     token: string;
@@ -18,11 +18,11 @@ export class UserStore {
     firstLoad = true;
 
     constructor() {
-        const storedToken = localStorage.getItem('token');
-        const payload = storedToken?.split('.')[1];
-        if (storedToken && payload) {
+        const token = primitiveStorage.getItem('token');
+        const payload = token?.split('.')[1];
+        if (token && payload) {
             const { exp } = JSON.parse(atob(payload));
-            this.token = exp * 1000 > Date.now() ? storedToken : '';
+            this.token = exp * 1000 > Date.now() ? token : '';
         } else {
             this.token = '';
         }
@@ -39,12 +39,12 @@ export class UserStore {
 
     setToken(token: string) {
         this.token = token;
-        localStorage.setItem('token', this.token);
+        primitiveStorage.setItem('token', this.token);
     }
 
     logout() {
         this.token = '';
-        localStorage.removeItem('token');
+        primitiveStorage.removeItem('token');
     }
 
     setUserInfo(userInfo: Partial<User>) {

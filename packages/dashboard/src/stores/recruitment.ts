@@ -3,12 +3,12 @@ import { makeAutoObservable, toJS } from 'mobx';
 
 import { Recruitment } from '@config/types';
 import { compareTitle } from '@utils/comparators';
-import { localStorage } from '@utils/storage';
+import { primitiveStorage } from '@utils/storage';
 
 export class RecruitmentStore {
     recruitments = new Map<string, Recruitment>();
 
-    viewingId = localStorage.getItem('viewingId') || '';
+    viewingId = primitiveStorage.getItem('viewingId') ?? '';
 
     constructor() {
         makeAutoObservable(this);
@@ -47,6 +47,6 @@ export class RecruitmentStore {
 
     setViewingRecruitment(rid: string) {
         this.viewingId = rid;
-        localStorage.setItem('viewingId', rid);
+        primitiveStorage.setItem('viewingId', rid);
     }
 }

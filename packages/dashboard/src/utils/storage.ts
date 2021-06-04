@@ -1,14 +1,9 @@
 /*
- * There are two storages in our dashboard, the first is IndexedDB and the second is LocalStorage.
- * To avoid (manual) serialization, objects are stored in IDB and plain strings are stored in LocalStorage.
+ * Both `IndexedDB` and `LocalStorage` are used in our dashboard.
+ * Objects are stored in `IndexedDB`, while primitives are stored in `LocalStorage`.
  */
 
-interface LocalStorageRecord {
-    token: string;
-    viewingId: string;
-}
-
-export class TypedStorage<T extends string> {
+class TypedStorage<T extends { [key: string]: unknown }> {
     private storage: Storage;
 
     constructor(storage: Storage) {
@@ -19,33 +14,43 @@ export class TypedStorage<T extends string> {
         return this.storage.length;
     }
 
-    // clear storage, except field "token"
-    clear() {
-        const token = this.storage.getItem('token');
-        this.storage.clear();
-        token && this.storage.setItem('token', token);
-    }
-
     // clear storage
-    clearAll() {
+    clear() {
         this.storage.clear();
     }
 
-    getItem(key: T) {
-        return this.storage.getItem(key);
+    getItem<K extends string & keyof T>(key: K) {
+        return JSON.parse(this.storage.getItem(key) ?? 'undefined') as T[K] | undefined;
     }
 
     key(index: number) {
-        return this.storage.key(index) as T | null;
+        return this.storage.key(index);
     }
 
-    removeItem(key: T): void {
+    removeItem<K extends string & keyof T>(key: K) {
         this.storage.removeItem(key);
     }
 
-    setItem(key: T, value: string) {
-        this.storage.setItem(key, value);
+    setItem<K extends string & keyof T>(key: K, value: T[K]) {
+        this.storage.setItem(key, JSON.stringify(value));
     }
 }
 
-export const localStorage = new TypedStorage<keyof LocalStorageRecord>(globalThis.localStorage);
+class PrimitiveStorage extends TypedStorage<{
+    token: string;
+    viewingId: string;
+    darkMode?: boolean;
+}> {
+    constructor(storage = globalThis.localStorage) {
+        super(storage);
+    }
+
+    // clear storage, except field "token"
+    clear() {
+        const token = this.getItem('token');
+        super.clear();
+        token && this.setItem('token', token);
+    }
+}
+
+export const primitiveStorage = new PrimitiveStorage();

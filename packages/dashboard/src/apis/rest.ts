@@ -5,7 +5,7 @@ import { API } from '@config/consts';
 import { GroupOrTeam, InterviewType, SMSType, Status, Step } from '@config/enums';
 import { Candidate, Interview, R, Recruitment, User } from '@config/types';
 import { stores } from '@stores/index';
-import { localStorage } from '@utils/storage';
+import { primitiveStorage } from '@utils/storage';
 
 const { $candidate, $component, $user, $recruitment } = stores;
 
@@ -118,7 +118,7 @@ export const allocateOne = (type: InterviewType, cid: string, time: Date) =>
     );
 
 export const getCandidates = (rid: string) => {
-    const viewing = localStorage.getItem('viewingId');
+    const viewing = primitiveStorage.getItem('viewingId');
     return apiWrapper(
         async () => {
             const candidates = await get<Map<string, Candidate>>('candidates');
@@ -207,7 +207,7 @@ export const getResume = async (cid: string, filename = 'resume') => {
 
 export const getAllRecruitments = async () => {
     const recruitments = await get<Map<string, Recruitment>>('recruitments');
-    const viewing = localStorage.getItem('viewingId');
+    const viewing = primitiveStorage.getItem('viewingId');
     if (recruitments) {
         $recruitment.setAll(recruitments);
         $component.enqueueSnackbar('成功获取招新信息', 'success');

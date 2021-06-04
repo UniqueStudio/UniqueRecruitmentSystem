@@ -20,7 +20,7 @@ import { GROUP_MAP, STEP_TYPE_MAP } from '@config/consts';
 import { Group, StepType } from '@config/enums';
 import { useStores } from '@hooks/useStores';
 import useStyles from '@styles/appBar';
-import { localStorage } from '@utils/storage';
+import { primitiveStorage } from '@utils/storage';
 import { titleConverter } from '@utils/titleConverter';
 
 export const AppBar: FC = observer(() => {
@@ -62,7 +62,7 @@ export const AppBar: FC = observer(() => {
 
     const refresh = () => {
         void clear();
-        localStorage.clear();
+        primitiveStorage.clear();
         location.reload();
     };
 
