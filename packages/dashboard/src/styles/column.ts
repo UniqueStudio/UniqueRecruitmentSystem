@@ -1,8 +1,6 @@
 import { makeStyles } from '@material-ui/core';
 
-import { colorToShadow } from './index';
-
-const useStyles = makeStyles(({ spacing, palette }) => ({
+const useStyles = makeStyles(({ spacing, palette, shadows }) => ({
     column: {
         margin: spacing(1),
         padding: spacing(1),
@@ -17,7 +15,7 @@ const useStyles = makeStyles(({ spacing, palette }) => ({
         marginLeft: spacing(5),
         marginRight: spacing(5),
         marginBottom: spacing(1),
-        boxShadow: colorToShadow(palette.primary.light),
+        boxShadow: shadows[5],
         userSelect: 'none',
     },
     columnTitle: {

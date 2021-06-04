@@ -1,59 +1,18 @@
-import { createTheme, responsiveFontSizes, ThemeOptions } from '@material-ui/core';
-import { blue } from '@material-ui/core/colors';
+import { createTheme, responsiveFontSizes } from '@material-ui/core';
+import { blue, grey, pink } from '@material-ui/core/colors';
 import { useMemo } from 'react';
 
-const darkTheme: ThemeOptions = {
+export const useTheme = (darkMode: boolean) => useMemo(() => responsiveFontSizes(createTheme({
     palette: {
-        mode: 'dark',
+        mode: darkMode ? 'dark' : 'light',
         primary: {
-            main: '#343434',
-            dark: '#000000',
-            light: '#484848',
-            contrastText: '#ffffff',
+            main: blue[darkMode ? 800 : 500],
         },
         secondary: {
-            main: '#ff7597',
+            main: pink[darkMode ? 700 : 300],
         },
-        background: {
-            default: '#121212',
-        },
-    },
-    components: {
-        MuiIconButton: {
-            styleOverrides: {
-                colorPrimary: {
-                    color: 'white',
-                },
-            },
-        },
-        MuiButton: {
-            styleOverrides: {
-                textPrimary: {
-                    color: 'white',
-                },
-            },
-        },
-        MuiCheckbox: {
-            styleOverrides: {
-                colorPrimary: {
-                    // override the checked checkbox styles
-                    // eslint-disable-next-line max-len
-                    // ref: https://material-ui.com/customization/components/#use-rulename-to-reference-a-local-rule-within-the-same-style-sheet
-                    '&$checked': 'inherit',
-                },
-            },
+        background: darkMode ? {} : {
+            default: grey[100],
         },
     },
-};
-
-const defaultTheme: ThemeOptions = {
-    palette: {
-        primary: blue,
-        background: {
-            default: '#f1f1f1',
-        },
-    },
-};
-
-export const useTheme = (darkMode: boolean) =>
-    useMemo(() => responsiveFontSizes(createTheme(darkMode ? darkTheme : defaultTheme)), [darkMode]);
+})), [darkMode]);

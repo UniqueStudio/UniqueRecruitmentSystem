@@ -1,6 +1,4 @@
-import { makeStyles } from '@material-ui/core';
-
-import { colorToAlpha } from '@styles/index';
+import { alpha, makeStyles } from '@material-ui/core';
 
 const useStyles = makeStyles(({ spacing, palette }) => ({
     blocksContainer: {
@@ -32,10 +30,10 @@ const useStyles = makeStyles(({ spacing, palette }) => ({
         position: 'absolute',
     },
     selected: {
-        boxShadow: `inset 0px 0px 0px 4px ${palette.primary.light}`,
+        boxShadow: `inset 0px 0px 0px 4px ${palette.secondary.main}`,
     },
     expired: {
-        background: colorToAlpha(palette.grey[200], 0.5),
+        background: alpha(palette.background.default, 0.9),
     },
     centerText: {
         marginLeft: 'auto',

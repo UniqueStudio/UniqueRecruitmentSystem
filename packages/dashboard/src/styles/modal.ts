@@ -1,7 +1,5 @@
 import { makeStyles } from '@material-ui/core';
 
-import { colorToShadow } from './index';
-
 const useStyles = makeStyles(({ palette, shadows, spacing, breakpoints }) => ({
     modalContainer: {
         display: 'flex',
@@ -12,9 +10,6 @@ const useStyles = makeStyles(({ palette, shadows, spacing, breakpoints }) => ({
         display: 'flex',
         flexDirection: 'column',
         position: 'absolute',
-        borderRadius: 6,
-        backgroundColor: palette.background.paper,
-        boxShadow: shadows[5],
         padding: spacing(1),
         outline: 'none',
         [breakpoints.down('sm')]: {
@@ -30,7 +25,7 @@ const useStyles = makeStyles(({ palette, shadows, spacing, breakpoints }) => ({
         marginLeft: spacing(5),
         marginRight: spacing(5),
         marginBottom: spacing(1),
-        boxShadow: colorToShadow(palette.primary.light),
+        boxShadow: shadows[5],
         userSelect: 'none',
     },
     modalTitle: {

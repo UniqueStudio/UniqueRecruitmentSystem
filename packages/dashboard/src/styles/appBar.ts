@@ -2,10 +2,9 @@ import { makeStyles } from '@material-ui/core';
 
 import { drawerWidth } from './index';
 
-const useStyles = makeStyles(({ zIndex, palette, transitions, spacing, breakpoints }) => ({
+const useStyles = makeStyles(({ zIndex, transitions, spacing, breakpoints }) => ({
     appBar: {
         zIndex: zIndex.drawer + 1,
-        background: `linear-gradient(60deg, ${palette.primary.main}, ${palette.primary.dark})`,
         transition: transitions.create(['width', 'margin'], {
             easing: transitions.easing.sharp,
             duration: transitions.duration.leavingScreen,

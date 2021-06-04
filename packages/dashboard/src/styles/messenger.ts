@@ -1,7 +1,5 @@
 import { makeStyles } from '@material-ui/core';
 
-import { colorToAlpha } from './index';
-
 const useStyles = makeStyles(({ spacing, transitions, breakpoints, palette, zIndex }) => ({
     collapse: {
         zIndex: zIndex.drawer + 1,
@@ -54,13 +52,13 @@ const useStyles = makeStyles(({ spacing, transitions, breakpoints, palette, zInd
         height: 'auto',
         padding: spacing(1),
         whiteSpace: 'normal',
-        background: colorToAlpha(palette.secondary.light, 0.3),
+        background: palette.secondary.light,
         '& > *': {
             whiteSpace: 'normal',
         },
     },
     myChip: {
-        background: colorToAlpha(palette.primary.main, 0.8),
+        background: palette.primary.light,
         color: palette.primary.contrastText,
     },
     myDivider: {
