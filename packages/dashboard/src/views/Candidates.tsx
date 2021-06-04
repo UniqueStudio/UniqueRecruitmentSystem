@@ -57,7 +57,7 @@ const Candidates: FC = observer(() => {
         }
     };
 
-    const toggleDetail = (newStep: number) => (newIndex: number) => () => {
+    const toggleDetail = (newStep: number, newIndex: number) => () => {
         setStep(newStep);
         setIndex(newIndex);
     };

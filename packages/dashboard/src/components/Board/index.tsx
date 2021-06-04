@@ -15,7 +15,7 @@ import useStyles from '@styles/board';
 
 interface Props {
     candidates: Candidate[][];
-    toggleDetail: (detail: number) => (index: number) => () => void;
+    toggleDetail: (step: number, index: number) => () => void;
 }
 
 export const Board: FC<Props> = observer(({ candidates, toggleDetail }) => {
@@ -47,7 +47,7 @@ export const Board: FC<Props> = observer(({ candidates, toggleDetail }) => {
 
     const CardsInStep = (step: Step) =>
         candidates[step].map((candidate, j) => (
-            <Card candidate={candidate} index={j} key={candidate.id} toggleDetail={toggleDetail(step)(j)} />
+            <Card candidate={candidate} index={j} key={candidate.id} toggleDetail={toggleDetail(step, j)} />
         ));
 
     return (
@@ -61,6 +61,7 @@ export const Board: FC<Props> = observer(({ candidates, toggleDetail }) => {
                                     label: STEP_MAP.get(step)!,
                                     value: step.toString(),
                                     component: <>{CardsInStep(step)}</>,
+                                    to: step.toString(),
                                 }))}
                                 variant='scrollable'
                                 classes={{ paper: classes.tabContainer }}
