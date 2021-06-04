@@ -1,12 +1,12 @@
+import { Color } from '@material-ui/lab';
 import { makeAutoObservable } from 'mobx';
-import { OptionsObject, SnackbarKey, SnackbarMessage, VariantType } from 'notistack';
 
 import { Evaluation, Step } from '@config/enums';
 import { primitiveStorage } from '@utils/storage';
 
 interface Snackbar {
-    message: SnackbarMessage;
-    options: OptionsObject;
+    message: string;
+    variant: Color;
 }
 
 export class ComponentStateStore {
@@ -20,7 +20,7 @@ export class ComponentStateStore {
 
     recruitmentPanelOpen = false;
 
-    snackbars: Record<SnackbarKey, Snackbar> = {};
+    snackbars: Record<string, Snackbar> = {};
 
     fabOn = Step.报名;
 
@@ -65,16 +65,14 @@ export class ComponentStateStore {
         this.drawerOpen = open ?? !this.drawerOpen;
     }
 
-    enqueueSnackbar(message: SnackbarMessage, variant: VariantType) {
+    enqueueSnackbar(message: string, variant: Color) {
         this.snackbars[performance.now()] = {
             message,
-            options: {
-                variant,
-            },
+            variant,
         };
     }
 
-    removeSnackbar(key: SnackbarKey) {
+    removeSnackbar(key: string) {
         delete this.snackbars[key];
     }
 

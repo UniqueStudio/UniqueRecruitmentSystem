@@ -6,9 +6,8 @@ import React, { FC, lazy, Suspense } from 'react';
 import { BrowserRouter, Route, RouteComponentProps, Switch } from 'react-router-dom';
 
 import { Login } from '@components/Login';
-import { Notifier } from '@components/Notifier';
 import { Progress } from '@components/Progress';
-import { Snackbar } from '@components/Snackbar';
+import { Snackbars } from '@components/Snackbars';
 import { useStores } from '@hooks/useStores';
 import { MainLayout } from '@layouts/MainLayout';
 import useStyles from '@styles/global';
@@ -47,9 +46,7 @@ export const App: FC = () => {
             <Theme>
                 <LocalizationProvider dateAdapter={AdapterDateFns}>
                     <BrowserRouter>
-                        <Snackbar>
-                            <Notifier />
-                        </Snackbar>
+                        <Snackbars />
                         <Switch>
                             <Route path='/login' component={Login} />
                             <Route path='/' exact render={routeRender(<Welcome />)} />
