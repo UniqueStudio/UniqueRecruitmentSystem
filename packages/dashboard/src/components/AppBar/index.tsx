@@ -12,7 +12,7 @@ import clsx from 'clsx';
 import { clear } from 'idb-keyval';
 import { observer } from 'mobx-react-lite';
 import React, { FC, MouseEventHandler, useMemo, useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useRouteMatch } from 'react-router-dom';
 
 import { setAuthToken } from '@apis/rest';
 import { Select } from '@components/Select';
@@ -24,7 +24,7 @@ import { primitiveStorage } from '@utils/storage';
 import { titleConverter } from '@utils/titleConverter';
 
 export const AppBar: FC = observer(() => {
-    const { pathname } = useLocation();
+    const { url } = useRouteMatch();
     const classes = useStyles();
     const { $component, $user, $candidate, $recruitment } = useStores();
     const [logoutMenu, setLogoutMenu] = useState<Element | null>(null);
@@ -91,9 +91,9 @@ export const AppBar: FC = observer(() => {
                     [open, classes.menuButton],
                 )}
                 <Typography variant='h6' color='inherit' noWrap>
-                    {pathToTitle[pathname] || '808 / 2 = ?'}
+                    {pathToTitle[url] || '808 / 2 = ?'}
                 </Typography>
-                {(pathname === '/candidates' || pathname === '/interviews') && (
+                {(url === '/candidates' || url === '/interviews') && (
                     <>
                         <Select
                             data={[...STEP_TYPE_MAP.entries()].map(([value, item]) => ({ value, item }))}
