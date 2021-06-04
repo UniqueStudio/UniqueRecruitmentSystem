@@ -61,8 +61,8 @@ export class ComponentStateStore {
         this.recruitmentPanelOpen = !this.recruitmentPanelOpen;
     }
 
-    toggleDrawer() {
-        this.drawerOpen = !this.drawerOpen;
+    toggleDrawer(open?: boolean) {
+        this.drawerOpen = open ?? !this.drawerOpen;
     }
 
     enqueueSnackbar(message: SnackbarMessage, variant: VariantType) {
