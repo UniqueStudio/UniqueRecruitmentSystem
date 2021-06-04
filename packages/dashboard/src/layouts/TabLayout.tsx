@@ -1,6 +1,7 @@
 import { Paper, Tab } from '@material-ui/core';
 import { TabContext, TabList, TabListProps, TabPanel } from '@material-ui/lab';
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, useEffect } from 'react';
+import { Link, Route, Switch, useHistory, useRouteMatch } from 'react-router-dom';
 
 import useStyles from '@styles/tabLayout';
 
@@ -18,31 +19,39 @@ interface Props {
 
 export const TabLayout: FC<Props> = ({ items, variant = 'standard', classes }) => {
     const defaultClasses = useStyles();
-    const [tab, setTab] = useState(items[0].value);
+    const { url } = useRouteMatch();
+    const tabs = items.map(({ value, ...props }) => ({ ...props, value: `${url}/${value}` }));
+    const routeMatch = useRouteMatch(tabs.map(({ value }) => value));
+    const history = useHistory();
 
     useEffect(() => {
-        setTab(items[0].value);
-    }, [items]);
+        if (!routeMatch && tabs[0]) {
+            history.push(tabs[0].value);
+        }
+    }, [routeMatch, tabs]);
 
-    return items.find(({ value }) => value === tab) ? (
+    return routeMatch ? (
         <Paper className={classes?.paper}>
-            <TabContext value={tab}>
+            <TabContext value={routeMatch.url}>
                 <TabList
-                    onChange={(event, newValue) => setTab(newValue)}
                     centered={variant === 'standard'}
                     variant={variant}
                     scrollButtons
                     allowScrollButtonsMobile
                 >
-                    {items.map(({ label, value }) => (
-                        <Tab label={label} value={value} key={value} />
+                    {tabs.map(({ label, value }) => (
+                        <Tab label={label} value={value} key={value} component={Link} to={value} />
                     ))}
                 </TabList>
-                {items.map(({ value, component }) => (
-                    <TabPanel value={value} key={value} classes={{ root: defaultClasses.tabPanel }}>
-                        {component}
-                    </TabPanel>
-                ))}
+                <Switch>
+                    {tabs.map(({ value, component }) => (
+                        <Route key={value} path={value}>
+                            <TabPanel value={value} classes={{ root: defaultClasses.tabPanel }}>
+                                {component}
+                            </TabPanel>
+                        </Route>
+                    ))}
+                </Switch>
             </TabContext>
         </Paper>
     ) : null;

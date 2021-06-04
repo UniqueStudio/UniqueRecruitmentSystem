@@ -18,17 +18,18 @@ import {
 import clsx from 'clsx';
 import { observer } from 'mobx-react-lite';
 import React, { FC } from 'react';
+import { useRouteMatch } from 'react-router-dom';
 
 import { Anchor } from '@components/Anchor';
 import { useStores } from '@hooks/useStores';
 import useStyles from '@styles/drawer';
 
 const listItems = [
-    { to: '/', text: '首页', icon: <HomeIcon /> },
-    { to: '/dashboard', text: '招新数据', icon: <TimelineIcon /> },
-    { to: '/interviews', text: '面试信息', icon: <DateRangeIcon /> },
-    { to: '/candidates', text: '选手信息', icon: <DashboardIcon /> },
-    { to: '/my', text: '组员信息', icon: <PeopleIcon /> },
+    { path: '/', text: '首页', exact: true, icon: <HomeIcon /> },
+    { path: '/dashboard', text: '招新数据', icon: <TimelineIcon /> },
+    { path: '/interviews', text: '面试信息', icon: <DateRangeIcon /> },
+    { path: '/candidates', text: '选手信息', icon: <DashboardIcon /> },
+    { path: '/my', text: '组员信息', icon: <PeopleIcon /> },
 ];
 
 export const Drawer: FC = observer(() => {
@@ -48,9 +49,13 @@ export const Drawer: FC = observer(() => {
             </div>
             <Divider />
             <List>
-                {listItems.map(({ to, text, icon }, index) => (
-                    <Anchor to={to} key={index}>
-                        <ListItem button onClick={$component.drawerOpen ? () => $component.toggleDrawer() : undefined}>
+                {listItems.map(({ path, text, icon, exact }, index) => (
+                    <Anchor to={path} key={index}>
+                        <ListItem
+                            button
+                            selected={!!useRouteMatch({ path, exact })}
+                            onClick={() => $component.toggleDrawer(false)}
+                        >
                             <ListItemIcon className={classes.icon}>{icon}</ListItemIcon>
                             <ListItemText primary={text} />
                         </ListItem>
