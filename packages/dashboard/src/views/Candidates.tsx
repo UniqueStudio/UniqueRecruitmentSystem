@@ -49,13 +49,7 @@ const Candidates: FC = observer(() => {
         setIndex(-1);
     };
 
-    const handleNextIndex = (newIndex: number) => {
-        if (newIndex >= candidates[step].length || newIndex < 0) {
-            setIndex(-1);
-        } else {
-            setIndex(newIndex);
-        }
-    };
+    const handleNextIndex = (index: number) => setIndex(candidates[step][index] ? index : -1);
 
     const toggleDetail = (newStep: number, newIndex: number) => () => {
         setStep(newStep);
@@ -85,7 +79,7 @@ const Candidates: FC = observer(() => {
                 ),
                 [candidates],
             )}
-            <Fab candidates={candidates[$component.fabOn] || []} toggleOpen={toggleOpen} />
+            <Fab candidates={candidates[$component.fabOn] ?? []} toggleOpen={toggleOpen} />
             <Dialog
                 open={dialog}
                 onClick={handleRemove}
@@ -97,17 +91,15 @@ const Candidates: FC = observer(() => {
             <Modal open={modal} onClose={toggleOpen('modal')} title='发送通知'>
                 <Template toggleOpen={toggleOpen('modal')} />
             </Modal>
-            <Modal open={index >= 0} onClose={toggleDetail(0)(-1)} direction={direction} title='详细信息'>
-                {step >= 0 && (
-                    <Slider
-                        index={index}
-                        handleLeft={handleLeft}
-                        handleRight={handleRight}
-                        handleNextIndex={handleNextIndex}
-                    >
-                        <SliderContent candidate={candidates[step][index]} />
-                    </Slider>
-                )}
+            <Modal open={index >= 0} onClose={handleLeft} direction={direction} title='详细信息'>
+                <Slider
+                    index={index}
+                    handleLeft={handleLeft}
+                    handleRight={handleRight}
+                    handleNextIndex={handleNextIndex}
+                >
+                    <SliderContent candidate={candidates[step][index]} />
+                </Slider>
             </Modal>
         </>
     );
