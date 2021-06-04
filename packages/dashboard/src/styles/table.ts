@@ -7,13 +7,6 @@ const useStyles = makeStyles(({ spacing, breakpoints }) => ({
             minWidth: 660,
         },
     },
-    dateSelection: {
-        margin: spacing(1),
-        width: 150,
-        [breakpoints.down('sm')]: {
-            margin: spacing(0.5),
-        },
-    },
     tableButton: {
         margin: `${spacing(1)} ${spacing(2)}`,
         [breakpoints.down('sm')]: {
