@@ -1,6 +1,6 @@
+import classNames from 'classnames';
 import React, { ChangeEvent, FC, memo } from 'react';
 
-import classNames from 'classnames';
 import useStyles from '../../style/TextArea';
 
 interface TextAreaProps {

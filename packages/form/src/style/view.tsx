@@ -1,6 +1,8 @@
 import { createStyles, Theme } from '@material-ui/core/styles';
+
 import bgLeft from '../asset/img/bgLeft.png';
 import bgRight from '../asset/img/bgRight.png';
+
 // import borderImg from '../asset/img/test.png';
 import MyTheme from './theme';
 const styles = ({ spacing, breakpoints }: Theme) =>

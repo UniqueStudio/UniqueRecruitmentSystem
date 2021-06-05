@@ -1,6 +1,5 @@
-import React, { PureComponent } from 'react';
-
 import classNames from 'classnames';
+import React, { PureComponent } from 'react';
 
 interface Props {
     on: boolean;

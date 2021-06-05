@@ -1,9 +1,11 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { Candidate, CandidateForm } from 'config/types';
-import { getCandidateInfo, submitCandidateForm } from 'services';
+
 import { showSnackbar } from './component';
 
 import type { RootState } from './index';
+
+import { Candidate, CandidateForm } from 'config/types';
+import { getCandidateInfo, submitCandidateForm } from 'services';
 
 const initialState: Candidate = {
     name: '',

@@ -89,7 +89,23 @@ module.exports = {
     env: {
         browser: true,
         es6: true,
-        node: true,
+        node: false,
     },
-    ignorePatterns: ['build', '**/*.js'],
+    ignorePatterns: ['build', '**/*.js', 'packages/form/**/*'],
+    overrides: [
+        {
+            files: ['packages/candidate-dashboard/**/*'],
+            rules: {
+                'react/react-in-jsx-scope': 'off',
+            },
+        },
+        {
+            files: ['packages/backend/**/*'],
+            env: {
+                browser: false,
+                es6: false,
+                node: true,
+            },
+        },
+    ],
 };

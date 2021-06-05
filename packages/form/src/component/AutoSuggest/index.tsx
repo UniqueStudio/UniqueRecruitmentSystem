@@ -1,7 +1,6 @@
-import React, { useState } from 'react';
-
 import { MenuItem, MenuList, Paper } from '@material-ui/core';
 import classNames from 'classnames';
+import React, { useState } from 'react';
 import Autosuggest, { InputProps } from 'react-autosuggest';
 
 import useStyles from '../../style/AutoSuggest';
@@ -21,7 +20,7 @@ export interface AutoSuggestProps<T> {
 function AutoSuggest<T>(props: AutoSuggestProps<T>) {
     const { id, value, items, getItemValue, onChange, onSelect, size = 10, labelSize = 4 } = props;
     const [suggestions, setSuggestions] = useState<T[]>([]);
-    const classes = useStyles({ labelSize, suggestionLength: suggestions.length }) as any;
+    const classes = useStyles({ labelSize, suggestionLength: suggestions.length });
 
     const getSuggestions = (suggestion: string) => {
         return suggestion.length === 0

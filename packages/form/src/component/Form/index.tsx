@@ -1,6 +1,6 @@
+import classNames from 'classnames';
 import React, { ChangeEvent, FC, KeyboardEvent, memo, MouseEvent, useEffect, useMemo, useRef, useState } from 'react';
 
-import classNames from 'classnames';
 import hlogo from '../../asset/img/hlogo.png';
 import { GENDERS, GRADES, GROUPS, RANKS, URL } from '../../config/const';
 import { Departments } from '../../config/department';
@@ -166,7 +166,7 @@ const Form: FC<FormProps> = memo((props) => {
     const Institute = (
         <AutoSuggest<string>
             id='学院'
-            items={Object.keys(Departments) as string[]}
+            items={Object.keys(Departments) }
             value={institute || ''}
             size={sizeSwitch({ 15: isPC, 21: isPad, 65: isMobile })}
             labelSize={sizeSwitch({ 4: isPC, 6: isPad, 15: isMobile })}

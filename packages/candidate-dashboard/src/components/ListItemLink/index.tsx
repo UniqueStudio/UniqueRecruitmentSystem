@@ -1,6 +1,6 @@
 import { ListItem, ListItemText, ListItemIcon } from '@material-ui/core';
-import { FC, MouseEventHandler } from 'react';
 import Link, { LinkProps } from 'next/link';
+import { FC, MouseEventHandler } from 'react';
 
 export interface ListItemLinkProps {
     icon?: React.ReactNode;

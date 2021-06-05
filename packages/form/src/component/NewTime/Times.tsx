@@ -1,19 +1,19 @@
 import { Chip, createStyles, Grid, List, ListItem, makeStyles, Theme } from '@material-ui/core';
-import React, { useContext, useEffect, useReducer, useState } from 'react';
-import Header from './Header';
-import Modal from './Modal';
-
-import { SelectDate } from './date';
-import { ToggleSnackbar } from './index';
-import { ClickedArray, initialState, reducer } from './reducer';
-
 import classNames from 'classnames';
+import React, { useContext, useEffect, useReducer, useState } from 'react';
+
 import { URL } from '../../config/const';
 import translate from '../../config/translate';
-import Submitted from '../Submitted';
-
 import fontStyle from '../../style/Font';
 import combineStyles from '../../utils/combindStyles';
+import Submitted from '../Submitted';
+
+import { SelectDate } from './date';
+import Header from './Header';
+import Modal from './Modal';
+import { ClickedArray, initialState, reducer } from './reducer';
+
+import { ToggleSnackbar } from './index';
 
 interface StyleProps {
     color?: 'white' | 'rgba(0, 0, 0, 0.26)' | undefined;

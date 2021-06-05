@@ -65,13 +65,13 @@ export const Group: FC = observer(() => {
                 return (
                     <Checkbox
                         checked={newAdmins.has(id) || isAdmin}
-                        onChange={({ target: { checked } }) =>
+                        onChange={({ target: { checked } }) => {
                             setNewAdmins((prevAdmins) => {
                                 const admins = new Set(prevAdmins);
                                 checked ? admins.add(id) : admins.delete(id);
                                 return admins;
-                            })
-                        }
+                            });
+                        }}
                         disabled={!$user.isAdminOrCaptain || isAdmin}
                         size={isMobile ? 'small' : 'medium'}
                     />

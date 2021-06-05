@@ -1,17 +1,16 @@
+import { ThemeProvider } from '@material-ui/core';
+import CssBaseline from '@material-ui/core/CssBaseline';
 import type { AppProps } from 'next/app';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import { ThemeProvider } from '@material-ui/core';
-import { Provider } from 'react-redux';
 import { FC } from 'react';
+import { Provider } from 'react-redux';
 
 import Snackbar from 'components/Snackbar';
-import theme from 'styles/theme';
 import Layout from 'layout';
-
 import store, { useAppDispatch, useAppSelector } from 'store';
 import { resetSnackbar } from 'store/component';
+import theme from 'styles/theme';
 
 import '../styles/globals.css';
 

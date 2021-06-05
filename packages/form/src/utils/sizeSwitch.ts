@@ -3,7 +3,7 @@ interface SizeSwitchObj {
 }
 
 export const sizeSwitch = (obj: SizeSwitchObj) => {
-    let size: number = 1;
+    let size = 1;
     for (const [k, v] of Object.entries(obj)) {
         if (v) {
             size = Number.parseInt(k, 10);

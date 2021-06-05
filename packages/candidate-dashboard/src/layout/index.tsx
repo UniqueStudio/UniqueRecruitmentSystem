@@ -11,8 +11,9 @@ import {
 } from '@material-ui/core';
 import { Home as HomeIcon, Menu as MenuIcon, Edit as EditIcon } from '@material-ui/icons';
 import clsx from 'clsx';
-import ListItemLink from 'components/ListItemLink';
 import { FC, useEffect, useState } from 'react';
+
+import { ListItemLink } from 'components/ListItemLink';
 import { useAppSelector } from 'store';
 
 const drawerWidth = 300;

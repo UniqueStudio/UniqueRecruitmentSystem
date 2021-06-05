@@ -1,7 +1,7 @@
-import React, { ChangeEvent, memo } from 'react';
-
 import { InputBase, InputLabel } from '@material-ui/core';
 import classNames from 'classnames';
+import React, { ChangeEvent, memo } from 'react';
+
 import useStyles from '../../style/Input';
 
 interface InputProps {

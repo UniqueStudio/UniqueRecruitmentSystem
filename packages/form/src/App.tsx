@@ -1,5 +1,6 @@
 import { CssBaseline } from '@material-ui/core';
 import React, { PureComponent } from 'react';
+
 import './style/index.scss';
 import Container from './view';
 

@@ -1,6 +1,7 @@
 import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 import classNames from 'classnames';
 import React, { PureComponent } from 'react';
+
 // import borderTop from '../asset/img/borderTop.png';
 import header from '../asset/img/headerSP.png';
 import Dialog from '../component/Dialog';
@@ -15,7 +16,7 @@ import { Variant } from '../config/types';
 import styles from '../style/view';
 import { titleConverter } from '../utils/titleConverter';
 
-interface Props extends WithStyles<typeof styles> {}
+type Props = WithStyles<typeof styles>;
 
 class Container extends PureComponent<Props> {
     state = {

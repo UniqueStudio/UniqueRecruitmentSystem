@@ -17,6 +17,7 @@ import { DashboardRounded as DashboardIcon } from '@material-ui/icons';
 import { NextPage } from 'next';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
+
 import { getVerificationCode, GetVerificationCodeResp, loginCandidate, LoginCandidateResp } from 'services';
 import { useAppDispatch } from 'store';
 import { showSnackbar } from 'store/component';
@@ -81,9 +82,9 @@ const Login: NextPage = () => {
             });
         }, 1000);
         setCountdown({ time: 59, send: true, id });
-        dispatch(async (dispatch) => {
-            const res: GetVerificationCodeResp = await getVerificationCode(phone).catch((e) => {
-                return { type: 'error', message: e?.message };
+        return dispatch(async (dispatch) => {
+            const res: GetVerificationCodeResp = await getVerificationCode(phone).catch(({ message }) => {
+                return { type: 'error', message };
             });
             dispatch(showSnackbar({ type: res.type, message: res.type == 'success' ? '验证码已发送' : res?.message }));
         });
@@ -106,16 +107,16 @@ const Login: NextPage = () => {
             return;
         }
         setLogin(true);
-        dispatch(async (dispatch) => {
-            const res: LoginCandidateResp = await loginCandidate(phone, code).catch((e) => {
-                return { type: 'error', message: e?.message };
+        return dispatch(async (dispatch) => {
+            const res: LoginCandidateResp = await loginCandidate(phone, code).catch(({ message }) => {
+                return { type: 'error', message };
             });
             setLogin(false);
             if (res.type != 'success') {
                 dispatch(showSnackbar({ type: res.type, message: res?.message }));
             } else {
                 setToken(res.token ?? '');
-                router.push('/');
+                return router.push('/');
             }
         });
     };

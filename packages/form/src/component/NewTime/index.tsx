@@ -3,6 +3,7 @@ import React from 'react';
 
 import { Variant } from '../../config/types';
 import { UniqueTheme } from '../../style';
+
 import Times from './Times';
 
 interface TimeRootProps {

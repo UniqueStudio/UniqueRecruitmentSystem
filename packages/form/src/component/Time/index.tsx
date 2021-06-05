@@ -1,6 +1,6 @@
+import classNames from 'classnames';
 import React, { PureComponent } from 'react';
 
-import classNames from 'classnames';
 import { URL } from '../../config/const';
 import { Variant } from '../../config/types';
 import Button from '../Button';

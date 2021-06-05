@@ -93,7 +93,7 @@ export interface GetCandidateInfoResp {
     message?: string;
 }
 
-export const getCandidateInfo: () => Promise<GetCandidateInfoResp> = async () => {
+export const getCandidateInfo = async () => {
     const resp = await fetch(`${HOST}/${prefix}`, {
         method: 'GET',
         headers: {
@@ -101,5 +101,5 @@ export const getCandidateInfo: () => Promise<GetCandidateInfoResp> = async () =>
         },
     });
 
-    return resp.json();
+    return resp.json() as Promise<GetCandidateInfoResp>;
 };

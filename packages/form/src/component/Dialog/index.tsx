@@ -1,8 +1,7 @@
-import React, { memo } from 'react';
-
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@material-ui/core';
 import { TransitionProps } from '@material-ui/core/transitions';
 import Zoom from '@material-ui/core/Zoom';
+import React, { memo } from 'react';
 
 interface ActionButton {
     name: string;

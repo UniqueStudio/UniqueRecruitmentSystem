@@ -1,6 +1,6 @@
+import { LinearProgress } from '@material-ui/core';
 import React, { FC, memo } from 'react';
 
-import { LinearProgress } from '@material-ui/core';
 import useStyles from '../../style/UploadProgress';
 
 interface UploadProgressProps {

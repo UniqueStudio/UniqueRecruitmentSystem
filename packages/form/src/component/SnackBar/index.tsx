@@ -1,10 +1,10 @@
-import React, { FC, memo } from 'react';
-
 import { IconButton, Snackbar, SnackbarContent } from '@material-ui/core';
 import { amber, green } from '@material-ui/core/colors';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import { CheckCircle, Close, Error as ErrorIcon, Info, Warning } from '@material-ui/icons';
 import clsx from 'clsx';
+import React, { FC, memo } from 'react';
+
 import { Variant } from '../../config/types';
 
 const variantIcon = {

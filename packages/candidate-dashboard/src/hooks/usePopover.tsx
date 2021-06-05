@@ -1,5 +1,5 @@
-import { useState, useCallback } from 'react';
 import { Popover, PopoverProps, Typography } from '@material-ui/core';
+import { useState, useCallback } from 'react';
 
 export const usePopover = ({ content, ...props }: Partial<PopoverProps> & { content: string }) => {
     const [anchorEl, setAnchorEl] = useState<Element | null | undefined>(null);

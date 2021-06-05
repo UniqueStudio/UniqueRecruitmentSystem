@@ -1,6 +1,6 @@
+import classNames from 'classnames';
 import React, { PureComponent } from 'react';
 
-import classNames from 'classnames';
 import Button from '../Button';
 
 interface Props {

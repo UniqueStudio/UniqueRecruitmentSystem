@@ -1,21 +1,20 @@
 import { Button, Card, Container, Grid, GridSize, TextField } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
+import type { Breakpoint } from '@material-ui/core/styles/createBreakpoints';
+import clsx from 'clsx';
+import type { NextPage } from 'next';
 import { useMemo, useEffect } from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
-import clsx from 'clsx';
-
-import type { Breakpoint } from '@material-ui/core/styles/createBreakpoints';
-import type { NextPage } from 'next';
-import type { CandidateForm } from 'config/types';
 
 import AutoComplete, { MajorAutoComplete } from 'components/AutoComplete';
 import { Input } from 'components/Input';
 import { IsQuickSwitch } from 'components/IsQuickSwitch';
 import { GROUPS, GRADES, GENDERS, RANKS } from 'config/consts';
-import { useAppDispatch, useAppSelector } from 'store';
-import { setLayoutTitle } from 'store/component';
-import { fetchCandidate, updateCandidate } from 'store/candidate';
 import { Departments } from 'config/departments';
+import type { CandidateForm } from 'config/types';
+import { useAppDispatch, useAppSelector } from 'store';
+import { fetchCandidate, updateCandidate } from 'store/candidate';
+import { setLayoutTitle } from 'store/component';
 
 const useStyle = makeStyles((theme) => ({
     center: {
@@ -89,9 +88,7 @@ const Edit: NextPage = () => {
     // title
     useEffect(() => void dispatch(setLayoutTitle('编辑信息')), [dispatch]);
 
-    const handleSubmit = (data: CandidateForm) => {
-        dispatch(updateCandidate(data));
-    };
+    const handleSubmit = (data: CandidateForm) => dispatch(updateCandidate(data));
 
     // AutoComplete options
     const Deps = useMemo(() => Object.keys(Departments), []);

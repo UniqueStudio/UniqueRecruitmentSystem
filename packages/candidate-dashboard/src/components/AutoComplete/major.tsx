@@ -1,9 +1,9 @@
 import { FC, useMemo } from 'react';
 import { useWatch } from 'react-hook-form';
 
-import { Departments } from 'config/departments';
-
 import AutoComplete from './index';
+
+import { Departments } from 'config/departments';
 
 export const MajorAutoComplete: FC<{ className?: string }> = ({ className }) => {
     const institute = useWatch({ name: 'institute' });

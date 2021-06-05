@@ -18,7 +18,7 @@ export const checkToken = () => {
         if (token === null) {
             return false;
         }
-        if (token === '' || JSON.parse(token.split('.')[1]).exp > Date.now() / 1000) {
+        if (token === '' || (<{ exp: number }>JSON.parse(token.split('.')[1])).exp > Date.now() / 1000) {
             localStorage.removeItem('token');
             return false;
         }

@@ -1,6 +1,6 @@
+import classNames from 'classnames';
 import React, { memo } from 'react';
 
-import classNames from 'classnames';
 import useStyles from '../../style/Button';
 import '../../style/Button.scss';
 

@@ -1,6 +1,6 @@
+import classNames from 'classnames';
 import React, { FC, memo } from 'react';
 
-import classNames from 'classnames';
 import useStyles from '../../style/Submitted';
 
 interface SubmittedProps {

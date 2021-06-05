@@ -1,6 +1,6 @@
+import CircularProgress from '@material-ui/core/CircularProgress';
 import React, { memo } from 'react';
 
-import CircularProgress from '@material-ui/core/CircularProgress';
 import useStyles from '../../style/Loading';
 
 interface LoadingProps {

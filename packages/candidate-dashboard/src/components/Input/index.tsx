@@ -1,9 +1,9 @@
 import { makeStyles } from '@material-ui/core';
 import clsx from 'clsx';
 
-import { TextInput } from './text';
-import { SelectInput } from './select';
 import { FileInput } from './file';
+import { SelectInput } from './select';
+import { TextInput } from './text';
 
 const useStyle = makeStyles((theme) => ({
     input: {
