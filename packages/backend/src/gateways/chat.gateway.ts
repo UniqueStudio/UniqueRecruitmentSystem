@@ -4,7 +4,7 @@ import { Socket } from 'socket.io';
 import { Status } from '@constants/enums';
 import { Message } from '@interfaces/message.interface';
 
-@WebSocketGateway()
+@WebSocketGateway({ cors: true })
 export class ChatGateway {
     @SubscribeMessage('sendMessage')
     handleMessage(

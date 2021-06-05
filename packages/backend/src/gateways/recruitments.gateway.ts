@@ -5,7 +5,7 @@ import { Server } from 'socket.io';
 import { Status } from '@constants/enums';
 
 @Injectable()
-@WebSocketGateway()
+@WebSocketGateway({ cors: true })
 export class RecruitmentsGateway {
     @WebSocketServer()
     server!: Server;

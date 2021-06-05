@@ -8,7 +8,7 @@ import { AuthService } from '@services/auth.service';
 import { CandidatesService } from '@services/candidates.service';
 import { CommentsService } from '@services/comments.service';
 
-@WebSocketGateway()
+@WebSocketGateway({ cors: true })
 export class CommentsGateway {
     constructor(
         private readonly candidatesService: CandidatesService,

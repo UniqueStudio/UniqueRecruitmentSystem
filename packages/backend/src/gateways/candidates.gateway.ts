@@ -4,7 +4,7 @@ import { Server } from 'socket.io';
 import { Status, Step } from '@constants/enums';
 import { CandidateEntity } from '@entities/candidate.entity';
 
-@WebSocketGateway()
+@WebSocketGateway({ cors: true })
 export class CandidatesGateway {
     @WebSocketServer()
     server!: Server;
