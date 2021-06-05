@@ -1,41 +1,33 @@
-import React, { FC, memo } from 'react';
+import { Chip, Typography } from '@material-ui/core';
+import { observer } from 'mobx-react-lite';
+import React, { FC, ReactElement } from 'react';
 
-import classNames from 'classnames';
+import { GRADES } from '@config/consts';
+import { useStores } from '@hooks/useStores';
+import useStyles from '@styles/sms';
 
-import Chip from '@material-ui/core/Chip';
-import Typography from '@material-ui/core/Typography';
-
-import { GRADES } from '../../config/consts';
-import { Candidate } from '../../config/types';
-
-import useStyles from '../../styles/sms';
-
-interface Props {
-    selected: Candidate[];
-    onDelete: (name: string) => () => void;
-}
-
-const SMSPicker: FC<Props> = memo(({ onDelete, selected }) => {
+export const SMSPicker: FC = observer(() => {
+    const { $candidate } = useStores();
     const classes = useStyles();
+    const handleDeselect = (id: string) => () => {
+        $candidate.deselectOne(id);
+    };
+
+    const chips: ReactElement[] = [];
+    $candidate.selected.forEach(({ id, name, grade, institute }) =>
+        chips.push(
+            <Chip
+                key={id}
+                label={`${name} ${GRADES[grade]} ${institute}`}
+                onDelete={handleDeselect(id)}
+                className={classes.templateItem}
+                color='primary'
+            />,
+        ),
+    );
     return (
-        <div className={classNames(classes.templateContent, classes.templateItem, classes.picker)}>
-            {!selected.length ? (
-                <Typography variant='h6' className={classes.templateItem}>
-                    你未选中任何人!
-                </Typography>
-            ) : (
-                selected.map(({ _id, name, grade, institute }) => (
-                    <Chip
-                        key={_id}
-                        label={`${name} ${GRADES[grade]} ${institute}`}
-                        onDelete={onDelete(_id)}
-                        className={classes.templateItem}
-                        color='primary'
-                    />
-                ))
-            )}
+        <div className={classes.templateItem}>
+            {chips.length ? chips : <Typography variant='body1'>你未选中任何人!</Typography>}
         </div>
     );
 });
-
-export default SMSPicker;

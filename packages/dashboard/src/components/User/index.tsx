@@ -1,28 +1,24 @@
-import React, { ChangeEventHandler, FC, memo, useState } from 'react';
+import { Button, TextField } from '@material-ui/core';
+import { observer } from 'mobx-react-lite';
+import React, { ChangeEventHandler, FC, useState } from 'react';
 
-import Button from '@material-ui/core/Button';
-import Paper from '@material-ui/core/Paper';
-import TextField from '@material-ui/core/TextField';
-import Typography from '@material-ui/core/Typography';
+import { setMyInfo } from '@apis/rest';
+import { GENDERS, GROUP_MAP } from '@config/consts';
+import { useStores } from '@hooks/useStores';
+import useStyles from '@styles/user';
+import { titleConverter } from '@utils/titleConverter';
 
-import { GENDERS, GROUPS, GROUPS_ } from '../../config/consts';
-
-import { Props } from '../../containers/User';
-
-import useStyles from '../../styles/user';
-
-import { titleConverter } from '../../utils/titleConverter';
-
-const User: FC<Props> = memo(({ userInfo, enqueueSnackbar, submitInfo }) => {
-    const { username, gender, group, isAdmin, isCaptain, phone: phoneP, mail: mailP, joinTime } = userInfo;
+export const User: FC = observer(() => {
+    const { $user, $component } = useStores();
+    const { name, gender, group, isAdmin, isCaptain, phone: phoneP, mail: mailP, joinTime } = $user.info;
     const classes = useStyles();
     const [data, setData] = useState({
         phone: phoneP,
-        mail: mailP,
+        mail: mailP || '',
         password: '',
     });
 
-    if (!username) {
+    if (!name) {
         return null;
     }
 
@@ -32,36 +28,30 @@ const User: FC<Props> = memo(({ userInfo, enqueueSnackbar, submitInfo }) => {
         setData((prevData) => ({ ...prevData, [name]: value }));
     };
 
-    const checkMail = (value: string) => {
-        const re = /^(([^<>()[\].,;:\s@"]+(\.[^<>()[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/i;
-        return re.test(value);
-    };
+    const checkMail = (value: string) => /^\S+@\S+\.\S+$/.test(value);
 
-    const checkPhone = (value: string) => {
-        const re = /^1[3-9]\d{9}$/i;
-        return re.test(value);
-    };
+    const checkPhone = (value: string) => /^1[3-9]\d{9}$/i.test(value);
 
     const submitChange = () => {
         if (mail === mailP && phone === phoneP && !password) {
-            enqueueSnackbar('你没有做任何更改！', { variant: 'info' });
+            $component.enqueueSnackbar('你没有做任何更改', 'info');
             return;
         }
         if (!checkMail(mail)) {
-            enqueueSnackbar('邮箱格式不正确！', { variant: 'warning' });
+            $component.enqueueSnackbar('邮箱格式不正确', 'warning');
             return;
         }
         if (!checkPhone(phone)) {
-            enqueueSnackbar('手机号码格式不正确！', { variant: 'warning' });
+            $component.enqueueSnackbar('手机号码格式不正确', 'warning');
             return;
         }
-        submitInfo({ phone, mail, password });
+        return setMyInfo({ phone, mail, password });
     };
 
     const textFields = [
-        { label: '姓名', value: username },
+        { label: '姓名', value: name },
         { label: '性别', value: GENDERS[gender] },
-        { label: '组别', value: GROUPS[GROUPS_.indexOf(group)] },
+        { label: '组别', value: GROUP_MAP.get(group) },
         { label: '加入时间', value: titleConverter(joinTime) },
         { label: '组长?', value: isCaptain ? '是' : '否' },
         { label: '管理员?', value: isAdmin ? '是' : '否' },
@@ -72,31 +62,24 @@ const User: FC<Props> = memo(({ userInfo, enqueueSnackbar, submitInfo }) => {
         { label: '密码', value: password, name: 'password', autoComplete: 'new-password', type: 'password' },
     ];
     return (
-        <form>
-            <Paper className={classes.container}>
-                <div className={classes.title}>
-                    <Typography variant='h6'>我的信息</Typography>
-                </div>
+        <form className={classes.container}>
+            <div className={classes.textFieldContainer}>
                 {textFields.map((props, index) => (
-                    <TextField margin='normal' className={classes.userInfo} disabled key={index} {...props} />
+                    <TextField variant='standard' margin='normal' disabled key={index} {...props} />
                 ))}
                 {editableFields.map(({ name, ...otherProps }, index) => (
                     <TextField
+                        variant='standard'
                         onChange={handleChange(name)}
                         margin='normal'
-                        className={classes.userInfo}
                         key={index}
                         {...otherProps}
                     />
                 ))}
-                <div>
-                    <Button size='large' onClick={submitChange} color='primary'>
-                        修改
-                    </Button>
-                </div>
-            </Paper>
+            </div>
+            <Button size='large' onClick={submitChange}>
+                修改
+            </Button>
         </form>
     );
 });
-
-export default User;

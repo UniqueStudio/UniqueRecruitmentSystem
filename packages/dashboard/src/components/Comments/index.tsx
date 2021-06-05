@@ -1,107 +1,111 @@
-import React, { ChangeEventHandler, FC, KeyboardEventHandler, memo, useState } from 'react';
+import { Button, MenuItem, TextField, Typography } from '@material-ui/core';
+import { observer } from 'mobx-react-lite';
+import React, { ChangeEventHandler, FC, KeyboardEventHandler, useState } from 'react';
 
-import Button from '@material-ui/core/Button';
-import MenuItem from '@material-ui/core/MenuItem';
-import TextField from '@material-ui/core/TextField';
-import Typography from '@material-ui/core/Typography';
+import { addComment, removeComment } from '@apis/websocket';
+import { Chip } from '@components/Chip';
+import { Evaluation } from '@config/enums';
+import { Candidate, Comment } from '@config/types';
+import { useStores } from '@hooks/useStores';
+import useStyles from '@styles/comments';
 
-import Chip from '../Chip';
+interface Props {
+    candidate: Candidate;
+}
 
-import { Comment, Evaluation } from '../../config/types';
+export const Comments: FC<Props> = observer(({ candidate: { comments, id } }) => {
+    const { $component, $user } = useStores();
+    const classes = useStyles();
+    const [evaluation, setEvaluation] = useState($component.inputtingComment.evaluation);
+    const [content, setContent] = useState($component.inputtingComment.content);
 
-import { Props } from '../../containers/Comments';
+    const handleKey: KeyboardEventHandler = (event) => {
+        const { ctrlKey, charCode } = event;
+        if (ctrlKey && charCode === 13) {
+            setContent((prevContent) => prevContent + '\n');
+        }
+        if (!ctrlKey && charCode === 13) {
+            event.preventDefault();
+            handleSubmit();
+        }
+    };
 
-import useStyles from '../../styles/comments';
+    const changeEvaluation: ChangeEventHandler<HTMLInputElement> = ({ target: { value } }) => {
+        const newEvaluation = +value as Evaluation;
+        setEvaluation(newEvaluation);
+        $component.recordInputtingComment(newEvaluation, content);
+    };
 
-const Comments: FC<Props> = memo(
-    ({ savedComment, comments, uid, changeInputting, submit, cid, enqueueSnackbar, username, remove }) => {
-        const classes = useStyles();
-        const [evaluation, setEvaluation] = useState(savedComment.evaluation);
-        const [content, setContent] = useState(savedComment.content);
+    const changeContent: ChangeEventHandler<HTMLInputElement> = ({ target: { value } }) => {
+        setContent(value);
+        $component.recordInputtingComment(evaluation, value);
+    };
 
-        const handleKey: KeyboardEventHandler = (event) => {
-            const { ctrlKey, charCode } = event;
-            if (ctrlKey && charCode === 13) {
-                setContent((prevContent) => prevContent + '\n');
-            }
-            if (!ctrlKey && charCode === 13) {
-                event.preventDefault();
-                handleSubmit();
-            }
-        };
+    const handleSubmit = () => {
+        if (content && evaluation !== undefined) {
+            addComment(id, {
+                content,
+                evaluation,
+            });
+            setEvaluation(Evaluation.fair);
+            setContent('');
+        } else {
+            $component.enqueueSnackbar('请完整填写评论', 'warning');
+        }
+    };
 
-        const changeEvaluation: ChangeEventHandler<HTMLInputElement> = ({ target: { value } }) => {
-            const newEvaluation = +value as Evaluation;
-            setEvaluation(newEvaluation);
-            changeInputting(content, newEvaluation);
-        };
+    const handleRemove = (id: string) => () => {
+        removeComment(id);
+    };
 
-        const changeContent: ChangeEventHandler<HTMLInputElement> = ({ target: { value } }) => {
-            setContent(value);
-            changeInputting(value, evaluation);
-        };
+    const handleCopy = (comment: Comment) => () => {
+        setEvaluation(comment.evaluation);
+        setContent(comment.content);
+    };
 
-        const handleSubmit = () => {
-            if (content && evaluation !== undefined) {
-                submit(cid, {
-                    uid,
-                    content,
-                    evaluation,
-                    username,
-                });
-                setEvaluation(2);
-                setContent('');
-            } else {
-                enqueueSnackbar('请完整填写评论！', { variant: 'warning' });
-            }
-        };
-
-        const handleRemove = (id: string) => () => {
-            remove(cid, id);
-        };
-
-        const handleCopy = (comment: Comment) => () => {
-            setEvaluation(comment.evaluation);
-            setContent(comment.content);
-        };
-
-        return (
-            <div className={classes.comments}>
-                <div className={classes.evaluation}>
-                    <TextField select label='评价' value={evaluation} onChange={changeEvaluation}>
-                        <MenuItem value={2}>好</MenuItem>
-                        <MenuItem value={1}>中</MenuItem>
-                        <MenuItem value={0}>差</MenuItem>
-                    </TextField>
-                    <TextField
-                        label='输入评论'
-                        multiline
-                        rowsMax={4}
-                        className={classes.comment}
-                        value={content}
-                        onChange={changeContent}
-                        onKeyPress={handleKey}
-                    />
-                    <Button color='primary' size='large' onClick={handleSubmit}>
-                        发表评论
-                    </Button>
-                </div>
-                <div>
-                    <Typography variant='caption' color='textSecondary'>
-                        可以发表多个评论，点击自己的评论进行修改
-                    </Typography>
-                </div>
-                {comments.map((comment, index) => (
-                    <Chip
-                        comment={comment}
-                        key={index}
-                        onRemove={uid === comment.uid ? handleRemove(comment._id) : undefined}
-                        onCopy={uid === comment.uid ? handleCopy(comment) : undefined}
-                    />
-                ))}
+    return (
+        <div>
+            <div className={classes.evaluation}>
+                <TextField
+                    variant='standard'
+                    select
+                    label='评价'
+                    margin='normal'
+                    value={evaluation}
+                    onChange={changeEvaluation}
+                >
+                    <MenuItem value={2}>👍</MenuItem>
+                    <MenuItem value={1}>🤔</MenuItem>
+                    <MenuItem value={0}>👎</MenuItem>
+                </TextField>
+                <TextField
+                    variant='standard'
+                    label='输入评论'
+                    margin='normal'
+                    multiline
+                    maxRows={3}
+                    className={classes.comment}
+                    value={content}
+                    onChange={changeContent}
+                    onKeyPress={handleKey}
+                />
+                <Button size='large' onClick={handleSubmit}>
+                    发表评论
+                </Button>
             </div>
-        );
-    },
-);
-
-export default Comments;
+            <div>
+                <Typography variant='caption' color='textSecondary'>
+                    可以发表多个评论，点击自己的评论进行修改
+                </Typography>
+            </div>
+            {comments.map((comment, index) => (
+                <Chip
+                    comment={comment}
+                    key={index}
+                    onRemove={$user.info.id === comment.user.id ? handleRemove(comment.id) : undefined}
+                    onCopy={$user.info.id === comment.user.id ? handleCopy(comment) : undefined}
+                />
+            ))}
+        </div>
+    );
+});

@@ -1,25 +1,20 @@
-import React, { FC, memo, useEffect, useState } from 'react';
+import { Button, TextField } from '@material-ui/core';
+import React, { ChangeEventHandler, FC, memo, useEffect, useState } from 'react';
 
-import classNames from 'classnames';
+import { getVerifyCode } from '@apis/rest';
+import useStyles from '@styles/verify';
 
-import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
+interface Props {
+    code: string;
+    onChange: ChangeEventHandler<HTMLInputElement>;
+}
 
-import { Props } from '../../containers/Verify';
-
-import useStyles from '../../styles/verify';
-
-const Verify: FC<Props> = memo(({ onChange, code, getVerifyCode }) => {
+export const Verify: FC<Props> = memo(({ onChange, code }) => {
     const classes = useStyles();
     const [time, setTime] = useState(0);
     const [handle, setHandle] = useState(NaN);
 
-    useEffect(
-        () => () => {
-            window.clearInterval(handle);
-        },
-        [handle],
-    );
+    useEffect(() => () => window.clearInterval(handle), [handle]);
 
     const tick = () => {
         setTime((prevTime) => {
@@ -33,23 +28,22 @@ const Verify: FC<Props> = memo(({ onChange, code, getVerifyCode }) => {
     };
 
     const getCode = () => {
-        getVerifyCode();
+        void getVerifyCode();
         setTime(60);
         setHandle(window.setInterval(tick, 1000));
     };
     return (
-        <div className={classNames(classes.content, classes.item)}>
-            <Button color='primary' onClick={getCode} disabled={time > 0}>
+        <div className={classes.content}>
+            <Button onClick={getCode} disabled={time > 0}>
                 {time > 0 ? `${time}秒后重新获取` : '获取验证码'}
             </Button>
             <TextField
+                variant='standard'
                 label='输入验证码'
-                className={classNames(classes.item, classes.input)}
+                className={classes.input}
                 onChange={onChange}
                 value={code}
             />
         </div>
     );
 });
-
-export default Verify;

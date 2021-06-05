@@ -1,61 +1,62 @@
-import { Candidate, Recruitment, User } from '../config/types';
+/*
+ * Both `IndexedDB` and `LocalStorage` are used in our dashboard.
+ * Objects are stored in `IndexedDB`, while primitives are stored in `LocalStorage`.
+ */
 
-interface LocalStorageRecord {
-    token: string;
-    candidates: Candidate[];
-    viewing: string;
-    user: User;
-    group: User[];
-    recruitments: Recruitment[];
-}
-
-type StringKeyOf<T> = Extract<keyof T, string>;
-
-const stringify = (data: any) => (typeof data === 'string' ? data : JSON.stringify(data));
-
-export class TypedStorage<T extends Record<string, any>> {
+class TypedStorage<T extends { [key: string]: unknown }> {
     private storage: Storage;
+
     constructor(storage: Storage) {
         this.storage = storage;
     }
+
     get length() {
         return this.storage.length;
     }
 
-    // clear storage, except field "token"
-    clear() {
-        const token = this.storage.getItem('token');
-        this.storage.clear();
-        token && this.storage.setItem('token', token);
-    }
-
     // clear storage
-    clearAll() {
+    clear() {
         this.storage.clear();
     }
 
-    getItem<K extends StringKeyOf<T>>(key: K): T[K] | null {
-        const item = this.storage.getItem(key);
-        try {
-            return item ? JSON.parse(item) : null;
-        } catch (e) {
-            // @ts-ignore
-            return item;
+    getItem<K extends string & keyof T>(key: K) {
+        const value = this.storage.getItem(key);
+        if (value) {
+            try {
+                return JSON.parse(value) as T[K];
+            } catch {}
         }
+        return undefined;
     }
-    key(index: number): StringKeyOf<T> | null {
-        return this.storage.key(index) as any;
+
+    key(index: number) {
+        return this.storage.key(index);
     }
-    removeItem(key: StringKeyOf<T>): void {
+
+    removeItem<K extends string & keyof T>(key: K) {
         this.storage.removeItem(key);
     }
-    setItem<K extends StringKeyOf<T>>(key: K, value: T[K]) {
-        this.storage.setItem(key, stringify(value));
+
+    setItem<K extends string & keyof T>(key: K, value: T[K]) {
+        this.storage.setItem(key, JSON.stringify(value));
     }
 }
 
-// export const sessionStorage = new TypedStorage<SessionStorageRecord>(globalThis.sessionStorage);
-export const localStorage = new TypedStorage<LocalStorageRecord>(globalThis.localStorage);
+class PrimitiveStorage extends TypedStorage<{
+    token: string;
+    viewingId: string;
+    darkMode?: boolean;
+}> {
+    constructor(storage = globalThis.localStorage) {
+        super(storage);
+    }
 
-export const updateStorage = <K extends StringKeyOf<LocalStorageRecord>>(name: K) => (data: LocalStorageRecord[K]) =>
-    localStorage.setItem(name, data);
+    // clear storage, except field "token"
+    clear() {
+        const token = this.getItem('token');
+        super.clear();
+        token && this.setItem('token', token);
+    }
+}
+
+export const primitiveStorage = new PrimitiveStorage();

@@ -24,7 +24,40 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "strict": true
+    "strict": true,
+    "baseUrl": ".",
+    "paths": {
+      "@apis/*": [
+        "./src/apis/*"
+      ],
+      "@components/*": [
+        "./src/components/*"
+      ],
+      "@config/*": [
+        "./src/config/*"
+      ],
+      "@hooks/*": [
+        "./src/hooks/*"
+      ],
+      "@images/*": [
+        "./src/images/*"
+      ],
+      "@layouts/*": [
+        "./src/layouts/*"
+      ],
+      "@stores/*": [
+        "./src/stores/*"
+      ],
+      "@styles/*": [
+        "./src/styles/*"
+      ],
+      "@utils/*": [
+        "./src/utils/*"
+      ],
+      "@views/*": [
+        "./src/views/*"
+      ]
+    }
   },
   "exclude": [
     "node_modules",
@@ -32,6 +65,7 @@
   ],
   "include": [
     "src/**/*",
-    "typings/*"
+    "typings/*",
+    "vite.config.ts"
   ]
 }

@@ -5,16 +5,15 @@ interface Props {
     to: string;
 }
 
-const Anchor: FC<Props> = memo(({ to, children }) => (
+export const Anchor: FC<Props> = memo(({ to, children }) => (
     <Link
         to={to}
         style={{
             textDecoration: 'none',
             outline: 'none',
             color: 'inherit',
-        }}>
+        }}
+    >
         {children}
     </Link>
 ));
-
-export default Anchor;

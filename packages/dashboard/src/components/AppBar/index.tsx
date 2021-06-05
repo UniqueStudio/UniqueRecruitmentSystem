@@ -1,201 +1,143 @@
-import React, { ChangeEventHandler, FC, memo, MouseEventHandler, useContext, useMemo, useState } from 'react';
+import { AppBar as MuiAppBar, IconButton, Menu, MenuItem, Toolbar, Typography } from '@material-ui/core';
+import {
+    Brightness4 as BrightnessIcon,
+    Chat as ChatIcon,
+    Help as HelpIcon,
+    History as HistoryIcon,
+    Menu as MenuIcon,
+    Person as PersonIcon,
+    Refresh as RefreshIcon,
+} from '@material-ui/icons';
+import clsx from 'clsx';
+import { clear } from 'idb-keyval';
+import { observer } from 'mobx-react-lite';
+import React, { FC, MouseEventHandler, useMemo, useState } from 'react';
+import { useRouteMatch } from 'react-router-dom';
 
-import classNames from 'classnames';
+import { setAuthToken } from '@apis/rest';
+import { Select } from '@components/Select';
+import { GROUP_MAP, STEP_TYPE_MAP } from '@config/consts';
+import { Group, StepType } from '@config/enums';
+import { useStores } from '@hooks/useStores';
+import useStyles from '@styles/appBar';
+import { primitiveStorage } from '@utils/storage';
+import { titleConverter } from '@utils/titleConverter';
 
-import AppBar from '@material-ui/core/AppBar';
-import Collapse from '@material-ui/core/Collapse';
-import IconButton from '@material-ui/core/IconButton';
-import Menu from '@material-ui/core/Menu';
-import MenuItem from '@material-ui/core/MenuItem';
-import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
-import Brightness4 from '@material-ui/icons/Brightness4';
-import ChatIcon from '@material-ui/icons/Chat';
-import HelpIcon from '@material-ui/icons/HelpOutline';
-import MenuIcon from '@material-ui/icons/Menu';
-import PersonIcon from '@material-ui/icons/Person';
-import RefreshIcon from '@material-ui/icons/Refresh';
+export const AppBar: FC = observer(() => {
+    const { url } = useRouteMatch();
+    const classes = useStyles();
+    const { $component, $user, $candidate, $recruitment } = useStores();
+    const [logoutMenu, setLogoutMenu] = useState<Element | null>(null);
+    const [darkModeMenu, setDarkModeMenu] = useState<Element | null>(null);
 
-import Modal from '../Modal';
-import Select from '../Select';
+    const title = titleConverter($recruitment.viewingRecruitment?.name ?? '');
+    const open = $component.drawerOpen;
 
-import { GROUPS, GROUPS_ } from '../../config/consts';
-import { Group } from '../../config/types';
+    const openLogoutMenu: MouseEventHandler = ({ currentTarget }) => {
+        setLogoutMenu(currentTarget);
+    };
 
-import { Props } from '../../containers/AppBar';
-import Messenger from '../../containers/Messenger';
+    const closeLogoutMenu = () => {
+        setLogoutMenu(null);
+    };
 
-import useStyles from '../../styles/appBar';
-import { ThemeContext } from '../../styles/withRoot';
+    const openDarkModeMenu: MouseEventHandler = ({ currentTarget }) => {
+        setDarkModeMenu(currentTarget);
+    };
 
-import { titleConverter } from '../../utils/titleConverter';
-import { localStorage } from '../../utils/storage';
+    const closeDarkModeMenu = () => {
+        setDarkModeMenu(null);
+    };
 
-import { version } from '../../../package.json';
+    const handleLogout = () => {
+        closeLogoutMenu();
+        $user.logout();
+        setAuthToken('');
+    };
 
-const Bar: FC<Props> = memo(
-    ({ open, location: { pathname }, group, title, steps, logout, setSteps, setGroup, toggleDrawer }) => {
-        const classes = useStyles();
-        const [anchorEl, setAnchorEl] = useState<Element | null>(null);
-        const [modal, setModal] = useState(false);
-        const [messenger, setMessenger] = useState(false);
-        const { darkMode, setDarkMode } = useContext(ThemeContext);
+    const handleChangeDarkMode = (darkMode?: boolean) => () => {
+        closeDarkModeMenu();
+        $component.setDarkMode(darkMode);
+    };
 
-        const handleClick: MouseEventHandler = ({ currentTarget }) => {
-            setAnchorEl(currentTarget);
-        };
+    const refresh = () => {
+        void clear();
+        primitiveStorage.clear();
+        location.reload();
+    };
 
-        const handleClose = () => {
-            setAnchorEl(null);
-        };
+    const pathToTitle = {
+        '/': `Unique Studio Recruitment Dashboard v${__APP_VERSION__}`,
+        '/dashboard': title ? `${title}・数据展示` : '数据展示',
+        '/interviews': title ? `${title}・面试分配` : '面试分配',
+        '/candidates': title ? `${title}・选手信息` : '选手信息',
+        '/my': '组员信息',
+    };
 
-        const handleLogout = () => {
-            handleClose();
-            logout();
-        };
-
-        const handleChange = (type: 'group' | 'step'): ChangeEventHandler<{ name?: string; value: unknown }> => ({
-            target: { value },
-        }) => {
-            type === 'group' && setGroup(value as Group);
-            type === 'step' && setSteps(+(value as string));
-        };
-
-        const toggleModal = () => {
-            setModal((prevModal) => !prevModal);
-        };
-
-        const toggleMessenger = () => {
-            setMessenger((prevMessenger) => !prevMessenger);
-        };
-
-        const refresh = () => {
-            localStorage.clear();
-            globalThis.location.reload();
-        };
-
-        title = titleConverter(title);
-        const pathToTitle = {
-            '/': `Unique Studio Recruitment Dashboard v${version}`,
-            '/data': `${title}・数据展示`,
-            '/candidates': `${title}・选手信息`,
-            '/my': '组员信息',
-        };
-
-        const Suggestion = useMemo(
-            () => (
-                <div className={classes.suggestion}>
-                    当你想不出什么问题的时候，不妨参照这里：
-                    <br />
-                    <ul>
-                        <li>简单介绍一下你自己</li>
-                        <li>请评价一下你的熬测</li>
-                        <li>熬测之后你又学/看了什么</li>
-                        <li>未来规划</li>
-                        <li>个人优缺点</li>
-                        <li>你对我们团队了解有多少</li>
-                        <li>你为什么选择来我们团队</li>
-                        <li>对本组的理解（为什么选择xx组，为什么不选择xx组）</li>
-                        <li>40小时打卡</li>
-                        <li>加入团队后，你能为我们带来什么</li>
-                        <li>没能加入团队的话，你有什么打算</li>
-                        <li>
-                            考察合作意识（围绕各组合作展开）
-                            <ul>
-                                <li>design提出的不喜欢的设计（web、android、iOS）</li>
-                                <li>pm提出的不合理的需求（web、android、iOS、design）</li>
-                                <li>合作对方咕咕咕</li>
-                            </ul>
-                        </li>
-                        <li>考察责任感（如紧急项目、ddl）</li>
-                        <li>面对全新的知识领域，如何学习</li>
-                        <li>评价业界相关现象（对程序员这个职业的看法，前端娱乐圈，996，etc.）</li>
-                        <li>如何看待室友、同学他们的学习</li>
-                        <li>你想作为技术管理者还是技术专家</li>
-                        <li>团队风气（如互膜）</li>
-                        <li>你有什么问题要问我们吗</li>
-                    </ul>
+    return (
+        <MuiAppBar position='fixed' className={clsx(classes.appBar, { [classes.appBarShift]: open })}>
+            <Toolbar disableGutters={!open} classes={{ gutters: classes.appBarGutters }}>
+                {useMemo(
+                    () => (
+                        <IconButton
+                            color='inherit'
+                            onClick={() => $component.toggleDrawer()}
+                            className={clsx(classes.menuButton, { [classes.hide]: open })}
+                        >
+                            <MenuIcon />
+                        </IconButton>
+                    ),
+                    // eslint-disable-next-line
+                    [open, classes.menuButton],
+                )}
+                <Typography variant='h6' color='inherit' noWrap>
+                    {pathToTitle[url] || '808 / 2 = ?'}
+                </Typography>
+                {(url === '/candidates' || url === '/interviews') && (
+                    <>
+                        <Select
+                            data={[...STEP_TYPE_MAP.entries()].map(([value, item]) => ({ value, item }))}
+                            onChange={({ target }) => $candidate.setSteps(+(target.value as StepType))}
+                            currentValue={$candidate.stepType}
+                        />
+                        {$candidate.stepType !== StepType.teamInterview && (
+                            <Select
+                                data={[...GROUP_MAP.entries()].map(([value, item]) => ({ value, item }))}
+                                onChange={({ target }) => $candidate.setGroup(target.value as Group)}
+                                currentValue={$candidate.group}
+                            />
+                        )}
+                    </>
+                )}
+                <div className={clsx(open && classes.hide, classes.rightButtons)}>
+                    <IconButton color='inherit' onClick={() => $component.toggleRecruitmentPanel()}>
+                        <HistoryIcon />
+                    </IconButton>
+                    <IconButton color='inherit' onClick={() => $component.toggleMessenger()}>
+                        <ChatIcon />
+                    </IconButton>
+                    <IconButton color='inherit' onClick={() => $component.toggleSuggestion()}>
+                        <HelpIcon />
+                    </IconButton>
+                    <IconButton color='inherit' onClick={refresh}>
+                        <RefreshIcon />
+                    </IconButton>
+                    <IconButton color='inherit' onClick={openDarkModeMenu}>
+                        <BrightnessIcon />
+                    </IconButton>
+                    <IconButton color='inherit' onClick={openLogoutMenu}>
+                        <PersonIcon />
+                    </IconButton>
                 </div>
-            ),
-            // eslint-disable-next-line
-            [],
-        );
-        return (
-            <>
-                <AppBar position='fixed' className={classNames(classes.appBar, { [classes.appBarShift]: open })}>
-                    <Toolbar
-                        disableGutters={!open}
-                        classes={{ gutters: classes.appBarGutters, regular: classes.regular }}>
-                        {useMemo(
-                            () => (
-                                <IconButton
-                                    color='inherit'
-                                    onClick={toggleDrawer}
-                                    className={classNames(classes.menuButton, { [classes.hide]: open })}>
-                                    <MenuIcon />
-                                </IconButton>
-                            ),
-                            // eslint-disable-next-line
-                            [open, classes.menuButton],
-                        )}
-                        <Typography variant='h6' color='inherit' noWrap>
-                            {pathToTitle[pathname] || '808 / 2 = ?'}
-                        </Typography>
-                        {pathname === '/candidates' && (
-                            <>
-                                <Select
-                                    data={['全部', '群面']}
-                                    values={[0, 1]}
-                                    onChange={handleChange('step')}
-                                    currentValue={steps.length === 6 ? 0 : 1}
-                                />
-                                {steps.length === 6 && (
-                                    <Select
-                                        data={GROUPS}
-                                        values={GROUPS_}
-                                        onChange={handleChange('group')}
-                                        currentValue={group}
-                                    />
-                                )}
-                            </>
-                        )}
-                        {useMemo(
-                            () => (
-                                <div className={classNames(open && classes.hide, classes.rightButtons)}>
-                                    <IconButton color='inherit' onClick={toggleMessenger}>
-                                        <ChatIcon />
-                                    </IconButton>
-                                    <IconButton color='inherit' onClick={toggleModal}>
-                                        <HelpIcon />
-                                    </IconButton>
-                                    <IconButton color='inherit' onClick={refresh}>
-                                        <RefreshIcon />
-                                    </IconButton>
-                                    <IconButton color='inherit' onClick={setDarkMode}>
-                                        <Brightness4 />
-                                    </IconButton>
-                                    <IconButton color='inherit' onClick={handleClick}>
-                                        <PersonIcon />
-                                    </IconButton>
-                                </div>
-                            ),
-                            // eslint-disable-next-line
-                            [open, darkMode],
-                        )}
-                        <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleClose}>
-                            <MenuItem onClick={handleLogout}>退出</MenuItem>
-                        </Menu>
-                    </Toolbar>
-                </AppBar>
-                <Collapse in={messenger} classes={{ container: classes.collapse }}>
-                    <Messenger />
-                </Collapse>
-                <Modal title='面试问题提示' open={modal} onClose={toggleModal}>
-                    {Suggestion}
-                </Modal>
-            </>
-        );
-    },
-);
-
-export default Bar;
+                <Menu anchorEl={logoutMenu} open={!!logoutMenu} onClose={closeLogoutMenu}>
+                    <MenuItem onClick={handleLogout}>退出</MenuItem>
+                </Menu>
+                <Menu anchorEl={darkModeMenu} open={!!darkModeMenu} onClose={closeDarkModeMenu}>
+                    <MenuItem onClick={handleChangeDarkMode()}>跟随系统</MenuItem>
+                    <MenuItem onClick={handleChangeDarkMode(true)}>开启</MenuItem>
+                    <MenuItem onClick={handleChangeDarkMode(false)}>关闭</MenuItem>
+                </Menu>
+            </Toolbar>
+        </MuiAppBar>
+    );
+});

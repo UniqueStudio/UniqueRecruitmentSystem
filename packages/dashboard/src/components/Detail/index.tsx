@@ -1,105 +1,114 @@
-import React, { FC, memo, useState } from 'react';
+import { IconButton, InputAdornment, TextField, TextFieldProps, Typography } from '@material-ui/core';
+import { Download } from '@material-ui/icons';
+import clsx from 'clsx';
+import { observer } from 'mobx-react-lite';
+import React, { FC, useState } from 'react';
 
-import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
+import { getResume } from '@apis/rest';
+import { Modal } from '@components/Modal';
+import { GENDERS, GRADES, GROUP_MAP, RANKS } from '@config/consts';
+import { Candidate } from '@config/types';
+import { useStores } from '@hooks/useStores';
+import useStyles from '@styles/detail';
 
-import Modal from '../Modal';
+interface Props {
+    candidate: Candidate;
+}
 
-import { GENDERS, GRADES, GROUPS, GROUPS_, RANKS } from '../../config/consts';
+class Row {
+    constructor(public columns: TextFieldProps[], public className?: string) {}
+}
 
-import { Props } from '../../containers/Detail';
-
-import useStyles from '../../styles/detail';
-
-const Detail: FC<Props> = memo(({ info, downloadingResume, getResume }) => {
+export const Detail: FC<Props> = observer(({ candidate }) => {
+    const { $component } = useStores();
     const classes = useStyles();
-    const [modal, setModal] = useState(false);
+    const [introModal, setIntroModal] = useState(false);
 
-    const { cid, progress } = downloadingResume;
-    const {
-        _id,
-        name,
-        group,
-        gender,
-        grade,
-        institute,
-        intro,
-        mail,
-        major,
-        phone,
-        rank,
-        isQuick,
-        referrer,
-        resume,
-    } = info;
+    const { id, name, group, gender, grade, institute, intro, mail, major, phone, rank, isQuick, referrer, resume } =
+        candidate;
+    const progress = $component.resumeProgresses[id];
 
-    const items: {}[][] = [
-        [
+    const toggleIntroModalOpen = () => setIntroModal((prevModal) => !prevModal);
+
+    const downloadResume = () => getResume(id, resume);
+
+    const rows = [
+        new Row([
             { label: '姓名', value: name },
-            { label: '组别', value: GROUPS[GROUPS_.indexOf(group)] },
+            { label: '组别', value: GROUP_MAP.get(group) },
             { label: '性别', value: GENDERS[gender] },
-        ],
-        [
+        ]),
+        new Row([
             { label: '学院', value: institute },
             { label: '专业', value: major },
-        ],
-        [
+        ]),
+        new Row([
             { label: '年级', value: GRADES[grade] },
             { label: '加权', value: RANKS[rank] },
-        ],
-        [
+        ]),
+        new Row([
             { label: '邮箱', value: mail },
             { label: '电话号码', value: phone },
-        ],
-        [
-            { label: '是否快通', value: isQuick ? '是' : '否' },
-            { label: '推荐人', value: referrer || '无' },
-        ],
-        [{ label: '预览', value: intro, fullWidth: true, multiline: true, rowsMax: 3 }],
+        ]),
+        new Row(
+            [
+                { label: '是否快通', value: isQuick ? '是' : '否' },
+                { label: '推荐人', value: referrer || '无' },
+                {
+                    label: '简历',
+                    value: progress ? `${(progress * 100).toFixed(2)}%` : resume ?? '无',
+                    InputProps: {
+                        endAdornment: (
+                            <InputAdornment position='end'>
+                                <IconButton onClick={downloadResume} disabled={!resume || !!progress}>
+                                    <Download />
+                                </IconButton>
+                            </InputAdornment>
+                        ),
+                    },
+                },
+            ],
+            clsx(classes.detailRow, classes.resumeRow),
+        ),
+        new Row([
+            {
+                label: '自我介绍',
+                value: intro,
+                fullWidth: true,
+                multiline: true,
+                maxRows: 3,
+                variant: 'outlined',
+                InputProps: {
+                    classes: {
+                        root: classes.intro,
+                        input: classes.intro,
+                    },
+                },
+                onClick: toggleIntroModalOpen,
+            },
+        ]),
     ];
 
-    const toggleModalOpen = () => {
-        setModal((prevModal) => !prevModal);
-    };
-
-    const downloadResume = () => {
-        getResume(_id);
-    };
-
     return (
-        <>
-            <div className={classes.detail}>
-                {items.map((row, i) => (
-                    <div className={classes.detailRow} key={i}>
-                        {row.map((props, j) => (
-                            <TextField margin='normal' key={j} InputProps={{ readOnly: true }} {...props} />
-                        ))}
-                    </div>
-                ))}
-                <div className={classes.detailRow}>
-                    <Button size='large' color='primary' onClick={toggleModalOpen}>
-                        自我介绍
-                    </Button>
-                    <Button size='large' color='primary' onClick={downloadResume} disabled={!resume || !!progress}>
-                        {progress ? (cid === _id ? `${(progress * 100).toFixed(2)}%` : '下载中') : '简历下载'}
-                    </Button>
+        <div>
+            {rows.map(({ columns, className }, i) => (
+                <div className={className ?? classes.detailRow} key={i}>
+                    {columns.map((props, j) => (
+                        <TextField
+                            variant='standard'
+                            margin='normal'
+                            key={j}
+                            {...props}
+                            InputProps={{ ...props.InputProps, readOnly: true }}
+                        />
+                    ))}
                 </div>
-            </div>
-            <Modal open={modal} onClose={toggleModalOpen} title='自我介绍'>
-                <div className={classes.introContent}>
-                    {intro
-                        .split('\n')
-                        .filter((text) => text)
-                        .map((text, index) => (
-                            <React.Fragment key={index}>
-                                {text}
-                                <br />
-                            </React.Fragment>
-                        ))}
-                </div>
+            ))}
+            <Modal open={introModal} onClose={toggleIntroModalOpen} title='自我介绍'>
+                <Typography variant='body1' className={classes.introContent}>
+                    {intro}
+                </Typography>
             </Modal>
-        </>
+        </div>
     );
 });
-
-export default Detail;

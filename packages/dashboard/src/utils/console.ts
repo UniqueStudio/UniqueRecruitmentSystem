@@ -15,9 +15,7 @@ const logger = () =>
             console,
             '%cUnique Studio',
             `font-size: 100px;padding: 0 60px 60px;text-shadow:${textShadow};`,
-            '\nMain developers:',
-            '\n@winderica https://github.com/winderica',
-            '\n@Faraway https://github.com/farawaaay',
+            '\nProject URL: https://github.com/UniqueStudio/UniqueRecruitmentDashboard',
         ),
     );
 

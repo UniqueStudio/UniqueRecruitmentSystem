@@ -1,36 +1,28 @@
+import { Avatar, Chip, Collapse, Divider, IconButton, Paper, TextField } from '@material-ui/core';
+import FaceIcon from '@material-ui/icons/Face';
+import InsertPhotoIcon from '@material-ui/icons/InsertPhoto';
+import PlusOneIcon from '@material-ui/icons/PlusOne';
+import SendIcon from '@material-ui/icons/Send';
+import clsx from 'clsx';
+import { observer } from 'mobx-react-lite';
 import React, {
     ChangeEventHandler,
     ClipboardEventHandler,
     FC,
     KeyboardEventHandler,
-    memo,
     MouseEventHandler,
     useEffect,
     useState,
 } from 'react';
 
-import classNames from 'classnames';
+import { sendMessage } from '@apis/websocket';
+import { EnlargeableImage } from '@components/EnlargeableImg';
+import { Message } from '@config/types';
+import { useStores } from '@hooks/useStores';
+import useStyles from '@styles/messenger';
 
-import Avatar from '@material-ui/core/Avatar';
-import Chip from '@material-ui/core/Chip';
-import Divider from '@material-ui/core/Divider';
-import IconButton from '@material-ui/core/IconButton';
-import Paper from '@material-ui/core/Paper';
-import TextField from '@material-ui/core/TextField';
-import PlusOneIcon from '@material-ui/icons/ExposurePlus1';
-import FaceIcon from '@material-ui/icons/Face';
-import InsertPhotoIcon from '@material-ui/icons/InsertPhoto';
-import SendIcon from '@material-ui/icons/Send';
-
-import EnlargeableImage from '../EnlargeableImg';
-
-import { Message } from '../../config/types';
-
-import { Props } from '../../containers/Messenger';
-
-import useStyles from '../../styles/messenger';
-
-const Messenger: FC<Props> = memo(({ messages, username, avatar, sendMessage, enqueueSnackbar }) => {
+export const Messenger: FC = observer(() => {
+    const { $user, $component } = useStores();
     const classes = useStyles();
     const [content, setContent] = useState('');
     const [container, setContainer] = useState<Element | null>(null);
@@ -39,15 +31,15 @@ const Messenger: FC<Props> = memo(({ messages, username, avatar, sendMessage, en
         if (container && container.scrollHeight - container.scrollTop < 1000) {
             container.scrollTop = container.scrollHeight;
         }
-    }, [messages, container]);
+    }, [$user.messages, container]);
 
     const generateMessage = (message: string | ArrayBuffer | null, isImage = false) => ({
         content: (message || '').toString(),
         isSelf: true,
         time: Date.now(),
         isImage,
-        name: username,
-        avatar,
+        name: $user.info.name,
+        avatar: $user.info.avatar || '',
     });
 
     const handleKey: KeyboardEventHandler = (event) => {
@@ -57,14 +49,14 @@ const Messenger: FC<Props> = memo(({ messages, username, avatar, sendMessage, en
         }
         if (!ctrlKey && charCode === 13) {
             event.preventDefault();
-            if (content && content.match(/\S+/)) {
+            if (/\S+/.exec(content)) {
                 send();
             }
         }
     };
 
     const handlePaste: ClipboardEventHandler = (event) => {
-        const items = (event.clipboardData || event['originalEvent'].clipboardData).items;
+        const items = event.clipboardData.items;
         let blob = null;
         for (const i of Object.values(items)) {
             if (i.type.indexOf('image') === 0) {
@@ -86,17 +78,17 @@ const Messenger: FC<Props> = memo(({ messages, username, avatar, sendMessage, en
 
     const handleImage: ChangeEventHandler<HTMLInputElement> = ({ target: { files } }) => {
         if (!files) {
-            enqueueSnackbar('你没有上传任何图片', { variant: 'info' });
+            $component.enqueueSnackbar('你没有上传任何图片', 'info');
             return;
         }
         const file = files[0];
         const extension = file.name.split('.').slice(-1)[0];
         if (!['jpg', 'jpeg', 'png'].includes(extension)) {
-            enqueueSnackbar('请上传jpg或png类型的图片', { variant: 'info' });
+            $component.enqueueSnackbar('请上传jpg或png类型的图片', 'info');
             return;
         }
         if (file.size > 1024 * 1024 * 5) {
-            enqueueSnackbar('图片大小必须小于5MB', { variant: 'info' });
+            $component.enqueueSnackbar('图片大小必须小于5MB', 'info');
             return;
         }
         const reader = new FileReader();
@@ -111,7 +103,7 @@ const Messenger: FC<Props> = memo(({ messages, username, avatar, sendMessage, en
     };
 
     const plusOne = () => {
-        const last = messages[messages.length - 1];
+        const last = $user.messages[$user.messages.length - 1];
         if (last) {
             sendMessage(generateMessage(last.content, last.isImage));
         }
@@ -131,10 +123,10 @@ const Messenger: FC<Props> = memo(({ messages, username, avatar, sendMessage, en
     ];
     const MessageChip = ({ isSelf, name, time, isImage, content: message }: Message) => (
         <div className={classes.message}>
-            <div className={classNames({ [classes.rightAlign]: isSelf })}>
+            <div className={clsx({ [classes.rightAlign]: isSelf })}>
                 {`${name} - ${new Date(time).toLocaleTimeString('zh-CN', { hour12: false })}`}
             </div>
-            <Divider className={classNames({ [classes.myDivider]: isSelf })} />
+            <Divider className={clsx({ [classes.myDivider]: isSelf })} />
             <div className={classes.messageContent}>
                 {isImage ? (
                     <EnlargeableImage src={message} />
@@ -150,62 +142,66 @@ const Messenger: FC<Props> = memo(({ messages, username, avatar, sendMessage, en
         </div>
     );
     const AvatarBox = ({ avatar: messageAvatar, name }: Message) => (
-        <Avatar alt={name} src={messageAvatar} className={classes.avatar} children={<FaceIcon />} />
+        <Avatar alt={name} src={messageAvatar} className={classes.avatar}>
+            <FaceIcon />
+        </Avatar>
     );
     return (
-        <Paper className={classes.messenger}>
-            <div className={classes.messages} ref={setContainer}>
-                {messages.map((message, index) => (
-                    <div key={index} className={classNames(classes.messageContainer, { [classes.my]: message.isSelf })}>
-                        {AvatarBox(message)}
-                        <Chip
-                            label={MessageChip(message)}
-                            classes={{ root: classNames(classes.chipRoot, { [classes.myChip]: message.isSelf }) }}
-                        />
-                    </div>
-                ))}
-            </div>
-            <div className={classes.input}>
-                <Divider />
-                <div className={classes.inputContent}>
-                    <input
-                        accept='image/png, image/jpeg'
-                        className={classes.hidden}
-                        id='file'
-                        type='file'
-                        onChange={handleImage}
-                        onClick={resetInput}
-                    />
-                    <label htmlFor='file'>
-                        <IconButton color='primary' component='span'>
-                            <InsertPhotoIcon />
-                        </IconButton>
-                    </label>
-                    <IconButton color='primary' component='span' onClick={plusOne} disabled={!messages.length}>
-                        <PlusOneIcon />
-                    </IconButton>
-                    <TextField
-                        multiline
-                        rowsMax={4}
-                        value={content}
-                        placeholder={placeHolders[~~(Math.random() * placeHolders.length)]}
-                        className={classes.textField}
-                        margin='normal'
-                        onChange={handleChange}
-                        onKeyPress={handleKey}
-                        onPaste={handlePaste}
-                    />
-                    <IconButton
-                        color='primary'
-                        component='span'
-                        onClick={send}
-                        disabled={!(content && content.match(/\S+/))}>
-                        <SendIcon />
-                    </IconButton>
+        <Collapse in={$component.messengerOpen} classes={{ root: classes.collapse }}>
+            <Paper className={classes.messenger}>
+                <div className={classes.messages} ref={setContainer}>
+                    {$user.messages.map((message, index) => (
+                        <div key={index} className={clsx(classes.messageContainer, { [classes.my]: message.isSelf })}>
+                            {AvatarBox(message)}
+                            <Chip
+                                label={MessageChip(message)}
+                                classes={{ root: clsx(classes.chipRoot, { [classes.myChip]: message.isSelf }) }}
+                            />
+                        </div>
+                    ))}
                 </div>
-            </div>
-        </Paper>
+                <div className={classes.input}>
+                    <Divider />
+                    <div className={classes.inputContent}>
+                        <input
+                            accept='image/png, image/jpeg'
+                            className={classes.hidden}
+                            id='file'
+                            type='file'
+                            onChange={handleImage}
+                            onClick={resetInput}
+                        />
+                        <label htmlFor='file'>
+                            <IconButton color='primary' component='span'>
+                                <InsertPhotoIcon />
+                            </IconButton>
+                        </label>
+                        <IconButton
+                            color='primary'
+                            component='span'
+                            onClick={plusOne}
+                            disabled={!$user.messages.length}
+                        >
+                            <PlusOneIcon />
+                        </IconButton>
+                        <TextField
+                            variant='standard'
+                            multiline
+                            maxRows={4}
+                            value={content}
+                            placeholder={placeHolders[~~(Math.random() * placeHolders.length)]}
+                            className={classes.textField}
+                            margin='normal'
+                            onChange={handleChange}
+                            onKeyPress={handleKey}
+                            onPaste={handlePaste}
+                        />
+                        <IconButton color='primary' component='span' onClick={send} disabled={!/\S+/.exec(content)}>
+                            <SendIcon />
+                        </IconButton>
+                    </div>
+                </div>
+            </Paper>
+        </Collapse>
     );
 });
-
-export default Messenger;

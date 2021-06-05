@@ -1,90 +1,108 @@
-import React, { FC, memo, useState } from 'react';
+import { SlideProps } from '@material-ui/core';
+import { observer } from 'mobx-react-lite';
+import React, { FC, useEffect, useMemo, useState } from 'react';
 
-import { SlideProps } from '@material-ui/core/Slide';
+import { removeCandidate } from '@apis/rest';
+import { Board } from '@components/Board';
+import { Comments } from '@components/Comments';
+import { Detail } from '@components/Detail';
+import { Dialog } from '@components/Dialog';
+import { Fab } from '@components/Fab';
+import { Modal } from '@components/Modal';
+import { Slider } from '@components/Slider';
+import { Template } from '@components/SMS';
+import { StepType } from '@config/enums';
+import { Candidate } from '@config/types';
+import { usePrevious } from '@hooks/usePrevious';
+import { useStores } from '@hooks/useStores';
 
-import Dialog from '../components/Dialog';
-import Modal from '../components/Modal';
+const SliderContent: FC<{ candidate: Candidate }> = ({ candidate }) => {
+    const prevCandidate = usePrevious(candidate);
+    candidate = candidate || prevCandidate;
+    return (
+        <>
+            <Detail candidate={candidate} />
+            <Comments candidate={candidate} />
+        </>
+    );
+};
 
-import Board from '../containers/Board';
-import { Props } from '../containers/Candidates';
-import Fab from '../containers/Fab';
-import Slider from '../containers/Slider';
-import Template from '../containers/SMS';
+const Candidates: FC = observer(() => {
+    const { $component, $candidate } = useStores();
+    const [dialog, setDialog] = useState(false);
+    const [modal, setModal] = useState(false);
+    const [step, setStep] = useState(0);
+    const [index, setIndex] = useState(-1);
+    const [direction, setDirection] = useState<SlideProps['direction']>('right');
 
-const Candidates: FC<Props> = memo(
-    ({ selected, candidates, fabOn, selectedInfo, deselect, enqueueSnackbar, remove }) => {
-        const [dialog, setDialog] = useState(false);
-        const [modal, setModal] = useState(false);
-        const [step, setStep] = useState(0);
-        const [index, setIndex] = useState(-1);
-        const [direction, setDirection] = useState<SlideProps['direction']>('left');
-        const [todo, setTodo] = useState(-1);
-        const handleNext = (current: number) => {
-            setDirection('left');
-            setIndex(-1);
-            setTodo(current + 1 === candidates[step].length ? -1 : current + 1);
-        };
+    useEffect(() => $candidate.setSteps(StepType.all), []);
 
-        const handlePrev = (current: number) => {
-            setDirection('right');
-            setIndex(-1);
-            setTodo(Math.max(current - 1, -1));
-        };
+    const candidates = $candidate.groupBySteps;
 
-        const toggleDetail = (newStep: number) => (newIndex: number) => () => {
-            setStep(newStep);
-            setIndex(newIndex);
-            setTodo(-1);
-        };
+    const handleRight = () => {
+        setDirection('left');
+        setIndex(-1);
+    };
 
-        const handleRemove = (toRemove: string[]) => () => {
-            toggleOpen('dialog')();
-            if (toRemove.length === 0) {
-                enqueueSnackbar('你没有选中任何人', { variant: 'info' });
-                return;
-            }
-            toRemove.map((cid) => remove(cid));
-        };
+    const handleLeft = () => {
+        setDirection('right');
+        setIndex(-1);
+    };
 
-        const toggleOpen = (name: string) => () => {
-            modal && deselect(selected);
-            if (name === 'modal') setModal((prevModal) => !prevModal);
-            if (name === 'dialog') setDialog((prevDialog) => !prevDialog);
-        };
+    const handleNextIndex = (index: number) => setIndex(candidates[step][index] ? index : -1);
 
-        const handleTodo = () => {
-            setIndex(todo);
-        };
+    const toggleDetail = (newStep: number, newIndex: number) => () => {
+        setStep(newStep);
+        setIndex(newIndex);
+    };
 
-        return (
-            <>
-                <Board candidates={candidates} toggleDetail={toggleDetail} />
-                <Fab candidates={candidates[fabOn] || []} toggleOpen={toggleOpen} />
-                <Dialog
-                    open={dialog}
-                    onClick={handleRemove(selected)}
-                    toggleOpen={toggleOpen('dialog')}
-                    title='提醒'
-                    content='这将永远移除该候选人，你确定吗？'
-                    yes='确定移除'
-                />
-                <Modal open={modal} onClose={toggleOpen('modal')} title='发送通知'>
-                    <Template toggleOpen={toggleOpen('modal')} selected={selectedInfo} deselect={deselect} />
-                </Modal>
-                <Modal open={index >= 0} onClose={toggleDetail(0)(-1)} direction={direction} title='详细信息'>
-                    {step >= 0 && (
-                        <Slider
-                            index={index}
-                            candidate={candidates[step][index]}
-                            handlePrev={handlePrev}
-                            handleNext={handleNext}
-                            handleTodo={handleTodo}
-                        />
-                    )}
-                </Modal>
-            </>
-        );
-    },
-);
+    const handleRemove = () => {
+        toggleOpen('dialog')();
+        if ($candidate.selected.size === 0) {
+            $component.enqueueSnackbar('你没有选中任何人', 'info');
+            return;
+        }
+        $candidate.selected.forEach(({ id }) => void removeCandidate(id));
+    };
+
+    const toggleOpen = (name: string) => () => {
+        modal && $candidate.deselectAll();
+        if (name === 'modal') setModal((prevModal) => !prevModal);
+        if (name === 'dialog') setDialog((prevDialog) => !prevDialog);
+    };
+
+    return (
+        <>
+            {useMemo(
+                () => (
+                    <Board candidates={candidates} toggleDetail={toggleDetail} />
+                ),
+                [candidates],
+            )}
+            <Fab candidates={candidates[$component.fabOn] ?? []} toggleOpen={toggleOpen} />
+            <Dialog
+                open={dialog}
+                onClick={handleRemove}
+                toggleOpen={toggleOpen('dialog')}
+                title='提醒'
+                content='这将永远移除该候选人，你确定吗？'
+                yes='确定移除'
+            />
+            <Modal open={modal} onClose={toggleOpen('modal')} title='发送通知'>
+                <Template toggleOpen={toggleOpen('modal')} />
+            </Modal>
+            <Modal open={index >= 0} onClose={handleLeft} direction={direction} title='详细信息'>
+                <Slider
+                    index={index}
+                    handleLeft={handleLeft}
+                    handleRight={handleRight}
+                    handleNextIndex={handleNextIndex}
+                >
+                    <SliderContent candidate={candidates[step][index]} />
+                </Slider>
+            </Modal>
+        </>
+    );
+});
 
 export default Candidates;

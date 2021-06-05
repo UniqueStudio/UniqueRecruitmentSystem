@@ -1,21 +1,11 @@
+import { LinearProgress } from '@material-ui/core';
 import React, { FC, memo } from 'react';
 
-import LinearProgress from '@material-ui/core/LinearProgress';
+import useStyles from '@styles/progress';
 
-import useStyles from '../../styles/progress';
-
-const Progress: FC = memo(() => {
+export const Progress: FC = memo(() => {
     const classes = useStyles();
     return (
-        <LinearProgress
-            className={classes.progress}
-            color='primary'
-            classes={{
-                colorPrimary: classes.color,
-                barColorPrimary: classes.barColor,
-            }}
-        />
+        <LinearProgress className={classes.progress} color='secondary' />
     );
 });
-
-export default Progress;

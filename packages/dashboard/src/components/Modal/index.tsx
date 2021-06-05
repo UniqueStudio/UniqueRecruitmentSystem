@@ -1,41 +1,33 @@
+import { Modal as MuiModal, ModalTypeMap, Paper, Slide, SlideProps, Typography } from '@material-ui/core';
 import React, { FC, memo } from 'react';
 
-import Modal from '@material-ui/core/Modal';
-import Slide, { SlideProps } from '@material-ui/core/Slide';
-import Typography from '@material-ui/core/Typography';
+import useStyles from '@styles/modal';
 
-import useStyles from '../../styles/modal';
-
-interface Props {
-    open: boolean;
+type Props = Exclude<ModalTypeMap['props'] & {
     direction?: SlideProps['direction'];
-    hideBackdrop?: boolean;
     title: string;
-    onClose?: () => void;
-}
+}, 'children'>;
 
-const InfoModal: FC<Props> = memo(({ open, onClose, title, children, direction, hideBackdrop }) => {
+export const Modal: FC<Props> = memo(({ open, title, children, direction = 'right', ...other }) => {
     const classes = useStyles();
     const leaveDirection = direction === 'left' ? 'right' : 'left';
     return (
-        <Modal
+        <MuiModal
             open={open}
-            onClose={onClose}
             className={classes.modalContainer}
-            hideBackdrop={hideBackdrop}
-            disableEnforceFocus>
-            <Slide direction={open ? direction || 'right' : leaveDirection} in={open} mountOnEnter unmountOnExit>
-                <div className={classes.modal}>
+            disableEnforceFocus
+            {...other}
+        >
+            <Slide direction={open ? direction : leaveDirection} in={open} mountOnEnter unmountOnExit>
+                <Paper className={classes.modal}>
                     <div className={classes.modalHeader}>
                         <Typography variant='h5' className={classes.modalTitle}>
                             {title}
                         </Typography>
                     </div>
                     {children}
-                </div>
+                </Paper>
             </Slide>
-        </Modal>
+        </MuiModal>
     );
 });
-
-export default InfoModal;

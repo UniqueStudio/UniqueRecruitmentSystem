@@ -1,14 +1,8 @@
+import { Chip as MuiChip, Paper, Popover } from '@material-ui/core';
 import React, { FC, memo, MouseEventHandler, useState } from 'react';
 
-import classNames from 'classnames';
-
-import Chip from '@material-ui/core/Chip';
-import Paper from '@material-ui/core/Paper';
-import Popover from '@material-ui/core/Popover';
-
-import { Comment } from '../../config/types';
-
-import useStyles from '../../styles/chip';
+import { Comment } from '@config/types';
+import useStyles from '@styles/chip';
 
 interface Props {
     comment: Comment;
@@ -16,8 +10,8 @@ interface Props {
     onCopy?: () => void;
 }
 
-const CommentChip: FC<Props> = memo(({ comment: { content, evaluation, username }, onCopy, onRemove }) => {
-    const classes = useStyles();
+export const Chip: FC<Props> = memo(({ comment: { content, evaluation, user }, onCopy, onRemove }) => {
+    const classes = useStyles({ evaluation });
     const [anchorEl, setAnchorEl] = useState<Element | null>(null);
 
     const handleOpen: MouseEventHandler = ({ currentTarget }) => {
@@ -28,16 +22,13 @@ const CommentChip: FC<Props> = memo(({ comment: { content, evaluation, username 
         setAnchorEl(null);
     };
 
-    const text = `${username}： ${content}`;
-    const color = ['danger', 'warning', 'success'][evaluation];
+    const text = `${user.name}： ${content}`;
     return (
         <>
-            <Chip
+            <MuiChip
                 label={text}
                 className={classes.chip}
-                classes={{
-                    root: classNames(classes[color], classes[`root-${color}`]),
-                }}
+                clickable
                 onMouseOver={handleOpen}
                 onMouseOut={handleClose}
                 onClick={onCopy}
@@ -51,11 +42,10 @@ const CommentChip: FC<Props> = memo(({ comment: { content, evaluation, username 
                 transformOrigin={{ vertical: 'top', horizontal: 'center' }}
                 onClose={handleClose}
                 disableRestoreFocus
-                disableEnforceFocus>
-                <Paper className={classNames(classes.content, classes[color])}>{content}</Paper>
+                disableEnforceFocus
+            >
+                <Paper className={classes.content}>{content}</Paper>
             </Popover>
         </>
     );
 });
-
-export default CommentChip;

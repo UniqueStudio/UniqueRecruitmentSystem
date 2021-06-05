@@ -1,63 +1,45 @@
-import { STEPS } from '../config/consts';
+import { STEP_MAP } from '@config/consts';
+import { SMSType, Step } from '@config/enums';
 
 interface Model {
-    type: string;
-    name?: string;
-    title?: string;
-    group?: string;
-    step: number;
-    next: number;
+    type: SMSType;
+    next: Step;
     time?: string;
     place?: string;
     rest?: string;
 }
 
-export const generateModel = ({
-    type,
-    name = '{{候选人姓名}}',
-    title = '{{招新名称}}',
-    group = '{{组别}}',
-    step,
-    time,
-    place,
-    rest,
-    next,
-}: Model) => {
+export const generateModel = ({ type, time, place, rest, next }: Model) => {
+    const prefix = '[联创团队]{{候选人姓名}}你好，';
+    // don't use default parameter because time and place may be empty string
+    time = time || '{{!请指定时间!}}';
+    place = place || '{{!请指定地点!}}';
     switch (type) {
-        case 'accept': {
-            let defaultRest = '';
+        case SMSType.accept: {
             switch (next) {
-                case 2:
-                case 4:
-                    defaultRest = `，请进入以下链接选择面试时间：{{链接}}`;
+                case Step.组面:
+                    return `${prefix}请于{{时间}}在启明学院亮胜楼${place}参加组面，请准时到场`;
+                case Step.群面:
+                    return `${prefix}请于{{时间}}在启明学院亮胜楼${place}参加群面，请准时到场`;
+                case Step.笔试:
+                case Step.熬测:
+                    rest = rest || `，请于${time}在${place}参加${STEP_MAP.get(next)!}，请务必准时到场`;
                     break;
-                case 1:
-                case 3:
-                    defaultRest = `，请于${time || '{{时间}}'}在${place || '{{地点}}'}参加${
-                        STEPS[next] || '{{下一流程}}'
-                    }，请务必准时到场`;
+                case Step.通过:
+                    rest = rest || '，你已成功加入{{组别}}组';
                     break;
-                case 5:
-                    defaultRest = `，你已成功加入${group}组`;
+                case Step.组面时间选择:
+                case Step.群面时间选择:
+                    rest = rest || '，请进入选手dashboard系统选择面试时间';
                     break;
                 default:
-                    break;
+                    return '{{!请指定下一轮!}}';
             }
-            rest = rest || defaultRest;
-            return `[联创团队]${name}你好，你通过了${title}${group}组${STEPS[step] || '{{xx流程}}'}审核${rest}`;
+            return `${prefix}你通过了{{招新名称}}{{组别}}组{{流程}}审核${rest}`;
         }
-        case 'reject': {
-            const defaultRest = '不要灰心，继续学习。期待与更强大的你的相遇！';
-            rest = rest || defaultRest;
-            return `[联创团队]${name}你好，你没有通过${title}${group}组${STEPS[step] || '{{xx流程}}'}审核，请你${rest}`;
+        case SMSType.reject: {
+            rest = rest || '不要灰心，继续学习。期待与更强大的你的相遇！';
+            return `${prefix}你没有通过{{招新名称}}{{组别}}组{{流程}}审核，请你${rest}`;
         }
-        case 'group': {
-            return `[联创团队]${name}你好，请于{{时间(默认)}}在启明学院亮胜楼${place}参加组面，请准时到场`;
-        }
-        case 'team': {
-            return `[联创团队]${name}你好，请于{{时间(默认)}}在启明学院亮胜楼${place}参加群面，请准时到场`;
-        }
-        default:
-            return '';
     }
 };

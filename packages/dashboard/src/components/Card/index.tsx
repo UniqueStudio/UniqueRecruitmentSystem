@@ -1,111 +1,101 @@
-import React, { ChangeEventHandler, FC, memo, MouseEventHandler, useMemo } from 'react';
-import { Draggable, DraggableProvided } from 'react-beautiful-dnd';
-
-import Card from '@material-ui/core/Card';
-import Checkbox from '@material-ui/core/Checkbox';
-import amber from '@material-ui/core/colors/amber';
-import blue from '@material-ui/core/colors/blue';
-import orange from '@material-ui/core/colors/orange';
-import pink from '@material-ui/core/colors/pink';
-import IconButton from '@material-ui/core/IconButton';
-import Typography from '@material-ui/core/Typography';
+import { Card as MuiCard, Checkbox, IconButton, Typography, useMediaQuery, useTheme } from '@material-ui/core';
+import { amber, blue, orange, pink } from '@material-ui/core/colors';
 import FlashOn from '@material-ui/icons/FlashOn';
 import InfoIcon from '@material-ui/icons/InfoOutlined';
-import Female from 'mdi-material-ui/GenderFemale';
-import Male from 'mdi-material-ui/GenderMale';
-import TransGender from 'mdi-material-ui/GenderTransgender';
+import { observer } from 'mobx-react-lite';
+import React, { ChangeEventHandler, FC, MouseEventHandler } from 'react';
+import { Draggable, DraggableProvided } from 'react-beautiful-dnd';
 
-import useTheme from '@material-ui/core/styles/useTheme';
-import useMediaQuery from '@material-ui/core/useMediaQuery/useMediaQuery';
-
-import { GRADES, GROUPS, GROUPS_ } from '../../config/consts';
-import { Evaluation } from '../../config/types';
-
-import { Props } from '../../containers/Card';
-import useStyles from '../../styles/card';
+import { Female, Male, TransGender } from '@components/Icons';
+import { GRADES, GROUP_MAP } from '@config/consts';
+import { Evaluation, StepType } from '@config/enums';
+import { Candidate as CandidateType } from '@config/types';
+import { useStores } from '@hooks/useStores';
+import useStyles from '@styles/card';
 
 const getProportion = (evaluations: Evaluation[]) => {
-    const good = (evaluations.filter((evaluation) => evaluation === 2).length / evaluations.length) * 100;
-    const soSo = (evaluations.filter((evaluation) => evaluation === 1).length / evaluations.length) * 100 + good;
-    return { good, soSo };
+    let good = 0;
+    let fair = 0;
+    for (const evaluation of evaluations) {
+        if (evaluation === Evaluation.good) {
+            good++;
+        } else if (evaluation === Evaluation.fair) {
+            fair++;
+        }
+    }
+    good = (good * 100) / evaluations.length;
+    fair = (fair * 100) / evaluations.length + good;
+    return { good, fair };
 };
 
-const genderIcons = [
-    <TransGender htmlColor={orange[500]} fontSize='small' />,
-    <Male htmlColor={blue[500]} fontSize='small' />,
-    <Female htmlColor={pink[500]} fontSize='small' />,
-];
+const genderIcons = {
+    0: <TransGender htmlColor={orange[500]} fontSize='small' />,
+    1: <Male htmlColor={blue[500]} fontSize='small' />,
+    2: <Female htmlColor={pink[500]} fontSize='small' />,
+};
 
-const CandidateCard: FC<Props> = memo((props) => {
-    const {
-        candidate,
-        disabled,
-        checked,
-        isTeamInterview,
-        index,
-        toggleFabOn,
-        select,
-        deselect,
-        toggleDetail,
-        changeInputting,
-    } = props;
+interface Props {
+    candidate: CandidateType;
+    index: number;
+    toggleDetail: () => void;
+}
+
+export const Card: FC<Props> = observer(({ candidate, index, toggleDetail }) => {
+    const { $candidate, $component } = useStores();
     const {
         name,
         grade,
         institute,
         comments,
-        abandon,
+        abandoned,
         rejected,
         gender,
         group,
-        interviews,
+        interviewAllocations,
         step,
-        _id,
+        id,
         isQuick,
     } = candidate;
-    const {
-        team: { allocation },
-    } = interviews;
     const evaluations = comments.map(({ evaluation }) => evaluation);
 
-    const { good, soSo } = getProportion(evaluations);
-    const classes = useStyles({ disabled: abandon, white: !evaluations.length, good, soSo });
+    const { good, fair } = getProportion(evaluations);
+    const classes = useStyles({ disabled: abandoned, white: !evaluations.length, good, fair });
 
     const theme = useTheme();
-    const isMobile = useMediaQuery(theme.breakpoints.down('xs'));
+    const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+
+    const checked = $candidate.selected.has(id);
+    const disabled = $candidate.selected.size !== 0 && $component.fabOn !== step;
 
     const handleCheck: ChangeEventHandler<HTMLInputElement> = ({ target }) => {
         if (target.checked) {
-            select(_id);
-            toggleFabOn(step);
+            $candidate.selectOne(id);
+            $component.setFabOn(step);
         } else {
-            deselect(_id);
+            $candidate.deselectOne(id);
         }
     };
 
     const handleToggle = () => {
         toggleDetail();
-        changeInputting('', 2);
+        $component.recordInputtingComment(Evaluation.fair, '');
     };
 
     const stopPropagation: MouseEventHandler = (event) => event.stopPropagation();
 
-    const disableCheck = abandon || rejected || disabled;
-
-    const Check = () => (
+    const Check = (
         <Checkbox
-            color='primary'
             onClick={stopPropagation}
             onChange={handleCheck}
             checked={checked}
-            disabled={disableCheck}
+            disabled={abandoned || rejected || disabled || $candidate.stepType === StepType.teamInterview}
         />
     );
 
-    const Profile = () => (
+    const Profile = (
         <span className={classes.cardTitle}>
             <Typography variant='h6'>
-                {isTeamInterview ? `${GROUPS[GROUPS_.indexOf(group)]} - ${name}` : name}
+                {$candidate.stepType === StepType.teamInterview ? `${GROUP_MAP.get(group)!} - ${name}` : name}
                 <span className={classes.svg}>
                     {genderIcons[gender]}
                     {isQuick && <FlashOn htmlColor={amber[500]} fontSize='small' />}
@@ -113,35 +103,34 @@ const CandidateCard: FC<Props> = memo((props) => {
             </Typography>
             <Typography color='textSecondary' variant='caption' display='block'>
                 {`${GRADES[grade]} - ${institute}`}
-                {abandon && ' - 已放弃'}
+                {abandoned && ' - 已放弃'}
                 {rejected && ' - 已淘汰'}
             </Typography>
-            {allocation && isTeamInterview && (
-                <Typography color='textSecondary' variant='caption' display='block'>
-                    {new Date(allocation).toLocaleString('ja-JP', { hour12: false })}
-                </Typography>
-            )}
+            <Typography color='textSecondary' variant='caption' display='block'>
+                {$candidate.stepType === StepType.groupInterview && interviewAllocations.group?.toLocaleString('zh-CN')}
+                {$candidate.stepType === StepType.teamInterview && interviewAllocations.team?.toLocaleString('zh-CN')}
+            </Typography>
         </span>
     );
 
-    const Info = () => (
+    const Info = (
         <IconButton className={classes.iconButton} onClick={handleToggle}>
             <InfoIcon />
         </IconButton>
     );
 
     const CardContent = (
-        <Card className={classes.card} onClick={handleToggle}>
+        <MuiCard className={classes.card} onClick={handleToggle}>
             <div className={classes.cardContent}>
-                {useMemo(Check, [checked, disableCheck])}
-                {useMemo(Profile, [isTeamInterview, abandon, rejected, allocation])}
-                {useMemo(Info, [classes.iconButton])}
+                {Check}
+                {Profile}
+                {Info}
             </div>
-        </Card>
+        </MuiCard>
     );
 
     return (
-        <Draggable draggableId={_id} index={index} isDragDisabled={abandon || rejected || checked || isMobile}>
+        <Draggable draggableId={id} index={index} isDragDisabled={abandoned || rejected || checked || isMobile}>
             {({ innerRef, draggableProps, dragHandleProps }: DraggableProvided) => (
                 <div ref={innerRef} className={classes.cardContainer} {...draggableProps} {...dragHandleProps}>
                     {CardContent}
@@ -150,5 +139,3 @@ const CandidateCard: FC<Props> = memo((props) => {
         </Draggable>
     );
 });
-
-export default CandidateCard;
