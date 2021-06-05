@@ -1,0 +1,54 @@
+{
+  "name": "unique-recruitment-system",
+  "version": "3.0.0-rc.2",
+  "description": "A management system for recruitment of Unique Studio",
+  "author": "Unique Web",
+  "private": true,
+  "homepage": "/",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/UniqueStudio/UniqueRecruitmentSystem.git"
+  },
+  "contributors": [
+    {
+      "name": "winderica",
+      "email": "winderica@gmail.com"
+    }
+  ],
+  "workspaces": [
+    "packages/*"
+  ],
+  "dependencies": {},
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^4.26.0",
+    "@typescript-eslint/parser": "^4.26.0",
+    "eslint": "^7.27.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-import-resolver-typescript": "^2.4.0",
+    "eslint-plugin-import": "^2.23.4",
+    "eslint-plugin-react": "^7.24.0",
+    "husky": "^6.0.0",
+    "lint-staged": "^11.0.0",
+    "prettier": "^2.3.0",
+    "typescript": "^4.3.2"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "yarn lint-staged"
+    }
+  },
+  "lint-staged": {
+    "**/*.{ts,tsx}": [
+      "eslint --cache --fix",
+      "prettier --write"
+    ],
+    "**/*.{html,css,scss,json,yml,yaml}": [
+      "prettier --write"
+    ]
+  },
+  "scripts": {
+    "prepare": "husky install",
+    "format": "prettier --write . '!**/*.md'",
+    "lint": "eslint --fix ."
+  }
+}

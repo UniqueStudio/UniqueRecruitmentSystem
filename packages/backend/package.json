@@ -50,17 +50,9 @@
     "@types/node": "^15.3.1",
     "@types/nodemailer": "^6.4.1",
     "@types/supertest": "^2.0.11",
-    "@typescript-eslint/eslint-plugin": "^4.24.0",
-    "@typescript-eslint/parser": "^4.24.0",
-    "eslint": "^7.26.0",
-    "eslint-config-prettier": "^8.3.0",
-    "eslint-import-resolver-typescript": "^2.4.0",
-    "eslint-plugin-import": "^2.23.2",
     "jest": "^26.6.3",
-    "prettier": "^2.3.0",
     "supertest": "^6.1.3",
-    "ts-jest": "^26.5.6",
-    "typescript": "^4.2.4"
+    "ts-jest": "^26.5.6"
   },
   "scripts": {
     "test": "jest -i",
@@ -70,8 +62,6 @@
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node build/main.js",
-    "lint": "eslint . --fix",
-    "format": "prettier -w ./src ./typings test",
     "migrate": "NODE_ENV=migration MIGRATION_BACKUP_PATH=./backup nest start"
   }
 }

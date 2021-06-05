@@ -1,80 +1,25 @@
 {
+  "extends": "../../tsconfig.json",
   "compilerOptions": {
+    "lib": ["esnext"],
     "baseUrl": ".",
-    "rootDir": "src",
     "paths": {
-      "@constants/*": [
-        "src/constants/*"
-      ],
-      "@controllers/*": [
-        "src/controllers/*"
-      ],
-      "@decorators/*": [
-        "src/decorators/*"
-      ],
-      "@dtos/*": [
-        "src/dtos/*"
-      ],
-      "@entities/*": [
-        "src/entities/*"
-      ],
-      "@filters/*": [
-        "src/filters/*"
-      ],
-      "@gateways/*": [
-        "src/gateways/*"
-      ],
-      "@guards/*": [
-        "src/guards/*"
-      ],
-      "@interceptors/*": [
-        "src/interceptors/*"
-      ],
-      "@interfaces/*": [
-        "src/interfaces/*"
-      ],
-      "@middlewares/*": [
-        "src/middlewares/*"
-      ],
-      "@modules/*": [
-        "src/modules/*"
-      ],
-      "@pipes/*": [
-        "src/pipes/*"
-      ],
-      "@services/*": [
-        "src/services/*"
-      ],
-      "@utils/*": [
-        "src/utils/*"
-      ]
-    },
-    "module": "commonjs",
-    "outDir": "build",
-    "target": "esnext",
-    "lib": [
-      "esnext"
-    ],
-    "sourceMap": true,
-    "allowJs": true,
-    "strict": true,
-    "moduleResolution": "node",
-    "allowSyntheticDefaultImports": true,
-    "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true,
-    "noImplicitReturns": true,
-    "noImplicitThis": true,
-    "noImplicitAny": true,
-    "strictNullChecks": true,
-    "suppressImplicitAnyIndexErrors": true,
-    "noUnusedLocals": true,
-    "experimentalDecorators": true,
-    "emitDecoratorMetadata": true,
-    "skipLibCheck": true
+      "@constants/*": ["src/constants/*"],
+      "@controllers/*": ["src/controllers/*"],
+      "@decorators/*": ["src/decorators/*"],
+      "@dtos/*": ["src/dtos/*"],
+      "@entities/*": ["src/entities/*"],
+      "@filters/*": ["src/filters/*"],
+      "@gateways/*": ["src/gateways/*"],
+      "@guards/*": ["src/guards/*"],
+      "@interceptors/*": ["src/interceptors/*"],
+      "@interfaces/*": ["src/interfaces/*"],
+      "@middlewares/*": ["src/middlewares/*"],
+      "@modules/*": ["src/modules/*"],
+      "@pipes/*": ["src/pipes/*"],
+      "@services/*": ["src/services/*"],
+      "@utils/*": ["src/utils/*"]
+    }
   },
-  "include": [
-    "src",
-    "typings",
-    "test"
-  ]
+  "include": ["src", "typings", "test"]
 }

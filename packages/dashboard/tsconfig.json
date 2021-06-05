@@ -1,71 +1,22 @@
 {
+  "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "module": "esnext",
-    "target": "es6",
-    "lib": [
-      "esnext",
-      "dom",
-      "webworker"
-    ],
-    "allowJs": true,
+    "lib": ["esnext", "dom", "webworker"],
     "jsx": "preserve",
-    "moduleResolution": "node",
-    "allowSyntheticDefaultImports": true,
-    "forceConsistentCasingInFileNames": true,
-    "noImplicitReturns": true,
-    "noImplicitThis": true,
-    "noImplicitAny": true,
-    "strictNullChecks": true,
-    "suppressImplicitAnyIndexErrors": true,
-    "noUnusedLocals": true,
-    "experimentalDecorators": true,
-    "skipLibCheck": true,
-    "esModuleInterop": true,
-    "resolveJsonModule": true,
-    "isolatedModules": true,
-    "noEmit": true,
-    "strict": true,
     "baseUrl": ".",
     "paths": {
-      "@apis/*": [
-        "./src/apis/*"
-      ],
-      "@components/*": [
-        "./src/components/*"
-      ],
-      "@config/*": [
-        "./src/config/*"
-      ],
-      "@hooks/*": [
-        "./src/hooks/*"
-      ],
-      "@images/*": [
-        "./src/images/*"
-      ],
-      "@layouts/*": [
-        "./src/layouts/*"
-      ],
-      "@stores/*": [
-        "./src/stores/*"
-      ],
-      "@styles/*": [
-        "./src/styles/*"
-      ],
-      "@utils/*": [
-        "./src/utils/*"
-      ],
-      "@views/*": [
-        "./src/views/*"
-      ]
+      "@apis/*": ["./src/apis/*"],
+      "@components/*": ["./src/components/*"],
+      "@config/*": ["./src/config/*"],
+      "@hooks/*": ["./src/hooks/*"],
+      "@images/*": ["./src/images/*"],
+      "@layouts/*": ["./src/layouts/*"],
+      "@stores/*": ["./src/stores/*"],
+      "@styles/*": ["./src/styles/*"],
+      "@utils/*": ["./src/utils/*"],
+      "@views/*": ["./src/views/*"]
     }
   },
-  "exclude": [
-    "node_modules",
-    "build"
-  ],
-  "include": [
-    "src/**/*",
-    "typings/*",
-    "vite.config.ts"
-  ]
+  "exclude": ["node_modules", "build"],
+  "include": ["src/**/*", "typings/*", "vite.config.ts"]
 }

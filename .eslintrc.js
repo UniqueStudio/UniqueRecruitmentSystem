@@ -1,7 +1,8 @@
 module.exports = {
+    root: true,
     parser: '@typescript-eslint/parser',
     parserOptions: {
-        project: 'tsconfig.json',
+        project: ['./packages/*/tsconfig.json'],
         sourceType: 'module',
         ecmaFeatures: {
             jsx: true,
@@ -17,7 +18,6 @@ module.exports = {
         'plugin:@typescript-eslint/recommended-requiring-type-checking',
         'prettier',
     ],
-    root: true,
     rules: {
         'max-len': ['warn', { code: 120 }],
         'quote-props': ['warn', 'as-needed'],
@@ -78,15 +78,18 @@ module.exports = {
             '@typescript-eslint/parser': ['.ts', '.tsx'],
         },
         'import/resolver': {
-            typescript: {},
+            typescript: {
+                project: 'packages/*/tsconfig.json',
+            },
         },
         react: {
-            version: 'detect',
+            version: 'latest',
         },
     },
     env: {
         browser: true,
         es6: true,
+        node: true,
     },
     ignorePatterns: ['build', '**/*.js'],
 };

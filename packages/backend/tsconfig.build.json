@@ -1,7 +1,9 @@
 {
   "extends": "./tsconfig.json",
-  "include": [
-    "src",
-    "typings",
-  ]
+  "compilerOptions": {
+    "outDir": "build",
+    "target": "esnext",
+    "noEmit": false
+  },
+  "include": ["src", "typings"]
 }

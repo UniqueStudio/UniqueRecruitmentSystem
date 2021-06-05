@@ -6,4 +6,12 @@ module.exports = {
     trailingComma: 'all',
     tabWidth: 4,
     printWidth: 120,
+    overrides: [
+        {
+            files: '*.{json,yaml,yml,*rc}',
+            options: {
+                tabWidth: 2,
+            },
+        },
+    ],
 };
