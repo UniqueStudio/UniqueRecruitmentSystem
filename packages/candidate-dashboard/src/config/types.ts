@@ -6,48 +6,48 @@ export type Step = 0 | 1 | 2 | 3 | 4 | 5; // 0-5: from 报名 to 通过
 export type MessageType = 'success' | 'warning' | 'error' | 'info';
 
 export interface Time {
-  date: number;
-  morning: number;
-  afternoon: number;
-  evening: number;
+    date: number;
+    morning: number;
+    afternoon: number;
+    evening: number;
 }
 
 export interface Interview {
-  selection: Time[];
-  allocation: number;
+    selection: Time[];
+    allocation: number;
 }
 
 export interface CandidateForm {
-  name: string;
-  gender: Gender;
-  grade: Grade;
-  institute: string;
-  major: string;
-  rank: Rank;
-  mail: string;
-  phone: string; // jwt will have phone field.
-  group: Group;
-  title: string;
-  intro: string;
-  isQuick: boolean;
-  referrer: string;
-  resume: string | File | FileList;
-  // code: string; we don't need code field in dashboard
+    name: string;
+    gender: Gender;
+    grade: Grade;
+    institute: string;
+    major: string;
+    rank: Rank;
+    mail: string;
+    phone: string; // jwt will have phone field.
+    group: Group;
+    title: string;
+    intro: string;
+    isQuick: boolean;
+    referrer: string;
+    resume: string | File | FileList;
+    // code: string; we don't need code field in dashboard
 }
 
 export interface Candidate extends CandidateForm {
-  abandon: boolean;
-  rejected: boolean;
-  interviews: {
-    group: Interview;
-    team: Interview;
-  };
-  step: Step;
+    abandon: boolean;
+    rejected: boolean;
+    interviews: {
+        group: Interview;
+        team: Interview;
+    };
+    step: Step;
 }
 
 export interface Recruitment {
-  title: string; // e.g. 2018A || 2018S (A: AUTUMN, S: SPRING, C: CAMP)
-  begin: number;
-  end: number;
-  stop: number;
+    title: string; // e.g. 2018A || 2018S (A: AUTUMN, S: SPRING, C: CAMP)
+    begin: number;
+    end: number;
+    stop: number;
 }

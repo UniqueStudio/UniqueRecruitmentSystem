@@ -62,9 +62,11 @@ export const AddOne: FC = observer(() => {
         }
     };
 
-    const handleChange = (name: string): ChangeEventHandler<HTMLInputElement> => ({ target: { value } }) => {
-        setState((prevState) => ({ ...prevState, [name]: value }));
-    };
+    const handleChange =
+        (name: string): ChangeEventHandler<HTMLInputElement> =>
+        ({ target: { value } }) => {
+            setState((prevState) => ({ ...prevState, [name]: value }));
+        };
 
     const handleChangeDate = (name: string) => (date: unknown) => {
         if (date instanceof Date) {

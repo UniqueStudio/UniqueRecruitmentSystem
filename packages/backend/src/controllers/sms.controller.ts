@@ -33,14 +33,11 @@ export class SMSController {
         @Inject(CACHE_MANAGER) private readonly cacheManager: Cache,
         private readonly candidatesService: CandidatesService,
         private readonly smsService: SMSService,
-    ) {
-    }
+    ) {}
 
     @Get('verification/candidate/:phone')
     @Throttle(1, 60)
-    async sendCodeToCandidate(
-        @Param('phone') phone: string,
-    ) {
+    async sendCodeToCandidate(@Param('phone') phone: string) {
         const code = randomBytes(2).toString('hex');
         try {
             // 您{1}的验证码为：{2}，请于3分钟内填写。如非本人操作，请忽略本短信。
@@ -54,9 +51,7 @@ export class SMSController {
     @Get('verification/user')
     @Throttle(1, 60)
     @AcceptRole(Role.user)
-    async sendCodeToUser(
-        @User() { phone }: UserEntity,
-    ) {
+    async sendCodeToUser(@User() { phone }: UserEntity) {
         const code = randomBytes(2).toString('hex');
         try {
             // 您{1}的验证码为：{2}，请于3分钟内填写。如非本人操作，请忽略本短信。
@@ -77,7 +72,13 @@ export class SMSController {
         const candidates = await this.candidatesService.findManyByIds(cids);
         const errors = new Set<string>();
         for (const candidate of candidates) {
-            const { recruitment: { end, name, interviews }, group, rejected, phone, abandoned } = candidate;
+            const {
+                recruitment: { end, name, interviews },
+                group,
+                rejected,
+                phone,
+                abandoned,
+            } = candidate;
             if (+end < Date.now()) {
                 errors.add(`Recruitment ${name} has already ended`);
                 continue;

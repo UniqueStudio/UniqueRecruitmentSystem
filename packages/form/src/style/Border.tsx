@@ -2,7 +2,7 @@ import { createStyles, Theme } from '@material-ui/core/styles';
 import CustomTheme from './theme';
 
 const {
-    palette: { primary }
+    palette: { primary },
 } = CustomTheme;
 
 const styles = ({ breakpoints }: Theme) =>
@@ -11,12 +11,12 @@ const styles = ({ breakpoints }: Theme) =>
             borderRadius: '12px',
             border: `3px ${primary.light} solid`,
             [breakpoints.between('sm', 'md')]: {
-                borderRadius: '8px'
+                borderRadius: '8px',
             },
             [breakpoints.down('xs')]: {
-                borderWidth: '2px'
-            }
-        }
+                borderWidth: '2px',
+            },
+        },
     });
 
 export default styles;

@@ -12,8 +12,7 @@ import { RequestWithIdentity } from '@interfaces/request.interface';
 
 @Injectable()
 export class RoleGuard implements CanActivate {
-    constructor(private reflector: Reflector) {
-    }
+    constructor(private reflector: Reflector) {}
 
     canActivate(context: ExecutionContext) {
         const role = this.reflector.get<Role>('role', context.getHandler());

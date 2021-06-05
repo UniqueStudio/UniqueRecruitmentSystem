@@ -7,9 +7,7 @@ import { BasicCRUDService } from '@services/basicCRUD.service';
 
 @Injectable()
 export class CommentsService extends BasicCRUDService<CommentEntity> {
-    constructor(
-        @InjectRepository(CommentEntity) repository: Repository<CommentEntity>,
-    ) {
+    constructor(@InjectRepository(CommentEntity) repository: Repository<CommentEntity>) {
         super(repository);
     }
 

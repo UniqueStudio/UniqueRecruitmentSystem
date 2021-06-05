@@ -65,11 +65,13 @@ export const Group: FC = observer(() => {
                 return (
                     <Checkbox
                         checked={newAdmins.has(id) || isAdmin}
-                        onChange={({ target: { checked } }) => setNewAdmins((prevAdmins) => {
-                            const admins = new Set(prevAdmins);
-                            checked ? admins.add(id) : admins.delete(id);
-                            return admins;
-                        })}
+                        onChange={({ target: { checked } }) =>
+                            setNewAdmins((prevAdmins) => {
+                                const admins = new Set(prevAdmins);
+                                checked ? admins.add(id) : admins.delete(id);
+                                return admins;
+                            })
+                        }
                         disabled={!$user.isAdminOrCaptain || isAdmin}
                         size={isMobile ? 'small' : 'medium'}
                     />
@@ -97,7 +99,11 @@ export const Group: FC = observer(() => {
                 disableColumnMenu
                 disableSelectionOnClick
                 components={{
-                    Footer: () => <Button className={classes.button} onClick={submitChange}>修改</Button>,
+                    Footer: () => (
+                        <Button className={classes.button} onClick={submitChange}>
+                            修改
+                        </Button>
+                    ),
                 }}
             />
         </div>

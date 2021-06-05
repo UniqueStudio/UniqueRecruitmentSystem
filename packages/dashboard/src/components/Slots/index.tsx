@@ -80,21 +80,25 @@ export const Slots: FC = observer(() => {
         ]);
     };
 
-    const setPeriod = (index: number): ChangeEventHandler<HTMLInputElement> => ({ target }) => {
-        setSlots((prevSlots) => [
-            ...prevSlots.slice(0, index),
-            { ...prevSlots[index], period: +target.value as Period },
-            ...prevSlots.slice(index + 1),
-        ]);
-    };
+    const setPeriod =
+        (index: number): ChangeEventHandler<HTMLInputElement> =>
+        ({ target }) => {
+            setSlots((prevSlots) => [
+                ...prevSlots.slice(0, index),
+                { ...prevSlots[index], period: +target.value as Period },
+                ...prevSlots.slice(index + 1),
+            ]);
+        };
 
-    const setSlotNumber = (index: number): ChangeEventHandler<HTMLInputElement> => ({ target }) => {
-        setSlots((prevSlots) => [
-            ...prevSlots.slice(0, index),
-            { ...prevSlots[index], slotNumber: Math.max(+target.value, 1) },
-            ...prevSlots.slice(index + 1),
-        ]);
-    };
+    const setSlotNumber =
+        (index: number): ChangeEventHandler<HTMLInputElement> =>
+        ({ target }) => {
+            setSlots((prevSlots) => [
+                ...prevSlots.slice(0, index),
+                { ...prevSlots[index], slotNumber: Math.max(+target.value, 1) },
+                ...prevSlots.slice(index + 1),
+            ]);
+        };
 
     const submit = () =>
         setRecruitmentInterviews(

@@ -35,45 +35,50 @@ describe('UserController e2e', () => {
         await interviewsService.clear();
         await recruitmentsService.clear();
         await usersService.clear();
-        testUser = await usersService.hashPasswordAndCreate({
-            weChatID: 'hanyuu',
-            name: 'hanyuu',
-            joinTime: '2020C',
-            phone: '19876543211',
-            mail: 'hanyuu@hinami.zawa',
-            gender: Gender.female,
-            group: Group.web,
-        }, password);
-        testAdmin = await usersService.hashPasswordAndCreate({
-            weChatID: 'rika',
-            name: 'rika',
-            joinTime: '2020C',
-            phone: '19876543212',
-            mail: 'rika@hinami.zawa',
-            gender: Gender.female,
-            group: Group.web,
-            isAdmin: true,
-        }, password);
+        testUser = await usersService.hashPasswordAndCreate(
+            {
+                weChatID: 'hanyuu',
+                name: 'hanyuu',
+                joinTime: '2020C',
+                phone: '19876543211',
+                mail: 'hanyuu@hinami.zawa',
+                gender: Gender.female,
+                group: Group.web,
+            },
+            password,
+        );
+        testAdmin = await usersService.hashPasswordAndCreate(
+            {
+                weChatID: 'rika',
+                name: 'rika',
+                joinTime: '2020C',
+                phone: '19876543212',
+                mail: 'rika@hinami.zawa',
+                gender: Gender.female,
+                group: Group.web,
+                isAdmin: true,
+            },
+            password,
+        );
         {
-            const { body: { payload } } = await agent(app.getHttpServer())
-                .post('/auth/user/login')
-                .send({ password, phone: testUser.phone });
+            const {
+                body: { payload },
+            } = await agent(app.getHttpServer()).post('/auth/user/login').send({ password, phone: testUser.phone });
             userJWT = payload;
         }
         {
-            const { body: { payload } } = await agent(app.getHttpServer())
-                .post('/auth/user/login')
-                .send({ password, phone: testAdmin.phone });
+            const {
+                body: { payload },
+            } = await agent(app.getHttpServer()).post('/auth/user/login').send({ password, phone: testAdmin.phone });
             adminJWT = payload;
         }
     });
 
     describe('GET /users/me with valid credential', () => {
         it('should return user info', async () => {
-            const { body: { payload } } = await agent(app.getHttpServer())
-                .get('/users/me')
-                .auth(userJWT, { type: 'bearer' })
-                .expect(200);
+            const {
+                body: { payload },
+            } = await agent(app.getHttpServer()).get('/users/me').auth(userJWT, { type: 'bearer' }).expect(200);
             const { weChatID, comments, password } = payload;
             expect(weChatID).toBe(testUser.weChatID);
             expect(password).toBe(undefined);
@@ -83,9 +88,7 @@ describe('UserController e2e', () => {
 
     describe('GET /users/me with invalid credential', () => {
         it('should throw', async () => {
-            await agent(app.getHttpServer())
-                .get('/users/me')
-                .expect(403);
+            await agent(app.getHttpServer()).get('/users/me').expect(403);
         });
     });
 
@@ -105,7 +108,9 @@ describe('UserController e2e', () => {
         });
         describe('login again with new phone and password', () => {
             it('should return new jwt', async () => {
-                const { body: { payload } } = await agent(app.getHttpServer())
+                const {
+                    body: { payload },
+                } = await agent(app.getHttpServer())
                     .post('/auth/user/login')
                     .send({ password: 'newPassword', phone: '13344445555' })
                     .expect(201);
@@ -124,10 +129,9 @@ describe('UserController e2e', () => {
 
     describe('GET /users/group with valid credential', () => {
         it('should return group info', async () => {
-            const { body: { payload } } = await agent(app.getHttpServer())
-                .get('/users/group')
-                .auth(userJWT, { type: 'bearer' })
-                .expect(200);
+            const {
+                body: { payload },
+            } = await agent(app.getHttpServer()).get('/users/group').auth(userJWT, { type: 'bearer' }).expect(200);
             expect(payload).toHaveLength(2);
         });
     });
@@ -144,7 +148,9 @@ describe('UserController e2e', () => {
         });
         describe('set admins with admin credential', () => {
             it('should return new admins', async () => {
-                const { body: { payload } } = await agent(app.getHttpServer())
+                const {
+                    body: { payload },
+                } = await agent(app.getHttpServer())
                     .put('/users/admin')
                     .send([testUser.id])
                     .auth(adminJWT, { type: 'bearer' })
@@ -155,7 +161,9 @@ describe('UserController e2e', () => {
         });
         describe('now user is admin', () => {
             it('should return new admins', async () => {
-                const { body: { payload } } = await agent(app.getHttpServer())
+                const {
+                    body: { payload },
+                } = await agent(app.getHttpServer())
                     .put('/users/admin')
                     .send([testUser.id])
                     .auth(userJWT, { type: 'bearer' })

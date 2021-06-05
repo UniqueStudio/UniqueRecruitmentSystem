@@ -1,23 +1,16 @@
-const { compilerOptions: { paths } } = require('./tsconfig.json');
+const {
+    compilerOptions: { paths },
+} = require('./tsconfig.json');
 
 module.exports = {
-    roots: [
-        '<rootDir>/test',
-    ],
+    roots: ['<rootDir>/test'],
     transform: {
         '^.+\\.ts?$': 'ts-jest',
     },
     testRegex: '.*\\.spec\\.ts$',
-    moduleFileExtensions: [
-        'ts',
-        'js',
-        'json',
-    ],
+    moduleFileExtensions: ['ts', 'js', 'json'],
     moduleNameMapper: Object.fromEntries(
-        Object.entries(paths).map(([k, v]) => [
-            k.replace('*', '(.*)'),
-            `<rootDir>/${v[0].replace('*', '$1')}`
-        ])
+        Object.entries(paths).map(([k, v]) => [k.replace('*', '(.*)'), `<rootDir>/${v[0].replace('*', '$1')}`]),
     ),
     testEnvironment: 'node',
 };

@@ -2,13 +2,13 @@ import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import CustomTheme from './theme';
 
 const {
-    palette: { primary }
+    palette: { primary },
 } = CustomTheme;
 
 const styles = ({ breakpoints }: Theme) =>
     createStyles({
         root: {
-            width: '80%'
+            width: '80%',
         },
         container: {
             display: 'flex',
@@ -23,15 +23,15 @@ const styles = ({ breakpoints }: Theme) =>
             top: 0,
             [breakpoints.down('xs')]: {
                 position: 'fixed',
-                backgroundColor: 'rgba(0,0,0,0.5)'
-            }
+                backgroundColor: 'rgba(0,0,0,0.5)',
+            },
         },
         barColorPrimary: {
-            backgroundColor: primary.main
+            backgroundColor: primary.main,
         },
         colorPrimary: {
-            backgroundColor: primary.light
-        }
+            backgroundColor: primary.light,
+        },
     });
 
 export default makeStyles(styles);

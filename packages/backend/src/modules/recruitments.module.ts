@@ -14,5 +14,4 @@ import { RecruitmentsService } from '@services/recruitments.service';
     providers: [RecruitmentsService, RecruitmentsGateway, InterviewsService],
     exports: [RecruitmentsService, RecruitmentsGateway, InterviewsService],
 })
-export class RecruitmentsModule {
-}
+export class RecruitmentsModule {}

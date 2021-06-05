@@ -25,13 +25,13 @@ class Container extends PureComponent<Props> {
         title: '',
         variant: 'info' as Variant,
         loading: true,
-        openDialog: true
+        openDialog: true,
     };
 
     toggleSnackbar = (content: string, variant: Variant) => {
         this.setState({
             snackBarOn: content,
-            variant
+            variant,
         });
     };
 
@@ -57,13 +57,13 @@ class Container extends PureComponent<Props> {
 
     checkMobile = () => {
         this.setState({
-            media: window.innerWidth < 600 ? MEDIA.Mobile : window.innerWidth < 1280 ? MEDIA.Pad : MEDIA.PC
+            media: window.innerWidth < 600 ? MEDIA.Mobile : window.innerWidth < 1280 ? MEDIA.Pad : MEDIA.PC,
         });
     };
 
     submit = () => {
         this.setState({
-            submit: true
+            submit: true,
         });
     };
 
@@ -113,7 +113,7 @@ class Container extends PureComponent<Props> {
                 <br />
                 <span className={classes.msg}>
                     如有意向加入或咨询详细信息，可邮件团队
-                    <a className={classNames('sp', 'sp1')} href="mailto:hr@hustunique.com">
+                    <a className={classNames('sp', 'sp1')} href='mailto:hr@hustunique.com'>
                         邮箱
                     </a>
                     。我们会及时作出答复。
@@ -125,13 +125,13 @@ class Container extends PureComponent<Props> {
             <div className={classes.root}>
                 <div className={classNames(classes.background, classes.bgLeft)} />
                 <div className={classes.center}>
-                    <img src={header} className={classes.header} alt="header" draggable={false} />
+                    <img src={header} className={classes.header} alt='header' draggable={false} />
                     {MainInterface}
                 </div>
                 <div className={classNames(classes.background, classes.bgRight)} />
                 <Snackbar open={snackBarOn !== ''} onClose={this.handleClose} content={snackBarOn} variant={variant} />
                 <Loading open={loading} />
-                <Dialog open={!loading && title === '' && pathname === '/' && openDialog} content={msg} title="" />
+                <Dialog open={!loading && title === '' && pathname === '/' && openDialog} content={msg} title='' />
             </div>
         );
     }

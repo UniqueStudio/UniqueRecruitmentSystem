@@ -6,22 +6,22 @@ import { UniqueTheme } from '../../style';
 import Times from './Times';
 
 interface TimeRootProps {
-  isMobile: boolean;
-  toggleSnackbar: (content: string, variant: Variant) => void;
+    isMobile: boolean;
+    toggleSnackbar: (content: string, variant: Variant) => void;
 }
 
 interface ContextProps {
-  snackbar: (content: string, variant: Variant) => void;
+    snackbar: (content: string, variant: Variant) => void;
 }
 
 export const ToggleSnackbar = React.createContext<ContextProps>({} as ContextProps);
 
 export const NewTime = (props: TimeRootProps): React.ReactElement => {
-  return (
-    <ThemeProvider theme={UniqueTheme}>
-      <ToggleSnackbar.Provider value={{ snackbar: props.toggleSnackbar }}>
-        <Times isMobile={props.isMobile} />
-      </ToggleSnackbar.Provider>
-    </ThemeProvider >
-  );
+    return (
+        <ThemeProvider theme={UniqueTheme}>
+            <ToggleSnackbar.Provider value={{ snackbar: props.toggleSnackbar }}>
+                <Times isMobile={props.isMobile} />
+            </ToggleSnackbar.Provider>
+        </ThemeProvider>
+    );
 };

@@ -1,29 +1,29 @@
 @import './palette';
 
 @font-face {
-  font-family: 'Hiragino';
-  src: url("../asset/font/Hiragino.ttf");
+    font-family: 'Hiragino';
+    src: url('../asset/font/Hiragino.ttf');
 }
 
 * {
-  box-sizing: border-box;
-  font-family: 'PingFang SC', 'Microsoft YaHei', 'Open Sans', Arial, sans-serif;
+    box-sizing: border-box;
+    font-family: 'PingFang SC', 'Microsoft YaHei', 'Open Sans', Arial, sans-serif;
 }
 
 ::-webkit-scrollbar {
-  width: 3px;
-  height: 3px;
+    width: 3px;
+    height: 3px;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: $primary;
+    background: $primary;
 }
 
 * {
-  scrollbar-width: none;
+    scrollbar-width: none;
 }
 
 body {
-  overflow-y: overlay;
-  overflow-x: hidden;
+    overflow-y: overlay;
+    overflow-x: hidden;
 }

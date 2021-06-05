@@ -8,13 +8,8 @@ import { CandidatesModule } from '@modules/candidates.module';
 import { CommentsService } from '@services/comments.service';
 
 @Module({
-    imports: [
-        TypeOrmModule.forFeature([CommentEntity]),
-        AuthModule,
-        CandidatesModule,
-    ],
+    imports: [TypeOrmModule.forFeature([CommentEntity]), AuthModule, CandidatesModule],
     providers: [CommentsService, CommentsGateway],
     exports: [CommentsService, CommentsGateway],
 })
-export class CommentsModule {
-}
+export class CommentsModule {}

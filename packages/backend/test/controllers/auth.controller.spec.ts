@@ -42,15 +42,18 @@ describe('AuthController e2e', () => {
             end: new Date('2099'),
             deadline: new Date('2048'),
         });
-        testUser = await usersService.hashPasswordAndCreate({
-            weChatID: 'hanyuu',
-            name: 'hanyuu',
-            joinTime: '2020C',
-            phone: '19876543211',
-            mail: 'hanyuu@hinami.zawa',
-            gender: Gender.female,
-            group: Group.web,
-        }, password);
+        testUser = await usersService.hashPasswordAndCreate(
+            {
+                weChatID: 'hanyuu',
+                name: 'hanyuu',
+                joinTime: '2020C',
+                phone: '19876543211',
+                mail: 'hanyuu@hinami.zawa',
+                gender: Gender.female,
+                group: Group.web,
+            },
+            password,
+        );
         testCandidate = await candidatesService.createAndSave({
             phone: '13344445555',
             group: Group.web,

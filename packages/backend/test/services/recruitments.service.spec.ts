@@ -50,7 +50,7 @@ describe('RecruitmentsService', () => {
     });
 
     describe('find recruitments with statistics', () => {
-        it('should return with statistics array',  async () => {
+        it('should return with statistics array', async () => {
             await candidatesService.createAndSave({
                 phone: '13344445555',
                 group: Group.web,

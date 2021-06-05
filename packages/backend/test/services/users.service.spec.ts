@@ -33,15 +33,18 @@ describe('UsersService', () => {
 
     describe('create legal user', () => {
         it('should succeed', async () => {
-            testUser = await usersService.hashPasswordAndCreate({
-                weChatID: 'rika',
-                name: 'rika',
-                joinTime: '2020C',
-                phone: '19876543210',
-                mail: 'rika@hinami.zawa',
-                gender: Gender.female,
-                group: Group.web,
-            }, password);
+            testUser = await usersService.hashPasswordAndCreate(
+                {
+                    weChatID: 'rika',
+                    name: 'rika',
+                    joinTime: '2020C',
+                    phone: '19876543210',
+                    mail: 'rika@hinami.zawa',
+                    gender: Gender.female,
+                    group: Group.web,
+                },
+                password,
+            );
             expect(testUser).toBeDefined();
         });
     });
@@ -64,15 +67,18 @@ describe('UsersService', () => {
     describe('create user which violates table constraints', () => {
         it('should fail', async () => {
             await expect(async () => {
-                await usersService.hashPasswordAndCreate({
-                    weChatID: 'rika',
-                    name: 'rikaWithNonUniqueFields',
-                    joinTime: '2020C',
-                    phone: '19876543210',
-                    mail: 'rika@hinami.zawa',
-                    gender: Gender.female,
-                    group: Group.web,
-                }, password);
+                await usersService.hashPasswordAndCreate(
+                    {
+                        weChatID: 'rika',
+                        name: 'rikaWithNonUniqueFields',
+                        joinTime: '2020C',
+                        phone: '19876543210',
+                        mail: 'rika@hinami.zawa',
+                        gender: Gender.female,
+                        group: Group.web,
+                    },
+                    password,
+                );
             }).rejects.toThrow(/violates unique constraint/);
         });
     });
@@ -80,15 +86,18 @@ describe('UsersService', () => {
     describe('create user which has invalid fields', () => {
         it('should fail', async () => {
             await expect(async () => {
-                await usersService.hashPasswordAndCreate({
-                    weChatID: 'rika',
-                    name: 'rika',
-                    joinTime: 'rika',
-                    phone: 'invalid',
-                    mail: 'invalid',
-                    gender: 0.5,
-                    group: -1 as unknown as Group,
-                }, password);
+                await usersService.hashPasswordAndCreate(
+                    {
+                        weChatID: 'rika',
+                        name: 'rika',
+                        joinTime: 'rika',
+                        phone: 'invalid',
+                        mail: 'invalid',
+                        gender: 0.5,
+                        group: -1 as unknown as Group,
+                    },
+                    password,
+                );
             }).rejects.toThrow();
         });
     });

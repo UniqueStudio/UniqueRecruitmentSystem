@@ -6,8 +6,8 @@ import {
     ValidatorConstraintInterface,
 } from 'class-validator';
 
-// eslint-disable-next-line @typescript-eslint/ban-types
-export const GreaterThan = <T extends Object>(prop: keyof T, options?: ValidationOptions) =>
+export const GreaterThan =  // eslint-disable-next-line @typescript-eslint/ban-types
+    <T extends Object>(prop: keyof T, options?: ValidationOptions) =>
     (object: T, propertyName: string) => {
         registerDecorator({
             target: object.constructor,
@@ -25,8 +25,8 @@ class GreaterThanConstraint<T> implements ValidatorConstraintInterface {
     }
 }
 
-// eslint-disable-next-line @typescript-eslint/ban-types
-export const LessThan = <T extends Object>(prop: keyof T, options?: ValidationOptions) =>
+export const LessThan =  // eslint-disable-next-line @typescript-eslint/ban-types
+    <T extends Object>(prop: keyof T, options?: ValidationOptions) =>
     (object: T, propertyName: string) => {
         registerDecorator({
             target: object.constructor,

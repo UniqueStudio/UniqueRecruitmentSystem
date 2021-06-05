@@ -11,10 +11,7 @@ import { UsersService } from '@services/users.service';
 @Controller('users')
 @UseGuards(ThrottlerGuard)
 export class UsersController {
-    constructor(
-        private readonly usersService: UsersService,
-    ) {
-    }
+    constructor(private readonly usersService: UsersService) {}
 
     @Get('me')
     @AcceptRole(Role.user)
@@ -24,10 +21,7 @@ export class UsersController {
 
     @Put('me')
     @AcceptRole(Role.user)
-    async setMyInfo(
-        @User() user: UserEntity,
-        @Body() { phone, password, mail }: SetUserInfoBody,
-    ) {
+    async setMyInfo(@User() user: UserEntity, @Body() { phone, password, mail }: SetUserInfoBody) {
         if (password) {
             user.password = await this.usersService.hashPassword(password);
         }
@@ -52,10 +46,7 @@ export class UsersController {
         if (newAdmins.length !== uids.size) {
             throw new BadRequestException('Not all of the requested users are in the group');
         }
-        await this.usersService.update(
-            [...uids],
-            { isAdmin: true },
-        );
+        await this.usersService.update([...uids], { isAdmin: true });
         return [...uids];
     }
 }

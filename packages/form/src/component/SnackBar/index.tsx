@@ -11,33 +11,33 @@ const variantIcon = {
     success: CheckCircle,
     warning: Warning,
     error: ErrorIcon,
-    info: Info
+    info: Info,
 };
 
 const useStyles1 = makeStyles((theme: Theme) => ({
     success: {
-        backgroundColor: green[600]
+        backgroundColor: green[600],
     },
     error: {
-        backgroundColor: theme.palette.error.dark
+        backgroundColor: theme.palette.error.dark,
     },
     info: {
-        backgroundColor: theme.palette.primary.main
+        backgroundColor: theme.palette.primary.main,
     },
     warning: {
-        backgroundColor: amber[700]
+        backgroundColor: amber[700],
     },
     icon: {
-        fontSize: 20
+        fontSize: 20,
     },
     iconVariant: {
         opacity: 0.9,
-        marginRight: theme.spacing(1)
+        marginRight: theme.spacing(1),
     },
     message: {
         display: 'flex',
-        alignItems: 'center'
-    }
+        alignItems: 'center',
+    },
 }));
 
 interface Props {
@@ -47,7 +47,7 @@ interface Props {
     variant: Variant;
 }
 
-const MySnackbarContentWrapper: FC<Props> = memo(props => {
+const MySnackbarContentWrapper: FC<Props> = memo((props) => {
     const classes = useStyles1();
     const { className, message, onClose, variant, ...other } = props;
     const Icon = variantIcon[variant];
@@ -65,7 +65,7 @@ const MySnackbarContentWrapper: FC<Props> = memo(props => {
             action={[
                 <IconButton key='close' aria-label='Close' color='inherit' onClick={onClose}>
                     <Close className={classes.icon} />
-                </IconButton>
+                </IconButton>,
             ]}
             {...other}
         />

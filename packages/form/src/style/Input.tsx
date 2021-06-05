@@ -6,7 +6,7 @@ import heightStyles from './Height';
 import CustomTheme from './theme';
 
 const {
-    palette: { primary }
+    palette: { primary },
 } = CustomTheme;
 
 interface Props {
@@ -20,17 +20,17 @@ const style = ({ breakpoints }: Theme) =>
             width: 'fit-content',
             display: 'flex',
             '& > div': {
-                height: '100%'
-            }
+                height: '100%',
+            },
         },
         item: {
-            height: '100%'
+            height: '100%',
         },
         labelContainer: ({ labelSize }: Props) => ({
-            width: `${labelSize}vw`
+            width: `${labelSize}vw`,
         }),
         inputContainer: ({ size }: Props) => ({
-            width: `${size}vw`
+            width: `${size}vw`,
         }),
         label: {
             width: '100%',
@@ -39,7 +39,7 @@ const style = ({ breakpoints }: Theme) =>
             borderBottomRightRadius: '0 !important',
             borderWidth: '0 !important',
             backgroundColor: primary.main,
-            userSelect: 'none'
+            userSelect: 'none',
         },
         labelText: {
             color: 'white',
@@ -47,7 +47,7 @@ const style = ({ breakpoints }: Theme) =>
             textAlign: 'center',
             display: 'flex',
             alignItems: 'center',
-            justifyContent: 'center'
+            justifyContent: 'center',
         },
         input: {
             width: '100%',
@@ -60,14 +60,14 @@ const style = ({ breakpoints }: Theme) =>
                 padding: '0 10px',
                 height: '100%',
                 [breakpoints.down('md')]: {
-                    padding: '0 8px'
+                    padding: '0 8px',
                 },
                 [breakpoints.down('sm')]: {
-                    padding: '0 6px'
-                }
-            }
+                    padding: '0 6px',
+                },
+            },
         },
-        inputText: {}
+        inputText: {},
     });
 
 const styles = combineStyles(style, borderStyles, fontStyles, heightStyles);

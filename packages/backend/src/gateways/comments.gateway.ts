@@ -14,14 +14,10 @@ export class CommentsGateway {
         private readonly candidatesService: CandidatesService,
         private readonly commentsService: CommentsService,
         private readonly authService: AuthService,
-    ) {
-    }
+    ) {}
 
     @SubscribeMessage('addComment')
-    async addComment(
-        @MessageBody() { cid, comment, token }: AddCommentBody,
-        @ConnectedSocket() socket: Socket,
-    ) {
+    async addComment(@MessageBody() { cid, comment, token }: AddCommentBody, @ConnectedSocket() socket: Socket) {
         const user = await this.authService.validateToken(token);
         if (!(user instanceof UserEntity)) {
             throw new WsException('Failed to authenticate user');
@@ -48,17 +44,14 @@ export class CommentsGateway {
     }
 
     @SubscribeMessage('removeComment')
-    async removeComment(
-        @MessageBody() { id, token }: RemoveCommentBody,
-        @ConnectedSocket() socket: Socket,
-    ) {
+    async removeComment(@MessageBody() { id, token }: RemoveCommentBody, @ConnectedSocket() socket: Socket) {
         const user = await this.authService.validateToken(token);
         if (!(user instanceof UserEntity)) {
             throw new WsException('Failed to authenticate user');
         }
         const comment = await this.commentsService.findOneById(id);
         if (comment.user.id !== user.id) {
-            throw new WsException('You don\'t have permission to do this');
+            throw new WsException("You don't have permission to do this");
         }
         const data = {
             cid: comment.candidate.id,

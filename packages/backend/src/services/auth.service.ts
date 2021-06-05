@@ -13,13 +13,15 @@ export class AuthService {
         private readonly usersService: UsersService,
         private readonly candidatesService: CandidatesService,
         private readonly jwtService: JwtService,
-    ) {
-    }
+    ) {}
 
     async validateUser(phone: string, password: string) {
         const user = await this.usersService.findIdentityByPhone(phone);
         if (user) {
-            const { password: { hash, salt }, id } = user;
+            const {
+                password: { hash, salt },
+                id,
+            } = user;
             if (Buffer.from(salt, 'base64').length === 16) {
                 if (await backwardCompatibleVerify(Buffer.from(hash, 'base64').toString(), salt, password)) {
                     user.password = await this.usersService.hashPassword(password);

@@ -26,12 +26,8 @@ function AutoSuggest<T>(props: AutoSuggestProps<T>) {
     const getSuggestions = (suggestion: string) => {
         return suggestion.length === 0
             ? []
-            : items.filter(item => {
-                  return (
-                      getItemValue(item)
-                          .toLowerCase()
-                          .indexOf(suggestion.toLowerCase()) > -1
-                  );
+            : items.filter((item) => {
+                  return getItemValue(item).toLowerCase().indexOf(suggestion.toLowerCase()) > -1;
               });
     };
 
@@ -77,7 +73,7 @@ function AutoSuggest<T>(props: AutoSuggestProps<T>) {
             theme={{
                 container: classes.container,
                 suggestionsContainer: classes.suggestionsContainer,
-                suggestionsList: classes.suggestionsList
+                suggestionsList: classes.suggestionsList,
             }}
         />
     );

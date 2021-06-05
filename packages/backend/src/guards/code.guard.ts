@@ -11,8 +11,7 @@ export class CodeGuard implements CanActivate {
     constructor(
         @Inject(CACHE_MANAGER) private readonly cacheManager: Cache,
         private readonly configService: ConfigService,
-    ) {
-    }
+    ) {}
 
     async canActivate(context: ExecutionContext) {
         if (this.configService.isNotProd) {
@@ -25,7 +24,7 @@ export class CodeGuard implements CanActivate {
             return false;
         }
         const key = cacheKey(phone, !!req.user);
-        const result = code === await this.cacheManager.get(key);
+        const result = code === (await this.cacheManager.get(key));
         await this.cacheManager.del(key);
         return result;
     }

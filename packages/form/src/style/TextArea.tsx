@@ -5,7 +5,7 @@ import fontStyle from './Font';
 import CustomTheme from './theme';
 
 const {
-    palette: { primary }
+    palette: { primary },
 } = CustomTheme;
 
 const style = ({ breakpoints, spacing }: Theme) =>
@@ -14,7 +14,7 @@ const style = ({ breakpoints, spacing }: Theme) =>
             position: 'relative',
             width: '100%',
             height: `calc(100% - ${spacing(2)}px)`,
-            margin: spacing(1, 0)
+            margin: spacing(1, 0),
         },
         textLabel: {
             userSelect: 'none',
@@ -31,7 +31,7 @@ const style = ({ breakpoints, spacing }: Theme) =>
             '& div': {
                 transform: 'skewX(20deg)',
                 padding: spacing(0, 2),
-                letterSpacing: spacing(0.5)
+                letterSpacing: spacing(0.5),
             },
             [breakpoints.down('xs')]: {
                 height: '24px',
@@ -39,8 +39,8 @@ const style = ({ breakpoints, spacing }: Theme) =>
                 left: '0',
                 right: '0',
                 margin: '0 auto',
-                width: 'fit-content'
-            }
+                width: 'fit-content',
+            },
         },
         textarea: {
             resize: 'none',
@@ -54,9 +54,9 @@ const style = ({ breakpoints, spacing }: Theme) =>
             [breakpoints.down('xs')]: {
                 margin: spacing(4, 0),
                 padding: spacing(0, 2),
-                height: '150px'
-            }
-        }
+                height: '150px',
+            },
+        },
     });
 
 const styles = combineStyles(borderStyles, fontStyle, style);

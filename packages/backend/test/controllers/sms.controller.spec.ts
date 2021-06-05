@@ -33,26 +33,27 @@ describe('SMSController e2e', () => {
         await interviewsService.clear();
         await recruitmentsService.clear();
         await usersService.clear();
-        testUser = await usersService.hashPasswordAndCreate({
-            weChatID: 'hanyuu',
-            name: 'hanyuu',
-            joinTime: '2020C',
-            phone: '19876543211',
-            mail: 'hanyuu@hinami.zawa',
-            gender: Gender.female,
-            group: Group.web,
-        }, password);
-        const { body: { payload } } = await agent(app.getHttpServer())
-            .post('/auth/user/login')
-            .send({ password, phone: testUser.phone });
+        testUser = await usersService.hashPasswordAndCreate(
+            {
+                weChatID: 'hanyuu',
+                name: 'hanyuu',
+                joinTime: '2020C',
+                phone: '19876543211',
+                mail: 'hanyuu@hinami.zawa',
+                gender: Gender.female,
+                group: Group.web,
+            },
+            password,
+        );
+        const {
+            body: { payload },
+        } = await agent(app.getHttpServer()).post('/auth/user/login').send({ password, phone: testUser.phone });
         userJWT = payload;
     });
 
     describe('GET /sms/verification/candidate/:phone', () => {
         it('should return 200', async () => {
-            await agent(app.getHttpServer())
-                .get('/sms/verification/candidate/13344445555')
-                .expect(200);
+            await agent(app.getHttpServer()).get('/sms/verification/candidate/13344445555').expect(200);
         });
     });
 
@@ -67,9 +68,7 @@ describe('SMSController e2e', () => {
         });
         describe('get code for user with invalid credential', () => {
             it('should throw', async () => {
-                await agent(app.getHttpServer())
-                    .get('/sms/verification/user')
-                    .expect(403);
+                await agent(app.getHttpServer()).get('/sms/verification/user').expect(403);
             });
         });
     });

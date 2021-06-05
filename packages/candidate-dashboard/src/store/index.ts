@@ -4,11 +4,11 @@ import candidate from './candidate';
 import component from './component';
 import recruitment from './recruitment';
 const store = configureStore({
-  reducer: {
-    candidate,
-    component,
-    recruitment,
-  },
+    reducer: {
+        candidate,
+        component,
+        recruitment,
+    },
 });
 
 export default store;

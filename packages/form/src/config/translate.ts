@@ -2,13 +2,13 @@ export default (msg: string): string => {
     switch (msg) {
         case 'No pending recruitment!':
             return '招新未开启';
-        case 'Form doesn\'t exist!':
+        case "Form doesn't exist!":
         case 'URL is invalid!':
             return '表单不存在，请检查URL信息';
-        case 'Recruitment doesn\'t exist!':
+        case "Recruitment doesn't exist!":
         case 'This recruitment has already ended!':
             return '招新不存在，请联系管理员';
-        case 'Candidate doesn\'t exist!':
+        case "Candidate doesn't exist!":
             return '候选人不存在';
         case 'You have already abandoned!':
             return '你已经放弃了';

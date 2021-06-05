@@ -7,10 +7,7 @@ import { Message } from '@interfaces/message.interface';
 @WebSocketGateway({ cors: true })
 export class ChatGateway {
     @SubscribeMessage('sendMessage')
-    handleMessage(
-        @MessageBody() { message }: { message: Message },
-        @ConnectedSocket() socket: Socket,
-    ) {
+    handleMessage(@MessageBody() { message }: { message: Message }, @ConnectedSocket() socket: Socket) {
         socket.broadcast.emit('receiveMessage', {
             status: Status.info,
             payload: message,

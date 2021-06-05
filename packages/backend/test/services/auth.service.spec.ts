@@ -31,15 +31,18 @@ describe('AuthService', () => {
         await interviewsService.clear();
         await recruitmentsService.clear();
         await usersService.clear();
-        testUser = await usersService.hashPasswordAndCreate({
-            weChatID: 'hanyuu',
-            name: 'hanyuu',
-            joinTime: '2020C',
-            phone: '19876543211',
-            mail: 'hanyuu@hinami.zawa',
-            gender: Gender.female,
-            group: Group.web,
-        }, password);
+        testUser = await usersService.hashPasswordAndCreate(
+            {
+                weChatID: 'hanyuu',
+                name: 'hanyuu',
+                joinTime: '2020C',
+                phone: '19876543211',
+                mail: 'hanyuu@hinami.zawa',
+                gender: Gender.female,
+                group: Group.web,
+            },
+            password,
+        );
     });
 
     describe('validate legal user', () => {

@@ -39,35 +39,41 @@ describe('RecruitmentsController e2e', () => {
         await interviewsService.clear();
         await recruitmentsService.clear();
         await usersService.clear();
-        testUser = await usersService.hashPasswordAndCreate({
-            weChatID: 'hanyuu',
-            name: 'hanyuu',
-            joinTime: '2020C',
-            phone: '19876543211',
-            mail: 'hanyuu@hinami.zawa',
-            gender: Gender.female,
-            group: Group.web,
-        }, password);
-        testAdmin = await usersService.hashPasswordAndCreate({
-            weChatID: 'rika',
-            name: 'rika',
-            joinTime: '2020C',
-            phone: '19876543212',
-            mail: 'rika@hinami.zawa',
-            gender: Gender.female,
-            group: Group.web,
-            isAdmin: true,
-        }, password);
+        testUser = await usersService.hashPasswordAndCreate(
+            {
+                weChatID: 'hanyuu',
+                name: 'hanyuu',
+                joinTime: '2020C',
+                phone: '19876543211',
+                mail: 'hanyuu@hinami.zawa',
+                gender: Gender.female,
+                group: Group.web,
+            },
+            password,
+        );
+        testAdmin = await usersService.hashPasswordAndCreate(
+            {
+                weChatID: 'rika',
+                name: 'rika',
+                joinTime: '2020C',
+                phone: '19876543212',
+                mail: 'rika@hinami.zawa',
+                gender: Gender.female,
+                group: Group.web,
+                isAdmin: true,
+            },
+            password,
+        );
         {
-            const { body: { payload } } = await agent(app.getHttpServer())
-                .post('/auth/user/login')
-                .send({ password, phone: testUser.phone });
+            const {
+                body: { payload },
+            } = await agent(app.getHttpServer()).post('/auth/user/login').send({ password, phone: testUser.phone });
             userJWT = payload;
         }
         {
-            const { body: { payload } } = await agent(app.getHttpServer())
-                .post('/auth/user/login')
-                .send({ password, phone: testAdmin.phone });
+            const {
+                body: { payload },
+            } = await agent(app.getHttpServer()).post('/auth/user/login').send({ password, phone: testAdmin.phone });
             adminJWT = payload;
         }
     });
@@ -90,10 +96,7 @@ describe('RecruitmentsController e2e', () => {
 
         describe('create new recruitment with invalid credential', () => {
             it('should throw', async () => {
-                await agent(app.getHttpServer())
-                    .post('/recruitments')
-                    .auth(userJWT, { type: 'bearer' })
-                    .expect(403);
+                await agent(app.getHttpServer()).post('/recruitments').auth(userJWT, { type: 'bearer' }).expect(403);
             });
         });
 
@@ -115,9 +118,9 @@ describe('RecruitmentsController e2e', () => {
 
     describe('GET /recruitments/pending', () => {
         it('should return pending recruitments', async () => {
-            const { body: { payload } } = await agent(app.getHttpServer())
-                .get('/recruitments/pending')
-                .expect(200);
+            const {
+                body: { payload },
+            } = await agent(app.getHttpServer()).get('/recruitments/pending').expect(200);
             expect(payload).toHaveLength(1);
         });
     });
@@ -125,19 +128,16 @@ describe('RecruitmentsController e2e', () => {
     describe('GET /recruitments', () => {
         describe('get all recruitments with valid credential', () => {
             it('should return all recruitments', async () => {
-                const { body: { payload } } = await agent(app.getHttpServer())
-                    .get('/recruitments')
-                    .auth(userJWT, { type: 'bearer' })
-                    .expect(200);
+                const {
+                    body: { payload },
+                } = await agent(app.getHttpServer()).get('/recruitments').auth(userJWT, { type: 'bearer' }).expect(200);
                 expect(payload).toHaveLength(1);
             });
         });
 
         describe('get all recruitments with invalid credential', () => {
             it('should throw', async () => {
-                await agent(app.getHttpServer())
-                    .get('/recruitments')
-                    .expect(403);
+                await agent(app.getHttpServer()).get('/recruitments').expect(403);
             });
         });
     });
@@ -147,9 +147,9 @@ describe('RecruitmentsController e2e', () => {
         let interviews: InterviewEntity[];
         describe('get id of pending recruitment', () => {
             it('should return success', async () => {
-                const { body: { payload } } = await agent(app.getHttpServer())
-                    .get('/recruitments/pending')
-                    .expect(200);
+                const {
+                    body: { payload },
+                } = await agent(app.getHttpServer()).get('/recruitments/pending').expect(200);
                 [testRecruitment] = payload;
             });
         });
@@ -179,10 +179,9 @@ describe('RecruitmentsController e2e', () => {
 
         describe('get recruitments', () => {
             it('should return recruitments with interviews', async () => {
-                const { body: { payload } } = await agent(app.getHttpServer())
-                    .get('/recruitments')
-                    .auth(userJWT, { type: 'bearer' })
-                    .expect(200);
+                const {
+                    body: { payload },
+                } = await agent(app.getHttpServer()).get('/recruitments').auth(userJWT, { type: 'bearer' }).expect(200);
                 [{ interviews }] = payload;
                 expect(interviews).toHaveLength(2);
             });
@@ -272,10 +271,9 @@ describe('RecruitmentsController e2e', () => {
 
         describe('get recruitments', () => {
             it('should return recruitments with updated interviews', async () => {
-                const { body: { payload } } = await agent(app.getHttpServer())
-                    .get('/recruitments')
-                    .auth(userJWT, { type: 'bearer' })
-                    .expect(200);
+                const {
+                    body: { payload },
+                } = await agent(app.getHttpServer()).get('/recruitments').auth(userJWT, { type: 'bearer' }).expect(200);
                 [{ interviews }] = payload;
                 interviews.forEach(({ slotNumber }) => expect(slotNumber).toBe(6));
             });
@@ -351,9 +349,9 @@ describe('RecruitmentsController e2e', () => {
         let testRecruitment: RecruitmentEntity;
         describe('get id of pending recruitment', () => {
             it('should return success', async () => {
-                const { body: { payload } } = await agent(app.getHttpServer())
-                    .get('/recruitments/pending')
-                    .expect(200);
+                const {
+                    body: { payload },
+                } = await agent(app.getHttpServer()).get('/recruitments/pending').expect(200);
                 [testRecruitment] = payload;
             });
         });
@@ -374,9 +372,9 @@ describe('RecruitmentsController e2e', () => {
 
         describe('get pending recruitments', () => {
             it('should return an empty array', async () => {
-                const { body: { payload } } = await agent(app.getHttpServer())
-                    .get('/recruitments/pending')
-                    .expect(200);
+                const {
+                    body: { payload },
+                } = await agent(app.getHttpServer()).get('/recruitments/pending').expect(200);
                 expect(payload).toHaveLength(0);
             });
         });

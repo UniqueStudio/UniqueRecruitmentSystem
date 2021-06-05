@@ -13,9 +13,14 @@ interface Model {
     rest?: string;
 }
 
-export const applySMSTemplate = (
-    { type, time, place, rest, next, candidate: { group, step, recruitment, name, interviewAllocations } }: Model,
-) => {
+export const applySMSTemplate = ({
+    type,
+    time,
+    place,
+    rest,
+    next,
+    candidate: { group, step, recruitment, name, interviewAllocations },
+}: Model) => {
     const suffix = ' (请勿回复本短信)';
     const recruitmentName = fullRecruitmentName(recruitment.name);
     switch (type) {

@@ -6,5 +6,4 @@ import { ChatGateway } from '@gateways/chat.gateway';
     providers: [ChatGateway],
     exports: [ChatGateway],
 })
-export class ChatModule {
-}
+export class ChatModule {}

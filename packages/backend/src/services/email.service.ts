@@ -15,9 +15,7 @@ export class EmailService {
 
     transporter: Transporter;
 
-    constructor(
-        private readonly configService: ConfigService,
-    ) {
+    constructor(private readonly configService: ConfigService) {
         this.transporter = createTransport(configService.emailConfig);
     }
 

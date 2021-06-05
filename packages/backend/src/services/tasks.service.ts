@@ -6,10 +6,7 @@ import { deleteFile, listDir } from '@utils/fs';
 
 @Injectable()
 export class TasksService {
-    constructor(
-        private readonly configService: ConfigService,
-    ) {
-    }
+    constructor(private readonly configService: ConfigService) {}
 
     @Cron(CronExpression.EVERY_DAY_AT_4AM)
     async cleanTemps() {

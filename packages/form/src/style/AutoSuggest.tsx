@@ -10,7 +10,7 @@ interface Props {
 }
 
 const {
-    palette: { primary }
+    palette: { primary },
 } = CustomTheme;
 
 const style = ({ spacing }: Theme) =>
@@ -19,13 +19,13 @@ const style = ({ spacing }: Theme) =>
             textAlign: 'center',
             minHeight: 'unset',
             color: primary.main,
-            justifyContent: 'center'
+            justifyContent: 'center',
         },
         hightlightedItem: {
-            backgroundColor: primary.light
+            backgroundColor: primary.light,
         },
         container: {
-            position: 'relative'
+            position: 'relative',
         },
         suggestionsContainer: ({ labelSize, suggestionLength }: Props) => ({
             position: 'absolute',
@@ -33,13 +33,13 @@ const style = ({ spacing }: Theme) =>
             overflowY: 'auto',
             zIndex: 999,
             display: suggestionLength ? '' : 'none',
-            left: `${labelSize}vw`
+            left: `${labelSize}vw`,
         }),
         suggestionsList: {
             margin: 0,
             padding: 0,
-            listStyleType: 'none'
-        }
+            listStyleType: 'none',
+        },
     });
 
 const styles = combindStyles(borderStyles, fontStyles, style);

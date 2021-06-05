@@ -5,12 +5,9 @@ import { CandidatesModule } from '@modules/candidates.module';
 import { SMSService } from '@services/sms.service';
 
 @Module({
-    imports: [
-        forwardRef(() => CandidatesModule),
-    ],
+    imports: [forwardRef(() => CandidatesModule)],
     controllers: [SMSController],
     providers: [SMSService],
     exports: [SMSService],
 })
-export class SMSModule {
-}
+export class SMSModule {}

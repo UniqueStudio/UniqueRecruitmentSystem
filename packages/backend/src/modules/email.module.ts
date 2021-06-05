@@ -1,4 +1,4 @@
-import {  Module } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 
 import { EmailService } from '@services/email.service';
 
@@ -6,5 +6,4 @@ import { EmailService } from '@services/email.service';
     providers: [EmailService],
     exports: [EmailService],
 })
-export class EmailModule {
-}
+export class EmailModule {}

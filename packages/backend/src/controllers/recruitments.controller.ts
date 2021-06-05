@@ -14,11 +14,7 @@ import { ThrottlerGuard } from '@nestjs/throttler';
 import { GroupOrTeam, Role } from '@constants/enums';
 import { AcceptRole } from '@decorators/role.decorator';
 import { User } from '@decorators/user.decorator';
-import {
-    CreateRecruitmentBody,
-    SetRecruitmentInterviewsBody,
-    SetRecruitmentScheduleBody,
-} from '@dtos/recruitment.dto';
+import { CreateRecruitmentBody, SetRecruitmentInterviewsBody, SetRecruitmentScheduleBody } from '@dtos/recruitment.dto';
 import { InterviewEntity } from '@entities/interview.entity';
 import { UserEntity } from '@entities/user.entity';
 import { RecruitmentsGateway } from '@gateways/recruitments.gateway';
@@ -33,8 +29,7 @@ export class RecruitmentsController {
         private readonly recruitmentsGateway: RecruitmentsGateway,
         private readonly recruitmentsService: RecruitmentsService,
         private readonly interviewsService: InterviewsService,
-    ) {
-    }
+    ) {}
 
     @Get('pending')
     getPendingRecruitments() {
@@ -43,9 +38,7 @@ export class RecruitmentsController {
 
     @Get(':rid')
     @AcceptRole(Role.user)
-    getOneRecruitment(
-        @Param('rid') rid: string,
-    ) {
+    getOneRecruitment(@Param('rid') rid: string) {
         return this.recruitmentsService.findOneWithStatistics(rid);
     }
 
@@ -58,9 +51,7 @@ export class RecruitmentsController {
     @Post()
     @AcceptRole(Role.admin)
     @UseGuards(CodeGuard)
-    async createRecruitment(
-        @Body() { name, beginning, end, deadline }: CreateRecruitmentBody,
-    ) {
+    async createRecruitment(@Body() { name, beginning, end, deadline }: CreateRecruitmentBody) {
         const recruitment = await this.recruitmentsService.createAndSave({
             name,
             beginning: new Date(beginning),
@@ -79,13 +70,14 @@ export class RecruitmentsController {
         const recruitment = await this.recruitmentsService.findOneById(rid);
         if (+recruitment.end < Date.now()) {
             /*
-              * If somebody extends the end date, he can bypass the restrictions on many operations,
-              * and may change some data of previous recruitments/candidates.
-              * They are recommended to modify the end date BEFORE it comes.
-              */
-            throw new ForbiddenException('This recruitment has already ended. '
-                + 'If you want to extend the end date of this recruitment, please contact maintainers. '
-                + 'This is not a bug.',
+             * If somebody extends the end date, he can bypass the restrictions on many operations,
+             * and may change some data of previous recruitments/candidates.
+             * They are recommended to modify the end date BEFORE it comes.
+             */
+            throw new ForbiddenException(
+                'This recruitment has already ended. ' +
+                    'If you want to extend the end date of this recruitment, please contact maintainers. ' +
+                    'This is not a bug.',
             );
         }
         recruitment.beginning = new Date(beginning);

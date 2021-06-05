@@ -14,26 +14,26 @@ export class CandidatesGateway {
             status: Status.info,
             payload: candidate,
         });
-    };
+    }
 
     broadcastUpdate(candidate: CandidateEntity) {
         this.server.sockets.emit('updateCandidate', {
             status: Status.info,
             payload: candidate,
         });
-    };
+    }
 
     broadcastMove(cid: string, to: Step) {
         this.server.sockets.emit('moveCandidate', {
             status: Status.info,
             payload: { cid, to },
         });
-    };
+    }
 
     broadcastRemove(cid: string) {
         this.server.sockets.emit('removeCandidate', {
             status: Status.info,
             payload: cid,
         });
-    };
+    }
 }

@@ -33,8 +33,7 @@ export class AuthController {
         private readonly authService: AuthService,
         private readonly configService: ConfigService,
         private readonly candidatesService: CandidatesService,
-    ) {
-    }
+    ) {}
 
     @Get('user/qrCode')
     async getQRCode() {
@@ -72,7 +71,7 @@ export class AuthController {
                     throw new InternalServerErrorException(`Unknown status ${status}`);
             }
         }
-        throw new ImATeapotException('NO HE DOESN\'T');
+        throw new ImATeapotException("NO HE DOESN'T");
     }
 
     @Post('user/login')

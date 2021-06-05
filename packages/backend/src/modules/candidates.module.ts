@@ -28,5 +28,4 @@ import { ConfigService } from '@services/config.service';
     providers: [CandidatesService, CandidatesGateway],
     exports: [CandidatesService, CandidatesGateway],
 })
-export class CandidatesModule {
-}
+export class CandidatesModule {}

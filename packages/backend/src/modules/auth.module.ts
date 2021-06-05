@@ -20,5 +20,4 @@ import { ConfigService } from '@services/config.service';
     providers: [AuthService],
     exports: [AuthService],
 })
-export class AuthModule {
-}
+export class AuthModule {}

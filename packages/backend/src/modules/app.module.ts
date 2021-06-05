@@ -102,8 +102,7 @@ import { ConfigService } from '@services/config.service';
     ],
 })
 export class AppModule implements NestModule, OnModuleInit {
-    constructor(private readonly configService: ConfigService) {
-    }
+    constructor(private readonly configService: ConfigService) {}
 
     configure(consumer: MiddlewareConsumer) {
         consumer

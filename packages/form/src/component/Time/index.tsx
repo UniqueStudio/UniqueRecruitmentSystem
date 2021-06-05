@@ -32,7 +32,7 @@ class Time extends PureComponent<Props> {
         clicked: [] as number[],
         confirmed: '',
         step: '',
-        time: [] as Date[]
+        time: [] as Date[],
     };
 
     async componentDidMount() {
@@ -51,7 +51,7 @@ class Time extends PureComponent<Props> {
                 sessionStorage.setItem('token', result.token);
                 this.setState({
                     time: result.time,
-                    step: formId[formId.length - 1]
+                    step: formId[formId.length - 1],
                 });
             } else {
                 return toggleSnackbar('获取表单出了问题，请尝试重新加载', result.type);
@@ -72,21 +72,21 @@ class Time extends PureComponent<Props> {
                 method: 'PUT',
                 headers: {
                     'content-type': 'application/json',
-                    Authorization: `Bearer ${token}`
+                    Authorization: `Bearer ${token}`,
                 },
                 body: JSON.stringify(
                     modal === 'abandon'
                         ? { abandon: true }
                         : step === '1'
                         ? { groupInterview: time }
-                        : { teamInterview: time }
-                )
+                        : { teamInterview: time },
+                ),
             });
             const result = await response.json();
             if (result.type === 'success') {
                 this.setState({
                     modal: '',
-                    confirmed: type
+                    confirmed: type,
                 });
             } else {
                 return toggleSnackbar(result.message, result.type);
@@ -98,18 +98,18 @@ class Time extends PureComponent<Props> {
 
     handleClick = (action: string) => () => {
         this.setState({
-            modal: action
+            modal: action,
         });
     };
 
     handleSelect = (t: number) => () => {
         if (this.state.clicked.includes(t)) {
             this.setState({
-                clicked: this.state.clicked.filter((i) => i !== t)
+                clicked: this.state.clicked.filter((i) => i !== t),
             });
         } else {
             this.setState({
-                clicked: [...this.state.clicked, t]
+                clicked: [...this.state.clicked, t],
             });
         }
     };
@@ -131,7 +131,7 @@ class Time extends PureComponent<Props> {
 
     handleDeny = () => {
         this.setState({
-            modal: ''
+            modal: '',
         });
     };
 
@@ -232,7 +232,7 @@ class Time extends PureComponent<Props> {
                         className={classNames(
                             'layer',
                             { none: modal === '' },
-                            modal === 'submit' ? 'layerSecondary' : 'layerPrimary'
+                            modal === 'submit' ? 'layerSecondary' : 'layerPrimary',
                         )}
                     />
                 </>

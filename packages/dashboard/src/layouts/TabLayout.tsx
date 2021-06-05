@@ -33,12 +33,7 @@ export const TabLayout: FC<Props> = ({ items, variant = 'standard', classes }) =
     return routeMatch ? (
         <Paper className={classes?.paper}>
             <TabContext value={routeMatch.url}>
-                <TabList
-                    centered={variant === 'standard'}
-                    variant={variant}
-                    scrollButtons
-                    allowScrollButtonsMobile
-                >
+                <TabList centered={variant === 'standard'} variant={variant} scrollButtons allowScrollButtonsMobile>
                     {tabs.map(({ label, value }) => (
                         <Tab label={label} value={value} key={value} component={Link} to={value} />
                     ))}

@@ -6,13 +6,13 @@ import heightStyles from './Height';
 import CustomTheme from './theme';
 
 const {
-    palette: { primary, secondary }
+    palette: { primary, secondary },
 } = CustomTheme;
 
 const style = ({ breakpoints, spacing }: Theme) =>
     createStyles({
         root: {
-            position: 'relative'
+            position: 'relative',
         },
         container: {
             position: 'relative',
@@ -21,13 +21,13 @@ const style = ({ breakpoints, spacing }: Theme) =>
             width: '100%',
             padding: spacing(4, 12),
             '& > div': {
-                width: '100%'
+                width: '100%',
             },
             [breakpoints.down('md')]: {
-                padding: spacing(2, 4)
+                padding: spacing(2, 4),
             },
             [breakpoints.down('sm')]: {
-                padding: spacing(2, 3)
+                padding: spacing(2, 3),
             },
             [breakpoints.down('xs')]: {
                 width: 'fit-content',
@@ -40,7 +40,7 @@ const style = ({ breakpoints, spacing }: Theme) =>
                     margin: spacing(3, 0),
                     width: '100%',
                     '& .button': {
-                        width: '35vw'
+                        width: '35vw',
                     },
                     '&.mobile-select': {
                         flexDirection: 'column',
@@ -48,25 +48,25 @@ const style = ({ breakpoints, spacing }: Theme) =>
                         margin: spacing(0),
                         '& > div': {
                             margin: spacing(3, 0),
-                            width: '50vw'
-                        }
+                            width: '50vw',
+                        },
                     },
                     '&.mobile-submit': {
                         '& > div': {
-                            margin: '0 auto'
-                        }
-                    }
-                }
-            }
+                            margin: '0 auto',
+                        },
+                    },
+                },
+            },
         },
         resume: {
-            fontWeight: 700
+            fontWeight: 700,
         },
         partOne: {
             display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'center',
-            margin: spacing(1, 0)
+            margin: spacing(1, 0),
         },
         partTwo: {
             display: 'flex',
@@ -77,8 +77,8 @@ const style = ({ breakpoints, spacing }: Theme) =>
                 flexDirection: 'column',
                 justifyContent: 'flex-start',
                 '& > div': {
-                    margin: spacing(1, 0)
-                }
+                    margin: spacing(1, 0),
+                },
             },
             '& .ptMid': {
                 '@media screen and (max-width: 1600px)': {
@@ -87,21 +87,21 @@ const style = ({ breakpoints, spacing }: Theme) =>
                     borderRadius: '1.5px',
                     width: '3px',
                     '@media screen and (max-width: 1440px)': {
-                        height: '96px'
+                        height: '96px',
                     },
                     [breakpoints.down('md')]: {
-                        height: '106px'
+                        height: '106px',
                     },
                     [breakpoints.down('sm')]: {
-                        height: '86px'
-                    }
+                        height: '86px',
+                    },
                 },
                 '& img': {
                     width: '100px',
                     '@media screen and (max-width: 1600px)': {
-                        display: 'none'
-                    }
-                }
+                        display: 'none',
+                    },
+                },
             },
             '& .ptRight': {
                 display: 'flex',
@@ -114,14 +114,14 @@ const style = ({ breakpoints, spacing }: Theme) =>
                     '& .button': {
                         width: '7vw',
                         [breakpoints.down('md')]: {
-                            width: '10vw'
-                        }
-                    }
+                            width: '10vw',
+                        },
+                    },
                 },
                 '& > div': {
-                    margin: spacing(1, 0)
-                }
-            }
+                    margin: spacing(1, 0),
+                },
+            },
         },
         partThree: {
             display: 'flex',
@@ -131,22 +131,22 @@ const style = ({ breakpoints, spacing }: Theme) =>
             '& > div': {
                 width: '10vw',
                 [breakpoints.down('md')]: {
-                    width: '14vw'
-                }
-            }
+                    width: '14vw',
+                },
+            },
         },
         partFour: {
             display: 'flex',
             justifyContent: 'space-between',
             margin: spacing(2, 0),
             [breakpoints.down('md')]: {
-                margin: spacing(1, 0)
+                margin: spacing(1, 0),
             },
             '& .pfLeft': {
                 width: 'calc(30vw + ( 100% - 40vw ) * 2 / 3)',
                 [breakpoints.down('md')]: {
-                    width: 'calc(42vw + ( 100% - 56vw ) * 2 / 3)'
-                }
+                    width: 'calc(42vw + ( 100% - 56vw ) * 2 / 3)',
+                },
             },
             '& .pfRight': {
                 display: 'flex',
@@ -155,9 +155,9 @@ const style = ({ breakpoints, spacing }: Theme) =>
                     margin: spacing(1, 0),
                     width: '10vw',
                     [breakpoints.down('md')]: {
-                        width: '14vw'
-                    }
-                }
+                        width: '14vw',
+                    },
+                },
             },
             '& .submit': {
                 display: 'flex',
@@ -166,18 +166,18 @@ const style = ({ breakpoints, spacing }: Theme) =>
                 '& .button': {
                     width: '10vw',
                     [breakpoints.down('md')]: {
-                        width: '14vw'
-                    }
-                }
-            }
+                        width: '14vw',
+                    },
+                },
+            },
         },
         curtain: {
-            opacity: 0.2
+            opacity: 0.2,
         },
         redTips: {
             color: secondary.main,
-            fontWeight: 'bold'
-        }
+            fontWeight: 'bold',
+        },
     });
 
 const styles = combineStyles(borderStyles, fontStyles, heightStyles, style);

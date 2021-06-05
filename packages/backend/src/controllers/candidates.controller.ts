@@ -64,16 +64,28 @@ export class CandidatesController {
         private readonly smsService: SMSService,
         private readonly emailService: EmailService,
         private readonly configService: ConfigService,
-    ) {
-    }
+    ) {}
 
     @Post()
     @UseGuards(CodeGuard)
     @UseInterceptors(FileInterceptor('resume'))
     @UsePipes(new ValidationPipe({ transform: true })) // FormData's value is always string and needs transformation
     async createCandidate(
-        @Body() {
-            name, grade, institute, major, rank, mail, phone, group, gender, intro, rid, isQuick, referrer,
+        @Body()
+        {
+            name,
+            grade,
+            institute,
+            major,
+            rank,
+            mail,
+            phone,
+            group,
+            gender,
+            intro,
+            rid,
+            isQuick,
+            referrer,
         }: CreateCandidateBody,
         @UploadedFile() file: Express.Multer.File,
     ) {
@@ -121,9 +133,7 @@ export class CandidatesController {
 
     @Get('me')
     @AcceptRole(Role.candidate)
-    getMyInfo(
-        @Candidate() candidate: CandidateEntity,
-    ) {
+    getMyInfo(@Candidate() candidate: CandidateEntity) {
         const bannedKeys = new Set([
             'recruitment',
             'comments',
@@ -153,15 +163,25 @@ export class CandidatesController {
         }
         if (file) {
             const persistentPath = this.configService.resumePaths.persistent;
-            resume && await deleteFile(join(persistentPath, recruitment.name, candidate.group), resume);
+            resume && (await deleteFile(join(persistentPath, recruitment.name, candidate.group), resume));
             const { originalname, path } = file;
             resume = `${name} - ${originalname}`;
             await copyFile(path, join(persistentPath, recruitment.name, group), resume);
         }
-        Object.assign(
-            candidate,
-            { name, gender, grade, group, institute, intro, isQuick, mail, major, rank, referrer, resume },
-        );
+        Object.assign(candidate, {
+            name,
+            gender,
+            grade,
+            group,
+            institute,
+            intro,
+            isQuick,
+            mail,
+            major,
+            rank,
+            referrer,
+            resume,
+        });
         await candidate.save();
         this.candidatesGateway.broadcastUpdate(candidate);
         this.recruitmentsGateway.broadcastUpdate(recruitment.id);
@@ -169,9 +189,7 @@ export class CandidatesController {
 
     @Get('me/slots')
     @AcceptRole(Role.candidate)
-    getInterviewSlots(
-        @Candidate() candidate: CandidateEntity,
-    ) {
+    getInterviewSlots(@Candidate() candidate: CandidateEntity) {
         const { recruitment, step, group } = candidate;
         if (+recruitment.end < Date.now()) {
             throw new ForbiddenException('This recruitment has already ended');
@@ -208,7 +226,7 @@ export class CandidatesController {
                 }
                 candidate.interviewSelections = [
                     ...interviewSelections,
-                    ...await this.interviewsService.findManyByIdsInRecruitment(iids, recruitment, GroupOrTeam[group]),
+                    ...(await this.interviewsService.findManyByIdsInRecruitment(iids, recruitment, GroupOrTeam[group])),
                 ];
                 await candidate.save();
                 return;
@@ -219,7 +237,7 @@ export class CandidatesController {
                 }
                 candidate.interviewSelections = [
                     ...interviewSelections,
-                    ...await this.interviewsService.findManyByIdsInRecruitment(iids, recruitment, GroupOrTeam.unique),
+                    ...(await this.interviewsService.findManyByIdsInRecruitment(iids, recruitment, GroupOrTeam.unique)),
                 ];
                 await candidate.save();
                 return;
@@ -231,12 +249,13 @@ export class CandidatesController {
 
     @Get(':cid/resume')
     @AcceptRole(Role.user)
-    async getResume(
-        @Param('cid') cid: string,
-        @Res() res: Response,
-    ) {
+    async getResume(@Param('cid') cid: string, @Res() res: Response) {
         const candidate = await this.candidatesService.findOneById(cid);
-        const { recruitment: { name }, resume, group } = candidate;
+        const {
+            recruitment: { name },
+            resume,
+            group,
+        } = candidate;
         if (!resume) {
             throw new BadRequestException(`Resume of candidate with id ${cid} doesn't exist`);
         }
@@ -256,7 +275,7 @@ export class CandidatesController {
         const recruitment = await this.recruitmentsService.findOneById(rid);
 
         if (recruitment.createdAt < user.createdAt) {
-            throw new ForbiddenException('You don\'t have permission to view this recruitment');
+            throw new ForbiddenException("You don't have permission to view this recruitment");
         }
 
         // find candidates WHERE c.updatedAt >= updatedAt AND r.rid = rid
@@ -265,13 +284,15 @@ export class CandidatesController {
 
     @Put(':cid/step')
     @AcceptRole(Role.user)
-    async moveCandidate(
-        @User() user: UserEntity,
-        @Param('cid') cid: string,
-        @Body() { from, to }: MoveCandidateBody,
-    ) {
+    async moveCandidate(@User() user: UserEntity, @Param('cid') cid: string, @Body() { from, to }: MoveCandidateBody) {
         const candidate = await this.candidatesService.findOneById(cid);
-        const { step, recruitment: { name, end, id }, group, rejected, abandoned } = candidate;
+        const {
+            step,
+            recruitment: { name, end, id },
+            group,
+            rejected,
+            abandoned,
+        } = candidate;
         if (+end < Date.now()) {
             throw new BadRequestException(`Recruitment ${name} has already ended`);
         }
@@ -294,19 +315,20 @@ export class CandidatesController {
 
     @Delete(':cid')
     @AcceptRole(Role.admin)
-    async removeCandidate(
-        @User() user: UserEntity,
-        @Param('cid') cid: string,
-    ) {
+    async removeCandidate(@User() user: UserEntity, @Param('cid') cid: string) {
         const candidate = await this.candidatesService.findOneById(cid);
-        const { resume, recruitment: { name, end, id }, group } = candidate;
+        const {
+            resume,
+            recruitment: { name, end, id },
+            group,
+        } = candidate;
         if (+end < Date.now()) {
             throw new BadRequestException(`Recruitment ${name} has already ended`);
         }
         if (user.group !== group) {
             throw new ForbiddenException(`You cannot remove candidates in group ${group}`);
         }
-        resume && await deleteFile(join(this.configService.resumePaths.persistent, name, group), resume);
+        resume && (await deleteFile(join(this.configService.resumePaths.persistent, name, group), resume));
         await candidate.remove();
         this.candidatesGateway.broadcastRemove(cid);
         this.recruitmentsGateway.broadcastUpdate(id);
@@ -334,18 +356,22 @@ export class CandidatesController {
     ) {
         const candidates = await this.candidatesService.findManyByIds(cids);
         if (type === InterviewType.group) {
-            candidates.sort((a, b) =>
-                a.interviewSelections.filter(({ name }) => name === GroupOrTeam[a.group]).length
-                - b.interviewSelections.filter(({ name }) => name === GroupOrTeam[b.group]).length,
+            candidates.sort(
+                (a, b) =>
+                    a.interviewSelections.filter(({ name }) => name === GroupOrTeam[a.group]).length -
+                    b.interviewSelections.filter(({ name }) => name === GroupOrTeam[b.group]).length,
             );
         } else {
-            candidates.sort((a, b) =>
-                a.interviewSelections.filter(({ name }) => name === GroupOrTeam.unique).length
-                - b.interviewSelections.filter(({ name }) => name === GroupOrTeam.unique).length,
+            candidates.sort(
+                (a, b) =>
+                    a.interviewSelections.filter(({ name }) => name === GroupOrTeam.unique).length -
+                    b.interviewSelections.filter(({ name }) => name === GroupOrTeam.unique).length,
             );
         }
         const interviewsMap = new Map<string, number[]>();
-        for (const { recruitment: { interviews } } of candidates) {
+        for (const {
+            recruitment: { interviews },
+        } of candidates) {
             for (const { id, period, slotNumber } of interviews) {
                 !interviewsMap.has(id) && interviewsMap.set(id, SLOTS[period].slice(0, slotNumber).reverse());
             }
@@ -356,8 +382,8 @@ export class CandidatesController {
         for (const candidate of candidates) {
             for (const { id, date, name } of candidate.interviewSelections) {
                 if (
-                    (type === InterviewType.group && name === GroupOrTeam[candidate.group])
-                    || (type === InterviewType.team && name === GroupOrTeam.unique)
+                    (type === InterviewType.group && name === GroupOrTeam[candidate.group]) ||
+                    (type === InterviewType.team && name === GroupOrTeam.unique)
                 ) {
                     const slots = interviewsMap.get(id);
                     if (slots?.length) {
@@ -380,7 +406,13 @@ export class CandidatesController {
     }
 
     private static checkAllocationPermission(candidate: CandidateEntity, user: UserEntity, type: InterviewType) {
-        const { recruitment: { name, end }, group, rejected, abandoned, step } = candidate;
+        const {
+            recruitment: { name, end },
+            group,
+            rejected,
+            abandoned,
+            step,
+        } = candidate;
         if (rejected) {
             throw new BadRequestException(`Candidate ${candidate.name} has already been rejected`);
         }
@@ -388,8 +420,8 @@ export class CandidatesController {
             throw new BadRequestException(`Candidate ${candidate.name} has already abandoned`);
         }
         if (
-            (type === InterviewType.group && step !== Step.组面时间选择)
-            || (type === InterviewType.team && step !== Step.群面时间选择)
+            (type === InterviewType.group && step !== Step.组面时间选择) ||
+            (type === InterviewType.team && step !== Step.群面时间选择)
         ) {
             throw new BadRequestException(`You cannot allocate time for candidates in step ${STEP_MAP[step]}`);
         }

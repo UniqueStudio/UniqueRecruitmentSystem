@@ -8,5 +8,4 @@ import { ConfigService } from '@services/config.service';
     providers: [ConfigService],
     exports: [ConfigService],
 })
-export class ConfigModule extends DefaultConfigModule {
-}
+export class ConfigModule extends DefaultConfigModule {}

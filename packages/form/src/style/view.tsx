@@ -13,8 +13,8 @@ const styles = ({ spacing, breakpoints }: Theme) =>
             marginRight: 'calc(100% - 100vw)',
             [breakpoints.down('xs')]: {
                 flexDirection: 'column',
-                alignItems: 'center'
-            }
+                alignItems: 'center',
+            },
         },
         background: {
             flex: 1,
@@ -23,27 +23,27 @@ const styles = ({ spacing, breakpoints }: Theme) =>
             backgroundPosition: 'bottom',
             marginBottom: spacing(2),
             [breakpoints.down('xs')]: {
-                display: 'none'
-            }
+                display: 'none',
+            },
         },
         bgLeft: {
             marginLeft: spacing(4),
-            backgroundImage: `url(${bgLeft})`
+            backgroundImage: `url(${bgLeft})`,
         },
         bgRight: {
             marginRight: spacing(4),
-            backgroundImage: `url(${bgRight})`
+            backgroundImage: `url(${bgRight})`,
         },
         center: {
             flex: 3,
             [breakpoints.down('xs')]: {
-                flex: 6
+                flex: 6,
             },
             [breakpoints.down('md')]: {
-                flex: 5
+                flex: 5,
             },
             '@media screen and (max-width: 800px)': {
-                flex: 6
+                flex: 6,
             },
             display: 'flex',
             flexDirection: 'column',
@@ -53,14 +53,14 @@ const styles = ({ spacing, breakpoints }: Theme) =>
             marginBottom: spacing(2),
             '& > div': {
                 width: '100%',
-                height: 'auto'
-            }
+                height: 'auto',
+            },
         },
         header: {
             width: '70%',
             [breakpoints.down('sm')]: {
-                width: '80%'
-            }
+                width: '80%',
+            },
         },
         msg: {
             userSelect: 'none',
@@ -69,22 +69,22 @@ const styles = ({ spacing, breakpoints }: Theme) =>
             margin: `${spacing(1)}px 0`,
             fontWeight: 600,
             [breakpoints.down('xs')]: {
-                fontSize: '14px'
+                fontSize: '14px',
             },
             '& .sp': {
                 fontFamily: MyTheme.font.special,
                 fontSize: '25px',
                 fontWeight: 'bold',
                 [breakpoints.down('xs')]: {
-                    fontSize: '20px'
-                }
+                    fontSize: '20px',
+                },
             },
             '& .sp1': {
-                color: MyTheme.palette.primary.main
+                color: MyTheme.palette.primary.main,
             },
             '& .sp2': {
-                color: MyTheme.palette.secondary.main
-            }
+                color: MyTheme.palette.secondary.main,
+            },
         },
         title: {
             textAlign: 'center',
@@ -97,14 +97,14 @@ const styles = ({ spacing, breakpoints }: Theme) =>
                 marginTop: spacing(-1),
                 marginBottom: 0,
                 [breakpoints.between('sm', 'md')]: {
-                    marginTop: spacing(1)
+                    marginTop: spacing(1),
                 },
                 [breakpoints.down('xs')]: {
                     fontSize: '8vw',
-                    marginTop: spacing(2)
-                }
-            }
-        }
+                    marginTop: spacing(2),
+                },
+            },
+        },
     });
 
 export default styles;

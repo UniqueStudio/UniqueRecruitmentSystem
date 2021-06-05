@@ -55,14 +55,16 @@ export const Template: FC<Props> = observer(({ toggleOpen }) => {
         setActiveStep((prevActiveStep) => prevActiveStep + 1);
     };
 
-    const handleChange = (name: string): ChangeEventHandler<HTMLInputElement> => ({ target: { value } }) => {
-        // `value` is defined as string but can be number here
-        setContent((prevContent) => {
-            const newContent = { ...prevContent, [name]: value };
-            setMessage(generateModel(newContent));
-            return newContent;
-        });
-    };
+    const handleChange =
+        (name: string): ChangeEventHandler<HTMLInputElement> =>
+        ({ target: { value } }) => {
+            // `value` is defined as string but can be number here
+            setContent((prevContent) => {
+                const newContent = { ...prevContent, [name]: value };
+                setMessage(generateModel(newContent));
+                return newContent;
+            });
+        };
 
     const handleCode: ChangeEventHandler<HTMLInputElement> = ({ target: { value } }) => {
         setCode(value);

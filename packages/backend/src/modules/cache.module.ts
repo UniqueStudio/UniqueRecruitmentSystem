@@ -5,5 +5,4 @@ import { CacheModule as DefaultCacheModule, Global, Module } from '@nestjs/commo
     imports: [DefaultCacheModule.register()],
     exports: [DefaultCacheModule],
 })
-export class CacheModule {
-}
+export class CacheModule {}

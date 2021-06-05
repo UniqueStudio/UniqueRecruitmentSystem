@@ -42,7 +42,9 @@ export const Login: FC = observer(() => {
         <>
             {$user.qrCodeURL && <img className={classes.qrCode} src={$user.qrCodeURL} alt='QRCode' />}
             <ButtonGroup variant='outlined' size='large'>
-                <Button onClick={loginByQRCode} disabled={!!$user.qrCodeURL}>获取二维码</Button>
+                <Button onClick={loginByQRCode} disabled={!!$user.qrCodeURL}>
+                    获取二维码
+                </Button>
                 <Button onClick={handleMethod(0)}>返回</Button>
             </ButtonGroup>
         </>
@@ -58,7 +60,9 @@ export const Login: FC = observer(() => {
                 onChange={handlePassword}
             />
             <ButtonGroup variant='outlined' size='large'>
-                <Button type='submit' disabled={!phone || !password}>登录</Button>
+                <Button type='submit' disabled={!phone || !password}>
+                    登录
+                </Button>
                 <Button onClick={handleMethod(0)}>返回</Button>
             </ButtonGroup>
         </>

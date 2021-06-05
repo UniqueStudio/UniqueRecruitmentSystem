@@ -59,15 +59,15 @@ export const Table: FC = observer(() => {
                             : !selections.length
                             ? '未选择'
                             : selections.map(({ date, period }, index) => (
-                                <Chip
-                                    key={index}
-                                    className={classes.chip}
-                                    color='primary'
-                                    variant='outlined'
-                                    size={isMobile ? 'small' : 'medium'}
-                                    label={new Date(date).toLocaleDateString('zh-CN') + PERIOD_MAP.get(period)!}
-                                />
-                            ))}
+                                  <Chip
+                                      key={index}
+                                      className={classes.chip}
+                                      color='primary'
+                                      variant='outlined'
+                                      size={isMobile ? 'small' : 'medium'}
+                                      label={new Date(date).toLocaleDateString('zh-CN') + PERIOD_MAP.get(period)!}
+                                  />
+                              ))}
                     </>
                 );
             },

@@ -14,11 +14,11 @@ const styles = createStyles({
         backgroundColor: 'rgba(0,0,0,0.5)',
         display: open ? 'flex' : 'none',
         justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: 'center',
     }),
     loading: {
-        color: 'rgb(31,84,122)'
-    }
+        color: 'rgb(31,84,122)',
+    },
 });
 
 export default makeStyles(styles);

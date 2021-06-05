@@ -56,7 +56,7 @@ describe('CandidatesController e2e', () => {
             phone: '13131111111',
             mail: 'foo@bar.com',
             group: Group.web,
-            gender:Gender.female,
+            gender: Gender.female,
             grade: Grade.freshman,
             recruitment: prevRecruitment,
             rank: Rank.A,
@@ -66,25 +66,28 @@ describe('CandidatesController e2e', () => {
             isQuick: false,
         });
         // create user before create recruitment
-        testUser = await usersService.hashPasswordAndCreate({
-            weChatID: 'hanyuu',
-            name: 'hanyuu',
-            joinTime: '2000C',
-            phone: '19876543211',
-            mail: 'hanyuu@hinami.zawa',
-            gender: Gender.female,
-            group: Group.ai,
-            isAdmin: true,
-        }, password);
+        testUser = await usersService.hashPasswordAndCreate(
+            {
+                weChatID: 'hanyuu',
+                name: 'hanyuu',
+                joinTime: '2000C',
+                phone: '19876543211',
+                mail: 'hanyuu@hinami.zawa',
+                gender: Gender.female,
+                group: Group.ai,
+                isAdmin: true,
+            },
+            password,
+        );
         testRecruitment = await recruitmentsService.createAndSave({
             name: '2020C',
             beginning: new Date('1999'),
             deadline: new Date('2077'),
             end: new Date('2099'),
         });
-        const { body: { payload } } = await agent(app.getHttpServer())
-            .post('/auth/user/login')
-            .send({ password, phone: testUser.phone });
+        const {
+            body: { payload },
+        } = await agent(app.getHttpServer()).post('/auth/user/login').send({ password, phone: testUser.phone });
         adminJWT = payload;
     });
 
@@ -157,7 +160,9 @@ describe('CandidatesController e2e', () => {
 
         describe('candidate login', () => {
             it('should return jwt', async () => {
-                const { body: { payload } } = await agent(app.getHttpServer())
+                const {
+                    body: { payload },
+                } = await agent(app.getHttpServer())
                     .post('/auth/candidate/login')
                     .send({ phone: '13344445555', code: '1234' })
                     .expect(201);
@@ -168,7 +173,9 @@ describe('CandidatesController e2e', () => {
 
     describe('GET /candidates/me', () => {
         it('should return my data', async () => {
-            const { body: { payload } } = await agent(app.getHttpServer())
+            const {
+                body: { payload },
+            } = await agent(app.getHttpServer())
                 .get('/candidates/me')
                 .auth(candidateJWT, { type: 'bearer' })
                 .expect(200);
@@ -204,7 +211,9 @@ describe('CandidatesController e2e', () => {
         });
         describe('get my new info', () => {
             it('should return my new info', async () => {
-                const { body: { payload } } = await agent(app.getHttpServer())
+                const {
+                    body: { payload },
+                } = await agent(app.getHttpServer())
                     .get('/candidates/me')
                     .auth(candidateJWT, { type: 'bearer' })
                     .expect(200);
@@ -214,9 +223,7 @@ describe('CandidatesController e2e', () => {
         });
         describe('update my info with invalid credential', () => {
             it('should throw', async () => {
-                await agent(app.getHttpServer())
-                    .put('/candidates/me')
-                    .expect(403);
+                await agent(app.getHttpServer()).put('/candidates/me').expect(403);
             });
         });
     });
@@ -245,9 +252,7 @@ describe('CandidatesController e2e', () => {
         });
         describe('get resume with invalid credential', () => {
             it('should throw', async () => {
-                await agent(app.getHttpServer())
-                    .get(`/candidates/${testCandidate.id}/resume`)
-                    .expect(403);
+                await agent(app.getHttpServer()).get(`/candidates/${testCandidate.id}/resume`).expect(403);
             });
         });
     });
@@ -255,7 +260,9 @@ describe('CandidatesController e2e', () => {
     describe('GET /candidates/recruitment/:rid', () => {
         describe('get candidates with valid credential', () => {
             it('should return the candidates info', async () => {
-                const { body: { payload } } = await agent(app.getHttpServer())
+                const {
+                    body: { payload },
+                } = await agent(app.getHttpServer())
                     .get(`/candidates/recruitment/${testRecruitment.id}`)
                     .auth(adminJWT, { type: 'bearer' })
                     .expect(200);
@@ -264,9 +271,7 @@ describe('CandidatesController e2e', () => {
         });
         describe('get candidates with invalid credential', () => {
             it('should throw', async () => {
-                await agent(app.getHttpServer())
-                    .get(`/candidates/recruitment/${testRecruitment.id}`)
-                    .expect(403);
+                await agent(app.getHttpServer()).get(`/candidates/recruitment/${testRecruitment.id}`).expect(403);
             });
         });
         describe('get candidates with invalid rid', () => {
@@ -275,11 +280,13 @@ describe('CandidatesController e2e', () => {
                     .get('/candidates/recruitment/foo')
                     .auth(adminJWT, { type: 'bearer' })
                     .expect(400);
-            } );
+            });
         });
         describe('get candidates with updated at', () => {
             it('should return empty', async () => {
-                const { body: { payload } } = await agent(app.getHttpServer())
+                const {
+                    body: { payload },
+                } = await agent(app.getHttpServer())
                     .get(`/candidates/recruitment/${testRecruitment.id}`)
                     .auth(adminJWT, { type: 'bearer' })
                     .query({ updatedAt: new Date().getTime() }) // add this updatedAt query
@@ -291,7 +298,9 @@ describe('CandidatesController e2e', () => {
                 // update test candidate
                 await candidatesService.update(testCandidate.id, { name: 'newName' });
 
-                const { body: { payload } } = await agent(app.getHttpServer())
+                const {
+                    body: { payload },
+                } = await agent(app.getHttpServer())
                     .get(`/candidates/recruitment/${testRecruitment.id}`)
                     .auth(adminJWT, { type: 'bearer' })
                     .query({ updatedAt: startTime }) // add this updatedAt query
@@ -340,7 +349,9 @@ describe('CandidatesController e2e', () => {
         });
         describe('get his group interview', () => {
             it('should be allocated', async () => {
-                const { interviewAllocations: { group } } = await candidatesService.findOneById(testCandidate.id);
+                const {
+                    interviewAllocations: { group },
+                } = await candidatesService.findOneById(testCandidate.id);
                 expect(group).toStrictEqual(time);
             });
         });
@@ -372,7 +383,9 @@ describe('CandidatesController e2e', () => {
         let interviews: InterviewEntity[];
         describe('get my slots', () => {
             it('should return my slots', async () => {
-                const { body: { payload } } = await agent(app.getHttpServer())
+                const {
+                    body: { payload },
+                } = await agent(app.getHttpServer())
                     .get('/candidates/me/slots')
                     .auth(candidateJWT, { type: 'bearer' })
                     .expect(200);
@@ -415,7 +428,9 @@ describe('CandidatesController e2e', () => {
     describe('PUT /candidates/interview/:type', () => {
         describe('automatically allocate interview for candidates with valid credential', () => {
             it('should return 200', async () => {
-                const { body: { payload } } = await agent(app.getHttpServer())
+                const {
+                    body: { payload },
+                } = await agent(app.getHttpServer())
                     .put('/candidates/interview/group')
                     .send({
                         cids: [testCandidate.id],

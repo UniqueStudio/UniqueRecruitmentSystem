@@ -36,11 +36,12 @@ const Theme: FC = observer(({ children }) => {
 
 export const App: FC = () => {
     useStyles();
-    const routeRender = (Component: JSX.Element) => (props: RouteComponentProps) => (
-        <MainLayout {...props}>
-            <Suspense fallback={<Progress />}>{Component}</Suspense>
-        </MainLayout>
-    );
+    const routeRender = (Component: JSX.Element) => (props: RouteComponentProps) =>
+        (
+            <MainLayout {...props}>
+                <Suspense fallback={<Progress />}>{Component}</Suspense>
+            </MainLayout>
+        );
     return (
         <StyledEngineProvider injectFirst>
             <Theme>

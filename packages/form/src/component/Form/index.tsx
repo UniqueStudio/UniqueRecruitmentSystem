@@ -38,10 +38,10 @@ const translator = new Map([
     ['rank', '成绩排名'],
     ['phone', '电话号码'],
     ['code', '验证码'],
-    ['intro', '自我介绍']
+    ['intro', '自我介绍'],
 ]);
 
-const Form: FC<FormProps> = memo(props => {
+const Form: FC<FormProps> = memo((props) => {
     const classes = useStyles() as any;
     const { isPC, isPad, isMobile, title, submit, toggleSnackbar } = props;
 
@@ -83,7 +83,7 @@ const Form: FC<FormProps> = memo(props => {
             setSubmitState(({ submitted }) => ({ submitted, submitting: true }));
             info.resume && toggleSnackbar('开始上传，请耐心等待', 'info');
             const response = await upload(`${URL}/candidate`, { method: 'POST', body: formData }, ({ loaded, total }) =>
-                setProgress(Number.parseFloat(((loaded / total) * 100).toFixed(1)))
+                setProgress(Number.parseFloat(((loaded / total) * 100).toFixed(1))),
             );
             const result = JSON.parse(response);
             if (result.type === 'success') {
@@ -102,7 +102,8 @@ const Form: FC<FormProps> = memo(props => {
         }
     };
 
-    const handleChangeFormInfo = (name: string) => (value: unknown) => setFormInfo(pre => ({ ...pre, [name]: value }));
+    const handleChangeFormInfo = (name: string) => (value: unknown) =>
+        setFormInfo((pre) => ({ ...pre, [name]: value }));
 
     const handleChange = (name: string) => (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
         handleChangeFormInfo(name)(e.target.value);
@@ -119,7 +120,7 @@ const Form: FC<FormProps> = memo(props => {
         if (file.size > 1024 * 1024 * 100) {
             return toggleSnackbar('文件大小必须小于100MB', 'warning');
         }
-        setFormInfo(pre => ({ ...pre, resume: file }));
+        setFormInfo((pre) => ({ ...pre, resume: file }));
     };
 
     const handleFileFocus = ({ which }: KeyboardEvent<HTMLSpanElement>) => {
@@ -147,7 +148,7 @@ const Form: FC<FormProps> = memo(props => {
                         }
                         return { time: time - 1, sent };
                     });
-                }, 1000)
+                }, 1000),
             );
             const response = await fetch(`${URL}/sms/verification/candidate/${phone}`);
             const result = await response.json();
@@ -234,20 +235,25 @@ const Form: FC<FormProps> = memo(props => {
         />
     );
 
-    const selectComponents = ([
-        ['性别选择', 'gender', GENDERS, gender],
-        ['所属年级', 'grade', GRADES, grade],
-        ['组别选择', 'group', GROUPS, group],
-        ['成绩排名', 'rank', RANKS, rank]
-    ] as [string, string, string[], number][]).map(v => {
-        return (
-            useMemo(() => <Select
-                key={v[1]}
-                selections={v[2]}
-                value={v[2][v[3]] || ''}
-                defaultValue={v[0]}
-                handleSelect={handleChangeFormInfo(v[1])}
-            />, [v[3]])
+    const selectComponents = (
+        [
+            ['性别选择', 'gender', GENDERS, gender],
+            ['所属年级', 'grade', GRADES, grade],
+            ['组别选择', 'group', GROUPS, group],
+            ['成绩排名', 'rank', RANKS, rank],
+        ] as [string, string, string[], number][]
+    ).map((v) => {
+        return useMemo(
+            () => (
+                <Select
+                    key={v[1]}
+                    selections={v[2]}
+                    value={v[2][v[3]] || ''}
+                    defaultValue={v[0]}
+                    handleSelect={handleChangeFormInfo(v[1])}
+                />
+            ),
+            [v[3]],
         );
     });
 
@@ -286,7 +292,7 @@ const Form: FC<FormProps> = memo(props => {
                         classes.font,
                         classes.resume,
                         classes.height,
-                        'button'
+                        'button',
                     )}
                     tabIndex={0}
                     onKeyDown={handleFileFocus}
@@ -371,20 +377,13 @@ const Form: FC<FormProps> = memo(props => {
         <div className={classes.root}>
             <div
                 className={classNames(classes.container, {
-                    [classes.curtain]: (submitState.submitted || submitState.submitting) && !isMobile
+                    [classes.curtain]: (submitState.submitted || submitState.submitting) && !isMobile,
                 })}
             >
                 {main}
             </div>
             {submitState.submitted && (
-                <Submitted
-                    title='报名成功'
-                    description={
-                        <>
-                            请等待我们的短信通知，有问题可在招新群联系我们
-                        </>
-                    }
-                />
+                <Submitted title='报名成功' description={<>请等待我们的短信通知，有问题可在招新群联系我们</>} />
             )}
             {submitState.submitting && <UploadProgress progress={progress} />}
         </div>
