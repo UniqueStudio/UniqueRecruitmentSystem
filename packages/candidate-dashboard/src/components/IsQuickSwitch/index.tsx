@@ -4,6 +4,7 @@ import { Controller } from 'react-hook-form';
 
 import { IS_QUICK_DESC } from 'config/consts';
 import { usePopover } from 'hooks/usePopover';
+import { Trans } from '@lingui/macro';
 
 const useStyle = makeStyles((theme) => ({
   center: {
@@ -48,7 +49,9 @@ export const IsQuickSwitch: React.FC = () => {
       }
       label={
         <div className={classes.center}>
-          <span>快速通道</span>
+          <span>
+            <Trans>快速通道</Trans>
+          </span>
           <IconButton size='small' onMouseEnter={handlePopoverOpen} onMouseLeave={handlePopoverClose}>
             <HelpOutline fontSize='small' />
           </IconButton>

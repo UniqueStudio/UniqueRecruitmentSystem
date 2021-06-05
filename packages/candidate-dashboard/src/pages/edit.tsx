@@ -2,6 +2,7 @@ import { Button, Card, Container, Grid, GridSize, TextField } from '@material-ui
 import { makeStyles } from '@material-ui/core/styles';
 import { useMemo, useEffect } from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
+import { t, Trans } from '@lingui/macro';
 import clsx from 'clsx';
 
 import type { Breakpoint } from '@material-ui/core/styles/createBreakpoints';
@@ -62,17 +63,17 @@ interface InputField {
 }
 
 const TextInputs: ReadonlyArray<InputField> = [
-  { name: 'name', label: '姓名', required: true },
-  { name: 'mail', label: '邮箱', required: true },
-  { name: 'referrer', label: '推荐人' },
-  { name: 'phone', label: '电话', required: true },
+  { name: 'name', label: t`姓名`, required: true },
+  { name: 'mail', label: t`邮箱`, required: true },
+  { name: 'referrer', label: t`推荐人` },
+  { name: 'phone', label: t`电话`, required: true },
 ] as const;
 
 const SelectInputs: ReadonlyArray<InputField & { options: string[] }> = [
-  { name: 'rank', label: '成绩排名', required: true, options: RANKS },
-  { name: 'gender', label: '性别', required: true, options: GENDERS },
-  { name: 'grade', label: '所属年级', required: true, options: GRADES },
-  { name: 'group', label: '组别', required: true, options: GROUPS },
+  { name: 'rank', label: t`成绩排名`, required: true, options: RANKS },
+  { name: 'gender', label: t`性别`, required: true, options: GENDERS },
+  { name: 'grade', label: t`所属年级`, required: true, options: GRADES },
+  { name: 'group', label: t`组别`, required: true, options: GROUPS },
 ] as const;
 
 const Edit: NextPage = () => {
@@ -87,7 +88,7 @@ const Edit: NextPage = () => {
   useEffect(() => void dispatch(fetchCandidate()), [dispatch]);
 
   // title
-  useEffect(() => void dispatch(setLayoutTitle('编辑信息')), [dispatch]);
+  useEffect(() => void dispatch(setLayoutTitle(t`编辑信息`)), [dispatch]);
 
   const handleSubmit = (data: CandidateForm) => {
     dispatch(updateCandidate(data));
@@ -108,7 +109,7 @@ const Edit: NextPage = () => {
                 </Grid>
               ))}
               <Grid item className={clsx(classes.item, classes.center)} {...grid}>
-                <AutoComplete name='institute' label='学院' required className={classes.input} options={Deps} />
+                <AutoComplete name='institute' label={t`学院`} required className={classes.input} options={Deps} />
               </Grid>
               <Grid item className={clsx(classes.item, classes.center)} {...grid}>
                 <MajorAutoComplete className={classes.input} />
@@ -128,7 +129,7 @@ const Edit: NextPage = () => {
                 <IsQuickSwitch />
               </Grid>
               <Grid item className={clsx(classes.item, classes.center)} {...grid}>
-                <Input name='resume' label='上传简历/作品集' type='file' />
+                <Input name='resume' label={t`上传简历/作品集`} type='file' />
               </Grid>
               <Grid item className={clsx(classes.item, classes.center)} xs={12}>
                 <Controller
@@ -141,7 +142,7 @@ const Edit: NextPage = () => {
                       rows={4}
                       rowsMax={8}
                       inputRef={ref}
-                      label='自我介绍'
+                      label={t`自我介绍`}
                       className={clsx(classes.input, classes.intro)}
                       variant='outlined'
                     />
@@ -152,11 +153,13 @@ const Edit: NextPage = () => {
             <Grid container justify='space-evenly'>
               <Grid item>
                 <Button variant='contained' color='primary' type='submit'>
-                  保存
+                  <Trans>保存</Trans>
                 </Button>
               </Grid>
               <Grid item>
-                <Button variant='contained'>取消</Button>
+                <Button variant='contained'>
+                  <Trans>取消</Trans>
+                </Button>
               </Grid>
             </Grid>
           </form>

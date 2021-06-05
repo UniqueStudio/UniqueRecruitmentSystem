@@ -1,3 +1,4 @@
+import { t, Trans } from '@lingui/macro';
 import {
   AppBar,
   makeStyles,
@@ -124,12 +125,12 @@ const Layout: FC = (props) => {
           <header className={classes.drawerheader}>
             <img src='/assets/logo.png' />
             <Typography variant='h6' align='center'>
-              联创招新选手dashboard
+              <Trans>联创团队招新选手Dashboard</Trans>
             </Typography>
           </header>
           <List className={classes.drawerList}>
-            <ListItemLink href='/' primary='首页' icon={<HomeIcon />} onClick={handleClose} />
-            <ListItemLink href='/edit' primary='编辑信息' icon={<EditIcon />} onClick={handleClose} />
+            <ListItemLink href='/' primary={t`首页`} icon={<HomeIcon />} onClick={handleClose} />
+            <ListItemLink href='/edit' primary={t`编辑信息`} icon={<EditIcon />} onClick={handleClose} />
           </List>
         </nav>
       </SwipeableDrawer>

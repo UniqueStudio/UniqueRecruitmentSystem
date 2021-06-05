@@ -1,3 +1,5 @@
 node_modules
 .next
 out
+/src/locales/_build/
+/src/locales/**/*.js
