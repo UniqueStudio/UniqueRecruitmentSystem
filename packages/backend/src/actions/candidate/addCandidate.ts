@@ -1,18 +1,19 @@
-import { RequestHandler } from 'express';
-import { body, validationResult } from 'express-validator';
 import path from 'path';
-import { io } from '../../app';
 
-import { GENDERS, GRADES, GROUPS_, RANKS } from '@config/consts';
+import { body, validationResult } from 'express-validator';
+
+import { sendSMS } from '@actions/candidate/sendSMS';
+import { GENDERS, GRADES, GROUPS_, RANKS, TITLE_REGEX } from '@config/consts';
+import { Candidate, Handler } from '@config/types';
 import { CandidateRepo, RecruitmentRepo } from '@database/model';
-import { titleConverter } from '@utils/titleConverter';
+import { io } from '@servers/websocket';
 import { copyFile } from '@utils/copyFile';
 import { errorRes } from '@utils/errorRes';
 import { logger } from '@utils/logger';
 import sendEmail from '@utils/sendEmail';
-import { sendSMS } from './sendSMS';
+import { titleConverter } from '@utils/titleConverter';
 
-export const addCandidate: RequestHandler = async (req, res, next) => {
+export const addCandidate: Handler<Candidate> = async (req, res, next) => {
     try {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
@@ -23,7 +24,7 @@ export const addCandidate: RequestHandler = async (req, res, next) => {
         if (req.file) {
             const { originalname: filename, path: oldPath } = req.file;
             filepath = path.join('./data/resumes', title, group);
-            filepath = await copyFile(oldPath, filepath, `${name} - ${filename}`);
+            filepath = copyFile(oldPath, filepath, `${name} - ${filename}`);
         }
         const info = await CandidateRepo.createAndInsert({
             name,
@@ -39,12 +40,12 @@ export const addCandidate: RequestHandler = async (req, res, next) => {
             isQuick,
             title,
             resume: filepath,
-            referrer
+            referrer,
         });
         await RecruitmentRepo.update({ title, 'groups.name': group }, {
             'groups.$.total': await CandidateRepo.count({ title, group }),
             'groups.$.steps.0': await CandidateRepo.count({ title, group, step: 0 }),
-            'total': await CandidateRepo.count({ title })
+            'total': await CandidateRepo.count({ title }),
         });
         res.json({ type: 'success' });
         io.emit('addCandidate', { candidate: info });
@@ -67,7 +68,7 @@ export const addCandidate: RequestHandler = async (req, res, next) => {
     }
 };
 
-export const verifyTitle = body('title').matches(/\d{4}[ASC]/, 'g').withMessage('Title is invalid!')
+export const verifyTitle = body('title').matches(TITLE_REGEX).withMessage('Title is invalid!')
     .custom(async (title) => {
         const recruitment = (await RecruitmentRepo.query({ title }))[0];
         if (!recruitment) {
@@ -90,8 +91,8 @@ export const addCandidateVerify = [
     body('gender').isInt({ lt: GENDERS.length, gt: -1 }).withMessage('Gender is invalid!'),
     body('isQuick').isBoolean().withMessage('IsQuick is invalid!'),
     body('phone').isMobilePhone('zh-CN').withMessage('Phone is invalid!'),
-    body('phone').custom(async (phone, { req }) => {
-        if ((await CandidateRepo.query({ phone, title: req.body.title })).length !== 0) {
+    body('phone').custom(async (phone, { req: { body: { title } } }) => {
+        if ((await CandidateRepo.query({ phone, title })).length !== 0) {
             throw new Error('You have already applied!');
         }
     }),
@@ -103,5 +104,5 @@ export const addCandidateVerify = [
     body('rank').isInt({ lt: RANKS.length, gt: -1 }).withMessage('Rank is invalid!'),
     body('intro').isString().withMessage('Intro is invalid!'),
     body('referrer').isString().withMessage('Referrer is invalid!'),
-    verifyTitle
+    verifyTitle,
 ];

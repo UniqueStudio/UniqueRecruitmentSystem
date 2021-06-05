@@ -1,12 +1,22 @@
-import { RequestHandler } from 'express';
 import { body, validationResult } from 'express-validator';
 
-import { io } from '../../app';
-import { GROUPS_ } from '@config/consts';
+
+import { GROUPS_, TITLE_REGEX } from '@config/consts';
+import { Handler } from '@config/types';
 import { RecruitmentRepo, UserRepo } from '@database/model';
+import { io } from '@servers/websocket';
 import { errorRes } from '@utils/errorRes';
 
-export const launchRecruitment: RequestHandler = async (req, res, next) => {
+interface Body {
+    code: string;
+    phone: string;
+    title: string;
+    begin: number;
+    end: number;
+    stop: number;
+}
+
+export const launchRecruitment: Handler<Body> = async (req, res, next) => {
     try {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
@@ -37,15 +47,15 @@ export const launchRecruitment: RequestHandler = async (req, res, next) => {
 };
 
 export const launchRecruitmentVerify = [
-    body('title').matches(/\d{4}[ASC]/, 'g').withMessage('Title is invalid!').custom(async (title) => {
+    body('title').matches(TITLE_REGEX).withMessage('Title is invalid!').custom(async (title) => {
         if ((await RecruitmentRepo.query({ title })).length) {
             throw new Error('Current recruitment has already been launched!');
         }
     }),
     body('begin').isInt().withMessage('Begin time is invalid!')
-        .custom((begin, { req }) => begin < req.body.stop).withMessage('Stop time should be later than begin time'),
+        .custom((begin, { req: { body: { stop } } }) => begin < stop).withMessage('Stop time should be later than begin time'),
     body('stop').isInt().withMessage('Stop time is invalid!')
-        .custom((stop, { req }) => stop < req.body.end).withMessage('End time should be later than stop time'),
+        .custom((stop, { req: { body: { end } } }) => stop < end).withMessage('End time should be later than stop time'),
     body('end').isInt().withMessage('End time is invalid!')
-        .custom((end, { req }) => end > req.body.begin).withMessage('End time should be later than begin time'),
+        .custom((end, { req: { body: { begin } } }) => end > begin).withMessage('End time should be later than begin time'),
 ];

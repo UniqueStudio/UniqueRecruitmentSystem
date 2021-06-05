@@ -1,11 +1,12 @@
-import { RequestHandler } from 'express';
 import { param, validationResult } from 'express-validator';
+
 import { GROUPS_ } from '@config/consts';
+import { Handler } from '@config/types';
 import { RecruitmentRepo } from '@database/model';
 import { errorRes } from '@utils/errorRes';
 import { generateJWT } from '@utils/generateJWT';
 
-export const getForm: RequestHandler = async (req, res, next) => {
+export const getForm: Handler = async (req, res, next) => {
     try {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {

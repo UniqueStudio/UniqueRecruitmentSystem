@@ -1,11 +1,13 @@
-import { RequestHandler } from 'express';
 import { param, validationResult } from 'express-validator';
-import { PayloadRepo, RecruitmentRepo } from '@database/model';
+
 import { redisAsync } from '../../redis';
+
+import { Handler } from '@config/types';
+import { PayloadRepo, RecruitmentRepo } from '@database/model';
 import { errorRes } from '@utils/errorRes';
 import { generateJWT } from '@utils/generateJWT';
 
-export const newGetForm: RequestHandler = async (req, res, next) => {
+export const newGetForm: Handler = async (req, res, next) => {
     try {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
@@ -13,8 +15,11 @@ export const newGetForm: RequestHandler = async (req, res, next) => {
         }
 
         const hash = req.params.hash;
-        const catchedId = await redisAsync.get(`payload:${hash}`);
-        let payload = await PayloadRepo.queryById(catchedId);
+        const payloadId = await redisAsync.get(`payload:${hash}`);
+        if (!payloadId) {
+            return next(errorRes('Payload ID doesn\'t exist!', 'warning'));
+        }
+        let payload = await PayloadRepo.queryById(payloadId);
         if (!payload) {
             payload = (await PayloadRepo.query({ hash }))[0];
             if (!payload) {
@@ -32,7 +37,10 @@ export const newGetForm: RequestHandler = async (req, res, next) => {
                     return next(errorRes('Recruitment doesn\'t exist!', 'warning'));
                 }
                 const groupData = recruitment.groups.find((group) => group.name === groupName);
-                return res.json({ type: 'success', time: groupData!.interview, token, step });
+                if (!groupData) {
+                    return next(errorRes('Group doesn\'t exist!', 'warning'));
+                }
+                return res.json({ type: 'success', time: groupData.interview, token, step });
             }
             case 'team': {
                 // 群面

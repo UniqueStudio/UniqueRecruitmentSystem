@@ -1,13 +1,26 @@
-import fs from 'fs';
+import { createLogger, format, transports } from 'winston';
 
-const logInfo = fs.createWriteStream('./logs/stdout.log');
-const logError = fs.createWriteStream('./logs/stderr.log');
+import { isDev } from '@utils/environment';
 
-export const logger = {
-    info: (message: string) => {
-        logInfo.write(`${new Date().toISOString()} [INFO] ${message}\n`);
-    },
-    error: (message: string) => {
-        logError.write(`${new Date().toISOString()} [ERROR] ${message}\n`);
-    }
-};
+export const logger = createLogger({
+    level: 'info',
+    format: format.combine(
+        format.timestamp({
+            format: 'YYYY-MM-DD HH:mm:ss',
+        }),
+        format.printf(({ level, message, timestamp }) => `[${level}] ${timestamp as string} | ${message}`),
+    ),
+    transports: [
+        new transports.File({ filename: 'logs/error.log', level: 'error' }),
+        new transports.File({ filename: 'logs/access.log' }),
+    ],
+});
+
+if (isDev) {
+    logger.add(new transports.Console({
+        format: format.combine(
+            format.colorize(),
+            format.simple(),
+        ),
+    }));
+}

@@ -2,7 +2,7 @@
 
 backend of recruitment system for Unique Studio
 
-## Tool Chain
+## Tech stack
 
 1. `node.js`
 2. `typescript`

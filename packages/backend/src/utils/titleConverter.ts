@@ -1,7 +1,7 @@
 export const titleConverter = (title: string) => {
     const last = title.slice(4);
-    const abbr = ['S', 'C', 'A'];
-    const full = ['春季招新', '夏令营招新', '秋季招新'];
+    const abbr = ['S', 'C', 'A', 'O'];
+    const full = ['春季招新', '夏令营招新', '秋季招新', '日常招新'];
     const i = abbr.indexOf(last);
     if (i >= 0) {
         return title.slice(0, 4) + full[i];

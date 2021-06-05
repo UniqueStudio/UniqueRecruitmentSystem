@@ -1,5 +1,5 @@
 import request from 'supertest';
-import { app } from '../src/app';
+import { app } from '../src/servers/http';
 import { UserRepo } from '../src/database/model';
 import { generateJWT } from '../src/utils/generateJWT';
 import { randomBytes, scryptSync } from 'crypto';
@@ -30,9 +30,9 @@ describe('POST /user/admin', () => {
                 }
             });
         } else {
-            await UserRepo.updateById(admin[0]._id, { isAdmin: false });
+            await UserRepo.updateById(admin[0]._id.toString(), { isAdmin: false });
         }
-        const token = generateJWT({ id: users[0]._id }, 100000);
+        const token = generateJWT({ id: users[0]._id.toString() }, 100000);
         request(app)
             .post('/user/admin')
             .set({

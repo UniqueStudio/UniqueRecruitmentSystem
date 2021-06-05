@@ -1,13 +1,19 @@
-import { RequestHandler } from 'express';
+import { body, validationResult } from 'express-validator';
+
+import { GROUPS_ } from '@config/consts';
+import { Group, Handler } from '@config/types';
 import { UserRepo } from '@database/model';
 import { errorRes } from '@utils/errorRes';
-import { body, validationResult } from 'express-validator';
-import { GROUPS_ } from '@config/consts';
+
+interface Body {
+    group: Group;
+    who: string[];
+}
 
 // set users to admin, only admin or captain can do this
 // notice that non-exist user will be ignore
 // and can only add admin within same group
-export const setAdmin: RequestHandler = async (req, res, next) => {
+export const setAdmin: Handler<Body> = async (req, res, next) => {
     try {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
@@ -17,7 +23,7 @@ export const setAdmin: RequestHandler = async (req, res, next) => {
         const { id: uid } = res.locals;
         const user = await UserRepo.queryById(uid);
         if (!user) {
-            return next(errorRes("User doesn't exist!", 'warning'));
+            return next(errorRes('User doesn\'t exist!', 'warning'));
         }
         if (!user.isAdmin && !user.isCaptain) {
             return next(errorRes('User has no permission', 'warning'));
@@ -35,8 +41,8 @@ export const setAdmin: RequestHandler = async (req, res, next) => {
         }
 
         await UserRepo.updateByIds(
-            admins.map((u) => u._id),
-            { isAdmin: true }
+            admins.map(({ _id }) => _id.toString()),
+            { isAdmin: true },
         );
 
         res.json({ type: 'success', newAdmins: admins.map(({ phone }) => phone) });

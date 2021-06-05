@@ -1,7 +1,4 @@
 import { Router } from 'express';
-import { authenticator } from '@mw/authenticator';
-import { codeChecker } from '@mw/codeChecker';
-import { fileHandler } from '@mw/fileHandler';
 
 import {
     addCandidate,
@@ -20,8 +17,13 @@ import {
     newSetCandidate,
     newSetCandidateVerify,
     setCandidate,
-    setCandidateVerify
+    setCandidateVerify,
 } from '../actions/candidate';
+
+import { authenticator } from '@mw/authenticator';
+import { codeChecker } from '@mw/codeChecker';
+import { fileHandler } from '@mw/fileHandler';
+
 
 const router = Router();
 

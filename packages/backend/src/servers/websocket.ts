@@ -1,14 +1,12 @@
 import socketIO, { Server } from 'socket.io';
 
-import { onAddComment, onMoveCandidate, onRemoveCandidate, onRemoveComment } from './actions/candidate';
-import { messenger } from './actions/user';
+import { onAddComment, onMoveCandidate, onRemoveCandidate, onRemoveComment } from '@actions/candidate';
+import { messenger } from '@actions/user';
+import { server } from '@servers/http';
+import { logger } from '@utils/logger';
 
-import { logger } from './utils/logger';
-
-export const wsServer = <T>(server: T) => socketIO(server);
-
-export const wsHandler = (IOServer: Server) =>
-    IOServer.on('connection', (socket) => {
+export const wsHandler = (IOServer: Server) => {
+    return IOServer.on('connection', (socket) => {
         logger.info('WebSocket connected');
         // move a candidate from step a to step b
         socket.on('moveCandidate', onMoveCandidate(socket));
@@ -21,3 +19,6 @@ export const wsHandler = (IOServer: Server) =>
         // instant messenger
         socket.on('sendMessage', messenger(socket));
     });
+};
+
+export const io = socketIO(server);

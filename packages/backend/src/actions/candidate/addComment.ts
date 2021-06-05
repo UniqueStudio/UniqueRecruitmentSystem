@@ -1,8 +1,8 @@
 import { Socket } from 'socket.io';
 
-import { io } from '../../app';
 import { Comment } from '@config/types';
 import { CandidateRepo, UserRepo } from '@database/model';
+import { io } from '@servers/websocket';
 import { errorRes } from '@utils/errorRes';
 import { logger } from '@utils/logger';
 import { verifyJWT } from '@utils/verifyJWT';
@@ -31,7 +31,7 @@ export const onAddComment = (socket: Socket) => async (req: { cid: string, comme
         if (!updated) {
             return socket.emit('addCommentError', errorRes('Failed to add comment!', 'warning'));
         }
-        return io.emit('addComment', { cid, title, comment: updated.comments.slice(-1)[0] });
+        return io.emit('addComment', { cid, title, comment: updated.comments[updated.comments.length - 1] });
     } catch ({ message }) {
         logger.error(message);
         return socket.emit('addCommentError', errorRes(message, 'error'));

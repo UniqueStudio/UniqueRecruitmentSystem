@@ -1,11 +1,17 @@
-import { RequestHandler } from 'express';
 import { param, validationResult } from 'express-validator';
+
+import { verifyTitle } from './addCandidate';
+
+import { Handler } from '@config/types';
 import { CandidateRepo, RecruitmentRepo, UserRepo } from '@database/model';
 import { allocateTime } from '@utils/allocateTime';
 import { errorRes } from '@utils/errorRes';
-import { verifyTitle } from './addCandidate';
 
-export const allocateAll: RequestHandler = async (req, res, next) => {
+interface Body {
+    title: string;
+}
+
+export const allocateAll: Handler<Body> = async (req, res, next) => {
     try {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
@@ -19,6 +25,9 @@ export const allocateAll: RequestHandler = async (req, res, next) => {
         const { title } = req.body;
         const { type } = req.params;
         const recruitment = (await RecruitmentRepo.query({ title }))[0];
+        if (!recruitment) {
+            return next(errorRes('Recruitment doesn\'t exist!', 'warning'));
+        }
         if (type === 'group') {
             const groupData = recruitment.groups.find(({ name }) => name === group);
             if (!groupData) {
@@ -37,13 +46,13 @@ export const allocateAll: RequestHandler = async (req, res, next) => {
                 'interviews.group.selection.0': { $exists: true }, // selected
             });
             const allocations = allocateTime(groupData.interview, candidates, 'group');
-            const promises = allocations.map(async ({ id, time }) => {
+            await Promise.all(allocations.map(async ({ id, time }) => {
                 if (time) {
                     return CandidateRepo.updateById(id, { 'interviews.group.allocation': time });
                 }
                 return;
-            });
-            Promise.all(promises).then(() => res.json({ type: 'success', allocations }));
+            }));
+            res.json({ type: 'success', allocations });
         } else {
             if (!recruitment.interview.length) {
                 return next(errorRes('Please set team interview time first!', 'warning'));
@@ -57,13 +66,13 @@ export const allocateAll: RequestHandler = async (req, res, next) => {
                 'interviews.team.selection.0': { $exists: true }, // selected
             });
             const allocations = allocateTime(recruitment.interview, candidates, 'team');
-            const promises = allocations.map(async ({ time, id }) => {
+            await Promise.all(allocations.map(async ({ time, id }) => {
                 if (time) {
                     return CandidateRepo.updateById(id, { 'interviews.team.allocation': time });
                 }
                 return;
-            });
-            Promise.all(promises).then(() => res.json({ type: 'success', allocations }));
+            }));
+            res.json({ type: 'success', allocations });
         }
     } catch (error) {
         return next(error);
@@ -72,5 +81,5 @@ export const allocateAll: RequestHandler = async (req, res, next) => {
 
 export const allocateAllVerify = [
     param('type').custom((type) => ['group', 'team'].includes(type)).withMessage('Interview type is invalid!'),
-    verifyTitle
+    verifyTitle,
 ];

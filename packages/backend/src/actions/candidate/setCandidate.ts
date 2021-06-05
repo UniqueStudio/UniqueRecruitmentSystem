@@ -1,10 +1,17 @@
-import { RequestHandler } from 'express';
 import { body, param, validationResult } from 'express-validator';
+
+import { Handler, Time } from '@config/types';
 import { CandidateRepo, RecruitmentRepo } from '@database/model';
 import { checkInterview } from '@utils/checkInterview';
 import { errorRes } from '@utils/errorRes';
 
-export const setCandidate: RequestHandler = async (req, res, next) => {
+interface Body {
+    teamInterview: Time[];
+    groupInterview: Time[];
+    abandon: boolean;
+}
+
+export const setCandidate: Handler<Body> = async (req, res, next) => {
     try {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {

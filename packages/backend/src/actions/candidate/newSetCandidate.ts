@@ -1,14 +1,22 @@
-import { RequestHandler } from 'express';
 import { body, param, validationResult } from 'express-validator';
-import { CandidateRepo, RecruitmentRepo } from '@database/model';
-import { PayloadRepo } from '@database/model';
+
 import { redisAsync } from '../../redis';
+
+import { sendSMS } from './sendSMS';
+
+import { Handler, Time } from '@config/types';
+import { CandidateRepo, PayloadRepo, RecruitmentRepo } from '@database/model';
 import { checkInterview } from '@utils/checkInterview';
 import { errorRes } from '@utils/errorRes';
-import { sendSMS } from './sendSMS';
 import { logger } from '@utils/logger';
 
-export const newSetCandidate: RequestHandler = async (req, res, next) => {
+interface Body {
+    teamInterview: Time[];
+    groupInterview: Time[];
+    abandon: boolean;
+}
+
+export const newSetCandidate: Handler<Body> = async (req, res, next) => {
     try {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
@@ -17,8 +25,11 @@ export const newSetCandidate: RequestHandler = async (req, res, next) => {
         const { id } = res.locals; // from JWT
         const { teamInterview, groupInterview, abandon } = req.body;
         const hash = req.params.hash;
-        const pid = await redisAsync.getThenDel(`payload:${hash}`);
-        let payload = await PayloadRepo.queryById(pid);
+        const payloadId = await redisAsync.getThenDel(`payload:${hash}`);
+        if (!payloadId) {
+            return next(errorRes('Payload ID doesn\'t exist!', 'warning'));
+        }
+        let payload = await PayloadRepo.queryById(payloadId);
         if (!payload) {
             payload = (await PayloadRepo.query({ hash }))[0];
             if (!payload) {
@@ -45,7 +56,7 @@ export const newSetCandidate: RequestHandler = async (req, res, next) => {
                 CandidateRepo.updateById(id, {
                     abandon
                 }),
-                redisAsync.del(`payload:${hash}`)
+                redisAsync.del(`payload:${hash}`),
             ]);
             return res.json({ type: 'success' });
         }
@@ -68,11 +79,11 @@ export const newSetCandidate: RequestHandler = async (req, res, next) => {
                     CandidateRepo.updateById(id, {
                         'interviews.group.selection': groupInterview,
                     }),
-                    PayloadRepo.deleteById(pid),
+                    PayloadRepo.deleteById(payloadId),
                 ]);
-                res.json({ type: 'success' });
                 // {{1}你好，您当前状态是{2}，请关注手机短信以便获取后续通知。
                 sendSMS(phone, { template: 670908, param_list: [name, '成功选择组面时间'] }).catch((e) => logger.error(e));
+                return res.json({ type: 'success' });
             }
             case 'team': {
                 const recruitment = await RecruitmentRepo.queryById(recruitmentId);
@@ -92,11 +103,11 @@ export const newSetCandidate: RequestHandler = async (req, res, next) => {
                     CandidateRepo.updateById(id, {
                         'interviews.team.selection': teamInterview,
                     }),
-                    PayloadRepo.deleteById(pid),
+                    PayloadRepo.deleteById(payloadId),
                 ]);
-                res.json({ type: 'success' });
                 // {1}你好，您当前状态是{2}，请关注手机短信以便获取后续通知。
                 sendSMS(phone, { template: 670908, param_list: [name, '成功选择群面时间'] }).catch((e) => logger.error(e));
+                return res.json({ type: 'success' });
             }
             default: {
                 return next(errorRes('Failed to set!', 'warning'));

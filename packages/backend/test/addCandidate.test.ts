@@ -1,5 +1,5 @@
 import request from 'supertest';
-import { app } from '../src/app';
+import { app } from '../src/servers/http';
 
 describe('POST /candidate', () => {
     it('should return success', (done) => {

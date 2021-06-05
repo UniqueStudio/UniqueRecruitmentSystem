@@ -1,11 +1,23 @@
-import { RequestHandler } from 'express';
 import { body, param, validationResult } from 'express-validator';
-import { io } from '../../app';
+
+
+import { TITLE_REGEX } from '@config/consts';
+import { Group, Handler, Time } from '@config/types';
 import { RecruitmentRepo, UserRepo } from '@database/model';
+import { io } from '@servers/websocket';
 import { checkInterview } from '@utils/checkInterview';
 import { errorRes } from '@utils/errorRes';
 
-export const setRecruitment: RequestHandler = async (req, res, next) => {
+interface Body {
+    begin: number;
+    end: number;
+    stop: number;
+    group: Group;
+    teamInterview?: Time[];
+    groupInterview?: Time[];
+}
+
+export const setRecruitment: Handler<Body> = async (req, res, next) => {
     try {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
@@ -24,7 +36,7 @@ export const setRecruitment: RequestHandler = async (req, res, next) => {
         await RecruitmentRepo.update({ title }, {
             begin,
             end,
-            stop
+            stop,
         });
         if (teamInterview && teamInterview.length) {
             await RecruitmentRepo.update({ title }, {
@@ -42,7 +54,7 @@ export const setRecruitment: RequestHandler = async (req, res, next) => {
                 title,
                 'groups.name': group,
             }, {
-                'groups.$.interview': groupInterview
+                'groups.$.interview': groupInterview,
             });
         }
         io.emit('updateRecruitment');
@@ -53,7 +65,7 @@ export const setRecruitment: RequestHandler = async (req, res, next) => {
 };
 
 export const setRecruitmentVerify = [
-    param('title').matches(/\d{4}[ASC]/, 'g').withMessage('Title is invalid!')
+    param('title').matches(TITLE_REGEX).withMessage('Title is invalid!')
         .custom(async (title) => {
             const recruitment = (await RecruitmentRepo.query({ title }))[0];
             if (!recruitment) {
@@ -67,11 +79,11 @@ export const setRecruitmentVerify = [
             }
         }),
     body('begin').isInt().withMessage('Begin time is invalid!')
-        .custom((begin, { req }) => begin < req.body.stop).withMessage('Stop applying time should be later than begin time'),
+        .custom((begin, { req: { body: { stop } } }) => begin < stop).withMessage('Stop applying time should be later than begin time'),
     body('stop').isInt().withMessage('Stop applying time is invalid!')
-        .custom((stop, { req }) => stop < req.body.end).withMessage('End time should be later than stop applying time'),
+        .custom((stop, { req: { body: { end } } }) => stop < end).withMessage('End time should be later than stop applying time'),
     body('end').isInt().withMessage('End time is invalid!')
-        .custom((end, { req }) => end > req.body.begin).withMessage('End time should be later than begin time'),
+        .custom((end, { req: { body: { begin } } }) => end > begin).withMessage('End time should be later than begin time'),
     body('teamInterview').custom(checkInterview).withMessage('Interview time is invalid!'),
     body('groupInterview').custom(checkInterview).withMessage('Interview time is invalid!'),
 ];

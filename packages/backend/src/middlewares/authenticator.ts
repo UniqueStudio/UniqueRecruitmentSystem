@@ -1,8 +1,8 @@
-import { NextFunction, Request, Response } from 'express';
+import { Handler } from '@config/types';
 import { errorRes } from '@utils/errorRes';
 import { verifyJWT } from '@utils/verifyJWT';
 
-export const authenticator = (req: Request, res: Response, next: NextFunction) => {
+export const authenticator: Handler = (req, res, next) => {
     if (req.method === 'OPTIONS') {
         return next();
     }
