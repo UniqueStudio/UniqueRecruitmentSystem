@@ -1,0 +1,7 @@
+version: "3"
+services:
+  nginx:
+    build:
+      context: nginx
+    ports:
+    - 6655:6655

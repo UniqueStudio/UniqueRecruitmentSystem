@@ -1,0 +1,15 @@
+{
+  "short_name": "报名表单",
+  "name": "联创团队招新报名表单",
+  "icons": [
+    {
+      "src": "favicon.ico",
+      "sizes": "512x512 256x256 192x192 128x128 64x64 32x32 24x24 16x16",
+      "type": "image/x-icon"
+    }
+  ],
+  "start_url": "./index.html",
+  "display": "standalone",
+  "theme_color": "#1769aa",
+  "background_color": "#fafafa"
+}
