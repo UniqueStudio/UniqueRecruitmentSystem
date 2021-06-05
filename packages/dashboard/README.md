@@ -1,13 +1,5 @@
 # Unique Recruitment Dashboard
 
-## Description
-
-Unique Recruitment System is the integrated project to solve the problem of the complicated recruitment process in Unique Studio.
-
-There are two parts of Unique Recruitment System,
-one is [Dashboard (this repo)](https://github.com/UniqueStudio/UniqueRecruitmentDashboard),
-the other is [Form](https://github.com/UniqueStudio/UniqueRecruitmentForm).
-
 ## Features
 
 1. Automatic interview / stay-up-test / rejected notification, time selection and so on.
@@ -15,11 +7,7 @@ the other is [Form](https://github.com/UniqueStudio/UniqueRecruitmentForm).
 3. Authority management
 4. ...
 
-## Preview
-
-Visit [https://hr.hustunique.com](https://hr.hustunique.com) for more details
-
-## Toolchain
+## Tech Stack
 
 1. `TypeScript`
 2. `React`
