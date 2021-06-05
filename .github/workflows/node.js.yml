@@ -3,11 +3,7 @@
 
 name: Node.js CI
 
-on:
-  push:
-    branches: [ master ]
-  pull_request:
-    branches: [ master ]
+on: [push, pull_request]
 
 jobs:
   build:
@@ -15,7 +11,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [10.x, 12.x, 14.x]
+        node-version: [12.x, 14.x, 16.x]
 
     steps:
       - uses: actions/checkout@v2
@@ -37,6 +33,9 @@ jobs:
       - run: yarn install
         name: Install Dependences
 
-      - run: yarn build
-        name: Run TypeScript Check
+      - run: yarn lint
+        name: Run ESLint Check
 
+      - run: yarn workspace unique-recruitment-dashboard build
+      - run: yarn workspace unique-recruitment-backend build
+      - run: yarn workspace unique-recruitment-candidate-dashboard build
