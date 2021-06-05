@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Button, Card, Container, Grid, GridSize, TextField } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { useMemo, useEffect } from 'react';
@@ -6,16 +7,15 @@ import clsx from 'clsx';
 
 import type { Breakpoint } from '@material-ui/core/styles/createBreakpoints';
 import type { NextPage } from 'next';
-import type { CandidateForm } from 'config/types';
+import type { SetCandidateInfo } from '@uniqs/api';
+import { Departments, GROUPS, GRADES, GENDERS, RANKS } from '@uniqs/config';
 
 import AutoComplete, { MajorAutoComplete } from 'components/AutoComplete';
 import { Input } from 'components/Input';
 import { IsQuickSwitch } from 'components/IsQuickSwitch';
-import { GROUPS, GRADES, GENDERS, RANKS } from 'config/consts';
 import { useAppDispatch, useAppSelector } from 'store';
 import { setLayoutTitle } from 'store/component';
 import { fetchCandidate, updateCandidate } from 'store/candidate';
-import { Departments } from 'config/departments';
 
 const useStyle = makeStyles((theme) => ({
   center: {
@@ -53,7 +53,7 @@ const grid: Partial<Record<Breakpoint, boolean | GridSize>> = {
   md: 4,
 };
 
-type InputKeys = keyof CandidateForm;
+type InputKeys = keyof SetCandidateInfo;
 
 interface InputField {
   name: InputKeys;
@@ -65,10 +65,10 @@ const TextInputs: ReadonlyArray<InputField> = [
   { name: 'name', label: '姓名', required: true },
   { name: 'mail', label: '邮箱', required: true },
   { name: 'referrer', label: '推荐人' },
-  { name: 'phone', label: '电话', required: true },
+  // { name: 'phone', label: '电话', required: true },
 ] as const;
 
-const SelectInputs: ReadonlyArray<InputField & { options: string[] }> = [
+const SelectInputs: ReadonlyArray<InputField & { options: ReadonlyArray<string> }> = [
   { name: 'rank', label: '成绩排名', required: true, options: RANKS },
   { name: 'gender', label: '性别', required: true, options: GENDERS },
   { name: 'grade', label: '所属年级', required: true, options: GRADES },
@@ -79,8 +79,16 @@ const Edit: NextPage = () => {
   const dispatch = useAppDispatch();
   const classes = useStyle();
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { abandon, rejected, interviews, step, ...defaultValues } = useAppSelector(({ candidate }) => candidate);
+  const {
+    abandoned,
+    rejected,
+    interviewAllocations,
+    interviewSelections,
+    updatedAt,
+    id,
+    step,
+    ...defaultValues
+  } = useAppSelector(({ candidate }) => candidate);
   const methods = useForm({ defaultValues });
 
   // fetch candidate data
@@ -89,7 +97,7 @@ const Edit: NextPage = () => {
   // title
   useEffect(() => void dispatch(setLayoutTitle('编辑信息')), [dispatch]);
 
-  const handleSubmit = (data: CandidateForm) => {
+  const handleSubmit = (data: SetCandidateInfo) => {
     dispatch(updateCandidate(data));
   };
 

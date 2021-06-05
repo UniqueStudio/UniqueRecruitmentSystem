@@ -1,6 +1,6 @@
 import { Snackbar, SnackbarCloseReason } from '@material-ui/core';
 import Alert from '@material-ui/lab/Alert';
-import { MessageType } from 'config/types';
+import { MessageType } from '@uniqs/api';
 import { FC, useCallback, useEffect, useState } from 'react';
 
 export interface SnackbarState {

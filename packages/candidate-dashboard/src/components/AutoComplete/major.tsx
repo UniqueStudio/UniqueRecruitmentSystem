@@ -1,7 +1,7 @@
 import { FC, useMemo } from 'react';
 import { useWatch } from 'react-hook-form';
 
-import { Departments } from 'config/departments';
+import { Departments } from '@uniqs/config';
 
 import AutoComplete from './index';
 

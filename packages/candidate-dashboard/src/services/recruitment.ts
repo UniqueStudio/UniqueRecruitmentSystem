@@ -1,16 +1,13 @@
-import { HOST } from 'config/consts';
-import { MessageType } from 'config/types';
+import { GetPendingTitlesResp } from '@uniqs/api';
 
+const HOST = process.env.HOST;
 const prefix = 'recruitment';
 
-export interface GetPendingTitlesResp {
-  type: MessageType;
-  data?: string[];
-  message?: string;
-}
-
-export const getPendingTitles = async () => {
-  const resp = await fetch(`${HOST}/${prefix}/pending`);
-  const result: GetPendingTitlesResp = await resp.json();
-  return result;
+export const getPendingTitles: () => Promise<GetPendingTitlesResp<string>> = async () => {
+  try {
+    const resp = await fetch(`${HOST}/${prefix}/pending`);
+    return await resp.json();
+  } catch (error) {
+    return { status: 'error', message: error?.message };
+  }
 };
