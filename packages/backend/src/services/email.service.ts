@@ -6,7 +6,7 @@ import { createTransport, Transporter } from 'nodemailer';
 
 import { Group } from '@constants/enums';
 import { CandidateEntity } from '@entities/candidate.entity';
-import { Questionnaire } from '@interfaces/questionnaire';
+import { Questionnaire } from '@interfaces/questionnaire.interface';
 import { ConfigService } from '@services/config.service';
 
 @Injectable()
