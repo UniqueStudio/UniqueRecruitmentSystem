@@ -4,19 +4,15 @@ backend of recruitment system for Unique Studio
 
 ## Tech Stack
 
-1. `node.js`
-2. `typescript`
-3. `postgres`
-4. `typeorm`
-5. `nest`
-6. `socket.io`
-7. `jwt`
+* `Node.js` + `TypeScript`
+* `Postgres` + `Typeorm`
+* `Nest` + `Express`
+* `Socket.IO`
+* `JWT` for authentication
 
 ## Documentation
 
-[Old doc is Here](./docs/doc.md)
-
-For v3, please run `yarn start`, and visit `/api` for the documentation.
+Please run `yarn start` to generate the documentation, then visit `/api`.
 
 ## Migrate data from v2
 

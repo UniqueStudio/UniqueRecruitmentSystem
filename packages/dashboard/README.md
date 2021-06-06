@@ -2,15 +2,17 @@
 
 ## Features
 
-1. Automatic interview / stay-up-test / rejected notification, time selection and so on.
-2. Recruitment preserving and visualization
-3. Authority management
-4. ...
+* A kanban that supports drag-and-drop, where users can check candidates in each steps
+* SMS notification
+* Recruitment data visualization
+* Access control
+* Real-time chat
+* ...
 
 ## Tech Stack
 
-1. `TypeScript`
-2. `React`
-3. `Mobx`
-4. `Material UI`
-5. `Snowpack`
+* `TypeScript`
+* `React`
+* `Mobx`
+* `Material UI`
+* `Snowpack`
