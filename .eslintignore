@@ -3,3 +3,5 @@ node_modules
 out
 build
 *.js
+/src/locales/_build/
+/src/locales/**/*.js

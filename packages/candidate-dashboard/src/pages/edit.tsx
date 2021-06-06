@@ -1,20 +1,23 @@
+import { t, Trans } from '@lingui/macro';
 import { Button, Card, Container, Grid, GridSize, TextField } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import { Breakpoint } from '@material-ui/core/styles/createBreakpoints';
-import clsx from 'clsx';
-import { NextPage } from 'next';
 import { useMemo, useEffect } from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
+import { t, Trans } from '@lingui/macro';
+import clsx from 'clsx';
+
+import type { Breakpoint } from '@material-ui/core/styles/createBreakpoints';
+import type { NextPage } from 'next';
+import type { CandidateForm } from 'config/types';
 
 import AutoComplete, { MajorAutoComplete } from 'components/AutoComplete';
 import { Input } from 'components/Input';
 import { IsQuickSwitch } from 'components/IsQuickSwitch';
 import { GROUPS, GRADES, GENDERS, RANKS } from 'config/consts';
-import { Departments } from 'config/departments';
-import { CandidateForm } from 'config/types';
 import { useAppDispatch, useAppSelector } from 'store';
-import { fetchCandidate, updateCandidate } from 'store/candidate';
 import { setLayoutTitle } from 'store/component';
+import { fetchCandidate, updateCandidate } from 'store/candidate';
+import { Departments } from 'config/departments';
 
 const useStyle = makeStyles((theme) => ({
     center: {
@@ -61,17 +64,17 @@ interface InputField {
 }
 
 const TextInputs: readonly InputField[] = [
-    { name: 'name', label: '姓名', required: true },
-    { name: 'mail', label: '邮箱', required: true },
-    { name: 'referrer', label: '推荐人' },
-    { name: 'phone', label: '电话', required: true },
+    { name: 'name', label: t`姓名`, required: true },
+    { name: 'mail', label: t`邮箱`, required: true },
+    { name: 'referrer', label: t`推荐人` },
+    { name: 'phone', label: t`电话`, required: true },
 ] as const;
 
 const SelectInputs: readonly (InputField & { options: string[] })[] = [
-    { name: 'rank', label: '成绩排名', required: true, options: RANKS },
-    { name: 'gender', label: '性别', required: true, options: GENDERS },
-    { name: 'grade', label: '所属年级', required: true, options: GRADES },
-    { name: 'group', label: '组别', required: true, options: GROUPS },
+    { name: 'rank', label: t`成绩排名`, required: true, options: RANKS },
+    { name: 'gender', label: t`性别`, required: true, options: GENDERS },
+    { name: 'grade', label: t`所属年级`, required: true, options: GRADES },
+    { name: 'group', label: t`组别`, required: true, options: GROUPS },
 ] as const;
 
 const Edit: NextPage = () => {
@@ -85,88 +88,84 @@ const Edit: NextPage = () => {
     // fetch candidate data
     useEffect(() => void dispatch(fetchCandidate()), [dispatch]);
 
-    // title
-    useEffect(() => void dispatch(setLayoutTitle('编辑信息')), [dispatch]);
+  // title
+  useEffect(() => void dispatch(setLayoutTitle(t`编辑信息`)), [dispatch]);
 
     const handleSubmit = (data: CandidateForm) => dispatch(updateCandidate(data));
 
     // AutoComplete options
     const Deps = useMemo(() => Object.keys(Departments), []);
 
-    return (
-        <Container className={clsx(classes.root, classes.center)}>
-            <Card className={classes.card}>
-                <FormProvider {...methods}>
-                    <form onSubmit={methods.handleSubmit(handleSubmit)}>
-                        <Grid container justify='space-evenly' direction='row'>
-                            {TextInputs.map(({ label, name, required }, index) => (
-                                <Grid item className={clsx(classes.item, classes.center)} key={index} {...grid}>
-                                    <Input label={label} name={name} required={required} type='text' />
-                                </Grid>
-                            ))}
-                            <Grid item className={clsx(classes.item, classes.center)} {...grid}>
-                                <AutoComplete
-                                    name='institute'
-                                    label='学院'
-                                    required
-                                    className={classes.input}
-                                    options={Deps}
-                                />
-                            </Grid>
-                            <Grid item className={clsx(classes.item, classes.center)} {...grid}>
-                                <MajorAutoComplete className={classes.input} />
-                            </Grid>
-                            {SelectInputs.map(({ label, name, required, options }, index) => (
-                                <Grid item className={clsx(classes.item, classes.center)} key={index} {...grid}>
-                                    <Input name={name} label={label} required={required} type='select'>
-                                        {options.map((opt, index) => (
-                                            <option value={index} key={opt}>
-                                                {opt}
-                                            </option>
-                                        ))}
-                                    </Input>
-                                </Grid>
-                            ))}
-                            <Grid item className={clsx(classes.item, classes.center)} {...grid}>
-                                <IsQuickSwitch />
-                            </Grid>
-                            <Grid item className={clsx(classes.item, classes.center)} {...grid}>
-                                <Input name='resume' label='上传简历/作品集' type='file' />
-                            </Grid>
-                            <Grid item className={clsx(classes.item, classes.center)} xs={12}>
-                                <Controller
-                                    name='intro'
-                                    render={({ field: { ref, ...props } }) => (
-                                        <TextField
-                                            {...props}
-                                            required
-                                            multiline
-                                            rows={4}
-                                            rowsMax={8}
-                                            inputRef={ref}
-                                            label='自我介绍'
-                                            className={clsx(classes.input, classes.intro)}
-                                            variant='outlined'
-                                        />
-                                    )}
-                                />
-                            </Grid>
-                        </Grid>
-                        <Grid container justify='space-evenly'>
-                            <Grid item>
-                                <Button variant='contained' color='primary' type='submit'>
-                                    保存
-                                </Button>
-                            </Grid>
-                            <Grid item>
-                                <Button variant='contained'>取消</Button>
-                            </Grid>
-                        </Grid>
-                    </form>
-                </FormProvider>
-            </Card>
-        </Container>
-    );
+  return (
+    <Container className={clsx(classes.root, classes.center)}>
+      <Card className={classes.card}>
+        <FormProvider {...methods}>
+          <form onSubmit={methods.handleSubmit(handleSubmit)}>
+            <Grid container justify='space-evenly' direction='row'>
+              {TextInputs.map(({ label, name, required }, index) => (
+                <Grid item className={clsx(classes.item, classes.center)} key={index} {...grid}>
+                  <Input label={label} name={name} required={required} type='text' />
+                </Grid>
+              ))}
+              <Grid item className={clsx(classes.item, classes.center)} {...grid}>
+                <AutoComplete name='institute' label={t`学院`} required className={classes.input} options={Deps} />
+              </Grid>
+              <Grid item className={clsx(classes.item, classes.center)} {...grid}>
+                <MajorAutoComplete className={classes.input} />
+              </Grid>
+              {SelectInputs.map(({ label, name, required, options }, index) => (
+                <Grid item className={clsx(classes.item, classes.center)} key={index} {...grid}>
+                  <Input name={name} label={label} required={required} type='select'>
+                    {options.map((opt, index) => (
+                      <option value={index} key={opt}>
+                        {opt}
+                      </option>
+                    ))}
+                  </Input>
+                </Grid>
+              ))}
+              <Grid item className={clsx(classes.item, classes.center)} {...grid}>
+                <IsQuickSwitch />
+              </Grid>
+              <Grid item className={clsx(classes.item, classes.center)} {...grid}>
+                <Input name='resume' label={t`上传简历/作品集`} type='file' />
+              </Grid>
+              <Grid item className={clsx(classes.item, classes.center)} xs={12}>
+                <Controller
+                  name='intro'
+                  render={({ field: { ref, ...props } }) => (
+                    <TextField
+                      {...props}
+                      required
+                      multiline
+                      rows={4}
+                      rowsMax={8}
+                      inputRef={ref}
+                      label={t`自我介绍`}
+                      className={clsx(classes.input, classes.intro)}
+                      variant='outlined'
+                    />
+                  )}
+                />
+              </Grid>
+            </Grid>
+            <Grid container justify='space-evenly'>
+              <Grid item>
+                <Button variant='contained' color='primary' type='submit'>
+                  <Trans>保存</Trans>
+                </Button>
+              </Grid>
+              <Grid item>
+                <Button variant='contained'>
+                  <Trans>取消</Trans>
+                </Button>
+              </Grid>
+            </Grid>
+          </form>
+        </FormProvider>
+      </Card>
+    </Container>
+  );
 };
 
 export default Edit;

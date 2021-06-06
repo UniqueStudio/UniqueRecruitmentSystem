@@ -1,3 +1,4 @@
+import { t, Trans } from '@lingui/macro';
 import {
     AppBar,
     makeStyles,
@@ -93,53 +94,51 @@ const Layout: FC = (props) => {
     const handleClose = () => setOpen(false);
     const handleOpen = () => setOpen(true);
 
-    useEffect(() => {
-        setOpen(matchMedia);
-    }, [matchMedia]);
-    return (
-        <div className={classes.root}>
-            <AppBar className={clsx(classes.appBar, { [classes.appBarShift]: open && matchMedia })}>
-                <Toolbar>
-                    <IconButton
-                        edge='start'
-                        className={classes.menuButton}
-                        color='inherit'
-                        aria-label='menu'
-                        onClick={() => setOpen(!open)}
-                    >
-                        <MenuIcon />
-                    </IconButton>
-                    <Typography variant='h6' className={classes.title}>
-                        {title}
-                    </Typography>
-                </Toolbar>
-            </AppBar>
-            <SwipeableDrawer
-                anchor='left'
-                open={open}
-                onClose={handleClose}
-                onOpen={handleOpen}
-                variant={matchMedia ? 'persistent' : 'temporary'}
-            >
-                <nav className={classes.drawer}>
-                    <header className={classes.drawerheader}>
-                        <img src='/assets/logo.png' />
-                        <Typography variant='h6' align='center'>
-                            联创招新选手dashboard
-                        </Typography>
-                    </header>
-                    <List className={classes.drawerList}>
-                        <ListItemLink href='/' primary='首页' icon={<HomeIcon />} onClick={handleClose} />
-                        <ListItemLink href='/edit' primary='编辑信息' icon={<EditIcon />} onClick={handleClose} />
-                    </List>
-                </nav>
-            </SwipeableDrawer>
-            <Toolbar /> {/** fix offset **/}
-            <main className={clsx(classes.content, { [classes.contentShift]: open && matchMedia })}>
-                {props.children}
-            </main>
-        </div>
-    );
+  useEffect(() => {
+    setOpen(matchMedia);
+  }, [matchMedia]);
+  return (
+    <div className={classes.root}>
+      <AppBar className={clsx(classes.appBar, { [classes.appBarShift]: open && matchMedia })}>
+        <Toolbar>
+          <IconButton
+            edge='start'
+            className={classes.menuButton}
+            color='inherit'
+            aria-label='menu'
+            onClick={() => setOpen(!open)}
+          >
+            <MenuIcon />
+          </IconButton>
+          <Typography variant='h6' className={classes.title}>
+            {title}
+          </Typography>
+        </Toolbar>
+      </AppBar>
+      <SwipeableDrawer
+        anchor='left'
+        open={open}
+        onClose={handleClose}
+        onOpen={handleOpen}
+        variant={matchMedia ? 'persistent' : 'temporary'}
+      >
+        <nav className={classes.drawer}>
+          <header className={classes.drawerheader}>
+            <img src='/assets/logo.png' />
+            <Typography variant='h6' align='center'>
+              <Trans>联创团队招新选手Dashboard</Trans>
+            </Typography>
+          </header>
+          <List className={classes.drawerList}>
+            <ListItemLink href='/' primary={t`首页`} icon={<HomeIcon />} onClick={handleClose} />
+            <ListItemLink href='/edit' primary={t`编辑信息`} icon={<EditIcon />} onClick={handleClose} />
+          </List>
+        </nav>
+      </SwipeableDrawer>
+      <Toolbar /> {/** fix offset **/}
+      <main className={clsx(classes.content, { [classes.contentShift]: open && matchMedia })}>{props.children}</main>
+    </div>
+  );
 };
 
 export default Layout;

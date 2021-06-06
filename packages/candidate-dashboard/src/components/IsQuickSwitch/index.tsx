@@ -1,3 +1,4 @@
+import { Trans } from '@lingui/macro';
 import { FormControlLabel, IconButton, makeStyles, Switch } from '@material-ui/core';
 import { HelpOutline } from '@material-ui/icons';
 import { FC } from 'react';
@@ -49,7 +50,9 @@ export const IsQuickSwitch: FC = () => {
             }
             label={
                 <div className={classes.center}>
-                    <span>快速通道</span>
+                    <span>
+                        <Trans>快速通道</Trans>
+                    </span>
                     <IconButton size='small' onMouseEnter={handlePopoverOpen} onMouseLeave={handlePopoverClose}>
                         <HelpOutline fontSize='small' />
                     </IconButton>

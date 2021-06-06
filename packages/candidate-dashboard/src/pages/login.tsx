@@ -1,3 +1,4 @@
+import { Trans, t } from '@lingui/macro';
 import {
     Paper,
     Container,
@@ -62,11 +63,11 @@ const Login: NextPage = () => {
             return;
         }
         if (!phone) {
-            dispatch(showSnackbar({ type: 'warning', message: '请填写手机号码！' }));
+            dispatch(showSnackbar({ type: 'warning', message: t`请填写手机号码！` }));
             return;
         }
         if (!checkPhone(phone)) {
-            dispatch(showSnackbar({ type: 'warning', message: '手机号码格式不正确!' }));
+            dispatch(showSnackbar({ type: 'warning', message: t`手机号码格式不正确！` }));
             return;
         }
         const id = window.setInterval(() => {
@@ -86,7 +87,7 @@ const Login: NextPage = () => {
             const res: GetVerificationCodeResp = await getVerificationCode(phone).catch(({ message }) => {
                 return { type: 'error', message };
             });
-            dispatch(showSnackbar({ type: res.type, message: res.type == 'success' ? '验证码已发送' : res.message }));
+            dispatch(showSnackbar({ type: res.type, message: res.type == 'success' ? t`验证码已发送` : res?.message }));
         });
     };
 
@@ -95,15 +96,15 @@ const Login: NextPage = () => {
             return;
         }
         if (!phone) {
-            dispatch(showSnackbar({ type: 'warning', message: '请填写手机号码！' }));
+            dispatch(showSnackbar({ type: 'warning', message: t`请填写手机号码！` }));
             return;
         }
         if (!checkPhone(phone)) {
-            dispatch(showSnackbar({ type: 'warning', message: '手机号码格式不正确!' }));
+            dispatch(showSnackbar({ type: 'warning', message: t`手机号码格式不正确！` }));
             return;
         }
         if (!code) {
-            dispatch(showSnackbar({ type: 'warning', message: '请填写验证码！' }));
+            dispatch(showSnackbar({ type: 'warning', message: t`请填写验证码！` }));
             return;
         }
         setLogin(true);
@@ -134,10 +135,10 @@ const Login: NextPage = () => {
                             </Grid>
                             <Grid item xs={10}>
                                 <Typography variant='h5' align='center' component='h1'>
-                                    联创团队
+                                    <Trans>联创团队</Trans>
                                 </Typography>
                                 <Typography variant='subtitle1' align='center'>
-                                    招新选手 Dashboard
+                                    <Trans>招新选手 Dashboard</Trans>
                                 </Typography>
                             </Grid>
                         </Grid>
@@ -147,7 +148,7 @@ const Login: NextPage = () => {
                         <Input
                             fullWidth
                             id='phone'
-                            placeholder='手机号码'
+                            placeholder={t`手机号码`}
                             type='tel'
                             inputProps={{ maxLength: 11 }}
                             value={phone}
@@ -160,7 +161,7 @@ const Login: NextPage = () => {
                     <Grid item xs={6}>
                         <Input
                             id='verification_code'
-                            placeholder='验证码'
+                            placeholder={t`验证码`}
                             fullWidth
                             inputProps={{ maxLength: 4 }}
                             value={code}
@@ -171,23 +172,23 @@ const Login: NextPage = () => {
                     </Grid>
                     <Grid item xs={4}>
                         <Button color='primary' fullWidth onClick={handleSendCode}>
-                            {countdown.send ? `${countdown.time}s` : matchMedia ? '验证码' : '获取验证码'}
+                            {countdown.send ? `${countdown.time}s` : matchMedia ? t`验证码` : t`获取验证码`}
                         </Button>
                     </Grid>
 
                     <Grid item xs={4}>
                         <Button variant='contained' color='primary' fullWidth onClick={handleLogin}>
-                            {login ? (
-                                <CircularProgress size={24} classes={{ colorPrimary: classes.buttonProgress }} />
-                            ) :
-                                '登录'}
+                            {login ? <CircularProgress size={24}
+                                                       classes={{ colorPrimary: classes.buttonProgress }} /> : '登录'}
                         </Button>
                     </Grid>
 
                     <Grid item xs={10}>
                         <Typography variant='caption' color='textSecondary'>
-                            请输入在报名时填写的手机号，如果您还没有报名，可以前往
-                            <Link href='https://join.hustunique.com'>联创招新报名网站</Link>报名
+                            <Trans>
+                                请输入在报名时填写的手机号，如果您还没有报名，可以前往
+                                <Link href='https://join.hustunique.com'>联创招新报名网站</Link>报名
+                            </Trans>
                         </Typography>
                     </Grid>
                 </Grid>

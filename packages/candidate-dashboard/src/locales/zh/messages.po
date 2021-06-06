@@ -1,0 +1,129 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language: \n"
+"Language-Team: \n"
+"Content-Type: \n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#: src/pages/edit.tsx:112
+msgid "上传简历/作品集"
+msgstr ""
+
+#: src/components/AutoComplete/major.tsx:9
+msgid "专业"
+msgstr ""
+
+#: src/pages/edit.tsx:124
+msgid "保存"
+msgstr ""
+
+#: src/pages/edit.tsx:129
+msgid "取消"
+msgstr ""
+
+#: src/pages/edit.tsx:61
+msgid "姓名"
+msgstr ""
+
+#: src/pages/edit.tsx:96
+msgid "学院"
+msgstr ""
+
+#: src/components/IsQuickSwitch/index.tsx:53
+msgid "快速通道"
+msgstr ""
+
+#: src/pages/edit.tsx:68
+msgid "性别"
+msgstr ""
+
+#: src/pages/edit.tsx:67
+msgid "成绩排名"
+msgstr ""
+
+#: src/pages/edit.tsx:69
+msgid "所属年级"
+msgstr ""
+
+#: src/pages/login.tsx:139
+msgid "手机号码"
+msgstr ""
+
+#: src/pages/login.tsx:60
+#: src/pages/login.tsx:94
+msgid "手机号码格式不正确！"
+msgstr ""
+
+#: src/pages/login.tsx:132
+msgid "招新选手 Dashboard"
+msgstr ""
+
+#: src/pages/edit.tsx:63
+msgid "推荐人"
+msgstr ""
+
+#: src/pages/edit.tsx:64
+msgid "电话"
+msgstr ""
+
+#: src/pages/edit.tsx:70
+msgid "组别"
+msgstr ""
+
+#: src/layout/index.tsx:105
+#: src/pages/edit.tsx:81
+msgid "编辑信息"
+msgstr ""
+
+#: src/pages/login.tsx:129
+msgid "联创团队"
+msgstr ""
+
+#: src/layout/index.tsx:100
+#: src/pages/_app.tsx:30
+msgid "联创团队招新选手Dashboard"
+msgstr ""
+
+#: src/pages/edit.tsx:117
+msgid "自我介绍"
+msgstr ""
+
+#: src/pages/login.tsx:151
+msgid "获取验证码"
+msgstr ""
+
+#: src/pages/login.tsx:56
+#: src/pages/login.tsx:90
+msgid "请填写手机号码！"
+msgstr ""
+
+#: src/pages/login.tsx:98
+msgid "请填写验证码！"
+msgstr ""
+
+#: src/pages/login.tsx:163
+msgid "请输入在报名时填写的手机号，如果您还没有报名，可以前往<0>联创招新报名网站</0>报名"
+msgstr ""
+
+#: src/pages/edit.tsx:62
+msgid "邮箱"
+msgstr ""
+
+#: src/layout/index.tsx:104
+msgid "首页"
+msgstr ""
+
+#: src/pages/login.tsx:145
+#: src/pages/login.tsx:151
+msgid "验证码"
+msgstr ""
+
+#: src/pages/login.tsx:82
+msgid "验证码已发送"
+msgstr ""
