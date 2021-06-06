@@ -1,6 +1,7 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
+    "module": "esnext",
     "lib": ["esnext", "dom", "webworker"],
     "jsx": "preserve",
     "baseUrl": ".",
