@@ -24,17 +24,13 @@ export interface LoginCandidateResp {
     message?: string;
 }
 
-export const loginCandidate: (phone: string, code: string) => Promise<LoginCandidateResp> = async (
-    phone: string,
-    code: string,
-) => {
+export const loginCandidate = async (phone: string, code: string) => {
     const resp = await fetch(`${HOST}/${prefix}/login`, {
         method: 'POST',
         body: JSON.stringify({ phone, code }),
         headers: { 'Content-Type': 'application/json' },
     });
-    const result: LoginCandidateResp = await resp.json();
-    return result;
+    return (await resp.json()) as LoginCandidateResp;
 };
 
 export interface SubmitCandidateFormResp {
@@ -43,31 +39,31 @@ export interface SubmitCandidateFormResp {
 }
 
 export const submitCandidateForm: (candidateForm: CandidateForm, update?: boolean) => Promise<SubmitCandidateFormResp> =
-    async (candidaiteForm, update = false) => {
-        if (!checkMail(candidaiteForm.mail)) {
+    async (candidateForm, update = false) => {
+        if (!checkMail(candidateForm.mail)) {
             return { type: 'warning', message: '邮箱格式不正确！' };
         }
-        if (!checkPhone(candidaiteForm.phone)) {
+        if (!checkPhone(candidateForm.phone)) {
             return { type: 'warning', message: '手机号码格式不正确！' };
         }
         // check if some fields are undefined
         for (const [key, value] of translator.entries()) {
-            if (candidaiteForm[key] === undefined) {
+            if (candidateForm[key] === undefined) {
                 return { type: 'warning', message: `请填写${value}` };
             }
         }
 
-        if (candidaiteForm.group === 'design' && !candidaiteForm.resume) {
+        if (candidateForm.group === 'design' && !candidateForm.resume) {
             return { type: 'warning', message: '填报Design组需要上交作品集' };
         }
-        if (candidaiteForm.resume instanceof FileList) {
-            candidaiteForm.resume = candidaiteForm.resume[0];
+        if (candidateForm.resume instanceof FileList) {
+            candidateForm.resume = candidateForm.resume[0];
         }
         const formData = new FormData();
         // number|boolean will be convert to string in formdata.
         // we need to use FormData as we need to upload file...
         // Todo: make this convert more clear
-        Object.entries(candidaiteForm).forEach(([key, value]) => formData.append(key, value as string | File));
+        Object.entries(candidateForm).forEach(([key, value]) => formData.append(key, value as string | File));
 
         const resp = await fetch(`${HOST}/${prefix}`, {
             method: update ? 'PUT' : 'POST',
@@ -76,8 +72,7 @@ export const submitCandidateForm: (candidateForm: CandidateForm, update?: boolea
                 Authorization: `Bearer ${getToken()}`,
             },
         });
-        const result: SubmitCandidateFormResp = await resp.json();
-        return result;
+        return (await resp.json()) as SubmitCandidateFormResp;
     };
 
 export interface GetInterviewFormResp {
@@ -101,5 +96,5 @@ export const getCandidateInfo = async () => {
         },
     });
 
-    return resp.json() as Promise<GetCandidateInfoResp>;
+    return (await resp.json()) as GetCandidateInfoResp;
 };

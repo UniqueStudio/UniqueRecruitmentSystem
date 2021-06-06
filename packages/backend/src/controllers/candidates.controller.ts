@@ -87,7 +87,7 @@ export class CandidatesController {
             isQuick,
             referrer,
         }: CreateCandidateBody,
-        @UploadedFile() file: Express.Multer.File,
+        @UploadedFile() file?: Express.Multer.File,
     ) {
         const recruitment = (await this.recruitmentsService.findPending()).find(({ id }) => id === rid);
         if (!recruitment) {
@@ -151,7 +151,7 @@ export class CandidatesController {
     async setMyInfo(
         @Candidate() candidate: CandidateEntity,
         @Body() { name, gender, grade, group, institute, intro, isQuick, mail, major, rank, referrer }: SetMyInfoBody,
-        @UploadedFile() file: Express.Multer.File,
+        @UploadedFile() file?: Express.Multer.File,
     ) {
         const { recruitment } = candidate;
         let { resume } = candidate;
@@ -163,7 +163,9 @@ export class CandidatesController {
         }
         if (file) {
             const persistentPath = this.configService.resumePaths.persistent;
-            resume && (await deleteFile(join(persistentPath, recruitment.name, candidate.group), resume));
+            if (resume) {
+                await deleteFile(join(persistentPath, recruitment.name, candidate.group), resume);
+            }
             const { originalname, path } = file;
             resume = `${name} - ${originalname}`;
             await copyFile(path, join(persistentPath, recruitment.name, group), resume);
@@ -219,32 +221,16 @@ export class CandidatesController {
             await candidate.save();
             return;
         }
-        switch (step) {
-            case Step.组面时间选择: {
-                if (interviewSelections.find(({ name }) => name === GroupOrTeam[group])) {
-                    throw new ForbiddenException('You have already selected available time for the group interview');
-                }
-                candidate.interviewSelections = [
-                    ...interviewSelections,
-                    ...(await this.interviewsService.findManyByIdsInRecruitment(iids, recruitment, GroupOrTeam[group])),
-                ];
-                await candidate.save();
-                return;
-            }
-            case Step.群面时间选择: {
-                if (interviewSelections.find(({ name }) => name === GroupOrTeam.unique)) {
-                    throw new ForbiddenException('You have already selected available time for the team interview');
-                }
-                candidate.interviewSelections = [
-                    ...interviewSelections,
-                    ...(await this.interviewsService.findManyByIdsInRecruitment(iids, recruitment, GroupOrTeam.unique)),
-                ];
-                await candidate.save();
-                return;
-            }
-            default:
-                throw new ForbiddenException('No need to select time in current step');
+        if (step !== Step.组面时间选择 && step !== Step.群面时间选择) {
+            throw new ForbiddenException('No need to select time in current step');
         }
+        const name = step === Step.组面时间选择 ? GroupOrTeam[group] : GroupOrTeam.unique;
+        if (interviewSelections.find((interview) => name === interview.name)) {
+            throw new ForbiddenException('You have already selected available time for the interview');
+        }
+        const newSelections = await this.interviewsService.findManyByIdsInRecruitment(iids, recruitment, name);
+        candidate.interviewSelections = [...interviewSelections, ...newSelections];
+        await candidate.save();
     }
 
     @Get(':cid/resume')
@@ -328,7 +314,9 @@ export class CandidatesController {
         if (user.group !== group) {
             throw new ForbiddenException(`You cannot remove candidates in group ${group}`);
         }
-        resume && (await deleteFile(join(this.configService.resumePaths.persistent, name, group), resume));
+        if (resume) {
+            await deleteFile(join(this.configService.resumePaths.persistent, name, group), resume);
+        }
         await candidate.remove();
         this.candidatesGateway.broadcastRemove(cid);
         this.recruitmentsGateway.broadcastUpdate(id);
@@ -369,27 +357,25 @@ export class CandidatesController {
             );
         }
         const interviewsMap = new Map<string, number[]>();
-        for (const {
-            recruitment: { interviews },
-        } of candidates) {
-            for (const { id, period, slotNumber } of interviews) {
-                !interviewsMap.has(id) && interviewsMap.set(id, SLOTS[period].slice(0, slotNumber).reverse());
+        for (const { recruitment } of candidates) {
+            for (const { id, period, slotNumber } of recruitment.interviews) {
+                if (!interviewsMap.has(id)) {
+                    interviewsMap.set(id, SLOTS[period].slice(0, slotNumber).reverse());
+                }
             }
         }
         for (const candidate of candidates) {
             CandidatesController.checkAllocationPermission(candidate, user, type);
         }
         for (const candidate of candidates) {
+            const expectedName = type === InterviewType.group ? GroupOrTeam[candidate.group] : GroupOrTeam.unique;
             for (const { id, date, name } of candidate.interviewSelections) {
-                if (
-                    (type === InterviewType.group && name === GroupOrTeam[candidate.group]) ||
-                    (type === InterviewType.team && name === GroupOrTeam.unique)
-                ) {
+                if (name === expectedName) {
                     const slots = interviewsMap.get(id);
                     if (slots?.length) {
                         const slot = slots.pop()!;
                         const h = ~~slot;
-                        const m = (slot % 1) * 60;
+                        const m = slot % 1 * 60;
                         const allocation = new Date(date);
                         allocation.setHours(h, m, 0, 0);
                         candidate.interviewAllocations[type] = allocation;
@@ -419,10 +405,8 @@ export class CandidatesController {
         if (abandoned) {
             throw new BadRequestException(`Candidate ${candidate.name} has already abandoned`);
         }
-        if (
-            (type === InterviewType.group && step !== Step.组面时间选择) ||
-            (type === InterviewType.team && step !== Step.群面时间选择)
-        ) {
+        const expectedStep = type === InterviewType.group ? Step.组面时间选择 : Step.群面时间选择;
+        if (step !== expectedStep) {
             throw new BadRequestException(`You cannot allocate time for candidates in step ${STEP_MAP[step]}`);
         }
         if (type === InterviewType.group && user.group !== group) {

@@ -38,7 +38,7 @@ export const AddOne: FC = observer(() => {
     const disabled = !$user.isAdminOrCaptain;
 
     const handleLaunch = async () => {
-        if (!code || !beginning || !end || !deadline) {
+        if (!code) {
             $component.enqueueSnackbar('请完整填写信息', 'warning');
             return;
         }
@@ -62,11 +62,9 @@ export const AddOne: FC = observer(() => {
         }
     };
 
-    const handleChange =
-        (name: string): ChangeEventHandler<HTMLInputElement> =>
-        ({ target: { value } }) => {
-            setState((prevState) => ({ ...prevState, [name]: value }));
-        };
+    const handleChangeCode: ChangeEventHandler<HTMLInputElement> = ({ target: { value } }) => {
+        setState((prevState) => ({ ...prevState, code: value }));
+    };
 
     const handleChangeDate = (name: string) => (date: unknown) => {
         if (date instanceof Date) {
@@ -103,7 +101,7 @@ export const AddOne: FC = observer(() => {
                 <div className={classes.newContainer}>
                     <Typography variant='h6'>{titleConverter(generateTitle(beginning))}</Typography>
                     <Schedule onChange={handleChangeDate} beginning={beginning} end={end} deadline={deadline} />
-                    <Verify onChange={handleChange('code')} code={code} />
+                    <Verify onChange={handleChangeCode} code={code} />
                     <Button className={classes.button} variant='contained' onClick={handleLaunch}>
                         确定
                     </Button>

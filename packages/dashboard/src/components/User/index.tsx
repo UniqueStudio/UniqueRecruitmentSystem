@@ -26,9 +26,8 @@ export const User: FC = observer(() => {
 
     const handleChange =
         (name: string): ChangeEventHandler<HTMLInputElement> =>
-        ({ target: { value } }) => {
+        ({ target: { value } }) =>
             setData((prevData) => ({ ...prevData, [name]: value }));
-        };
 
     const checkMail = (value: string) => /^\S+@\S+\.\S+$/.test(value);
 

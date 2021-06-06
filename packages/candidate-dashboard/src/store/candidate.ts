@@ -2,7 +2,7 @@ import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 import { showSnackbar } from './component';
 
-import type { RootState } from './index';
+import { RootState } from './index';
 
 import { Candidate, CandidateForm } from 'config/types';
 import { getCandidateInfo, submitCandidateForm } from 'services';
@@ -37,10 +37,10 @@ const initialState: Candidate = {
     step: 0,
 };
 
-type SetFieldPayload = {
+interface SetFieldPayload {
     key: keyof CandidateForm;
     value: CandidateForm[keyof CandidateForm];
-};
+}
 
 const fetchCandidate = createAsyncThunk<
     Candidate,

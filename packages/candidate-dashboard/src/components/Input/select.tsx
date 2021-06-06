@@ -1,9 +1,10 @@
 import { FormControl, FormHelperText, NativeSelect } from '@material-ui/core';
+import { FC } from 'react';
 import { useController } from 'react-hook-form';
 
-import type { InputProps } from './index';
+import { InputProps } from './index';
 
-export const SelectInput: React.FC<Omit<InputProps, 'type'>> = ({
+export const SelectInput: FC<Omit<InputProps, 'type'>> = ({
     name,
     label,
     children,

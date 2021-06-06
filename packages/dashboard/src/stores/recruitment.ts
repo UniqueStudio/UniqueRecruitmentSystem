@@ -31,7 +31,9 @@ export class RecruitmentStore {
             return +a.date - +b.date;
         });
         this.recruitments.set(id, { ...this.recruitments.get(id), ...(recruitment as Recruitment) });
-        saveToIDB && void set('recruitments', toJS(this.recruitments));
+        if (saveToIDB) {
+            void set('recruitments', toJS(this.recruitments));
+        }
     }
 
     setRecruitments(recruitments: Recruitment[]) {

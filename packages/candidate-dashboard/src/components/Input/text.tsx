@@ -1,9 +1,10 @@
 import { TextField } from '@material-ui/core';
+import { FC } from 'react';
 import { useController } from 'react-hook-form';
 
-import type { InputProps } from './index';
+import { InputProps } from './index';
 
-export const TextInput: React.FC<Omit<InputProps, 'type'>> = ({ name, label, className, required }) => {
+export const TextInput: FC<Omit<InputProps, 'type'>> = ({ name, label, className, required }) => {
     const {
         field: { ref, ...props },
         fieldState: { invalid, error },

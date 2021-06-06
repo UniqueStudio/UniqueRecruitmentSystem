@@ -12,13 +12,18 @@ interface Props extends SnackbarProps {
 export const SnackbarItem: FC<Props> = ({ message, variant, popped, ...otherProps }) => {
     const [open, setOpen] = useState(true);
     useEffect(() => {
-        popped && setOpen(false);
+        if (popped) {
+            setOpen(false);
+        }
     }, [popped]);
     return (
         <Snackbar
             open={open}
             onClose={(_, reason) => {
-                reason === 'timeout' && setOpen(false);
+                if (reason === 'clickaway') {
+                    return;
+                }
+                setOpen(false);
             }}
             sx={{ position: 'static', display: 'block' }}
             TransitionComponent={Transition}

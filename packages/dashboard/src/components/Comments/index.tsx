@@ -20,11 +20,11 @@ export const Comments: FC<Props> = observer(({ candidate: { comments, id } }) =>
     const [content, setContent] = useState($component.inputtingComment.content);
 
     const handleKey: KeyboardEventHandler = (event) => {
-        const { ctrlKey, charCode } = event;
-        if (ctrlKey && charCode === 13) {
+        const { ctrlKey, key } = event;
+        if (ctrlKey && key === 'Enter') {
             setContent((prevContent) => prevContent + '\n');
         }
-        if (!ctrlKey && charCode === 13) {
+        if (!ctrlKey && key === 'Enter') {
             event.preventDefault();
             handleSubmit();
         }
@@ -42,7 +42,7 @@ export const Comments: FC<Props> = observer(({ candidate: { comments, id } }) =>
     };
 
     const handleSubmit = () => {
-        if (content && evaluation !== undefined) {
+        if (content) {
             addComment(id, {
                 content,
                 evaluation,

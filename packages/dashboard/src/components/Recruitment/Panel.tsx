@@ -72,12 +72,11 @@ const RecruitmentOverview: FC<Props> = observer(({ recruitment: { statistics, en
                                 data={data}
                                 title={title}
                                 labels={labels}
-                                onClick={(event, elements) => {
-                                    const element = elements[0];
-                                    if (!element) {
+                                onClick={(_, elements) => {
+                                    if (!elements.length) {
                                         return;
                                     }
-                                    setGroup((group) => (group ? undefined : [...GROUP_MAP.keys()][element.index]));
+                                    setGroup((group) => group ? undefined : [...GROUP_MAP.keys()][elements[0].index]);
                                 }}
                             />
                         </div>

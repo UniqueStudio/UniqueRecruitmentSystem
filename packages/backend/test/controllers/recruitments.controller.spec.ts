@@ -269,19 +269,21 @@ describe('RecruitmentsController e2e', () => {
             });
         });
 
-        describe('get recruitments', () => {
+        describe('get recruitments again', () => {
             it('should return recruitments with updated interviews', async () => {
                 const {
                     body: { payload },
                 } = await agent(app.getHttpServer()).get('/recruitments').auth(userJWT, { type: 'bearer' }).expect(200);
                 [{ interviews }] = payload;
-                interviews.forEach(({ slotNumber }) => expect(slotNumber).toBe(6));
+                interviews.forEach(({ slotNumber }) => {
+                    expect(slotNumber).toBe(6);
+                });
             });
         });
 
         describe('create candidate and select slots', () => {
             it('should return success', async () => {
-                await candidatesService.createAndSave({
+                expect(await candidatesService.createAndSave({
                     name: 'foo',
                     phone: '13131111111',
                     mail: 'foo@bar.com',
@@ -295,7 +297,7 @@ describe('RecruitmentsController e2e', () => {
                     intro: 'hi',
                     isQuick: false,
                     interviewSelections: await interviewsService.find(),
-                });
+                })).toBeDefined();
             });
         });
 
@@ -328,7 +330,7 @@ describe('RecruitmentsController e2e', () => {
 
         describe('remove all candidates', () => {
             it('should return success', async () => {
-                await candidatesService.clear();
+                expect(await candidatesService.clear()).toBeDefined();
             });
         });
 

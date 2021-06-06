@@ -20,7 +20,9 @@ export const MainLayout: FC = observer(({ children }) => {
     const prevTitle = usePrevious($recruitment.viewingId);
 
     const handleClick = () => {
-        $component.drawerOpen && $component.toggleDrawer();
+        if ($component.drawerOpen) {
+            $component.toggleDrawer();
+        }
     };
 
     useEffect(() => {
@@ -44,7 +46,7 @@ export const MainLayout: FC = observer(({ children }) => {
                 <Drawer />
                 <main className={classes.content} onClick={handleClick}>
                     <Toolbar />
-                    {$user.info && children}
+                    {$user.info.id && children}
                 </main>
             </div>
             <Suggestion />

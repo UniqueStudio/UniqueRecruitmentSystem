@@ -59,7 +59,7 @@ export const Messenger: FC = observer(() => {
         const items = event.clipboardData.items;
         let blob = null;
         for (const i of Object.values(items)) {
-            if (i.type.indexOf('image') === 0) {
+            if (i.type.startsWith('image')) {
                 blob = i.getAsFile();
             }
         }
@@ -103,8 +103,8 @@ export const Messenger: FC = observer(() => {
     };
 
     const plusOne = () => {
-        const last = $user.messages[$user.messages.length - 1];
-        if (last) {
+        if ($user.messages.length) {
+            const last = $user.messages[$user.messages.length - 1];
             sendMessage(generateMessage(last.content, last.isImage));
         }
     };
@@ -130,14 +130,13 @@ export const Messenger: FC = observer(() => {
             <div className={classes.messageContent}>
                 {isImage ? (
                     <EnlargeableImage src={message} />
-                ) : (
+                ) :
                     message.split('\n').map((text, index) => (
                         <span key={index}>
                             {text}
                             <br />
                         </span>
-                    ))
-                )}
+                    ))}
             </div>
         </div>
     );

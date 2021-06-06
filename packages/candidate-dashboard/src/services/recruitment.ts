@@ -11,6 +11,5 @@ export interface GetPendingTitlesResp {
 
 export const getPendingTitles = async () => {
     const resp = await fetch(`${HOST}/${prefix}/pending`);
-    const result: GetPendingTitlesResp = await resp.json();
-    return result;
+    return (await resp.json()) as GetPendingTitlesResp;
 };

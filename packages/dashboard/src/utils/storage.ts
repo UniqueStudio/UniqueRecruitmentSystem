@@ -3,7 +3,7 @@
  * Objects are stored in `IndexedDB`, while primitives are stored in `LocalStorage`.
  */
 
-class TypedStorage<T extends { [key: string]: unknown }> {
+class TypedStorage<T extends Record<string, unknown>> {
     private storage: Storage;
 
     constructor(storage: Storage) {
@@ -55,7 +55,9 @@ class PrimitiveStorage extends TypedStorage<{
     clear() {
         const token = this.getItem('token');
         super.clear();
-        token && this.setItem('token', token);
+        if (token) {
+            this.setItem('token', token);
+        }
     }
 }
 

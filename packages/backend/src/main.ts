@@ -5,7 +5,7 @@ import { AppModule } from '@modules/app.module';
 import { ConfigService } from '@services/config.service';
 import { migrate } from '@utils/migrate';
 
-void (async () => {
+(async () => {
     const app = await NestFactory.create(AppModule, { cors: true });
     if (app.get(ConfigService).isMigration) {
         await migrate(app);

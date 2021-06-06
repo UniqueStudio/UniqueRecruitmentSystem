@@ -8,8 +8,7 @@ export interface GetVerificationCodeResp {
     message?: string;
 }
 
-export const getVerificationCode: (phone: string) => Promise<GetVerificationCodeResp> = async (phone: string) => {
+export const getVerificationCode = async (phone: string) => {
     const resp = await fetch(`${HOST}/${prefix}/verification/candidate/${phone}`);
-    const result: GetVerificationCodeResp = await resp.json();
-    return result;
+    return (await resp.json()) as GetVerificationCodeResp;
 };

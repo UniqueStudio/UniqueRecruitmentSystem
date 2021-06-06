@@ -11,7 +11,7 @@ export class HttpErrorFilter<T extends Error = Error> implements ExceptionFilter
         const res = host.switchToHttp().getResponse<Response<FailureResponse>>();
 
         if (exception instanceof HttpException) {
-            const { message } = exception.getResponse() as { message: string | string[] };
+            const { message } = exception.getResponse() as { message?: string | string[] };
             const status = exception.getStatus();
             res.status(status).json({
                 status: status < HttpStatus.INTERNAL_SERVER_ERROR ? Status.warning : Status.error,

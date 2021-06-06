@@ -86,7 +86,7 @@ const Login: NextPage = () => {
             const res: GetVerificationCodeResp = await getVerificationCode(phone).catch(({ message }) => {
                 return { type: 'error', message };
             });
-            dispatch(showSnackbar({ type: res.type, message: res.type == 'success' ? '验证码已发送' : res?.message }));
+            dispatch(showSnackbar({ type: res.type, message: res.type == 'success' ? '验证码已发送' : res.message }));
         });
     };
 
@@ -108,12 +108,12 @@ const Login: NextPage = () => {
         }
         setLogin(true);
         return dispatch(async (dispatch) => {
-            const res: LoginCandidateResp = await loginCandidate(phone, code).catch(({ message }) => {
+            const res: LoginCandidateResp = await loginCandidate(phone, code).catch(({ message }: Error) => {
                 return { type: 'error', message };
             });
             setLogin(false);
             if (res.type != 'success') {
-                dispatch(showSnackbar({ type: res.type, message: res?.message }));
+                dispatch(showSnackbar({ type: res.type, message: res.message }));
             } else {
                 setToken(res.token ?? '');
                 return router.push('/');
@@ -179,9 +179,8 @@ const Login: NextPage = () => {
                         <Button variant='contained' color='primary' fullWidth onClick={handleLogin}>
                             {login ? (
                                 <CircularProgress size={24} classes={{ colorPrimary: classes.buttonProgress }} />
-                            ) : (
-                                '登陆'
-                            )}
+                            ) :
+                                '登录'}
                         </Button>
                     </Grid>
 

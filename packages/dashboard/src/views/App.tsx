@@ -2,8 +2,8 @@ import { CssBaseline, StyledEngineProvider, ThemeProvider, useMediaQuery } from 
 import { LocalizationProvider } from '@material-ui/lab';
 import AdapterDateFns from '@material-ui/lab/AdapterDateFns';
 import { observer } from 'mobx-react-lite';
-import React, { FC, lazy, Suspense } from 'react';
-import { BrowserRouter, Route, RouteComponentProps, Switch } from 'react-router-dom';
+import React, { FC, ReactElement, lazy, Suspense } from 'react';
+import { RouteComponentProps, BrowserRouter, Route, Switch } from 'react-router-dom';
 
 import { Login } from '@components/Login';
 import { Progress } from '@components/Progress';
@@ -36,7 +36,7 @@ const Theme: FC = observer(({ children }) => {
 
 export const App: FC = () => {
     useStyles();
-    const routeRender = (Component: JSX.Element) => (props: RouteComponentProps) =>
+    const routeRender = (Component: ReactElement) => (props: RouteComponentProps) =>
         (
             <MainLayout {...props}>
                 <Suspense fallback={<Progress />}>{Component}</Suspense>

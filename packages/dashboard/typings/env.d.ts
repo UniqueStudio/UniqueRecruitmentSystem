@@ -1,6 +1,4 @@
 interface ImportMeta {
-    readonly env: {
-        readonly [key: string]: string;
-    };
+    readonly env: Readonly<Record<string, string>>;
 }
 declare const __APP_VERSION__: string;

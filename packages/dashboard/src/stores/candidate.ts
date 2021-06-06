@@ -161,7 +161,7 @@ export class CandidateStore {
     }
 
     get groupBySteps() {
-        const candidates: Candidate[][] = [...new Array(STEP_MAP.size)].map(() => []);
+        const candidates: Candidate[][] = [...new Array<unknown>(STEP_MAP.size)].map(() => []);
         switch (this.stepType) {
             case StepType.all:
             case StepType.groupInterview:

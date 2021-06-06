@@ -1,7 +1,7 @@
 import { SpeedDial, SpeedDialAction, SpeedDialIcon } from '@material-ui/core';
 import { Delete, SelectAll, ArrowBack, ArrowForward, Send } from '@material-ui/icons';
 import { observer } from 'mobx-react-lite';
-import React, { FC, useState } from 'react';
+import React, { FC, ReactElement, useState } from 'react';
 
 import { moveCandidate } from '@apis/rest';
 import { SelectInverse } from '@components/Icons';
@@ -10,7 +10,7 @@ import { Candidate } from '@config/types';
 import { useStores } from '@hooks/useStores';
 import useStyles from '@styles/fab';
 
-const ButtonGenerator = (content: string, icon: JSX.Element, onClick: () => void, disabled = false) => (
+const ButtonGenerator = (content: string, icon: ReactElement, onClick: () => void, disabled = false) => (
     <SpeedDialAction icon={icon} FabProps={{ disabled }} tooltipTitle={content} onClick={onClick} />
 );
 

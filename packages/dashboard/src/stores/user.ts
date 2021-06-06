@@ -21,7 +21,7 @@ export class UserStore {
         const token = primitiveStorage.getItem('token');
         const payload = token?.split('.')[1];
         if (token && payload) {
-            const { exp } = JSON.parse(atob(payload));
+            const { exp } = JSON.parse(atob(payload)) as { exp: number };
             this.token = exp * 1000 > Date.now() ? token : '';
         } else {
             this.token = '';

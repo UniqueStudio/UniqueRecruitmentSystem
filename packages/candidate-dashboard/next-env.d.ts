@@ -1,2 +1,2 @@
-/// <reference types="next" />
-/// <reference types="next/types/global" />
+import 'next';
+import 'next/types/global';

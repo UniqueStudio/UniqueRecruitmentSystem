@@ -42,7 +42,7 @@ const MySnackbar: FC<MySnackbarProps> = ({ type, message, _key, onClose }) => {
                 return;
             }
             setOpen(false);
-            onClose && onClose();
+            onClose?.();
         },
         [onClose],
     );

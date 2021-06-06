@@ -25,7 +25,9 @@ export const Slider: FC<Props> = observer(({ handleNextIndex, handleLeft, handle
     const [nextIndex, setNextIndex] = useState(-1);
     useEffect(
         () => () => {
-            index < 0 && handleNextIndex(nextIndex);
+            if (index < 0) {
+                handleNextIndex(nextIndex);
+            }
         },
         [index],
     );

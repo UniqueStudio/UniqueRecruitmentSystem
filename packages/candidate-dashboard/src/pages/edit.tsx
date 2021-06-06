@@ -1,8 +1,8 @@
 import { Button, Card, Container, Grid, GridSize, TextField } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import type { Breakpoint } from '@material-ui/core/styles/createBreakpoints';
+import { Breakpoint } from '@material-ui/core/styles/createBreakpoints';
 import clsx from 'clsx';
-import type { NextPage } from 'next';
+import { NextPage } from 'next';
 import { useMemo, useEffect } from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
 
@@ -11,7 +11,7 @@ import { Input } from 'components/Input';
 import { IsQuickSwitch } from 'components/IsQuickSwitch';
 import { GROUPS, GRADES, GENDERS, RANKS } from 'config/consts';
 import { Departments } from 'config/departments';
-import type { CandidateForm } from 'config/types';
+import { CandidateForm } from 'config/types';
 import { useAppDispatch, useAppSelector } from 'store';
 import { fetchCandidate, updateCandidate } from 'store/candidate';
 import { setLayoutTitle } from 'store/component';
@@ -60,14 +60,14 @@ interface InputField {
     required?: boolean;
 }
 
-const TextInputs: ReadonlyArray<InputField> = [
+const TextInputs: readonly InputField[] = [
     { name: 'name', label: '姓名', required: true },
     { name: 'mail', label: '邮箱', required: true },
     { name: 'referrer', label: '推荐人' },
     { name: 'phone', label: '电话', required: true },
 ] as const;
 
-const SelectInputs: ReadonlyArray<InputField & { options: string[] }> = [
+const SelectInputs: readonly (InputField & { options: string[] })[] = [
     { name: 'rank', label: '成绩排名', required: true, options: RANKS },
     { name: 'gender', label: '性别', required: true, options: GENDERS },
     { name: 'grade', label: '所属年级', required: true, options: GRADES },

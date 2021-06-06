@@ -9,6 +9,6 @@ render(<App />, document.getElementById('root'));
 // One feasible solution is using `HashRouter` rather than `BrowserRouter`
 window.addEventListener('load', () => {
     if (import.meta.env.PROD) {
-        navigator.serviceWorker?.register('/serviceWorker.js');
+        void navigator.serviceWorker.register('/serviceWorker.js');
     }
 });

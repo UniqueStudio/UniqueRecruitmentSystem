@@ -67,7 +67,9 @@ describe('RecruitmentsService', () => {
                 referrer: 'hanyuu',
             });
             const recruitments = await recruitmentsService.findAllWithStatistics();
-            recruitments.forEach(({ statistics }) => expect(statistics).toHaveProperty(Group.web));
+            recruitments.forEach(({ statistics }) => {
+                expect(statistics).toHaveProperty(Group.web);
+            });
         });
     });
 

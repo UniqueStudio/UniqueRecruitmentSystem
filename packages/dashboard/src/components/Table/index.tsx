@@ -50,24 +50,27 @@ export const Table: FC = observer(() => {
                 const selections = interviewSelections.filter(
                     ({ name }) => name === (type === InterviewType.group ? GroupOrTeam[group] : GroupOrTeam.unique),
                 );
+                if (rejected) {
+                    return <>已淘汰</>;
+                }
+                if (abandoned) {
+                    return <>已放弃</>;
+                }
+                if (!selections.length) {
+                    return <>未选择</>;
+                }
                 return (
                     <>
-                        {rejected
-                            ? '已淘汰'
-                            : abandoned
-                            ? '已放弃'
-                            : !selections.length
-                            ? '未选择'
-                            : selections.map(({ date, period }, index) => (
-                                <Chip
-                                    key={index}
-                                    className={classes.chip}
-                                    color='primary'
-                                    variant='outlined'
-                                    size={isMobile ? 'small' : 'medium'}
-                                    label={new Date(date).toLocaleDateString('zh-CN') + PERIOD_MAP.get(period)!}
-                                />
-                              ))}
+                        {selections.map(({ date, period }, index) => (
+                            <Chip
+                                key={index}
+                                className={classes.chip}
+                                color='primary'
+                                variant='outlined'
+                                size={isMobile ? 'small' : 'medium'}
+                                label={new Date(date).toLocaleDateString('zh-CN') + PERIOD_MAP.get(period)!}
+                            />
+                        ))}
                     </>
                 );
             },
@@ -82,7 +85,10 @@ export const Table: FC = observer(() => {
                 return interviewAllocations[type]?.toLocaleString('zh-CN', { timeStyle: 'short', dateStyle: 'short' });
             },
             sortComparator(a, b) {
-                return compareAllocation(a?.[type], b?.[type]);
+                return compareAllocation(
+                    (a as Candidate['interviewAllocations'])[type],
+                    (b as Candidate['interviewAllocations'])[type],
+                );
             },
         },
         {
@@ -113,7 +119,9 @@ export const Table: FC = observer(() => {
     };
 
     const handleChange = (value: unknown) => {
-        value instanceof Date && setTime(value);
+        if (value instanceof Date) {
+            setTime(value);
+        }
     };
 
     return (

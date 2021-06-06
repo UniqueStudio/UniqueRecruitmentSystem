@@ -18,7 +18,7 @@ interface Props {
 
 const initialContent = {
     type: SMSType.accept,
-    next: -1 as -1,
+    next: -1!,
     time: '',
     place: '',
     rest: '',

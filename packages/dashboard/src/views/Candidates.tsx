@@ -16,9 +16,9 @@ import { Candidate } from '@config/types';
 import { usePrevious } from '@hooks/usePrevious';
 import { useStores } from '@hooks/useStores';
 
-const SliderContent: FC<{ candidate: Candidate }> = ({ candidate }) => {
-    const prevCandidate = usePrevious(candidate);
-    candidate = candidate || prevCandidate;
+const SliderContent: FC<{ candidate?: Candidate }> = ({ candidate }) => {
+    const prevCandidate = usePrevious(candidate)!;
+    candidate = candidate ?? prevCandidate;
     return (
         <>
             <Detail candidate={candidate} />
@@ -66,9 +66,15 @@ const Candidates: FC = observer(() => {
     };
 
     const toggleOpen = (name: string) => () => {
-        modal && $candidate.deselectAll();
-        if (name === 'modal') setModal((prevModal) => !prevModal);
-        if (name === 'dialog') setDialog((prevDialog) => !prevDialog);
+        if (modal) {
+            $candidate.deselectAll();
+        }
+        if (name === 'modal') {
+            setModal((prevModal) => !prevModal);
+        }
+        if (name === 'dialog') {
+            setDialog((prevDialog) => !prevDialog);
+        }
     };
 
     return (

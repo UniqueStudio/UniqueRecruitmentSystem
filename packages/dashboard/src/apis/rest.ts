@@ -1,3 +1,4 @@
+import { Color } from '@material-ui/lab';
 import axios, { AxiosResponse } from 'axios';
 import { get } from 'idb-keyval';
 
@@ -59,7 +60,7 @@ const client = axios.create({
 });
 
 export const setAuthToken = (token: string) => {
-    (client.defaults.headers as { common: Record<string, string> }).common['Authorization'] = `Bearer ${token}`;
+    (client.defaults.headers as { common: Record<string, string> }).common.Authorization = `Bearer ${token}`;
 };
 
 setAuthToken($user.token);
@@ -85,7 +86,7 @@ const apiWrapper = async <T>(
         }
     } catch ({ message }) {
         $component.setProgress(false);
-        $component.enqueueSnackbar(message, 'error');
+        $component.enqueueSnackbar(message as string, 'error');
         await onFailure?.();
     }
     return false;
@@ -198,8 +199,8 @@ export const getResume = async (cid: string, filename = 'resume') => {
         a.click();
         document.body.removeChild(a);
         URL.revokeObjectURL(url);
-    } catch ({ message, status }) {
-        $component.enqueueSnackbar(message, status ?? 'error');
+    } catch ({ message, status = 'error' }) {
+        $component.enqueueSnackbar(message as string, status as Color);
     }
     $component.setResumeProgress(0, cid);
     $component.setProgress(false);
@@ -228,7 +229,7 @@ export const getAllRecruitments = async () => {
                     })),
                 })),
             );
-            $recruitment.setViewingRecruitment(viewing ?? recruitments[0]?.id ?? '');
+            $recruitment.setViewingRecruitment(viewing ?? recruitments.length ? recruitments[0].id : '');
             $component.enqueueSnackbar('成功获取招新信息', 'success');
         },
     );

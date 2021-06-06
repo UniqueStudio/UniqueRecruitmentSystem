@@ -37,8 +37,8 @@ function AutoComplete<Option = string>({
         <Autocomplete<Option, false, false, true>
             value={value}
             inputValue={inputValue}
-            onChange={(_, value) => void onChange(value)}
-            onInputChange={(_, value) => void setInputValue(value)}
+            onChange={(_, value) => onChange(value)}
+            onInputChange={(_, value) => setInputValue(value)}
             onBlur={() => {
                 if (inputValue !== value) {
                     onChange(inputValue);

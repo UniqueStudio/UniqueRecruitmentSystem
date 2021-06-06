@@ -15,11 +15,7 @@ export const useTheme = (darkMode: boolean) =>
                         secondary: {
                             main: pink[darkMode ? 700 : 300],
                         },
-                        background: darkMode
-                            ? {}
-                            : {
-                                  default: grey[100],
-                              },
+                        background: darkMode ? {} : { default: grey[100] },
                     },
                 }),
             ),

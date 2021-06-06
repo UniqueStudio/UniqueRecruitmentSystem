@@ -1,5 +1,6 @@
 import { makeStyles } from '@material-ui/core';
 import clsx from 'clsx';
+import { FC } from 'react';
 
 import { FileInput } from './file';
 import { SelectInput } from './select';
@@ -23,20 +24,21 @@ export interface InputProps {
     defaultValue?: string;
 }
 
-export const Input: React.FC<InputProps> = ({ type, children, className, ...props }) => {
+export const Input: FC<InputProps> = ({ type, children, className, ...props }) => {
     const classes = useStyle();
 
-    if (type === 'text') {
-        return <TextInput {...props} className={clsx(className, classes.input)} />;
-    } else if (type === 'select') {
-        return (
-            <SelectInput {...props} className={clsx(className, classes.input)}>
-                {children}
-            </SelectInput>
-        );
-    } else if (type === 'file') {
-        return <FileInput {...props} />;
+    switch (type) {
+        case 'text':
+            return <TextInput {...props} className={clsx(className, classes.input)} />;
+        case 'select':
+            return (
+                <SelectInput {...props} className={clsx(className, classes.input)}>
+                    {children}
+                </SelectInput>
+            );
+        case 'file':
+            return <FileInput {...props} />;
+        default:
+            return null;
     }
-
-    return null;
 };

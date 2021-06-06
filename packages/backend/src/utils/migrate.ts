@@ -77,9 +77,9 @@ export const migrate = async (app: INestApplication) => {
     if (!path) {
         throw new Error('MIGRATION_BACKUP_PATH is not specified');
     }
-    const users: User[] = JSON.parse(readFileSync(join(path, 'users.json')).toString());
-    const recruitments: Recruitment[] = JSON.parse(readFileSync(join(path, 'recruitments.json')).toString());
-    const candidates: Candidate[] = JSON.parse(readFileSync(join(path, 'candidates.json')).toString());
+    const users = JSON.parse(readFileSync(join(path, 'users.json')).toString()) as User[];
+    const recruitments = JSON.parse(readFileSync(join(path, 'recruitments.json')).toString()) as Recruitment[];
+    const candidates = JSON.parse(readFileSync(join(path, 'candidates.json')).toString()) as Candidate[];
     const usersService = app.get(UsersService);
     const recruitmentsService = app.get(RecruitmentsService);
     const candidatesService = app.get(CandidatesService);
@@ -107,6 +107,8 @@ export const migrate = async (app: INestApplication) => {
             }) => {
                 if (password) {
                     password.hash = Buffer.from(password.hash).toString('base64');
+                } else {
+                    password = await hash(randomBytes(512).toString('hex'));
                 }
                 joinTime =
                     joinTime === '2018年3月'
@@ -126,7 +128,7 @@ export const migrate = async (app: INestApplication) => {
                     avatar: avatar || undefined,
                     isAdmin,
                     isCaptain,
-                    password: password || (await hash(randomBytes(512).toString('hex'))),
+                    password,
                 });
             },
         ),
@@ -143,59 +145,65 @@ export const migrate = async (app: INestApplication) => {
             for (const { date, afternoon, evening, morning } of interview) {
                 const d = new Date(date);
                 d.setHours(0, 0, 0, 0);
-                morning > 0 &&
-                    (await interviewsService.createAndSave({
+                if (morning > 0) {
+                    await interviewsService.createAndSave({
                         date: d,
                         period: Period.morning,
                         slotNumber: morning,
                         name: GroupOrTeam.unique,
                         recruitment,
-                    }));
-                afternoon > 0 &&
-                    (await interviewsService.createAndSave({
+                    });
+                }
+                if (afternoon > 0) {
+                    await interviewsService.createAndSave({
                         date: d,
                         period: Period.afternoon,
                         slotNumber: afternoon,
                         name: GroupOrTeam.unique,
                         recruitment,
-                    }));
-                evening > 0 &&
-                    (await interviewsService.createAndSave({
+                    });
+                }
+                if (evening > 0) {
+                    await interviewsService.createAndSave({
                         date: d,
                         period: Period.evening,
                         slotNumber: evening,
                         name: GroupOrTeam.unique,
                         recruitment,
-                    }));
+                    });
+                }
             }
             for (const { name, interview } of groups) {
                 for (const { date, afternoon, evening, morning } of interview) {
                     const d = new Date(date);
                     d.setHours(0, 0, 0, 0);
-                    morning > 0 &&
-                        (await interviewsService.createAndSave({
+                    if (morning > 0) {
+                        await interviewsService.createAndSave({
                             date: d,
                             period: Period.morning,
                             slotNumber: morning,
                             name: GroupOrTeam[name],
                             recruitment,
-                        }));
-                    afternoon > 0 &&
-                        (await interviewsService.createAndSave({
+                        });
+                    }
+                    if (afternoon > 0) {
+                        await interviewsService.createAndSave({
                             date: d,
                             period: Period.afternoon,
                             slotNumber: afternoon,
                             name: GroupOrTeam[name],
                             recruitment,
-                        }));
-                    evening > 0 &&
-                        (await interviewsService.createAndSave({
+                        });
+                    }
+                    if (evening > 0) {
+                        await interviewsService.createAndSave({
                             date: d,
                             period: Period.evening,
                             slotNumber: evening,
                             name: GroupOrTeam[name],
                             recruitment,
-                        }));
+                        });
+                    }
                 }
             }
         }),
@@ -237,7 +245,7 @@ export const migrate = async (app: INestApplication) => {
                 for (const { date, morning, afternoon, evening } of interviews.group.selection) {
                     const d = new Date(typeof date === 'object' ? +date.$numberLong : +date);
                     d.setHours(0, 0, 0, 0);
-                    morning &&
+                    if (morning) {
                         interviewSelections.push(
                             await interviewsService.findOne({
                                 date: d,
@@ -245,7 +253,8 @@ export const migrate = async (app: INestApplication) => {
                                 name: GroupOrTeam[group],
                             }),
                         );
-                    afternoon &&
+                    }
+                    if (afternoon) {
                         interviewSelections.push(
                             await interviewsService.findOne({
                                 date: d,
@@ -253,7 +262,8 @@ export const migrate = async (app: INestApplication) => {
                                 name: GroupOrTeam[group],
                             }),
                         );
-                    evening &&
+                    }
+                    if (evening) {
                         interviewSelections.push(
                             await interviewsService.findOne({
                                 date: d,
@@ -261,11 +271,12 @@ export const migrate = async (app: INestApplication) => {
                                 name: GroupOrTeam[group],
                             }),
                         );
+                    }
                 }
                 for (const { date, morning, afternoon, evening } of interviews.team.selection) {
-                    const d = new Date(typeof date === 'object' ? +date['$numberLong'] : +date);
+                    const d = new Date(typeof date === 'object' ? +date.$numberLong : +date);
                     d.setHours(0, 0, 0, 0);
-                    morning &&
+                    if (morning) {
                         interviewSelections.push(
                             await interviewsService.findOne({
                                 date: d,
@@ -273,7 +284,8 @@ export const migrate = async (app: INestApplication) => {
                                 name: GroupOrTeam.unique,
                             }),
                         );
-                    afternoon &&
+                    }
+                    if (afternoon) {
                         interviewSelections.push(
                             await interviewsService.findOne({
                                 date: d,
@@ -281,7 +293,8 @@ export const migrate = async (app: INestApplication) => {
                                 name: GroupOrTeam.unique,
                             }),
                         );
-                    evening &&
+                    }
+                    if (evening) {
                         interviewSelections.push(
                             await interviewsService.findOne({
                                 date: d,
@@ -289,6 +302,7 @@ export const migrate = async (app: INestApplication) => {
                                 name: GroupOrTeam.unique,
                             }),
                         );
+                    }
                 }
                 const candidate = await candidatesService.createAndSave({
                     name,

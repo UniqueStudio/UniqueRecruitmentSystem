@@ -66,13 +66,12 @@ export const Board: FC<Props> = observer(({ candidates, toggleDetail }) => {
                                 variant='scrollable'
                                 classes={{ paper: classes.tabContainer }}
                             />
-                        ) : (
+                        ) :
                             $candidate.steps.map((step, i) => (
                                 <Column step={step} key={step} dropIndex={i}>
                                     {CardsInStep(step)}
                                 </Column>
-                            ))
-                        )}
+                            ))}
                         {placeholder}
                     </div>
                 )}

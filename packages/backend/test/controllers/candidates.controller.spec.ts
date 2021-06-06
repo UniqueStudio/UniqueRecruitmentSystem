@@ -238,7 +238,7 @@ describe('CandidatesController e2e', () => {
                     .parse((res, callback) => {
                         res.setEncoding('binary');
                         let data = '';
-                        res.on('data', (chunk) => {
+                        res.on('data', (chunk: string) => {
                             data += chunk;
                         });
                         res.on('end', () => {
@@ -333,7 +333,7 @@ describe('CandidatesController e2e', () => {
         const time = new Date();
         describe('move all candidates to interview step', () => {
             it('should success', async () => {
-                await candidatesService.update({}, { step: Step.组面时间选择 });
+                expect(await candidatesService.update({}, { step: Step.组面时间选择 })).toBeDefined();
             });
         });
         describe('allocate interview for a candidate with valid credential', () => {

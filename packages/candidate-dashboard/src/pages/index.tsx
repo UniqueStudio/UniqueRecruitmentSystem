@@ -28,10 +28,7 @@ export default function Home() {
                         <p>Discover and deploy boilerplate example Next.js projects.</p>
                     </a>
 
-                    <a
-                        href='https://vercel.com/new'
-                        className={styles.card}
-                    >
+                    <a href='https://vercel.com/new' className={styles.card}>
                         <h3>Deploy &rarr;</h3>
                         <p>Instantly deploy your Next.js site to a public URL with Vercel.</p>
                     </a>

@@ -112,7 +112,7 @@ export class SMSController {
                 const { template, params } = applySMSTemplate({ candidate, type, rest, next, time, place });
                 await this.smsService.sendSMS(phone, template, params);
             } catch ({ message }) {
-                errors.add(message);
+                errors.add(message as string);
             }
         }
         if (errors.size) {

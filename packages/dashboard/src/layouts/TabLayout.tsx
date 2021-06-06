@@ -1,6 +1,6 @@
 import { Paper, Tab } from '@material-ui/core';
 import { TabContext, TabList, TabListProps, TabPanel } from '@material-ui/lab';
-import React, { FC, useEffect } from 'react';
+import React, { FC, ReactElement, useEffect } from 'react';
 import { Link, Route, Switch, useHistory, useRouteMatch } from 'react-router-dom';
 
 import useStyles from '@styles/tabLayout';
@@ -10,7 +10,7 @@ interface Props {
     items: {
         label: string;
         value: string;
-        component: JSX.Element;
+        component: ReactElement;
     }[];
     classes?: {
         paper?: string;

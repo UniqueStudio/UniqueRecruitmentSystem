@@ -19,9 +19,6 @@ export const Group: FC = observer(() => {
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
-    if (!$user.groupInfo) {
-        return null;
-    }
     const columns: GridColDef[] = [
         {
             field: 'name',
@@ -68,7 +65,7 @@ export const Group: FC = observer(() => {
                         onChange={({ target: { checked } }) => {
                             setNewAdmins((prevAdmins) => {
                                 const admins = new Set(prevAdmins);
-                                checked ? admins.add(id) : admins.delete(id);
+                                void (checked ? admins.add(id) : admins.delete(id));
                                 return admins;
                             });
                         }}
@@ -86,12 +83,12 @@ export const Group: FC = observer(() => {
         <div className={classes.tableContainer}>
             <DataGrid
                 className={classes.table}
-                columns={columns.map((i) => ({
+                columns={columns.map((column) => ({
                     headerAlign: 'center',
                     align: 'center',
                     flex: 1,
                     sortable: false,
-                    ...i,
+                    ...column,
                 }))}
                 rows={toJS($user.groupInfo)}
                 density={isMobile ? 'compact' : 'standard'}

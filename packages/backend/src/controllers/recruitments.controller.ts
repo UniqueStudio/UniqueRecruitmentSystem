@@ -133,7 +133,7 @@ export class RecruitmentsController {
                     }
                 }
             } catch ({ message }) {
-                errors.add(message);
+                errors.add(message as string);
             }
         }
         for (const { date, period, slotNumber } of newInterviews) {
@@ -146,7 +146,7 @@ export class RecruitmentsController {
                     recruitment,
                 });
             } catch ({ message }) {
-                errors.add(message);
+                errors.add(message as string);
             }
         }
         this.recruitmentsGateway.broadcastUpdate(rid);

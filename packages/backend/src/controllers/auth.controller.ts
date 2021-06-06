@@ -46,13 +46,14 @@ export class AuthController {
 
     @Get('user/qrCode/:key')
     async authUserByQRCode(@Param('key') key: string) {
+        type Response = Record<string, string>;
         while (!ZHANG_XIAO_LONG.has('mother')) {
             const scanResponse = await got(this.configService.scanningURL(key)).text();
-            const { status, auth_code } = JSON.parse(/{.+}/.exec(scanResponse)![0]) as Record<string, string>;
+            const { status, auth_code } = JSON.parse(/{.+}/.exec(scanResponse)![0]) as Response;
             switch (status) {
                 case 'QRCODE_SCAN_SUCC': {
-                    const { accessToken } = await got(this.configService.accessTokenURL).json();
-                    const { userID } = await got(this.configService.uidURL(accessToken, auth_code)).json();
+                    const { accessToken } = await got(this.configService.accessTokenURL).json<Response>();
+                    const { userID } = await got(this.configService.uidURL(accessToken, auth_code)).json<Response>();
                     const data = parseWeChatData(await got(this.configService.userInfoURL(accessToken, userID)).json());
                     const { id, isCaptain } = await this.usersService.findOrCreate(data);
                     if (data.isCaptain !== isCaptain) {

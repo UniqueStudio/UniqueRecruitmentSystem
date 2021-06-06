@@ -5,7 +5,7 @@ interface Data {
     userid: string;
     name: string;
     mobile: string;
-    avatar: string;
+    avatar?: string;
     isleader: number;
     is_leader_in_dept: number[];
     gender: string;
@@ -19,7 +19,7 @@ interface Data {
 export const parseWeChatData = (data: Data) => {
     const { userid, name, mobile, avatar, isleader, is_leader_in_dept, gender, extattr, email, department } = data;
     const isCaptain = isleader === 1 || is_leader_in_dept.includes(1);
-    const groups = department.filter((i) => ID_GROUP_MAP[i] !== undefined);
+    const groups = department.filter((i) => i in ID_GROUP_MAP);
     if (!groups[0]) {
         throw new Error('Please set group info in WeChat first!');
     }

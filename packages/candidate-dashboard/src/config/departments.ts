@@ -1,4 +1,4 @@
-export const Departments = {
+export const Departments: Record<string, string[]> = {
     电子信息与通信学院: [
         '通信工程',
         '电子信息类',
