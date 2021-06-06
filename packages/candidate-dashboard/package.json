@@ -8,8 +8,7 @@
     "dev": "next dev",
     "build": "next build && next export",
     "start": "next start",
-    "prebuild": "rimraf .next",
-    "prepare": "husky install"
+    "prebuild": "rimraf .next"
   },
   "dependencies": {
     "@lingui/core": "^3.8.10",

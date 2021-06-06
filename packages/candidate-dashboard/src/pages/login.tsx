@@ -19,6 +19,7 @@ import { isSuccess } from '@uniqs/api';
 import { NextPage } from 'next';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
+
 import { getVerificationCode, loginCandidate } from 'services';
 import { useAppDispatch } from 'store';
 import { showSnackbar } from 'store/component';
@@ -83,9 +84,9 @@ const Login: NextPage = () => {
             });
         }, 1000);
         setCountdown({ time: 59, send: true, id });
-        dispatch(async (dispatch) => {
+        return dispatch(async (dispatch) => {
             const res = await getVerificationCode(phone);
-            dispatch(showSnackbar({ type: res.status, message: isSuccess(res) ? t`验证码已发送` : res?.message }));
+            dispatch(showSnackbar({ type: res.status, message: isSuccess(res) ? t`验证码已发送` : res.message }));
         });
     };
 
@@ -110,10 +111,10 @@ const Login: NextPage = () => {
             const res = await loginCandidate({ phone, code });
             setLogin(false);
             if (!isSuccess(res)) {
-                dispatch(showSnackbar({ type: res.status, message: res?.message }));
+                dispatch(showSnackbar({ type: res.status, message: res.message }));
             } else {
-                setToken(res.payload ?? '');
-                router.push('/');
+                setToken(res.payload);
+                await router.push('/');
             }
         });
     };
@@ -174,8 +175,11 @@ const Login: NextPage = () => {
 
                     <Grid item xs={4}>
                         <Button variant='contained' color='primary' fullWidth onClick={handleLogin}>
-                            {login ? <CircularProgress size={24}
-                                                       classes={{ colorPrimary: classes.buttonProgress }} /> : '登录'}
+                            {login ? (
+                                <CircularProgress size={24} classes={{ colorPrimary: classes.buttonProgress }} />
+                            ) : (
+                                '登录'
+                            )}
                         </Button>
                     </Grid>
 

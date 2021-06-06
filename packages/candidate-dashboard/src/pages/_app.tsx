@@ -1,13 +1,13 @@
 import { i18n } from '@lingui/core';
 import { Trans } from '@lingui/macro';
 import { I18nProvider } from '@lingui/react';
-import CssBaseline from '@material-ui/core/CssBaseline';
 import { ThemeProvider } from '@material-ui/core';
+import CssBaseline from '@material-ui/core/CssBaseline';
 import { AppProps } from 'next/app';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import { Provider } from 'react-redux';
 import { FC, useEffect } from 'react';
+import { Provider } from 'react-redux';
 
 import Snackbar from 'components/Snackbar';
 import Layout from 'layout';
@@ -19,7 +19,7 @@ import theme from 'styles/theme';
 import '../styles/globals.css';
 
 // Todo: make without layout filter implementation more Elegant.
-const withoutLayout: Set<string> = new Set(['/login', '/_error']);
+const withoutLayout = new Set(['/login', '/_error']);
 
 const SnackbarWapper: FC = () => {
     const snackbarProps = useAppSelector((state) => state.component.snackbar);
@@ -39,9 +39,9 @@ function MyApp({ Component, pageProps }: AppProps) {
                 </title>
                 <meta name='viewport' content='width=device-width, initial-scale=1.0' />
             </Head>
-            <CssBaseline />
             <Provider store={store}>
                 <ThemeProvider theme={theme}>
+                    <CssBaseline />
                     {withoutLayout.has(router.pathname) ? (
                         <Component {...pageProps} />
                     ) : (

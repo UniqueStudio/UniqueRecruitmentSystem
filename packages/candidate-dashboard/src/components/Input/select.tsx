@@ -4,13 +4,7 @@ import { useController } from 'react-hook-form';
 
 import { InputProps } from './index';
 
-export const SelectInput: FC<Omit<InputProps, 'type'>> = ({
-    name,
-    label,
-    children,
-    className,
-    required = false,
-}) => {
+export const SelectInput: FC<Omit<InputProps, 'type'>> = ({ name, label, children, className, required = false }) => {
     const {
         field: { ref, ...props },
     } = useController({

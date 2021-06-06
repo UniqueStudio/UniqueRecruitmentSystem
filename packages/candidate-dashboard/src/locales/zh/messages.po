@@ -11,27 +11,27 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: \n"
 
-#: src/pages/edit.tsx:112
+#: src/pages/edit.tsx:136
 msgid "上传简历/作品集"
 msgstr ""
 
-#: src/components/AutoComplete/major.tsx:9
+#: src/components/AutoComplete/major.tsx:14
 msgid "专业"
 msgstr ""
 
-#: src/pages/edit.tsx:124
+#: src/pages/edit.tsx:160
 msgid "保存"
 msgstr ""
 
-#: src/pages/edit.tsx:129
+#: src/pages/edit.tsx:165
 msgid "取消"
 msgstr ""
 
-#: src/pages/edit.tsx:61
+#: src/pages/edit.tsx:64
 msgid "姓名"
 msgstr ""
 
-#: src/pages/edit.tsx:96
+#: src/pages/edit.tsx:112
 msgid "学院"
 msgstr ""
 
@@ -39,91 +39,89 @@ msgstr ""
 msgid "快速通道"
 msgstr ""
 
-#: src/pages/edit.tsx:68
+#: src/pages/edit.tsx:72
 msgid "性别"
 msgstr ""
 
-#: src/pages/edit.tsx:67
+#: src/pages/edit.tsx:71
 msgid "成绩排名"
 msgstr ""
 
-#: src/pages/edit.tsx:69
+#: src/pages/edit.tsx:73
 msgid "所属年级"
 msgstr ""
 
-#: src/pages/login.tsx:139
+#: src/pages/login.tsx:148
 msgid "手机号码"
 msgstr ""
 
-#: src/pages/login.tsx:60
-#: src/pages/login.tsx:94
+#: src/pages/login.tsx:71
 msgid "手机号码格式不正确！"
 msgstr ""
 
-#: src/pages/login.tsx:132
+#: src/pages/login.tsx:138
 msgid "招新选手 Dashboard"
 msgstr ""
 
-#: src/pages/edit.tsx:63
+#: src/pages/edit.tsx:66
 msgid "推荐人"
 msgstr ""
 
 #: src/pages/edit.tsx:64
-msgid "电话"
-msgstr ""
+#~ msgid "电话"
+#~ msgstr ""
 
-#: src/pages/edit.tsx:70
+#: src/pages/edit.tsx:74
 msgid "组别"
 msgstr ""
 
-#: src/layout/index.tsx:105
-#: src/pages/edit.tsx:81
+#: src/layout/index.tsx:134
+#: src/pages/edit.tsx:89
 msgid "编辑信息"
 msgstr ""
 
-#: src/pages/login.tsx:129
+#: src/pages/login.tsx:135
 msgid "联创团队"
 msgstr ""
 
-#: src/layout/index.tsx:100
-#: src/pages/_app.tsx:30
+#: src/layout/index.tsx:129
+#: src/pages/_app.tsx:38
 msgid "联创团队招新选手Dashboard"
 msgstr ""
 
-#: src/pages/edit.tsx:117
+#: src/pages/edit.tsx:149
 msgid "自我介绍"
 msgstr ""
 
-#: src/pages/login.tsx:151
+#: src/pages/login.tsx:172
 msgid "获取验证码"
 msgstr ""
 
-#: src/pages/login.tsx:56
-#: src/pages/login.tsx:90
+#: src/pages/login.tsx:67
 msgid "请填写手机号码！"
 msgstr ""
 
 #: src/pages/login.tsx:98
-msgid "请填写验证码！"
-msgstr ""
+#~ msgid "请填写验证码！"
+#~ msgstr ""
 
-#: src/pages/login.tsx:163
+#: src/pages/login.tsx:188
 msgid "请输入在报名时填写的手机号，如果您还没有报名，可以前往<0>联创招新报名网站</0>报名"
 msgstr ""
 
-#: src/pages/edit.tsx:62
+#: src/pages/edit.tsx:65
 msgid "邮箱"
 msgstr ""
 
-#: src/layout/index.tsx:104
+#: src/layout/index.tsx:133
 msgid "首页"
 msgstr ""
 
-#: src/pages/login.tsx:145
-#: src/pages/login.tsx:151
+#: src/pages/login.tsx:161
+#: src/pages/login.tsx:172
 msgid "验证码"
 msgstr ""
 
-#: src/pages/login.tsx:82
+#: src/pages/login.tsx:89
 msgid "验证码已发送"
 msgstr ""
