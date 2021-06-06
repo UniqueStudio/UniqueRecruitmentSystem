@@ -15,11 +15,11 @@ import {
 } from '@material-ui/core';
 import { blue } from '@material-ui/core/colors';
 import { DashboardRounded as DashboardIcon } from '@material-ui/icons';
+import { isSuccess } from '@uniqs/api';
 import { NextPage } from 'next';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
-
-import { getVerificationCode, GetVerificationCodeResp, loginCandidate, LoginCandidateResp } from 'services';
+import { getVerificationCode, loginCandidate } from 'services';
 import { useAppDispatch } from 'store';
 import { showSnackbar } from 'store/component';
 import { setToken } from 'utils/token';
@@ -83,11 +83,9 @@ const Login: NextPage = () => {
             });
         }, 1000);
         setCountdown({ time: 59, send: true, id });
-        return dispatch(async (dispatch) => {
-            const res: GetVerificationCodeResp = await getVerificationCode(phone).catch(({ message }) => {
-                return { type: 'error', message };
-            });
-            dispatch(showSnackbar({ type: res.type, message: res.type == 'success' ? t`验证码已发送` : res?.message }));
+        dispatch(async (dispatch) => {
+            const res = await getVerificationCode(phone);
+            dispatch(showSnackbar({ type: res.status, message: isSuccess(res) ? t`验证码已发送` : res?.message }));
         });
     };
 
@@ -96,28 +94,26 @@ const Login: NextPage = () => {
             return;
         }
         if (!phone) {
-            dispatch(showSnackbar({ type: 'warning', message: t`请填写手机号码！` }));
+            dispatch(showSnackbar({ type: 'warning', message: '请填写手机号码！' }));
             return;
         }
         if (!checkPhone(phone)) {
-            dispatch(showSnackbar({ type: 'warning', message: t`手机号码格式不正确！` }));
+            dispatch(showSnackbar({ type: 'warning', message: '手机号码格式不正确!' }));
             return;
         }
         if (!code) {
-            dispatch(showSnackbar({ type: 'warning', message: t`请填写验证码！` }));
+            dispatch(showSnackbar({ type: 'warning', message: '请填写验证码！' }));
             return;
         }
         setLogin(true);
         return dispatch(async (dispatch) => {
-            const res: LoginCandidateResp = await loginCandidate(phone, code).catch(({ message }: Error) => {
-                return { type: 'error', message };
-            });
+            const res = await loginCandidate({ phone, code });
             setLogin(false);
-            if (res.type != 'success') {
-                dispatch(showSnackbar({ type: res.type, message: res.message }));
+            if (!isSuccess(res)) {
+                dispatch(showSnackbar({ type: res.status, message: res?.message }));
             } else {
-                setToken(res.token ?? '');
-                return router.push('/');
+                setToken(res.payload ?? '');
+                router.push('/');
             }
         });
     };

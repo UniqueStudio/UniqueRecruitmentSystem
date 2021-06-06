@@ -1,14 +1,13 @@
-import { HOST } from 'config/consts';
-import { MessageType } from 'config/types';
+import { SendSMSResp } from '@uniqs/api';
 
+const HOST = process.env.HOST;
 const prefix = 'sms';
 
-export interface GetVerificationCodeResp {
-    type: MessageType;
-    message?: string;
-}
-
-export const getVerificationCode = async (phone: string) => {
+export const getVerificationCode: (phone: string) => Promise<SendSMSResp> = async (phone) => {
+  try {
     const resp = await fetch(`${HOST}/${prefix}/verification/candidate/${phone}`);
-    return (await resp.json()) as GetVerificationCodeResp;
+    return await resp.json();
+  } catch (error) {
+    return { status: 'error', message: error?.message };
+  }
 };

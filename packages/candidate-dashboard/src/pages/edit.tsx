@@ -3,12 +3,12 @@ import { Button, Card, Container, Grid, GridSize, TextField } from '@material-ui
 import { makeStyles } from '@material-ui/core/styles';
 import { useMemo, useEffect } from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
-import { t, Trans } from '@lingui/macro';
 import clsx from 'clsx';
 
 import type { Breakpoint } from '@material-ui/core/styles/createBreakpoints';
 import type { NextPage } from 'next';
-import type { CandidateForm } from 'config/types';
+import type { SetCandidateInfo } from '@uniqs/api';
+import { Departments, GROUPS, GRADES, GENDERS, RANKS } from '@uniqs/config';
 
 import AutoComplete, { MajorAutoComplete } from 'components/AutoComplete';
 import { Input } from 'components/Input';
@@ -55,7 +55,7 @@ const grid: Partial<Record<Breakpoint, boolean | GridSize>> = {
     md: 4,
 };
 
-type InputKeys = keyof CandidateForm;
+type InputKeys = keyof SetCandidateInfo;
 
 interface InputField {
     name: InputKeys;
@@ -67,7 +67,7 @@ const TextInputs: readonly InputField[] = [
     { name: 'name', label: t`姓名`, required: true },
     { name: 'mail', label: t`邮箱`, required: true },
     { name: 'referrer', label: t`推荐人` },
-    { name: 'phone', label: t`电话`, required: true },
+    // { name: 'phone', label: t`电话`, required: true },
 ] as const;
 
 const SelectInputs: readonly (InputField & { options: string[] })[] = [
@@ -81,9 +81,17 @@ const Edit: NextPage = () => {
     const dispatch = useAppDispatch();
     const classes = useStyle();
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { abandon, rejected, interviews, step, ...defaultValues } = useAppSelector(({ candidate }) => candidate);
-    const methods = useForm({ defaultValues });
+  const {
+    abandoned,
+    rejected,
+    interviewAllocations,
+    interviewSelections,
+    updatedAt,
+    id,
+    step,
+    ...defaultValues
+  } = useAppSelector(({ candidate }) => candidate);
+  const methods = useForm({ defaultValues });
 
     // fetch candidate data
     useEffect(() => void dispatch(fetchCandidate()), [dispatch]);
@@ -91,7 +99,9 @@ const Edit: NextPage = () => {
   // title
   useEffect(() => void dispatch(setLayoutTitle(t`编辑信息`)), [dispatch]);
 
-    const handleSubmit = (data: CandidateForm) => dispatch(updateCandidate(data));
+  const handleSubmit = (data: SetCandidateInfo) => {
+    dispatch(updateCandidate(data));
+  };
 
     // AutoComplete options
     const Deps = useMemo(() => Object.keys(Departments), []);

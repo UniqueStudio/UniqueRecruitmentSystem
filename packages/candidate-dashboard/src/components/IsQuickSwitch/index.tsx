@@ -4,7 +4,6 @@ import { HelpOutline } from '@material-ui/icons';
 import { FC } from 'react';
 import { Controller } from 'react-hook-form';
 
-import { IS_QUICK_DESC } from 'config/consts';
 import { usePopover } from 'hooks/usePopover';
 
 const useStyle = makeStyles((theme) => ({
@@ -22,22 +21,22 @@ const useStyle = makeStyles((theme) => ({
 }));
 
 export const IsQuickSwitch: FC = () => {
-    // Popover
-    const classes = useStyle();
-    const { handlePopoverClose, handlePopoverOpen, Pop } = usePopover({
-        content: IS_QUICK_DESC,
-        id: 'isquick-popover',
-        className: classes.popover,
-        classes: { paper: classes.paper },
-        anchorOrigin: {
-            vertical: 'bottom',
-            horizontal: 'center',
-        },
-        transformOrigin: {
-            vertical: 'top',
-            horizontal: 'center',
-        },
-    });
+  // Popover
+  const classes = useStyle();
+  const { handlePopoverClose, handlePopoverOpen, Pop } = usePopover({
+      content: '所谓的快速通道 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
+    id: 'isquick-popover',
+    className: classes.popover,
+    classes: { paper: classes.paper },
+    anchorOrigin: {
+      vertical: 'bottom',
+      horizontal: 'center',
+    },
+    transformOrigin: {
+      vertical: 'top',
+      horizontal: 'center',
+    },
+  });
 
     return (
         <FormControlLabel

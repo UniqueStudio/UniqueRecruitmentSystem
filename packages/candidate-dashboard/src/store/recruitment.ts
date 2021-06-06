@@ -1,27 +1,23 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { Recruitment } from '@uniqs/api';
 
-interface RecruitmentState {
-    title: string;
-    begin: number;
-    stop: number;
-    end: number;
-}
-
-const initialState: RecruitmentState = {
-    title: '',
-    begin: 0,
-    stop: 0,
-    end: 0,
+const initialState: Recruitment = {
+  id: '',
+  name: '',
+  beginning: new Date(0),
+  deadline: new Date(0),
+  end: new Date(0),
+  interviews: [],
 };
 
 const recruitmentSlice = createSlice({
-    name: 'recruitment',
-    initialState,
-    reducers: {
-        setRecruitmentState: (state, action: PayloadAction<RecruitmentState>) => {
-            state = { ...action.payload };
-        },
+  name: 'recruitment',
+  initialState,
+  reducers: {
+    setRecruitmentState: (state, action: PayloadAction<Recruitment>) => {
+      state = { ...action.payload };
     },
+  },
 });
 
 export default recruitmentSlice.reducer;
