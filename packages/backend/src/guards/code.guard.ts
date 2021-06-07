@@ -19,11 +19,11 @@ export class CodeGuard implements CanActivate {
         }
         const req = context.switchToHttp().getRequest<RequestWithIdentity<AuthByCodeBody>>();
         const { code } = req.body;
-        const phone = req.user?.phone ?? req.body.phone;
+        const phone = req.member?.phone ?? req.body.phone;
         if (!code || !phone) {
             return false;
         }
-        const key = cacheKey(phone, !!req.user);
+        const key = cacheKey(phone, !!req.member);
         const cachedCode = await this.cacheManager.get(key);
         await this.cacheManager.del(key);
         return code === cachedCode;

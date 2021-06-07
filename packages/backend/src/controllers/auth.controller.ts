@@ -1,11 +1,9 @@
 import {
-    BadRequestException,
     Body,
     Controller,
     Get,
     ImATeapotException,
     InternalServerErrorException,
-    NotImplementedException,
     Param,
     Post,
     RequestTimeoutException,
@@ -17,35 +15,33 @@ import got from 'got';
 
 import { ZHANG_XIAO_LONG } from '@constants/consts';
 import { Role } from '@constants/enums';
-import { AuthByCodeBody, AuthUserByPasswordBody } from '@dtos/auth.dto';
-import { CodeGuard } from '@guards/code.guard';
+import { Msg } from '@constants/messages';
+import { AuthByPasswordBody } from '@dtos/auth.dto';
 import { AuthService } from '@services/auth.service';
-import { CandidatesService } from '@services/candidates.service';
 import { ConfigService } from '@services/config.service';
-import { UsersService } from '@services/users.service';
+import { MembersService } from '@services/members.service';
 import { parseWeChatData } from '@utils/parseWeChatData';
 
 @Controller('auth')
 @UseGuards(ThrottlerGuard)
 export class AuthController {
     constructor(
-        private readonly usersService: UsersService,
+        private readonly membersService: MembersService,
         private readonly authService: AuthService,
         private readonly configService: ConfigService,
-        private readonly candidatesService: CandidatesService,
     ) {}
 
-    @Get('user/qrCode')
+    @Get('member/qrCode')
     async getQRCode() {
         const key = /(?<=key ?: ?")\w+/.exec(await got(this.configService.qrInitURL).text())?.[0];
         if (!key) {
-            throw new InternalServerErrorException('Failed to fetch key of QR Code');
+            throw new InternalServerErrorException(Msg.$_FAILED('fetch QR Code'));
         }
         return this.configService.qrImgURL(key);
     }
 
-    @Get('user/qrCode/:key')
-    async authUserByQRCode(@Param('key') key: string) {
+    @Get('member/qrCode/:key')
+    async authMemberByQRCode(@Param('key') key: string) {
         type Response = Record<string, string>;
         while (!ZHANG_XIAO_LONG.has('mother')) {
             const scanResponse = await got(this.configService.scanningURL(key)).text();
@@ -55,46 +51,41 @@ export class AuthController {
                     const { accessToken } = await got(this.configService.accessTokenURL).json<Response>();
                     const { userID } = await got(this.configService.uidURL(accessToken, auth_code)).json<Response>();
                     const data = parseWeChatData(await got(this.configService.userInfoURL(accessToken, userID)).json());
-                    const { id, isCaptain } = await this.usersService.findOrCreate(data);
+                    const { id, isCaptain } = await this.membersService.findOrCreate(data);
                     if (data.isCaptain !== isCaptain) {
-                        await this.usersService.update(id, { isCaptain: !isCaptain, isAdmin: !isCaptain });
+                        await this.membersService.update(id, { isCaptain: !isCaptain, isAdmin: !isCaptain });
                     }
-                    return this.authService.generateToken(id, Role.user);
+                    return this.authService.generateToken(id, Role.member);
                 }
                 case 'QRCODE_SCAN_NEVER':
                 case 'QRCODE_SCAN_ING':
                     continue;
                 case 'QRCODE_SCAN_FAIL':
-                    throw new UnauthorizedException('User canceled, please login again');
+                    throw new UnauthorizedException(Msg.$_AGAIN('User canceled'));
                 case 'QRCODE_SCAN_ERR':
-                    throw new RequestTimeoutException('Time out, please login again');
+                    throw new RequestTimeoutException(Msg.$_AGAIN('Time out'));
                 default:
-                    throw new InternalServerErrorException(`Unknown status ${status}`);
+                    throw new InternalServerErrorException(Msg.$_OOPS(`unknown status ${status}`));
             }
         }
-        throw new ImATeapotException("NO HE DOESN'T");
+        throw new ImATeapotException(Msg.$$ONLY_MONEY_MATTERS$$);
     }
 
-    @Post('user/login')
-    async authUserByPassword(@Body() { phone, password }: AuthUserByPasswordBody) {
-        const id = await this.authService.validateUser(phone, password);
+    @Post('member/login')
+    async authMemberByPassword(@Body() { phone, password }: AuthByPasswordBody) {
+        const id = await this.authService.validateMember(phone, password);
         if (!id) {
-            throw new UnauthorizedException('Failed to login');
+            throw new UnauthorizedException(Msg.$_FAILED('login'));
         }
-        return this.authService.generateToken(id, Role.user);
+        return this.authService.generateToken(id, Role.member);
     }
 
     @Post('candidate/login')
-    @UseGuards(CodeGuard)
-    async authCandidateByCode(@Body() { phone }: AuthByCodeBody) {
-        const candidates = await this.candidatesService.findInPendingRecruitments(phone);
-        if (!candidates.length) {
-            throw new BadRequestException(`Candidate with phone ${phone} doesn't exist`);
+    async authCandidateByPassword(@Body() { phone, password }: AuthByPasswordBody) {
+        const id = await this.authService.validateCandidate(phone, password);
+        if (!id) {
+            throw new UnauthorizedException(Msg.$_FAILED('login'));
         }
-        if (candidates.length > 1) {
-            throw new NotImplementedException('multiple candidates in pending recruitment(s) are not supported');
-        }
-        const { id } = candidates[0];
         return this.authService.generateToken(id, Role.candidate);
     }
 }

@@ -3,7 +3,7 @@ import { Column, Entity, OneToMany } from 'typeorm';
 
 import { Group, Step } from '@constants/enums';
 import { GreaterThan, LessThan } from '@decorators/comparator.decorator';
-import { CandidateEntity } from '@entities/candidate.entity';
+import { ApplicationEntity } from '@entities/application.entity';
 import { CommonEntity } from '@entities/common.entity';
 import { InterviewEntity } from '@entities/interview.entity';
 
@@ -31,8 +31,8 @@ export class RecruitmentEntity extends CommonEntity {
     @OneToMany(() => InterviewEntity, ({ recruitment }) => recruitment)
     interviews!: InterviewEntity[];
 
-    @OneToMany(() => CandidateEntity, ({ recruitment }) => recruitment)
-    candidates!: CandidateEntity[];
+    @OneToMany(() => ApplicationEntity, ({ recruitment }) => recruitment)
+    candidates!: ApplicationEntity[];
 
     @Column('jsonb', { nullable: true })
     statistics?: Record<Group, Record<Step, number | undefined> | undefined>;

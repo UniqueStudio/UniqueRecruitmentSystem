@@ -6,7 +6,7 @@ import { SuccessResponse } from '@interfaces/response.interface';
 
 @Injectable()
 export class TransformInterceptor<T> implements NestInterceptor<T, SuccessResponse<T>> {
-    intercept(context: ExecutionContext, next: CallHandler) {
+    intercept(_: ExecutionContext, next: CallHandler) {
         return next.handle().pipe(map<T, SuccessResponse<T>>((payload) => ({ status: Status.success, payload })));
     }
 }

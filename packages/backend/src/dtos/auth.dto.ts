@@ -1,6 +1,6 @@
 import { IsPhoneNumber, IsString } from 'class-validator';
 
-export class AuthUserByPasswordBody {
+export class AuthByPasswordBody {
     @IsPhoneNumber('CN')
     phone!: string;
 

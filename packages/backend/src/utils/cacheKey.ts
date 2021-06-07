@@ -1,1 +1,1 @@
-export const cacheKey = (phone: string, isUser: boolean) => `${isUser ? 'userCode' : 'candidateCode'}:${phone}`;
+export const cacheKey = (phone: string, isMember: boolean) => `${isMember ? 'memberCode' : 'candidateCode'}:${phone}`;

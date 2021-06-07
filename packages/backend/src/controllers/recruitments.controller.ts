@@ -12,11 +12,12 @@ import {
 import { ThrottlerGuard } from '@nestjs/throttler';
 
 import { GroupOrTeam, Role } from '@constants/enums';
+import { Msg } from '@constants/messages';
+import { Member } from '@decorators/member.decorator';
 import { AcceptRole } from '@decorators/role.decorator';
-import { User } from '@decorators/user.decorator';
 import { CreateRecruitmentBody, SetRecruitmentInterviewsBody, SetRecruitmentScheduleBody } from '@dtos/recruitment.dto';
 import { InterviewEntity } from '@entities/interview.entity';
-import { UserEntity } from '@entities/user.entity';
+import { MemberEntity } from '@entities/member.entity';
 import { RecruitmentsGateway } from '@gateways/recruitments.gateway';
 import { CodeGuard } from '@guards/code.guard';
 import { InterviewsService } from '@services/interviews.service';
@@ -32,18 +33,19 @@ export class RecruitmentsController {
     ) {}
 
     @Get('pending')
+    @AcceptRole(Role.candidate | Role.member)
     getPendingRecruitments() {
         return this.recruitmentsService.findPending();
     }
 
     @Get(':rid')
-    @AcceptRole(Role.user)
+    @AcceptRole(Role.member)
     getOneRecruitment(@Param('rid') rid: string) {
         return this.recruitmentsService.findOneWithStatistics(rid);
     }
 
     @Get()
-    @AcceptRole(Role.user)
+    @AcceptRole(Role.member)
     getAllRecruitments() {
         return this.recruitmentsService.findAllWithStatistics();
     }
@@ -71,14 +73,10 @@ export class RecruitmentsController {
         if (+recruitment.end < Date.now()) {
             /*
              * If somebody extends the end date, he can bypass the restrictions on many operations,
-             * and may change some data of previous recruitments/candidates.
+             * and may change some data of previous recruitments/applications.
              * They are recommended to modify the end date BEFORE it comes.
              */
-            throw new ForbiddenException(
-                'This recruitment has already ended. ' +
-                    'If you want to extend the end date of this recruitment, please contact maintainers. ' +
-                    'This is not a bug.',
-            );
+            throw new ForbiddenException(Msg.R_ENDED_LONG(recruitment.name));
         }
         recruitment.beginning = new Date(beginning);
         recruitment.end = new Date(end);
@@ -90,17 +88,17 @@ export class RecruitmentsController {
     @Put(':rid/interviews/:name')
     @AcceptRole(Role.admin)
     async setRecruitmentInterviews(
-        @User() user: UserEntity,
+        @Member() member: MemberEntity,
         @Param('rid') rid: string,
         @Param('name') name: GroupOrTeam,
         @Body() { interviews }: SetRecruitmentInterviewsBody,
     ) {
         const recruitment = await this.recruitmentsService.findOneById(rid);
         if (+recruitment.end < Date.now()) {
-            throw new ForbiddenException('This recruitment has already ended');
+            throw new ForbiddenException(Msg.R_ENDED(recruitment.name));
         }
-        if (name !== GroupOrTeam.unique && GroupOrTeam[user.group] !== name) {
-            throw new ForbiddenException(`You cannot update interviews for group ${name}`);
+        if (name !== GroupOrTeam.unique && GroupOrTeam[member.group] !== name) {
+            throw new ForbiddenException(Msg.R_INTERVIEWS_CROSS_GROUP(name));
         }
         const errors = new Set<string>();
         const updatedInterviews = new Map<string, Pick<InterviewEntity, 'date' | 'period' | 'slotNumber'>>();
@@ -118,7 +116,7 @@ export class RecruitmentsController {
                 if (updatedInterview) {
                     const { date, period, slotNumber } = updatedInterview;
                     if (interview.candidates.length && (+interview.date !== +date || interview.period !== period)) {
-                        errors.add('Some of the interview slots are already selected by candidates');
+                        errors.add(Msg.R_INTERVIEWS_SELECTED);
                     } else {
                         interview.slotNumber = slotNumber;
                         interview.date = date;
@@ -127,7 +125,7 @@ export class RecruitmentsController {
                     }
                 } else {
                     if (interview.candidates.length) {
-                        errors.add('Some of the interview slots are already selected by candidates');
+                        errors.add(Msg.R_INTERVIEWS_SELECTED);
                     } else {
                         await interview.remove();
                     }

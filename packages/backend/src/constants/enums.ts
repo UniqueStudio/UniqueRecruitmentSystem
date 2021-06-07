@@ -87,9 +87,9 @@ export enum Status {
 }
 
 export enum Role {
-    admin,
-    user,
-    candidate,
+    admin = 0b100,
+    member = 0b010,
+    candidate = 0b001,
 }
 
 export enum SMSType {

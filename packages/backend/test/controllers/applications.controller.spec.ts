@@ -1,49 +1,29 @@
 import { INestApplication } from '@nestjs/common';
-import { Test } from '@nestjs/testing';
 import { agent } from 'supertest';
 
 import { Gender, Grade, Group, Period, Rank, Step } from '@constants/enums';
-import { CandidateEntity } from '@entities/candidate.entity';
+import { ApplicationEntity } from '@entities/application.entity';
 import { InterviewEntity } from '@entities/interview.entity';
 import { RecruitmentEntity } from '@entities/recruitment.entity';
-import { UserEntity } from '@entities/user.entity';
-import { AppModule } from '@modules/app.module';
-import { CandidatesService } from '@services/candidates.service';
-import { CommentsService } from '@services/comments.service';
-import { InterviewsService } from '@services/interviews.service';
-import { RecruitmentsService } from '@services/recruitments.service';
-import { UsersService } from '@services/users.service';
+import { ApplicationsService } from '@services/applications.service';
+import { init } from '@test/utils/init';
 
-describe('CandidatesController e2e', () => {
+describe('ApplicationsController e2e', () => {
     let app: INestApplication;
-    let testUser: UserEntity;
     let prevRecruitment: RecruitmentEntity;
     let testRecruitment: RecruitmentEntity;
     let adminJWT: string;
     let candidateJWT: string;
-    let testCandidate: CandidateEntity;
+    let testApplication: ApplicationEntity;
     let startTime: number;
-    let candidatesService: CandidatesService;
+    let applicationsService: ApplicationsService;
     const password = 'P@ssw0rd';
 
     beforeAll(async () => {
         startTime = new Date().getTime();
-        const module = await Test.createTestingModule({
-            imports: [AppModule],
-        }).compile();
-        app = module.createNestApplication();
-        await app.init();
-        const usersService = app.get(UsersService);
-        const recruitmentsService = app.get(RecruitmentsService);
-        candidatesService = app.get(CandidatesService);
-        const interviewsService = app.get(InterviewsService);
-        const commentsService = app.get(CommentsService);
-        await commentsService.clear();
-        await candidatesService.clear();
-        await interviewsService.clear();
-        await recruitmentsService.clear();
-        await usersService.clear();
-
+        const services = await init();
+        ({ applicationsService, app } = services);
+        const { recruitmentsService, membersService, candidatesService } = services;
         prevRecruitment = await recruitmentsService.createAndSave({
             name: '2018A',
             beginning: new Date('2018'),
@@ -51,12 +31,17 @@ describe('CandidatesController e2e', () => {
             end: new Date('2020'),
         });
         // previous candidate
-        await candidatesService.createAndSave({
-            name: 'foo',
-            phone: '13131111111',
-            mail: 'foo@bar.com',
+        await candidatesService.hashPasswordAndCreate(
+            {
+                name: 'foo',
+                phone: '13131111111',
+                mail: 'foo@bar.com',
+                gender: Gender.female,
+            },
+            password,
+        );
+        await applicationsService.createAndSave({
             group: Group.web,
-            gender: Gender.female,
             grade: Grade.freshman,
             recruitment: prevRecruitment,
             rank: Rank.A,
@@ -66,7 +51,7 @@ describe('CandidatesController e2e', () => {
             isQuick: false,
         });
         // create user before create recruitment
-        testUser = await usersService.hashPasswordAndCreate(
+        const { phone } = await membersService.hashPasswordAndCreate(
             {
                 weChatID: 'hanyuu',
                 name: 'hanyuu',
@@ -85,123 +70,127 @@ describe('CandidatesController e2e', () => {
             deadline: new Date('2077'),
             end: new Date('2099'),
         });
-        const {
-            body: { payload },
-        } = await agent(app.getHttpServer()).post('/auth/user/login').send({ password, phone: testUser.phone });
-        adminJWT = payload;
+        {
+            const {
+                body: { payload },
+            } = await agent(app.getHttpServer()).post('/auth/member/login').send({ password, phone });
+            adminJWT = payload;
+        }
+        {
+            const {
+                body: { payload },
+            } = await agent(app.getHttpServer()).post('/auth/candidate/login').send({ phone: '13131111111', password });
+            candidateJWT = payload;
+        }
     });
 
-    describe('POST /candidates', () => {
-        describe('create new candidate', () => {
-            it('should return success', async () => {
-                await agent(app.getHttpServer())
-                    .post('/candidates')
-                    .field('phone', '13344445555')
-                    .field('group', Group.web)
-                    .field('rid', testRecruitment.id)
-                    .field('name', 'rika')
-                    .field('gender', Gender.female)
-                    .field('grade', Grade.freshman)
-                    .field('institute', 'test')
-                    .field('major', 'test')
-                    .field('rank', Rank.A)
-                    .field('mail', 'aa@bb.cc')
-                    .field('intro', 'no')
-                    .field('isQuick', true)
-                    .field('referrer', 'hanyuu')
-                    .attach('resume', '/etc/hosts')
-                    .expect(201);
-            });
-        });
-        describe('create the same candidate again', () => {
+    describe('POST /applications', () => {
+        describe('create application without credential', () => {
             it('should throw', async () => {
                 await agent(app.getHttpServer())
-                    .post('/candidates')
-                    .field('phone', '13344445555')
+                    .post('/applications')
                     .field('group', Group.web)
                     .field('rid', testRecruitment.id)
-                    .field('name', 'rika')
-                    .field('gender', Gender.female)
                     .field('grade', Grade.freshman)
                     .field('institute', 'test')
                     .field('major', 'test')
                     .field('rank', Rank.A)
-                    .field('mail', 'aa@bb.cc')
                     .field('intro', 'no')
                     .field('isQuick', true)
                     .field('referrer', 'hanyuu')
                     .attach('resume', '/etc/hosts')
+                    .expect(403);
+            });
+        });
+        describe('create new application', () => {
+            it('should return success', async () => {
+                const {
+                    body: {
+                        payload,
+                    },
+                } = await agent(app.getHttpServer())
+                    .post('/applications')
+                    .field('group', Group.web)
+                    .field('rid', testRecruitment.id)
+                    .field('grade', Grade.freshman)
+                    .field('institute', 'test')
+                    .field('major', 'test')
+                    .field('rank', Rank.A)
+                    .field('intro', 'no')
+                    .field('isQuick', true)
+                    .field('referrer', 'hanyuu')
+                    .attach('resume', '/etc/hosts')
+                    .auth(candidateJWT, { type: 'bearer' })
+                    .expect(201);
+                testApplication = payload;
+            });
+        });
+        describe('create the same application again', () => {
+            it('should throw', async () => {
+                await agent(app.getHttpServer())
+                    .post('/applications')
+                    .field('group', Group.web)
+                    .field('rid', testRecruitment.id)
+                    .field('grade', Grade.freshman)
+                    .field('institute', 'test')
+                    .field('major', 'test')
+                    .field('rank', Rank.A)
+                    .field('intro', 'no')
+                    .field('isQuick', true)
+                    .field('referrer', 'hanyuu')
+                    .attach('resume', '/etc/hosts')
+                    .auth(candidateJWT, { type: 'bearer' })
                     .expect(400);
             });
         });
 
-        describe('create new candidate with invalid data', () => {
+        describe('create new application with invalid data', () => {
             it('should throw', async () => {
                 await agent(app.getHttpServer())
-                    .post('/candidates')
+                    .post('/applications')
                     .send({
-                        phone: '0',
                         group: -1,
                         rid: 2,
-                        name: -3,
-                        gender: 4,
                         grade: -5,
                         institute: 6,
                         major: -7,
                         rank: 8,
-                        mail: -9,
                         intro: undefined,
                         isQuick: NaN,
                         referrer: [{}],
                     })
+                    .auth(candidateJWT, { type: 'bearer' })
                     .expect(400);
             });
         });
-
-        describe('candidate login', () => {
-            it('should return jwt', async () => {
-                const {
-                    body: { payload },
-                } = await agent(app.getHttpServer())
-                    .post('/auth/candidate/login')
-                    .send({ phone: '13344445555', code: '1234' })
-                    .expect(201);
-                candidateJWT = payload;
-            });
-        });
     });
 
-    describe('GET /candidates/me', () => {
-        it('should return my data', async () => {
+    describe('GET /applications/:aid', () => {
+        it('should return application data', async () => {
             const {
                 body: { payload },
             } = await agent(app.getHttpServer())
-                .get('/candidates/me')
+                .get(`/applications/${testApplication.id}`)
                 .auth(candidateJWT, { type: 'bearer' })
                 .expect(200);
-            testCandidate = payload;
-            const { id, resume, interviewSelections, recruitment } = payload;
+            const { id, recruitment, comments } = payload;
             expect(id).toBeDefined();
-            expect(resume).toBeUndefined();
-            expect(interviewSelections).toBeUndefined();
             expect(recruitment).toBeUndefined();
+            expect(comments).toBeUndefined();
         });
     });
 
-    describe('PUT /candidates/me', () => {
-        describe('update my info with valid credential', () => {
+    describe('PUT /applications/:aid', () => {
+        describe('update application data with valid credential', () => {
             it('should return 200', async () => {
                 await agent(app.getHttpServer())
-                    .put('/candidates/me')
+                    .put(`/applications/${testApplication.id}`)
                     .auth(candidateJWT, { type: 'bearer' })
                     .field('group', Group.ai)
-                    .field('name', 'hanyuu')
-                    .field('gender', Gender.other)
                     .field('grade', Grade.graduate)
-                    .field('institute', 'ddd')
+                    .field('institute', 'eee')
                     .field('major', 'ddd')
                     .field('rank', Rank.D)
-                    .field('mail', 'aa@bb.cc')
                     .field('intro', 'ddd')
                     .field('isQuick', false)
                     .field('referrer', 'rika')
@@ -209,30 +198,30 @@ describe('CandidatesController e2e', () => {
                     .expect(200);
             });
         });
-        describe('get my new info', () => {
-            it('should return my new info', async () => {
+        describe('get application data again', () => {
+            it('should return new application data', async () => {
                 const {
                     body: { payload },
                 } = await agent(app.getHttpServer())
-                    .get('/candidates/me')
+                    .get(`/applications/${testApplication.id}`)
                     .auth(candidateJWT, { type: 'bearer' })
                     .expect(200);
-                const { name } = payload;
-                expect(name).toBe('hanyuu');
+                const { institute } = payload;
+                expect(institute).toBe('eee');
             });
         });
-        describe('update my info with invalid credential', () => {
+        describe('update my info without credential', () => {
             it('should throw', async () => {
-                await agent(app.getHttpServer()).put('/candidates/me').expect(403);
+                await agent(app.getHttpServer()).put('/applications/:aid').expect(403);
             });
         });
     });
 
-    describe('GET /candidates/:cid/resume', () => {
-        describe('get resume with valid credential', () => {
+    describe('GET /applications/:aid/resume', () => {
+        describe('get resume with user credential', () => {
             it('should download the resume', async () => {
                 const { body, header } = await agent(app.getHttpServer())
-                    .get(`/candidates/${testCandidate.id}/resume`)
+                    .get(`/applications/${testApplication.id}/resume`)
                     .auth(adminJWT, { type: 'bearer' })
                     .buffer()
                     .parse((res, callback) => {
@@ -250,96 +239,117 @@ describe('CandidatesController e2e', () => {
                 expect(body).toBeInstanceOf(Buffer);
             });
         });
-        describe('get resume with invalid credential', () => {
+        describe('get resume with candidate credential', () => {
+            it('should download the resume', async () => {
+                const { body, header } = await agent(app.getHttpServer())
+                    .get(`/applications/${testApplication.id}/resume`)
+                    .auth(candidateJWT, { type: 'bearer' })
+                    .buffer()
+                    .parse((res, callback) => {
+                        res.setEncoding('binary');
+                        let data = '';
+                        res.on('data', (chunk: string) => {
+                            data += chunk;
+                        });
+                        res.on('end', () => {
+                            callback(null, Buffer.from(data, 'binary'));
+                        });
+                    })
+                    .expect(200);
+                expect(header).toHaveProperty('content-disposition');
+                expect(body).toBeInstanceOf(Buffer);
+            });
+        });
+        describe('get resume without credential', () => {
             it('should throw', async () => {
-                await agent(app.getHttpServer()).get(`/candidates/${testCandidate.id}/resume`).expect(403);
+                await agent(app.getHttpServer()).get(`/applications/${testApplication.id}/resume`).expect(403);
             });
         });
     });
 
-    describe('GET /candidates/recruitment/:rid', () => {
-        describe('get candidates with valid credential', () => {
-            it('should return the candidates info', async () => {
+    describe('GET /applications/recruitment/:rid', () => {
+        describe('get applications with valid credential', () => {
+            it('should return the applications info', async () => {
                 const {
                     body: { payload },
                 } = await agent(app.getHttpServer())
-                    .get(`/candidates/recruitment/${testRecruitment.id}`)
+                    .get(`/applications/recruitment/${testRecruitment.id}`)
                     .auth(adminJWT, { type: 'bearer' })
                     .expect(200);
                 expect(payload).toHaveLength(1);
             });
         });
-        describe('get candidates with invalid credential', () => {
+        describe('get applications with invalid credential', () => {
             it('should throw', async () => {
-                await agent(app.getHttpServer()).get(`/candidates/recruitment/${testRecruitment.id}`).expect(403);
+                await agent(app.getHttpServer()).get(`/applications/recruitment/${testRecruitment.id}`).expect(403);
             });
         });
-        describe('get candidates with invalid rid', () => {
+        describe('get applications with invalid rid', () => {
             it('should throw 400', async () => {
                 await agent(app.getHttpServer())
-                    .get('/candidates/recruitment/foo')
+                    .get('/applications/recruitment/foo')
                     .auth(adminJWT, { type: 'bearer' })
                     .expect(400);
             });
         });
-        describe('get candidates with updated at', () => {
+        describe('get applications with updated at', () => {
             it('should return empty', async () => {
                 const {
                     body: { payload },
                 } = await agent(app.getHttpServer())
-                    .get(`/candidates/recruitment/${testRecruitment.id}`)
+                    .get(`/applications/recruitment/${testRecruitment.id}`)
                     .auth(adminJWT, { type: 'bearer' })
                     .query({ updatedAt: new Date().getTime() }) // add this updatedAt query
                     .expect(200);
                 expect(payload).toHaveLength(0);
             });
 
-            it('should return updated candidates', async () => {
-                // update test candidate
-                await candidatesService.update(testCandidate.id, { name: 'newName' });
+            it('should return updated applications', async () => {
+                // update test application
+                await applicationsService.update(testApplication.id, { institute: 'newName' });
 
                 const {
                     body: { payload },
                 } = await agent(app.getHttpServer())
-                    .get(`/candidates/recruitment/${testRecruitment.id}`)
+                    .get(`/applications/recruitment/${testRecruitment.id}`)
                     .auth(adminJWT, { type: 'bearer' })
                     .query({ updatedAt: startTime }) // add this updatedAt query
                     .expect(200);
                 expect(payload).toHaveLength(1);
-                const [{ name }] = payload;
-                expect(name).toBe('newName');
+                const [{ institute }] = payload;
+                expect(institute).toBe('newName');
             });
 
             it('should get 400 with invalid updatedAt', async () => {
                 await agent(app.getHttpServer())
-                    .get(`/candidates/recruitment/${testRecruitment.id}`)
+                    .get(`/applications/recruitment/${testRecruitment.id}`)
                     .auth(adminJWT, { type: 'bearer' })
                     .query({ updatedAt: 'foo' }) // add this updatedAt query
                     .expect(400);
             });
         });
 
-        describe('get candidates in previous recruitment than user', () => {
+        describe('get applications in previous recruitment than user', () => {
             it('should throw 403', async () => {
                 await agent(app.getHttpServer())
-                    .get(`/candidates/recruitment/${prevRecruitment.id}`)
+                    .get(`/applications/recruitment/${prevRecruitment.id}`)
                     .auth(adminJWT, { type: 'bearer' })
                     .expect(403);
             });
         });
     });
 
-    describe('PUT /candidates/:cid/interview/:type', () => {
+    describe('PUT /applications/:cid/interview/:type', () => {
         const time = new Date();
-        describe('move all candidates to interview step', () => {
+        describe('move all applications to interview step', () => {
             it('should success', async () => {
-                expect(await candidatesService.update({}, { step: Step.组面时间选择 })).toBeDefined();
+                expect(await applicationsService.update({}, { step: Step.组面时间选择 })).toBeDefined();
             });
         });
-        describe('allocate interview for a candidate with valid credential', () => {
+        describe('allocate interview for an application with valid credential', () => {
             it('should return 200', async () => {
                 await agent(app.getHttpServer())
-                    .put(`/candidates/${testCandidate.id}/interview/group`)
+                    .put(`/applications/${testApplication.id}/interview/group`)
                     .send({
                         time,
                     })
@@ -351,13 +361,13 @@ describe('CandidatesController e2e', () => {
             it('should be allocated', async () => {
                 const {
                     interviewAllocations: { group },
-                } = await candidatesService.findOneById(testCandidate.id);
+                } = await applicationsService.findOneById(testApplication.id);
                 expect(group).toStrictEqual(time);
             });
         });
     });
 
-    describe('GET and PUT /candidates/me/slots', () => {
+    describe('GET and PUT /applications/:aid/slots/:type', () => {
         describe('prepare interview slots', () => {
             it('should return success', async () => {
                 await agent(app.getHttpServer())
@@ -386,7 +396,7 @@ describe('CandidatesController e2e', () => {
                 const {
                     body: { payload },
                 } = await agent(app.getHttpServer())
-                    .get('/candidates/me/slots')
+                    .get(`/applications/${testApplication.id}/slots/group`)
                     .auth(candidateJWT, { type: 'bearer' })
                     .expect(200);
                 expect(payload).toHaveLength(2);
@@ -396,10 +406,9 @@ describe('CandidatesController e2e', () => {
         describe('select slots', () => {
             it('should return success', async () => {
                 await agent(app.getHttpServer())
-                    .put('/candidates/me/slots')
+                    .put(`/applications/${testApplication.id}/slots/group`)
                     .send({
                         iids: interviews.map(({ id }) => id),
-                        abandon: false,
                     })
                     .auth(candidateJWT, { type: 'bearer' })
                     .expect(200);
@@ -408,10 +417,9 @@ describe('CandidatesController e2e', () => {
         describe('select slots again', () => {
             it('should throw', async () => {
                 await agent(app.getHttpServer())
-                    .put('/candidates/me/slots')
+                    .put(`/applications/${testApplication.id}/slots/group`)
                     .send({
                         iids: interviews.map(({ id }) => id),
-                        abandon: false,
                     })
                     .auth(candidateJWT, { type: 'bearer' })
                     .expect(403);
@@ -419,21 +427,21 @@ describe('CandidatesController e2e', () => {
         });
         describe('get his selection', () => {
             it('should be equal to what he selected', async () => {
-                const { interviewSelections } = await candidatesService.findOneById(testCandidate.id);
+                const { interviewSelections } = await applicationsService.findOneByIdForMember(testApplication.id);
                 expect(interviewSelections).toHaveLength(2);
             });
         });
     });
 
-    describe('PUT /candidates/interview/:type', () => {
-        describe('automatically allocate interview for candidates with valid credential', () => {
+    describe('PUT /applications/interview/:type', () => {
+        describe('automatically allocate interview for applications with valid credential', () => {
             it('should return 200', async () => {
                 const {
                     body: { payload },
                 } = await agent(app.getHttpServer())
-                    .put('/candidates/interview/group')
+                    .put('/applications/interview/group')
                     .send({
-                        cids: [testCandidate.id],
+                        aids: [testApplication.id],
                     })
                     .auth(adminJWT, { type: 'bearer' })
                     .expect(200);
