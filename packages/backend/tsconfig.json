@@ -18,7 +18,8 @@
       "@modules/*": ["src/modules/*"],
       "@pipes/*": ["src/pipes/*"],
       "@services/*": ["src/services/*"],
-      "@utils/*": ["src/utils/*"]
+      "@utils/*": ["src/utils/*"],
+      "@test/*": ["test/*"]
     }
   },
   "include": ["src", "typings", "test"]
