@@ -6,14 +6,14 @@ import React, { FC, useState } from 'react';
 
 import { setGroupAdmin } from '@apis/rest';
 import { GENDERS } from '@config/consts';
-import { User } from '@config/types';
+import { Member } from '@config/types';
 import { useStores } from '@hooks/useStores';
 import useStyles from '@styles/group';
 import { compareTitle } from '@utils/comparators';
 import { titleConverter } from '@utils/titleConverter';
 
 export const Group: FC = observer(() => {
-    const { $user } = useStores();
+    const { $member } = useStores();
     const classes = useStyles();
     const [newAdmins, setNewAdmins] = useState(new Set<string>());
     const theme = useTheme();
@@ -58,7 +58,7 @@ export const Group: FC = observer(() => {
             headerName: '管理员',
             flex: 1.5,
             renderCell({ row }) {
-                const { id, isAdmin } = row as User;
+                const { id, isAdmin } = row as Member;
                 return (
                     <Checkbox
                         checked={newAdmins.has(id) || isAdmin}
@@ -69,7 +69,7 @@ export const Group: FC = observer(() => {
                                 return admins;
                             });
                         }}
-                        disabled={!$user.isAdminOrCaptain || isAdmin}
+                        disabled={!$member.isAdminOrCaptain || isAdmin}
                         size={isMobile ? 'small' : 'medium'}
                     />
                 );
@@ -90,7 +90,7 @@ export const Group: FC = observer(() => {
                     sortable: false,
                     ...column,
                 }))}
-                rows={toJS($user.groupInfo)}
+                rows={toJS($member.groupInfo)}
                 density={isMobile ? 'compact' : 'standard'}
                 autoHeight
                 disableColumnMenu

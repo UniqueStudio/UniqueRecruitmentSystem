@@ -35,40 +35,40 @@ export class ApplicationStore {
     }
 
     addComment(cid: string, comment: Comment) {
-        const candidate = this.applications.get(cid);
-        if (!candidate) {
+        const application = this.applications.get(cid);
+        if (!application) {
             return;
         }
-        candidate.comments.push(comment);
-        void set('candidates', toJS(this.applications));
+        application.comments.push(comment);
+        void set('applications', toJS(this.applications));
     }
 
     removeComment(cid: string, commendId: string) {
-        const candidate = this.applications.get(cid);
-        if (!candidate) {
+        const application = this.applications.get(cid);
+        if (!application) {
             return;
         }
-        candidate.comments = candidate.comments.filter(({ id }) => id !== commendId);
-        void set('candidates', toJS(this.applications));
+        application.comments = application.comments.filter(({ id }) => id !== commendId);
+        void set('applications', toJS(this.applications));
     }
 
-    setOne(candidate: Application) {
-        this.applications.set(candidate.id, candidate);
-        void set('candidates', toJS(this.applications));
+    setOne(application: Application) {
+        this.applications.set(application.id, application);
+        void set('applications', toJS(this.applications));
     }
 
-    setMany(candidates: Application[]) {
-        for (const candidate of candidates) {
-            this.applications.set(candidate.id, candidate);
+    setMany(applications: Application[]) {
+        for (const application of applications) {
+            this.applications.set(application.id, application);
         }
         this.deselectAll();
-        void set('candidates', toJS(this.applications));
+        void set('applications', toJS(this.applications));
     }
 
-    setAll(candidates: Map<string, Application>) {
-        this.applications = candidates;
+    setAll(applications: Map<string, Application>) {
+        this.applications = applications;
         this.deselectAll();
-        void set('candidates', toJS(this.applications));
+        void set('applications', toJS(this.applications));
     }
 
     clear() {
@@ -102,17 +102,17 @@ export class ApplicationStore {
     removeOne(cid: string) {
         this.applications.delete(cid);
         this.deselectOne(cid);
-        void set('candidates', toJS(this.applications));
+        void set('applications', toJS(this.applications));
     }
 
     moveOne(cid: string, to: Step) {
-        const candidate = this.applications.get(cid);
-        if (!candidate) {
+        const application = this.applications.get(cid);
+        if (!application) {
             return;
         }
         this.deselectOne(cid);
-        candidate.step = to;
-        void set('candidates', toJS(this.applications));
+        application.step = to;
+        void set('applications', toJS(this.applications));
     }
 
     setGroup(group: Group) {
@@ -141,44 +141,44 @@ export class ApplicationStore {
     }
 
     allocateOne(type: InterviewType, cid: string, time: Date) {
-        const candidate = this.applications.get(cid);
-        if (!candidate) {
+        const application = this.applications.get(cid);
+        if (!application) {
             return;
         }
-        candidate.interviewAllocations[type] = time;
-        void set('candidates', toJS(this.applications));
+        application.interviewAllocations[type] = time;
+        void set('applications', toJS(this.applications));
     }
 
-    allocateMany(allocations: { id: string; time?: Date }[], type: InterviewType) {
-        allocations.forEach(({ id, time }) => {
-            const candidate = this.applications.get(id);
-            if (!candidate) {
+    allocateMany(allocations: { aid: string; time?: Date }[], type: InterviewType) {
+        allocations.forEach(({ aid, time }) => {
+            const application = this.applications.get(aid);
+            if (!application) {
                 return;
             }
-            candidate.interviewAllocations[type] = time;
+            application.interviewAllocations[type] = time;
         });
-        void set('candidates', toJS(this.applications));
+        void set('applications', toJS(this.applications));
     }
 
     get groupBySteps() {
-        const candidates: Application[][] = [...new Array<unknown>(STEP_MAP.size)].map(() => []);
+        const applications: Application[][] = [...new Array<unknown>(STEP_MAP.size)].map(() => []);
         switch (this.stepType) {
             case StepType.all:
             case StepType.groupInterview:
-                for (const [, candidate] of this.applications) {
-                    if (candidate.group === this.group) {
-                        candidates[candidate.step].push(candidate);
+                for (const [, application] of this.applications) {
+                    if (application.group === this.group) {
+                        applications[application.step].push(application);
                     }
                 }
                 break;
             case StepType.teamInterview:
-                for (const [, candidate] of this.applications) {
-                    candidates[candidate.step].push(candidate);
+                for (const [, application] of this.applications) {
+                    applications[application.step].push(application);
                 }
                 break;
         }
-        candidates[Step.组面].sort(groupSort);
-        candidates[Step.群面].sort(teamSort);
-        return candidates;
+        applications[Step.组面].sort(groupSort);
+        applications[Step.群面].sort(teamSort);
+        return applications;
     }
 }

@@ -14,7 +14,7 @@ import useStyles from '@styles/global';
 import { useTheme } from '@styles/theme';
 import { logger } from '@utils/console';
 
-const Candidates = lazy(() => import('./Candidates'));
+const Applications = lazy(() => import('./Applications'));
 const Dashboard = lazy(() => import('./Dashboard'));
 const Interviews = lazy(() => import('./Interviews'));
 const My = lazy(() => import('./My'));
@@ -53,7 +53,7 @@ export const App: FC = () => {
                             <Route path='/' exact render={routeRender(<Welcome />)} />
                             <Route path='/dashboard' render={routeRender(<Dashboard />)} />
                             <Route path='/interviews' render={routeRender(<Interviews />)} />
-                            <Route path='/candidates' render={routeRender(<Candidates />)} />
+                            <Route path='/applications' render={routeRender(<Applications />)} />
                             <Route path='/my' render={routeRender(<My />)} />
                             <Route render={routeRender(<Welcome easterEgg={true} />)} />
                         </Switch>

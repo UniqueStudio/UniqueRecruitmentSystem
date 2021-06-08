@@ -28,7 +28,7 @@ const listItems = [
     { path: '/', text: '首页', exact: true, icon: <HomeIcon /> },
     { path: '/dashboard', text: '招新数据', icon: <TimelineIcon /> },
     { path: '/interviews', text: '面试信息', icon: <DateRangeIcon /> },
-    { path: '/candidates', text: '选手信息', icon: <DashboardIcon /> },
+    { path: '/applications', text: '选手信息', icon: <DashboardIcon /> },
     { path: '/my', text: '组员信息', icon: <PeopleIcon /> },
 ];
 

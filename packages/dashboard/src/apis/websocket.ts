@@ -6,23 +6,23 @@ import { Status, Step } from '@config/enums';
 import { Application, Comment, Message, R, Recruitment } from '@config/types';
 import { stores } from '@stores/index';
 
-const { $component, $recruitment, $application, $user } = stores;
+const { $component, $recruitment, $application, $member } = stores;
 
 const socket = io(API);
 
 export const addComment = (cid: string, comment: Pick<Comment, 'evaluation' | 'content'>) => {
-    socket.emit('addComment', { cid, comment, token: $user.token });
+    socket.emit('addComment', { cid, comment, token: $member.token });
     $component.setProgress(true);
 };
 
 export const removeComment = (id: string) => {
-    socket.emit('removeComment', { id, token: $user.token });
+    socket.emit('removeComment', { id, token: $member.token });
     $component.setProgress(true);
 };
 
 export const sendMessage = (message: Message) => {
     socket.emit('sendMessage', { message });
-    $user.addMessage(message);
+    $member.addMessage(message);
 };
 
 socket.on('disconnect', () => socket.close());
@@ -114,7 +114,7 @@ socket.on('updateRecruitment', (res: R<string>) => {
 socket.on('receiveMessage', (res: R<Message>) => {
     switch (res.status) {
         case Status.info:
-            $user.addMessage({ ...res.payload, isSelf: false });
+            $member.addMessage({ ...res.payload, isSelf: false });
     }
 });
 

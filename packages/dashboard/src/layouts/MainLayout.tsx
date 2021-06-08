@@ -3,7 +3,7 @@ import { observer } from 'mobx-react-lite';
 import React, { FC, useEffect } from 'react';
 import { Redirect } from 'react-router-dom';
 
-import { getAllRecruitments, getCandidates, getMyGroup, getMyInfo } from '@apis/rest';
+import { getAllRecruitments, getApplications, getMyGroup, getMyInfo } from '@apis/rest';
 import { AppBar } from '@components/AppBar';
 import { Drawer } from '@components/Drawer';
 import { Messenger } from '@components/Messenger';
@@ -15,7 +15,7 @@ import { useStores } from '@hooks/useStores';
 import useStyles from '@styles/mainLayout';
 
 export const MainLayout: FC = observer(({ children }) => {
-    const { $component, $recruitment, $user } = useStores();
+    const { $component, $recruitment, $member } = useStores();
     const classes = useStyles();
     const prevTitle = usePrevious($recruitment.viewingId);
 
@@ -26,7 +26,7 @@ export const MainLayout: FC = observer(({ children }) => {
     };
 
     useEffect(() => {
-        if ($user.token) {
+        if ($member.token) {
             void getMyInfo();
             void getAllRecruitments();
             void getMyGroup();
@@ -35,18 +35,18 @@ export const MainLayout: FC = observer(({ children }) => {
 
     useEffect(() => {
         if (!prevTitle && $recruitment.viewingId) {
-            void getCandidates($recruitment.viewingId);
+            void getApplications($recruitment.viewingId);
         }
     }, [prevTitle, $recruitment.viewingId]);
 
-    return $user.token ? (
+    return $member.token ? (
         <>
             <AppBar />
             <div className={classes.root}>
                 <Drawer />
                 <main className={classes.content} onClick={handleClick}>
                     <Toolbar />
-                    {$user.info.id && children}
+                    {$member.info.id && children}
                 </main>
             </div>
             <Suggestion />

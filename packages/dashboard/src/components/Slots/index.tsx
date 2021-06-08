@@ -32,7 +32,7 @@ const TipButton: FC<Props> = ({ name, onClick, disabled, children }) => (
 
 export const Slots: FC = observer(() => {
     const classes = useStyles();
-    const { $recruitment, $application, $user } = useStores();
+    const { $recruitment, $application, $member } = useStores();
     const [slots, setSlots] = useState<Omit<Interview, 'name' | 'id'>[]>([]);
 
     const init = () => {
@@ -152,7 +152,7 @@ export const Slots: FC = observer(() => {
                 ))}
             </div>
             <div className={classes.buttonsContainer}>
-                <TipButton name='提交' onClick={submit} disabled={!$user.isAdminOrCaptain}>
+                <TipButton name='提交' onClick={submit} disabled={!$member.isAdminOrCaptain}>
                     <CheckIcon />
                 </TipButton>
                 <TipButton name='取消' onClick={init}>

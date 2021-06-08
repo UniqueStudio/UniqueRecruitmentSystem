@@ -31,12 +31,12 @@ export interface Application<T = Date> {
 
 export interface Comment {
     id: string;
-    user: User;
+    user: Member;
     content: string;
     evaluation: Evaluation;
 }
 
-export interface User {
+export interface Member {
     id: string;
     weChatID: string;
     name: string;

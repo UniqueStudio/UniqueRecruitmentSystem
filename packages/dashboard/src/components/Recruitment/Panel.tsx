@@ -6,7 +6,7 @@ import clsx from 'clsx';
 import { observer } from 'mobx-react-lite';
 import React, { FC, MouseEventHandler, useMemo, useState } from 'react';
 
-import { getCandidates, setRecruitmentSchedule } from '@apis/rest';
+import { getApplications, setRecruitmentSchedule } from '@apis/rest';
 import { AddOne } from '@components/AddOne';
 import { DoughnutChart } from '@components/Chart/DoughnutChart';
 import { Modal } from '@components/Modal';
@@ -28,7 +28,7 @@ interface Props {
 const RecruitmentOverview: FC<Props> = observer(({ recruitment: { statistics, end, id, name }, onToggle }) => {
     const classes = useStyles();
     const [group, setGroup] = useState<Group>();
-    const { $recruitment, $user, $component } = useStores();
+    const { $recruitment, $member, $component } = useStores();
     const result = {} as Record<Group, number[]>;
     let total = 0;
     GROUP_MAP.forEach((_, group) => {
@@ -43,12 +43,12 @@ const RecruitmentOverview: FC<Props> = observer(({ recruitment: { statistics, en
         result[group].push(sum);
     });
     const handleSet = () => {
-        if (compareTitle($user.info.joinTime, name) >= 0) {
+        if (compareTitle($member.info.joinTime, name) >= 0) {
             $component.enqueueSnackbar('你不能查看本次招新', 'info');
             return;
         }
         $component.enqueueSnackbar('设置成功，正在获取候选人信息', 'success');
-        return getCandidates(id);
+        return getApplications(id);
     };
     const data = group ? result[group].slice(0, -1) : Object.values(result).map((t) => t[STEP_SHORT_MAP.size]);
     const title = group ? `${GROUP_MAP.get(group)!}组各轮情况` : titleConverter(name);
@@ -92,7 +92,12 @@ const RecruitmentOverview: FC<Props> = observer(({ recruitment: { statistics, en
                     <EyeIcon />
                     {selected ? '当前招新' : '查看招新'}
                 </Button>
-                <Button color='inherit' onClick={onToggle(id)} fullWidth disabled={!$user.isAdminOrCaptain || expired}>
+                <Button
+                    color='inherit'
+                    onClick={onToggle(id)}
+                    fullWidth
+                    disabled={!$member.isAdminOrCaptain || expired}
+                >
                     <EditIcon />
                     修改时间
                 </Button>
@@ -103,7 +108,7 @@ const RecruitmentOverview: FC<Props> = observer(({ recruitment: { statistics, en
 
 export const RecruitmentPanel: FC = observer(() => {
     const classes = useStyles();
-    const { $recruitment, $component, $user } = useStores();
+    const { $recruitment, $component, $member } = useStores();
     const [id, setId] = useState('');
     const [beginningState, setBeginning] = useState(new Date());
     const [endState, setEnd] = useState(new Date());
@@ -166,9 +171,9 @@ export const RecruitmentPanel: FC = observer(() => {
                         end={endState}
                         deadline={deadlineState}
                         onChange={handleChange}
-                        disabled={!$user.isAdminOrCaptain}
+                        disabled={!$member.isAdminOrCaptain}
                     />
-                    <Button onClick={setTime} variant='contained' disabled={!$user.isAdminOrCaptain}>
+                    <Button onClick={setTime} variant='contained' disabled={!$member.isAdminOrCaptain}>
                         修改时间
                     </Button>
                 </div>

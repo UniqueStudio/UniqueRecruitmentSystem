@@ -10,11 +10,11 @@ import { useStores } from '@hooks/useStores';
 import useStyles from '@styles/comments';
 
 interface Props {
-    candidate: Application;
+    application: Application;
 }
 
-export const Comments: FC<Props> = observer(({ candidate: { comments, id } }) => {
-    const { $component, $user } = useStores();
+export const Comments: FC<Props> = observer(({ application: { comments, id } }) => {
+    const { $component, $member } = useStores();
     const classes = useStyles();
     const [evaluation, setEvaluation] = useState($component.inputtingComment.evaluation);
     const [content, setContent] = useState($component.inputtingComment.content);
@@ -102,8 +102,8 @@ export const Comments: FC<Props> = observer(({ candidate: { comments, id } }) =>
                 <Chip
                     comment={comment}
                     key={index}
-                    onRemove={$user.info.id === comment.user.id ? handleRemove(comment.id) : undefined}
-                    onCopy={$user.info.id === comment.user.id ? handleCopy(comment) : undefined}
+                    onRemove={$member.info.id === comment.user.id ? handleRemove(comment.id) : undefined}
+                    onCopy={$member.info.id === comment.user.id ? handleCopy(comment) : undefined}
                 />
             ))}
         </div>

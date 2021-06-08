@@ -3,7 +3,7 @@ import { observer } from 'mobx-react-lite';
 import React, { FC, useCallback } from 'react';
 import { DragDropContext, Droppable, DropResult } from 'react-beautiful-dnd';
 
-import { moveCandidate } from '@apis/rest';
+import { moveApplication } from '@apis/rest';
 import { Card } from '@components/Card';
 import { Column } from '@components/Column';
 import { STEP_MAP } from '@config/consts';
@@ -14,11 +14,11 @@ import { TabLayout } from '@layouts/TabLayout';
 import useStyles from '@styles/board';
 
 interface Props {
-    candidates: Application[][];
+    applications: Application[][];
     toggleDetail: (step: number, index: number) => () => void;
 }
 
-export const Board: FC<Props> = observer(({ candidates, toggleDetail }) => {
+export const Board: FC<Props> = observer(({ applications: applications, toggleDetail }) => {
     const classes = useStyles();
     const { $application } = useStores();
     const theme = useTheme();
@@ -38,16 +38,16 @@ export const Board: FC<Props> = observer(({ candidates, toggleDetail }) => {
                 $application.setSteps($application.stepType, ordered);
                 return;
             }
-            case 'CANDIDATE':
+            case 'CARD':
                 if (source.droppableId === droppableId) return;
-                void moveCandidate(draggableId, +source.droppableId, +droppableId);
+                void moveApplication(draggableId, +source.droppableId, +droppableId);
                 return;
         }
     }, []);
 
     const CardsInStep = (step: Step) =>
-        candidates[step].map((candidate, j) => (
-            <Card application={candidate} index={j} key={candidate.id} toggleDetail={toggleDetail(step, j)} />
+        applications[step].map((application, j) => (
+            <Card application={application} index={j} key={application.id} toggleDetail={toggleDetail(step, j)} />
         ));
 
     return (

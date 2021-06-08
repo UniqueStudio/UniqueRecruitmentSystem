@@ -21,7 +21,7 @@ export const Table: FC = observer(() => {
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
-    const candidates =
+    const applications =
         $application.groupBySteps[$application.stepType === StepType.teamInterview ? Step.群面时间选择 : Step.组面时间选择];
 
     const type = $application.stepType === StepType.teamInterview ? InterviewType.team : InterviewType.group;
@@ -127,7 +127,7 @@ export const Table: FC = observer(() => {
     return (
         <>
             <DataGrid
-                rows={candidates}
+                rows={applications}
                 columns={columns}
                 checkboxSelection
                 autoHeight

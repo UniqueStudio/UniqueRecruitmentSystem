@@ -2,7 +2,7 @@ import { SlideProps } from '@material-ui/core';
 import { observer } from 'mobx-react-lite';
 import React, { FC, useEffect, useMemo, useState } from 'react';
 
-import { removeCandidate } from '@apis/rest';
+import { removeApplication } from '@apis/rest';
 import { Board } from '@components/Board';
 import { Comments } from '@components/Comments';
 import { Detail } from '@components/Detail';
@@ -16,18 +16,18 @@ import { Application } from '@config/types';
 import { usePrevious } from '@hooks/usePrevious';
 import { useStores } from '@hooks/useStores';
 
-const SliderContent: FC<{ candidate?: Application }> = ({ candidate }) => {
-    const prevCandidate = usePrevious(candidate)!;
-    candidate = candidate ?? prevCandidate;
+const SliderContent: FC<{ application?: Application }> = ({ application }) => {
+    const prevApplication = usePrevious(application)!;
+    application = application ?? prevApplication;
     return (
         <>
-            <Detail application={candidate} />
-            <Comments candidate={candidate} />
+            <Detail application={application} />
+            <Comments application={application} />
         </>
     );
 };
 
-const Candidates: FC = observer(() => {
+const Applications: FC = observer(() => {
     const { $component, $application } = useStores();
     const [dialog, setDialog] = useState(false);
     const [modal, setModal] = useState(false);
@@ -37,7 +37,7 @@ const Candidates: FC = observer(() => {
 
     useEffect(() => $application.setSteps(StepType.all), []);
 
-    const candidates = $application.groupBySteps;
+    const applications = $application.groupBySteps;
 
     const handleRight = () => {
         setDirection('left');
@@ -49,7 +49,7 @@ const Candidates: FC = observer(() => {
         setIndex(-1);
     };
 
-    const handleNextIndex = (index: number) => setIndex(candidates[step][index] ? index : -1);
+    const handleNextIndex = (index: number) => setIndex(applications[step][index] ? index : -1);
 
     const toggleDetail = (newStep: number, newIndex: number) => () => {
         setStep(newStep);
@@ -62,7 +62,7 @@ const Candidates: FC = observer(() => {
             $component.enqueueSnackbar('你没有选中任何人', 'info');
             return;
         }
-        $application.selected.forEach(({ id }) => void removeCandidate(id));
+        $application.selected.forEach(({ id }) => void removeApplication(id));
     };
 
     const toggleOpen = (name: string) => () => {
@@ -81,11 +81,11 @@ const Candidates: FC = observer(() => {
         <>
             {useMemo(
                 () => (
-                    <Board candidates={candidates} toggleDetail={toggleDetail} />
+                    <Board applications={applications} toggleDetail={toggleDetail} />
                 ),
-                [candidates],
+                [applications],
             )}
-            <Fab candidates={candidates[$component.fabOn] ?? []} toggleOpen={toggleOpen} />
+            <Fab applications={applications[$component.fabOn] ?? []} toggleOpen={toggleOpen} />
             <Dialog
                 open={dialog}
                 onClick={handleRemove}
@@ -104,11 +104,11 @@ const Candidates: FC = observer(() => {
                     handleRight={handleRight}
                     handleNextIndex={handleNextIndex}
                 >
-                    <SliderContent candidate={candidates[step][index]} />
+                    <SliderContent application={applications[step][index]} />
                 </Slider>
             </Modal>
         </>
     );
 });
 
-export default Candidates;
+export default Applications;

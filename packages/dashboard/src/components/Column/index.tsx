@@ -25,7 +25,7 @@ export const Column: FC<Props> = memo(({ step, children, dropIndex }) => {
                             </Typography>
                         </div>
                         <Divider />
-                        <Droppable droppableId={step.toString()} type='CANDIDATE'>
+                        <Droppable droppableId={step.toString()} type='CARD'>
                             {({ innerRef, droppableProps, placeholder }) => (
                                 <div className={classes.columnBody} ref={innerRef} {...droppableProps}>
                                     {children}
