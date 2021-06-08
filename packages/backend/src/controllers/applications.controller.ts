@@ -365,7 +365,7 @@ export class ApplicationsController {
             }
         }
         return applications.map(({ interviewAllocations, id }) => ({
-            id,
+            aid: id,
             time: interviewAllocations[type],
         }));
     }
