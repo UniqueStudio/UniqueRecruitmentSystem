@@ -19,7 +19,7 @@ export class CodeGuard implements CanActivate {
         }
         const req = context.switchToHttp().getRequest<RequestWithIdentity<AuthByCodeBody>>();
         const { code } = req.body;
-        const phone = req.member?.phone ?? req.body.phone;
+        const phone = req.member?.phone ?? req.candidate?.phone ?? req.body.phone;
         if (!code || !phone) {
             return false;
         }
