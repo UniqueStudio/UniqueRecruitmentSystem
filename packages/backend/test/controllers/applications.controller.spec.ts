@@ -1,7 +1,7 @@
 import { INestApplication } from '@nestjs/common';
 import { agent } from 'supertest';
 
-import { Gender, Grade, Group, Period, Rank, Step } from '@constants/enums';
+import { Gender, Grade, Group, Period, Rank, Role, Step } from '@constants/enums';
 import { ApplicationEntity } from '@entities/application.entity';
 import { InterviewEntity } from '@entities/interview.entity';
 import { RecruitmentEntity } from '@entities/recruitment.entity';
@@ -11,38 +11,52 @@ import { init } from '@test/utils/init';
 describe('ApplicationsController e2e', () => {
     let app: INestApplication;
     let prevRecruitment: RecruitmentEntity;
-    let testRecruitment: RecruitmentEntity;
+    let recruitment: RecruitmentEntity;
     let adminJWT: string;
-    let candidateJWT: string;
-    let testApplication: ApplicationEntity;
-    let startTime: number;
+    let aliceJWT: string;
+    let bobJWT: string;
+    let aliceApplication: ApplicationEntity;
+    let bobApplication: ApplicationEntity;
     let applicationsService: ApplicationsService;
-    const password = 'P@ssw0rd';
 
     beforeAll(async () => {
-        startTime = new Date().getTime();
         const services = await init();
         ({ applicationsService, app } = services);
-        const { recruitmentsService, membersService, candidatesService } = services;
+        const { authService, recruitmentsService, membersService, candidatesService } = services;
         prevRecruitment = await recruitmentsService.createAndSave({
             name: '2018A',
-            beginning: new Date('2018'),
-            deadline: new Date('2019'),
-            end: new Date('2020'),
+            beginning: new Date('1000'),
+            deadline: new Date('1001'),
+            end: new Date('1002'),
         });
-        // previous candidate
-        await candidatesService.hashPasswordAndCreate(
-            {
-                name: 'foo',
-                phone: '13131111111',
-                mail: 'foo@bar.com',
-                gender: Gender.female,
-            },
-            password,
-        );
+        // admin joins us before `recruitment` but after `prevRecruitment`
+        const admin = await membersService.hashPasswordAndCreate({
+            weChatID: 'hanyuu',
+            name: 'hanyuu',
+            joinTime: '2000C',
+            phone: '19876543211',
+            mail: 'hanyuu@hinami.zawa',
+            gender: Gender.female,
+            group: Group.design,
+            isAdmin: true,
+        });
+        const alice = await candidatesService.hashPasswordAndCreate({
+            name: 'alice',
+            phone: '13131111111',
+            mail: 'foo@bar.com',
+            gender: Gender.female,
+        });
+        const bob = await candidatesService.hashPasswordAndCreate({
+            name: 'bob',
+            phone: '13131111112',
+            mail: 'bar@bar.com',
+            gender: Gender.female,
+        });
+        // previous application
         await applicationsService.createAndSave({
             group: Group.web,
             grade: Grade.freshman,
+            candidate: alice,
             recruitment: prevRecruitment,
             rank: Rank.A,
             institute: 'cs',
@@ -50,38 +64,26 @@ describe('ApplicationsController e2e', () => {
             intro: 'hi',
             isQuick: false,
         });
-        // create user before create recruitment
-        const { phone } = await membersService.hashPasswordAndCreate(
-            {
-                weChatID: 'hanyuu',
-                name: 'hanyuu',
-                joinTime: '2000C',
-                phone: '19876543211',
-                mail: 'hanyuu@hinami.zawa',
-                gender: Gender.female,
-                group: Group.ai,
-                isAdmin: true,
-            },
-            password,
-        );
-        testRecruitment = await recruitmentsService.createAndSave({
+        recruitment = await recruitmentsService.createAndSave({
             name: '2020C',
             beginning: new Date('1999'),
             deadline: new Date('2077'),
             end: new Date('2099'),
         });
-        {
-            const {
-                body: { payload },
-            } = await agent(app.getHttpServer()).post('/auth/member/login').send({ password, phone });
-            adminJWT = payload;
-        }
-        {
-            const {
-                body: { payload },
-            } = await agent(app.getHttpServer()).post('/auth/candidate/login').send({ phone: '13131111111', password });
-            candidateJWT = payload;
-        }
+        bobApplication = await applicationsService.createAndSave({
+            group: Group.web,
+            grade: Grade.freshman,
+            candidate: bob,
+            recruitment: recruitment,
+            rank: Rank.A,
+            institute: 'cs',
+            major: 'cs',
+            intro: 'hi',
+            isQuick: false,
+        });
+        adminJWT = await authService.generateToken(admin.id, Role.member);
+        aliceJWT = await authService.generateToken(alice.id, Role.candidate);
+        bobJWT = await authService.generateToken(bob.id, Role.candidate);
     });
 
     describe('POST /applications', () => {
@@ -90,7 +92,7 @@ describe('ApplicationsController e2e', () => {
                 await agent(app.getHttpServer())
                     .post('/applications')
                     .field('group', Group.web)
-                    .field('rid', testRecruitment.id)
+                    .field('rid', recruitment.id)
                     .field('grade', Grade.freshman)
                     .field('institute', 'test')
                     .field('major', 'test')
@@ -111,7 +113,7 @@ describe('ApplicationsController e2e', () => {
                 } = await agent(app.getHttpServer())
                     .post('/applications')
                     .field('group', Group.web)
-                    .field('rid', testRecruitment.id)
+                    .field('rid', recruitment.id)
                     .field('grade', Grade.freshman)
                     .field('institute', 'test')
                     .field('major', 'test')
@@ -120,9 +122,9 @@ describe('ApplicationsController e2e', () => {
                     .field('isQuick', true)
                     .field('referrer', 'hanyuu')
                     .attach('resume', '/etc/hosts')
-                    .auth(candidateJWT, { type: 'bearer' })
+                    .auth(aliceJWT, { type: 'bearer' })
                     .expect(201);
-                testApplication = payload;
+                aliceApplication = payload;
             });
         });
         describe('create the same application again', () => {
@@ -130,7 +132,7 @@ describe('ApplicationsController e2e', () => {
                 await agent(app.getHttpServer())
                     .post('/applications')
                     .field('group', Group.web)
-                    .field('rid', testRecruitment.id)
+                    .field('rid', recruitment.id)
                     .field('grade', Grade.freshman)
                     .field('institute', 'test')
                     .field('major', 'test')
@@ -139,11 +141,28 @@ describe('ApplicationsController e2e', () => {
                     .field('isQuick', true)
                     .field('referrer', 'hanyuu')
                     .attach('resume', '/etc/hosts')
-                    .auth(candidateJWT, { type: 'bearer' })
+                    .auth(aliceJWT, { type: 'bearer' })
                     .expect(400);
             });
         });
-
+        describe('create application to ended recruitment', () => {
+            it('should throw', async () => {
+                await agent(app.getHttpServer())
+                    .post('/applications')
+                    .field('group', Group.web)
+                    .field('rid', prevRecruitment.id)
+                    .field('grade', Grade.freshman)
+                    .field('institute', 'test')
+                    .field('major', 'test')
+                    .field('rank', Rank.A)
+                    .field('intro', 'no')
+                    .field('isQuick', true)
+                    .field('referrer', 'hanyuu')
+                    .attach('resume', '/etc/hosts')
+                    .auth(aliceJWT, { type: 'bearer' })
+                    .expect(403);
+            });
+        });
         describe('create new application with invalid data', () => {
             it('should throw', async () => {
                 await agent(app.getHttpServer())
@@ -159,24 +178,48 @@ describe('ApplicationsController e2e', () => {
                         isQuick: NaN,
                         referrer: [{}],
                     })
-                    .auth(candidateJWT, { type: 'bearer' })
+                    .auth(aliceJWT, { type: 'bearer' })
                     .expect(400);
             });
         });
     });
 
     describe('GET /applications/:aid', () => {
-        it('should return application data', async () => {
-            const {
-                body: { payload },
-            } = await agent(app.getHttpServer())
-                .get(`/applications/${testApplication.id}`)
-                .auth(candidateJWT, { type: 'bearer' })
-                .expect(200);
-            const { id, recruitment, comments } = payload;
-            expect(id).toBeDefined();
-            expect(recruitment).toBeUndefined();
-            expect(comments).toBeUndefined();
+        describe('get own application data as alice', () => {
+            it('should return partial application data', async () => {
+                const {
+                    body: { payload },
+                } = await agent(app.getHttpServer())
+                    .get(`/applications/${aliceApplication.id}`)
+                    .auth(aliceJWT, { type: 'bearer' })
+                    .expect(200);
+                const { id, recruitment, comments } = payload;
+                expect(id).toBeDefined();
+                expect(recruitment).toBeUndefined();
+                expect(comments).toBeUndefined();
+            });
+        });
+        describe('get application data of bob as alice', () => {
+            it('should return partial application data', async () => {
+                await agent(app.getHttpServer())
+                    .get(`/applications/${bobApplication.id}`)
+                    .auth(aliceJWT, { type: 'bearer' })
+                    .expect(403);
+            });
+        });
+        describe('get application data as member', () => {
+            it('should return full application data', async () => {
+                const {
+                    body: { payload },
+                } = await agent(app.getHttpServer())
+                    .get(`/applications/${aliceApplication.id}`)
+                    .auth(adminJWT, { type: 'bearer' })
+                    .expect(200);
+                const { id, recruitment, comments } = payload;
+                expect(id).toBeDefined();
+                expect(recruitment).toBeDefined();
+                expect(comments).toBeDefined();
+            });
         });
     });
 
@@ -184,9 +227,9 @@ describe('ApplicationsController e2e', () => {
         describe('update application data with valid credential', () => {
             it('should return 200', async () => {
                 await agent(app.getHttpServer())
-                    .put(`/applications/${testApplication.id}`)
-                    .auth(candidateJWT, { type: 'bearer' })
-                    .field('group', Group.ai)
+                    .put(`/applications/${aliceApplication.id}`)
+                    .auth(aliceJWT, { type: 'bearer' })
+                    .field('group', Group.design)
                     .field('grade', Grade.graduate)
                     .field('institute', 'eee')
                     .field('major', 'ddd')
@@ -203,25 +246,104 @@ describe('ApplicationsController e2e', () => {
                 const {
                     body: { payload },
                 } = await agent(app.getHttpServer())
-                    .get(`/applications/${testApplication.id}`)
-                    .auth(candidateJWT, { type: 'bearer' })
+                    .get(`/applications/${aliceApplication.id}`)
+                    .auth(aliceJWT, { type: 'bearer' })
                     .expect(200);
                 const { institute } = payload;
                 expect(institute).toBe('eee');
             });
         });
-        describe('update my info without credential', () => {
+        describe('update own info without credential', () => {
             it('should throw', async () => {
                 await agent(app.getHttpServer()).put('/applications/:aid').expect(403);
+            });
+        });
+        describe('update info of bob with credential of alice', () => {
+            it('should throw', async () => {
+                await agent(app.getHttpServer())
+                    .put(`/applications/${bobApplication.id}`)
+                    .auth(aliceJWT, { type: 'bearer' })
+                    .field('group', Group.ai)
+                    .field('grade', Grade.graduate)
+                    .field('institute', 'eee')
+                    .field('major', 'ddd')
+                    .field('rank', Rank.D)
+                    .field('intro', 'ddd')
+                    .field('isQuick', false)
+                    .field('referrer', 'rika')
+                    .attach('resume', '/etc/profile')
+                    .expect(403);
+            });
+        });
+        describe('apply to design without resume', () => {
+            it('should throw', async () => {
+                await agent(app.getHttpServer())
+                    .put(`/applications/${aliceApplication.id}`)
+                    .auth(aliceJWT, { type: 'bearer' })
+                    .field('group', Group.design)
+                    .field('grade', Grade.graduate)
+                    .field('institute', 'eee')
+                    .field('major', 'ddd')
+                    .field('rank', Rank.D)
+                    .field('intro', 'ddd')
+                    .field('isQuick', false)
+                    .field('referrer', 'rika')
+                    .expect(403);
+            });
+        });
+    });
+
+    describe('PUT /applications/:aid/abandoned', () => {
+        describe('abandon application with valid credential', () => {
+            it('should return 200', async () => {
+                await agent(app.getHttpServer())
+                    .put(`/applications/${bobApplication.id}/abandoned`)
+                    .auth(bobJWT, { type: 'bearer' })
+                    .expect(200);
+            });
+        });
+        describe('get application data', () => {
+            it('should return application data with abandoned=true', async () => {
+                const {
+                    body: { payload },
+                } = await agent(app.getHttpServer())
+                    .get(`/applications/${bobApplication.id}`)
+                    .auth(bobJWT, { type: 'bearer' })
+                    .expect(200);
+                const { abandoned } = payload;
+                expect(abandoned).toBe(true);
+            });
+        });
+        describe('abandon application info without credential', () => {
+            it('should throw', async () => {
+                await agent(app.getHttpServer())
+                    .put(`/applications/${bobApplication.id}/abandoned`)
+                    .expect(403);
+            });
+        });
+        describe('abandon again', () => {
+            it('should throw', async () => {
+                await agent(app.getHttpServer())
+                    .put(`/applications/${bobApplication.id}/abandoned`)
+                    .auth(bobJWT, { type: 'bearer' })
+                    .expect(403);
+            });
+        });
+        describe('abandon the application of alice with the credential of bob', () => {
+            it('should throw', async () => {
+                await agent(app.getHttpServer())
+                    .put(`/applications/${aliceApplication.id}/abandoned`)
+                    .auth(bobJWT, { type: 'bearer' })
+                    .expect(403);
             });
         });
     });
 
     describe('GET /applications/:aid/resume', () => {
-        describe('get resume with user credential', () => {
+        describe('get resume with member credential', () => {
             it('should download the resume', async () => {
                 const { body, header } = await agent(app.getHttpServer())
-                    .get(`/applications/${testApplication.id}/resume`)
+                    .get(`/applications/${aliceApplication.id}/resume`)
                     .auth(adminJWT, { type: 'bearer' })
                     .buffer()
                     .parse((res, callback) => {
@@ -240,10 +362,10 @@ describe('ApplicationsController e2e', () => {
             });
         });
         describe('get resume with candidate credential', () => {
-            it('should download the resume', async () => {
+            it('should also download the resume', async () => {
                 const { body, header } = await agent(app.getHttpServer())
-                    .get(`/applications/${testApplication.id}/resume`)
-                    .auth(candidateJWT, { type: 'bearer' })
+                    .get(`/applications/${aliceApplication.id}/resume`)
+                    .auth(aliceJWT, { type: 'bearer' })
                     .buffer()
                     .parse((res, callback) => {
                         res.setEncoding('binary');
@@ -262,7 +384,15 @@ describe('ApplicationsController e2e', () => {
         });
         describe('get resume without credential', () => {
             it('should throw', async () => {
-                await agent(app.getHttpServer()).get(`/applications/${testApplication.id}/resume`).expect(403);
+                await agent(app.getHttpServer()).get(`/applications/${aliceApplication.id}/resume`).expect(403);
+            });
+        });
+        describe('get resume of bob with credential of alice', () => {
+            it('should throw', async () => {
+                await agent(app.getHttpServer())
+                    .get(`/applications/${bobApplication.id}/resume`)
+                    .auth(aliceJWT, { type: 'bearer' })
+                    .expect(403);
             });
         });
     });
@@ -273,15 +403,23 @@ describe('ApplicationsController e2e', () => {
                 const {
                     body: { payload },
                 } = await agent(app.getHttpServer())
-                    .get(`/applications/recruitment/${testRecruitment.id}`)
+                    .get(`/applications/recruitment/${recruitment.id}`)
                     .auth(adminJWT, { type: 'bearer' })
                     .expect(200);
-                expect(payload).toHaveLength(1);
+                expect(payload).toHaveLength(2);
             });
         });
-        describe('get applications with invalid credential', () => {
+        describe('get applications without credential', () => {
             it('should throw', async () => {
-                await agent(app.getHttpServer()).get(`/applications/recruitment/${testRecruitment.id}`).expect(403);
+                await agent(app.getHttpServer()).get(`/applications/recruitment/${recruitment.id}`).expect(403);
+            });
+        });
+        describe('get applications with credential of alice', () => {
+            it('should throw', async () => {
+                await agent(app.getHttpServer())
+                    .get(`/applications/recruitment/${recruitment.id}`)
+                    .auth(aliceJWT, { type: 'bearer' })
+                    .expect(403);
             });
         });
         describe('get applications with invalid rid', () => {
@@ -292,12 +430,12 @@ describe('ApplicationsController e2e', () => {
                     .expect(400);
             });
         });
-        describe('get applications with updated at', () => {
+        describe('get applications with `updatedAt`', () => {
             it('should return empty', async () => {
                 const {
                     body: { payload },
                 } = await agent(app.getHttpServer())
-                    .get(`/applications/recruitment/${testRecruitment.id}`)
+                    .get(`/applications/recruitment/${recruitment.id}`)
                     .auth(adminJWT, { type: 'bearer' })
                     .query({ updatedAt: new Date().getTime() }) // add this updatedAt query
                     .expect(200);
@@ -305,31 +443,38 @@ describe('ApplicationsController e2e', () => {
             });
 
             it('should return updated applications', async () => {
-                // update test application
-                await applicationsService.update(testApplication.id, { institute: 'newName' });
+                const timeBeforeUpdate = Date.now();
+                // update application of alice
+                await applicationsService.update(aliceApplication.id, { institute: 'newName' });
 
                 const {
                     body: { payload },
                 } = await agent(app.getHttpServer())
-                    .get(`/applications/recruitment/${testRecruitment.id}`)
+                    .get(`/applications/recruitment/${recruitment.id}`)
                     .auth(adminJWT, { type: 'bearer' })
-                    .query({ updatedAt: startTime }) // add this updatedAt query
+                    .query({ updatedAt: timeBeforeUpdate }) // add this updatedAt query
                     .expect(200);
                 expect(payload).toHaveLength(1);
-                const [{ institute }] = payload;
-                expect(institute).toBe('newName');
+                expect(payload).toEqual(
+                    expect.arrayContaining([
+                        expect.objectContaining({
+                            id: aliceApplication.id,
+                            institute: 'newName',
+                        }),
+                    ]),
+                );
             });
 
             it('should get 400 with invalid updatedAt', async () => {
                 await agent(app.getHttpServer())
-                    .get(`/applications/recruitment/${testRecruitment.id}`)
+                    .get(`/applications/recruitment/${recruitment.id}`)
                     .auth(adminJWT, { type: 'bearer' })
                     .query({ updatedAt: 'foo' }) // add this updatedAt query
                     .expect(400);
             });
         });
 
-        describe('get applications in previous recruitment than user', () => {
+        describe('get applications in `prevRecruitment`', () => {
             it('should throw 403', async () => {
                 await agent(app.getHttpServer())
                     .get(`/applications/recruitment/${prevRecruitment.id}`)
@@ -339,30 +484,52 @@ describe('ApplicationsController e2e', () => {
         });
     });
 
-    describe('PUT /applications/:cid/interview/:type', () => {
-        const time = new Date();
-        describe('move all applications to interview step', () => {
-            it('should success', async () => {
-                expect(await applicationsService.update({}, { step: Step.组面时间选择 })).toBeDefined();
-            });
-        });
-        describe('allocate interview for an application with valid credential', () => {
-            it('should return 200', async () => {
+    describe('PUT /applications/:aid/step', () => {
+        describe('move alice with valid credential', () => {
+            it('should return success', async () => {
                 await agent(app.getHttpServer())
-                    .put(`/applications/${testApplication.id}/interview/group`)
+                    .put(`/applications/${aliceApplication.id}/step`)
                     .send({
-                        time,
+                        from: aliceApplication.step,
+                        to: Step.通过,
                     })
                     .auth(adminJWT, { type: 'bearer' })
                     .expect(200);
             });
         });
-        describe('get his group interview', () => {
-            it('should be allocated', async () => {
-                const {
-                    interviewAllocations: { group },
-                } = await applicationsService.findOneById(testApplication.id);
-                expect(group).toStrictEqual(time);
+        describe('move alice again with the same body', () => {
+            it('should throw', async () => {
+                await agent(app.getHttpServer())
+                    .put(`/applications/${aliceApplication.id}/step`)
+                    .send({
+                        from: aliceApplication.step,
+                        to: Step.通过,
+                    })
+                    .auth(adminJWT, { type: 'bearer' })
+                    .expect(400);
+            });
+        });
+        describe('move alice without credential', () => {
+            it('should throw', async () => {
+                await agent(app.getHttpServer())
+                    .put(`/applications/${aliceApplication.id}/step`)
+                    .send({
+                        from: Step.通过,
+                        to: Step.通过,
+                    })
+                    .expect(403);
+            });
+        });
+        describe('move alice on her own', () => {
+            it('should throw', async () => {
+                await agent(app.getHttpServer())
+                    .put(`/applications/${aliceApplication.id}/step`)
+                    .send({
+                        from: Step.通过,
+                        to: Step.通过,
+                    })
+                    .auth(aliceJWT, { type: 'bearer' })
+                    .expect(403);
             });
         });
     });
@@ -370,8 +537,9 @@ describe('ApplicationsController e2e', () => {
     describe('GET and PUT /applications/:aid/slots/:type', () => {
         describe('prepare interview slots', () => {
             it('should return success', async () => {
+                await applicationsService.update({}, { step: Step.组面时间选择 });
                 await agent(app.getHttpServer())
-                    .put(`/recruitments/${testRecruitment.id}/interviews/ai`)
+                    .put(`/recruitments/${recruitment.id}/interviews/design`)
                     .send({
                         interviews: [
                             {
@@ -396,8 +564,8 @@ describe('ApplicationsController e2e', () => {
                 const {
                     body: { payload },
                 } = await agent(app.getHttpServer())
-                    .get(`/applications/${testApplication.id}/slots/group`)
-                    .auth(candidateJWT, { type: 'bearer' })
+                    .get(`/applications/${aliceApplication.id}/slots/group`)
+                    .auth(aliceJWT, { type: 'bearer' })
                     .expect(200);
                 expect(payload).toHaveLength(2);
                 interviews = payload;
@@ -406,29 +574,36 @@ describe('ApplicationsController e2e', () => {
         describe('select slots', () => {
             it('should return success', async () => {
                 await agent(app.getHttpServer())
-                    .put(`/applications/${testApplication.id}/slots/group`)
+                    .put(`/applications/${aliceApplication.id}/slots/group`)
                     .send({
-                        iids: interviews.map(({ id }) => id),
+                        iids: [interviews[0].id],
                     })
-                    .auth(candidateJWT, { type: 'bearer' })
+                    .auth(aliceJWT, { type: 'bearer' })
                     .expect(200);
             });
         });
         describe('select slots again', () => {
             it('should throw', async () => {
                 await agent(app.getHttpServer())
-                    .put(`/applications/${testApplication.id}/slots/group`)
+                    .put(`/applications/${aliceApplication.id}/slots/group`)
                     .send({
                         iids: interviews.map(({ id }) => id),
                     })
-                    .auth(candidateJWT, { type: 'bearer' })
+                    .auth(aliceJWT, { type: 'bearer' })
                     .expect(403);
             });
         });
-        describe('get his selection', () => {
-            it('should be equal to what he selected', async () => {
-                const { interviewSelections } = await applicationsService.findOneByIdForMember(testApplication.id);
-                expect(interviewSelections).toHaveLength(2);
+        describe('get her selection', () => {
+            it('should be equal to what she selected', async () => {
+                const { interviewSelections } = await applicationsService.findOneByIdForMember(aliceApplication.id);
+                expect(interviewSelections).toHaveLength(1);
+                expect(interviewSelections).toEqual(
+                    expect.arrayContaining([
+                        expect.objectContaining({
+                            id: interviews[0].id,
+                        }),
+                    ]),
+                );
             });
         });
     });
@@ -441,11 +616,76 @@ describe('ApplicationsController e2e', () => {
                 } = await agent(app.getHttpServer())
                     .put('/applications/interview/group')
                     .send({
-                        aids: [testApplication.id],
+                        aids: [aliceApplication.id],
                     })
                     .auth(adminJWT, { type: 'bearer' })
                     .expect(200);
                 expect(payload).toHaveLength(1);
+            });
+        });
+        describe('allocate interview for abandoned candidates', () => {
+            it('should throw', async () => {
+                await agent(app.getHttpServer())
+                    .put('/applications/interview/group')
+                    .send({
+                        aids: [aliceApplication.id, bobApplication.id],
+                    })
+                    .auth(adminJWT, { type: 'bearer' })
+                    .expect(403);
+            });
+        });
+    });
+
+    describe('PUT /applications/:cid/interview/:type', () => {
+        const time = new Date();
+        describe('allocate interview for an application with valid credential', () => {
+            it('should return 200', async () => {
+                await agent(app.getHttpServer())
+                    .put(`/applications/${aliceApplication.id}/interview/group`)
+                    .send({
+                        time,
+                    })
+                    .auth(adminJWT, { type: 'bearer' })
+                    .expect(200);
+            });
+        });
+        describe('get his group interview', () => {
+            it('should be allocated', async () => {
+                const {
+                    interviewAllocations: { group },
+                } = await applicationsService.findOneById(aliceApplication.id);
+                expect(group).toStrictEqual(time);
+            });
+        });
+    });
+
+    describe('DELETE /applications/:aid/', () => {
+        describe('remove alice with valid credential', () => {
+            it('should return success', async () => {
+                await agent(app.getHttpServer())
+                    .delete(`/applications/${aliceApplication.id}`)
+                    .auth(adminJWT, { type: 'bearer' })
+                    .expect(200);
+            });
+        });
+        describe('get applications again', () => {
+            it('should not return the application of alice', async () => {
+                const {
+                    body: { payload },
+                } = await agent(app.getHttpServer())
+                    .get(`/applications/recruitment/${recruitment.id}`)
+                    .auth(adminJWT, { type: 'bearer' })
+                    .expect(200);
+                expect(payload).toHaveLength(1);
+                const [{ id }] = payload;
+                expect(id).not.toEqual(aliceApplication.id);
+            });
+        });
+        describe('remove alice without credential', () => {
+            it('should throw', async () => {
+                await agent(app.getHttpServer())
+                    .delete(`/applications/${aliceApplication.id}`)
+                    .expect(403);
             });
         });
     });
