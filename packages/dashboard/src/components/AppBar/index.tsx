@@ -26,7 +26,7 @@ import { titleConverter } from '@utils/titleConverter';
 export const AppBar: FC = observer(() => {
     const { url } = useRouteMatch();
     const classes = useStyles();
-    const { $component, $user, $candidate, $recruitment } = useStores();
+    const { $component, $member, $application, $recruitment } = useStores();
     const [logoutMenu, setLogoutMenu] = useState<Element | null>(null);
     const [darkModeMenu, setDarkModeMenu] = useState<Element | null>(null);
 
@@ -51,7 +51,7 @@ export const AppBar: FC = observer(() => {
 
     const handleLogout = () => {
         closeLogoutMenu();
-        $user.logout();
+        $member.logout();
         setAuthToken('');
     };
 
@@ -70,7 +70,7 @@ export const AppBar: FC = observer(() => {
         '/': `Unique Studio Recruitment Dashboard v${__APP_VERSION__}`,
         '/dashboard': title ? `${title}・数据展示` : '数据展示',
         '/interviews': title ? `${title}・面试分配` : '面试分配',
-        '/candidates': title ? `${title}・选手信息` : '选手信息',
+        '/applications': title ? `${title}・选手信息` : '选手信息',
         '/my': '组员信息',
     };
 
@@ -93,18 +93,18 @@ export const AppBar: FC = observer(() => {
                 <Typography variant='h6' color='inherit' noWrap>
                     {pathToTitle[url] || '808 / 2 = ?'}
                 </Typography>
-                {(url === '/candidates' || url === '/interviews') && (
+                {(url === '/applications' || url === '/interviews') && (
                     <>
                         <Select
                             data={[...STEP_TYPE_MAP.entries()].map(([value, item]) => ({ value, item }))}
-                            onChange={({ target }) => $candidate.setSteps(+(target.value as StepType))}
-                            currentValue={$candidate.stepType}
+                            onChange={({ target }) => $application.setSteps(+(target.value as StepType))}
+                            currentValue={$application.stepType}
                         />
-                        {$candidate.stepType !== StepType.teamInterview && (
+                        {$application.stepType !== StepType.teamInterview && (
                             <Select
                                 data={[...GROUP_MAP.entries()].map(([value, item]) => ({ value, item }))}
-                                onChange={({ target }) => $candidate.setGroup(target.value as Group)}
-                                currentValue={$candidate.group}
+                                onChange={({ target }) => $application.setGroup(target.value as Group)}
+                                currentValue={$application.group}
                             />
                         )}
                     </>

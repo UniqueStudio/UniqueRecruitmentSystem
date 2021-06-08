@@ -2,5 +2,5 @@ import { Role } from '@constants/enums';
 
 export interface JwtPayload {
     id: string;
-    role: Role.candidate | Role.user;
+    role: Role.candidate | Role.member;
 }

@@ -4,34 +4,34 @@ import { get } from 'idb-keyval';
 
 import { API } from '@config/consts';
 import { GroupOrTeam, InterviewType, SMSType, Status, Step } from '@config/enums';
-import { Candidate, Interview, R, Recruitment, User } from '@config/types';
+import { Application, Interview, R, Recruitment, Member } from '@config/types';
 import { stores } from '@stores/index';
 import { primitiveStorage } from '@utils/storage';
 
-const { $candidate, $component, $user, $recruitment } = stores;
+const { $application, $component, $member, $recruitment } = stores;
 
 class Endpoint {
     static base = API;
 
     static auth = '/auth';
 
-    static qrCode = (key = '') => `${Endpoint.auth}/user/qrCode/${key}`;
+    static qrCode = (key = '') => `${Endpoint.auth}/member/qrCode/${key}`;
 
-    static login = `${Endpoint.auth}/user/login/`;
+    static login = `${Endpoint.auth}/member/login/`;
 
-    static candidates = '/candidates';
+    static applications = '/applications';
 
-    static candidate = (cid: string) => `${Endpoint.candidates}/${cid}`;
+    static application = (cid: string) => `${Endpoint.applications}/${cid}`;
 
-    static candidateStep = (cid: string) => `${Endpoint.candidates}/${cid}/step`;
+    static applicationStep = (cid: string) => `${Endpoint.applications}/${cid}/step`;
 
-    static resume = (cid: string) => `${Endpoint.candidates}/${cid}/resume`;
+    static resume = (cid: string) => `${Endpoint.applications}/${cid}/resume`;
 
-    static candidatesInRecruitment = (rid: string, now: Date) =>
-        `${Endpoint.candidates}/recruitment/${rid}?updatedAt=${+now}`;
+    static applicationsInRecruitment = (rid: string, now: Date) =>
+        `${Endpoint.applications}/recruitment/${rid}?updatedAt=${+now}`;
 
-    static candidateAllocation = (type: InterviewType, cid?: string) =>
-        `${Endpoint.candidates}/${cid ? `${cid}/` : ''}interview/${type}`;
+    static applicationAllocation = (type: InterviewType, cid?: string) =>
+        `${Endpoint.applications}/${cid ? `${cid}/` : ''}interview/${type}`;
 
     static recruitments = '/recruitments';
 
@@ -43,15 +43,15 @@ class Endpoint {
 
     static sms = '/sms';
 
-    static verification = `${Endpoint.sms}/verification/user`;
+    static verification = `${Endpoint.sms}/verification/member`;
 
-    static users = '/users';
+    static members = '/members';
 
-    static me = `${Endpoint.users}/me`;
+    static me = `${Endpoint.members}/me`;
 
-    static group = `${Endpoint.users}/group`;
+    static group = `${Endpoint.members}/group`;
 
-    static admin = `${Endpoint.users}/admin`;
+    static admin = `${Endpoint.members}/admin`;
 }
 
 const client = axios.create({
@@ -63,7 +63,7 @@ export const setAuthToken = (token: string) => {
     (client.defaults.headers as { common: Record<string, string> }).common.Authorization = `Bearer ${token}`;
 };
 
-setAuthToken($user.token);
+setAuthToken($member.token);
 
 const apiWrapper = async <T>(
     action: () => Promise<AxiosResponse<R<T>>>,
@@ -94,10 +94,10 @@ const apiWrapper = async <T>(
 
 export const allocateMany = (type: InterviewType, cids: string[]) =>
     apiWrapper(
-        () => client.put<R<{ id: string; time?: string }[]>>(Endpoint.candidateAllocation(type), { cids }),
+        () => client.put<R<{ aid: string; time?: string }[]>>(Endpoint.applicationAllocation(type), { cids }),
         (allocations) => {
-            $candidate.allocateMany(
-                allocations.map(({ id, time }) => ({ id, time: time ? new Date(time) : undefined })),
+            $application.allocateMany(
+                allocations.map(({ aid, time }) => ({ aid, time: time ? new Date(time) : undefined })),
                 type,
             );
             const failed = allocations.filter(({ time }) => !time).length;
@@ -111,37 +111,37 @@ export const allocateMany = (type: InterviewType, cids: string[]) =>
 
 export const allocateOne = (type: InterviewType, cid: string, time: Date) =>
     apiWrapper(
-        () => client.put<R>(Endpoint.candidateAllocation(type, cid), { time }),
+        () => client.put<R>(Endpoint.applicationAllocation(type, cid), { time }),
         () => {
-            $candidate.allocateOne(type, cid, time);
+            $application.allocateOne(type, cid, time);
             $component.enqueueSnackbar('设置成功', 'success');
         },
     );
 
-export const getCandidates = (rid: string) => {
+export const getApplications = (rid: string) => {
     const viewing = primitiveStorage.getItem('viewingId');
     return apiWrapper(
         async () => {
-            const candidates = await get<Map<string, Candidate>>('candidates');
-            if (candidates && rid === viewing) {
-                $candidate.setAll(candidates);
+            const applications = await get<Map<string, Application>>('applications');
+            if (applications && rid === viewing) {
+                $application.setAll(applications);
                 $component.enqueueSnackbar('成功获取候选人信息（缓存）', 'success');
-                let maxUpdatedAt = new Date(0);
-                for (const [, { updatedAt }] of candidates) {
-                    if (maxUpdatedAt < updatedAt) {
-                        maxUpdatedAt = updatedAt;
+                let max = new Date(0);
+                for (const [, { updatedAt }] of applications) {
+                    if (max < updatedAt) {
+                        max = updatedAt;
                     }
                 }
-                return await client.get<R<Candidate<string>[]>>(Endpoint.candidatesInRecruitment(rid, maxUpdatedAt));
+                return await client.get<R<Application<string>[]>>(Endpoint.applicationsInRecruitment(rid, max));
             }
-            return await client.get<R<Candidate<string>[]>>(Endpoint.candidatesInRecruitment(rid, new Date(0)));
+            return await client.get<R<Application<string>[]>>(Endpoint.applicationsInRecruitment(rid, new Date(0)));
         },
-        (candidates) => {
+        (applications) => {
             if (rid !== viewing) {
-                $candidate.clear();
+                $application.clear();
             }
-            $candidate.setMany(
-                candidates.map(({ interviewAllocations: { group, team }, interviewSelections, updatedAt, ...r }) => ({
+            $application.setMany(
+                applications.map(({ interviewAllocations: { group, team }, interviewSelections, updatedAt, ...r }) => ({
                     ...r,
                     updatedAt: new Date(updatedAt),
                     interviewAllocations: {
@@ -160,32 +160,32 @@ export const getCandidates = (rid: string) => {
     );
 };
 
-export const moveCandidate = (cid: string, from: Step, to: Step) =>
+export const moveApplication = (id: string, from: Step, to: Step) =>
     apiWrapper(
         () => {
-            $candidate.moveOne(cid, to);
-            return client.put<R>(Endpoint.candidateStep(cid), { from, to });
+            $application.moveOne(id, to);
+            return client.put<R>(Endpoint.applicationStep(id), { from, to });
         },
         () => $component.enqueueSnackbar('移动成功', 'success'),
-        () => $candidate.moveOne(cid, from),
+        () => $application.moveOne(id, from),
     );
 
-export const removeCandidate = (cid: string) =>
+export const removeApplication = (id: string) =>
     apiWrapper(
-        () => client.delete<R>(Endpoint.candidate(cid)),
+        () => client.delete<R>(Endpoint.application(id)),
         () => {
-            $candidate.removeOne(cid);
+            $application.removeOne(id);
             $component.enqueueSnackbar('移除成功', 'success');
         },
     );
 
-export const getResume = async (cid: string, filename = 'resume') => {
+export const getResume = async (id: string, filename = 'resume') => {
     $component.setProgress(true);
     try {
-        const { data, status } = await client.get<Blob>(Endpoint.resume(cid), {
+        const { data, status } = await client.get<Blob>(Endpoint.resume(id), {
             responseType: 'blob',
             onDownloadProgress(event: ProgressEvent) {
-                $component.setResumeProgress(event.loaded / event.total, cid);
+                $component.setResumeProgress(event.loaded / event.total, id);
             },
         });
         if (status >= 400) {
@@ -202,7 +202,7 @@ export const getResume = async (cid: string, filename = 'resume') => {
     } catch ({ message, status = 'error' }) {
         $component.enqueueSnackbar(message as string, status as Color);
     }
-    $component.setResumeProgress(0, cid);
+    $component.setResumeProgress(0, id);
     $component.setProgress(false);
 };
 
@@ -296,38 +296,38 @@ export const sendSMSToCandidate = (content: {
     );
 
 export const getMyGroup = async () => {
-    const groupInfo = await get<User[]>('group');
-    if (groupInfo && !$user.firstLoad) {
-        $user.setGroupInfo(groupInfo);
+    const groupInfo = await get<Member[]>('group');
+    if (groupInfo && !$member.firstLoad) {
+        $member.setGroupInfo(groupInfo);
         return;
     }
     return apiWrapper(
-        () => client.get<R<User[]>>(Endpoint.group),
-        (users) => $user.setGroupInfo(users),
+        () => client.get<R<Member[]>>(Endpoint.group),
+        (members) => $member.setGroupInfo(members),
     );
 };
 
 export const getMyInfo = async () => {
-    const user = await get<User>('user');
-    if (user) {
-        $user.setUserInfo(user);
-        $candidate.setGroup(user.group);
+    const member = await get<Member>('member');
+    if (member) {
+        $member.setMyInfo(member);
+        $application.setGroup(member.group);
         return;
     }
     return apiWrapper(
-        () => client.get<R<User>>(Endpoint.me),
-        (user) => {
-            $user.setUserInfo(user);
-            $candidate.setGroup(user.group);
+        () => client.get<R<Member>>(Endpoint.me),
+        (member) => {
+            $member.setMyInfo(member);
+            $application.setGroup(member.group);
         },
     );
 };
 
-export const setMyInfo = (data: Pick<User, 'mail' | 'phone' | 'password'>) =>
+export const setMyInfo = (data: Pick<Member, 'mail' | 'phone' | 'password'>) =>
     apiWrapper(
         () => client.put<R>(Endpoint.me, data),
         () => {
-            $user.setUserInfo(data);
+            $member.setMyInfo(data);
             $component.enqueueSnackbar('已成功修改信息', 'success');
         },
     );
@@ -336,7 +336,7 @@ export const setGroupAdmin = (uids: string[]) =>
     apiWrapper(
         () => client.put<R<string[]>>(Endpoint.admin, uids),
         (uids) => {
-            $user.setGroupAdmins(uids);
+            $member.setGroupAdmins(uids);
             $component.enqueueSnackbar('已成功设置管理员', 'success');
         },
     );
@@ -347,16 +347,16 @@ export const loginByQRCode = () =>
         (url) => {
             void apiWrapper(
                 () => {
-                    $user.setQRCode(url);
+                    $member.setQRCode(url);
                     $component.enqueueSnackbar('请尽快用企业微信扫描二维码', 'success');
                     return client.get<R<string>>(Endpoint.qrCode(new URL(url).searchParams.get('key')!));
                 },
                 (token) => {
                     setAuthToken(token);
-                    $user.setToken(token);
+                    $member.setToken(token);
                     $component.enqueueSnackbar('已成功登录', 'success');
                 },
-                () => $user.setQRCode(''),
+                () => $member.setQRCode(''),
             );
             // Toggle progress bar off immediately when users are scanning QRCode
             $component.setProgress(false);
@@ -368,7 +368,7 @@ export const loginByPassword = (phone: string, password: string) =>
         () => client.post<R<string>>(Endpoint.login, { phone, password }),
         (token) => {
             setAuthToken(token);
-            $user.setToken(token);
+            $member.setToken(token);
             $component.enqueueSnackbar('已成功登录', 'success');
         },
     );

@@ -1,41 +1,23 @@
 import { INestApplication } from '@nestjs/common';
-import { Test } from '@nestjs/testing';
 import { agent } from 'supertest';
 
 import { Gender, Group } from '@constants/enums';
-import { UserEntity } from '@entities/user.entity';
-import { AppModule } from '@modules/app.module';
-import { CandidatesService } from '@services/candidates.service';
-import { CommentsService } from '@services/comments.service';
-import { InterviewsService } from '@services/interviews.service';
-import { RecruitmentsService } from '@services/recruitments.service';
-import { UsersService } from '@services/users.service';
+import { MemberEntity } from '@entities/member.entity';
+import { init } from '@test/utils/init';
 
-describe('UserController e2e', () => {
+describe('MemberController e2e', () => {
     let app: INestApplication;
-    let testUser: UserEntity;
-    let testAdmin: UserEntity;
-    let userJWT: string;
+    let testMember: MemberEntity;
+    let testAdmin: MemberEntity;
+    let memberJWT: string;
     let adminJWT: string;
     const password = 'P@ssw0rd';
 
     beforeAll(async () => {
-        const module = await Test.createTestingModule({
-            imports: [AppModule],
-        }).compile();
-        app = module.createNestApplication();
-        await app.init();
-        const usersService = app.get(UsersService);
-        const recruitmentsService = app.get(RecruitmentsService);
-        const candidatesService = app.get(CandidatesService);
-        const interviewsService = app.get(InterviewsService);
-        const commentsService = app.get(CommentsService);
-        await commentsService.clear();
-        await candidatesService.clear();
-        await interviewsService.clear();
-        await recruitmentsService.clear();
-        await usersService.clear();
-        testUser = await usersService.hashPasswordAndCreate(
+        const services = await init();
+        ({ app } = services);
+        const { membersService } = services;
+        testMember = await membersService.hashPasswordAndCreate(
             {
                 weChatID: 'hanyuu',
                 name: 'hanyuu',
@@ -47,7 +29,7 @@ describe('UserController e2e', () => {
             },
             password,
         );
-        testAdmin = await usersService.hashPasswordAndCreate(
+        testAdmin = await membersService.hashPasswordAndCreate(
             {
                 weChatID: 'rika',
                 name: 'rika',
@@ -63,46 +45,46 @@ describe('UserController e2e', () => {
         {
             const {
                 body: { payload },
-            } = await agent(app.getHttpServer()).post('/auth/user/login').send({ password, phone: testUser.phone });
-            userJWT = payload;
+            } = await agent(app.getHttpServer()).post('/auth/member/login').send({ password, phone: testMember.phone });
+            memberJWT = payload;
         }
         {
             const {
                 body: { payload },
-            } = await agent(app.getHttpServer()).post('/auth/user/login').send({ password, phone: testAdmin.phone });
+            } = await agent(app.getHttpServer()).post('/auth/member/login').send({ password, phone: testAdmin.phone });
             adminJWT = payload;
         }
     });
 
-    describe('GET /users/me with valid credential', () => {
-        it('should return user info', async () => {
+    describe('GET /members/me with valid credential', () => {
+        it('should return member info', async () => {
             const {
                 body: { payload },
-            } = await agent(app.getHttpServer()).get('/users/me').auth(userJWT, { type: 'bearer' }).expect(200);
+            } = await agent(app.getHttpServer()).get('/members/me').auth(memberJWT, { type: 'bearer' }).expect(200);
             const { weChatID, comments, password } = payload;
-            expect(weChatID).toBe(testUser.weChatID);
+            expect(weChatID).toBe(testMember.weChatID);
             expect(password).toBe(undefined);
             expect(comments).toBe(undefined);
         });
     });
 
-    describe('GET /users/me with invalid credential', () => {
+    describe('GET /members/me with invalid credential', () => {
         it('should throw', async () => {
-            await agent(app.getHttpServer()).get('/users/me').expect(403);
+            await agent(app.getHttpServer()).get('/members/me').expect(403);
         });
     });
 
-    describe('PUT /users/me with valid credential', () => {
+    describe('PUT /members/me with valid credential', () => {
         describe('update phone, mail and password', () => {
             it('should return 200', async () => {
                 await agent(app.getHttpServer())
-                    .put('/users/me')
+                    .put('/members/me')
                     .send({
                         phone: '13344445555',
                         mail: 'aa@bbb.cc',
                         password: 'newPassword',
                     })
-                    .auth(userJWT, { type: 'bearer' })
+                    .auth(memberJWT, { type: 'bearer' })
                     .expect(200);
             });
         });
@@ -111,7 +93,7 @@ describe('UserController e2e', () => {
                 const {
                     body: { payload },
                 } = await agent(app.getHttpServer())
-                    .post('/auth/user/login')
+                    .post('/auth/member/login')
                     .send({ password: 'newPassword', phone: '13344445555' })
                     .expect(201);
                 expect(payload).toBeDefined();
@@ -120,29 +102,31 @@ describe('UserController e2e', () => {
         describe('login again with old phone and password', () => {
             it('should throw', async () => {
                 await agent(app.getHttpServer())
-                    .post('/auth/user/login')
-                    .send({ password, phone: testUser.phone })
+                    .post('/auth/member/login')
+                    .send({ password, phone: testMember.phone })
                     .expect(401);
             });
         });
     });
 
-    describe('GET /users/group with valid credential', () => {
+    describe('GET /members/group with valid credential', () => {
         it('should return group info', async () => {
             const {
                 body: { payload },
-            } = await agent(app.getHttpServer()).get('/users/group').auth(userJWT, { type: 'bearer' }).expect(200);
+            } = await agent(app.getHttpServer()).get('/members/group').auth(memberJWT, { type: 'bearer' }).expect(200);
             expect(payload).toHaveLength(2);
         });
     });
 
-    describe('PUT /users/admin', () => {
-        describe('set admins with user credential', () => {
+    describe('PUT /members/admin', () => {
+        describe('set admins with member credential', () => {
             it('should throw', async () => {
                 await agent(app.getHttpServer())
-                    .put('/users/admin')
-                    .send([testUser.id])
-                    .auth(userJWT, { type: 'bearer' })
+                    .put('/members/admin')
+                    .send({
+                        mids: [testMember.id],
+                    })
+                    .auth(memberJWT, { type: 'bearer' })
                     .expect(403);
             });
         });
@@ -151,25 +135,29 @@ describe('UserController e2e', () => {
                 const {
                     body: { payload },
                 } = await agent(app.getHttpServer())
-                    .put('/users/admin')
-                    .send([testUser.id])
+                    .put('/members/admin')
+                    .send({
+                        mids: [testMember.id],
+                    })
                     .auth(adminJWT, { type: 'bearer' })
                     .expect(200);
                 expect(payload).toHaveLength(1);
-                expect(payload).toStrictEqual([testUser.id]);
+                expect(payload).toStrictEqual([testMember.id]);
             });
         });
-        describe('now user is admin', () => {
+        describe('now member is admin', () => {
             it('should return new admins', async () => {
                 const {
                     body: { payload },
                 } = await agent(app.getHttpServer())
-                    .put('/users/admin')
-                    .send([testUser.id])
-                    .auth(userJWT, { type: 'bearer' })
+                    .put('/members/admin')
+                    .send({
+                        mids: [testMember.id],
+                    })
+                    .auth(memberJWT, { type: 'bearer' })
                     .expect(200);
                 expect(payload).toHaveLength(1);
-                expect(payload).toStrictEqual([testUser.id]);
+                expect(payload).toStrictEqual([testMember.id]);
             });
         });
     });

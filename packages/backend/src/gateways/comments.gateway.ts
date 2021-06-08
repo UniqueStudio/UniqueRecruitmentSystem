@@ -3,31 +3,32 @@ import { Socket } from 'socket.io';
 
 import { Status } from '@constants/enums';
 import { AddCommentBody, RemoveCommentBody } from '@dtos/comment.dto';
-import { UserEntity } from '@entities/user.entity';
+import { MemberEntity } from '@entities/member.entity';
+import { ApplicationsService } from '@services/applications.service';
 import { AuthService } from '@services/auth.service';
-import { CandidatesService } from '@services/candidates.service';
 import { CommentsService } from '@services/comments.service';
 
 @WebSocketGateway({ cors: true })
 export class CommentsGateway {
     constructor(
-        private readonly candidatesService: CandidatesService,
+        private readonly candidatesService: ApplicationsService,
         private readonly commentsService: CommentsService,
         private readonly authService: AuthService,
     ) {}
 
     @SubscribeMessage('addComment')
     async addComment(@MessageBody() { cid, comment, token }: AddCommentBody, @ConnectedSocket() socket: Socket) {
-        const user = await this.authService.validateToken(token);
-        if (!(user instanceof UserEntity)) {
-            throw new WsException('Failed to authenticate user');
+        // TODO: auth websocket requests using `Authorization` field in HTTP header
+        const member = await this.authService.validateToken(token);
+        if (!(member instanceof MemberEntity)) {
+            throw new WsException('Failed to authenticate member');
         }
         const candidate = await this.candidatesService.findOneById(cid);
         const { content, evaluation } = comment;
         const data = {
             cid,
             comment: await this.commentsService.createAndSave({
-                user,
+                user: member,
                 candidate,
                 content,
                 evaluation,
@@ -45,12 +46,12 @@ export class CommentsGateway {
 
     @SubscribeMessage('removeComment')
     async removeComment(@MessageBody() { id, token }: RemoveCommentBody, @ConnectedSocket() socket: Socket) {
-        const user = await this.authService.validateToken(token);
-        if (!(user instanceof UserEntity)) {
-            throw new WsException('Failed to authenticate user');
+        const member = await this.authService.validateToken(token);
+        if (!(member instanceof MemberEntity)) {
+            throw new WsException('Failed to authenticate member');
         }
         const comment = await this.commentsService.findOneById(id);
-        if (comment.user.id !== user.id) {
+        if (comment.user.id !== member.id) {
             throw new WsException("You don't have permission to do this");
         }
         const data = {

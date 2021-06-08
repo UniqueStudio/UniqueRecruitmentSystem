@@ -1,39 +1,19 @@
 import { INestApplication } from '@nestjs/common';
-import { Test } from '@nestjs/testing';
 import { agent } from 'supertest';
 
 import { Gender, Group } from '@constants/enums';
-import { UserEntity } from '@entities/user.entity';
-import { AppModule } from '@modules/app.module';
-import { CandidatesService } from '@services/candidates.service';
-import { CommentsService } from '@services/comments.service';
-import { InterviewsService } from '@services/interviews.service';
-import { RecruitmentsService } from '@services/recruitments.service';
-import { UsersService } from '@services/users.service';
+import { init } from '@test/utils/init';
 
 describe('SMSController e2e', () => {
     let app: INestApplication;
-    let testUser: UserEntity;
-    let userJWT: string;
+    let memberJWT: string;
     const password = 'P@ssw0rd';
 
     beforeAll(async () => {
-        const module = await Test.createTestingModule({
-            imports: [AppModule],
-        }).compile();
-        app = module.createNestApplication();
-        await app.init();
-        const usersService = app.get(UsersService);
-        const recruitmentsService = app.get(RecruitmentsService);
-        const candidatesService = app.get(CandidatesService);
-        const interviewsService = app.get(InterviewsService);
-        const commentsService = app.get(CommentsService);
-        await commentsService.clear();
-        await candidatesService.clear();
-        await interviewsService.clear();
-        await recruitmentsService.clear();
-        await usersService.clear();
-        testUser = await usersService.hashPasswordAndCreate(
+        const services = await init();
+        ({ app } = services);
+        const { membersService } = services;
+        const { phone } = await membersService.hashPasswordAndCreate(
             {
                 weChatID: 'hanyuu',
                 name: 'hanyuu',
@@ -47,8 +27,8 @@ describe('SMSController e2e', () => {
         );
         const {
             body: { payload },
-        } = await agent(app.getHttpServer()).post('/auth/user/login').send({ password, phone: testUser.phone });
-        userJWT = payload;
+        } = await agent(app.getHttpServer()).post('/auth/member/login').send({ password, phone });
+        memberJWT = payload;
     });
 
     describe('GET /sms/verification/candidate/:phone', () => {
@@ -57,18 +37,18 @@ describe('SMSController e2e', () => {
         });
     });
 
-    describe('GET /sms/verification/user', () => {
-        describe('get code for user with valid credential', () => {
+    describe('GET /sms/verification/member', () => {
+        describe('get code for member with valid credential', () => {
             it('should return 200', async () => {
                 await agent(app.getHttpServer())
-                    .get('/sms/verification/user')
-                    .auth(userJWT, { type: 'bearer' })
+                    .get('/sms/verification/member')
+                    .auth(memberJWT, { type: 'bearer' })
                     .expect(200);
             });
         });
-        describe('get code for user with invalid credential', () => {
+        describe('get code for member with invalid credential', () => {
             it('should throw', async () => {
-                await agent(app.getHttpServer()).get('/sms/verification/user').expect(403);
+                await agent(app.getHttpServer()).get('/sms/verification/member').expect(403);
             });
         });
     });

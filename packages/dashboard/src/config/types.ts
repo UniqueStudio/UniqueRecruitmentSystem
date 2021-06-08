@@ -1,16 +1,18 @@
 import { Evaluation, Gender, Grade, Group, GroupOrTeam, Period, Rank, Status, Step } from '@config/enums';
 
-export interface Candidate<T = Date> {
+export interface Application<T = Date> {
     updatedAt: T;
     id: string;
-    name: string;
-    gender: Gender;
+    candidate: {
+        name: string;
+        gender: Gender;
+        mail: string;
+        phone: string;
+    };
     grade: Grade;
     institute: string;
     major: string;
     rank: Rank;
-    mail: string;
-    phone: string;
     group: Group;
     intro: string;
     isQuick: boolean;
@@ -29,12 +31,12 @@ export interface Candidate<T = Date> {
 
 export interface Comment {
     id: string;
-    user: User;
+    user: Member;
     content: string;
     evaluation: Evaluation;
 }
 
-export interface User {
+export interface Member {
     id: string;
     weChatID: string;
     name: string;

@@ -1,37 +1,22 @@
-import { Test } from '@nestjs/testing';
+import { INestApplication } from '@nestjs/common';
 
 import { Gender, Group, Role } from '@constants/enums';
 import { UserEntity } from '@entities/user.entity';
-import { AppModule } from '@modules/app.module';
 import { AuthService } from '@services/auth.service';
-import { CandidatesService } from '@services/candidates.service';
-import { CommentsService } from '@services/comments.service';
-import { InterviewsService } from '@services/interviews.service';
-import { RecruitmentsService } from '@services/recruitments.service';
-import { UsersService } from '@services/users.service';
+import { MembersService } from '@services/members.service';
+import { init } from '@test/utils/init';
 
 describe('AuthService', () => {
-    let usersService: UsersService;
+    let app: INestApplication;
+    let membersService: MembersService;
     let authService: AuthService;
     let testUser: UserEntity;
 
     const password = 'P@ssw0rd';
     beforeAll(async () => {
-        const module = await Test.createTestingModule({
-            imports: [AppModule],
-        }).compile();
-        authService = module.get(AuthService);
-        usersService = module.get(UsersService);
-        const recruitmentsService = module.get(RecruitmentsService);
-        const candidatesService = module.get(CandidatesService);
-        const interviewsService = module.get(InterviewsService);
-        const commentsService = module.get(CommentsService);
-        await commentsService.clear();
-        await candidatesService.clear();
-        await interviewsService.clear();
-        await recruitmentsService.clear();
-        await usersService.clear();
-        testUser = await usersService.hashPasswordAndCreate(
+        const services = await init();
+        ({ app, membersService, authService } = services);
+        testUser = await membersService.hashPasswordAndCreate(
             {
                 weChatID: 'hanyuu',
                 name: 'hanyuu',
@@ -47,20 +32,20 @@ describe('AuthService', () => {
 
     describe('validate legal user', () => {
         it('should return jwt', async () => {
-            expect(await authService.validateUser(testUser.phone, password)).toBe(testUser.id);
+            expect(await authService.validateMember(testUser.phone, password)).toBe(testUser.id);
         });
     });
 
     describe('validate illegal user', () => {
         it('should return undefined', async () => {
-            expect(await authService.validateUser('fakePhone', password)).toBeUndefined();
-            expect(await authService.validateUser(testUser.phone, 'fakePassword')).toBeUndefined();
+            expect(await authService.validateMember('fakePhone', password)).toBeUndefined();
+            expect(await authService.validateMember(testUser.phone, 'fakePassword')).toBeUndefined();
         });
     });
 
     describe('verify generated token', () => {
         it('should return the same user', async () => {
-            const token = await authService.generateToken(testUser.id, Role.user);
+            const token = await authService.generateToken(testUser.id, Role.member);
             const user = await authService.validateToken(token);
             expect(user?.id).toBe(testUser.id);
         });
@@ -73,7 +58,5 @@ describe('AuthService', () => {
         });
     });
 
-    afterAll(async () => {
-        await usersService.clear();
-    });
+    afterAll(() => app.close());
 });

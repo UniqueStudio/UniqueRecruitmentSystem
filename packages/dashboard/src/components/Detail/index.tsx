@@ -7,25 +7,25 @@ import React, { FC, useState } from 'react';
 import { getResume } from '@apis/rest';
 import { Modal } from '@components/Modal';
 import { GENDERS, GRADES, GROUP_MAP, RANKS } from '@config/consts';
-import { Candidate } from '@config/types';
+import { Application } from '@config/types';
 import { useStores } from '@hooks/useStores';
 import useStyles from '@styles/detail';
 
 interface Props {
-    candidate: Candidate;
+    application: Application;
 }
 
 class Row {
     constructor(public columns: TextFieldProps[], public className?: string) {}
 }
 
-export const Detail: FC<Props> = observer(({ candidate }) => {
+export const Detail: FC<Props> = observer(({ application }) => {
     const { $component } = useStores();
     const classes = useStyles();
     const [introModal, setIntroModal] = useState(false);
 
-    const { id, name, group, gender, grade, institute, intro, mail, major, phone, rank, isQuick, referrer, resume } =
-        candidate;
+    const { candidate, id, group, grade, institute, intro, major, rank, isQuick, referrer, resume } = application;
+    const { name, gender, mail, phone } = candidate;
     const progress = $component.resumeProgresses[id];
 
     const toggleIntroModalOpen = () => setIntroModal((prevModal) => !prevModal);

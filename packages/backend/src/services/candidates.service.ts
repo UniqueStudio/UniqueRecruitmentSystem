@@ -1,9 +1,12 @@
+import { randomBytes } from 'crypto';
+
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { MoreThan, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 
 import { CandidateEntity } from '@entities/candidate.entity';
 import { BasicCRUDService } from '@services/basicCRUD.service';
+import { hash } from '@utils/scrypt';
 
 @Injectable()
 export class CandidatesService extends BasicCRUDService<CandidateEntity> {
@@ -11,38 +14,29 @@ export class CandidatesService extends BasicCRUDService<CandidateEntity> {
         super(repository);
     }
 
-    findOneById(id: string) {
-        return super.findOneById(id, {
-            relations: ['recruitment', 'recruitment.interviews', 'interviewSelections'],
-        });
-    }
-
-    findManyByIds(ids: string[]) {
-        return this.repository.findByIds(ids, {
-            relations: ['recruitment', 'recruitment.interviews', 'interviewSelections'],
-        });
-    }
-
-    findManyByRecruitmentId(rid: string, since: Date) {
-        return this.find({
-            where: {
-                recruitment: {
-                    id: rid,
-                },
-                updatedAt: MoreThan(since),
+    findByPhoneWithPassword(phone: string) {
+        return this.findOne(
+            {
+                phone,
             },
-            relations: ['recruitment', 'interviewSelections', 'comments', 'comments.user'],
-        });
+            {
+                select: ['id', 'password.hash' as keyof CandidateEntity, 'password.salt' as keyof CandidateEntity],
+            },
+        );
     }
 
-    findInPendingRecruitments(phone: string) {
-        const now = new Date();
-        return this.repository
-            .createQueryBuilder('candidate')
-            .leftJoinAndSelect('candidate.recruitment', 'recruitment')
-            .where('candidate.phone = :phone', { phone })
-            .andWhere('recruitment.beginning <= :now', { now })
-            .andWhere('recruitment.end >= :now', { now })
-            .getMany();
+    hashPassword(password: string) {
+        return hash(password);
+    }
+
+    async hashPasswordAndCreate(data: Partial<CandidateEntity>, password = randomBytes(512).toString('hex')) {
+        const { hash, salt } = await this.hashPassword(password);
+        return await this.createAndSave({
+            ...data,
+            password: {
+                hash: hash,
+                salt,
+            },
+        });
     }
 }

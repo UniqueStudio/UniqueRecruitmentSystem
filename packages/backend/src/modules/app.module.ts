@@ -13,6 +13,7 @@ import { RoleGuard } from '@guards/role.guard';
 import { TransformInterceptor } from '@interceptors/transform.interceptor';
 import { AuthMiddleWare } from '@middlewares/auth';
 import { helmet } from '@middlewares/helmet';
+import { ApplicationsModule } from '@modules/applications.module';
 import { AuthModule } from '@modules/auth.module';
 import { CacheModule } from '@modules/cache.module';
 import { CandidatesModule } from '@modules/candidates.module';
@@ -20,10 +21,10 @@ import { ChatModule } from '@modules/chat.module';
 import { CommentsModule } from '@modules/comments.module';
 import { ConfigModule } from '@modules/config.module';
 import { EmailModule } from '@modules/email.module';
+import { MembersModule } from '@modules/members.module';
 import { RecruitmentsModule } from '@modules/recruitments.module';
 import { SMSModule } from '@modules/sms.module';
 import { TasksModule } from '@modules/tasks.module';
-import { UsersModule } from '@modules/users.module';
 import { ConfigService } from '@services/config.service';
 
 @Module({
@@ -72,13 +73,14 @@ import { ConfigService } from '@services/config.service';
         }),
         TasksModule,
         AuthModule,
-        CandidatesModule,
+        ApplicationsModule,
         CacheModule,
+        CandidatesModule,
         ChatModule,
         CommentsModule,
         SMSModule,
         RecruitmentsModule,
-        UsersModule,
+        MembersModule,
         EmailModule,
     ],
     providers: [

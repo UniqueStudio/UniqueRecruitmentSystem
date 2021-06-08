@@ -3,10 +3,10 @@ import { Delete, SelectAll, ArrowBack, ArrowForward, Send } from '@material-ui/i
 import { observer } from 'mobx-react-lite';
 import React, { FC, ReactElement, useState } from 'react';
 
-import { moveCandidate } from '@apis/rest';
+import { moveApplication } from '@apis/rest';
 import { SelectInverse } from '@components/Icons';
 import { Step } from '@config/enums';
-import { Candidate } from '@config/types';
+import { Application } from '@config/types';
 import { useStores } from '@hooks/useStores';
 import useStyles from '@styles/fab';
 
@@ -15,23 +15,23 @@ const ButtonGenerator = (content: string, icon: ReactElement, onClick: () => voi
 );
 
 interface Props {
-    candidates: Candidate[];
+    applications: Application[];
     toggleOpen: (component: string) => () => void;
 }
 
-const selectable = ({ abandoned, rejected }: Candidate) => !abandoned && !rejected;
+const selectable = ({ abandoned, rejected }: Application) => !abandoned && !rejected;
 
-export const Fab: FC<Props> = observer(({ candidates, toggleOpen }) => {
-    const { $candidate, $user, $component } = useStores();
+export const Fab: FC<Props> = observer(({ applications: applications, toggleOpen }) => {
+    const { $application, $member, $component } = useStores();
     const classes = useStyles();
     const [fabOpen, setFabOpen] = useState(false);
 
-    const handleSelectAll = () => $candidate.selectMany(candidates.filter(selectable).map(({ id }) => id));
+    const handleSelectAll = () => $application.selectMany(applications.filter(selectable).map(({ id }) => id));
 
     const handleInverse = () => {
-        const selected = [...$candidate.selected.keys()];
-        $candidate.selectMany(candidates.filter(selectable).map(({ id }) => id));
-        $candidate.deselectMany(selected);
+        const selected = [...$application.selected.keys()];
+        $application.selectMany(applications.filter(selectable).map(({ id }) => id));
+        $application.deselectMany(selected);
     };
 
     const openFab = () => setFabOpen(true);
@@ -39,23 +39,23 @@ export const Fab: FC<Props> = observer(({ candidates, toggleOpen }) => {
     const closeFab = () => setFabOpen(false);
 
     const changeProcess = (delta: -1 | 1) => () => {
-        $candidate.selected.forEach(({ id, step }) => void moveCandidate(id, step, delta + step));
+        $application.selected.forEach(({ id, step }) => void moveApplication(id, step, delta + step));
     };
 
-    const disabled = !$candidate.selected.size || $candidate.group !== $user.info.group;
+    const disabled = !$application.selected.size || $application.group !== $member.info.group;
 
     return (
         <SpeedDial
             ariaLabel='fab'
             className={classes.fab}
-            hidden={!$candidate.selected.size}
+            hidden={!$application.selected.size}
             icon={<SpeedDialIcon />}
             onClose={closeFab}
             onOpen={openFab}
-            open={fabOpen && !!$candidate.selected.size}
+            open={fabOpen && !!$application.selected.size}
         >
-            {ButtonGenerator('移除', <Delete />, toggleOpen('dialog'), disabled || !$user.isAdminOrCaptain)}
-            {ButtonGenerator('发送通知', <Send />, toggleOpen('modal'), disabled || !$user.isAdminOrCaptain)}
+            {ButtonGenerator('移除', <Delete />, toggleOpen('dialog'), disabled || !$member.isAdminOrCaptain)}
+            {ButtonGenerator('发送通知', <Send />, toggleOpen('modal'), disabled || !$member.isAdminOrCaptain)}
             {ButtonGenerator(
                 '下一流程',
                 <ArrowForward />,

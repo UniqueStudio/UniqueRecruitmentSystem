@@ -1,8 +1,7 @@
-import { IsBoolean, IsEmail, IsEnum, IsOptional, IsPhoneNumber, IsString, IsUrl, Matches } from 'class-validator';
-import { Column, Entity, OneToMany } from 'typeorm';
+import { IsEmail, IsEnum, IsOptional, IsPhoneNumber, IsString } from 'class-validator';
+import { Column } from 'typeorm';
 
-import { Gender, Group } from '@constants/enums';
-import { CommentEntity } from '@entities/comment.entity';
+import { Gender } from '@constants/enums';
 import { CommonEntity } from '@entities/common.entity';
 
 class Password {
@@ -15,33 +14,13 @@ class Password {
     hash!: string;
 }
 
-@Entity('users')
-export class UserEntity extends CommonEntity {
-    @Column({ unique: true })
-    @IsString()
-    weChatID!: string;
-
+export abstract class UserEntity extends CommonEntity {
     @Column()
     @IsString()
     name!: string;
 
     @Column(() => Password)
     password!: Password;
-
-    @Column()
-    @IsString()
-    @Matches(/^\d{4}[ASC]$/)
-    joinTime!: string;
-
-    @Column({ default: false })
-    @IsOptional()
-    @IsBoolean()
-    isCaptain!: boolean;
-
-    @Column({ default: false })
-    @IsOptional()
-    @IsBoolean()
-    isAdmin!: boolean;
 
     @Column({ unique: true })
     @IsPhoneNumber('CN')
@@ -55,16 +34,4 @@ export class UserEntity extends CommonEntity {
     @Column('enum', { enum: Gender })
     @IsEnum(Gender)
     gender!: Gender;
-
-    @Column('enum', { enum: Group })
-    @IsEnum(Group)
-    group!: Group;
-
-    @Column({ nullable: true })
-    @IsOptional()
-    @IsUrl({ protocols: ['https'] })
-    avatar?: string;
-
-    @OneToMany(() => CommentEntity, ({ user }) => user)
-    comments!: CommentEntity[];
 }

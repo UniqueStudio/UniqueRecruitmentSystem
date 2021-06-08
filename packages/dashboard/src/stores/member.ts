@@ -1,19 +1,19 @@
 import { set } from 'idb-keyval';
 import { makeAutoObservable, toJS } from 'mobx';
 
-import { Message, User } from '@config/types';
+import { Message, Member } from '@config/types';
 import { primitiveStorage } from '@utils/storage';
 
-export class UserStore {
+export class MemberStore {
     token: string;
 
-    info = {} as User;
+    info = {} as Member;
 
     qrCodeURL = '';
 
     messages: Message[] = [];
 
-    groupInfo: User[] = [];
+    groupInfo: Member[] = [];
 
     firstLoad = true;
 
@@ -47,18 +47,18 @@ export class UserStore {
         primitiveStorage.removeItem('token');
     }
 
-    setUserInfo(userInfo: Partial<User>) {
-        delete userInfo.password;
-        Object.assign(this.info, userInfo);
-        void set('user', toJS(this.info));
-        const user = this.groupInfo.find(({ id }) => this.info.id === id);
-        if (user) {
-            Object.assign(user, userInfo);
+    setMyInfo(myInfo: Partial<Member>) {
+        delete myInfo.password;
+        Object.assign(this.info, myInfo);
+        void set('member', toJS(this.info));
+        const member = this.groupInfo.find(({ id }) => this.info.id === id);
+        if (member) {
+            Object.assign(member, myInfo);
             void set('group', toJS(this.groupInfo));
         }
     }
 
-    setGroupInfo(groupInfo: User[]) {
+    setGroupInfo(groupInfo: Member[]) {
         this.groupInfo = groupInfo;
         this.firstLoad = false;
         void set('group', groupInfo);
@@ -70,9 +70,9 @@ export class UserStore {
     }
 
     setGroupAdmins(admins: string[]) {
-        this.groupInfo.forEach((user) => {
-            if (admins.includes(user.phone)) {
-                user.isAdmin = true;
+        this.groupInfo.forEach((member) => {
+            if (admins.includes(member.phone)) {
+                member.isAdmin = true;
             }
         });
         void set('group', toJS(this.groupInfo));

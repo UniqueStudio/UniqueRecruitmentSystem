@@ -3,7 +3,7 @@ import { makeAutoObservable, toJS } from 'mobx';
 
 import { STEP_MAP } from '@config/consts';
 import { Group, InterviewType, Step, StepType } from '@config/enums';
-import { Candidate, Comment } from '@config/types';
+import { Application, Comment } from '@config/types';
 import { groupSort, teamSort } from '@utils/sort';
 
 const allSteps = [
@@ -19,10 +19,10 @@ const allSteps = [
 const teamInterviewSteps = [Step.群面, Step.通过];
 const groupInterviewSteps = [Step.组面, Step.熬测];
 
-export class CandidateStore {
-    candidates = new Map<string, Candidate>();
+export class ApplicationStore {
+    applications = new Map<string, Application>();
 
-    selected = new Map<string, Candidate>();
+    selected = new Map<string, Application>();
 
     group = Group.web;
 
@@ -35,48 +35,48 @@ export class CandidateStore {
     }
 
     addComment(cid: string, comment: Comment) {
-        const candidate = this.candidates.get(cid);
-        if (!candidate) {
+        const application = this.applications.get(cid);
+        if (!application) {
             return;
         }
-        candidate.comments.push(comment);
-        void set('candidates', toJS(this.candidates));
+        application.comments.push(comment);
+        void set('applications', toJS(this.applications));
     }
 
     removeComment(cid: string, commendId: string) {
-        const candidate = this.candidates.get(cid);
-        if (!candidate) {
+        const application = this.applications.get(cid);
+        if (!application) {
             return;
         }
-        candidate.comments = candidate.comments.filter(({ id }) => id !== commendId);
-        void set('candidates', toJS(this.candidates));
+        application.comments = application.comments.filter(({ id }) => id !== commendId);
+        void set('applications', toJS(this.applications));
     }
 
-    setOne(candidate: Candidate) {
-        this.candidates.set(candidate.id, candidate);
-        void set('candidates', toJS(this.candidates));
+    setOne(application: Application) {
+        this.applications.set(application.id, application);
+        void set('applications', toJS(this.applications));
     }
 
-    setMany(candidates: Candidate[]) {
-        for (const candidate of candidates) {
-            this.candidates.set(candidate.id, candidate);
+    setMany(applications: Application[]) {
+        for (const application of applications) {
+            this.applications.set(application.id, application);
         }
         this.deselectAll();
-        void set('candidates', toJS(this.candidates));
+        void set('applications', toJS(this.applications));
     }
 
-    setAll(candidates: Map<string, Candidate>) {
-        this.candidates = candidates;
+    setAll(applications: Map<string, Application>) {
+        this.applications = applications;
         this.deselectAll();
-        void set('candidates', toJS(this.candidates));
+        void set('applications', toJS(this.applications));
     }
 
     clear() {
-        this.candidates.clear();
+        this.applications.clear();
     }
 
     selectOne(cid: string) {
-        this.selected.set(cid, this.candidates.get(cid)!);
+        this.selected.set(cid, this.applications.get(cid)!);
     }
 
     selectMany(cids: string[]) {
@@ -100,19 +100,19 @@ export class CandidateStore {
     }
 
     removeOne(cid: string) {
-        this.candidates.delete(cid);
+        this.applications.delete(cid);
         this.deselectOne(cid);
-        void set('candidates', toJS(this.candidates));
+        void set('applications', toJS(this.applications));
     }
 
     moveOne(cid: string, to: Step) {
-        const candidate = this.candidates.get(cid);
-        if (!candidate) {
+        const application = this.applications.get(cid);
+        if (!application) {
             return;
         }
         this.deselectOne(cid);
-        candidate.step = to;
-        void set('candidates', toJS(this.candidates));
+        application.step = to;
+        void set('applications', toJS(this.applications));
     }
 
     setGroup(group: Group) {
@@ -141,44 +141,44 @@ export class CandidateStore {
     }
 
     allocateOne(type: InterviewType, cid: string, time: Date) {
-        const candidate = this.candidates.get(cid);
-        if (!candidate) {
+        const application = this.applications.get(cid);
+        if (!application) {
             return;
         }
-        candidate.interviewAllocations[type] = time;
-        void set('candidates', toJS(this.candidates));
+        application.interviewAllocations[type] = time;
+        void set('applications', toJS(this.applications));
     }
 
-    allocateMany(allocations: { id: string; time?: Date }[], type: InterviewType) {
-        allocations.forEach(({ id, time }) => {
-            const candidate = this.candidates.get(id);
-            if (!candidate) {
+    allocateMany(allocations: { aid: string; time?: Date }[], type: InterviewType) {
+        allocations.forEach(({ aid, time }) => {
+            const application = this.applications.get(aid);
+            if (!application) {
                 return;
             }
-            candidate.interviewAllocations[type] = time;
+            application.interviewAllocations[type] = time;
         });
-        void set('candidates', toJS(this.candidates));
+        void set('applications', toJS(this.applications));
     }
 
     get groupBySteps() {
-        const candidates: Candidate[][] = [...new Array<unknown>(STEP_MAP.size)].map(() => []);
+        const applications: Application[][] = [...new Array<unknown>(STEP_MAP.size)].map(() => []);
         switch (this.stepType) {
             case StepType.all:
             case StepType.groupInterview:
-                for (const [, candidate] of this.candidates) {
-                    if (candidate.group === this.group) {
-                        candidates[candidate.step].push(candidate);
+                for (const [, application] of this.applications) {
+                    if (application.group === this.group) {
+                        applications[application.step].push(application);
                     }
                 }
                 break;
             case StepType.teamInterview:
-                for (const [, candidate] of this.candidates) {
-                    candidates[candidate.step].push(candidate);
+                for (const [, application] of this.applications) {
+                    applications[application.step].push(application);
                 }
                 break;
         }
-        candidates[Step.组面].sort(groupSort);
-        candidates[Step.群面].sort(teamSort);
-        return candidates;
+        applications[Step.组面].sort(groupSort);
+        applications[Step.群面].sort(teamSort);
+        return applications;
     }
 }

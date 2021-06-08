@@ -22,7 +22,7 @@ import { useStores } from '@hooks/useStores';
 import useStyles from '@styles/messenger';
 
 export const Messenger: FC = observer(() => {
-    const { $user, $component } = useStores();
+    const { $member, $component } = useStores();
     const classes = useStyles();
     const [content, setContent] = useState('');
     const [container, setContainer] = useState<Element | null>(null);
@@ -31,15 +31,15 @@ export const Messenger: FC = observer(() => {
         if (container && container.scrollHeight - container.scrollTop < 1000) {
             container.scrollTop = container.scrollHeight;
         }
-    }, [$user.messages, container]);
+    }, [$member.messages, container]);
 
     const generateMessage = (message: string | ArrayBuffer | null, isImage = false) => ({
         content: (message || '').toString(),
         isSelf: true,
         time: Date.now(),
         isImage,
-        name: $user.info.name,
-        avatar: $user.info.avatar || '',
+        name: $member.info.name,
+        avatar: $member.info.avatar || '',
     });
 
     const handleKey: KeyboardEventHandler = (event) => {
@@ -103,8 +103,8 @@ export const Messenger: FC = observer(() => {
     };
 
     const plusOne = () => {
-        if ($user.messages.length) {
-            const last = $user.messages[$user.messages.length - 1];
+        if ($member.messages.length) {
+            const last = $member.messages[$member.messages.length - 1];
             sendMessage(generateMessage(last.content, last.isImage));
         }
     };
@@ -149,7 +149,7 @@ export const Messenger: FC = observer(() => {
         <Collapse in={$component.messengerOpen} classes={{ root: classes.collapse }}>
             <Paper className={classes.messenger}>
                 <div className={classes.messages} ref={setContainer}>
-                    {$user.messages.map((message, index) => (
+                    {$member.messages.map((message, index) => (
                         <div key={index} className={clsx(classes.messageContainer, { [classes.my]: message.isSelf })}>
                             {AvatarBox(message)}
                             <Chip
@@ -179,7 +179,7 @@ export const Messenger: FC = observer(() => {
                             color='primary'
                             component='span'
                             onClick={plusOne}
-                            disabled={!$user.messages.length}
+                            disabled={!$member.messages.length}
                         >
                             <PlusOneIcon />
                         </IconButton>

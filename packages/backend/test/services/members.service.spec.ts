@@ -1,30 +1,16 @@
-import { Test } from '@nestjs/testing';
+import { INestApplication } from '@nestjs/common';
 
 import { Gender, Group } from '@constants/enums';
 import { UserEntity } from '@entities/user.entity';
-import { AppModule } from '@modules/app.module';
-import { CandidatesService } from '@services/candidates.service';
-import { CommentsService } from '@services/comments.service';
-import { InterviewsService } from '@services/interviews.service';
-import { RecruitmentsService } from '@services/recruitments.service';
-import { UsersService } from '@services/users.service';
+import { MembersService } from '@services/members.service';
+import { init } from '@test/utils/init';
 
 describe('UsersService', () => {
-    let usersService: UsersService;
+    let app: INestApplication;
+    let membersService: MembersService;
     beforeAll(async () => {
-        const module = await Test.createTestingModule({
-            imports: [AppModule],
-        }).compile();
-        usersService = module.get(UsersService);
-        const recruitmentsService = module.get(RecruitmentsService);
-        const candidatesService = module.get(CandidatesService);
-        const interviewsService = module.get(InterviewsService);
-        const commentsService = module.get(CommentsService);
-        await commentsService.clear();
-        await candidatesService.clear();
-        await interviewsService.clear();
-        await recruitmentsService.clear();
-        await usersService.clear();
+        const services = await init();
+        ({ app, membersService } = services);
     });
 
     const password = 'P@ssw0rd';
@@ -33,7 +19,7 @@ describe('UsersService', () => {
 
     describe('create legal user', () => {
         it('should succeed', async () => {
-            testUser = await usersService.hashPasswordAndCreate(
+            testUser = await membersService.hashPasswordAndCreate(
                 {
                     weChatID: 'rika',
                     name: 'rika',
@@ -51,7 +37,7 @@ describe('UsersService', () => {
 
     describe('find by phone and return id and password', () => {
         it('should return an object with password', async () => {
-            const user = await usersService.findIdentityByPhone('19876543210');
+            const user = await membersService.findByPhoneWithPassword('19876543210');
             expect(user?.password).toHaveProperty('salt');
             expect(user?.password).toHaveProperty('hash');
         });
@@ -59,7 +45,7 @@ describe('UsersService', () => {
 
     describe('find by id and return data without password', () => {
         it('should return an object without password', async () => {
-            const user = await usersService.findOneById(testUser.id);
+            const user = await membersService.findOneById(testUser.id);
             expect(user.password).toBeUndefined();
         });
     });
@@ -67,7 +53,7 @@ describe('UsersService', () => {
     describe('create user which violates table constraints', () => {
         it('should fail', async () => {
             await expect(async () => {
-                await usersService.hashPasswordAndCreate(
+                await membersService.hashPasswordAndCreate(
                     {
                         weChatID: 'rika',
                         name: 'rikaWithNonUniqueFields',
@@ -86,7 +72,7 @@ describe('UsersService', () => {
     describe('create user which has invalid fields', () => {
         it('should fail', async () => {
             await expect(async () => {
-                await usersService.hashPasswordAndCreate(
+                await membersService.hashPasswordAndCreate(
                     {
                         weChatID: 'rika',
                         name: 'rika',
@@ -102,7 +88,5 @@ describe('UsersService', () => {
         });
     });
 
-    afterAll(async () => {
-        await usersService.clear();
-    });
+    afterAll(() => app.close());
 });

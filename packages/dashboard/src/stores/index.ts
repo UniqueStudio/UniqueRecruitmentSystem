@@ -1,13 +1,13 @@
-import { CandidateStore } from './candidate';
+import { ApplicationStore } from './application';
 import { ComponentStateStore } from './componentState';
+import { MemberStore } from './member';
 import { RecruitmentStore } from './recruitment';
-import { UserStore } from './user';
 
 export const stores = {
-    $candidate: new CandidateStore(),
+    $application: new ApplicationStore(),
     $component: new ComponentStateStore(),
     $recruitment: new RecruitmentStore(),
-    $user: new UserStore(),
+    $member: new MemberStore(),
 };
 
-export { ComponentStateStore, CandidateStore, UserStore, RecruitmentStore };
+export { ComponentStateStore, ApplicationStore, MemberStore, RecruitmentStore };

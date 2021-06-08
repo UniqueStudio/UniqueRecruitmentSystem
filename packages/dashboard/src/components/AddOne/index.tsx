@@ -32,10 +32,10 @@ const initialState = () => {
 
 export const AddOne: FC = observer(() => {
     const classes = useStyles();
-    const { $component, $user } = useStores();
+    const { $component, $member } = useStores();
     const [{ modal, beginning, end, deadline, code }, setState] = useState(initialState());
 
-    const disabled = !$user.isAdminOrCaptain;
+    const disabled = !$member.isAdminOrCaptain;
 
     const handleLaunch = async () => {
         if (!code) {

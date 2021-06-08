@@ -11,13 +11,13 @@ import logo from '@images/logo.png';
 import useStyles from '@styles/login';
 
 export const Login: FC = observer(() => {
-    const { $user, $component } = useStores();
+    const { $member, $component } = useStores();
 
     const classes = useStyles();
     const [phone, setPhone] = useState('');
     const [password, setPassword] = useState('');
     const [method, setMethod] = useState(0);
-    if ($user.token) {
+    if ($member.token) {
         return <Redirect to='/' />;
     }
     const handleLogin: FormEventHandler = (event) => {
@@ -40,9 +40,9 @@ export const Login: FC = observer(() => {
     );
     const ByQRCode = (
         <>
-            {$user.qrCodeURL && <img className={classes.qrCode} src={$user.qrCodeURL} alt='QRCode' />}
+            {$member.qrCodeURL && <img className={classes.qrCode} src={$member.qrCodeURL} alt='QRCode' />}
             <ButtonGroup variant='outlined' size='large'>
-                <Button onClick={loginByQRCode} disabled={!!$user.qrCodeURL}>
+                <Button onClick={loginByQRCode} disabled={!!$member.qrCodeURL}>
                     获取二维码
                 </Button>
                 <Button onClick={handleMethod(0)}>返回</Button>

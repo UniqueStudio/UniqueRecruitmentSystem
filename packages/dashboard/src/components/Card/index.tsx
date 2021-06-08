@@ -9,7 +9,7 @@ import { Draggable, DraggableProvided } from 'react-beautiful-dnd';
 import { Female, Male, TransGender } from '@components/Icons';
 import { GRADES, GROUP_MAP } from '@config/consts';
 import { Evaluation, StepType } from '@config/enums';
-import { Candidate as CandidateType } from '@config/types';
+import { Application } from '@config/types';
 import { useStores } from '@hooks/useStores';
 import useStyles from '@styles/card';
 
@@ -18,13 +18,13 @@ const getProportion = (evaluations: Evaluation[]) => {
     let fair = 0;
     for (const evaluation of evaluations) {
         if (evaluation === Evaluation.good) {
-            good++;
+            good += 100;
         } else if (evaluation === Evaluation.fair) {
-            fair++;
+            fair += 100;
         }
     }
-    good = good * 100 / evaluations.length;
-    fair = fair * 100 / evaluations.length + good;
+    good /= evaluations.length;
+    fair = fair / evaluations.length + good;
     return { good, fair };
 };
 
@@ -35,27 +35,26 @@ const genderIcons = {
 };
 
 interface Props {
-    candidate: CandidateType;
+    application: Application;
     index: number;
     toggleDetail: () => void;
 }
 
-export const Card: FC<Props> = observer(({ candidate, index, toggleDetail }) => {
-    const { $candidate, $component } = useStores();
+export const Card: FC<Props> = observer(({ application, index, toggleDetail }) => {
+    const { $application, $component } = useStores();
     const {
-        name,
+        candidate: { name, gender },
         grade,
         institute,
         comments,
         abandoned,
         rejected,
-        gender,
         group,
         interviewAllocations,
         step,
         id,
         isQuick,
-    } = candidate;
+    } = application;
     const evaluations = comments.map(({ evaluation }) => evaluation);
 
     const { good, fair } = getProportion(evaluations);
@@ -64,15 +63,15 @@ export const Card: FC<Props> = observer(({ candidate, index, toggleDetail }) => 
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
-    const checked = $candidate.selected.has(id);
-    const disabled = $candidate.selected.size !== 0 && $component.fabOn !== step;
+    const checked = $application.selected.has(id);
+    const disabled = $application.selected.size !== 0 && $component.fabOn !== step;
 
     const handleCheck: ChangeEventHandler<HTMLInputElement> = ({ target }) => {
         if (target.checked) {
-            $candidate.selectOne(id);
+            $application.selectOne(id);
             $component.setFabOn(step);
         } else {
-            $candidate.deselectOne(id);
+            $application.deselectOne(id);
         }
     };
 
@@ -88,14 +87,14 @@ export const Card: FC<Props> = observer(({ candidate, index, toggleDetail }) => 
             onClick={stopPropagation}
             onChange={handleCheck}
             checked={checked}
-            disabled={abandoned || rejected || disabled || $candidate.stepType === StepType.teamInterview}
+            disabled={abandoned || rejected || disabled || $application.stepType === StepType.teamInterview}
         />
     );
 
     const Profile = (
         <span className={classes.cardTitle}>
             <Typography variant='h6'>
-                {$candidate.stepType === StepType.teamInterview ? `${GROUP_MAP.get(group)!} - ${name}` : name}
+                {$application.stepType === StepType.teamInterview ? `${GROUP_MAP.get(group)!} - ${name}` : name}
                 <span className={classes.svg}>
                     {genderIcons[gender]}
                     {isQuick && <FlashOn htmlColor={amber[500]} fontSize='small' />}
@@ -107,8 +106,9 @@ export const Card: FC<Props> = observer(({ candidate, index, toggleDetail }) => 
                 {rejected && ' - 已淘汰'}
             </Typography>
             <Typography color='textSecondary' variant='caption' display='block'>
-                {$candidate.stepType === StepType.groupInterview && interviewAllocations.group?.toLocaleString('zh-CN')}
-                {$candidate.stepType === StepType.teamInterview && interviewAllocations.team?.toLocaleString('zh-CN')}
+                {$application.stepType === StepType.groupInterview &&
+                    interviewAllocations.group?.toLocaleString('zh-CN')}
+                {$application.stepType === StepType.teamInterview && interviewAllocations.team?.toLocaleString('zh-CN')}
             </Typography>
         </span>
     );

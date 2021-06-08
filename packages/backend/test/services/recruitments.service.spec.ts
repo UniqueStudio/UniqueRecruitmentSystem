@@ -1,31 +1,20 @@
-import { Test } from '@nestjs/testing';
+import { INestApplication } from '@nestjs/common';
 
 import { Gender, Grade, Group, Rank } from '@constants/enums';
 import { RecruitmentEntity } from '@entities/recruitment.entity';
-import { AppModule } from '@modules/app.module';
+import { ApplicationsService } from '@services/applications.service';
 import { CandidatesService } from '@services/candidates.service';
-import { CommentsService } from '@services/comments.service';
-import { InterviewsService } from '@services/interviews.service';
 import { RecruitmentsService } from '@services/recruitments.service';
-import { UsersService } from '@services/users.service';
+import { init } from '@test/utils/init';
 
 describe('RecruitmentsService', () => {
+    let app: INestApplication;
     let recruitmentsService: RecruitmentsService;
+    let applicationsService: ApplicationsService;
     let candidatesService: CandidatesService;
     beforeAll(async () => {
-        const module = await Test.createTestingModule({
-            imports: [AppModule],
-        }).compile();
-        const usersService = module.get(UsersService);
-        recruitmentsService = module.get(RecruitmentsService);
-        candidatesService = module.get(CandidatesService);
-        const interviewsService = module.get(InterviewsService);
-        const commentsService = module.get(CommentsService);
-        await commentsService.clear();
-        await candidatesService.clear();
-        await interviewsService.clear();
-        await recruitmentsService.clear();
-        await usersService.clear();
+        const services = await init();
+        ({ app, recruitmentsService, applicationsService, candidatesService } = services);
     });
 
     let testRecruitment: RecruitmentEntity;
@@ -51,17 +40,20 @@ describe('RecruitmentsService', () => {
 
     describe('find recruitments with statistics', () => {
         it('should return with statistics array', async () => {
-            await candidatesService.createAndSave({
+            const candidate = await candidatesService.hashPasswordAndCreate({
                 phone: '13344445555',
-                group: Group.web,
-                recruitment: testRecruitment,
                 name: 'rika',
                 gender: Gender.female,
+                mail: 'aa@bb.cc',
+            });
+            await applicationsService.createAndSave({
+                group: Group.web,
+                recruitment: testRecruitment,
+                candidate,
                 grade: Grade.freshman,
                 institute: 'test',
                 major: 'test',
                 rank: Rank.A,
-                mail: 'aa@bb.cc',
                 intro: 'no',
                 isQuick: true,
                 referrer: 'hanyuu',
@@ -73,8 +65,5 @@ describe('RecruitmentsService', () => {
         });
     });
 
-    afterAll(async () => {
-        await candidatesService.clear();
-        await recruitmentsService.clear();
-    });
+    afterAll(() => app.close());
 });

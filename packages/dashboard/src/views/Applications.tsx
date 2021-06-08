@@ -2,7 +2,7 @@ import { SlideProps } from '@material-ui/core';
 import { observer } from 'mobx-react-lite';
 import React, { FC, useEffect, useMemo, useState } from 'react';
 
-import { removeCandidate } from '@apis/rest';
+import { removeApplication } from '@apis/rest';
 import { Board } from '@components/Board';
 import { Comments } from '@components/Comments';
 import { Detail } from '@components/Detail';
@@ -12,32 +12,32 @@ import { Modal } from '@components/Modal';
 import { Slider } from '@components/Slider';
 import { Template } from '@components/SMS';
 import { StepType } from '@config/enums';
-import { Candidate } from '@config/types';
+import { Application } from '@config/types';
 import { usePrevious } from '@hooks/usePrevious';
 import { useStores } from '@hooks/useStores';
 
-const SliderContent: FC<{ candidate?: Candidate }> = ({ candidate }) => {
-    const prevCandidate = usePrevious(candidate)!;
-    candidate = candidate ?? prevCandidate;
+const SliderContent: FC<{ application?: Application }> = ({ application }) => {
+    const prevApplication = usePrevious(application)!;
+    application = application ?? prevApplication;
     return (
         <>
-            <Detail candidate={candidate} />
-            <Comments candidate={candidate} />
+            <Detail application={application} />
+            <Comments application={application} />
         </>
     );
 };
 
-const Candidates: FC = observer(() => {
-    const { $component, $candidate } = useStores();
+const Applications: FC = observer(() => {
+    const { $component, $application } = useStores();
     const [dialog, setDialog] = useState(false);
     const [modal, setModal] = useState(false);
     const [step, setStep] = useState(0);
     const [index, setIndex] = useState(-1);
     const [direction, setDirection] = useState<SlideProps['direction']>('right');
 
-    useEffect(() => $candidate.setSteps(StepType.all), []);
+    useEffect(() => $application.setSteps(StepType.all), []);
 
-    const candidates = $candidate.groupBySteps;
+    const applications = $application.groupBySteps;
 
     const handleRight = () => {
         setDirection('left');
@@ -49,7 +49,7 @@ const Candidates: FC = observer(() => {
         setIndex(-1);
     };
 
-    const handleNextIndex = (index: number) => setIndex(candidates[step][index] ? index : -1);
+    const handleNextIndex = (index: number) => setIndex(applications[step][index] ? index : -1);
 
     const toggleDetail = (newStep: number, newIndex: number) => () => {
         setStep(newStep);
@@ -58,16 +58,16 @@ const Candidates: FC = observer(() => {
 
     const handleRemove = () => {
         toggleOpen('dialog')();
-        if ($candidate.selected.size === 0) {
+        if ($application.selected.size === 0) {
             $component.enqueueSnackbar('你没有选中任何人', 'info');
             return;
         }
-        $candidate.selected.forEach(({ id }) => void removeCandidate(id));
+        $application.selected.forEach(({ id }) => void removeApplication(id));
     };
 
     const toggleOpen = (name: string) => () => {
         if (modal) {
-            $candidate.deselectAll();
+            $application.deselectAll();
         }
         if (name === 'modal') {
             setModal((prevModal) => !prevModal);
@@ -81,11 +81,11 @@ const Candidates: FC = observer(() => {
         <>
             {useMemo(
                 () => (
-                    <Board candidates={candidates} toggleDetail={toggleDetail} />
+                    <Board applications={applications} toggleDetail={toggleDetail} />
                 ),
-                [candidates],
+                [applications],
             )}
-            <Fab candidates={candidates[$component.fabOn] ?? []} toggleOpen={toggleOpen} />
+            <Fab applications={applications[$component.fabOn] ?? []} toggleOpen={toggleOpen} />
             <Dialog
                 open={dialog}
                 onClick={handleRemove}
@@ -104,11 +104,11 @@ const Candidates: FC = observer(() => {
                     handleRight={handleRight}
                     handleNextIndex={handleNextIndex}
                 >
-                    <SliderContent candidate={candidates[step][index]} />
+                    <SliderContent application={applications[step][index]} />
                 </Slider>
             </Modal>
         </>
     );
 });
 
-export default Candidates;
+export default Applications;

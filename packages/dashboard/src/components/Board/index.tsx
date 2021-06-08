@@ -3,24 +3,24 @@ import { observer } from 'mobx-react-lite';
 import React, { FC, useCallback } from 'react';
 import { DragDropContext, Droppable, DropResult } from 'react-beautiful-dnd';
 
-import { moveCandidate } from '@apis/rest';
+import { moveApplication } from '@apis/rest';
 import { Card } from '@components/Card';
 import { Column } from '@components/Column';
 import { STEP_MAP } from '@config/consts';
 import { Step } from '@config/enums';
-import { Candidate } from '@config/types';
+import { Application } from '@config/types';
 import { useStores } from '@hooks/useStores';
 import { TabLayout } from '@layouts/TabLayout';
 import useStyles from '@styles/board';
 
 interface Props {
-    candidates: Candidate[][];
+    applications: Application[][];
     toggleDetail: (step: number, index: number) => () => void;
 }
 
-export const Board: FC<Props> = observer(({ candidates, toggleDetail }) => {
+export const Board: FC<Props> = observer(({ applications: applications, toggleDetail }) => {
     const classes = useStyles();
-    const { $candidate } = useStores();
+    const { $application } = useStores();
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
@@ -32,22 +32,22 @@ export const Board: FC<Props> = observer(({ candidates, toggleDetail }) => {
         switch (type) {
             case 'COLUMN': {
                 if (source.droppableId === droppableId && source.index === index) return;
-                const ordered = [...$candidate.steps];
+                const ordered = [...$application.steps];
                 const [removed] = ordered.splice(source.index, 1);
                 ordered.splice(index, 0, removed);
-                $candidate.setSteps($candidate.stepType, ordered);
+                $application.setSteps($application.stepType, ordered);
                 return;
             }
-            case 'CANDIDATE':
+            case 'CARD':
                 if (source.droppableId === droppableId) return;
-                void moveCandidate(draggableId, +source.droppableId, +droppableId);
+                void moveApplication(draggableId, +source.droppableId, +droppableId);
                 return;
         }
     }, []);
 
     const CardsInStep = (step: Step) =>
-        candidates[step].map((candidate, j) => (
-            <Card candidate={candidate} index={j} key={candidate.id} toggleDetail={toggleDetail(step, j)} />
+        applications[step].map((application, j) => (
+            <Card application={application} index={j} key={application.id} toggleDetail={toggleDetail(step, j)} />
         ));
 
     return (
@@ -57,7 +57,7 @@ export const Board: FC<Props> = observer(({ candidates, toggleDetail }) => {
                     <div className={classes.columnsContainer} ref={innerRef} {...droppableProps}>
                         {isMobile ? (
                             <TabLayout
-                                items={$candidate.steps.map((step) => ({
+                                items={$application.steps.map((step) => ({
                                     label: STEP_MAP.get(step)!,
                                     value: step.toString(),
                                     component: <>{CardsInStep(step)}</>,
@@ -67,7 +67,7 @@ export const Board: FC<Props> = observer(({ candidates, toggleDetail }) => {
                                 classes={{ paper: classes.tabContainer }}
                             />
                         ) :
-                            $candidate.steps.map((step, i) => (
+                            $application.steps.map((step, i) => (
                                 <Column step={step} key={step} dropIndex={i}>
                                     {CardsInStep(step)}
                                 </Column>

@@ -5,12 +5,12 @@ import React, { ChangeEventHandler, FC, useState } from 'react';
 import { setMyInfo } from '@apis/rest';
 import { GENDERS, GROUP_MAP } from '@config/consts';
 import { useStores } from '@hooks/useStores';
-import useStyles from '@styles/user';
+import useStyles from '@styles/member';
 import { titleConverter } from '@utils/titleConverter';
 
-export const User: FC = observer(() => {
-    const { $user, $component } = useStores();
-    const { name, gender, group, isAdmin, isCaptain, phone: phoneP, mail: mailP, joinTime } = $user.info;
+export const Member: FC = observer(() => {
+    const { $member, $component } = useStores();
+    const { name, gender, group, isAdmin, isCaptain, phone: phoneP, mail: mailP, joinTime } = $member.info;
     const classes = useStyles();
     const [data, setData] = useState({
         phone: phoneP,

@@ -1,79 +1,62 @@
 import { INestApplication } from '@nestjs/common';
-import { Test } from '@nestjs/testing';
 import { agent } from 'supertest';
 
 import { Gender, Grade, Group, Period, Rank } from '@constants/enums';
 import { InterviewEntity } from '@entities/interview.entity';
 import { RecruitmentEntity } from '@entities/recruitment.entity';
-import { UserEntity } from '@entities/user.entity';
-import { AppModule } from '@modules/app.module';
+import { ApplicationsService } from '@services/applications.service';
 import { CandidatesService } from '@services/candidates.service';
-import { CommentsService } from '@services/comments.service';
 import { InterviewsService } from '@services/interviews.service';
-import { RecruitmentsService } from '@services/recruitments.service';
-import { UsersService } from '@services/users.service';
+import { init } from '@test/utils/init';
 
 describe('RecruitmentsController e2e', () => {
     let app: INestApplication;
-    let testUser: UserEntity;
-    let testAdmin: UserEntity;
-    let userJWT: string;
+    let memberJWT: string;
     let adminJWT: string;
+    let applicationsService: ApplicationsService;
     let candidatesService: CandidatesService;
     let interviewsService: InterviewsService;
     const password = 'P@ssw0rd';
 
     beforeAll(async () => {
-        const module = await Test.createTestingModule({
-            imports: [AppModule],
-        }).compile();
-        app = module.createNestApplication();
-        await app.init();
-        const usersService = app.get(UsersService);
-        const recruitmentsService = app.get(RecruitmentsService);
-        candidatesService = app.get(CandidatesService);
-        interviewsService = app.get(InterviewsService);
-        const commentsService = app.get(CommentsService);
-        await commentsService.clear();
-        await candidatesService.clear();
-        await interviewsService.clear();
-        await recruitmentsService.clear();
-        await usersService.clear();
-        testUser = await usersService.hashPasswordAndCreate(
-            {
-                weChatID: 'hanyuu',
-                name: 'hanyuu',
-                joinTime: '2020C',
-                phone: '19876543211',
-                mail: 'hanyuu@hinami.zawa',
-                gender: Gender.female,
-                group: Group.web,
-            },
-            password,
-        );
-        testAdmin = await usersService.hashPasswordAndCreate(
-            {
-                weChatID: 'rika',
-                name: 'rika',
-                joinTime: '2020C',
-                phone: '19876543212',
-                mail: 'rika@hinami.zawa',
-                gender: Gender.female,
-                group: Group.web,
-                isAdmin: true,
-            },
-            password,
-        );
+        const services = await init();
+        ({ app, applicationsService, candidatesService, interviewsService } = services);
+        const { membersService } = services;
         {
+            const { phone } = await membersService.hashPasswordAndCreate(
+                {
+                    weChatID: 'hanyuu',
+                    name: 'hanyuu',
+                    joinTime: '2020C',
+                    phone: '19876543211',
+                    mail: 'hanyuu@hinami.zawa',
+                    gender: Gender.female,
+                    group: Group.web,
+                },
+                password,
+            );
             const {
                 body: { payload },
-            } = await agent(app.getHttpServer()).post('/auth/user/login').send({ password, phone: testUser.phone });
-            userJWT = payload;
+            } = await agent(app.getHttpServer()).post('/auth/member/login').send({ password, phone });
+            memberJWT = payload;
         }
         {
+            const { phone } = await membersService.hashPasswordAndCreate(
+                {
+                    weChatID: 'rika',
+                    name: 'rika',
+                    joinTime: '2020C',
+                    phone: '19876543212',
+                    mail: 'rika@hinami.zawa',
+                    gender: Gender.female,
+                    group: Group.web,
+                    isAdmin: true,
+                },
+                password,
+            );
             const {
                 body: { payload },
-            } = await agent(app.getHttpServer()).post('/auth/user/login').send({ password, phone: testAdmin.phone });
+            } = await agent(app.getHttpServer()).post('/auth/member/login').send({ password, phone });
             adminJWT = payload;
         }
     });
@@ -96,7 +79,7 @@ describe('RecruitmentsController e2e', () => {
 
         describe('create new recruitment with invalid credential', () => {
             it('should throw', async () => {
-                await agent(app.getHttpServer()).post('/recruitments').auth(userJWT, { type: 'bearer' }).expect(403);
+                await agent(app.getHttpServer()).post('/recruitments').auth(memberJWT, { type: 'bearer' }).expect(403);
             });
         });
 
@@ -120,7 +103,10 @@ describe('RecruitmentsController e2e', () => {
         it('should return pending recruitments', async () => {
             const {
                 body: { payload },
-            } = await agent(app.getHttpServer()).get('/recruitments/pending').expect(200);
+            } = await agent(app.getHttpServer())
+                .get('/recruitments/pending')
+                .auth(memberJWT, { type: 'bearer' })
+                .expect(200);
             expect(payload).toHaveLength(1);
         });
     });
@@ -130,7 +116,10 @@ describe('RecruitmentsController e2e', () => {
             it('should return all recruitments', async () => {
                 const {
                     body: { payload },
-                } = await agent(app.getHttpServer()).get('/recruitments').auth(userJWT, { type: 'bearer' }).expect(200);
+                } = await agent(app.getHttpServer())
+                    .get('/recruitments')
+                    .auth(memberJWT, { type: 'bearer' })
+                    .expect(200);
                 expect(payload).toHaveLength(1);
             });
         });
@@ -149,7 +138,10 @@ describe('RecruitmentsController e2e', () => {
             it('should return success', async () => {
                 const {
                     body: { payload },
-                } = await agent(app.getHttpServer()).get('/recruitments/pending').expect(200);
+                } = await agent(app.getHttpServer())
+                    .get('/recruitments/pending')
+                    .auth(memberJWT, { type: 'bearer' })
+                    .expect(200);
                 [testRecruitment] = payload;
             });
         });
@@ -181,7 +173,10 @@ describe('RecruitmentsController e2e', () => {
             it('should return recruitments with interviews', async () => {
                 const {
                     body: { payload },
-                } = await agent(app.getHttpServer()).get('/recruitments').auth(userJWT, { type: 'bearer' }).expect(200);
+                } = await agent(app.getHttpServer())
+                    .get('/recruitments')
+                    .auth(memberJWT, { type: 'bearer' })
+                    .expect(200);
                 [{ interviews }] = payload;
                 expect(interviews).toHaveLength(2);
             });
@@ -191,7 +186,7 @@ describe('RecruitmentsController e2e', () => {
             it('should throw', async () => {
                 await agent(app.getHttpServer())
                     .put(`/recruitments/${testRecruitment.id}/interviews/web`)
-                    .auth(userJWT, { type: 'bearer' })
+                    .auth(memberJWT, { type: 'bearer' })
                     .expect(403);
             });
         });
@@ -273,7 +268,10 @@ describe('RecruitmentsController e2e', () => {
             it('should return recruitments with updated interviews', async () => {
                 const {
                     body: { payload },
-                } = await agent(app.getHttpServer()).get('/recruitments').auth(userJWT, { type: 'bearer' }).expect(200);
+                } = await agent(app.getHttpServer())
+                    .get('/recruitments')
+                    .auth(memberJWT, { type: 'bearer' })
+                    .expect(200);
                 [{ interviews }] = payload;
                 interviews.forEach(({ slotNumber }) => {
                     expect(slotNumber).toBe(6);
@@ -283,21 +281,26 @@ describe('RecruitmentsController e2e', () => {
 
         describe('create candidate and select slots', () => {
             it('should return success', async () => {
-                expect(await candidatesService.createAndSave({
+                const candidate = await candidatesService.hashPasswordAndCreate({
                     name: 'foo',
                     phone: '13131111111',
                     mail: 'foo@bar.com',
-                    group: Group.web,
                     gender: Gender.female,
-                    grade: Grade.freshman,
-                    recruitment: testRecruitment,
-                    rank: Rank.A,
-                    institute: 'cs',
-                    major: 'cs',
-                    intro: 'hi',
-                    isQuick: false,
-                    interviewSelections: await interviewsService.find(),
-                })).toBeDefined();
+                });
+                expect(
+                    await applicationsService.createAndSave({
+                        group: Group.web,
+                        grade: Grade.freshman,
+                        candidate,
+                        recruitment: testRecruitment,
+                        rank: Rank.A,
+                        institute: 'cs',
+                        major: 'cs',
+                        intro: 'hi',
+                        isQuick: false,
+                        interviewSelections: await interviewsService.find(),
+                    }),
+                ).toBeDefined();
             });
         });
 
@@ -330,7 +333,7 @@ describe('RecruitmentsController e2e', () => {
 
         describe('remove all candidates', () => {
             it('should return success', async () => {
-                expect(await candidatesService.clear()).toBeDefined();
+                expect(await applicationsService.clear()).toBeDefined();
             });
         });
 
@@ -353,7 +356,10 @@ describe('RecruitmentsController e2e', () => {
             it('should return success', async () => {
                 const {
                     body: { payload },
-                } = await agent(app.getHttpServer()).get('/recruitments/pending').expect(200);
+                } = await agent(app.getHttpServer())
+                    .get('/recruitments/pending')
+                    .auth(memberJWT, { type: 'bearer' })
+                    .expect(200);
                 [testRecruitment] = payload;
             });
         });
@@ -376,7 +382,10 @@ describe('RecruitmentsController e2e', () => {
             it('should return an empty array', async () => {
                 const {
                     body: { payload },
-                } = await agent(app.getHttpServer()).get('/recruitments/pending').expect(200);
+                } = await agent(app.getHttpServer())
+                    .get('/recruitments/pending')
+                    .auth(memberJWT, { type: 'bearer' })
+                    .expect(200);
                 expect(payload).toHaveLength(0);
             });
         });
@@ -385,7 +394,7 @@ describe('RecruitmentsController e2e', () => {
             it('should throw', async () => {
                 await agent(app.getHttpServer())
                     .put(`/recruitments/${testRecruitment.id}/schedule`)
-                    .auth(userJWT, { type: 'bearer' })
+                    .auth(memberJWT, { type: 'bearer' })
                     .expect(403);
             });
         });

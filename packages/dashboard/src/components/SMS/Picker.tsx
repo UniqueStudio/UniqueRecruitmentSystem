@@ -7,18 +7,18 @@ import { useStores } from '@hooks/useStores';
 import useStyles from '@styles/sms';
 
 export const SMSPicker: FC = observer(() => {
-    const { $candidate } = useStores();
+    const { $application } = useStores();
     const classes = useStyles();
     const handleDeselect = (id: string) => () => {
-        $candidate.deselectOne(id);
+        $application.deselectOne(id);
     };
 
     const chips: ReactElement[] = [];
-    $candidate.selected.forEach(({ id, name, grade, institute }) =>
+    $application.selected.forEach(({ id, candidate, grade, institute }) =>
         chips.push(
             <Chip
                 key={id}
-                label={`${name} ${GRADES[grade]} ${institute}`}
+                label={`${candidate.name} ${GRADES[grade]} ${institute}`}
                 onDelete={handleDeselect(id)}
                 className={classes.templateItem}
                 color='primary'

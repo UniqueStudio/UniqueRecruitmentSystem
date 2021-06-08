@@ -5,23 +5,23 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
 import { Group } from '@constants/enums';
-import { UserEntity } from '@entities/user.entity';
+import { MemberEntity } from '@entities/member.entity';
 import { BasicCRUDService } from '@services/basicCRUD.service';
 import { hash } from '@utils/scrypt';
 
 @Injectable()
-export class UsersService extends BasicCRUDService<UserEntity> {
-    constructor(@InjectRepository(UserEntity) repository: Repository<UserEntity>) {
+export class MembersService extends BasicCRUDService<MemberEntity> {
+    constructor(@InjectRepository(MemberEntity) repository: Repository<MemberEntity>) {
         super(repository);
     }
 
-    findIdentityByPhone(phone: string) {
+    findByPhoneWithPassword(phone: string) {
         return this.findOne(
             {
                 phone,
             },
             {
-                select: ['id', 'password.hash' as keyof UserEntity, 'password.salt' as keyof UserEntity],
+                select: ['id', 'password.hash' as keyof MemberEntity, 'password.salt' as keyof MemberEntity],
             },
         );
     }
@@ -37,7 +37,7 @@ export class UsersService extends BasicCRUDService<UserEntity> {
         });
     }
 
-    async findOrCreate(data: Partial<UserEntity>) {
+    async findOrCreate(data: Partial<MemberEntity>) {
         return await this.findOne({ weChatID: data.weChatID }) ?? await this.hashPasswordAndCreate(data);
     }
 
@@ -45,7 +45,7 @@ export class UsersService extends BasicCRUDService<UserEntity> {
         return hash(password);
     }
 
-    async hashPasswordAndCreate(data: Partial<UserEntity>, password = randomBytes(512).toString('hex')) {
+    async hashPasswordAndCreate(data: Partial<MemberEntity>, password = randomBytes(512).toString('hex')) {
         const { hash, salt } = await this.hashPassword(password);
         return await this.createAndSave({
             ...data,

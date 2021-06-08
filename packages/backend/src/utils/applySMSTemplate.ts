@@ -1,12 +1,12 @@
 import { RECRUITMENT_NAME_MAP, STEP_MAP } from '@constants/consts';
 import { SMSType, Step } from '@constants/enums';
-import { CandidateEntity } from '@entities/candidate.entity';
+import { ApplicationEntity } from '@entities/application.entity';
 
 const fullRecruitmentName = (name: string) => name.slice(0, 4) + RECRUITMENT_NAME_MAP[name[4]];
 
 interface Model {
     type: SMSType;
-    candidate: CandidateEntity;
+    application: ApplicationEntity;
     next: Step;
     time?: string;
     place?: string;
@@ -19,7 +19,7 @@ export const applySMSTemplate = ({
     place,
     rest,
     next,
-    candidate: { group, step, recruitment, name, interviewAllocations },
+    application: { group, step, recruitment, candidate: { name }, interviewAllocations },
 }: Model) => {
     const suffix = ' (请勿回复本短信)';
     const recruitmentName = fullRecruitmentName(recruitment.name);

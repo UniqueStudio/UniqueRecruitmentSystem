@@ -32,7 +32,7 @@ const TipButton: FC<Props> = ({ name, onClick, disabled, children }) => (
 
 export const Slots: FC = observer(() => {
     const classes = useStyles();
-    const { $recruitment, $candidate, $user } = useStores();
+    const { $recruitment, $application, $member } = useStores();
     const [slots, setSlots] = useState<Omit<Interview, 'name' | 'id'>[]>([]);
 
     const init = () => {
@@ -44,15 +44,15 @@ export const Slots: FC = observer(() => {
         setSlots(
             interviews
                 .filter(({ name }) =>
-                    $candidate.stepType === StepType.teamInterview
+                    $application.stepType === StepType.teamInterview
                         ? name === GroupOrTeam.unique
-                        : name === GroupOrTeam[$candidate.group],
+                        : name === GroupOrTeam[$application.group],
                 )
                 .map((i) => toJS(i)),
         );
     };
 
-    useEffect(init, [$recruitment.viewingRecruitment, $candidate.stepType, $candidate.group]);
+    useEffect(init, [$recruitment.viewingRecruitment, $application.stepType, $application.group]);
 
     const addSlot = () => {
         setSlots((prevSlots) => [
@@ -103,7 +103,7 @@ export const Slots: FC = observer(() => {
     const submit = () =>
         setRecruitmentInterviews(
             $recruitment.viewingId,
-            $candidate.stepType === StepType.teamInterview ? GroupOrTeam.unique : GroupOrTeam[$candidate.group],
+            $application.stepType === StepType.teamInterview ? GroupOrTeam.unique : GroupOrTeam[$application.group],
             slots,
         );
 
@@ -152,7 +152,7 @@ export const Slots: FC = observer(() => {
                 ))}
             </div>
             <div className={classes.buttonsContainer}>
-                <TipButton name='提交' onClick={submit} disabled={!$user.isAdminOrCaptain}>
+                <TipButton name='提交' onClick={submit} disabled={!$member.isAdminOrCaptain}>
                     <CheckIcon />
                 </TipButton>
                 <TipButton name='取消' onClick={init}>
