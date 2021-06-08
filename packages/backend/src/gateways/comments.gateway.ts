@@ -18,6 +18,7 @@ export class CommentsGateway {
 
     @SubscribeMessage('addComment')
     async addComment(@MessageBody() { cid, comment, token }: AddCommentBody, @ConnectedSocket() socket: Socket) {
+        // TODO: auth websocket requests using `Authorization` field in HTTP header
         const member = await this.authService.validateToken(token);
         if (!(member instanceof MemberEntity)) {
             throw new WsException('Failed to authenticate member');
