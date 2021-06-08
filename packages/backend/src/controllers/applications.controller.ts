@@ -172,6 +172,7 @@ export class ApplicationsController {
         const application = await this.applicationsService.findOneByIdForMember(aid);
         ApplicationsController.checkCandidate(application, candidate, 'abandon');
         ApplicationsController.checkApplicationStatus(application);
+        ApplicationsController.checkRecruitment(application.recruitment);
         application.abandoned = true;
         await application.save();
         this.applicationsGateway.broadcastUpdate(application);
