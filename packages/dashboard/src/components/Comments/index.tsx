@@ -5,12 +5,12 @@ import React, { ChangeEventHandler, FC, KeyboardEventHandler, useState } from 'r
 import { addComment, removeComment } from '@apis/websocket';
 import { Chip } from '@components/Chip';
 import { Evaluation } from '@config/enums';
-import { Candidate, Comment } from '@config/types';
+import { Application, Comment } from '@config/types';
 import { useStores } from '@hooks/useStores';
 import useStyles from '@styles/comments';
 
 interface Props {
-    candidate: Candidate;
+    candidate: Application;
 }
 
 export const Comments: FC<Props> = observer(({ candidate: { comments, id } }) => {

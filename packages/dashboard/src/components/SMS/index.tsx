@@ -25,7 +25,7 @@ const initialContent = {
 };
 
 export const Template: FC<Props> = observer(({ toggleOpen }) => {
-    const { $component, $candidate } = useStores();
+    const { $component, $application } = useStores();
     const classes = useStyles();
     const [activeStep, setActiveStep] = useState(0);
     const [content, setContent] = useState(initialContent);
@@ -42,7 +42,7 @@ export const Template: FC<Props> = observer(({ toggleOpen }) => {
             return;
         }
 
-        if (await sendSMSToCandidate({ ...content, code, cids: [...$candidate.selected.keys()] })) {
+        if (await sendSMSToCandidate({ ...content, code, cids: [...$application.selected.keys()] })) {
             setCode('');
         }
     };
@@ -95,7 +95,7 @@ export const Template: FC<Props> = observer(({ toggleOpen }) => {
                             variant='contained'
                             onClick={activeStep === steps.length - 1 ? handleSend : handleNext}
                             className={classes.templateItem}
-                            disabled={$candidate.selected.size === 0}
+                            disabled={$application.selected.size === 0}
                         >
                             {activeStep === steps.length - 1 ? '发送通知' : '下一步'}
                         </Button>

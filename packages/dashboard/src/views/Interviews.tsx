@@ -8,15 +8,15 @@ import { useStores } from '@hooks/useStores';
 import { TabLayout } from '@layouts/TabLayout';
 
 const Interviews: FC = observer(() => {
-    const { $candidate } = useStores();
+    const { $application } = useStores();
 
     useEffect(() => {
-        if ($candidate.stepType === StepType.all) {
-            $candidate.setSteps(StepType.groupInterview);
+        if ($application.stepType === StepType.all) {
+            $application.setSteps(StepType.groupInterview);
         }
-    }, [$candidate.stepType]);
+    }, [$application.stepType]);
 
-    const name = $candidate.stepType === StepType.teamInterview ? '群面' : '组面';
+    const name = $application.stepType === StepType.teamInterview ? '群面' : '组面';
 
     return (
         <TabLayout

@@ -12,32 +12,32 @@ import { Modal } from '@components/Modal';
 import { Slider } from '@components/Slider';
 import { Template } from '@components/SMS';
 import { StepType } from '@config/enums';
-import { Candidate } from '@config/types';
+import { Application } from '@config/types';
 import { usePrevious } from '@hooks/usePrevious';
 import { useStores } from '@hooks/useStores';
 
-const SliderContent: FC<{ candidate?: Candidate }> = ({ candidate }) => {
+const SliderContent: FC<{ candidate?: Application }> = ({ candidate }) => {
     const prevCandidate = usePrevious(candidate)!;
     candidate = candidate ?? prevCandidate;
     return (
         <>
-            <Detail candidate={candidate} />
+            <Detail application={candidate} />
             <Comments candidate={candidate} />
         </>
     );
 };
 
 const Candidates: FC = observer(() => {
-    const { $component, $candidate } = useStores();
+    const { $component, $application } = useStores();
     const [dialog, setDialog] = useState(false);
     const [modal, setModal] = useState(false);
     const [step, setStep] = useState(0);
     const [index, setIndex] = useState(-1);
     const [direction, setDirection] = useState<SlideProps['direction']>('right');
 
-    useEffect(() => $candidate.setSteps(StepType.all), []);
+    useEffect(() => $application.setSteps(StepType.all), []);
 
-    const candidates = $candidate.groupBySteps;
+    const candidates = $application.groupBySteps;
 
     const handleRight = () => {
         setDirection('left');
@@ -58,16 +58,16 @@ const Candidates: FC = observer(() => {
 
     const handleRemove = () => {
         toggleOpen('dialog')();
-        if ($candidate.selected.size === 0) {
+        if ($application.selected.size === 0) {
             $component.enqueueSnackbar('你没有选中任何人', 'info');
             return;
         }
-        $candidate.selected.forEach(({ id }) => void removeCandidate(id));
+        $application.selected.forEach(({ id }) => void removeCandidate(id));
     };
 
     const toggleOpen = (name: string) => () => {
         if (modal) {
-            $candidate.deselectAll();
+            $application.deselectAll();
         }
         if (name === 'modal') {
             setModal((prevModal) => !prevModal);

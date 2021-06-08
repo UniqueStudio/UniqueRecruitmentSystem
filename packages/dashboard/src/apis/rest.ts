@@ -4,34 +4,34 @@ import { get } from 'idb-keyval';
 
 import { API } from '@config/consts';
 import { GroupOrTeam, InterviewType, SMSType, Status, Step } from '@config/enums';
-import { Candidate, Interview, R, Recruitment, User } from '@config/types';
+import { Application, Interview, R, Recruitment, User } from '@config/types';
 import { stores } from '@stores/index';
 import { primitiveStorage } from '@utils/storage';
 
-const { $candidate, $component, $user, $recruitment } = stores;
+const { $application, $component, $user, $recruitment } = stores;
 
 class Endpoint {
     static base = API;
 
     static auth = '/auth';
 
-    static qrCode = (key = '') => `${Endpoint.auth}/user/qrCode/${key}`;
+    static qrCode = (key = '') => `${Endpoint.auth}/member/qrCode/${key}`;
 
-    static login = `${Endpoint.auth}/user/login/`;
+    static login = `${Endpoint.auth}/member/login/`;
 
-    static candidates = '/candidates';
+    static applications = '/applications';
 
-    static candidate = (cid: string) => `${Endpoint.candidates}/${cid}`;
+    static application = (cid: string) => `${Endpoint.applications}/${cid}`;
 
-    static candidateStep = (cid: string) => `${Endpoint.candidates}/${cid}/step`;
+    static applicationStep = (cid: string) => `${Endpoint.applications}/${cid}/step`;
 
-    static resume = (cid: string) => `${Endpoint.candidates}/${cid}/resume`;
+    static resume = (cid: string) => `${Endpoint.applications}/${cid}/resume`;
 
-    static candidatesInRecruitment = (rid: string, now: Date) =>
-        `${Endpoint.candidates}/recruitment/${rid}?updatedAt=${+now}`;
+    static applicationsInRecruitment = (rid: string, now: Date) =>
+        `${Endpoint.applications}/recruitment/${rid}?updatedAt=${+now}`;
 
-    static candidateAllocation = (type: InterviewType, cid?: string) =>
-        `${Endpoint.candidates}/${cid ? `${cid}/` : ''}interview/${type}`;
+    static applicationAllocation = (type: InterviewType, cid?: string) =>
+        `${Endpoint.applications}/${cid ? `${cid}/` : ''}interview/${type}`;
 
     static recruitments = '/recruitments';
 
@@ -43,15 +43,15 @@ class Endpoint {
 
     static sms = '/sms';
 
-    static verification = `${Endpoint.sms}/verification/user`;
+    static verification = `${Endpoint.sms}/verification/member`;
 
-    static users = '/users';
+    static members = '/members';
 
-    static me = `${Endpoint.users}/me`;
+    static me = `${Endpoint.members}/me`;
 
-    static group = `${Endpoint.users}/group`;
+    static group = `${Endpoint.members}/group`;
 
-    static admin = `${Endpoint.users}/admin`;
+    static admin = `${Endpoint.members}/admin`;
 }
 
 const client = axios.create({
@@ -94,9 +94,9 @@ const apiWrapper = async <T>(
 
 export const allocateMany = (type: InterviewType, cids: string[]) =>
     apiWrapper(
-        () => client.put<R<{ id: string; time?: string }[]>>(Endpoint.candidateAllocation(type), { cids }),
+        () => client.put<R<{ id: string; time?: string }[]>>(Endpoint.applicationAllocation(type), { cids }),
         (allocations) => {
-            $candidate.allocateMany(
+            $application.allocateMany(
                 allocations.map(({ id, time }) => ({ id, time: time ? new Date(time) : undefined })),
                 type,
             );
@@ -111,9 +111,9 @@ export const allocateMany = (type: InterviewType, cids: string[]) =>
 
 export const allocateOne = (type: InterviewType, cid: string, time: Date) =>
     apiWrapper(
-        () => client.put<R>(Endpoint.candidateAllocation(type, cid), { time }),
+        () => client.put<R>(Endpoint.applicationAllocation(type, cid), { time }),
         () => {
-            $candidate.allocateOne(type, cid, time);
+            $application.allocateOne(type, cid, time);
             $component.enqueueSnackbar('设置成功', 'success');
         },
     );
@@ -122,25 +122,25 @@ export const getCandidates = (rid: string) => {
     const viewing = primitiveStorage.getItem('viewingId');
     return apiWrapper(
         async () => {
-            const candidates = await get<Map<string, Candidate>>('candidates');
+            const candidates = await get<Map<string, Application>>('candidates');
             if (candidates && rid === viewing) {
-                $candidate.setAll(candidates);
+                $application.setAll(candidates);
                 $component.enqueueSnackbar('成功获取候选人信息（缓存）', 'success');
-                let maxUpdatedAt = new Date(0);
+                let max = new Date(0);
                 for (const [, { updatedAt }] of candidates) {
-                    if (maxUpdatedAt < updatedAt) {
-                        maxUpdatedAt = updatedAt;
+                    if (max < updatedAt) {
+                        max = updatedAt;
                     }
                 }
-                return await client.get<R<Candidate<string>[]>>(Endpoint.candidatesInRecruitment(rid, maxUpdatedAt));
+                return await client.get<R<Application<string>[]>>(Endpoint.applicationsInRecruitment(rid, max));
             }
-            return await client.get<R<Candidate<string>[]>>(Endpoint.candidatesInRecruitment(rid, new Date(0)));
+            return await client.get<R<Application<string>[]>>(Endpoint.applicationsInRecruitment(rid, new Date(0)));
         },
         (candidates) => {
             if (rid !== viewing) {
-                $candidate.clear();
+                $application.clear();
             }
-            $candidate.setMany(
+            $application.setMany(
                 candidates.map(({ interviewAllocations: { group, team }, interviewSelections, updatedAt, ...r }) => ({
                     ...r,
                     updatedAt: new Date(updatedAt),
@@ -163,18 +163,18 @@ export const getCandidates = (rid: string) => {
 export const moveCandidate = (cid: string, from: Step, to: Step) =>
     apiWrapper(
         () => {
-            $candidate.moveOne(cid, to);
-            return client.put<R>(Endpoint.candidateStep(cid), { from, to });
+            $application.moveOne(cid, to);
+            return client.put<R>(Endpoint.applicationStep(cid), { from, to });
         },
         () => $component.enqueueSnackbar('移动成功', 'success'),
-        () => $candidate.moveOne(cid, from),
+        () => $application.moveOne(cid, from),
     );
 
 export const removeCandidate = (cid: string) =>
     apiWrapper(
-        () => client.delete<R>(Endpoint.candidate(cid)),
+        () => client.delete<R>(Endpoint.application(cid)),
         () => {
-            $candidate.removeOne(cid);
+            $application.removeOne(cid);
             $component.enqueueSnackbar('移除成功', 'success');
         },
     );
@@ -311,14 +311,14 @@ export const getMyInfo = async () => {
     const user = await get<User>('user');
     if (user) {
         $user.setUserInfo(user);
-        $candidate.setGroup(user.group);
+        $application.setGroup(user.group);
         return;
     }
     return apiWrapper(
         () => client.get<R<User>>(Endpoint.me),
         (user) => {
             $user.setUserInfo(user);
-            $candidate.setGroup(user.group);
+            $application.setGroup(user.group);
         },
     );
 };

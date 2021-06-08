@@ -7,14 +7,14 @@ import React, { FC, useState } from 'react';
 import { allocateMany, allocateOne } from '@apis/rest';
 import { PERIOD_MAP } from '@config/consts';
 import { GroupOrTeam, InterviewType, Step, StepType } from '@config/enums';
-import { Candidate } from '@config/types';
+import { Application } from '@config/types';
 import { useStores } from '@hooks/useStores';
 import useStyles from '@styles/table';
 import { compareAllocation } from '@utils/comparators';
 import { roundToMinute } from '@utils/time';
 
 export const Table: FC = observer(() => {
-    const { $candidate } = useStores();
+    const { $application } = useStores();
     const classes = useStyles();
     const [cid, setCid] = useState('');
     const [time, setTime] = useState(new Date());
@@ -22,9 +22,9 @@ export const Table: FC = observer(() => {
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
     const candidates =
-        $candidate.groupBySteps[$candidate.stepType === StepType.teamInterview ? Step.群面时间选择 : Step.组面时间选择];
+        $application.groupBySteps[$application.stepType === StepType.teamInterview ? Step.群面时间选择 : Step.组面时间选择];
 
-    const type = $candidate.stepType === StepType.teamInterview ? InterviewType.team : InterviewType.group;
+    const type = $application.stepType === StepType.teamInterview ? InterviewType.team : InterviewType.group;
     const columns: GridColDef[] = [
         {
             field: 'name',
@@ -46,7 +46,7 @@ export const Table: FC = observer(() => {
             disableClickEventBubbling: true,
             cellClassName: classes.cell,
             renderCell(params) {
-                const { interviewSelections, group, rejected, abandoned } = params.row as Candidate;
+                const { interviewSelections, group, rejected, abandoned } = params.row as Application;
                 const selections = interviewSelections.filter(
                     ({ name }) => name === (type === InterviewType.group ? GroupOrTeam[group] : GroupOrTeam.unique),
                 );
@@ -81,13 +81,13 @@ export const Table: FC = observer(() => {
             width: 180,
             disableClickEventBubbling: true,
             valueFormatter(params) {
-                const { interviewAllocations } = params.row as Candidate;
+                const { interviewAllocations } = params.row as Application;
                 return interviewAllocations[type]?.toLocaleString('zh-CN', { timeStyle: 'short', dateStyle: 'short' });
             },
             sortComparator(a, b) {
                 return compareAllocation(
-                    (a as Candidate['interviewAllocations'])[type],
-                    (b as Candidate['interviewAllocations'])[type],
+                    (a as Application['interviewAllocations'])[type],
+                    (b as Application['interviewAllocations'])[type],
                 );
             },
         },
@@ -97,7 +97,7 @@ export const Table: FC = observer(() => {
             sortable: false,
             disableClickEventBubbling: true,
             renderCell(params) {
-                const { id } = params.row as Candidate;
+                const { id } = params.row as Application;
                 return (
                     <Button size={isMobile ? 'small' : 'medium'} onClick={() => setCid(id)}>
                         设置
@@ -114,8 +114,8 @@ export const Table: FC = observer(() => {
     };
 
     const handleAllocateAll = async () => {
-        await allocateMany(type, [...$candidate.selected.keys()]);
-        $candidate.deselectAll();
+        await allocateMany(type, [...$application.selected.keys()]);
+        $application.deselectAll();
     };
 
     const handleChange = (value: unknown) => {
@@ -133,10 +133,10 @@ export const Table: FC = observer(() => {
                 autoHeight
                 disableColumnMenu
                 density={isMobile ? 'compact' : 'standard'}
-                selectionModel={[...$candidate.selected.keys()]}
+                selectionModel={[...$application.selected.keys()]}
                 onSelectionModelChange={({ selectionModel }) => {
-                    $candidate.deselectAll();
-                    $candidate.selectMany(selectionModel as string[]);
+                    $application.deselectAll();
+                    $application.selectMany(selectionModel as string[]);
                 }}
                 className={classes.table}
                 components={{
@@ -144,11 +144,11 @@ export const Table: FC = observer(() => {
                         <Button
                             variant='contained'
                             size={isMobile ? 'small' : 'medium'}
-                            disabled={!$candidate.selected.size}
+                            disabled={!$application.selected.size}
                             onClick={handleAllocateAll}
                             className={classes.tableButton}
                         >
-                            为{$candidate.selected.size}名候选人自动分配
+                            为{$application.selected.size}名候选人自动分配
                         </Button>
                     ),
                 }}

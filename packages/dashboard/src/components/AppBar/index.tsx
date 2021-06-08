@@ -26,7 +26,7 @@ import { titleConverter } from '@utils/titleConverter';
 export const AppBar: FC = observer(() => {
     const { url } = useRouteMatch();
     const classes = useStyles();
-    const { $component, $user, $candidate, $recruitment } = useStores();
+    const { $component, $user, $application, $recruitment } = useStores();
     const [logoutMenu, setLogoutMenu] = useState<Element | null>(null);
     const [darkModeMenu, setDarkModeMenu] = useState<Element | null>(null);
 
@@ -97,14 +97,14 @@ export const AppBar: FC = observer(() => {
                     <>
                         <Select
                             data={[...STEP_TYPE_MAP.entries()].map(([value, item]) => ({ value, item }))}
-                            onChange={({ target }) => $candidate.setSteps(+(target.value as StepType))}
-                            currentValue={$candidate.stepType}
+                            onChange={({ target }) => $application.setSteps(+(target.value as StepType))}
+                            currentValue={$application.stepType}
                         />
-                        {$candidate.stepType !== StepType.teamInterview && (
+                        {$application.stepType !== StepType.teamInterview && (
                             <Select
                                 data={[...GROUP_MAP.entries()].map(([value, item]) => ({ value, item }))}
-                                onChange={({ target }) => $candidate.setGroup(target.value as Group)}
-                                currentValue={$candidate.group}
+                                onChange={({ target }) => $application.setGroup(target.value as Group)}
+                                currentValue={$application.group}
                             />
                         )}
                     </>
