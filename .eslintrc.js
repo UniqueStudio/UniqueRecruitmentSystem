@@ -2,9 +2,6 @@ module.exports = {
     root: true,
     parserOptions: {
         project: ['./packages/*/tsconfig.json'],
-        ecmaFeatures: {
-            jsx: true,
-        },
     },
     extends: [
         'eslint:recommended',
