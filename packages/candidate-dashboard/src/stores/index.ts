@@ -4,6 +4,7 @@ import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
 import candidate from './candidate';
 import component from './component';
 import recruitment from './recruitment';
+
 const store = configureStore({
     reducer: {
         candidate,
