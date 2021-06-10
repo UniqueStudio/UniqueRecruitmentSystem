@@ -3,12 +3,8 @@ module.exports = {
     env: {
         browser: true,
     },
-    rules: {
-        'react/react-in-jsx-scope': 'off',
-    },
     globals: {
         JSX: 'readonly',
-        React: 'readonly',
         process: 'readonly',
     },
 };
