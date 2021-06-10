@@ -1,0 +1,8 @@
+{
+  "name": "unique-recruitment-utils",
+  "version": "3.0.0-rc.2",
+  "private": true,
+  "dependencies": {
+    "idb-keyval": "^5.0.6"
+  }
+}
