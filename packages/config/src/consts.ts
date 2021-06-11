@@ -238,5 +238,3 @@ export const DEPARTMENTS: Readonly<Record<string, string[]>> = {
 };
 
 export const INSTITUTES = Object.keys(DEPARTMENTS);
-
-export const INSTITUTES = Object.keys(DEPARTMENTS);
