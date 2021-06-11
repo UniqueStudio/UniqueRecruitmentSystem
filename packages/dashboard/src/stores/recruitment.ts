@@ -1,21 +1,20 @@
-import { set } from 'idb-keyval';
+import { compareRecruitment } from '@uniqs/utils';
 import { makeAutoObservable, toJS } from 'mobx';
 
 import { Recruitment } from '@config/types';
-import { compareTitle } from '@utils/comparators';
-import { primitiveStorage } from '@utils/storage';
+import { primitiveStorage, objectStorage } from '@utils/storage';
 
 export class RecruitmentStore {
     recruitments = new Map<string, Recruitment>();
 
-    viewingId = primitiveStorage.getItem('viewingId') ?? '';
+    viewingId = primitiveStorage.get('viewingId') ?? '';
 
     constructor() {
         makeAutoObservable(this);
     }
 
     get recruitmentsArray() {
-        return [...this.recruitments.values()].sort((a, b) => compareTitle(b.name, a.name));
+        return [...this.recruitments.values()].sort((a, b) => compareRecruitment(b.name, a.name));
     }
 
     get viewingRecruitment() {
@@ -32,7 +31,7 @@ export class RecruitmentStore {
         });
         this.recruitments.set(id, { ...this.recruitments.get(id), ...(recruitment as Recruitment) });
         if (saveToIDB) {
-            void set('recruitments', toJS(this.recruitments));
+            void objectStorage.set('recruitments', toJS(this.recruitments));
         }
     }
 
@@ -40,7 +39,7 @@ export class RecruitmentStore {
         for (const recruitment of recruitments) {
             this.setRecruitment(recruitment, false);
         }
-        void set('recruitments', toJS(this.recruitments));
+        void objectStorage.set('recruitments', toJS(this.recruitments));
     }
 
     setAll(recruitments: Map<string, Recruitment>) {
@@ -49,6 +48,6 @@ export class RecruitmentStore {
 
     setViewingRecruitment(rid: string) {
         this.viewingId = rid;
-        primitiveStorage.setItem('viewingId', rid);
+        primitiveStorage.set('viewingId', rid);
     }
 }

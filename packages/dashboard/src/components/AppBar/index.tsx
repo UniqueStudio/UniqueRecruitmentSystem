@@ -8,6 +8,7 @@ import {
     Person as PersonIcon,
     Refresh as RefreshIcon,
 } from '@material-ui/icons';
+import { convertRecruitmentName } from '@uniqs/utils';
 import clsx from 'clsx';
 import { clear } from 'idb-keyval';
 import { observer } from 'mobx-react-lite';
@@ -21,7 +22,6 @@ import { Group, StepType } from '@config/enums';
 import { useStores } from '@hooks/useStores';
 import useStyles from '@styles/appBar';
 import { primitiveStorage } from '@utils/storage';
-import { titleConverter } from '@utils/titleConverter';
 
 export const AppBar: FC = observer(() => {
     const { url } = useRouteMatch();
@@ -30,7 +30,7 @@ export const AppBar: FC = observer(() => {
     const [logoutMenu, setLogoutMenu] = useState<Element | null>(null);
     const [darkModeMenu, setDarkModeMenu] = useState<Element | null>(null);
 
-    const title = titleConverter($recruitment.viewingRecruitment?.name ?? '');
+    const title = convertRecruitmentName($recruitment.viewingRecruitment?.name ?? '');
     const open = $component.drawerOpen;
 
     const openLogoutMenu: MouseEventHandler = ({ currentTarget }) => {

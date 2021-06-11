@@ -1,9 +1,10 @@
 import { CssBaseline, StyledEngineProvider, ThemeProvider, useMediaQuery } from '@material-ui/core';
 import { LocalizationProvider } from '@material-ui/lab';
 import AdapterDateFns from '@material-ui/lab/AdapterDateFns';
+import { useTheme } from '@uniqs/ui';
 import { observer } from 'mobx-react-lite';
 import React, { FC, ReactElement, lazy, Suspense } from 'react';
-import { RouteComponentProps, BrowserRouter, Route, Switch } from 'react-router-dom';
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
 
 import { Login } from '@components/Login';
 import { Progress } from '@components/Progress';
@@ -11,7 +12,6 @@ import { Snackbars } from '@components/Snackbars';
 import { useStores } from '@hooks/useStores';
 import { MainLayout } from '@layouts/MainLayout';
 import useStyles from '@styles/global';
-import { useTheme } from '@styles/theme';
 import { logger } from '@utils/console';
 
 const Applications = lazy(() => import('./Applications'));
@@ -36,9 +36,9 @@ const Theme: FC = observer(({ children }) => {
 
 export const App: FC = () => {
     useStyles();
-    const routeRender = (Component: ReactElement) => (props: RouteComponentProps) =>
+    const routeRender = (Component: ReactElement) => () =>
         (
-            <MainLayout {...props}>
+            <MainLayout>
                 <Suspense fallback={<Progress />}>{Component}</Suspense>
             </MainLayout>
         );

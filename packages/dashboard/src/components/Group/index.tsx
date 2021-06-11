@@ -1,5 +1,6 @@
 import { Button, Checkbox, useMediaQuery, useTheme } from '@material-ui/core';
 import { DataGrid, GridColDef } from '@material-ui/data-grid';
+import { compareRecruitment, convertRecruitmentName } from '@uniqs/utils';
 import { toJS } from 'mobx';
 import { observer } from 'mobx-react-lite';
 import React, { FC, useState } from 'react';
@@ -9,8 +10,6 @@ import { GENDERS } from '@config/consts';
 import { Member } from '@config/types';
 import { useStores } from '@hooks/useStores';
 import useStyles from '@styles/group';
-import { compareTitle } from '@utils/comparators';
-import { titleConverter } from '@utils/titleConverter';
 
 export const Group: FC = observer(() => {
     const { $member } = useStores();
@@ -45,8 +44,8 @@ export const Group: FC = observer(() => {
             headerName: '加入时间',
             flex: 2,
             sortable: true,
-            valueFormatter: ({ value }) => titleConverter(value as string).slice(0, 5),
-            sortComparator: (a, b) => compareTitle(a as string, b as string),
+            valueFormatter: ({ value }) => convertRecruitmentName(value as string).slice(0, 5),
+            sortComparator: (a, b) => compareRecruitment(a as string, b as string),
         },
         {
             field: 'isCaptain',

@@ -26,7 +26,7 @@ export class ComponentStateStore {
 
     resumeProgresses: Record<string, number> = {};
 
-    darkMode = primitiveStorage.getItem('darkMode');
+    darkMode = primitiveStorage.get('darkMode');
 
     inputtingComment = {
         content: '',
@@ -83,9 +83,9 @@ export class ComponentStateStore {
     setDarkMode(darkMode?: boolean) {
         this.darkMode = darkMode;
         if (darkMode === undefined) {
-            primitiveStorage.removeItem('darkMode');
+            primitiveStorage.del('darkMode');
         } else {
-            primitiveStorage.setItem('darkMode', darkMode);
+            primitiveStorage.set('darkMode', darkMode);
         }
     }
 

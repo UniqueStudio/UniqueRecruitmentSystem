@@ -1,10 +1,10 @@
-import { set } from 'idb-keyval';
+import { groupSort, teamSort } from '@uniqs/utils';
 import { makeAutoObservable, toJS } from 'mobx';
 
 import { STEP_MAP } from '@config/consts';
 import { Group, InterviewType, Step, StepType } from '@config/enums';
 import { Application, Comment } from '@config/types';
-import { groupSort, teamSort } from '@utils/sort';
+import { objectStorage } from '@utils/storage';
 
 const allSteps = [
     Step.报名,
@@ -40,7 +40,7 @@ export class ApplicationStore {
             return;
         }
         application.comments.push(comment);
-        void set('applications', toJS(this.applications));
+        void objectStorage.set('applications', toJS(this.applications));
     }
 
     removeComment(cid: string, commendId: string) {
@@ -49,12 +49,12 @@ export class ApplicationStore {
             return;
         }
         application.comments = application.comments.filter(({ id }) => id !== commendId);
-        void set('applications', toJS(this.applications));
+        void objectStorage.set('applications', toJS(this.applications));
     }
 
     setOne(application: Application) {
         this.applications.set(application.id, application);
-        void set('applications', toJS(this.applications));
+        void objectStorage.set('applications', toJS(this.applications));
     }
 
     setMany(applications: Application[]) {
@@ -62,13 +62,13 @@ export class ApplicationStore {
             this.applications.set(application.id, application);
         }
         this.deselectAll();
-        void set('applications', toJS(this.applications));
+        void objectStorage.set('applications', toJS(this.applications));
     }
 
     setAll(applications: Map<string, Application>) {
         this.applications = applications;
         this.deselectAll();
-        void set('applications', toJS(this.applications));
+        void objectStorage.set('applications', toJS(this.applications));
     }
 
     clear() {
@@ -102,7 +102,7 @@ export class ApplicationStore {
     removeOne(cid: string) {
         this.applications.delete(cid);
         this.deselectOne(cid);
-        void set('applications', toJS(this.applications));
+        void objectStorage.set('applications', toJS(this.applications));
     }
 
     moveOne(cid: string, to: Step) {
@@ -112,7 +112,7 @@ export class ApplicationStore {
         }
         this.deselectOne(cid);
         application.step = to;
-        void set('applications', toJS(this.applications));
+        void objectStorage.set('applications', toJS(this.applications));
     }
 
     setGroup(group: Group) {
@@ -145,8 +145,8 @@ export class ApplicationStore {
         if (!application) {
             return;
         }
-        application.interviewAllocations[type] = time;
-        void set('applications', toJS(this.applications));
+        application.interviewAllocations[type] = time.toJSON();
+        void objectStorage.set('applications', toJS(this.applications));
     }
 
     allocateMany(allocations: { aid: string; time?: Date }[], type: InterviewType) {
@@ -155,9 +155,9 @@ export class ApplicationStore {
             if (!application) {
                 return;
             }
-            application.interviewAllocations[type] = time;
+            application.interviewAllocations[type] = time?.toJSON();
         });
-        void set('applications', toJS(this.applications));
+        void objectStorage.set('applications', toJS(this.applications));
     }
 
     get groupBySteps() {

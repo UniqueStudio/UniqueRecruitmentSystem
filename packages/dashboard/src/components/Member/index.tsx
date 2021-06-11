@@ -1,4 +1,5 @@
 import { Button, TextField } from '@material-ui/core';
+import { convertRecruitmentName } from '@uniqs/utils';
 import { observer } from 'mobx-react-lite';
 import React, { ChangeEventHandler, FC, useState } from 'react';
 
@@ -6,7 +7,6 @@ import { setMyInfo } from '@apis/rest';
 import { GENDERS, GROUP_MAP } from '@config/consts';
 import { useStores } from '@hooks/useStores';
 import useStyles from '@styles/member';
-import { titleConverter } from '@utils/titleConverter';
 
 export const Member: FC = observer(() => {
     const { $member, $component } = useStores();
@@ -53,7 +53,7 @@ export const Member: FC = observer(() => {
         { label: '姓名', value: name },
         { label: '性别', value: GENDERS[gender] },
         { label: '组别', value: GROUP_MAP.get(group) },
-        { label: '加入时间', value: titleConverter(joinTime) },
+        { label: '加入时间', value: convertRecruitmentName(joinTime) },
         { label: '组长?', value: isCaptain ? '是' : '否' },
         { label: '管理员?', value: isAdmin ? '是' : '否' },
     ];
