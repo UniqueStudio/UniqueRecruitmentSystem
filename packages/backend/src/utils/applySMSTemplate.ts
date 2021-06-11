@@ -22,7 +22,7 @@ export const applySMSTemplate = ({
     application: { group, step, recruitment, candidate: { name }, interviewAllocations },
 }: Model) => {
     const suffix = ' (请勿回复本短信)';
-    const recruitmentName = fullRecruitmentName(recruitment.name);
+    const recruitmentName = convertRecruitmentName(recruitment.name);
     switch (type) {
         case SMSType.accept: {
             let defaultRest = '';
@@ -40,13 +40,13 @@ export const applySMSTemplate = ({
                         hour12: false,
                     });
                     // {1}你好，请于{2}在启明学院亮胜楼{3}参加{4}，请准时到场。
-                    return { template: 670906, params: [name, time, place, STEP_MAP[next]] };
+                    return { template: '670906', params: [name, time, place, STEP_MAP.get(next)!] };
                 }
                 case Step.笔试:
                 case Step.熬测:
                     if (!place) throw new Error('Place is not provided!');
                     if (!time) throw new Error('Time is not provided!');
-                    defaultRest = `，请于${time}在${place}参加${STEP_MAP[next]}，请务必准时到场`;
+                    defaultRest = `，请于${time}在${place}参加${STEP_MAP.get(next)!}，请务必准时到场`;
                     break;
                 case Step.通过:
                     defaultRest = `，你已成功加入${group}组`;
@@ -60,13 +60,13 @@ export const applySMSTemplate = ({
             }
             rest = `${rest || defaultRest}${suffix}`;
             // {1}你好，你通过了{2}{3}组{4}审核{5}
-            return { template: 670901, params: [name, recruitmentName, group, STEP_MAP[step], rest] };
+            return { template: '670901', params: [name, recruitmentName, group, STEP_MAP.get(step)!, rest] };
         }
         case SMSType.reject: {
             const defaultRest = '不要灰心，继续学习。期待与更强大的你的相遇！';
             rest = `${rest || defaultRest}${suffix}`;
             // {1}你好，你没有通过{2}{3}组{4}审核，请你{5}
-            return { template: 670903, params: [name, recruitmentName, group, STEP_MAP[step], rest] };
+            return { template: '670903', params: [name, recruitmentName, group, STEP_MAP.get(step)!, rest] };
         }
     }
 };

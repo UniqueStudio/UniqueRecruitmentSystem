@@ -104,7 +104,7 @@ export class ApplicationsController {
             recruitment,
         });
         try {
-            await this.smsService.sendSMS(candidate.phone, 670908, [candidate.name, '成功提交报名表单']);
+            await this.smsService.sendSMS(candidate.phone, '670908', [candidate.name, '成功提交报名表单']);
             await this.emailService.sendEmail(application);
         } catch ({ message }) {
             throw new InternalServerErrorException(message);

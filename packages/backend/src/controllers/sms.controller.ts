@@ -42,7 +42,7 @@ export class SMSController {
         const code = randomBytes(2).toString('hex');
         try {
             // 您{1}的验证码为：{2}，请于3分钟内填写。如非本人操作，请忽略本短信。
-            await this.smsService.sendSMS(phone, 719160, ['dashboard中', code]);
+            await this.smsService.sendSMS(phone, '719160', ['dashboard中', code]);
         } catch ({ message }) {
             throw new InternalServerErrorException(message);
         }
@@ -56,7 +56,7 @@ export class SMSController {
         const code = randomBytes(2).toString('hex');
         try {
             // 您{1}的验证码为：{2}，请于3分钟内填写。如非本人操作，请忽略本短信。
-            await this.smsService.sendSMS(phone, 719160, ['dashboard中', code]);
+            await this.smsService.sendSMS(phone, '719160', ['dashboard中', code]);
         } catch ({ message }) {
             throw new InternalServerErrorException(message);
         }
