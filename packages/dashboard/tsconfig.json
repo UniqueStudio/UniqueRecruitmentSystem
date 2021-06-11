@@ -16,7 +16,8 @@
       "@styles/*": ["./src/styles/*"],
       "@utils/*": ["./src/utils/*"],
       "@views/*": ["./src/views/*"]
-    }
+    },
+    "types": ["vite/client"]
   },
   "exclude": ["node_modules", "build"],
   "include": ["src/**/*", "typings/*", "vite.config.ts"]
