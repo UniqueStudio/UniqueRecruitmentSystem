@@ -1,7 +1,4 @@
 node_modules
-.next
-out
 build
+dist
 *.js
-/src/locales/_build/
-/src/locales/**/*.js
