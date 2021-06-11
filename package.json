@@ -4,17 +4,10 @@
   "description": "A management system for recruitment of Unique Studio",
   "author": "Unique Web",
   "private": true,
-  "homepage": "/",
   "repository": {
     "type": "git",
     "url": "https://github.com/UniqueStudio/UniqueRecruitmentSystem.git"
   },
-  "contributors": [
-    {
-      "name": "winderica",
-      "email": "winderica@gmail.com"
-    }
-  ],
   "workspaces": [
     "packages/*"
   ],
@@ -25,7 +18,7 @@
     "eslint": "^7.27.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-import-resolver-typescript": "^2.4.0",
-    "eslint-plugin-import": "^2.23.4",
+    "eslint-plugin-import": "2.21.2",
     "eslint-plugin-jest": "^24.3.6",
     "eslint-plugin-react": "^7.24.0",
     "husky": "^6.0.0",
