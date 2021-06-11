@@ -1,5 +1,6 @@
 import { Button, IconButton, Paper, Tooltip, Typography } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
+import { convertRecruitmentName, roundToDay } from '@uniqs/utils';
 import { observer } from 'mobx-react-lite';
 import React, { ChangeEventHandler, FC, useState } from 'react';
 
@@ -9,8 +10,6 @@ import { Schedule } from '@components/Schedule';
 import { Verify } from '@components/Verify';
 import { useStores } from '@hooks/useStores';
 import useStyles from '@styles/addOne';
-import { roundToDay } from '@utils/time';
-import { titleConverter } from '@utils/titleConverter';
 
 const generateTitle = (date: Date) => {
     const year = date.getFullYear().toString();
@@ -52,9 +51,9 @@ export const AddOne: FC = observer(() => {
         }
         const ok = await createRecruitment({
             name: generateTitle(beginning),
-            beginning: roundToDay(beginning),
-            end: roundToDay(end),
-            deadline: roundToDay(deadline),
+            beginning: roundToDay(beginning).toJSON(),
+            end: roundToDay(end).toJSON(),
+            deadline: roundToDay(deadline).toJSON(),
             code,
         });
         if (ok) {
@@ -66,7 +65,7 @@ export const AddOne: FC = observer(() => {
         setState((prevState) => ({ ...prevState, code: value }));
     };
 
-    const handleChangeDate = (name: string) => (date: unknown) => {
+    const handleChangeDate = (name: 'beginning' | 'deadline' | 'end') => (date: unknown) => {
         if (date instanceof Date) {
             setState((prevState) => ({ ...prevState, [name]: date }));
         }
@@ -99,7 +98,7 @@ export const AddOne: FC = observer(() => {
             </Tooltip>
             <Modal title='发起招新' open={modal} onClose={toggleModal}>
                 <div className={classes.newContainer}>
-                    <Typography variant='h6'>{titleConverter(generateTitle(beginning))}</Typography>
+                    <Typography variant='h6'>{convertRecruitmentName(generateTitle(beginning))}</Typography>
                     <Schedule onChange={handleChangeDate} beginning={beginning} end={end} deadline={deadline} />
                     <Verify onChange={handleChangeCode} code={code} />
                     <Button className={classes.button} variant='contained' onClick={handleLaunch}>

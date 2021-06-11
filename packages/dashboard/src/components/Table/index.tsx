@@ -1,6 +1,7 @@
 import { Button, Chip, Dialog, TextField, useMediaQuery, useTheme } from '@material-ui/core';
 import { DataGrid, GridColDef } from '@material-ui/data-grid';
 import { StaticDateTimePicker } from '@material-ui/lab';
+import { compareAllocation, roundToMinute } from '@uniqs/utils';
 import { observer } from 'mobx-react-lite';
 import React, { FC, useState } from 'react';
 
@@ -10,8 +11,6 @@ import { GroupOrTeam, InterviewType, Step, StepType } from '@config/enums';
 import { Application } from '@config/types';
 import { useStores } from '@hooks/useStores';
 import useStyles from '@styles/table';
-import { compareAllocation } from '@utils/comparators';
-import { roundToMinute } from '@utils/time';
 
 export const Table: FC = observer(() => {
     const { $application } = useStores();
@@ -82,12 +81,18 @@ export const Table: FC = observer(() => {
             disableClickEventBubbling: true,
             valueFormatter(params) {
                 const { interviewAllocations } = params.row as Application;
-                return interviewAllocations[type]?.toLocaleString('zh-CN', { timeStyle: 'short', dateStyle: 'short' });
+                const allocation = interviewAllocations[type];
+                if (!allocation) {
+                    return;
+                }
+                return new Date(allocation).toLocaleString('zh-CN', { timeStyle: 'short', dateStyle: 'short' });
             },
             sortComparator(a, b) {
+                const l = (a as Application['interviewAllocations'])[type];
+                const r = (b as Application['interviewAllocations'])[type];
                 return compareAllocation(
-                    (a as Application['interviewAllocations'])[type],
-                    (b as Application['interviewAllocations'])[type],
+                    l ? new Date(l) : undefined,
+                    r ? new Date(r) : undefined,
                 );
             },
         },

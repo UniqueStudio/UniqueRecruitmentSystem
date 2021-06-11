@@ -2,6 +2,7 @@ import { Box, Button, Paper, Typography } from '@material-ui/core';
 import { Edit as EditIcon } from '@material-ui/icons';
 import VisibilityIcon from '@material-ui/icons/Visibility';
 import VisibilityOffIcon from '@material-ui/icons/VisibilityOff';
+import { compareRecruitment, convertRecruitmentName, roundToDay } from '@uniqs/utils';
 import clsx from 'clsx';
 import { observer } from 'mobx-react-lite';
 import React, { FC, MouseEventHandler, useMemo, useState } from 'react';
@@ -16,9 +17,6 @@ import { Group } from '@config/enums';
 import { Recruitment } from '@config/types';
 import { useStores } from '@hooks/useStores';
 import useStyles from '@styles/recruitmentPanel';
-import { compareTitle } from '@utils/comparators';
-import { roundToDay } from '@utils/time';
-import { titleConverter } from '@utils/titleConverter';
 
 interface Props {
     recruitment: Recruitment;
@@ -43,7 +41,7 @@ const RecruitmentOverview: FC<Props> = observer(({ recruitment: { statistics, en
         result[group].push(sum);
     });
     const handleSet = () => {
-        if (compareTitle($member.info.joinTime, name) >= 0) {
+        if (compareRecruitment($member.info.joinTime, name) >= 0) {
             $component.enqueueSnackbar('你不能查看本次招新', 'info');
             return;
         }
@@ -51,7 +49,7 @@ const RecruitmentOverview: FC<Props> = observer(({ recruitment: { statistics, en
         return getApplications(id);
     };
     const data = group ? result[group].slice(0, -1) : Object.values(result).map((t) => t[STEP_SHORT_MAP.size]);
-    const title = group ? `${GROUP_MAP.get(group)!}组各轮情况` : titleConverter(name);
+    const title = group ? `${GROUP_MAP.get(group)!}组各轮情况` : convertRecruitmentName(name);
     const labels = group ? [...STEP_SHORT_MAP.values()] : [...GROUP_MAP.values()];
     const selected = $recruitment.viewingId === id;
     const EyeIcon = selected ? VisibilityIcon : VisibilityOffIcon;
@@ -121,18 +119,18 @@ export const RecruitmentPanel: FC = observer(() => {
             return;
         }
         const { beginning, end, deadline } = recruitment;
-        setBeginning(beginning);
-        setEnd(end);
-        setDeadline(deadline);
+        setBeginning(new Date(beginning));
+        setEnd(new Date(end));
+        setDeadline(new Date(deadline));
     };
 
-    const handleChange = (name: string) => (date: unknown) => {
+    const handleChange = (name: 'beginning' | 'deadline' | 'end') => (date: unknown) => {
         if (!(date instanceof Date)) {
             return;
         }
-        if (name === 'begin') setBeginning(date);
+        if (name === 'beginning') setBeginning(date);
         if (name === 'end') setEnd(date);
-        if (name === 'stop') setDeadline(date);
+        if (name === 'deadline') setDeadline(date);
     };
 
     const setTime = () => {
@@ -145,9 +143,9 @@ export const RecruitmentPanel: FC = observer(() => {
             return;
         }
         return setRecruitmentSchedule(id, {
-            beginning: roundToDay(beginningState),
-            deadline: roundToDay(deadlineState),
-            end: roundToDay(endState),
+            beginning: roundToDay(beginningState).toJSON(),
+            deadline: roundToDay(deadlineState).toJSON(),
+            end: roundToDay(endState).toJSON(),
         });
     };
     return (

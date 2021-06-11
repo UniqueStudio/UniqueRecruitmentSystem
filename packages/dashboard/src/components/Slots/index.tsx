@@ -4,6 +4,7 @@ import CancelIcon from '@material-ui/icons/CancelOutlined';
 import CheckIcon from '@material-ui/icons/CheckCircleOutlined';
 import RemoveIcon from '@material-ui/icons/RemoveCircleOutline';
 import { MobileDatePicker } from '@material-ui/lab';
+import { roundToDay } from '@uniqs/utils';
 import { toJS } from 'mobx';
 import { observer } from 'mobx-react-lite';
 import React, { ChangeEventHandler, FC, useEffect, useState } from 'react';
@@ -14,7 +15,6 @@ import { GroupOrTeam, Period, StepType } from '@config/enums';
 import { Interview } from '@config/types';
 import { useStores } from '@hooks/useStores';
 import useStyles from '@styles/slots';
-import { roundToDay } from '@utils/time';
 
 interface Props {
     name: string;
@@ -33,7 +33,7 @@ const TipButton: FC<Props> = ({ name, onClick, disabled, children }) => (
 export const Slots: FC = observer(() => {
     const classes = useStyles();
     const { $recruitment, $application, $member } = useStores();
-    const [slots, setSlots] = useState<Omit<Interview, 'name' | 'id'>[]>([]);
+    const [slots, setSlots] = useState<Pick<Interview, 'date' | 'period' | 'slotNumber'>[]>([]);
 
     const init = () => {
         const recruitment = $recruitment.viewingRecruitment;
@@ -59,7 +59,7 @@ export const Slots: FC = observer(() => {
             ...prevSlots,
             {
                 period: Period.morning,
-                date: roundToDay(new Date()),
+                date: roundToDay(new Date()).toJSON(),
                 slotNumber: 1,
             },
         ]);
@@ -75,30 +75,28 @@ export const Slots: FC = observer(() => {
         }
         setSlots((prevSlots) => [
             ...prevSlots.slice(0, index),
-            { ...prevSlots[index], date: roundToDay(date) },
+            { ...prevSlots[index], date: roundToDay(date).toJSON() },
             ...prevSlots.slice(index + 1),
         ]);
     };
 
     const setPeriod =
         (index: number): ChangeEventHandler<HTMLInputElement> =>
-        ({ target }) => {
+        ({ target }) =>
             setSlots((prevSlots) => [
                 ...prevSlots.slice(0, index),
                 { ...prevSlots[index], period: +target.value as Period },
                 ...prevSlots.slice(index + 1),
             ]);
-        };
 
     const setSlotNumber =
         (index: number): ChangeEventHandler<HTMLInputElement> =>
-        ({ target }) => {
+        ({ target }) =>
             setSlots((prevSlots) => [
                 ...prevSlots.slice(0, index),
                 { ...prevSlots[index], slotNumber: Math.max(+target.value, 1) },
                 ...prevSlots.slice(index + 1),
             ]);
-        };
 
     const submit = () =>
         setRecruitmentInterviews(

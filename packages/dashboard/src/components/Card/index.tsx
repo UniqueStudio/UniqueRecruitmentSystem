@@ -50,7 +50,7 @@ export const Card: FC<Props> = observer(({ application, index, toggleDetail }) =
         abandoned,
         rejected,
         group,
-        interviewAllocations,
+        interviewAllocations: { group: groupInterviewTime, team: teamInterviewTime },
         step,
         id,
         isQuick,
@@ -65,6 +65,8 @@ export const Card: FC<Props> = observer(({ application, index, toggleDetail }) =
 
     const checked = $application.selected.has(id);
     const disabled = $application.selected.size !== 0 && $component.fabOn !== step;
+    const isGroupInterview = $application.stepType === StepType.groupInterview;
+    const isTeamInterview = $application.stepType === StepType.teamInterview;
 
     const handleCheck: ChangeEventHandler<HTMLInputElement> = ({ target }) => {
         if (target.checked) {
@@ -87,14 +89,14 @@ export const Card: FC<Props> = observer(({ application, index, toggleDetail }) =
             onClick={stopPropagation}
             onChange={handleCheck}
             checked={checked}
-            disabled={abandoned || rejected || disabled || $application.stepType === StepType.teamInterview}
+            disabled={abandoned || rejected || disabled || isTeamInterview}
         />
     );
 
     const Profile = (
         <span className={classes.cardTitle}>
             <Typography variant='h6'>
-                {$application.stepType === StepType.teamInterview ? `${GROUP_MAP.get(group)!} - ${name}` : name}
+                {isTeamInterview ? `${GROUP_MAP.get(group)!} - ${name}` : name}
                 <span className={classes.svg}>
                     {genderIcons[gender]}
                     {isQuick && <FlashOn htmlColor={amber[500]} fontSize='small' />}
@@ -106,9 +108,8 @@ export const Card: FC<Props> = observer(({ application, index, toggleDetail }) =
                 {rejected && ' - 已淘汰'}
             </Typography>
             <Typography color='textSecondary' variant='caption' display='block'>
-                {$application.stepType === StepType.groupInterview &&
-                    interviewAllocations.group?.toLocaleString('zh-CN')}
-                {$application.stepType === StepType.teamInterview && interviewAllocations.team?.toLocaleString('zh-CN')}
+                {isGroupInterview && groupInterviewTime && new Date(groupInterviewTime).toLocaleString('zh-CN')}
+                {isTeamInterview && teamInterviewTime && new Date(teamInterviewTime).toLocaleString('zh-CN')}
             </Typography>
         </span>
     );

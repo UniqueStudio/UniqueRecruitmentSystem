@@ -18,15 +18,15 @@ interface Props {
     end: Date;
     deadline: Date;
     disabled?: boolean;
-    onChange: (name: string) => (date: unknown) => void;
+    onChange: (name: 'beginning' | 'deadline' | 'end') => (date: unknown) => void;
 }
 
 export const Schedule: FC<Props> = memo(({ beginning, end, deadline, disabled, onChange }) => {
     const classes = useStyles();
     const items = [
-        { label: '招新开始', name: 'beginning', value: beginning },
-        { label: '报名截止', name: 'deadline', value: deadline },
-        { label: '招新结束', name: 'end', value: end },
+        { label: '招新开始', name: 'beginning' as const, value: beginning },
+        { label: '报名截止', name: 'deadline' as const, value: deadline },
+        { label: '招新结束', name: 'end' as const, value: end },
     ];
     return (
         <Timeline position='left' classes={{ root: classes.root }}>

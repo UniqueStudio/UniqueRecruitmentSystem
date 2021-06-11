@@ -1,12 +1,11 @@
 import { Color } from '@material-ui/lab';
 import axios, { AxiosResponse } from 'axios';
-import { get } from 'idb-keyval';
 
 import { API } from '@config/consts';
 import { GroupOrTeam, InterviewType, SMSType, Status, Step } from '@config/enums';
 import { Application, Interview, R, Recruitment, Member } from '@config/types';
 import { stores } from '@stores/index';
-import { primitiveStorage } from '@utils/storage';
+import { primitiveStorage, objectStorage } from '@utils/storage';
 
 const { $application, $component, $member, $recruitment } = stores;
 
@@ -119,41 +118,27 @@ export const allocateOne = (type: InterviewType, cid: string, time: Date) =>
     );
 
 export const getApplications = (rid: string) => {
-    const viewing = primitiveStorage.getItem('viewingId');
+    const viewing = primitiveStorage.get('viewingId');
     return apiWrapper(
         async () => {
-            const applications = await get<Map<string, Application>>('applications');
+            const applications = await objectStorage.get('applications');
             if (applications && rid === viewing) {
                 $application.setAll(applications);
-                $component.enqueueSnackbar('成功获取候选人信息（缓存）', 'success');
-                let max = new Date(0);
+                let max = new Date(0).toJSON();
                 for (const [, { updatedAt }] of applications) {
                     if (max < updatedAt) {
                         max = updatedAt;
                     }
                 }
-                return await client.get<R<Application<string>[]>>(Endpoint.applicationsInRecruitment(rid, max));
+                return await client.get<R<Application[]>>(Endpoint.applicationsInRecruitment(rid, new Date(max)));
             }
-            return await client.get<R<Application<string>[]>>(Endpoint.applicationsInRecruitment(rid, new Date(0)));
+            return await client.get<R<Application[]>>(Endpoint.applicationsInRecruitment(rid, new Date(0)));
         },
         (applications) => {
             if (rid !== viewing) {
                 $application.clear();
             }
-            $application.setMany(
-                applications.map(({ interviewAllocations: { group, team }, interviewSelections, updatedAt, ...r }) => ({
-                    ...r,
-                    updatedAt: new Date(updatedAt),
-                    interviewAllocations: {
-                        group: group ? new Date(group) : undefined,
-                        team: team ? new Date(team) : undefined,
-                    },
-                    interviewSelections: interviewSelections.map(({ date, ...rest }) => ({
-                        ...rest,
-                        date: new Date(date),
-                    })),
-                })),
-            );
+            $application.setMany(applications);
             $recruitment.setViewingRecruitment(rid);
             $component.enqueueSnackbar('成功获取候选人信息', 'success');
         },
@@ -195,9 +180,7 @@ export const getResume = async (id: string, filename = 'resume') => {
         const a = document.createElement('a');
         a.href = url;
         a.download = filename;
-        document.body.appendChild(a);
         a.click();
-        document.body.removeChild(a);
         URL.revokeObjectURL(url);
     } catch ({ message, status = 'error' }) {
         $component.enqueueSnackbar(message as string, status as Color);
@@ -207,28 +190,15 @@ export const getResume = async (id: string, filename = 'resume') => {
 };
 
 export const getAllRecruitments = async () => {
-    const recruitments = await get<Map<string, Recruitment>>('recruitments');
-    const viewing = primitiveStorage.getItem('viewingId');
+    const recruitments = await objectStorage.get('recruitments');
+    const viewing = primitiveStorage.get('viewingId');
     if (recruitments) {
         $recruitment.setAll(recruitments);
-        $component.enqueueSnackbar('成功获取招新信息', 'success');
-        return;
     }
     return apiWrapper(
-        () => client.get<R<Recruitment<string>[]>>(Endpoint.recruitments),
+        () => client.get<R<Recruitment[]>>(Endpoint.recruitments),
         (recruitments) => {
-            $recruitment.setRecruitments(
-                recruitments.map(({ beginning, end, deadline, interviews, ...rest }) => ({
-                    ...rest,
-                    beginning: new Date(beginning),
-                    end: new Date(end),
-                    deadline: new Date(deadline),
-                    interviews: interviews.map(({ date, ...rest }) => ({
-                        ...rest,
-                        date: new Date(date),
-                    })),
-                })),
-            );
+            $recruitment.setRecruitments(recruitments);
             $recruitment.setViewingRecruitment(viewing ?? recruitments.length ? recruitments[0].id : '');
             $component.enqueueSnackbar('成功获取招新信息', 'success');
         },
@@ -237,18 +207,8 @@ export const getAllRecruitments = async () => {
 
 export const getOneRecruitment = async (rid: string) =>
     apiWrapper(
-        () => client.get<R<Recruitment<string>>>(Endpoint.recruitment(rid)),
-        ({ beginning, end, deadline, interviews, ...rest }) =>
-            $recruitment.setRecruitment({
-                ...rest,
-                beginning: new Date(beginning),
-                end: new Date(end),
-                deadline: new Date(deadline),
-                interviews: interviews.map(({ date, ...rest }) => ({
-                    ...rest,
-                    date: new Date(date),
-                })),
-            }),
+        () => client.get<R<Recruitment>>(Endpoint.recruitment(rid)),
+        (recruitment) => $recruitment.setRecruitment(recruitment),
     );
 
 export const createRecruitment = (
@@ -268,7 +228,7 @@ export const setRecruitmentSchedule = (rid: string, data: Pick<Recruitment, 'beg
 export const setRecruitmentInterviews = (
     rid: string,
     name: GroupOrTeam,
-    interviews: Omit<Interview, 'name' | 'id'>[],
+    interviews: Pick<Interview, 'date' | 'period' | 'slotNumber'>[],
 ) =>
     apiWrapper(
         () => client.put<R>(Endpoint.interviews(rid, name), { interviews }),
@@ -296,7 +256,7 @@ export const sendSMSToCandidate = (content: {
     );
 
 export const getMyGroup = async () => {
-    const groupInfo = await get<Member[]>('group');
+    const groupInfo = await objectStorage.get('group');
     if (groupInfo && !$member.firstLoad) {
         $member.setGroupInfo(groupInfo);
         return;
@@ -308,7 +268,7 @@ export const getMyGroup = async () => {
 };
 
 export const getMyInfo = async () => {
-    const member = await get<Member>('member');
+    const member = await objectStorage.get('member');
     if (member) {
         $member.setMyInfo(member);
         $application.setGroup(member.group);
