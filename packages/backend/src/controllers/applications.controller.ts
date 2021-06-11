@@ -411,7 +411,7 @@ export class ApplicationsController {
     private static checkStep(application: ApplicationEntity, type: InterviewType, action: string) {
         const step = type === InterviewType.group ? Step.组面时间选择 : Step.群面时间选择;
         if (application.step !== step) {
-            throw new ForbiddenException(Msg.A_WRONG_STEP(action, STEP_MAP[step]));
+            throw new ForbiddenException(Msg.A_WRONG_STEP(action, STEP_MAP.get(step)!));
         }
     }
 }

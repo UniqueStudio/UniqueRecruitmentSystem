@@ -1,8 +1,8 @@
-import { RECRUITMENT_NAME_MAP, STEP_MAP } from '@constants/consts';
+import { convertRecruitmentName } from '@uniqs/utils';
+
+import { STEP_MAP } from '@constants/consts';
 import { SMSType, Step } from '@constants/enums';
 import { ApplicationEntity } from '@entities/application.entity';
-
-const fullRecruitmentName = (name: string) => name.slice(0, 4) + RECRUITMENT_NAME_MAP[name[4]];
 
 interface Model {
     type: SMSType;

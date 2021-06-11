@@ -1,26 +1,12 @@
-import { Group, Period, Step } from '@constants/enums';
+import { Group, Period } from '@constants/enums';
 
 export const QR_API = 'https://open.work.weixin.qq.com/wwopen/sso';
 export const WX_API = 'https://qyapi.weixin.qq.com/cgi-bin';
-export const SMS_API = 'https://open.hustunique.com/message/sms';
+export const SMS_API = 'https://open.hustunique.com/sms/send_single';
 export const ACM_API = 'http://acm.aliyun.com';
 export const EMAIL_HOST = 'smtpdm.aliyun.com';
 export const EMAIL_PORT = 465;
-export const STEP_MAP: Record<Step, string> = {
-    [Step.报名]: '报名流程',
-    [Step.笔试]: '笔试流程',
-    [Step.组面时间选择]: '组面时间选择流程',
-    [Step.组面]: '组面流程',
-    [Step.熬测]: '熬测流程',
-    [Step.群面时间选择]: '群面时间选择流程',
-    [Step.群面]: '群面流程',
-    [Step.通过]: '通过',
-};
-export const RECRUITMENT_NAME_MAP: Record<string, string> = {
-    S: '春季招新',
-    C: '夏令营招新',
-    A: '秋季招新',
-};
+
 export const ID_GROUP_MAP: Record<number, Group> = {
     2: Group.web,
     3: Group.pm,
@@ -49,3 +35,7 @@ export const SLOTS = {
 };
 
 export const ZHANG_XIAO_LONG = new Map<'mother', never>();
+
+export {
+    GRADES, GENDERS, STEP_SHORT_MAP, STEP_MAP, RANKS, PERIOD_MAP, GROUP_MAP,
+} from '@uniqs/config';
