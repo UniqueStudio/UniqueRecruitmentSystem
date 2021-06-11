@@ -15,7 +15,7 @@ const useStyles = makeStyles(({ breakpoints, spacing, zIndex, palette }: Theme) 
 
     return {
         cardContainer: {
-            padding: `${spacing(0.5)} ${spacing(1)}`,
+            padding: spacing(0.5, 1),
             [breakpoints.down('sm')]: {
                 padding: spacing(0.5),
             },
@@ -35,7 +35,7 @@ const useStyles = makeStyles(({ breakpoints, spacing, zIndex, palette }: Theme) 
             alignItems: 'center',
             display: 'flex',
             [breakpoints.down('md')]: {
-                margin: `${spacing(1)} 0`,
+                margin: spacing(1, 0),
                 '& button': {
                     padding: spacing(1),
                     minWidth: 80,

@@ -6,7 +6,7 @@ const useStyles = makeStyles(({ spacing, breakpoints }: Theme) => ({
         display: 'flex',
         overflow: 'hidden',
         [breakpoints.down('md')]: {
-            margin: `${spacing(1)} ${spacing(2)}`,
+            margin: spacing(1, 2),
         },
         [breakpoints.down('sm')]: {
             margin: spacing(1),

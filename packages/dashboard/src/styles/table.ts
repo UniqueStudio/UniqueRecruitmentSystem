@@ -9,9 +9,9 @@ const useStyles = makeStyles(({ spacing, breakpoints }: Theme) => ({
         },
     },
     tableButton: {
-        margin: `${spacing(1)} ${spacing(2)}`,
+        margin: spacing(1, 2),
         [breakpoints.down('sm')]: {
-            margin: `0 ${spacing(2)} ${spacing(2)}`,
+            margin: spacing(0, 2, 2),
         },
     },
     cell: {
@@ -19,7 +19,7 @@ const useStyles = makeStyles(({ spacing, breakpoints }: Theme) => ({
         overflowY: 'auto !important' as 'auto',
     },
     chip: {
-        margin: `${spacing(1)} ${spacing(0.5)}`,
+        margin: spacing(1, 0.5),
         [breakpoints.down('sm')]: {
             margin: spacing(0.5),
         },
