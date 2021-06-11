@@ -4,11 +4,11 @@ import { CacheProvider, EmotionCache } from '@emotion/react';
 // import { I18nProvider } from '@lingui/react';
 import { ThemeProvider, useMediaQuery } from '@material-ui/core';
 import CssBaseline from '@material-ui/core/CssBaseline';
+import { useTheme } from '@uniqs/ui';
 import React, { FC } from 'react';
 import { Provider } from 'react-redux';
 import { Route, Switch } from 'react-router-dom';
 
-import { useTheme } from '#ui/theme';
 // import { defaultLocale, dynamicActivate } from '@locales/index';
 import { Layout } from '@layouts/index';
 import store from '@stores/index';

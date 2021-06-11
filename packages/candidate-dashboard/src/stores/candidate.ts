@@ -1,7 +1,9 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { Candidate } from '@uniqs/config';
 
 interface CandidateState {
     token: string;
+    info?: Candidate;
 }
 
 const initialState: CandidateState = {
@@ -9,14 +11,17 @@ const initialState: CandidateState = {
 };
 
 const { reducer, actions } = createSlice({
-    name: 'component',
+    name: 'candidate',
     initialState,
     reducers: {
         setToken(state, { payload }: PayloadAction<string>) {
             state.token = payload;
         },
+        setInfo(state, { payload }: PayloadAction<Candidate>) {
+            state.info = payload;
+        },
     },
 });
 
 export default reducer;
-export const { setToken } = actions;
+export const { setToken, setInfo } = actions;

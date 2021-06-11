@@ -8,18 +8,12 @@ interface Snackbar {
 
 interface ComponentState {
     snackbars: Record<string, Snackbar>;
-    layout: {
-        title: string;
-    };
+    progress: number;
 }
 
 const initialState: ComponentState = {
-    snackbars: {
-
-    },
-    layout: {
-        title: '',
-    },
+    snackbars: {},
+    progress: 0,
 };
 
 const { reducer, actions } = createSlice({
@@ -32,11 +26,11 @@ const { reducer, actions } = createSlice({
         removeSnackbar(state, { payload }: PayloadAction<string>) {
             delete state.snackbars[payload];
         },
-        setLayoutTitle(state, { payload }: PayloadAction<string>) {
-            state.layout.title = payload;
+        setProgress(state, { payload }: PayloadAction<number>) {
+            state.progress = payload;
         },
     },
 });
 
 export default reducer;
-export const { enqueueSnackbar, removeSnackbar, setLayoutTitle } = actions;
+export const { enqueueSnackbar, removeSnackbar, setProgress } = actions;

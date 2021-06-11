@@ -1,21 +1,19 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { Recruitment } from '@uniqs/api';
+import { Recruitment } from '@uniqs/config';
 
 interface RecruitmentState {
-    recruitments: Record<string, Recruitment>;
-    viewingId: string;
+    recruitments: Recruitment[];
 }
 
 const initialState: RecruitmentState = {
-    recruitments: {},
-    viewingId: '',
+    recruitments: [],
 };
 
 const recruitmentSlice = createSlice({
     name: 'recruitment',
     initialState,
     reducers: {
-        setRecruitments: (state, { payload }: PayloadAction<Record<string, Recruitment>>) => {
+        setRecruitments: (state, { payload }: PayloadAction<Recruitment[]>) => {
             state.recruitments = payload;
         },
     },
