@@ -6,8 +6,7 @@ import { FC, useCallback, useEffect, useState } from 'react';
 export interface SnackbarState {
     type: MessageType | undefined;
     message: string | undefined;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    _key?: any;
+    _key?: unknown;
 }
 
 export interface MySnackbarProps extends SnackbarState {

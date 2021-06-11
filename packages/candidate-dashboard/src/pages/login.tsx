@@ -177,9 +177,8 @@ const Login: NextPage = () => {
                         <Button variant='contained' color='primary' fullWidth onClick={handleLogin}>
                             {login ? (
                                 <CircularProgress size={24} classes={{ colorPrimary: classes.buttonProgress }} />
-                            ) : (
-                                '登录'
-                            )}
+                            ) :
+                                '登录'}
                         </Button>
                     </Grid>
 

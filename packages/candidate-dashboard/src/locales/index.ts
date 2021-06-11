@@ -1,4 +1,4 @@
-import { i18n } from '@lingui/core';
+import { i18n, Messages } from '@lingui/core';
 import { detect, fromUrl, fromStorage, fromNavigator, fromHtmlTag, fromCookie } from '@lingui/detect-locale';
 
 const DEFAULT_FALLBACK = () => 'zh';
@@ -14,7 +14,7 @@ export const defaultLocale = () =>
     ) || DEFAULT_FALLBACK();
 
 export async function dynamicActivate(locale: string) {
-    const { messages } = await import(`@lingui/loader!./${locale}/messages.po`);
+    const { messages } = (await import(`@lingui/loader!./${locale}/messages.po`)) as { messages: Messages };
     i18n.load(locale, messages);
     i18n.activate(locale);
 }

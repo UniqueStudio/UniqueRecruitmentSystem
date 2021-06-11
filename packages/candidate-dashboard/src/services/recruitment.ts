@@ -1,13 +1,12 @@
 import { GetPendingTitlesResp } from '@uniqs/api';
+import { Status } from '@uniqs/config';
 
-const HOST = process.env.HOST;
-const prefix = 'recruitment';
+import { client, handleError } from './client';
 
 export const getPendingTitles: () => Promise<GetPendingTitlesResp<string>> = async () => {
     try {
-        const resp = await fetch(`${HOST}/${prefix}/pending`);
-        return await resp.json();
+        return await client('recruitment/pending').json<GetPendingTitlesResp<string>>();
     } catch (error) {
-        return { status: 'error', message: error?.message };
+        return { status: Status.error, message: handleError(error) };
     }
 };

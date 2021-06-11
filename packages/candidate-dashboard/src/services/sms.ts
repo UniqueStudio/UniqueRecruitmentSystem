@@ -1,13 +1,12 @@
 import { SendSMSResp } from '@uniqs/api';
+import { Status } from '@uniqs/config';
 
-const HOST = process.env.HOST;
-const prefix = 'sms';
+import { client, handleError } from './client';
 
 export const getVerificationCode: (phone: string) => Promise<SendSMSResp> = async (phone) => {
     try {
-        const resp = await fetch(`${HOST}/${prefix}/verification/candidate/${phone}`);
-        return await resp.json();
-    } catch (error) {
-        return { status: 'error', message: error?.message };
+        return await client(`sms/verification/candidate/${phone}`).json<SendSMSResp>();
+    } catch (error: unknown) {
+        return { status: Status.error, message: handleError(error) };
     }
 };

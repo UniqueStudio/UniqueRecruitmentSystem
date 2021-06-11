@@ -24,6 +24,7 @@ function AutoComplete<Option = string>({
     className,
 }: AutoCompleteProps<Option>): JSX.Element {
     const {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         field: { onBlur, onChange, value },
     } = useController({
         name,
@@ -35,6 +36,7 @@ function AutoComplete<Option = string>({
 
     return (
         <Autocomplete<Option, false, false, true>
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
             value={value}
             inputValue={inputValue}
             onChange={(_, value) => onChange(value)}

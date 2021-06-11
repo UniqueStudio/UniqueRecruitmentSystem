@@ -41,7 +41,7 @@ const fetchCandidate = createAsyncThunk('candidate/fetch', async (_, { rejectWit
 
     dispatch(showSnackbar({ type: res.status, message: res.message }));
 
-    return rejectWithValue(res.message ?? '网络错误');
+    return rejectWithValue(res.message);
 });
 
 const updateCandidate = createAsyncThunk<
@@ -68,7 +68,7 @@ const updateCandidate = createAsyncThunk<
     const { status, message } = res;
     dispatch(showSnackbar({ type: status, message }));
 
-    return rejectWithValue(message ?? '网络错误');
+    return rejectWithValue(message);
 });
 
 const fetchInterviewSlots = createAsyncThunk('candidate/fetch/slots', async (_, { rejectWithValue }) => {
@@ -78,7 +78,7 @@ const fetchInterviewSlots = createAsyncThunk('candidate/fetch/slots', async (_, 
         return res.payload;
     }
 
-    return rejectWithValue(res.message ?? '网络错误');
+    return rejectWithValue(res.message);
 });
 
 const candidateSlice = createSlice({

@@ -6,12 +6,12 @@ import {
     SetCandidateInfo,
     SubmitCandidateFormResp,
 } from '@uniqs/api';
+import { Status } from '@uniqs/config';
 
-import { getToken } from 'utils/token';
+import { client, authClient, handleError } from './client';
+
 import { checkMail } from 'utils/validators';
 
-const HOST = process.env.HOST;
-const prefix = 'candidate';
 const translator: Map<keyof SetCandidateInfo, string> = new Map([
     ['name', '姓名'],
     ['mail', '邮箱'],
@@ -28,14 +28,9 @@ const translator: Map<keyof SetCandidateInfo, string> = new Map([
 
 export const loginCandidate: (data: AuthCode) => Promise<LoginCandidateResp> = async ({ phone, code }) => {
     try {
-        const resp = await fetch(`${HOST}/${prefix}/login`, {
-            method: 'POST',
-            body: JSON.stringify({ phone, code }),
-            headers: { 'Content-Type': 'application/json' },
-        });
-        return await resp.json();
+        return await client.post('candidate/login', { json: { phone, code } }).json<LoginCandidateResp>();
     } catch (error) {
-        return { status: 'error', message: error?.message };
+        return { status: Status.error, message: handleError(error) };
     }
 };
 
@@ -43,17 +38,17 @@ export const submitCandidateForm: (form: SetCandidateInfo, update?: boolean) => 
     async (form, update = false) => {
         try {
             if (!checkMail(form.mail)) {
-                return { status: 'warning', message: '邮箱格式不正确！' };
+                return { status: Status.warning, message: '邮箱格式不正确！' };
             }
             // check if some fields are undefined
             for (const [key, value] of translator.entries()) {
                 if (form[key] === undefined) {
-                    return { status: 'warning', message: `请填写${value}` };
+                    return { status: Status.warning, message: `请填写${value}` };
                 }
             }
 
             if (form.group === 'design' && !form.resume) {
-                return { status: 'warning', message: '填报Design组需要上交作品集' };
+                return { status: Status.warning, message: '填报Design组需要上交作品集' };
             }
             if (form.resume instanceof FileList) {
                 form.resume = form.resume[0];
@@ -64,45 +59,27 @@ export const submitCandidateForm: (form: SetCandidateInfo, update?: boolean) => 
             // Todo: make this convert more clear
             Object.entries(form).forEach(([key, value]) => formData.append(key, value as string | File));
 
-            const resp = await fetch(`${HOST}/${prefix}`, {
-                method: update ? 'PUT' : 'POST',
+            return await authClient('candidate', {
+                method: update ? 'put' : 'post',
                 body: formData,
-                headers: {
-                    Authorization: `Bearer ${getToken()}`,
-                },
-            });
-            return await resp.json();
+            }).json<SubmitCandidateFormResp>();
         } catch (error) {
-            return { status: 'error', message: error?.error };
+            return { status: Status.error, message: handleError(error) };
         }
     };
 
 export const getInterviewSlots: () => Promise<GetInterviewSlotsResp<string>> = async () => {
     try {
-        const resp = await fetch(`${HOST}/${prefix}/me/slots`, {
-            method: 'GET',
-            headers: {
-                Authorization: `Bearer ${getToken()}`,
-            },
-        });
-
-        return await resp.json();
+        return await authClient('candidate/me/slots').json<GetInterviewSlotsResp<string>>();
     } catch (error) {
-        return { status: 'error', message: error?.message };
+        return { status: Status.error, message: handleError(error) };
     }
 };
 
 export const getCandidateInfo: () => Promise<GetCandidateInfoResp> = async () => {
     try {
-        const resp = await fetch(`${HOST}/${prefix}`, {
-            method: 'GET',
-            headers: {
-                Authorization: `Bearer ${getToken()}`,
-            },
-        });
-
-        return await resp.json();
+        return await authClient('candidate').json<GetCandidateInfoResp>();
     } catch (error) {
-        return { status: 'error', message: error?.message };
+        return { status: Status.error, message: handleError(error) };
     }
 };

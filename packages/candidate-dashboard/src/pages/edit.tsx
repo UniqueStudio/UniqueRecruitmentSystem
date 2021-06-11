@@ -67,17 +67,22 @@ const TextInputs: readonly InputField[] = [
     // { name: 'phone', label: t`电话`, required: true },
 ] as const;
 
-const SelectInputs = [
+interface SelectField extends InputField {
+    options: readonly string[];
+}
+
+const SelectInputs: readonly SelectField[] = [
     { name: 'rank', label: t`成绩排名`, required: true, options: RANKS },
     { name: 'gender', label: t`性别`, required: true, options: GENDERS },
     { name: 'grade', label: t`所属年级`, required: true, options: GRADES },
     { name: 'group', label: t`组别`, required: true, options: GROUPS },
-] as const;
+];
 
 const Edit: NextPage = () => {
     const dispatch = useAppDispatch();
     const classes = useStyle();
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { abandoned, rejected, interviewAllocations, interviewSelections, updatedAt, id, step, ...defaultValues } =
         useAppSelector(({ candidate }) => candidate);
     const methods = useForm({ defaultValues });
@@ -88,9 +93,7 @@ const Edit: NextPage = () => {
     // title
     useEffect(() => void dispatch(setLayoutTitle(t`编辑信息`)), [dispatch]);
 
-    const handleSubmit = (data: SetCandidateInfo) => {
-        dispatch(updateCandidate(data));
-    };
+    const handleSubmit = (data: SetCandidateInfo) => void dispatch(updateCandidate(data));
 
     // AutoComplete options
     const Deps = useMemo(() => Object.keys(Departments), []);
