@@ -1,14 +1,24 @@
 import { Evaluation, Gender, Grade, Group, GroupOrTeam, Period, Rank, Status, Step } from './enums';
 
-export interface Application<T = Date> {
-    updatedAt: T;
+interface Common {
     id: string;
-    candidate: {
-        name: string;
-        gender: Gender;
-        mail: string;
-        phone: string;
-    };
+    createdAt: string;
+    updatedAt: string;
+}
+
+interface User extends Common {
+    name: string;
+    password: string;
+    gender: Gender;
+    mail?: string;
+    phone: string;
+}
+
+export interface Candidate extends User {
+    applications: Application[];
+}
+
+export interface Application extends Common {
     grade: Grade;
     institute: string;
     major: string;
@@ -21,61 +31,49 @@ export interface Application<T = Date> {
     abandoned: boolean;
     rejected: boolean;
     step: Step;
-    interviewSelections: Interview<T>[];
     interviewAllocations: {
-        group?: T;
-        team?: T;
+        group?: string;
+        team?: string;
     };
+    interviewSelections: Interview[];
+    candidate: Candidate;
+    recruitment: Recruitment;
     comments: Comment[];
 }
 
-export interface Comment {
-    id: string;
+export interface Comment extends Common {
+    candidate: Application;
     user: Member;
     content: string;
     evaluation: Evaluation;
 }
 
-export interface Member {
-    id: string;
+export interface Member extends User {
     weChatID: string;
-    name: string;
-    password?: string;
     joinTime: string;
     isCaptain: boolean;
     isAdmin: boolean;
-    phone: string;
-    mail?: string;
-    gender: Gender;
     group: Group;
     avatar?: string;
 }
 
-export interface Interview<T = Date> {
-    id: string;
-    date: T;
+export interface Interview extends Common {
+    date: string;
     period: Period;
     name: GroupOrTeam;
     slotNumber: number;
+    recruitment: Recruitment;
+    candidates: Application[];
 }
 
-export interface Recruitment<T = Date> {
-    id: string;
+export interface Recruitment extends Common {
     name: string;
-    beginning: T;
-    deadline: T;
-    end: T;
-    interviews: Interview<T>[];
+    beginning: string;
+    deadline: string;
+    end: string;
+    interviews: Interview[];
+    candidates: Application[];
     statistics?: Record<Group, Record<Step, number | undefined> | undefined>;
-}
-
-export interface Message {
-    isSelf: boolean;
-    name: string;
-    time: number;
-    isImage: boolean;
-    avatar: string;
-    content: string;
 }
 
 interface SuccessResponse<T> {

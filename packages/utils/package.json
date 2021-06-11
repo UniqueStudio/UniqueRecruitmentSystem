@@ -1,8 +1,19 @@
 {
-  "name": "unique-recruitment-utils",
+  "name": "@uniqs/utils",
   "version": "3.0.0-rc.2",
   "private": true,
+  "files": [
+    "dist"
+  ],
+  "main": "dist/cjs/index.js",
+  "module": "dist/esm/index.js",
+  "types": "dist/cjs/index.d.ts",
   "dependencies": {
+    "@uniqs/config": "^3.0.0-rc.2",
     "idb-keyval": "^5.0.6"
+  },
+  "scripts": {
+    "prebuild": "rm -rf dist",
+    "build": "tsc --module esnext --outDir dist/esm && tsc --module commonjs --outDir dist/cjs"
   }
 }

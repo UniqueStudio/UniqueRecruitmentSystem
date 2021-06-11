@@ -40,7 +40,7 @@ export const GRADES = ['大一', '大二', '大三', '大四', '研究生'] as c
 export const GENDERS = ['其他', '男', '女'] as const;
 export const API = 'https://hustunique.com:5000';
 
-export const Departments: Readonly<Record<string, string[]>> = {
+export const DEPARTMENTS: Readonly<Record<string, string[]>> = {
     电子信息与通信学院: [
         '通信工程',
         '电子信息类',
@@ -236,3 +236,7 @@ export const Departments: Readonly<Record<string, string[]>> = {
     法医学系: ['法医学'],
     网络空间安全学院: ['信息安全', '网络空间安全'],
 };
+
+export const INSTITUTES = Object.keys(DEPARTMENTS);
+
+export const INSTITUTES = Object.keys(DEPARTMENTS);
