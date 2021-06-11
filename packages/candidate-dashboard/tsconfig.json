@@ -15,10 +15,7 @@
       "@locales/*": ["src/locales/*"],
       "@stores/*": ["src/stores/*"],
       "@styles/*": ["src/styles/*"],
-      "@utils/*": ["src/utils/*"],
-      "#ui/*": ["../ui/src/*"],
-      "#utils/*": ["../utils/src/*"],
-      "#config/*": ["../config/src/*"]
+      "@utils/*": ["src/utils/*"]
     },
     "types": ["vite/client"]
   },
