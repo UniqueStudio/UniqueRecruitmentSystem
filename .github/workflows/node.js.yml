@@ -37,9 +37,13 @@ jobs:
       - run: yarn install
         name: Install Dependences
 
+      - run: yarn workspace @uniqs/config build
+      - run: yarn workspace @uniqs/ui build
+      - run: yarn workspace @uniqs/utils build
+
       - run: yarn lint
         name: Run ESLint Check
 
-      - run: yarn workspace unique-recruitment-dashboard build
-      - run: yarn workspace unique-recruitment-backend build
-      - run: yarn workspace unique-recruitment-candidate-dashboard build
+      - run: yarn workspace @uniqs/backend build
+      - run: yarn workspace @uniqs/dashboard build
+      - run: yarn workspace @uniqs/candidate-dashboard build
