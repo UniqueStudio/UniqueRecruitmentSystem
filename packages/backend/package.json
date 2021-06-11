@@ -1,20 +1,7 @@
 {
-  "name": "unique-recruitment-backend",
-  "version": "3.0.0-rc.1",
-  "description": "the backend for recruitment of Unique Studio",
-  "author": "@winderica",
+  "name": "@uniqs/backend",
+  "version": "3.0.0-rc.2",
   "private": true,
-  "homepage": ".",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/UniqueStudio/UniqueRecruitmentBackend.git"
-  },
-  "contributors": [
-    {
-      "name": "winderica",
-      "email": "winderica@gmail.com"
-    }
-  ],
   "dependencies": {
     "@nestjs/common": "^8.0.0-alpha.7",
     "@nestjs/config": "^0.6.3",
@@ -27,6 +14,8 @@
     "@nestjs/throttler": "^1.1.4",
     "@nestjs/typeorm": "^7.1.5",
     "@nestjs/websockets": "^8.0.0-alpha.7",
+    "@uniqs/config": "^3.0.0-rc.2",
+    "@uniqs/utils": "^3.0.0-rc.2",
     "cache-manager": "^3.4.3",
     "class-transformer": "^0.4.0",
     "class-validator": "^0.13.1",
@@ -62,7 +51,7 @@
     "start": "nest start",
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
-    "start:prod": "node build/main.js",
+    "start:prod": "NODE_ENV=production node build/main.js",
     "migrate": "NODE_ENV=migration MIGRATION_BACKUP_PATH=./backup nest start"
   }
 }
