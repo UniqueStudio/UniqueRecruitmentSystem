@@ -1,48 +1,9 @@
-/*
- * Both `IndexedDB` and `LocalStorage` are used in our dashboard.
- * Objects are stored in `IndexedDB`, while primitives are stored in `LocalStorage`.
- */
+import { ObjectStorage, PrimitiveStorage } from '@uniqs/utils';
+import * as idb from 'idb-keyval';
 
-class TypedStorage<T extends Record<string, unknown>> {
-    private storage: Storage;
+import { Application, Member, Recruitment } from '@config/types';
 
-    constructor(storage: Storage) {
-        this.storage = storage;
-    }
-
-    get length() {
-        return this.storage.length;
-    }
-
-    // clear storage
-    clear() {
-        this.storage.clear();
-    }
-
-    getItem<K extends string & keyof T>(key: K) {
-        const value = this.storage.getItem(key);
-        if (value) {
-            try {
-                return JSON.parse(value) as T[K];
-            } catch {}
-        }
-        return undefined;
-    }
-
-    key(index: number) {
-        return this.storage.key(index);
-    }
-
-    removeItem<K extends string & keyof T>(key: K) {
-        this.storage.removeItem(key);
-    }
-
-    setItem<K extends string & keyof T>(key: K, value: T[K]) {
-        this.storage.setItem(key, JSON.stringify(value));
-    }
-}
-
-class PrimitiveStorage extends TypedStorage<{
+export const primitiveStorage = new class extends PrimitiveStorage<{
     token: string;
     viewingId: string;
     darkMode?: boolean;
@@ -53,12 +14,17 @@ class PrimitiveStorage extends TypedStorage<{
 
     // clear storage, except field "token"
     clear() {
-        const token = this.getItem('token');
+        const token = this.get('token');
         super.clear();
         if (token) {
-            this.setItem('token', token);
+            this.set('token', token);
         }
     }
-}
+}();
 
-export const primitiveStorage = new PrimitiveStorage();
+export const objectStorage = new ObjectStorage<{
+    applications: Map<string, Application>;
+    recruitments: Map<string, Recruitment>;
+    group: Member[];
+    member: Member;
+}>(idb);
