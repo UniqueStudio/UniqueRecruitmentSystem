@@ -1,28 +1,18 @@
 {
-  "name": "unique-recruitment-dashboard",
+  "name": "@uniqs/dashboard",
   "version": "3.0.0-rc.2",
-  "description": "the dashboard for recruitment of Unique Studio",
-  "author": "@winderica",
   "private": true,
-  "homepage": "/",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/UniqueStudio/UniqueRecruitmentDashboard.git"
-  },
-  "contributors": [
-    {
-      "name": "winderica",
-      "email": "winderica@gmail.com"
-    }
-  ],
   "dependencies": {
     "@emotion/react": "^11.4.0",
     "@emotion/styled": "^11.3.0",
-    "@material-ui/core": "^5.0.0-alpha.35",
+    "@material-ui/core": "^5.0.0-alpha.36",
     "@material-ui/data-grid": "^4.0.0-alpha.30",
-    "@material-ui/icons": "^5.0.0-alpha.35",
-    "@material-ui/lab": "^5.0.0-alpha.35",
+    "@material-ui/icons": "^5.0.0-alpha.36",
+    "@material-ui/lab": "^5.0.0-alpha.36",
     "@material-ui/styles": "^5.0.0-alpha.35",
+    "@uniqs/config": "^3.0.0-rc.2",
+    "@uniqs/ui": "^3.0.0-rc.2",
+    "@uniqs/utils": "^3.0.0-rc.2",
     "axios": "^0.21.1",
     "chart.js": "^3.3.2",
     "date-fns": "^2.22.1",
