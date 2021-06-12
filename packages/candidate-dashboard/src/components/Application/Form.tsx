@@ -1,23 +1,34 @@
 import { t, Trans } from '@lingui/macro';
-import { Box, Tooltip, Typography } from '@material-ui/core';
+import { Box, DialogActions, DialogContent, Tooltip, Typography } from '@material-ui/core';
 import { LoadingButton } from '@material-ui/lab';
-import { DEPARTMENTS, Grade, GRADES, Group, GROUP_MAP, INSTITUTES, Rank, RANKS } from '@uniqs/config';
+import { Application, DEPARTMENTS, GRADES, GROUP_MAP, INSTITUTES, RANKS } from '@uniqs/config';
 import { convertRecruitmentName } from '@uniqs/utils';
 import React, { FC } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 
-import { createApplication, getPendingRecruitments } from '@apis/rest';
+import { createApplication } from '@apis/rest';
 import { AutoComplete, CheckBox, Input, Select, Upload } from '@components/Textfields';
-import { useAsyncEffect } from '@hooks/useAsyncEffect';
 import { useAppSelector } from '@stores/index';
 
 type Inputs = Parameters<typeof createApplication>[0];
 
 interface Props {
-    defaultValues?: Partial<Inputs>;
+    application?: Partial<Application>;
 }
 
-export const Apply: FC<Props> = ({ defaultValues }) => {
+export const Form: FC<Props> = ({
+    application: {
+        institute = '',
+        major = '',
+        intro = '',
+        isQuick = false,
+        referrer = '',
+        recruitment,
+        grade,
+        group,
+        rank,
+    } = {},
+}) => {
     const {
         control,
         formState: { isValid, isSubmitting },
@@ -26,24 +37,18 @@ export const Apply: FC<Props> = ({ defaultValues }) => {
     } = useForm<Inputs>({
         mode: 'onChange',
         defaultValues: {
-            institute: '',
-            major: '',
-            grade: Grade.freshman,
-            rank: Rank.A,
-            group: Group.web,
-            intro: '',
-            isQuick: false,
-            referrer: '',
-            rid: '',
-            ...defaultValues,
+            institute,
+            major,
+            intro,
+            isQuick,
+            referrer,
+            group,
+            grade,
+            rank,
+            rid: recruitment?.id,
         },
     });
-    const recruitments = useAppSelector(({ recruitment }) => recruitment.recruitments);
     const progress = useAppSelector(({ component }) => component.progress);
-
-    useAsyncEffect(async () => {
-        await getPendingRecruitments();
-    }, []);
 
     const onSubmit: SubmitHandler<Inputs> = async (data) => {
         if (isSubmitting) {
@@ -52,15 +57,19 @@ export const Apply: FC<Props> = ({ defaultValues }) => {
         await createApplication(data);
     };
 
+    const recruitments = recruitment ? [recruitment] : [];
+
     return (
         <form onSubmit={handleSubmit(onSubmit)}>
-            <Box
-                display='grid'
-                gridTemplateColumns='repeat(auto-fit, minmax(300px, 1fr))'
-                gap={1}
+            <DialogContent
+                sx={{
+                    display: 'grid',
+                    gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+                    gap: 1,
+                }}
             >
                 <Box display='grid' gap={1}>
-                    <Box display='grid' gridTemplateColumns='minmax(auto, 300px) auto' gap={1}>
+                    <Box display='grid' gridTemplateColumns='2fr minmax(110px, 1fr)' gap={1}>
                         <Select
                             name='rid'
                             control={control}
@@ -70,6 +79,7 @@ export const Apply: FC<Props> = ({ defaultValues }) => {
                             }))}
                             label={t`招新名称`}
                             variant='outlined'
+                            disabled
                         />
                         <Select
                             name='group'
@@ -79,7 +89,7 @@ export const Apply: FC<Props> = ({ defaultValues }) => {
                             variant='outlined'
                         />
                     </Box>
-                    <Box display='grid' gridTemplateColumns='minmax(auto, 300px) auto' gap={1}>
+                    <Box display='grid' gridTemplateColumns='2fr minmax(110px, 1fr)' gap={1}>
                         <AutoComplete
                             name='institute'
                             control={control}
@@ -95,16 +105,17 @@ export const Apply: FC<Props> = ({ defaultValues }) => {
                             variant='outlined'
                         />
                     </Box>
-                    <Box display='grid' gridTemplateColumns='minmax(auto, 300px) auto' gap={1}>
+                    <Box display='grid' gridTemplateColumns='2fr minmax(110px, 1fr)' gap={1}>
                         <AutoComplete
                             name='major'
                             control={control}
+                            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
                             options={DEPARTMENTS[watch('institute')] ?? []}
                             label={t`专业`}
                             variant='outlined'
                         />
                         <Select
-                            name='grade'
+                            name='rank'
                             control={control}
                             selections={RANKS.map((value, key) => ({ key, value }))}
                             label={t`成绩排名`}
@@ -144,16 +155,26 @@ export const Apply: FC<Props> = ({ defaultValues }) => {
                         <Upload name='resume' control={control} rules={{ required: false }} label={t`选择简历`} />
                     </Box>
                 </Box>
-                <Input name='intro' control={control} label={t`个人简介`} multiline rows={9} variant='outlined' fullWidth />
-            </Box>
-            <LoadingButton
-                type='submit'
-                disabled={!isValid}
-                loading={isSubmitting}
-                loadingIndicator={`${(progress * 100).toFixed(2)}%`}
-            >
-                <Trans>提交</Trans>
-            </LoadingButton>
+                <Input
+                    name='intro'
+                    control={control}
+                    label={t`个人简介`}
+                    multiline
+                    rows={9}
+                    variant='outlined'
+                    fullWidth
+                />
+            </DialogContent>
+            <DialogActions>
+                <LoadingButton
+                    type='submit'
+                    disabled={!isValid}
+                    loading={isSubmitting}
+                    loadingIndicator={`${(progress * 100).toFixed(2)}%`}
+                >
+                    <Trans>提交</Trans>
+                </LoadingButton>
+            </DialogActions>
         </form>
     );
 };

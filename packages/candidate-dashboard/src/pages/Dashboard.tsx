@@ -1,102 +1,122 @@
-import { Box, Container, Paper, styled, Tab } from '@material-ui/core';
-import { TabContext, TabList, TabPanel } from '@material-ui/lab';
+import { Alert, AlertTitle, Button, Container, Paper, Stack } from '@material-ui/core';
+import { Application, STEP_MAP } from '@uniqs/config';
 import { convertRecruitmentName } from '@uniqs/utils';
-import React, { FC, useEffect } from 'react';
-import { Link, Route, Switch, useHistory, useRouteMatch } from 'react-router-dom';
+import React, { FC, useState } from 'react';
 
-import { getMyInfo } from '@apis/rest';
-import header from '@assets/header.png';
-import { Apply } from '@components/Apply';
+import { getMyInfo, getPendingRecruitments } from '@apis/rest';
+import { ApplicationDialog } from '@components/Application';
 import { Guard } from '@components/Guard';
+import { useAsyncEffect } from '@hooks/useAsyncEffect';
+import { TabsLayout } from '@layouts/TabsLayout';
 import { useAppSelector } from '@stores/index';
 
-const Panel = styled(TabPanel)(({ theme: { breakpoints, spacing } }) => ({
-    flex: 1,
-    display: 'flex',
-    flexDirection: 'column',
-    width: '100%',
-    maxWidth: spacing(150),
-    marginLeft: 'auto',
-    marginRight: 'auto',
-    [breakpoints.down('xs')]: {
-        padding: spacing(1),
-    },
-}));
+const Applications: FC = () => {
+    const info = useAppSelector(({ candidate }) => candidate.info);
+    const recruitments = useAppSelector(({ recruitment }) => recruitment.recruitments);
+    const applications = info?.applications ?? [];
+    const appliedRecruitments = new Set(applications.map(({ recruitment: { id } }) => id));
+    const [application, setApplication] = useState<Partial<Application>>();
+    const handleCloseApplication = () => {
+        setApplication(undefined);
+    };
+    return (
+        <>
+            <Stack sx={{ width: '100%' }} spacing={1}>
+                {recruitments
+                    .filter(({ id }) => !appliedRecruitments.has(id))
+                    .map((recruitment) => (
+                        <Alert
+                            severity='info'
+                            key={recruitment.id}
+                            action={
+                                <Button
+                                    color='inherit'
+                                    sx={{ alignSelf: 'center' }}
+                                    onClick={() => setApplication({ recruitment })}
+                                >
+                                    立即报名
+                                </Button>
+                            }
+                        >
+                            <AlertTitle>New!</AlertTitle>
+                            {convertRecruitmentName(recruitment.name)}
+                        </Alert>
+                    ))}
+                {applications.map((application) => {
+                    const {
+                        recruitment: { name, deadline, end },
+                        id,
+                        rejected,
+                        abandoned,
+                        step,
+                    } = application;
+                    const stopped = new Date(deadline) < new Date();
+                    const ended = new Date(end) < new Date();
+                    return (
+                        <Alert
+                            severity={ended || rejected || abandoned ? 'error' : stopped ? 'warning' : 'success'}
+                            key={id}
+                            action={
+                                <>
+                                    <Button
+                                        color='inherit'
+                                        sx={{ alignSelf: 'center' }}
+                                    >
+                                        查看面试
+                                    </Button>
+                                    <Button
+                                        color='inherit'
+                                        sx={{ alignSelf: 'center' }}
+                                        onClick={() => setApplication(application)}
+                                    >
+                                        查看申请
+                                    </Button>
+                                </>
+                            }
+                        >
+                            <AlertTitle>
+                                {ended
+                                    ? 'Ended.'
+                                    : rejected
+                                    ? 'Rejected :('
+                                    : abandoned
+                                    ? 'Abandoned ;('
+                                    : stopped
+                                    ? 'Processing...'
+                                    : 'Applying...'}
+                            </AlertTitle>
+                            {`${convertRecruitmentName(name)} - ${STEP_MAP.get(step)!}`}
+                        </Alert>
+                    );
+                })}
+            </Stack>
+            <ApplicationDialog open={!!application} application={application} onClose={handleCloseApplication} />
+        </>
+    );
+};
 
 const Dashboard: FC = () => {
-    const info = useAppSelector(({ candidate }) => candidate.info);
-    const { url } = useRouteMatch();
-    const applications = (info?.applications ?? []).map((application) => ({
-        ...application,
-        path: `${url}/${application.recruitment.name}`,
-    }));
-    const routeMatch = useRouteMatch(applications.map(({ path }) => path).concat(`${url}/new`));
-    const history = useHistory();
-
-    useEffect(() => {
-        void getMyInfo();
+    useAsyncEffect(async () => {
+        await getMyInfo();
+        await getPendingRecruitments();
     }, []);
-
-    useEffect(() => {
-        if (!routeMatch) {
-            history.push(applications.length ? applications[applications.length - 1].path : `${url}/new`);
-        }
-    }, [routeMatch, url]);
 
     return (
         <Container maxWidth='xl'>
             <Paper sx={{ minHeight: '90vh', display: 'flex', flexDirection: 'column' }}>
-                <TabContext value={routeMatch?.url ?? `${url}/new`}>
-                    <TabList centered scrollButtons allowScrollButtonsMobile>
-                        <Tab label='创建申请' value={`${url}/new`} component={Link} to={`${url}/new`} />
-                        {applications.map(({ path, recruitment: { name } }) => (
-                            <Tab
-                                label={convertRecruitmentName(name)}
-                                value={path}
-                                key={path}
-                                component={Link}
-                                to={path}
-                            />
-                        ))}
-                    </TabList>
-                    <Switch>
-                        <Route path={`${url}/new`}>
-                            <Panel value={`${url}/new`}>
-                                <Box
-                                    sx={{ background: `center / contain no-repeat url("${header}")` }}
-                                    flex={1}
-                                    mb={2}
-                                    minHeight={150}
-                                />
-                                <Apply />
-                            </Panel>
-                        </Route>
-                        {applications.map((
-                            { rank, intro, grade, group, major, institute, isQuick, referrer, recruitment, path },
-                        ) => (
-                            <Route key={path} path={path}>
-                                <TabPanel value={path} sx={{ flex: 1 }}>
-                                    <Apply
-                                        defaultValues={{
-                                            rank,
-                                            intro,
-                                            grade,
-                                            group,
-                                            major,
-                                            institute,
-                                            isQuick,
-                                            referrer,
-                                            rid: recruitment.id,
-                                        }}
-                                    />
-                                </TabPanel>
-                            </Route>
-                        ))}
-                    </Switch>
-                </TabContext>
+                <TabsLayout
+                    items={[
+                        { component: <Applications />, value: 'applications', label: '我的申请' },
+                        { component: <div>TODO</div>, value: 'info', label: '我的信息' },
+                    ]}
+                />
             </Paper>
         </Container>
     );
 };
 
-export default () => <Guard><Dashboard /></Guard>;
+export default () => (
+    <Guard>
+        <Dashboard />
+    </Guard>
+);
