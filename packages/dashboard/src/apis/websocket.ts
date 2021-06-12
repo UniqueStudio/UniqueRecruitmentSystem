@@ -15,8 +15,8 @@ const socket = io(API, {
     },
 });
 
-export const addComment = (cid: string, comment: Pick<Comment, 'evaluation' | 'content'>) => {
-    socket.emit('addComment', { cid, comment });
+export const addComment = (aid: string, comment: Pick<Comment, 'evaluation' | 'content'>) => {
+    socket.emit('addComment', { aid, comment });
     $component.setProgress(true);
 };
 
@@ -32,26 +32,26 @@ export const sendMessage = (message: Message) => {
 
 socket.on('disconnect', () => socket.close());
 
-socket.on('addComment', (res: R<{ cid: string; comment: Comment }>) => {
+socket.on('addComment', (res: R<{ aid: string; comment: Comment }>) => {
     switch (res.status) {
         case Status.success:
             $component.setProgress(false);
         // eslint-disable-next-line no-fallthrough
         case Status.info: {
-            const { cid, comment } = res.payload;
-            $application.addComment(cid, comment);
+            const { aid, comment } = res.payload;
+            $application.addComment(aid, comment);
         }
     }
 });
 
-socket.on('removeComment', (res: R<{ cid: string; id: string }>) => {
+socket.on('removeComment', (res: R<{ aid: string; id: string }>) => {
     switch (res.status) {
         case Status.success:
             $component.setProgress(false);
         // eslint-disable-next-line no-fallthrough
         case Status.info: {
-            const { cid, id } = res.payload;
-            $application.removeComment(cid, id);
+            const { aid, id } = res.payload;
+            $application.removeComment(aid, id);
         }
     }
 });
@@ -95,11 +95,11 @@ socket.on('removeCandidate', (res: R<string>) => {
     }
 });
 
-socket.on('moveCandidate', (res: R<{ cid: string; to: Step }>) => {
+socket.on('moveCandidate', (res: R<{ aid: string; to: Step }>) => {
     switch (res.status) {
         case Status.info: {
-            const { cid, to } = res.payload;
-            const application = $application.applications.get(cid);
+            const { aid, to } = res.payload;
+            const application = $application.applications.get(aid);
             if (application && application.step !== to) {
                 const { group, candidate, id } = application;
                 $application.moveOne(id, to);

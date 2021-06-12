@@ -20,17 +20,17 @@ class Endpoint {
 
     static applications = '/applications';
 
-    static application = (cid: string) => `${Endpoint.applications}/${cid}`;
+    static application = (aid: string) => `${Endpoint.applications}/${aid}`;
 
-    static applicationStep = (cid: string) => `${Endpoint.applications}/${cid}/step`;
+    static applicationStep = (aid: string) => `${Endpoint.applications}/${aid}/step`;
 
-    static resume = (cid: string) => `${Endpoint.applications}/${cid}/resume`;
+    static resume = (aid: string) => `${Endpoint.applications}/${aid}/resume`;
 
     static applicationsInRecruitment = (rid: string, now: Date) =>
         `${Endpoint.applications}/recruitment/${rid}?updatedAt=${+now}`;
 
-    static applicationAllocation = (type: InterviewType, cid?: string) =>
-        `${Endpoint.applications}/${cid ? `${cid}/` : ''}interview/${type}`;
+    static applicationAllocation = (type: InterviewType, aid?: string) =>
+        `${Endpoint.applications}/${aid ? `${aid}/` : ''}interview/${type}`;
 
     static recruitments = '/recruitments';
 
@@ -91,9 +91,9 @@ const apiWrapper = async <T>(
     return false;
 };
 
-export const allocateMany = (type: InterviewType, cids: string[]) =>
+export const allocateMany = (type: InterviewType, aids: string[]) =>
     apiWrapper(
-        () => client.put<R<{ aid: string; time?: string }[]>>(Endpoint.applicationAllocation(type), { cids }),
+        () => client.put<R<{ aid: string; time?: string }[]>>(Endpoint.applicationAllocation(type), { aids }),
         (allocations) => {
             $application.allocateMany(
                 allocations.map(({ aid, time }) => ({ aid, time: time ? new Date(time) : undefined })),
@@ -108,11 +108,11 @@ export const allocateMany = (type: InterviewType, cids: string[]) =>
         },
     );
 
-export const allocateOne = (type: InterviewType, cid: string, time: Date) =>
+export const allocateOne = (type: InterviewType, aid: string, time: Date) =>
     apiWrapper(
-        () => client.put<R>(Endpoint.applicationAllocation(type, cid), { time }),
+        () => client.put<R>(Endpoint.applicationAllocation(type, aid), { time }),
         () => {
-            $application.allocateOne(type, cid, time);
+            $application.allocateOne(type, aid, time);
             $component.enqueueSnackbar('设置成功', 'success');
         },
     );
@@ -292,11 +292,11 @@ export const setMyInfo = (data: Pick<Member, 'mail' | 'phone' | 'password'>) =>
         },
     );
 
-export const setGroupAdmin = (uids: string[]) =>
+export const setGroupAdmin = (mids: string[]) =>
     apiWrapper(
-        () => client.put<R<string[]>>(Endpoint.admin, uids),
-        (uids) => {
-            $member.setGroupAdmins(uids);
+        () => client.put<R<string[]>>(Endpoint.admin, { mids }),
+        (mids) => {
+            $member.setGroupAdmins(mids);
             $component.enqueueSnackbar('已成功设置管理员', 'success');
         },
     );

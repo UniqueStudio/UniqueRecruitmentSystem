@@ -32,7 +32,7 @@ export class RecruitmentEntity extends CommonEntity {
     interviews!: InterviewEntity[];
 
     @OneToMany(() => ApplicationEntity, ({ recruitment }) => recruitment)
-    candidates!: ApplicationEntity[];
+    applications!: ApplicationEntity[];
 
     @Column('jsonb', { nullable: true })
     statistics?: Record<Group, Record<Step, number | undefined> | undefined>;

@@ -42,8 +42,8 @@ export interface Application extends Common {
 }
 
 export interface Comment extends Common {
-    candidate: Application;
-    user: Member;
+    application: Application;
+    member: Member;
     content: string;
     evaluation: Evaluation;
 }
@@ -63,7 +63,7 @@ export interface Interview extends Common {
     name: GroupOrTeam;
     slotNumber: number;
     recruitment: Recruitment;
-    candidates: Application[];
+    applications: Application[];
 }
 
 export interface Recruitment extends Common {
@@ -72,7 +72,7 @@ export interface Recruitment extends Common {
     deadline: string;
     end: string;
     interviews: Interview[];
-    candidates: Application[];
+    applications: Application[];
     statistics?: Record<Group, Record<Step, number | undefined> | undefined>;
 }
 

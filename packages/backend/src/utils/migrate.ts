@@ -349,10 +349,10 @@ export const migrate = async (app: INestApplication) => {
             }
             const user = users[0];
             await commentsService.createAndSave({
-                user,
+                member: user,
                 evaluation,
                 content,
-                candidate: application,
+                application,
             });
         }
     }

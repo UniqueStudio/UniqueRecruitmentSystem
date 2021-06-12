@@ -13,7 +13,7 @@ export class CommentsService extends BasicCRUDService<CommentEntity> {
 
     findOneById(id: string) {
         return super.findOneById(id, {
-            relations: ['user', 'candidate'],
+            relations: ['member', 'application'],
         });
     }
 }

@@ -35,6 +35,6 @@ export class MemberEntity extends UserEntity {
     @IsUrl({ protocols: ['https'] })
     avatar?: string;
 
-    @OneToMany(() => CommentEntity, ({ user }) => user)
+    @OneToMany(() => CommentEntity, ({ member }) => member)
     comments!: CommentEntity[];
 }

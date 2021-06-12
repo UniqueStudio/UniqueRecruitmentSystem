@@ -102,8 +102,8 @@ export const Comments: FC<Props> = observer(({ application: { comments, id } }) 
                 <Chip
                     comment={comment}
                     key={index}
-                    onRemove={$member.info.id === comment.user.id ? handleRemove(comment.id) : undefined}
-                    onCopy={$member.info.id === comment.user.id ? handleCopy(comment) : undefined}
+                    onRemove={$member.info.id === comment.member.id ? handleRemove(comment.id) : undefined}
+                    onCopy={$member.info.id === comment.member.id ? handleCopy(comment) : undefined}
                 />
             ))}
         </div>

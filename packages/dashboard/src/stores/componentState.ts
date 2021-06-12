@@ -89,8 +89,8 @@ export class ComponentStateStore {
         }
     }
 
-    setResumeProgress(progress: number, cid: string) {
-        this.resumeProgresses[cid] = progress;
+    setResumeProgress(progress: number, owner: string) {
+        this.resumeProgresses[owner] = progress;
     }
 
     recordInputtingComment(evaluation: Evaluation, content: string) {

@@ -10,7 +10,7 @@ export class ApplicationsService extends BasicCRUDService<ApplicationEntity> {
     relations = {
         forCandidate: ['interviewSelections', 'candidate'],
         forInterview: ['recruitment', 'recruitment.interviews', 'interviewSelections', 'candidate'],
-        forMember: ['recruitment', 'interviewSelections', 'comments', 'comments.user', 'candidate'],
+        forMember: ['recruitment', 'interviewSelections', 'comments', 'comments.member', 'candidate'],
     };
 
     constructor(@InjectRepository(ApplicationEntity) repository: Repository<ApplicationEntity>) {

@@ -76,7 +76,7 @@ export class ApplicationEntity extends CommonEntity {
     @IsEnum(Step)
     step!: Step;
 
-    @ManyToMany(() => InterviewEntity, ({ candidates }) => candidates)
+    @ManyToMany(() => InterviewEntity, ({ applications }) => applications)
     @JoinTable({ name: 'interview_selections' })
     interviewSelections!: InterviewEntity[];
 
@@ -86,9 +86,9 @@ export class ApplicationEntity extends CommonEntity {
     @ManyToOne(() => CandidateEntity, ({ applications }) => applications, { onDelete: 'CASCADE' })
     candidate!: CandidateEntity;
 
-    @ManyToOne(() => RecruitmentEntity, ({ candidates }) => candidates, { onDelete: 'CASCADE' })
+    @ManyToOne(() => RecruitmentEntity, ({ applications }) => applications, { onDelete: 'CASCADE' })
     recruitment!: RecruitmentEntity;
 
-    @OneToMany(() => CommentEntity, ({ candidate }) => candidate)
+    @OneToMany(() => CommentEntity, ({ application }) => application)
     comments!: CommentEntity[];
 }

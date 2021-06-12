@@ -4,7 +4,7 @@ import { CommentEntity } from '@entities/comment.entity';
 
 export class AddCommentBody {
     @IsUUID(4)
-    cid!: string;
+    aid!: string;
 
     @ValidateNested()
     comment!: CommentEntity;

@@ -30,5 +30,5 @@ export class InterviewEntity extends CommonEntity {
     recruitment!: RecruitmentEntity;
 
     @ManyToMany(() => ApplicationEntity, ({ interviewSelections }) => interviewSelections)
-    candidates!: ApplicationEntity[];
+    applications!: ApplicationEntity[];
 }

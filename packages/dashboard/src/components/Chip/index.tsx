@@ -10,7 +10,7 @@ interface Props {
     onCopy?: () => void;
 }
 
-export const Chip: FC<Props> = memo(({ comment: { content, evaluation, user }, onCopy, onRemove }) => {
+export const Chip: FC<Props> = memo(({ comment: { content, evaluation, member }, onCopy, onRemove }) => {
     const classes = useStyles({ evaluation });
     const [anchorEl, setAnchorEl] = useState<Element | null>(null);
 
@@ -22,7 +22,7 @@ export const Chip: FC<Props> = memo(({ comment: { content, evaluation, user }, o
         setAnchorEl(null);
     };
 
-    const text = `${user.name}： ${content}`;
+    const text = `${member.name}： ${content}`;
     return (
         <>
             <MuiChip

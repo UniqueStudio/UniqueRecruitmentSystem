@@ -9,10 +9,10 @@ import { MemberEntity } from '@entities/member.entity';
 @Entity('comments')
 export class CommentEntity extends CommonEntity {
     @ManyToOne(() => ApplicationEntity, ({ comments }) => comments, { onDelete: 'CASCADE' })
-    candidate!: ApplicationEntity;
+    application!: ApplicationEntity;
 
     @ManyToOne(() => MemberEntity, ({ comments }) => comments, { onDelete: 'CASCADE' })
-    user!: MemberEntity;
+    member!: MemberEntity;
 
     @Column()
     @IsString()

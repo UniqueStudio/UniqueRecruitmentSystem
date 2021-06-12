@@ -14,23 +14,23 @@ import { CommentsService } from '@services/comments.service';
 @WebSocketGateway({ cors: true })
 export class CommentsGateway {
     constructor(
-        private readonly candidatesService: ApplicationsService,
+        private readonly applicationsService: ApplicationsService,
         private readonly commentsService: CommentsService,
     ) {}
 
     @AcceptRole(Role.member)
     @SubscribeMessage('addComment')
     async addComment(
-        @MessageBody() { cid, comment, member }: WsBody<AddCommentBody>,
+        @MessageBody() { aid, comment, member }: WsBody<AddCommentBody>,
         @ConnectedSocket() socket: Socket,
     ) {
-        const candidate = await this.candidatesService.findOneById(cid);
+        const application = await this.applicationsService.findOneById(aid);
         const { content, evaluation } = comment;
         const data = {
-            cid,
+            aid,
             comment: await this.commentsService.createAndSave({
-                user: member,
-                candidate,
+                member,
+                application,
                 content,
                 evaluation,
             }),
@@ -49,11 +49,11 @@ export class CommentsGateway {
     @SubscribeMessage('removeComment')
     async removeComment(@MessageBody() { id, member }: WsBody<RemoveCommentBody>, @ConnectedSocket() socket: Socket) {
         const comment = await this.commentsService.findOneById(id);
-        if (comment.user.id !== member?.id) {
+        if (comment.member.id !== member?.id) {
             throw new WsException("You don't have permission to do this");
         }
         const data = {
-            cid: comment.candidate.id,
+            aid: comment.application.id,
             id,
         };
         await comment.remove();

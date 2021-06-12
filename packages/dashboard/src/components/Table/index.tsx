@@ -15,7 +15,7 @@ import useStyles from '@styles/table';
 export const Table: FC = observer(() => {
     const { $application } = useStores();
     const classes = useStyles();
-    const [cid, setCid] = useState('');
+    const [id, setId] = useState('');
     const [time, setTime] = useState(new Date());
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
@@ -104,7 +104,7 @@ export const Table: FC = observer(() => {
             renderCell(params) {
                 const { id } = params.row as Application;
                 return (
-                    <Button size={isMobile ? 'small' : 'medium'} onClick={() => setCid(id)}>
+                    <Button size={isMobile ? 'small' : 'medium'} onClick={() => setId(id)}>
                         设置
                     </Button>
                 );
@@ -113,8 +113,8 @@ export const Table: FC = observer(() => {
     ];
 
     const handleAllocateOne = async () => {
-        if (await allocateOne(type, cid, roundToMinute(time))) {
-            setCid('');
+        if (await allocateOne(type, id, roundToMinute(time))) {
+            setId('');
         }
     };
 
@@ -158,7 +158,7 @@ export const Table: FC = observer(() => {
                     ),
                 }}
             />
-            <Dialog open={!!cid} onClose={() => setCid('')}>
+            <Dialog open={!!id} onClose={() => setId('')}>
                 <StaticDateTimePicker
                     label='选择时间'
                     ampm={false}

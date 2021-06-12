@@ -636,7 +636,7 @@ describe('ApplicationsController e2e', () => {
         });
     });
 
-    describe('PUT /applications/:cid/interview/:type', () => {
+    describe('PUT /applications/:aid/interview/:type', () => {
         const time = new Date();
         describe('allocate interview for an application with valid credential', () => {
             it('should return 200', async () => {

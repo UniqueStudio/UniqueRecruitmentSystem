@@ -26,7 +26,7 @@ export class InterviewsService extends BasicCRUDService<InterviewEntity> {
     async findManyWithCandidates(rid: string, name: GroupOrTeam) {
         return await this.repository
             .createQueryBuilder('interview')
-            .leftJoinAndSelect('interview.candidates', 'candidates')
+            .leftJoinAndSelect('interview.applications', 'applications')
             .leftJoinAndSelect('interview.recruitment', 'recruitment')
             .where('recruitment.id = :rid', { rid })
             .andWhere('interview.name = :name', { name })

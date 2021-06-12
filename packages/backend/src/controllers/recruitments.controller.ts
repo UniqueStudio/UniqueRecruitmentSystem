@@ -115,7 +115,7 @@ export class RecruitmentsController {
             try {
                 if (updatedInterview) {
                     const { date, period, slotNumber } = updatedInterview;
-                    if (interview.candidates.length && (+interview.date !== +date || interview.period !== period)) {
+                    if (interview.applications.length && (+interview.date !== +date || interview.period !== period)) {
                         errors.add(Msg.R_INTERVIEWS_SELECTED);
                     } else {
                         interview.slotNumber = slotNumber;
@@ -124,7 +124,7 @@ export class RecruitmentsController {
                         await interview.save();
                     }
                 } else {
-                    if (interview.candidates.length) {
+                    if (interview.applications.length) {
                         errors.add(Msg.R_INTERVIEWS_SELECTED);
                     } else {
                         await interview.remove();

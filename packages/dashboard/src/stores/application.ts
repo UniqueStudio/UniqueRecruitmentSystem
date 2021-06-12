@@ -34,8 +34,8 @@ export class ApplicationStore {
         makeAutoObservable(this);
     }
 
-    addComment(cid: string, comment: Comment) {
-        const application = this.applications.get(cid);
+    addComment(aid: string, comment: Comment) {
+        const application = this.applications.get(aid);
         if (!application) {
             return;
         }
@@ -43,8 +43,8 @@ export class ApplicationStore {
         void objectStorage.set('applications', toJS(this.applications));
     }
 
-    removeComment(cid: string, commendId: string) {
-        const application = this.applications.get(cid);
+    removeComment(aid: string, commendId: string) {
+        const application = this.applications.get(aid);
         if (!application) {
             return;
         }
@@ -75,23 +75,23 @@ export class ApplicationStore {
         this.applications.clear();
     }
 
-    selectOne(cid: string) {
-        this.selected.set(cid, this.applications.get(cid)!);
+    selectOne(aid: string) {
+        this.selected.set(aid, this.applications.get(aid)!);
     }
 
-    selectMany(cids: string[]) {
-        for (const cid of cids) {
-            this.selectOne(cid);
+    selectMany(aids: string[]) {
+        for (const aid of aids) {
+            this.selectOne(aid);
         }
     }
 
-    deselectOne(cid: string) {
-        this.selected.delete(cid);
+    deselectOne(aid: string) {
+        this.selected.delete(aid);
     }
 
-    deselectMany(cids: string[]) {
-        for (const cid of cids) {
-            this.deselectOne(cid);
+    deselectMany(aids: string[]) {
+        for (const aid of aids) {
+            this.deselectOne(aid);
         }
     }
 
@@ -99,18 +99,18 @@ export class ApplicationStore {
         this.selected.clear();
     }
 
-    removeOne(cid: string) {
-        this.applications.delete(cid);
-        this.deselectOne(cid);
+    removeOne(aid: string) {
+        this.applications.delete(aid);
+        this.deselectOne(aid);
         void objectStorage.set('applications', toJS(this.applications));
     }
 
-    moveOne(cid: string, to: Step) {
-        const application = this.applications.get(cid);
+    moveOne(aid: string, to: Step) {
+        const application = this.applications.get(aid);
         if (!application) {
             return;
         }
-        this.deselectOne(cid);
+        this.deselectOne(aid);
         application.step = to;
         void objectStorage.set('applications', toJS(this.applications));
     }
@@ -140,8 +140,8 @@ export class ApplicationStore {
         }
     }
 
-    allocateOne(type: InterviewType, cid: string, time: Date) {
-        const application = this.applications.get(cid);
+    allocateOne(type: InterviewType, aid: string, time: Date) {
+        const application = this.applications.get(aid);
         if (!application) {
             return;
         }
