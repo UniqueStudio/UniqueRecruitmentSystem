@@ -1,4 +1,3 @@
-// import { t, Trans } from '@lingui/macro';
 import { Box } from '@material-ui/core';
 import { Notifier } from '@uniqs/ui';
 import { validateJWT } from '@uniqs/utils';
@@ -10,7 +9,7 @@ import { setToken } from '@stores/candidate';
 import { removeSnackbar } from '@stores/component';
 import { useAppDispatch, useAppSelector } from '@stores/index';
 
-export const Layout: FC = ({ children }) => {
+export const MainLayout: FC = ({ children }) => {
     const [initialized, setInitialized] = useState(false);
     const snackbars = useAppSelector((state) => state.component.snackbars);
     const dispatch = useAppDispatch();

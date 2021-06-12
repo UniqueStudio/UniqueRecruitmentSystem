@@ -9,7 +9,7 @@ import { Provider } from 'react-redux';
 import { Route, Switch } from 'react-router-dom';
 
 import { useAsyncEffect } from '@hooks/useAsyncEffect';
-import { Layout } from '@layouts/index';
+import { MainLayout } from '@layouts/MainLayout';
 import store from '@stores/index';
 import { defaultLocale, dynamicActivate } from '@utils/i18n';
 
@@ -38,7 +38,7 @@ export const App: FC<Props> = ({ cache }) => {
                 <Provider store={store}>
                     <ThemeProvider theme={theme}>
                         <CssBaseline />
-                        <Layout>
+                        <MainLayout>
                             <Switch>
                                 {routes.map(({ path, Component }) => (
                                     <Route key={path} path={path} exact={path === '/'}>
@@ -46,7 +46,7 @@ export const App: FC<Props> = ({ cache }) => {
                                     </Route>
                                 ))}
                             </Switch>
-                        </Layout>
+                        </MainLayout>
                     </ThemeProvider>
                 </Provider>
             </I18nProvider>
