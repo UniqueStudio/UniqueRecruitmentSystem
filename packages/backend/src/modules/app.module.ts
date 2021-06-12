@@ -9,7 +9,7 @@ import Joi from 'joi';
 
 import { Env } from '@constants/enums';
 import { HttpErrorFilter } from '@filters/httpError.filter';
-import { RoleGuard } from '@guards/role.guard';
+import { HttpRoleGuard } from '@guards/role.guard';
 import { TransformInterceptor } from '@interceptors/transform.interceptor';
 import { AuthMiddleWare } from '@middlewares/auth';
 import { helmet } from '@middlewares/helmet';
@@ -87,7 +87,7 @@ import { ConfigService } from '@services/config.service';
         ConfigService,
         {
             provide: APP_GUARD,
-            useClass: RoleGuard,
+            useClass: HttpRoleGuard,
         },
         {
             provide: APP_PIPE,
