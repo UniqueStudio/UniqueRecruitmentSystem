@@ -247,7 +247,7 @@ export const sendSMSToCandidate = (content: {
     place?: string;
     rest?: string;
     next: Step;
-    cids: string[];
+    aids: string[];
     code: string;
 }) =>
     apiWrapper(

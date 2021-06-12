@@ -8,15 +8,20 @@ import { stores } from '@stores/index';
 
 const { $component, $recruitment, $application, $member } = stores;
 
-const socket = io(API);
+// TODO: $member.token is empty when user has not logged in, so the connection will be invalid even if he logged in
+const socket = io(API, {
+    extraHeaders: {
+        Authorization:`Bearer ${$member.token}`,
+    },
+});
 
 export const addComment = (cid: string, comment: Pick<Comment, 'evaluation' | 'content'>) => {
-    socket.emit('addComment', { cid, comment, token: $member.token });
+    socket.emit('addComment', { cid, comment });
     $component.setProgress(true);
 };
 
 export const removeComment = (id: string) => {
-    socket.emit('removeComment', { id, token: $member.token });
+    socket.emit('removeComment', { id });
     $component.setProgress(true);
 };
 

@@ -42,7 +42,7 @@ export const Template: FC<Props> = observer(({ toggleOpen }) => {
             return;
         }
 
-        if (await sendSMSToCandidate({ ...content, code, cids: [...$application.selected.keys()] })) {
+        if (await sendSMSToCandidate({ ...content, code, aids: [...$application.selected.keys()] })) {
             setCode('');
         }
     };
