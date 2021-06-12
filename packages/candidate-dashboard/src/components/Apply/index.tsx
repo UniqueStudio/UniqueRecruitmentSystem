@@ -1,3 +1,4 @@
+import { t, Trans } from '@lingui/macro';
 import { Box, Tooltip, Typography } from '@material-ui/core';
 import { LoadingButton } from '@material-ui/lab';
 import { DEPARTMENTS, Grade, GRADES, Group, GROUP_MAP, INSTITUTES, Rank, RANKS } from '@uniqs/config';
@@ -67,14 +68,14 @@ export const Apply: FC<Props> = ({ defaultValues }) => {
                                 key: id,
                                 value: convertRecruitmentName(name),
                             }))}
-                            label='招新名称'
+                            label={t`招新名称`}
                             variant='outlined'
                         />
                         <Select
                             name='group'
                             control={control}
                             selections={[...GROUP_MAP.entries()].map(([key, value]) => ({ key, value }))}
-                            label='组别'
+                            label={t`组别`}
                             variant='outlined'
                         />
                     </Box>
@@ -83,14 +84,14 @@ export const Apply: FC<Props> = ({ defaultValues }) => {
                             name='institute'
                             control={control}
                             options={INSTITUTES}
-                            label='学院'
+                            label={t`学院`}
                             variant='outlined'
                         />
                         <Select
                             name='grade'
                             control={control}
                             selections={GRADES.map((value, key) => ({ key, value }))}
-                            label='年级'
+                            label={t`年级`}
                             variant='outlined'
                         />
                     </Box>
@@ -99,14 +100,14 @@ export const Apply: FC<Props> = ({ defaultValues }) => {
                             name='major'
                             control={control}
                             options={DEPARTMENTS[watch('institute')] ?? []}
-                            label='专业'
+                            label={t`专业`}
                             variant='outlined'
                         />
                         <Select
                             name='grade'
                             control={control}
                             selections={RANKS.map((value, key) => ({ key, value }))}
-                            label='成绩排名'
+                            label={t`成绩排名`}
                             variant='outlined'
                         />
                     </Box>
@@ -115,7 +116,7 @@ export const Apply: FC<Props> = ({ defaultValues }) => {
                             name='referrer'
                             rules={{ required: false }}
                             control={control}
-                            label='推荐人'
+                            label={t`推荐人`}
                             variant='outlined'
                         />
                         <Tooltip
@@ -137,13 +138,13 @@ export const Apply: FC<Props> = ({ defaultValues }) => {
                             }
                         >
                             <div>
-                                <CheckBox name='isQuick' control={control} label='快速通道' />
+                                <CheckBox name='isQuick' control={control} label={t`快速通道`} />
                             </div>
                         </Tooltip>
-                        <Upload name='resume' control={control} rules={{ required: false }} label='选择简历' />
+                        <Upload name='resume' control={control} rules={{ required: false }} label={t`选择简历`} />
                     </Box>
                 </Box>
-                <Input name='intro' control={control} label='个人简介' multiline rows={9} variant='outlined' fullWidth />
+                <Input name='intro' control={control} label={t`个人简介`} multiline rows={9} variant='outlined' fullWidth />
             </Box>
             <LoadingButton
                 type='submit'
@@ -151,7 +152,7 @@ export const Apply: FC<Props> = ({ defaultValues }) => {
                 loading={isSubmitting}
                 loadingIndicator={`${(progress * 100).toFixed(2)}%`}
             >
-                提交
+                <Trans>提交</Trans>
             </LoadingButton>
         </form>
     );

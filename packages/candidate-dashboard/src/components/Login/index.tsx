@@ -1,3 +1,4 @@
+import { t, Trans } from '@lingui/macro';
 import { Grid, Link, Typography } from '@material-ui/core';
 import { LoadingButton } from '@material-ui/lab';
 import { validatePhone } from '@uniqs/utils';
@@ -43,19 +44,27 @@ export const Login: FC = () => {
             onSubmit={handleSubmit(onSubmit)}
         >
             <Grid item>
-                <Input name='phone' control={control} rules={{ validate: validatePhone }} label='手机号' type='tel' />
+                <Input
+                    name='phone'
+                    control={control}
+                    rules={{ validate: validatePhone }}
+                    label={t`手机号`}
+                    type='tel'
+                />
             </Grid>
             <Grid item>
-                <Input name='password' control={control} label='密码' type='password' />
+                <Input name='password' control={control} label={t`密码`} type='password' />
             </Grid>
             <Grid item>
                 <LoadingButton variant='contained' type='submit' disabled={!isValid} loading={isSubmitting}>
-                    登录
+                    <Trans>登录</Trans>
                 </LoadingButton>
             </Grid>
             <Grid item xs={10}>
                 <Typography variant='caption' color='textSecondary' align='center' component='p'>
-                    没有账号？ 立即<Link href='register'>注册</Link>
+                    <Trans>
+                        没有账号？ 立即<Link href='register'>注册</Link>
+                    </Trans>
                 </Typography>
             </Grid>
         </Grid>
