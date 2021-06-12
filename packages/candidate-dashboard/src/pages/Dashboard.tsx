@@ -16,7 +16,8 @@ const Panel = styled(TabPanel)(({ theme: { breakpoints, spacing } }) => ({
     flexDirection: 'column',
     width: '100%',
     maxWidth: spacing(150),
-    mx: 'auto',
+    marginLeft: 'auto',
+    marginRight: 'auto',
     [breakpoints.down('xs')]: {
         padding: spacing(1),
     },
