@@ -1,5 +1,5 @@
 import { t, Trans } from '@lingui/macro';
-import { Grid, Link, Typography } from '@material-ui/core';
+import { Link, Stack, Typography } from '@material-ui/core';
 import { LoadingButton } from '@material-ui/lab';
 import { validatePhone } from '@uniqs/utils';
 import React, { FC } from 'react';
@@ -34,39 +34,17 @@ export const Login: FC = () => {
     };
 
     return (
-        <Grid
-            item
-            container
-            xs={10}
-            spacing={3}
-            component='form'
-            justifyContent='center'
-            onSubmit={handleSubmit(onSubmit)}
-        >
-            <Grid item>
-                <Input
-                    name='phone'
-                    control={control}
-                    rules={{ validate: validatePhone }}
-                    label={t`手机号`}
-                    type='tel'
-                />
-            </Grid>
-            <Grid item>
-                <Input name='password' control={control} label={t`密码`} type='password' />
-            </Grid>
-            <Grid item>
-                <LoadingButton variant='contained' type='submit' disabled={!isValid} loading={isSubmitting}>
-                    <Trans>登录</Trans>
-                </LoadingButton>
-            </Grid>
-            <Grid item xs={10}>
-                <Typography variant='caption' color='textSecondary' align='center' component='p'>
-                    <Trans>
-                        没有账号？ 立即<Link href='register'>注册</Link>
-                    </Trans>
-                </Typography>
-            </Grid>
-        </Grid>
+        <Stack spacing={2} component='form' alignItems='center' onSubmit={handleSubmit(onSubmit)}>
+            <Input name='phone' control={control} rules={{ validate: validatePhone }} label={t`手机号`} type='tel' />
+            <Input name='password' control={control} label={t`密码`} type='password' />
+            <LoadingButton variant='contained' type='submit' disabled={!isValid} loading={isSubmitting}>
+                <Trans>登录</Trans>
+            </LoadingButton>
+            <Typography variant='caption' color='textSecondary'>
+                <Trans>
+                    没有账号？ 立即<Link href='register'>注册</Link>
+                </Trans>
+            </Typography>
+        </Stack>
     );
 };

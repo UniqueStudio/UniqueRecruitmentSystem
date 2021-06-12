@@ -1,4 +1,4 @@
-import { Avatar, Container, Grid, Paper, Typography } from '@material-ui/core';
+import { Avatar, Container, Paper, Stack, Typography } from '@material-ui/core';
 import { blue } from '@material-ui/core/colors';
 import { DashboardRounded as DashboardIcon } from '@material-ui/icons';
 import React, { useEffect } from 'react';
@@ -22,31 +22,25 @@ export default () => {
         }
     }, [routeMatch, login]);
 
-    return token ? <Redirect to='/dashboard' /> : (
+    return token ? (
+        <Redirect to='/dashboard' />
+    ) : (
         <Container maxWidth='xs'>
             <Paper elevation={12} sx={{ p: 4 }}>
-                <Grid container spacing={4} justifyContent='center'>
-                    <Grid item container xs='auto' spacing={2} justifyContent='center'>
-                        <Grid item xs='auto'>
-                            <Avatar
-                                sx={{
-                                    height: 64,
-                                    width: 64,
-                                    bgcolor: blue[50],
-                                }}
-                            >
-                                <DashboardIcon color='primary' fontSize='large' />
-                            </Avatar>
-                        </Grid>
-                        <Grid item xs={10}>
-                            <Typography variant='h5' align='center' component='h1'>
-                                联创团队招新系统
-                            </Typography>
-                            <Typography variant='subtitle1' align='center'>
-                                Candidate Dashboard
-                            </Typography>
-                        </Grid>
-                    </Grid>
+                <Stack spacing={2} alignItems='center'>
+                    <Avatar
+                        sx={{
+                            height: 64,
+                            width: 64,
+                            bgcolor: blue[50],
+                        }}
+                    >
+                        <DashboardIcon color='primary' fontSize='large' />
+                    </Avatar>
+                    <Stack spacing={1} alignItems='center'>
+                        <Typography variant='h5'>联创团队招新系统</Typography>
+                        <Typography variant='subtitle1'>Candidate Dashboard</Typography>
+                    </Stack>
                     <Switch>
                         <Route path={login}>
                             <Login />
@@ -55,7 +49,7 @@ export default () => {
                             <Register />
                         </Route>
                     </Switch>
-                </Grid>
+                </Stack>
             </Paper>
         </Container>
     );

@@ -1,6 +1,6 @@
 import { styled, Tab } from '@material-ui/core';
 import { TabContext, TabList, TabPanel } from '@material-ui/lab';
-import React, { FC, useState, ReactElement, useEffect } from 'react';
+import React, { FC, ReactElement, useEffect } from 'react';
 import { Link, Route, Switch, useHistory, useRouteMatch } from 'react-router-dom';
 
 const Panel = styled(TabPanel)(({ theme: { breakpoints, spacing } }) => ({
@@ -11,7 +11,7 @@ const Panel = styled(TabPanel)(({ theme: { breakpoints, spacing } }) => ({
     maxWidth: spacing(150),
     marginLeft: 'auto',
     marginRight: 'auto',
-    [breakpoints.down('xs')]: {
+    [breakpoints.down('sm')]: {
         padding: spacing(1),
     },
 }));

@@ -1,4 +1,4 @@
-import { Alert, AlertTitle, Button, Container, Paper, Stack } from '@material-ui/core';
+import { Container, Paper, Stack } from '@material-ui/core';
 import { Application, STEP_MAP } from '@uniqs/config';
 import { convertRecruitmentName } from '@uniqs/utils';
 import React, { FC, useState } from 'react';
@@ -6,6 +6,7 @@ import React, { FC, useState } from 'react';
 import { getMyInfo, getPendingRecruitments } from '@apis/rest';
 import { ApplicationDialog } from '@components/Application';
 import { Guard } from '@components/Guard';
+import { Toast } from '@components/Toast';
 import { useAsyncEffect } from '@hooks/useAsyncEffect';
 import { TabsLayout } from '@layouts/TabsLayout';
 import { useAppSelector } from '@stores/index';
@@ -20,78 +21,53 @@ const Applications: FC = () => {
         setApplication(undefined);
     };
     return (
-        <>
-            <Stack sx={{ width: '100%' }} spacing={1}>
-                {recruitments
-                    .filter(({ id }) => !appliedRecruitments.has(id))
-                    .map((recruitment) => (
-                        <Alert
-                            severity='info'
-                            key={recruitment.id}
-                            action={
-                                <Button
-                                    color='inherit'
-                                    sx={{ alignSelf: 'center' }}
-                                    onClick={() => setApplication({ recruitment })}
-                                >
-                                    立即报名
-                                </Button>
-                            }
-                        >
-                            <AlertTitle>New!</AlertTitle>
-                            {convertRecruitmentName(recruitment.name)}
-                        </Alert>
-                    ))}
-                {applications.map((application) => {
-                    const {
-                        recruitment: { name, deadline, end },
-                        id,
-                        rejected,
-                        abandoned,
-                        step,
-                    } = application;
-                    const stopped = new Date(deadline) < new Date();
-                    const ended = new Date(end) < new Date();
-                    return (
-                        <Alert
-                            severity={ended || rejected || abandoned ? 'error' : stopped ? 'warning' : 'success'}
-                            key={id}
-                            action={
-                                <>
-                                    <Button
-                                        color='inherit'
-                                        sx={{ alignSelf: 'center' }}
-                                    >
-                                        查看面试
-                                    </Button>
-                                    <Button
-                                        color='inherit'
-                                        sx={{ alignSelf: 'center' }}
-                                        onClick={() => setApplication(application)}
-                                    >
-                                        查看申请
-                                    </Button>
-                                </>
-                            }
-                        >
-                            <AlertTitle>
-                                {ended
-                                    ? 'Ended.'
-                                    : rejected
-                                    ? 'Rejected :('
-                                    : abandoned
-                                    ? 'Abandoned ;('
-                                    : stopped
-                                    ? 'Processing...'
-                                    : 'Applying...'}
-                            </AlertTitle>
-                            {`${convertRecruitmentName(name)} - ${STEP_MAP.get(step)!}`}
-                        </Alert>
-                    );
-                })}
-            </Stack>
+        <Stack spacing={1}>
+            {recruitments
+                .filter(({ id }) => !appliedRecruitments.has(id))
+                .map((recruitment) => (
+                    <Toast
+                        severity='info'
+                        key={recruitment.id}
+                        buttons={[{ label: '立即报名', onClick: () => setApplication({ recruitment }) }]}
+                        title='New!'
+                        label={convertRecruitmentName(recruitment.name)}
+                    />
+                ))}
+            {applications.map((application) => {
+                const {
+                    recruitment: { name, deadline, end },
+                    id,
+                    rejected,
+                    abandoned,
+                    step,
+                } = application;
+                const stopped = new Date(deadline) < new Date();
+                const ended = new Date(end) < new Date();
+                return (
+                    <Toast
+                        severity={ended || rejected || abandoned ? 'error' : stopped ? 'warning' : 'success'}
+                        key={id}
+                        buttons={[
+                            { label: '查看面试' },
+                            { label: '查看申请', onClick: () => setApplication(application) },
+                        ]}
+                        title={
+                            ended
+                                ? 'Ended.'
+                                : rejected
+                                ? 'Rejected :('
+                                : abandoned
+                                ? 'Abandoned ;('
+                                : stopped
+                                ? 'Processing...'
+                                : 'Applying...'
+                        }
+                        label={`${convertRecruitmentName(name)} - ${STEP_MAP.get(step)!}`}
+                    />
+                );
+            })}
             <ApplicationDialog open={!!application} application={application} onClose={handleCloseApplication} />
-        </>
+        </Stack>
     );
 };
 

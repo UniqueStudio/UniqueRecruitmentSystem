@@ -1,5 +1,5 @@
 import { t, Trans } from '@lingui/macro';
-import { Box, DialogActions, DialogContent, Tooltip, Typography } from '@material-ui/core';
+import { Box, Button, DialogActions, DialogContent, Tooltip, Typography } from '@material-ui/core';
 import { LoadingButton } from '@material-ui/lab';
 import { Application, DEPARTMENTS, GRADES, GROUP_MAP, INSTITUTES, RANKS } from '@uniqs/config';
 import { convertRecruitmentName } from '@uniqs/utils';
@@ -14,6 +14,7 @@ type Inputs = Parameters<typeof createApplication>[0];
 
 interface Props {
     application?: Partial<Application>;
+    onCancel: () => void;
 }
 
 export const Form: FC<Props> = ({
@@ -28,6 +29,7 @@ export const Form: FC<Props> = ({
         group,
         rank,
     } = {},
+    onCancel,
 }) => {
     const {
         control,
@@ -174,6 +176,7 @@ export const Form: FC<Props> = ({
                 >
                     <Trans>提交</Trans>
                 </LoadingButton>
+                <Button onClick={onCancel}><Trans>取消</Trans></Button>
             </DialogActions>
         </form>
     );
