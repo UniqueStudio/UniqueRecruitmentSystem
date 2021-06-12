@@ -41,6 +41,8 @@ jobs:
       - run: yarn workspace @uniqs/ui build
       - run: yarn workspace @uniqs/utils build
 
+      - run: yarn workspace @uniqs/candidate-dashboard compile
+
       - run: yarn lint
         name: Run ESLint Check
 
