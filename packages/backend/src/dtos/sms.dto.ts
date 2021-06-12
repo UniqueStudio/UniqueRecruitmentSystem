@@ -24,5 +24,5 @@ export class SendSMSToCandidateBody {
     @IsUUID(4, {
         each: true,
     })
-    cids!: string[];
+    aids!: string[];
 }

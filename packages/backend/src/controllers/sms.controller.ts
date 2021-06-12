@@ -67,10 +67,10 @@ export class SMSController {
     @AcceptRole(Role.admin)
     @UseGuards(CodeGuard)
     async sendSMSToCandidate(
-        @Body() { type, time, place, rest, next, cids }: SendSMSToCandidateBody,
+        @Body() { type, time, place, rest, next, aids }: SendSMSToCandidateBody,
         @Member() member: MemberEntity,
     ) {
-        const applications = await this.applicationsService.findManyByIds(cids);
+        const applications = await this.applicationsService.findManyByIds(aids);
         const errors = new Set<string>();
         for (const application of applications) {
             const { group, rejected, abandoned, recruitment, candidate } = application;
