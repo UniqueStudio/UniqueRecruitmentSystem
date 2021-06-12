@@ -33,7 +33,7 @@ export const Select = <T extends FieldValues = FieldValues, N extends FieldPath<
         <TextField
             onChange={onChange}
             onBlur={onBlur}
-            value={value}
+            value={value ?? ''}
             select
             error={invalid}
             inputRef={ref}
