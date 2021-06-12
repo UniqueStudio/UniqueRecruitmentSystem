@@ -32,6 +32,7 @@ export const AutoComplete = <T extends FieldValues = FieldValues, N extends Fiel
     return (
         <Autocomplete
             value={value as string}
+            inputValue={value ?? ''}
             options={options}
             onChange={(_, value) => onChange(value)}
             onInputChange={(_, value) => onChange(value)}
