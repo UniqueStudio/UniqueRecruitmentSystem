@@ -1,7 +1,6 @@
 import { CacheProvider, EmotionCache } from '@emotion/react';
-// import { i18n } from '@lingui/core';
-// import { Trans } from '@lingui/macro';
-// import { I18nProvider } from '@lingui/react';
+import { i18n } from '@lingui/core';
+import { I18nProvider } from '@lingui/react';
 import { ThemeProvider, useMediaQuery } from '@material-ui/core';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import { useTheme } from '@uniqs/ui';
@@ -9,9 +8,10 @@ import React, { FC } from 'react';
 import { Provider } from 'react-redux';
 import { Route, Switch } from 'react-router-dom';
 
-// import { defaultLocale, dynamicActivate } from '@locales/index';
+import { useAsyncEffect } from '@hooks/useAsyncEffect';
 import { Layout } from '@layouts/index';
 import store from '@stores/index';
+import { defaultLocale, dynamicActivate } from '@utils/i18n';
 
 const pages = import.meta.globEager('./pages/*.tsx');
 
@@ -31,26 +31,25 @@ interface Props {
 
 export const App: FC<Props> = ({ cache }) => {
     const theme = useTheme(useMediaQuery('(prefers-color-scheme: dark)'));
-    // useEffect(() => void dynamicActivate(defaultLocale()), []);
-
+    useAsyncEffect(() => dynamicActivate(defaultLocale()), []); // TODO: detect locale on server-side
     return (
         <CacheProvider value={cache}>
-            {/* <I18nProvider i18n={i18n}> */}
-            <Provider store={store}>
-                <ThemeProvider theme={theme}>
-                    <CssBaseline />
-                    <Layout>
-                        <Switch>
-                            {routes.map(({ path, Component }) => (
-                                <Route key={path} path={path} exact={path === '/'}>
-                                    <Component />
-                                </Route>
-                            ))}
-                        </Switch>
-                    </Layout>
-                </ThemeProvider>
-            </Provider>
-            {/* </I18nProvider> */}
+            <I18nProvider i18n={i18n}>
+                <Provider store={store}>
+                    <ThemeProvider theme={theme}>
+                        <CssBaseline />
+                        <Layout>
+                            <Switch>
+                                {routes.map(({ path, Component }) => (
+                                    <Route key={path} path={path} exact={path === '/'}>
+                                        <Component />
+                                    </Route>
+                                ))}
+                            </Switch>
+                        </Layout>
+                    </ThemeProvider>
+                </Provider>
+            </I18nProvider>
         </CacheProvider>
     );
 };

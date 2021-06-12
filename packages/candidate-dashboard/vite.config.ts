@@ -1,3 +1,4 @@
+import { transformAsync } from '@babel/core';
 import refresh from '@vitejs/plugin-react-refresh';
 import { defineConfig } from 'vite';
 
@@ -16,5 +17,37 @@ export default defineConfig({
         outDir: 'build',
         minify: 'esbuild',
     },
-    plugins: [refresh()],
+    plugins: [
+        refresh(),
+        {
+            name: 'lingui-macro',
+            enforce: 'pre',
+            async transform(source, filename) {
+                if (filename.includes('node_modules')) {
+                    return;
+                }
+                if (!source.includes('@lingui/macro')) {
+                    return;
+                }
+                const result = await transformAsync(source, {
+                    filename,
+                    parserOpts: {
+                        plugins: ['jsx', 'typescript'],
+                    },
+                    plugins: ['babel-plugin-macros'],
+                    babelrc: false,
+                    configFile: false,
+                    generatorOpts: {
+                        jsescOption: {
+                            // This option is mandatory.
+                            // Otherwise, UTF-8 strings will be escaped in the produced code,
+                            // which cannot be translated by @lingui/macro.
+                            minimal: true,
+                        },
+                    },
+                });
+                return result?.code;
+            },
+        },
+    ],
 });

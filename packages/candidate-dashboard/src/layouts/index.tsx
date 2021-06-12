@@ -15,7 +15,7 @@ export const Layout: FC = ({ children }) => {
     const snackbars = useAppSelector((state) => state.component.snackbars);
     const dispatch = useAppDispatch();
 
-    useAsyncEffect(async () => {
+    useAsyncEffect(async () => { // TODO: authentication with SSR?
         const { primitiveStorage } = await import('@utils/storage');
         const token = primitiveStorage.get('token');
         if (validateJWT(token)) {
