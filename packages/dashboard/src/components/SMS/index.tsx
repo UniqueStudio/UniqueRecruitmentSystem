@@ -7,7 +7,7 @@ import { SMSPicker } from './Picker';
 
 import { sendSMSToCandidate } from '@apis/rest';
 import { Verify } from '@components/Verify';
-import { SMSType } from '@config/enums';
+import { SMSType, Status } from '@config/enums';
 import { useStores } from '@hooks/useStores';
 import useStyles from '@styles/sms';
 import { generateModel } from '@utils/generateModel';
@@ -38,7 +38,7 @@ export const Template: FC<Props> = observer(({ toggleOpen }) => {
 
     const handleSend = async () => {
         if (code === '') {
-            $component.enqueueSnackbar('请填写验证码', 'warning');
+            $component.enqueueSnackbar('请填写验证码', Status.warning);
             return;
         }
 
@@ -49,7 +49,7 @@ export const Template: FC<Props> = observer(({ toggleOpen }) => {
 
     const handleNext = () => {
         if (activeStep === 1 && message.includes('{{!')) {
-            $component.enqueueSnackbar('请完整填写模板', 'warning');
+            $component.enqueueSnackbar('请完整填写模板', Status.warning);
             return;
         }
         setActiveStep((prevActiveStep) => prevActiveStep + 1);

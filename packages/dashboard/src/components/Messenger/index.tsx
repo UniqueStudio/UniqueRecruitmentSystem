@@ -17,6 +17,7 @@ import React, {
 
 import { sendMessage } from '@apis/websocket';
 import { EnlargeableImage } from '@components/EnlargeableImg';
+import { Status } from '@config/enums';
 import { Message } from '@config/types';
 import { useStores } from '@hooks/useStores';
 import useStyles from '@styles/messenger';
@@ -78,17 +79,17 @@ export const Messenger: FC = observer(() => {
 
     const handleImage: ChangeEventHandler<HTMLInputElement> = ({ target: { files } }) => {
         if (!files) {
-            $component.enqueueSnackbar('你没有上传任何图片', 'info');
+            $component.enqueueSnackbar('你没有上传任何图片', Status.info);
             return;
         }
         const file = files[0];
         const extension = file.name.split('.').slice(-1)[0];
         if (!['jpg', 'jpeg', 'png'].includes(extension)) {
-            $component.enqueueSnackbar('请上传jpg或png类型的图片', 'info');
+            $component.enqueueSnackbar('请上传jpg或png类型的图片', Status.info);
             return;
         }
         if (file.size > 1024 * 1024 * 5) {
-            $component.enqueueSnackbar('图片大小必须小于5MB', 'info');
+            $component.enqueueSnackbar('图片大小必须小于5MB', Status.info);
             return;
         }
         const reader = new FileReader();

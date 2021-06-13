@@ -11,7 +11,7 @@ import { Fab } from '@components/Fab';
 import { Modal } from '@components/Modal';
 import { Slider } from '@components/Slider';
 import { Template } from '@components/SMS';
-import { StepType } from '@config/enums';
+import { Status, StepType } from '@config/enums';
 import { Application } from '@config/types';
 import { usePrevious } from '@hooks/usePrevious';
 import { useStores } from '@hooks/useStores';
@@ -59,7 +59,7 @@ const Applications: FC = observer(() => {
     const handleRemove = () => {
         toggleOpen('dialog')();
         if ($application.selected.size === 0) {
-            $component.enqueueSnackbar('你没有选中任何人', 'info');
+            $component.enqueueSnackbar('你没有选中任何人', Status.info);
             return;
         }
         $application.selected.forEach(({ id }) => void removeApplication(id));

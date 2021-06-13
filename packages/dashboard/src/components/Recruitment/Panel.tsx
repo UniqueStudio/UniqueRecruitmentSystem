@@ -13,7 +13,7 @@ import { DoughnutChart } from '@components/Chart/DoughnutChart';
 import { Modal } from '@components/Modal';
 import { Schedule } from '@components/Schedule';
 import { GROUP_MAP, STEP_SHORT_MAP } from '@config/consts';
-import { Group } from '@config/enums';
+import { Group, Status } from '@config/enums';
 import { Recruitment } from '@config/types';
 import { useStores } from '@hooks/useStores';
 import useStyles from '@styles/recruitmentPanel';
@@ -42,10 +42,10 @@ const RecruitmentOverview: FC<Props> = observer(({ recruitment: { statistics, en
     });
     const handleSet = () => {
         if (compareRecruitment($member.info.joinTime, name) >= 0) {
-            $component.enqueueSnackbar('你不能查看本次招新', 'info');
+            $component.enqueueSnackbar('你不能查看本次招新', Status.info);
             return;
         }
-        $component.enqueueSnackbar('设置成功，正在获取候选人信息', 'success');
+        $component.enqueueSnackbar('设置成功，正在获取候选人信息', Status.success);
         return getApplications(id);
     };
     const data = group ? result[group].slice(0, -1) : Object.values(result).map((t) => t[STEP_SHORT_MAP.size]);
@@ -135,11 +135,11 @@ export const RecruitmentPanel: FC = observer(() => {
 
     const setTime = () => {
         if (beginningState >= endState) {
-            $component.enqueueSnackbar('结束时间必须大于开始时间', 'warning');
+            $component.enqueueSnackbar('结束时间必须大于开始时间', Status.warning);
             return;
         }
         if (deadlineState >= endState) {
-            $component.enqueueSnackbar('截止时间必须大于开始时间', 'warning');
+            $component.enqueueSnackbar('截止时间必须大于开始时间', Status.warning);
             return;
         }
         return setRecruitmentSchedule(id, {

@@ -4,7 +4,7 @@ import React, { ChangeEventHandler, FC, KeyboardEventHandler, useState } from 'r
 
 import { addComment, removeComment } from '@apis/websocket';
 import { Chip } from '@components/Chip';
-import { Evaluation } from '@config/enums';
+import { Evaluation, Status } from '@config/enums';
 import { Application, Comment } from '@config/types';
 import { useStores } from '@hooks/useStores';
 import useStyles from '@styles/comments';
@@ -50,7 +50,7 @@ export const Comments: FC<Props> = observer(({ application: { comments, id } }) 
             setEvaluation(Evaluation.fair);
             setContent('');
         } else {
-            $component.enqueueSnackbar('请完整填写评论', 'warning');
+            $component.enqueueSnackbar('请完整填写评论', Status.warning);
         }
     };
 

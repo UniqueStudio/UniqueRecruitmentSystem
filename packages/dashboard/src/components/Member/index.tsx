@@ -5,6 +5,7 @@ import React, { ChangeEventHandler, FC, useState } from 'react';
 
 import { setMyInfo } from '@apis/rest';
 import { GENDERS, GROUP_MAP } from '@config/consts';
+import { Status } from '@config/enums';
 import { useStores } from '@hooks/useStores';
 import useStyles from '@styles/member';
 
@@ -35,15 +36,15 @@ export const Member: FC = observer(() => {
 
     const submitChange = () => {
         if (mail === mailP && phone === phoneP && !password) {
-            $component.enqueueSnackbar('你没有做任何更改', 'info');
+            $component.enqueueSnackbar('你没有做任何更改', Status.info);
             return;
         }
         if (!checkMail(mail)) {
-            $component.enqueueSnackbar('邮箱格式不正确', 'warning');
+            $component.enqueueSnackbar('邮箱格式不正确', Status.warning);
             return;
         }
         if (!checkPhone(phone)) {
-            $component.enqueueSnackbar('手机号码格式不正确', 'warning');
+            $component.enqueueSnackbar('手机号码格式不正确', Status.warning);
             return;
         }
         return setMyInfo({ phone, mail, password });

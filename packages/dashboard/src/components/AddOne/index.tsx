@@ -8,6 +8,7 @@ import { createRecruitment } from '@apis/rest';
 import { Modal } from '@components/Modal';
 import { Schedule } from '@components/Schedule';
 import { Verify } from '@components/Verify';
+import { Status } from '@config/enums';
 import { useStores } from '@hooks/useStores';
 import useStyles from '@styles/addOne';
 
@@ -38,15 +39,15 @@ export const AddOne: FC = observer(() => {
 
     const handleLaunch = async () => {
         if (!code) {
-            $component.enqueueSnackbar('请完整填写信息', 'warning');
+            $component.enqueueSnackbar('请完整填写信息', Status.warning);
             return;
         }
         if (beginning >= deadline) {
-            $component.enqueueSnackbar('截止时间必须大于开始时间', 'warning');
+            $component.enqueueSnackbar('截止时间必须大于开始时间', Status.warning);
             return;
         }
         if (deadline >= end) {
-            $component.enqueueSnackbar('结束时间必须大于截止时间', 'warning');
+            $component.enqueueSnackbar('结束时间必须大于截止时间', Status.warning);
             return;
         }
         const ok = await createRecruitment({
