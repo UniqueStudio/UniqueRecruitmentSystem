@@ -17,9 +17,11 @@ import { Cache } from 'cache-manager';
 
 import { GroupOrTeam, Role, SMSType, Step } from '@constants/enums';
 import { Msg } from '@constants/messages';
+import { Candidate } from '@decorators/candidate.decorator';
 import { Member } from '@decorators/member.decorator';
 import { AcceptRole } from '@decorators/role.decorator';
-import { SendSMSToCandidateBody } from '@dtos/sms.dto';
+import { SendCodeToOthersParams, SendSMSToCandidateBody } from '@dtos/sms.dto';
+import { CandidateEntity } from '@entities/candidate.entity';
 import { MemberEntity } from '@entities/member.entity';
 import { CodeGuard } from '@guards/code.guard';
 import { ApplicationsService } from '@services/applications.service';
@@ -36,9 +38,9 @@ export class SMSController {
         private readonly smsService: SMSService,
     ) {}
 
-    @Get('verification/candidate/:phone')
+    @Get('verification/other/:phone')
     @Throttle(1, 60)
-    async sendCodeToCandidate(@Param('phone') phone: string) {
+    async sendCodeToOthers(@Param() { phone }: SendCodeToOthersParams) {
         const code = randomBytes(2).toString('hex');
         try {
             // 您{1}的验证码为：{2}，请于3分钟内填写。如非本人操作，请忽略本短信。
@@ -46,7 +48,21 @@ export class SMSController {
         } catch ({ message }) {
             throw new InternalServerErrorException(message);
         }
-        await this.cacheManager.set(cacheKey(phone, false), code, { ttl: 180 });
+        await this.cacheManager.set(cacheKey(phone), code, { ttl: 180 });
+    }
+
+    @Get('verification/candidate')
+    @Throttle(1, 60)
+    @AcceptRole(Role.candidate)
+    async sendCodeToCandidate(@Candidate() { phone }: CandidateEntity) {
+        const code = randomBytes(2).toString('hex');
+        try {
+            // 您{1}的验证码为：{2}，请于3分钟内填写。如非本人操作，请忽略本短信。
+            await this.smsService.sendSMS(phone, '719160', ['dashboard中', code]);
+        } catch ({ message }) {
+            throw new InternalServerErrorException(message);
+        }
+        await this.cacheManager.set(cacheKey(phone, Role.candidate), code, { ttl: 180 });
     }
 
     @Get('verification/member')
@@ -60,7 +76,7 @@ export class SMSController {
         } catch ({ message }) {
             throw new InternalServerErrorException(message);
         }
-        await this.cacheManager.set(cacheKey(phone, true), code, { ttl: 180 });
+        await this.cacheManager.set(cacheKey(phone, Role.member), code, { ttl: 180 });
     }
 
     @Post()

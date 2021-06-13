@@ -31,9 +31,9 @@ describe('SMSController e2e', () => {
         memberJWT = payload;
     });
 
-    describe('GET /sms/verification/candidate/:phone', () => {
+    describe('GET /sms/verification/other/:phone', () => {
         it('should return 200', async () => {
-            await agent(app.getHttpServer()).get('/sms/verification/candidate/13344445555').expect(200);
+            await agent(app.getHttpServer()).get('/sms/verification/other/13344445555').expect(200);
         });
     });
 
@@ -44,6 +44,14 @@ describe('SMSController e2e', () => {
                     .get('/sms/verification/member')
                     .auth(memberJWT, { type: 'bearer' })
                     .expect(200);
+            });
+        });
+        describe('get code for member with valid credential frequently', () => {
+            it('should return 429', async () => {
+                await agent(app.getHttpServer())
+                    .get('/sms/verification/member')
+                    .auth(memberJWT, { type: 'bearer' })
+                    .expect(429);
             });
         });
         describe('get code for member with invalid credential', () => {

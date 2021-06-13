@@ -1,6 +1,11 @@
-import { IsEnum, IsOptional, IsString, IsUUID } from 'class-validator';
+import { IsEnum, IsOptional, IsPhoneNumber, IsString, IsUUID } from 'class-validator';
 
 import { SMSType, Step } from '@constants/enums';
+
+export class SendCodeToOthersParams {
+    @IsPhoneNumber('CN')
+    phone!: string;
+}
 
 export class SendSMSToCandidateBody {
     @IsEnum(SMSType)
