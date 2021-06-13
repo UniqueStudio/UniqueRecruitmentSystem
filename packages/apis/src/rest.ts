@@ -103,7 +103,8 @@ export class RestClient {
         > & {
             resume: FileList | undefined;
             rid: string;
-        } & Code,
+            code: string;
+        },
         onUploadProgress: (event: ProgressEvent) => void,
     ) {
         const form = new FormData();
@@ -122,10 +123,7 @@ export class RestClient {
 
     setApplication(
         aid: string,
-        data: Pick<
-            Application,
-            'grade' | 'institute' | 'major' | 'rank' | 'group' | 'intro' | 'referrer'
-        > & {
+        data: Pick<Application, 'grade' | 'institute' | 'major' | 'rank' | 'group' | 'intro' | 'referrer'> & {
             resume: FileList | undefined;
         },
         onUploadProgress: (event: ProgressEvent) => void,
