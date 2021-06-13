@@ -1,3 +1,4 @@
+import { IRecruitmetEntity } from '@uniqs/config';
 import { IsDate, IsString, Matches } from 'class-validator';
 import { Column, Entity, OneToMany } from 'typeorm';
 
@@ -8,7 +9,7 @@ import { CommonEntity } from '@entities/common.entity';
 import { InterviewEntity } from '@entities/interview.entity';
 
 @Entity('recruitments')
-export class RecruitmentEntity extends CommonEntity {
+export class RecruitmentEntity extends CommonEntity implements IRecruitmetEntity {
     @Column({ unique: true })
     @IsString()
     @Matches(/^\d{4}[ASC]$/)

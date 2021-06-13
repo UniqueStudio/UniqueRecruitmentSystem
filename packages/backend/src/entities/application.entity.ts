@@ -1,3 +1,4 @@
+import { IApplicationEntity } from '@uniqs/config';
 import { IsBoolean, IsDate, IsEnum, IsOptional, IsString } from 'class-validator';
 import { Column, Entity, JoinTable, ManyToMany, ManyToOne, OneToMany, Unique } from 'typeorm';
 
@@ -22,7 +23,7 @@ class InterviewAllocations {
 
 @Entity('applications')
 @Unique(['candidate', 'recruitment'])
-export class ApplicationEntity extends CommonEntity {
+export class ApplicationEntity extends CommonEntity implements IApplicationEntity {
     @Column('enum', { enum: Grade })
     @IsEnum(Grade)
     grade!: Grade;

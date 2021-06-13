@@ -1,3 +1,4 @@
+import { IInterviewEntity } from '@uniqs/config';
 import { IsDate, IsEnum, IsInt, IsPositive } from 'class-validator';
 import { Column, Entity, ManyToMany, ManyToOne, Unique } from 'typeorm';
 
@@ -8,7 +9,7 @@ import { RecruitmentEntity } from '@entities/recruitment.entity';
 
 @Entity('interviews')
 @Unique(['date', 'period', 'name'])
-export class InterviewEntity extends CommonEntity {
+export class InterviewEntity extends CommonEntity implements IInterviewEntity {
     @Column('timestamptz')
     @IsDate()
     date!: Date;

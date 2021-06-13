@@ -1,3 +1,4 @@
+import { IMemberEntity } from '@uniqs/config';
 import { IsBoolean, IsEnum, IsOptional, IsString, IsUrl, Matches } from 'class-validator';
 import { Column, Entity, OneToMany } from 'typeorm';
 
@@ -6,7 +7,7 @@ import { CommentEntity } from '@entities/comment.entity';
 import { UserEntity } from '@entities/user.entity';
 
 @Entity('members')
-export class MemberEntity extends UserEntity {
+export class MemberEntity extends UserEntity implements IMemberEntity {
     @Column({ unique: true })
     @IsString()
     weChatID!: string;

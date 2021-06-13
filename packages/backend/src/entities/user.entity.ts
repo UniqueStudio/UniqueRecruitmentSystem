@@ -1,3 +1,4 @@
+import { IUserEntity } from '@uniqs/config';
 import { IsEmail, IsEnum, IsOptional, IsPhoneNumber, IsString } from 'class-validator';
 import { Column } from 'typeorm';
 
@@ -14,7 +15,7 @@ class Password {
     hash!: string;
 }
 
-export abstract class UserEntity extends CommonEntity {
+export abstract class UserEntity extends CommonEntity implements IUserEntity {
     @Column()
     @IsString()
     name!: string;
