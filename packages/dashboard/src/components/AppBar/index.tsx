@@ -15,7 +15,6 @@ import { observer } from 'mobx-react-lite';
 import React, { FC, MouseEventHandler, useMemo, useState } from 'react';
 import { useRouteMatch } from 'react-router-dom';
 
-import { setAuthToken } from '@apis/rest';
 import { Select } from '@components/Select';
 import { GROUP_MAP, STEP_TYPE_MAP } from '@config/consts';
 import { Group, StepType } from '@config/enums';
@@ -52,7 +51,6 @@ export const AppBar: FC = observer(() => {
     const handleLogout = () => {
         closeLogoutMenu();
         $member.logout();
-        setAuthToken('');
     };
 
     const handleChangeDarkMode = (darkMode?: boolean) => () => {

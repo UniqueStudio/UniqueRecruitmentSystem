@@ -1,12 +1,11 @@
-import { Color } from '@material-ui/lab';
 import { makeAutoObservable } from 'mobx';
 
-import { Evaluation, Step } from '@config/enums';
+import { Evaluation, Status, Step } from '@config/enums';
 import { primitiveStorage } from '@utils/storage';
 
 interface Snackbar {
     message: string;
-    variant: Color;
+    variant: Status;
 }
 
 export class ComponentStateStore {
@@ -65,7 +64,7 @@ export class ComponentStateStore {
         this.drawerOpen = open ?? !this.drawerOpen;
     }
 
-    enqueueSnackbar(message: string, variant: Color) {
+    enqueueSnackbar(message: string, variant: Status) {
         this.snackbars[performance.now()] = {
             message,
             variant,
