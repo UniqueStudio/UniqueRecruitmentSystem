@@ -17,6 +17,7 @@ const Applications: FC = () => {
     const applications = info?.applications ?? [];
     const appliedRecruitments = new Set(applications.map(({ recruitment: { id } }) => id));
     const [application, setApplication] = useState<Partial<Application>>();
+    const [open, setOpen] = useState(false);
     const handleCloseApplication = () => {
         setApplication(undefined);
     };
@@ -28,7 +29,15 @@ const Applications: FC = () => {
                     <Toast
                         severity='info'
                         key={recruitment.id}
-                        buttons={[{ label: '立即报名', onClick: () => setApplication({ recruitment }) }]}
+                        buttons={[
+                            {
+                                label: '立即报名',
+                                onClick: () => {
+                                    setOpen(true);
+                                    setApplication({ recruitment });
+                                },
+                            },
+                        ]}
                         title='New!'
                         label={convertRecruitmentName(recruitment.name)}
                     />
@@ -49,7 +58,13 @@ const Applications: FC = () => {
                         key={id}
                         buttons={[
                             { label: '查看面试' },
-                            { label: '查看申请', onClick: () => setApplication(application) },
+                            {
+                                label: '查看申请',
+                                onClick: () => {
+                                    setOpen(true);
+                                    setApplication(application);
+                                },
+                            },
                         ]}
                         title={
                             ended
@@ -66,7 +81,12 @@ const Applications: FC = () => {
                     />
                 );
             })}
-            <ApplicationDialog open={!!application} application={application} onClose={handleCloseApplication} />
+            <ApplicationDialog
+                open={open}
+                application={application}
+                onClose={() => setOpen(false)}
+                onExited={handleCloseApplication}
+            />
         </Stack>
     );
 };

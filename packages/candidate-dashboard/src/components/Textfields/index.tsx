@@ -3,3 +3,4 @@ export * from './CheckBox';
 export * from './Input';
 export * from './Select';
 export * from './Upload';
+export * from './Password';

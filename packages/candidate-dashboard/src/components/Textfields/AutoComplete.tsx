@@ -40,7 +40,7 @@ export const AutoComplete = <T extends FieldValues = FieldValues, N extends Fiel
             autoHighlight
             freeSolo
             renderInput={(params) => (
-                <TextField {...params} error={invalid} variant='standard' {...rest} />
+                <TextField {...params} error={invalid} variant='standard' required {...rest} />
             )}
         />
     );

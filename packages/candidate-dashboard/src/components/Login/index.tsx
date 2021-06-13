@@ -6,7 +6,7 @@ import React, { FC } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 
 import { loginByPassword } from '@apis/rest';
-import { Input } from '@components/Textfields/Input';
+import { Input, Password } from '@components/Textfields';
 
 interface Inputs {
     phone: string;
@@ -34,9 +34,16 @@ export const Login: FC = () => {
     };
 
     return (
-        <Stack spacing={2} component='form' alignItems='center' onSubmit={handleSubmit(onSubmit)}>
-            <Input name='phone' control={control} rules={{ validate: validatePhone }} label={t`手机号`} type='tel' />
-            <Input name='password' control={control} label={t`密码`} type='password' />
+        <Stack spacing={2} component='form' alignItems='center' maxWidth='75%' onSubmit={handleSubmit(onSubmit)}>
+            <Input
+                name='phone'
+                control={control}
+                rules={{ validate: validatePhone }}
+                label={t`手机号`}
+                type='tel'
+                fullWidth
+            />
+            <Password name='password' control={control} label={t`密码`} fullWidth />
             <LoadingButton variant='contained' type='submit' disabled={!isValid} loading={isSubmitting}>
                 <Trans>登录</Trans>
             </LoadingButton>

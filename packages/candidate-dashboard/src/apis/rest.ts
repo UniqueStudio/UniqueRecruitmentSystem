@@ -1,5 +1,5 @@
 import { RestClient } from '@uniqs/apis';
-import { API, Application, Candidate } from '@uniqs/config';
+import { API, Candidate, Code } from '@uniqs/config';
 
 import { setInfo, setToken } from '@stores/candidate';
 import { enqueueSnackbar, setProgress } from '@stores/component';
@@ -29,7 +29,7 @@ export const loginByPassword = (phone: string, password: string) =>
         },
     );
 
-export const getVerificationCode = (phone: string) =>
+export const getCodeForOther = (phone: string) =>
     apiWrapper(
         () => client.getCodeForOther(phone),
         () => {
@@ -37,9 +37,15 @@ export const getVerificationCode = (phone: string) =>
         },
     );
 
-export const createCandidate = (
-    data: Pick<Candidate, 'name' | 'gender' | 'mail' | 'phone' | 'password'> & { code: string },
-) =>
+export const getCodeForCandidate = () =>
+    apiWrapper(
+        () => client.getCodeForCandidate(),
+        () => {
+            store.dispatch(enqueueSnackbar({ message: '已成功发送验证码', variant: 'success' }));
+        },
+    );
+
+export const createCandidate = (data: Pick<Candidate, 'name' | 'gender' | 'mail' | 'phone' | 'password'> & Code) =>
     apiWrapper(
         () => client.createCandidate(data),
         () => {
@@ -63,17 +69,26 @@ export const getPendingRecruitments = () =>
         },
     );
 
-export const createApplication = (
-    data: Pick<Application, 'grade' | 'institute' | 'major' | 'rank' | 'group' | 'intro' | 'isQuick' | 'referrer'> & {
-        resume: FileList | undefined;
-        rid: string;
-    },
-) =>
+export const createApplication = (data: Parameters<typeof client.createApplication>[0]) =>
     apiWrapper(
         () => client.createApplication(data, ({ loaded, total }) => store.dispatch(setProgress(loaded / total))),
         () => {
             store.dispatch(setProgress(0));
             store.dispatch(enqueueSnackbar({ message: '已成功提交', variant: 'success' }));
+            return getMyInfo();
+        },
+        () => {
+            store.dispatch(setProgress(0));
+        },
+    );
+
+export const setApplication = (aid: string, data: Parameters<typeof client.setApplication>[1]) =>
+    apiWrapper(
+        () => client.setApplication(aid, data, ({ loaded, total }) => store.dispatch(setProgress(loaded / total))),
+        () => {
+            store.dispatch(setProgress(0));
+            store.dispatch(enqueueSnackbar({ message: '已成功更新', variant: 'success' }));
+            return getMyInfo();
         },
         () => {
             store.dispatch(setProgress(0));

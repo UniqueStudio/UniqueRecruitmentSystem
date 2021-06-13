@@ -32,6 +32,7 @@ export const Input = <T extends FieldValues = FieldValues, N extends FieldPath<T
             error={invalid}
             inputRef={ref}
             variant='standard'
+            required
             {...rest}
         />
     );

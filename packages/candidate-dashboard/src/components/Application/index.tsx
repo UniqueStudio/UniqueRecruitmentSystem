@@ -1,13 +1,12 @@
-import { Dialog, DialogTitle, Theme, useMediaQuery, styled } from '@material-ui/core';
+import { Dialog, DialogTitle, Theme, useMediaQuery, styled, DialogProps } from '@material-ui/core';
 import { Application } from '@uniqs/config';
 import React, { FC } from 'react';
 
 import header from '@assets/header.png';
 import { Form } from '@components/Application/Form';
 
-interface Props {
+interface Props extends DialogProps {
     application?: Partial<Application>;
-    open: boolean;
     onClose: () => void;
 }
 
@@ -19,14 +18,14 @@ const Header = styled('img')(({ theme: { spacing } }) => ({
     marginRight: 'auto',
 }));
 
-export const ApplicationDialog: FC<Props> = ({ application, open, onClose }) => {
+export const ApplicationDialog: FC<Props> = ({ application, ...rest }) => {
     const isMobile = useMediaQuery<Theme>((theme) => theme.breakpoints.down('sm'));
 
     return (
-        <Dialog open={open} onClose={onClose} fullScreen={isMobile} fullWidth maxWidth='lg'>
+        <Dialog fullScreen={isMobile} fullWidth maxWidth='lg' {...rest}>
             <DialogTitle>报名表单</DialogTitle>
             <Header src={header} />
-            <Form application={application} onCancel={onClose} />
+            <Form application={application} onCancel={rest.onClose} />
         </Dialog>
     );
 };

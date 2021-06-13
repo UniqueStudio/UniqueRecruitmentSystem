@@ -38,6 +38,7 @@ export const Select = <T extends FieldValues = FieldValues, N extends FieldPath<
             error={invalid}
             inputRef={ref}
             variant='standard'
+            required
             {...rest}
         >
             {selections.map(({ key, value }) => (
