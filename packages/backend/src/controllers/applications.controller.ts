@@ -141,7 +141,7 @@ export class ApplicationsController {
     async setApplication(
         @Candidate() candidate: CandidateEntity,
         @Param() { aid }: Aid,
-        @Body() { grade, institute, major, rank, group, intro, isQuick, referrer }: SetApplicationBody,
+        @Body() { grade, institute, major, rank, group, intro, referrer }: SetApplicationBody,
         @UploadedFile() file?: Express.Multer.File,
     ) {
         const application = await this.applicationsService.findOneByIdForMember(aid);
@@ -169,7 +169,7 @@ export class ApplicationsController {
             throw new ForbiddenException(Msg.A_REQUIRE_RESUME(group));
         }
 
-        Object.assign(application, { grade, group, institute, intro, isQuick, major, rank, referrer });
+        Object.assign(application, { grade, group, institute, intro, major, rank, referrer });
         await application.save();
         this.applicationsGateway.broadcastUpdate(application);
         this.recruitmentsGateway.broadcastUpdate(recruitment.id);

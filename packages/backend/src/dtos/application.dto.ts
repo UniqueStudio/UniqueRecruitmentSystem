@@ -34,16 +34,16 @@ export class SetApplicationBody {
     @IsString()
     intro!: string;
 
-    @IsBoolean()
-    @Type(() => Boolean)
-    isQuick!: boolean;
-
     @IsOptional()
     @IsString()
     referrer?: string;
 }
 
 export class CreateApplicationBody extends SetApplicationBody {
+    @IsBoolean()
+    @Type(() => Boolean)
+    isQuick!: boolean;
+
     @IsUUID(4)
     rid!: string;
 }
