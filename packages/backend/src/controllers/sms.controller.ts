@@ -38,9 +38,7 @@ export class SMSController {
         private readonly smsService: SMSService,
     ) {}
 
-    @Get('verification/other/:phone')
-    @Throttle(1, 60)
-    async sendCodeToOthers(@Param() { phone }: SendCodeToOthersParams) {
+    private async sendCode(phone: string, role?: Role.candidate | Role.member) {
         const code = randomBytes(2).toString('hex');
         try {
             // 您{1}的验证码为：{2}，请于3分钟内填写。如非本人操作，请忽略本短信。
@@ -48,35 +46,27 @@ export class SMSController {
         } catch ({ message }) {
             throw new InternalServerErrorException(message);
         }
-        await this.cacheManager.set(cacheKey(phone), code, { ttl: 180 });
+        await this.cacheManager.set(cacheKey(phone, role), code, { ttl: 180 });
+    }
+
+    @Get('verification/other/:phone')
+    @Throttle(1, 60)
+    sendCodeToOthers(@Param() { phone }: SendCodeToOthersParams) {
+        return this.sendCode(phone);
     }
 
     @Get('verification/candidate')
     @Throttle(1, 60)
     @AcceptRole(Role.candidate)
     async sendCodeToCandidate(@Candidate() { phone }: CandidateEntity) {
-        const code = randomBytes(2).toString('hex');
-        try {
-            // 您{1}的验证码为：{2}，请于3分钟内填写。如非本人操作，请忽略本短信。
-            await this.smsService.sendSMS(phone, '719160', ['dashboard中', code]);
-        } catch ({ message }) {
-            throw new InternalServerErrorException(message);
-        }
-        await this.cacheManager.set(cacheKey(phone, Role.candidate), code, { ttl: 180 });
+        return this.sendCode(phone, Role.candidate);
     }
 
     @Get('verification/member')
     @Throttle(1, 60)
     @AcceptRole(Role.member)
     async sendCodeToMember(@Member() { phone }: MemberEntity) {
-        const code = randomBytes(2).toString('hex');
-        try {
-            // 您{1}的验证码为：{2}，请于3分钟内填写。如非本人操作，请忽略本短信。
-            await this.smsService.sendSMS(phone, '719160', ['dashboard中', code]);
-        } catch ({ message }) {
-            throw new InternalServerErrorException(message);
-        }
-        await this.cacheManager.set(cacheKey(phone, Role.member), code, { ttl: 180 });
+        return this.sendCode(phone, Role.member);
     }
 
     @Post()
