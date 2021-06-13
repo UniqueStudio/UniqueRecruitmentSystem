@@ -90,7 +90,7 @@ export class ApplicationsController {
         if (file) {
             const { originalname, path } = file;
             resume = `${candidate.name} - ${originalname}`;
-            await copyFile(path, join(this.configService.resumePaths.persistent, recruitment.name, group), resume);
+            await copyFile(path, join(this.configService.resumePaths.persistent, recruitment.name, group, resume));
         }
         const application = await this.applicationsService.createAndSave({
             grade,
@@ -146,22 +146,29 @@ export class ApplicationsController {
     ) {
         const application = await this.applicationsService.findOneByIdForMember(aid);
         const { resume, recruitment } = application;
+
         ApplicationsController.checkCandidate(application, candidate, 'modify');
         ApplicationsController.checkApplicationStatus(application);
         ApplicationsController.checkRecruitment(recruitment, true);
-        if (group === Group.design && !file) {
-            throw new ForbiddenException(Msg.A_REQUIRE_RESUME(group));
-        }
+
+        const persistentPath = this.configService.resumePaths.persistent;
         if (file) {
-            const persistentPath = this.configService.resumePaths.persistent;
             if (resume) {
-                await deleteFile(join(persistentPath, recruitment.name, application.group), resume);
+                await deleteFile(join(persistentPath, recruitment.name, application.group, resume));
             }
             const { originalname, path } = file;
             const newResume = `${candidate.name} - ${originalname}`;
-            await copyFile(path, join(persistentPath, recruitment.name, group), newResume);
+            await copyFile(path, join(persistentPath, recruitment.name, group, newResume));
             application.resume = newResume;
+        } else if (group !== application.group && resume) {
+            const oldPath = join(persistentPath, recruitment.name, application.group, resume);
+            await copyFile(oldPath, join(persistentPath, recruitment.name, group, resume));
+            await deleteFile(oldPath);
         }
+        if (group === Group.design && !application.resume) {
+            throw new ForbiddenException(Msg.A_REQUIRE_RESUME(group));
+        }
+
         Object.assign(application, { grade, group, institute, intro, isQuick, major, rank, referrer });
         await application.save();
         this.applicationsGateway.broadcastUpdate(application);
@@ -281,7 +288,7 @@ export class ApplicationsController {
         ApplicationsController.checkRecruitment(recruitment);
         ApplicationsController.checkGroup(application, member);
         if (resume) {
-            await deleteFile(join(this.configService.resumePaths.persistent, recruitment.name, group), resume);
+            await deleteFile(join(this.configService.resumePaths.persistent, recruitment.name, group, resume));
         }
         await application.remove();
         this.applicationsGateway.broadcastRemove(aid);

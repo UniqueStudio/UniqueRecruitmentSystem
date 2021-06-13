@@ -1,3 +1,5 @@
+import { join } from 'path';
+
 import { Injectable } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
 
@@ -12,7 +14,7 @@ export class TasksService {
     async cleanTemps() {
         const directory = this.configService.resumePaths.temporary;
         for (const file of await listDir(directory)) {
-            await deleteFile(directory, file);
+            await deleteFile(join(directory, file));
         }
     }
 }

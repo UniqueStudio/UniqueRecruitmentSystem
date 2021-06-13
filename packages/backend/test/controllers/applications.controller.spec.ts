@@ -87,6 +87,23 @@ describe('ApplicationsController e2e', () => {
     });
 
     describe('POST /applications', () => {
+        describe('create new application to design without resume', () => {
+            it('should return success', async () => {
+                await agent(app.getHttpServer())
+                    .post('/applications')
+                    .field('group', Group.design)
+                    .field('rid', recruitment.id)
+                    .field('grade', Grade.freshman)
+                    .field('institute', 'test')
+                    .field('major', 'test')
+                    .field('rank', Rank.A)
+                    .field('intro', 'no')
+                    .field('isQuick', true)
+                    .field('referrer', 'hanyuu')
+                    .auth(aliceJWT, { type: 'bearer' })
+                    .expect(403);
+            });
+        });
         describe('create application without credential', () => {
             it('should throw', async () => {
                 await agent(app.getHttpServer())
@@ -272,22 +289,6 @@ describe('ApplicationsController e2e', () => {
                     .field('isQuick', false)
                     .field('referrer', 'rika')
                     .attach('resume', '/etc/profile')
-                    .expect(403);
-            });
-        });
-        describe('apply to design without resume', () => {
-            it('should throw', async () => {
-                await agent(app.getHttpServer())
-                    .put(`/applications/${aliceApplication.id}`)
-                    .auth(aliceJWT, { type: 'bearer' })
-                    .field('group', Group.design)
-                    .field('grade', Grade.graduate)
-                    .field('institute', 'eee')
-                    .field('major', 'ddd')
-                    .field('rank', Rank.D)
-                    .field('intro', 'ddd')
-                    .field('isQuick', false)
-                    .field('referrer', 'rika')
                     .expect(403);
             });
         });
