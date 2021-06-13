@@ -103,6 +103,30 @@ export class RestClient {
         > & {
             resume: FileList | undefined;
             rid: string;
+        } & Code,
+        onUploadProgress: (event: ProgressEvent) => void,
+    ) {
+        const form = new FormData();
+        Object.entries(data).forEach(([key, value]) => {
+            if (value instanceof FileList) {
+                form.append(key, value[0]);
+            } else if (value !== undefined) {
+                form.append(key, value.toString());
+            }
+        });
+        return this.instance.post<R<Application>>(Endpoint.applications, form, {
+            headers: { 'Content-Type': 'multipart/form-data' },
+            onUploadProgress,
+        });
+    }
+
+    setApplication(
+        aid: string,
+        data: Pick<
+            Application,
+            'grade' | 'institute' | 'major' | 'rank' | 'group' | 'intro' | 'referrer'
+        > & {
+            resume: FileList | undefined;
         },
         onUploadProgress: (event: ProgressEvent) => void,
     ) {
@@ -114,7 +138,7 @@ export class RestClient {
                 form.append(key, value.toString());
             }
         });
-        return this.instance.post<R>(Endpoint.applications, form, {
+        return this.instance.put<R>(Endpoint.application(aid), form, {
             headers: { 'Content-Type': 'multipart/form-data' },
             onUploadProgress,
         });
