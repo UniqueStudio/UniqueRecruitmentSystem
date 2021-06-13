@@ -40,6 +40,7 @@ jobs:
       - run: yarn workspace @uniqs/config build
       - run: yarn workspace @uniqs/ui build
       - run: yarn workspace @uniqs/utils build
+      - run: yarn workspace @uniqs/apis build
 
       - run: yarn workspace @uniqs/candidate-dashboard compile
 
