@@ -1,5 +1,10 @@
 import { IsPhoneNumber, IsString } from 'class-validator';
 
+export class AuthMemberByQRCodeParams {
+    @IsString()
+    key!: string;
+}
+
 export class AuthByPasswordBody {
     @IsPhoneNumber('CN')
     phone!: string;

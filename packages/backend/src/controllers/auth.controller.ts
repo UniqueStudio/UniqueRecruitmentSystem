@@ -16,7 +16,7 @@ import got from 'got';
 import { ZHANG_XIAO_LONG } from '@constants/consts';
 import { Role } from '@constants/enums';
 import { Msg } from '@constants/messages';
-import { AuthByPasswordBody } from '@dtos/auth.dto';
+import { AuthByPasswordBody, AuthMemberByQRCodeParams } from '@dtos/auth.dto';
 import { AuthService } from '@services/auth.service';
 import { ConfigService } from '@services/config.service';
 import { MembersService } from '@services/members.service';
@@ -41,7 +41,7 @@ export class AuthController {
     }
 
     @Get('member/qrCode/:key')
-    async authMemberByQRCode(@Param('key') key: string) {
+    async authMemberByQRCode(@Param() { key }: AuthMemberByQRCodeParams) {
         type Response = Record<string, string>;
         while (!ZHANG_XIAO_LONG.has('mother')) {
             const scanResponse = await got(this.configService.scanningURL(key)).text();

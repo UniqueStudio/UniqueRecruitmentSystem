@@ -15,7 +15,13 @@ import { GroupOrTeam, Role } from '@constants/enums';
 import { Msg } from '@constants/messages';
 import { Member } from '@decorators/member.decorator';
 import { AcceptRole } from '@decorators/role.decorator';
-import { CreateRecruitmentBody, SetRecruitmentInterviewsBody, SetRecruitmentScheduleBody } from '@dtos/recruitment.dto';
+import {
+    CreateRecruitmentBody,
+    Rid,
+    SetRecruitmentInterviewsBody,
+    SetRecruitmentInterviewsParams,
+    SetRecruitmentScheduleBody,
+} from '@dtos/recruitment.dto';
 import { InterviewEntity } from '@entities/interview.entity';
 import { MemberEntity } from '@entities/member.entity';
 import { RecruitmentsGateway } from '@gateways/recruitments.gateway';
@@ -40,7 +46,7 @@ export class RecruitmentsController {
 
     @Get(':rid')
     @AcceptRole(Role.member)
-    getOneRecruitment(@Param('rid') rid: string) {
+    getOneRecruitment(@Param() { rid }: Rid) {
         return this.recruitmentsService.findOneWithStatistics(rid);
     }
 
@@ -66,7 +72,7 @@ export class RecruitmentsController {
     @Put(':rid/schedule')
     @AcceptRole(Role.admin)
     async setRecruitmentSchedule(
-        @Param('rid') rid: string,
+        @Param() { rid }: Rid,
         @Body() { beginning, end, deadline }: SetRecruitmentScheduleBody,
     ) {
         const recruitment = await this.recruitmentsService.findOneById(rid);
@@ -89,8 +95,7 @@ export class RecruitmentsController {
     @AcceptRole(Role.admin)
     async setRecruitmentInterviews(
         @Member() member: MemberEntity,
-        @Param('rid') rid: string,
-        @Param('name') name: GroupOrTeam,
+        @Param() { rid, name }: SetRecruitmentInterviewsParams,
         @Body() { interviews }: SetRecruitmentInterviewsBody,
     ) {
         const recruitment = await this.recruitmentsService.findOneById(rid);

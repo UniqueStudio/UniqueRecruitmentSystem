@@ -12,8 +12,13 @@ import {
     ValidateNested,
 } from 'class-validator';
 
-import { Period } from '@constants/enums';
+import { GroupOrTeam, Period } from '@constants/enums';
 import { GreaterThan, LessThan } from '@decorators/comparator.decorator';
+
+export class Rid {
+    @IsUUID(4)
+    rid!: string;
+}
 
 export class SetRecruitmentScheduleBody {
     @IsDateString()
@@ -42,6 +47,11 @@ class InterviewsElement {
     @IsInt()
     @IsPositive()
     slotNumber!: number;
+}
+
+export class SetRecruitmentInterviewsParams extends Rid {
+    @IsEnum(GroupOrTeam)
+    name!: GroupOrTeam;
 }
 
 export class SetRecruitmentInterviewsBody {

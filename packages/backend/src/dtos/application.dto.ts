@@ -3,6 +3,16 @@ import { IsBoolean, IsDateString, IsEnum, IsOptional, IsString, IsUUID } from 'c
 
 import { Grade, Group, InterviewType, Rank, Step } from '@constants/enums';
 
+export class Rid {
+    @IsUUID(4)
+    rid!: string;
+}
+
+export class Aid {
+    @IsUUID(4)
+    aid!: string;
+}
+
 export class SetApplicationBody {
     @IsEnum(Group)
     group!: Group;

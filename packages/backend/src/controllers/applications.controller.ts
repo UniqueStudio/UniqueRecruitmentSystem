@@ -30,12 +30,15 @@ import { Candidate } from '@decorators/candidate.decorator';
 import { Member } from '@decorators/member.decorator';
 import { AcceptRole } from '@decorators/role.decorator';
 import {
+    Aid,
     AllocateManyBody,
     AllocateManyParams,
     AllocateOneBody,
     CreateApplicationBody,
     InterviewParams,
-    MoveApplicationBody, SelectInterviewSlotsBody,
+    MoveApplicationBody,
+    Rid,
+    SelectInterviewSlotsBody,
     SetApplicationBody,
 } from '@dtos/application.dto';
 import { ApplicationEntity } from '@entities/application.entity';
@@ -66,8 +69,7 @@ export class ApplicationsController {
         private readonly smsService: SMSService,
         private readonly emailService: EmailService,
         private readonly configService: ConfigService,
-    ) {
-    }
+    ) {}
 
     @Post()
     @AcceptRole(Role.candidate)
@@ -117,7 +119,7 @@ export class ApplicationsController {
     @Get(':aid')
     @AcceptRole(Role.candidate | Role.member)
     async getApplication(
-        @Param('aid') aid: string,
+        @Param() { aid }: Aid,
         @Member() member?: MemberEntity,
         @Candidate() candidate?: CandidateEntity,
     ) {
@@ -138,7 +140,7 @@ export class ApplicationsController {
     @UsePipes(new ValidationPipe({ transform: true })) // FormData's value is always string and needs transformation
     async setApplication(
         @Candidate() candidate: CandidateEntity,
-        @Param('aid') aid: string,
+        @Param() { aid }: Aid,
         @Body() { grade, institute, major, rank, group, intro, isQuick, referrer }: SetApplicationBody,
         @UploadedFile() file?: Express.Multer.File,
     ) {
@@ -168,7 +170,7 @@ export class ApplicationsController {
 
     @Put(':aid/abandoned')
     @AcceptRole(Role.candidate)
-    async abandonApplication(@Candidate() candidate: CandidateEntity, @Param('aid') aid: string) {
+    async abandonApplication(@Candidate() candidate: CandidateEntity, @Param() { aid }: Aid) {
         const application = await this.applicationsService.findOneByIdForMember(aid);
         ApplicationsController.checkCandidate(application, candidate, 'abandon');
         ApplicationsController.checkApplicationStatus(application);
@@ -180,10 +182,7 @@ export class ApplicationsController {
 
     @Get(':aid/slots/:type')
     @AcceptRole(Role.candidate)
-    async getInterviewSlots(
-        @Candidate() candidate: CandidateEntity,
-        @Param() { aid, type }: InterviewParams,
-    ) {
+    async getInterviewSlots(@Candidate() candidate: CandidateEntity, @Param() { aid, type }: InterviewParams) {
         const application = await this.applicationsService.findOneByIdForInterview(aid);
         ApplicationsController.checkCandidate(application, candidate, 'get interview time of');
         ApplicationsController.checkStep(application, type, 'allocate time for');
@@ -218,7 +217,7 @@ export class ApplicationsController {
     @Get(':aid/resume')
     @AcceptRole(Role.member | Role.candidate)
     async getResume(
-        @Param('aid') aid: string,
+        @Param() { aid }: Aid,
         @Res() res: Response,
         @Member() member?: MemberEntity,
         @Candidate() candidate?: CandidateEntity,
@@ -241,7 +240,7 @@ export class ApplicationsController {
     @AcceptRole(Role.member)
     async getApplications(
         @Member() member: MemberEntity,
-        @Param('rid') rid: string,
+        @Param() { rid }: Rid,
         @Query('updatedAt', UpdatedAtPipe) updatedAt: Date,
     ) {
         const recruitment = await this.recruitmentsService.findOneById(rid);
@@ -258,7 +257,7 @@ export class ApplicationsController {
     @AcceptRole(Role.member)
     async moveApplication(
         @Member() member: MemberEntity,
-        @Param('aid') aid: string,
+        @Param() { aid }: Aid,
         @Body() { from, to }: MoveApplicationBody,
     ) {
         const application = await this.applicationsService.findOneByIdForMember(aid);
@@ -276,7 +275,7 @@ export class ApplicationsController {
 
     @Delete(':aid')
     @AcceptRole(Role.admin)
-    async removeApplication(@Member() member: MemberEntity, @Param('aid') aid: string) {
+    async removeApplication(@Member() member: MemberEntity, @Param() { aid }: Aid) {
         const application = await this.applicationsService.findOneByIdForMember(aid);
         const { resume, recruitment, group } = application;
         ApplicationsController.checkRecruitment(recruitment);
