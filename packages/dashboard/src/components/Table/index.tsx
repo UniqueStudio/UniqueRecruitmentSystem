@@ -20,8 +20,12 @@ export const Table: FC = observer(() => {
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
-    const applications =
-        $application.groupBySteps[$application.stepType === StepType.teamInterview ? Step.群面时间选择 : Step.组面时间选择];
+    const applications = $application.groupBySteps[
+        $application.stepType === StepType.teamInterview ? Step.群面时间选择 : Step.组面时间选择
+    ].map(({ candidate: { name }, ...rest }) => ({
+        ...rest,
+        name,
+    }));
 
     const type = $application.stepType === StepType.teamInterview ? InterviewType.team : InterviewType.group;
     const columns: GridColDef[] = [
@@ -83,17 +87,14 @@ export const Table: FC = observer(() => {
                 const { interviewAllocations } = params.row as Application;
                 const allocation = interviewAllocations[type];
                 if (!allocation) {
-                    return;
+                    return '未分配';
                 }
                 return new Date(allocation).toLocaleString('zh-CN', { timeStyle: 'short', dateStyle: 'short' });
             },
             sortComparator(a, b) {
                 const l = (a as Application['interviewAllocations'])[type];
                 const r = (b as Application['interviewAllocations'])[type];
-                return compareAllocation(
-                    l ? new Date(l) : undefined,
-                    r ? new Date(r) : undefined,
-                );
+                return compareAllocation(l ? new Date(l) : undefined, r ? new Date(r) : undefined);
             },
         },
         {
