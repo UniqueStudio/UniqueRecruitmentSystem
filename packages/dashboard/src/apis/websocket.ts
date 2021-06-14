@@ -56,7 +56,7 @@ socket.on('removeComment', (res: R<{ aid: string; id: string }>) => {
     }
 });
 
-socket.on('newCandidate', (res: R<Application & { recruitment: Recruitment }>) => {
+socket.on('newApplication', (res: R<Application & { recruitment: Recruitment }>) => {
     switch (res.status) {
         case Status.info: {
             const application = res.payload;
@@ -69,7 +69,7 @@ socket.on('newCandidate', (res: R<Application & { recruitment: Recruitment }>) =
     }
 });
 
-socket.on('updateCandidate', (res: R<Application & { recruitment: Recruitment }>) => {
+socket.on('updateApplication', (res: R<Application & { recruitment: Recruitment }>) => {
     switch (res.status) {
         case Status.info: {
             const application = res.payload;
@@ -82,7 +82,7 @@ socket.on('updateCandidate', (res: R<Application & { recruitment: Recruitment }>
     }
 });
 
-socket.on('removeCandidate', (res: R<string>) => {
+socket.on('removeApplication', (res: R<string>) => {
     switch (res.status) {
         case Status.info: {
             const application = $application.applications.get(res.payload);
@@ -95,7 +95,7 @@ socket.on('removeCandidate', (res: R<string>) => {
     }
 });
 
-socket.on('moveCandidate', (res: R<{ aid: string; to: Step }>) => {
+socket.on('moveApplication', (res: R<{ aid: string; to: Step }>) => {
     switch (res.status) {
         case Status.info: {
             const { aid, to } = res.payload;
