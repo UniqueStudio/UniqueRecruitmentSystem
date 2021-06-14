@@ -14,6 +14,8 @@ import {
 } from '@uniqs/config';
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
 
+type Optional<T, K extends keyof T> = Pick<Partial<T>, K> & Omit<T, K>;
+
 class Endpoint {
     static auth = '/auth';
     static qrCode = (key = '') => `${Endpoint.auth}/member/qrCode/${key}`;
@@ -22,8 +24,10 @@ class Endpoint {
 
     static applications = '/applications';
     static application = (aid: string) => `${Endpoint.applications}/${aid}`;
-    static applicationStep = (aid: string) => `${Endpoint.applications}/${aid}/step`;
+    static step = (aid: string) => `${Endpoint.applications}/${aid}/step`;
+    static abandoned = (aid: string) => `${Endpoint.applications}/${aid}/abandoned`;
     static resume = (aid: string) => `${Endpoint.applications}/${aid}/resume`;
+    static slots = (aid: string, type: InterviewType) => `${Endpoint.applications}/${aid}/slots/${type}`;
     static applicationsInRecruitment = (rid: string) => `${Endpoint.applications}/recruitment/${rid}`;
     static applicationAllocation = (type: InterviewType, aid?: string) =>
         `${Endpoint.applications}/${aid ? `${aid}/` : ''}interview/${type}`;
@@ -142,6 +146,18 @@ export class RestClient {
         });
     }
 
+    abandonApplication(aid: string) {
+        return this.instance.put<R>(Endpoint.abandoned(aid));
+    }
+
+    getInterviewSlots(aid: string, type: InterviewType) {
+        return this.instance.get<R<Interview[]>>(Endpoint.slots(aid, type));
+    }
+
+    selectInterviewSlots(aid: string, type: InterviewType, iids: string[]) {
+        return this.instance.put<R>(Endpoint.slots(aid, type), { iids });
+    }
+
     allocateMany(type: InterviewType, aids: string[]) {
         return this.instance.put<R<{ aid: string; time?: string }[]>>(Endpoint.applicationAllocation(type), { aids });
     }
@@ -159,7 +175,7 @@ export class RestClient {
     }
 
     moveApplication(id: string, from: Step, to: Step) {
-        return this.instance.put<R>(Endpoint.applicationStep(id), { from, to });
+        return this.instance.put<R>(Endpoint.step(id), { from, to });
     }
 
     removeApplication(id: string) {
@@ -273,5 +289,9 @@ export class RestClient {
 
     getCandidateInfo() {
         return this.instance.get<R<Candidate>>(Endpoint.candidateInfo);
+    }
+
+    setCandidateInfo(data: Optional<Pick<Candidate, 'mail' | 'phone' | 'password'>, 'password'>) {
+        return this.instance.put<R>(Endpoint.candidateInfo, data);
     }
 }
