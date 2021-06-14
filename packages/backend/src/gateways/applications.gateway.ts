@@ -1,14 +1,8 @@
-import { WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
-import { Server } from 'socket.io';
-
 import { Status, Step } from '@constants/enums';
 import { ApplicationEntity } from '@entities/application.entity';
+import { BaseGateway } from '@gateways/base.gateway';
 
-@WebSocketGateway({ cors: true })
-export class ApplicationsGateway {
-    @WebSocketServer()
-    server!: Server;
-
+export class ApplicationsGateway extends BaseGateway {
     broadcastNew(application: ApplicationEntity) {
         this.server.sockets.emit('newApplication', {
             status: Status.info,

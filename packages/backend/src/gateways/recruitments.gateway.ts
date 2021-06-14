@@ -1,15 +1,7 @@
-import { Injectable } from '@nestjs/common';
-import { WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
-import { Server } from 'socket.io';
-
 import { Status } from '@constants/enums';
+import { BaseGateway } from '@gateways/base.gateway';
 
-@Injectable()
-@WebSocketGateway({ cors: true })
-export class RecruitmentsGateway {
-    @WebSocketServer()
-    server!: Server;
-
+export class RecruitmentsGateway extends BaseGateway {
     broadcastUpdate(rid: string) {
         this.server.sockets.emit('updateRecruitment', {
             status: Status.info,

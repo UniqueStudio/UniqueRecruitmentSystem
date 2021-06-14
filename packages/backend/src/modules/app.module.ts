@@ -11,7 +11,7 @@ import { Env } from '@constants/enums';
 import { HttpErrorFilter } from '@filters/httpError.filter';
 import { HttpRoleGuard } from '@guards/role.guard';
 import { TransformInterceptor } from '@interceptors/transform.interceptor';
-import { AuthMiddleWare } from '@middlewares/auth';
+import { HttpAuthMiddleware } from '@middlewares/auth';
 import { helmet } from '@middlewares/helmet';
 import { ApplicationsModule } from '@modules/applications.module';
 import { AuthModule } from '@modules/auth.module';
@@ -112,7 +112,7 @@ export class AppModule implements NestModule, OnModuleInit {
                 helmet({
                     contentSecurityPolicy: this.configService.isNotProd ? false : undefined,
                 }),
-                AuthMiddleWare,
+                HttpAuthMiddleware,
             )
             .forRoutes('*');
     }

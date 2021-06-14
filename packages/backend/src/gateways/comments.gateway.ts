@@ -1,22 +1,23 @@
-import { UseGuards } from '@nestjs/common';
-import { ConnectedSocket, MessageBody, SubscribeMessage, WebSocketGateway, WsException } from '@nestjs/websockets';
+import { ConnectedSocket, MessageBody, SubscribeMessage, WsException } from '@nestjs/websockets';
 import { Socket } from 'socket.io';
 
 import { Role, Status } from '@constants/enums';
 import { AcceptRole } from '@decorators/role.decorator';
 import { AddCommentBody, RemoveCommentBody } from '@dtos/comment.dto';
-import { WsRoleGuard } from '@guards/role.guard';
+import { BaseGateway } from '@gateways/base.gateway';
 import { WsBody } from '@interfaces/ws.interface';
 import { ApplicationsService } from '@services/applications.service';
+import { AuthService } from '@services/auth.service';
 import { CommentsService } from '@services/comments.service';
 
-@UseGuards(WsRoleGuard)
-@WebSocketGateway({ cors: true })
-export class CommentsGateway {
+export class CommentsGateway extends BaseGateway {
     constructor(
+        authService: AuthService,
         private readonly applicationsService: ApplicationsService,
         private readonly commentsService: CommentsService,
-    ) {}
+    ) {
+        super(authService);
+    }
 
     @AcceptRole(Role.member)
     @SubscribeMessage('addComment')
