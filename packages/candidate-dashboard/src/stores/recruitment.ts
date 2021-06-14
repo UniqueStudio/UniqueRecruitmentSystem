@@ -1,12 +1,14 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { Recruitment } from '@uniqs/config';
+import { Interview, Recruitment } from '@uniqs/config';
 
 interface RecruitmentState {
     recruitments: Recruitment[];
+    interviews: Interview[];
 }
 
 const initialState: RecruitmentState = {
     recruitments: [],
+    interviews: [],
 };
 
 const recruitmentSlice = createSlice({
@@ -16,8 +18,11 @@ const recruitmentSlice = createSlice({
         setRecruitments: (state, { payload }: PayloadAction<Recruitment[]>) => {
             state.recruitments = payload;
         },
+        setInterviews: (state, { payload }: PayloadAction<Interview[]>) => {
+            state.interviews = payload;
+        },
     },
 });
 
 export default recruitmentSlice.reducer;
-export const { setRecruitments } = recruitmentSlice.actions;
+export const { setRecruitments, setInterviews } = recruitmentSlice.actions;

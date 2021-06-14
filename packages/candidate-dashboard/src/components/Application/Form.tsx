@@ -7,7 +7,7 @@ import { convertRecruitmentName, validateCode } from '@uniqs/utils';
 import React, { FC, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 
-import { createApplication, getCodeForCandidate, setApplication } from '@apis/rest';
+import { abandonApplication, createApplication, getCodeForCandidate, setApplication } from '@apis/rest';
 import { SplitButton } from '@components/SplitButton';
 import { AutoComplete, Input, Select, Upload } from '@components/Textfields';
 import { useCountdown } from '@hooks/useCountdown';
@@ -16,7 +16,7 @@ import { useAppSelector } from '@stores/index';
 type Inputs = Parameters<typeof createApplication>[0];
 
 interface Props {
-    application?: Partial<Application>;
+    application: Partial<Application>;
     onCancel: () => void;
 }
 
@@ -43,7 +43,7 @@ export const Form: FC<Props> = ({
         rank,
         resume,
         id,
-    } = {},
+    },
     onCancel,
 }) => {
     const [timeLeft, setTimeLeft] = useCountdown();
@@ -89,7 +89,8 @@ export const Form: FC<Props> = ({
 
     const recruitments = recruitment ? [recruitment] : [];
     const now = new Date();
-    const isAvailable = recruitment && new Date(recruitment.deadline) > now && new Date(recruitment.beginning) < now;
+    const canApply = recruitment && new Date(recruitment.deadline) > now && new Date(recruitment.beginning) < now;
+    const ended = recruitment && new Date(recruitment.end) < now;
 
     const size: 'medium' | 'small' = id ? 'medium' : 'small';
     const props = { control, size, variant: 'outlined' as const };
@@ -172,14 +173,29 @@ export const Form: FC<Props> = ({
             </Content>
             <DialogActions>
                 {id ? (
-                    <LoadingButton
-                        type='submit'
-                        disabled={!isValid || !isAvailable}
-                        loading={isSubmitting}
-                        loadingIndicator={`${(progress * 100).toFixed(2)}%`}
+                    <SplitButton
+                        options={[t`更新`, t`放弃`]}
+                        onSelect={(index) => {
+                            setSelected(index);
+                        }}
                     >
-                        <Trans>更新</Trans>
-                    </LoadingButton>
+                        {
+                            [
+                                <LoadingButton
+                                    key='0'
+                                    type='submit'
+                                    disabled={!isValid || !canApply}
+                                    loading={isSubmitting}
+                                    loadingIndicator={`${(progress * 100).toFixed(2)}%`}
+                                >
+                                    <Trans>更新</Trans>
+                                </LoadingButton>,
+                                <Button disabled={ended} onClick={() => abandonApplication(id)} key='1'>
+                                    <Trans>放弃</Trans>
+                                </Button>,
+                            ][selected]
+                        }
+                    </SplitButton>
                 ) : (
                     <>
                         {!!selected && (
@@ -215,7 +231,7 @@ export const Form: FC<Props> = ({
                         >
                             <LoadingButton
                                 type='submit'
-                                disabled={!isValid || !isAvailable}
+                                disabled={!isValid || !canApply}
                                 loading={isSubmitting}
                                 loadingIndicator={`${(progress * 100).toFixed(2)}%`}
                             >
