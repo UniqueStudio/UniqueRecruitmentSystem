@@ -1,10 +1,10 @@
 import { RestClient } from '@uniqs/apis';
-import { API, Candidate, Code } from '@uniqs/config';
+import { API, InterviewType, Status } from '@uniqs/config';
 
 import { setInfo, setToken } from '@stores/candidate';
 import { enqueueSnackbar, setProgress } from '@stores/component';
 import store from '@stores/index';
-import { setRecruitments } from '@stores/recruitment';
+import { setInterviews, setRecruitments } from '@stores/recruitment';
 
 const client = new RestClient((import.meta.env.VITE_PUBLIC_API ?? API) as string);
 
@@ -15,7 +15,7 @@ client.addRequestInterceptor((config) => {
 
 const apiWrapper = client.apiWrapper(
     () => undefined,
-    (message, status) => store.dispatch(enqueueSnackbar({ message, variant: status })),
+    (message, status) => store.dispatch(enqueueSnackbar([message, status])),
 );
 
 export const loginByPassword = (phone: string, password: string) =>
@@ -25,7 +25,7 @@ export const loginByPassword = (phone: string, password: string) =>
             const { primitiveStorage } = await import('@utils/storage');
             primitiveStorage.set('token', token);
             store.dispatch(setToken(token));
-            store.dispatch(enqueueSnackbar({ message: '已成功登录', variant: 'success' }));
+            store.dispatch(enqueueSnackbar(['已成功登录', Status.success]));
         },
     );
 
@@ -33,7 +33,7 @@ export const getCodeForOther = (phone: string) =>
     apiWrapper(
         () => client.getCodeForOther(phone),
         () => {
-            store.dispatch(enqueueSnackbar({ message: '已成功发送验证码', variant: 'success' }));
+            store.dispatch(enqueueSnackbar(['已成功发送验证码', Status.success]));
         },
     );
 
@@ -41,15 +41,15 @@ export const getCodeForCandidate = () =>
     apiWrapper(
         () => client.getCodeForCandidate(),
         () => {
-            store.dispatch(enqueueSnackbar({ message: '已成功发送验证码', variant: 'success' }));
+            store.dispatch(enqueueSnackbar(['已成功发送验证码', Status.success]));
         },
     );
 
-export const createCandidate = (data: Pick<Candidate, 'name' | 'gender' | 'mail' | 'phone' | 'password'> & Code) =>
+export const createCandidate = (data: Parameters<typeof client.createCandidate>[0]) =>
     apiWrapper(
         () => client.createCandidate(data),
         () => {
-            store.dispatch(enqueueSnackbar({ message: '已成功注册', variant: 'success' }));
+            store.dispatch(enqueueSnackbar(['已成功注册', Status.success]));
         },
     );
 
@@ -58,6 +58,15 @@ export const getMyInfo = () =>
         () => client.getCandidateInfo(),
         (candidate) => {
             store.dispatch(setInfo(candidate));
+        },
+    );
+
+export const setMyInfo = (data: Parameters<typeof client.setCandidateInfo>[0]) =>
+    apiWrapper(
+        () => client.setCandidateInfo(data),
+        () => {
+            store.dispatch(enqueueSnackbar(['已成功更新', Status.success]));
+            return getMyInfo();
         },
     );
 
@@ -74,7 +83,7 @@ export const createApplication = (data: Parameters<typeof client.createApplicati
         () => client.createApplication(data, ({ loaded, total }) => store.dispatch(setProgress(loaded / total))),
         () => {
             store.dispatch(setProgress(0));
-            store.dispatch(enqueueSnackbar({ message: '已成功提交', variant: 'success' }));
+            store.dispatch(enqueueSnackbar(['已成功提交', Status.success]));
             return getMyInfo();
         },
         () => {
@@ -87,10 +96,28 @@ export const setApplication = (aid: string, data: Parameters<typeof client.setAp
         () => client.setApplication(aid, data, ({ loaded, total }) => store.dispatch(setProgress(loaded / total))),
         () => {
             store.dispatch(setProgress(0));
-            store.dispatch(enqueueSnackbar({ message: '已成功更新', variant: 'success' }));
+            store.dispatch(enqueueSnackbar(['已成功更新', Status.success]));
             return getMyInfo();
         },
         () => {
             store.dispatch(setProgress(0));
+        },
+    );
+
+export const abandonApplication = (aid: string) =>
+    apiWrapper(
+        () => client.abandonApplication(aid),
+        () => {
+            store.dispatch(enqueueSnackbar(['已成功放弃', Status.success]));
+            return getMyInfo();
+        },
+    );
+
+export const getSlots = (aid: string, type: InterviewType) =>
+    apiWrapper(
+        () => client.getInterviewSlots(aid, type),
+        (interviews) => {
+            store.dispatch(setInterviews(interviews));
+            return getMyInfo();
         },
     );

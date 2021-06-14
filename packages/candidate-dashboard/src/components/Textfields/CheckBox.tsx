@@ -22,7 +22,7 @@ export const CheckBox = <T extends FieldValues = FieldValues, N extends FieldPat
 
     return (
         <FormControlLabel
-            control={<Checkbox onBlur={onBlur} onChange={onChange} checked={value as boolean} inputRef={ref} />}
+            control={<Checkbox onBlur={onBlur} onChange={onChange} checked={value ?? false} inputRef={ref} />}
             {...rest}
         />
     );

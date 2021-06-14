@@ -1,9 +1,9 @@
-import { Color } from '@material-ui/lab';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { Status } from '@uniqs/config';
 
 interface Snackbar {
     message: string;
-    variant: Color;
+    variant: Status;
 }
 
 interface ComponentState {
@@ -20,8 +20,8 @@ const { reducer, actions } = createSlice({
     name: 'component',
     initialState,
     reducers: {
-        enqueueSnackbar(state, { payload }: PayloadAction<Snackbar>) {
-            state.snackbars[performance.now()] = payload;
+        enqueueSnackbar(state, { payload: [message, variant] }: PayloadAction<[string, Status]>) {
+            state.snackbars[performance.now()] = { message, variant };
         },
         removeSnackbar(state, { payload }: PayloadAction<string>) {
             delete state.snackbars[payload];

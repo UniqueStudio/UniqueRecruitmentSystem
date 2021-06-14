@@ -26,7 +26,7 @@ export const Login: FC = () => {
         },
     });
 
-    const onSubmit: SubmitHandler<Inputs> = async ({ phone, password }) => {
+    const submit: SubmitHandler<Inputs> = async ({ phone, password }) => {
         if (isSubmitting) {
             return;
         }
@@ -34,7 +34,7 @@ export const Login: FC = () => {
     };
 
     return (
-        <Stack spacing={2} component='form' alignItems='center' maxWidth='75%' onSubmit={handleSubmit(onSubmit)}>
+        <Stack spacing={2} component='form' alignItems='center' maxWidth='75%' onSubmit={handleSubmit(submit)}>
             <Input
                 name='phone'
                 control={control}

@@ -17,7 +17,6 @@ interface Inputs {
     mail: string;
     code: string;
     password: string;
-    confirmPassword: string;
 }
 
 export const Register = () => {
@@ -35,7 +34,6 @@ export const Register = () => {
             mail: '',
             code: '',
             password: '',
-            confirmPassword: '',
         },
     });
 
