@@ -89,8 +89,9 @@ export const Overview: FC = () => {
             />
             <InterviewDialog
                 open={open === 'interview'}
-                application={application}
+                application={application as Application | undefined}
                 onClose={() => setOpen(undefined)}
+                maxWidth='sm'
             />
         </Stack>
     );

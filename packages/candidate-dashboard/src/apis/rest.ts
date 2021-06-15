@@ -97,7 +97,7 @@ export const setApplication = (aid: string, data: Parameters<typeof client.setAp
         () => {
             store.dispatch(setProgress(0));
             store.dispatch(enqueueSnackbar(['已成功更新', Status.success]));
-            return getMyInfo();
+            return getMyInfo(); // TODO: get avoid of sending requests again
         },
         () => {
             store.dispatch(setProgress(0));
@@ -118,6 +118,15 @@ export const getSlots = (aid: string, type: InterviewType) =>
         () => client.getInterviewSlots(aid, type),
         (interviews) => {
             store.dispatch(setInterviews(interviews));
+            return getMyInfo();
+        },
+    );
+
+export const selectInterview = (aid: string, type: InterviewType, iids: string[]) =>
+    apiWrapper(
+        () => client.selectInterviewSlots(aid, type, iids),
+        () => {
+            store.dispatch(enqueueSnackbar(['已成功选择', Status.success]));
             return getMyInfo();
         },
     );
