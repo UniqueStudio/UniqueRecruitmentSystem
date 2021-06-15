@@ -3,15 +3,20 @@ import { Cache } from 'cache-manager';
 
 import { Role } from '@constants/enums';
 import { RequestWithIdentity } from '@interfaces/request.interface';
+import { ConfigService } from '@services/config.service';
 import { cacheKey } from '@utils/cacheKey';
 
 @Injectable()
 export class CodeGuard implements CanActivate {
     constructor(
         @Inject(CACHE_MANAGER) private readonly cacheManager: Cache,
+        private readonly configService: ConfigService,
     ) {}
 
     async canActivate(context: ExecutionContext) {
+        if (this.configService.isTest) {
+            return true;
+        }
         const req = context.switchToHttp().getRequest<RequestWithIdentity<{ code?: string; phone?: string }>>();
         const code = req.body.code ?? req.query.code;
         if (!code) {
