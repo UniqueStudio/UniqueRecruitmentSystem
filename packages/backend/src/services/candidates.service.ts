@@ -15,7 +15,9 @@ export class CandidatesService extends BasicCRUDService<CandidateEntity> {
     }
 
     findOneById(id: string) {
-        return super.findOneById(id, { relations: ['applications', 'applications.recruitment'] });
+        return super.findOneById(id, {
+            relations: ['applications', 'applications.recruitment', 'applications.interviewSelections'],
+        });
     }
 
     findByPhoneWithPassword(phone: string) {
