@@ -1,0 +1,56 @@
+version: '3.8'
+services:
+  postgres:
+    image: postgres:alpine
+    ports:
+      - '127.0.0.1:5432:5432'
+    user: postgres
+    env_file:
+      - packages/backend/.env
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+  backend:
+    build:
+      context: .
+      target: backend
+    env_file:
+      - packages/backend/.env
+    ports:
+      - '5000:5000'
+    links:
+      - postgres
+    volumes:
+      - ./packages/backend/data/resumes:/usr/src/recruitment/packages/backend/data/resumes
+      - ./packages/backend/logs:/usr/src/recruitment/packages/backend/logs
+      - ./packages/backend/backup:/usr/src/recruitment/packages/backend/backup
+      - yarn-cache:/tmp/yarn-cache
+  dashboard:
+    build:
+      context: .
+      target: dashboard
+    env_file:
+      - packages/dashboard/.env
+    volumes:
+      - dashboard-build:/usr/src/recruitment/packages/dashboard/build
+      - yarn-cache:/tmp/yarn-cache
+  candidate-dashboard:
+    build:
+      context: .
+      target: candidate-dashboard
+    env_file:
+      - packages/candidate-dashboard/.env
+    volumes:
+      - yarn-cache:/tmp/yarn-cache
+  nginx:
+    image: nginx:alpine
+    ports:
+      - '80:80'
+    volumes:
+      - dashboard-build:/usr/share/nginx/dashboard
+      - type: bind
+        source: ./nginx/nginx.conf
+        target: /etc/nginx/nginx.conf
+volumes:
+  postgres-data:
+  dashboard-build:
+  yarn-cache:
