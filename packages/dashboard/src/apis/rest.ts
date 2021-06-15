@@ -1,10 +1,10 @@
 import { RestClient } from '@uniqs/apis';
 
 import { API } from '@config/consts';
-import { GroupOrTeam, InterviewType, SMSType, Status, Step } from '@config/enums';
-import { Interview, Recruitment, Member } from '@config/types';
+import { GroupOrTeam, InterviewType, Status, Step } from '@config/enums';
+import { Interview, Recruitment, Member, SMSTemplate } from '@config/types';
 import { stores } from '@stores/index';
-import { primitiveStorage, objectStorage } from '@utils/storage';
+import { objectStorage } from '@utils/storage';
 
 const { $application, $component, $member, $recruitment } = stores;
 
@@ -47,7 +47,7 @@ export const allocateOne = (type: InterviewType, aid: string, time: Date) =>
     );
 
 export const getApplications = (rid: string) => {
-    const viewing = primitiveStorage.get('viewingId');
+    const viewing = $recruitment.viewingId;
     return apiWrapper(
         async () => {
             const applications = await objectStorage.get('applications');
@@ -116,7 +116,6 @@ export const getResume = async (id: string, filename = 'resume') => {
 
 export const getAllRecruitments = async () => {
     const recruitments = await objectStorage.get('recruitments');
-    const viewing = primitiveStorage.get('viewingId');
     if (recruitments) {
         $recruitment.setAll(recruitments);
     }
@@ -124,7 +123,9 @@ export const getAllRecruitments = async () => {
         () => client.getAllRecruitments(),
         (recruitments) => {
             $recruitment.setRecruitments(recruitments);
-            $recruitment.setViewingRecruitment(viewing ?? recruitments.length ? recruitments[0].id : '');
+            if (!$recruitment.viewingId && recruitments.length) {
+                $recruitment.setViewingRecruitment(recruitments[0].id);
+            }
             $component.enqueueSnackbar('成功获取招新信息', Status.success);
         },
     );
@@ -166,12 +167,7 @@ export const getVerifyCode = () =>
         () => $component.enqueueSnackbar('验证码已发送', Status.success),
     );
 
-export const sendSMSToCandidate = (content: {
-    type: SMSType;
-    time?: string;
-    place?: string;
-    rest?: string;
-    next: Step;
+export const sendSMSToCandidate = (content: SMSTemplate & {
     aids: string[];
     code: string;
 }) =>

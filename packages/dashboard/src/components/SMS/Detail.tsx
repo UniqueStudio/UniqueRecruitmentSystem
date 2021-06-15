@@ -4,23 +4,18 @@ import React, { ChangeEventHandler, FC, memo } from 'react';
 
 import { STEP_MAP } from '@config/consts';
 import { SMSType, Step } from '@config/enums';
+import { SMSTemplate } from '@config/types';
 import useStyles from '@styles/sms';
 
 interface Props {
-    content: {
-        type: SMSType;
-        next: Step | -1;
-        time: string;
-        place: string;
-        rest: string;
-    };
+    content: SMSTemplate;
     message: string;
-    handleChange: (name: string) => ChangeEventHandler<HTMLInputElement>;
+    handleChange: (name: keyof SMSTemplate) => ChangeEventHandler<HTMLInputElement>;
 }
 
 export const SMSDetail: FC<Props> = memo(({ handleChange, content, message }) => {
     const classes = useStyles();
-    const { type, time, place, rest, next } = content;
+    const { type, time, place, rest, next, current } = content;
     return (
         <div className={clsx(classes.templateItem, classes.inputContainer)}>
             <Typography variant='body1' className={classes.fullWidth}>
@@ -33,8 +28,22 @@ export const SMSDetail: FC<Props> = memo(({ handleChange, content, message }) =>
             <TextField
                 variant='standard'
                 select
+                label='本轮'
+                value={current ?? ''}
+                onChange={handleChange('current')}
+                disabled={[Step.群面, Step.组面].includes(next!)}
+            >
+                {[...STEP_MAP.entries()].map(([index, stepName]) => (
+                    <MenuItem key={stepName} value={+index} disabled={index === Step.通过}>
+                        {stepName}
+                    </MenuItem>
+                ))}
+            </TextField>
+            <TextField
+                variant='standard'
+                select
                 label='下一轮'
-                value={next >= 0 ? next : ''}
+                value={next ?? ''}
                 onChange={handleChange('next')}
                 disabled={type === SMSType.reject}
             >
@@ -47,27 +56,27 @@ export const SMSDetail: FC<Props> = memo(({ handleChange, content, message }) =>
             <TextField
                 variant='standard'
                 label='时间'
-                value={time}
+                value={time ?? ''}
                 InputLabelProps={{ shrink: true }}
                 onChange={handleChange('time')}
-                disabled={![Step.熬测, Step.笔试].includes(next)}
+                disabled={![Step.熬测, Step.笔试].includes(next!)}
             />
             <TextField
                 variant='standard'
                 label='地点'
-                value={place}
+                value={place ?? ''}
                 InputLabelProps={{ shrink: true }}
                 onChange={handleChange('place')}
-                disabled={![Step.群面, Step.组面, Step.熬测, Step.笔试].includes(next)}
+                disabled={![Step.群面, Step.组面, Step.熬测, Step.笔试].includes(next!)}
             />
             <TextField
                 variant='standard'
                 label='自定义'
-                value={rest}
+                value={rest ?? ''}
                 className={classes.fullWidth}
                 InputLabelProps={{ shrink: true }}
                 onChange={handleChange('rest')}
-                disabled={[Step.群面, Step.组面].includes(next)}
+                disabled={[Step.群面, Step.组面].includes(next!)}
             />
         </div>
     );

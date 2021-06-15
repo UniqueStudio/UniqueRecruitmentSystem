@@ -17,7 +17,7 @@ const useStyles = makeStyles(({ breakpoints, spacing }: Theme) => ({
     },
     inputContainer: {
         display: 'grid',
-        gridTemplateColumns: 'repeat(4, minmax(auto, 160px))',
+        gridTemplateColumns: 'repeat(5, minmax(auto, 160px))',
         [breakpoints.down('md')]: {
             gridTemplateColumns: 'repeat(2, minmax(auto, 160px))',
         },
@@ -26,7 +26,7 @@ const useStyles = makeStyles(({ breakpoints, spacing }: Theme) => ({
     },
     fullWidth: {
         overflowWrap: 'anywhere',
-        gridColumn: '1 / 5',
+        gridColumn: '1 / 6',
         [breakpoints.down('md')]: {
             gridColumn: '1 / 3',
         },

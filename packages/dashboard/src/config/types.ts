@@ -7,4 +7,4 @@ export interface Message {
     content: string;
 }
 
-export type { Application, Interview, R, Recruitment, Member, Candidate, Comment } from '@uniqs/config';
+export type { Application, Interview, R, Recruitment, Member, Candidate, Comment, SMSTemplate } from '@uniqs/config';

@@ -8,7 +8,7 @@ import {
     Member,
     R,
     Recruitment,
-    SMSType,
+    SMSTemplate,
     Status,
     Step,
 } from '@uniqs/config';
@@ -101,14 +101,11 @@ export class RestClient {
     // applications/
 
     createApplication(
-        data: Pick<
-            Application,
-            'grade' | 'institute' | 'major' | 'rank' | 'group' | 'intro' | 'isQuick' | 'referrer'
-        > & {
+        data: {
             resume: FileList | undefined;
             rid: string;
             code: string;
-        },
+        } & Pick<Application, 'grade' | 'institute' | 'major' | 'rank' | 'group' | 'intro' | 'isQuick' | 'referrer'>,
         onUploadProgress: (event: ProgressEvent) => void,
     ) {
         const form = new FormData();
@@ -122,6 +119,9 @@ export class RestClient {
         return this.instance.post<R<Application>>(Endpoint.applications, form, {
             headers: { 'Content-Type': 'multipart/form-data' },
             onUploadProgress,
+            params: {
+                code: data.code,
+            },
         });
     }
 
@@ -233,15 +233,7 @@ export class RestClient {
         return this.instance.get<R>(Endpoint.verifyOthers(phone));
     }
 
-    sendSMSToCandidate(content: {
-        type: SMSType;
-        time?: string;
-        place?: string;
-        rest?: string;
-        next: Step;
-        aids: string[];
-        code: string;
-    }) {
+    sendSMSToCandidate(content: SMSTemplate & { aids: string[]; code: string }) {
         return this.instance.post<R>(Endpoint.sms, content);
     }
 

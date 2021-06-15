@@ -5,6 +5,7 @@ import { Gender, GENDERS } from '@uniqs/config';
 import { validateCode, validateMail, validatePhone } from '@uniqs/utils';
 import React from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
+import { useHistory, useRouteMatch } from 'react-router-dom';
 
 import { createCandidate, getCodeForOther } from '@apis/rest';
 import { Input, Select, Password } from '@components/Textfields';
@@ -21,11 +22,15 @@ interface Inputs {
 
 export const Register = () => {
     const [timeLeft, setTimeLeft] = useCountdown();
+    const history = useHistory();
+    const { url } = useRouteMatch();
+    const login = `${url}/login`;
     const {
         control,
         watch,
         formState: { isValid, isSubmitting, errors },
         handleSubmit,
+        setValue,
     } = useForm<Inputs>({
         mode: 'onChange',
         defaultValues: {
@@ -46,7 +51,11 @@ export const Register = () => {
         if (isSubmitting) {
             return;
         }
-        await createCandidate({ phone, password, name, code, gender, mail });
+        if (await createCandidate({ phone, password, name, code, gender, mail })) {
+            history.push(login);
+        } else {
+            setValue('code', '');
+        }
     };
 
     return (

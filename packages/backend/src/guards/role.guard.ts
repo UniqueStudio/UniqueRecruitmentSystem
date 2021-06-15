@@ -5,6 +5,7 @@ import { Socket } from 'socket.io';
 import { Role } from '@constants/enums';
 import { Msg } from '@constants/messages';
 import { RequestWithIdentity } from '@interfaces/request.interface';
+
 class RoleGuard {
     constructor(protected readonly reflector: Reflector) {}
 

@@ -10,7 +10,6 @@ import {
 } from '@material-ui/icons';
 import { convertRecruitmentName } from '@uniqs/utils';
 import clsx from 'clsx';
-import { clear } from 'idb-keyval';
 import { observer } from 'mobx-react-lite';
 import React, { FC, MouseEventHandler, useMemo, useState } from 'react';
 import { useRouteMatch } from 'react-router-dom';
@@ -20,7 +19,7 @@ import { GROUP_MAP, STEP_TYPE_MAP } from '@config/consts';
 import { Group, StepType } from '@config/enums';
 import { useStores } from '@hooks/useStores';
 import useStyles from '@styles/appBar';
-import { primitiveStorage } from '@utils/storage';
+import { objectStorage, primitiveStorage } from '@utils/storage';
 
 export const AppBar: FC = observer(() => {
     const { url } = useRouteMatch();
@@ -59,7 +58,7 @@ export const AppBar: FC = observer(() => {
     };
 
     const refresh = () => {
-        void clear();
+        void objectStorage.clear();
         primitiveStorage.clear();
         location.reload();
     };

@@ -25,7 +25,7 @@ export const ApplicationDialog: FC<Props> = ({ application, ...rest }) => {
         <Dialog fullScreen={isMobile} fullWidth maxWidth='lg' {...rest}>
             <DialogTitle>报名表单</DialogTitle>
             <Header src={header} />
-            {application ? <Form application={application} onCancel={rest.onClose} /> : null}
+            {application ? <Form application={application} onClose={rest.onClose} /> : null}
         </Dialog>
     );
 };

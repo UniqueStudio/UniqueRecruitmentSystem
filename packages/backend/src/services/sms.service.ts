@@ -9,6 +9,7 @@ export class SMSService {
 
     async sendSMS(phone: string, id: string, params: string[]) {
         if (this.configService.isNotProd) {
+            console.log(phone, id, params);
             return;
         }
         const { code, message } = await got

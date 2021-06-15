@@ -1,16 +1,12 @@
+import { SMSTemplate } from '@uniqs/config';
 import { convertRecruitmentName } from '@uniqs/utils';
 
 import { STEP_MAP } from '@constants/consts';
 import { SMSType, Step } from '@constants/enums';
 import { ApplicationEntity } from '@entities/application.entity';
 
-interface Model {
-    type: SMSType;
+interface Template extends SMSTemplate {
     application: ApplicationEntity;
-    next: Step;
-    time?: string;
-    place?: string;
-    rest?: string;
 }
 
 export const applySMSTemplate = ({
@@ -19,8 +15,9 @@ export const applySMSTemplate = ({
     place,
     rest,
     next,
-    application: { group, step, recruitment, candidate: { name }, interviewAllocations },
-}: Model) => {
+    current,
+    application: { group, recruitment, candidate: { name }, interviewAllocations },
+}: Template) => {
     const suffix = ' (请勿回复本短信)';
     const recruitmentName = convertRecruitmentName(recruitment.name);
     switch (type) {
@@ -58,15 +55,17 @@ export const applySMSTemplate = ({
                 default:
                     throw new Error('Next step is invalid!');
             }
+            if (current === undefined) throw new Error('Current step is not provided!');
             rest = `${rest || defaultRest}${suffix}`;
             // {1}你好，你通过了{2}{3}组{4}审核{5}
-            return { template: '670901', params: [name, recruitmentName, group, STEP_MAP.get(step)!, rest] };
+            return { template: '670901', params: [name, recruitmentName, group, STEP_MAP.get(current)!, rest] };
         }
         case SMSType.reject: {
             const defaultRest = '不要灰心，继续学习。期待与更强大的你的相遇！';
+            if (current === undefined) throw new Error('Current step is not provided!');
             rest = `${rest || defaultRest}${suffix}`;
             // {1}你好，你没有通过{2}{3}组{4}审核，请你{5}
-            return { template: '670903', params: [name, recruitmentName, group, STEP_MAP.get(step)!, rest] };
+            return { template: '670903', params: [name, recruitmentName, group, STEP_MAP.get(current)!, rest] };
         }
     }
 };

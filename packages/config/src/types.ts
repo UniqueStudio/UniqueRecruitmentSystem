@@ -1,4 +1,4 @@
-import { Evaluation, Gender, Grade, Group, GroupOrTeam, Period, Rank, Status, Step } from './enums';
+import { Evaluation, Gender, Grade, Group, GroupOrTeam, Period, Rank, Status, Step, SMSType } from './enums';
 
 type Modify<New, Old extends { [k in keyof New]: unknown }> = Omit<Old, keyof New> & New;
 
@@ -162,6 +162,15 @@ export type Recruitment = Modify<
 
 export interface Code {
     code: string;
+}
+
+export interface SMSTemplate {
+    type: SMSType;
+    current?: Step;
+    next?: Step;
+    time?: string;
+    place?: string;
+    rest?: string;
 }
 
 interface SuccessResponse<T> {

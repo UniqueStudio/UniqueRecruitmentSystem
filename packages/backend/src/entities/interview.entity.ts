@@ -8,7 +8,7 @@ import { CommonEntity } from '@entities/common.entity';
 import { RecruitmentEntity } from '@entities/recruitment.entity';
 
 @Entity('interviews')
-@Unique(['date', 'period', 'name'])
+@Unique(['date', 'period', 'name', 'recruitment'])
 export class InterviewEntity extends CommonEntity implements IInterviewEntity {
     @Column('timestamptz')
     @IsDate()

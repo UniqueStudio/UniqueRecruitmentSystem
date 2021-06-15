@@ -36,11 +36,7 @@ export const Slots: FC = observer(() => {
     const [slots, setSlots] = useState<Pick<Interview, 'date' | 'period' | 'slotNumber'>[]>([]);
 
     const init = () => {
-        const recruitment = $recruitment.viewingRecruitment;
-        if (!recruitment) {
-            return;
-        }
-        const { interviews } = recruitment;
+        const interviews = $recruitment.viewingRecruitment?.interviews ?? [];
         setSlots(
             interviews
                 .filter(({ name }) =>
@@ -52,7 +48,7 @@ export const Slots: FC = observer(() => {
         );
     };
 
-    useEffect(init, [$recruitment.viewingRecruitment, $application.stepType, $application.group]);
+    useEffect(init, [$recruitment.viewingRecruitment?.interviews, $application.stepType, $application.group]);
 
     const addSlot = () => {
         setSlots((prevSlots) => [

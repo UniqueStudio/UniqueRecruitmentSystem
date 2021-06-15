@@ -1,15 +1,8 @@
 import { STEP_MAP } from '@config/consts';
 import { SMSType, Step } from '@config/enums';
+import { SMSTemplate } from '@config/types';
 
-interface Model {
-    type: SMSType;
-    next: Step;
-    time?: string;
-    place?: string;
-    rest?: string;
-}
-
-export const generateModel = ({ type, time, place, rest, next }: Model) => {
+export const applySMSTemplate = ({ type, time, place, rest, current, next }: SMSTemplate) => {
     const prefix = '[联创团队]{{候选人姓名}}你好，';
     // don't use default parameter because time and place may be empty string
     time = time || '{{!请指定时间!}}';
@@ -35,11 +28,11 @@ export const generateModel = ({ type, time, place, rest, next }: Model) => {
                 default:
                     return '{{!请指定下一轮!}}';
             }
-            return `${prefix}你通过了{{招新名称}}{{组别}}组{{流程}}审核${rest}`;
+            return `${prefix}你通过了{{招新名称}}{{组别}}组${STEP_MAP.get(current!) ?? '{{!请指定当前流程!}}'}审核${rest}`;
         }
         case SMSType.reject: {
             rest = rest || '不要灰心，继续学习。期待与更强大的你的相遇！';
-            return `${prefix}你没有通过{{招新名称}}{{组别}}组{{流程}}审核，请你${rest}`;
+            return `${prefix}你没有通过{{招新名称}}{{组别}}组${STEP_MAP.get(current!) ?? '{{!请指定当前流程!}}'}审核，请你${rest}`;
         }
     }
 };

@@ -73,6 +73,7 @@ export class ApplicationStore {
 
     clear() {
         this.applications.clear();
+        void objectStorage.del('applications');
     }
 
     selectOne(aid: string) {

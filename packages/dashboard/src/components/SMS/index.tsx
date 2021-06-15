@@ -8,29 +8,22 @@ import { SMSPicker } from './Picker';
 import { sendSMSToCandidate } from '@apis/rest';
 import { Verify } from '@components/Verify';
 import { SMSType, Status } from '@config/enums';
+import { SMSTemplate } from '@config/types';
 import { useStores } from '@hooks/useStores';
 import useStyles from '@styles/sms';
-import { generateModel } from '@utils/generateModel';
+import { applySMSTemplate } from '@utils/applySMSTemplate';
 
 interface Props {
     toggleOpen: () => void;
 }
 
-const initialContent = {
-    type: SMSType.accept,
-    next: -1!,
-    time: '',
-    place: '',
-    rest: '',
-};
-
 export const Template: FC<Props> = observer(({ toggleOpen }) => {
     const { $component, $application } = useStores();
     const classes = useStyles();
     const [activeStep, setActiveStep] = useState(0);
-    const [content, setContent] = useState(initialContent);
-    const [message, setMessage] = useState(generateModel(initialContent));
+    const [content, setContent] = useState<SMSTemplate>({ type: SMSType.accept });
     const [code, setCode] = useState('');
+    const message = applySMSTemplate(content);
 
     const handleBack = () => {
         setActiveStep((prevActiveStep) => prevActiveStep - 1);
@@ -43,6 +36,8 @@ export const Template: FC<Props> = observer(({ toggleOpen }) => {
         }
 
         if (await sendSMSToCandidate({ ...content, code, aids: [...$application.selected.keys()] })) {
+            toggleOpen();
+        } else {
             setCode('');
         }
     };
@@ -56,14 +51,10 @@ export const Template: FC<Props> = observer(({ toggleOpen }) => {
     };
 
     const handleChange =
-        (name: string): ChangeEventHandler<HTMLInputElement> =>
+        (name: keyof SMSTemplate): ChangeEventHandler<HTMLInputElement> =>
         ({ target: { value } }) => {
             // `value` is defined as string but can be number here
-            setContent((prevContent) => {
-                const newContent = { ...prevContent, [name]: value };
-                setMessage(generateModel(newContent));
-                return newContent;
-            });
+            setContent((prevContent) => ({ ...prevContent, [name]: value }));
         };
 
     const handleCode: ChangeEventHandler<HTMLInputElement> = ({ target: { value } }) => {

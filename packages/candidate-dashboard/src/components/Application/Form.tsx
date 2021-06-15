@@ -17,7 +17,7 @@ type Inputs = Parameters<typeof createApplication>[0];
 
 interface Props {
     application: Partial<Application>;
-    onCancel: () => void;
+    onClose: () => void;
 }
 
 const Content = styled(DialogContent)(({ theme: { spacing, breakpoints } }) => ({
@@ -44,7 +44,7 @@ export const Form: FC<Props> = ({
         resume,
         id,
     },
-    onCancel,
+    onClose,
 }) => {
     const [timeLeft, setTimeLeft] = useCountdown();
     const [selected, setSelected] = useState(0);
@@ -81,9 +81,15 @@ export const Form: FC<Props> = ({
             return;
         }
         if (id) {
-            await setApplication(id, data);
+            if (await setApplication(id, data)) {
+                onClose();
+            }
         } else {
-            await createApplication(data);
+            if (await createApplication(data)) {
+                onClose();
+            } else {
+                setValue('code', '');
+            }
         }
     };
 
@@ -240,7 +246,7 @@ export const Form: FC<Props> = ({
                         </SplitButton>
                     </>
                 )}
-                <Button onClick={onCancel} color='secondary'>
+                <Button onClick={onClose} color='secondary'>
                     <Trans>取消</Trans>
                 </Button>
             </DialogActions>
