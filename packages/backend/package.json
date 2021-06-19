@@ -1,6 +1,6 @@
 {
   "name": "@uniqs/backend",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "private": true,
   "dependencies": {
     "@nestjs/common": "^8.0.0-alpha.7",
@@ -14,8 +14,8 @@
     "@nestjs/throttler": "^1.1.4",
     "@nestjs/typeorm": "^7.1.5",
     "@nestjs/websockets": "^8.0.0-alpha.7",
-    "@uniqs/config": "^3.0.0",
-    "@uniqs/utils": "^3.0.0",
+    "@uniqs/config": "^3.0.1",
+    "@uniqs/utils": "^3.0.1",
     "cache-manager": "^3.4.3",
     "class-transformer": "^0.4.0",
     "class-validator": "^0.13.1",

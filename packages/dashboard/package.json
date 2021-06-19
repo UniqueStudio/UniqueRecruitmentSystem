@@ -1,6 +1,6 @@
 {
   "name": "@uniqs/dashboard",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "private": true,
   "dependencies": {
     "@emotion/react": "^11.4.0",
@@ -10,10 +10,10 @@
     "@material-ui/icons": "^5.0.0-alpha.36",
     "@material-ui/lab": "^5.0.0-alpha.36",
     "@material-ui/styles": "^5.0.0-alpha.35",
-    "@uniqs/apis": "^3.0.0",
-    "@uniqs/config": "^3.0.0",
-    "@uniqs/ui": "^3.0.0",
-    "@uniqs/utils": "^3.0.0",
+    "@uniqs/apis": "^3.0.1",
+    "@uniqs/config": "^3.0.1",
+    "@uniqs/ui": "^3.0.1",
+    "@uniqs/utils": "^3.0.1",
     "chart.js": "^3.3.2",
     "date-fns": "^2.22.1",
     "idb-keyval": "^5.0.6",
