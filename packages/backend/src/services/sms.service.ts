@@ -22,7 +22,7 @@ export class SMSService {
                     template_id: id,
                     template_param_set: params,
                 },
-                throwHttpErrors: false,
+                // throwHttpErrors: false,
             })
             .json<{ code: number; message: string }>();
         if (code !== 200) {
