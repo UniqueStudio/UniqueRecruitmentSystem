@@ -1,10 +1,11 @@
-import { Body, Controller, Get, Post, Put, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, NotFoundException, Post, Put, UseGuards } from '@nestjs/common';
 import { ThrottlerGuard } from '@nestjs/throttler';
 
 import { Role } from '@constants/enums';
+import { Msg } from '@constants/messages';
 import { Candidate } from '@decorators/candidate.decorator';
 import { AcceptRole } from '@decorators/role.decorator';
-import { CreateCandidateBody, SetCandidateBody } from '@dtos/candidate.dto';
+import { CreateCandidateBody, ResetCandidateBody, SetCandidateBody } from '@dtos/candidate.dto';
 import { CandidateEntity } from '@entities/candidate.entity';
 import { CodeGuard } from '@guards/code.guard';
 import { CandidatesService } from '@services/candidates.service';
@@ -42,6 +43,19 @@ export class CandidatesController {
         }
         candidate.phone = phone;
         candidate.mail = mail;
+        await candidate.save();
+    }
+
+    @Put('me/password')
+    @UseGuards(CodeGuard)
+    async resetMyPassword(
+        @Body(){ phone, password }: ResetCandidateBody,
+    ) {
+        const candidate = await this.candidatesService.findByPhoneWithPassword(phone);
+        if (!candidate) {
+            throw new NotFoundException(Msg.C_NOT_FOUND(phone));
+        }
+        candidate.password = await this.candidatesService.hashPassword(password);
         await candidate.save();
     }
 }

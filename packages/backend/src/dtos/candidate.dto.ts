@@ -2,6 +2,14 @@ import { IsEmail, IsEnum, IsOptional, IsPhoneNumber, IsString } from 'class-vali
 
 import { Gender } from '@constants/enums';
 
+export class ResetCandidateBody {
+    @IsString()
+    password!: string;
+
+    @IsPhoneNumber('CN')
+    phone!: string;
+}
+
 export class SetCandidateBody {
     @IsOptional()
     @IsString()

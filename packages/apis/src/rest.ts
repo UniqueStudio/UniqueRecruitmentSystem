@@ -45,6 +45,7 @@ class Endpoint {
 
     static candidates = '/candidates';
     static candidateInfo = `${Endpoint.candidates}/me`;
+    static candidatePassword = `${Endpoint.candidates}/me/password`;
 
     static members = '/members';
     static memberInfo = `${Endpoint.members}/me`;
@@ -285,5 +286,9 @@ export class RestClient {
 
     setCandidateInfo(data: Optional<Pick<Candidate, 'mail' | 'phone' | 'password'>, 'password'>) {
         return this.instance.put<R>(Endpoint.candidateInfo, data);
+    }
+
+    resetCandidatePassword(data: Pick<Candidate, 'phone' | 'password'> & Code) {
+        return this.instance.put<R>(Endpoint.candidatePassword, data);
     }
 }

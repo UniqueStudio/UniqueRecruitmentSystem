@@ -7,6 +7,8 @@ export const Msg = {
     $_AGAIN: (failure: string) => `${failure}, please try again`,
     $_OOPS: (failure: string) => `Oops, ${failure}`,
 
+    C_NOT_FOUND: (phone: string) => `Candidate with phone number ${phone} does not exist`,
+
     R_NOT_STARTED: (name: string) => `Recruitment ${name} has not started yet`,
     R_ENDED: (name: string) => `Recruitment ${name} has already ended`,
     // eslint-disable-next-line max-len
