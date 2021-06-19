@@ -29,6 +29,14 @@ export const loginByPassword = (phone: string, password: string) =>
         },
     );
 
+export const resetPassword = (data: Parameters<typeof client.resetCandidatePassword>[0]) =>
+    apiWrapper(
+        () => client.resetCandidatePassword(data),
+        () => {
+            store.dispatch(enqueueSnackbar(['已成功重置', Status.success]));
+        },
+    );
+
 export const getCodeForOther = (phone: string) =>
     apiWrapper(
         () => client.getCodeForOther(phone),

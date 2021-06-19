@@ -6,6 +6,7 @@ import { Redirect, Route, Switch, useHistory, useRouteMatch } from 'react-router
 
 import { Login } from '@components/Login';
 import { Register } from '@components/Register';
+import { Reset } from '@components/Reset';
 import { useAppSelector } from '@stores/index';
 
 export default () => {
@@ -13,7 +14,8 @@ export default () => {
     const { url } = useRouteMatch();
     const login = `${url}/login`;
     const register = `${url}/register`;
-    const routeMatch = useRouteMatch([login, register]);
+    const reset = `${url}/reset`;
+    const routeMatch = useRouteMatch([login, register, reset]);
     const history = useHistory();
 
     useEffect(() => {
@@ -47,6 +49,9 @@ export default () => {
                         </Route>
                         <Route path={register}>
                             <Register />
+                        </Route>
+                        <Route path={reset}>
+                            <Reset />
                         </Route>
                     </Switch>
                 </Stack>

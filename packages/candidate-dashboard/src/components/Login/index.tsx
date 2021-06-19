@@ -47,11 +47,18 @@ export const Login: FC = () => {
             <LoadingButton variant='contained' type='submit' disabled={!isValid} loading={isSubmitting}>
                 <Trans>登录</Trans>
             </LoadingButton>
-            <Typography variant='caption' color='textSecondary'>
-                <Trans>
-                    没有账号？ 立即<Link href='register'>注册</Link>
-                </Trans>
-            </Typography>
+            <Stack alignItems='center'>
+                <Typography variant='caption' color='textSecondary'>
+                    <Trans>
+                        没有账号？ 立即<Link href='register'>注册</Link>
+                    </Trans>
+                </Typography>
+                <Typography variant='caption' color='textSecondary'>
+                    <Trans>
+                        不知道/忘记密码？立即<Link href='reset'>重置</Link>
+                    </Trans>
+                </Typography>
+            </Stack>
         </Stack>
     );
 };
