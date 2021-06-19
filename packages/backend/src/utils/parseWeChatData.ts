@@ -45,7 +45,7 @@ export const parseWeChatData = (data: Data) => {
         name,
         joinTime,
         phone: mobile,
-        mail: email,
+        mail: email || undefined,
         gender: +gender as Gender,
         group: ID_GROUP_MAP[groups[0]],
         avatar: avatar?.replace('http://', 'https://'),

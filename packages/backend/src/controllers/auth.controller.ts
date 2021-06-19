@@ -48,9 +48,9 @@ export class AuthController {
             const { status, auth_code } = JSON.parse(/{.+}/.exec(scanResponse)![0]) as Response;
             switch (status) {
                 case 'QRCODE_SCAN_SUCC': {
-                    const { accessToken } = await got(this.configService.accessTokenURL).json<Response>();
-                    const { userID } = await got(this.configService.uidURL(accessToken, auth_code)).json<Response>();
-                    const data = parseWeChatData(await got(this.configService.userInfoURL(accessToken, userID)).json());
+                    const { access_token: token } = await got(this.configService.accessTokenURL).json<Response>();
+                    const { UserId: uid } = await got(this.configService.uidURL(token, auth_code)).json<Response>();
+                    const data = parseWeChatData(await got(this.configService.userInfoURL(token, uid)).json());
                     const { id, isCaptain } = await this.membersService.findOrCreate(data);
                     if (data.isCaptain !== isCaptain) {
                         await this.membersService.update(id, { isCaptain: !isCaptain, isAdmin: !isCaptain });
