@@ -1,4 +1,4 @@
-import { ArgumentsHost, Catch, ExceptionFilter, HttpException, HttpStatus } from '@nestjs/common';
+import { ArgumentsHost, Catch, ExceptionFilter, HttpException, HttpStatus, Logger } from '@nestjs/common';
 import { Response } from 'express';
 import { QueryFailedError, EntityNotFoundError } from 'typeorm';
 
@@ -7,9 +7,11 @@ import { FailureResponse } from '@interfaces/response.interface';
 
 @Catch()
 export class HttpErrorFilter<T extends Error = Error> implements ExceptionFilter<T> {
+    private readonly logger = new Logger(HttpErrorFilter.name);
+
     catch(exception: T, host: ArgumentsHost) {
         const res = host.switchToHttp().getResponse<Response<FailureResponse>>();
-
+        this.logger.error(exception, exception.stack);
         if (exception instanceof HttpException) {
             const { message } = exception.getResponse() as { message?: string | string[] };
             const status = exception.getStatus();
