@@ -1,4 +1,4 @@
-import { Type } from 'class-transformer';
+import { Transform, Type } from 'class-transformer';
 import { IsBoolean, IsDateString, IsEnum, IsOptional, IsString, IsUUID } from 'class-validator';
 
 import { Grade, Group, InterviewType, Rank, Step } from '@constants/enums';
@@ -41,7 +41,7 @@ export class SetApplicationBody {
 
 export class CreateApplicationBody extends SetApplicationBody {
     @IsBoolean()
-    @Type(() => Boolean)
+    @Transform(({ value }) => (typeof value === 'string' ? value === 'true' : Boolean(value)))
     isQuick!: boolean;
 
     @IsUUID(4)
