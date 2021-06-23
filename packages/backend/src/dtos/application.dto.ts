@@ -1,4 +1,4 @@
-import { Type } from 'class-transformer';
+import { Transform, Type } from 'class-transformer';
 import { IsBoolean, IsDateString, IsEnum, IsOptional, IsString, IsUUID } from 'class-validator';
 
 import { Grade, Group, InterviewType, Rank, Step } from '@constants/enums';
@@ -39,9 +39,21 @@ export class SetApplicationBody {
     referrer?: string;
 }
 
+/*
+ * ???
+ * https://github.com/typestack/class-transformer/issues/534
+ * https://github.com/typestack/class-transformer/issues/626
+ * https://github.com/typestack/class-transformer/issues/676
+ * ???
+ */
+const bool = new Map<unknown, boolean>([
+    ['true', true],
+    ['false', false],
+]);
+
 export class CreateApplicationBody extends SetApplicationBody {
     @IsBoolean()
-    @Type(() => Boolean)
+    @Transform(({ value }) => bool.get(value))
     isQuick!: boolean;
 
     @IsUUID(4)
