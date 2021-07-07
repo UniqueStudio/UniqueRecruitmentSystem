@@ -362,7 +362,7 @@ export class ApplicationsController {
                         const h = ~~slot;
                         const m = (slot - h) * 60;
                         const allocation = new Date(date);
-                        allocation.setHours(h, m, 0, 0);
+                        allocation.setHours(h + date.getHours(), m + date.getMinutes(), 0, 0);
                         application.interviewAllocations[type] = allocation;
                         await application.save();
                         break;
