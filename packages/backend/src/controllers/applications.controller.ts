@@ -23,8 +23,8 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { ThrottlerGuard } from '@nestjs/throttler';
 import { Response } from 'express';
 
-import { SLOTS, STEP_MAP } from '@constants/consts';
-import { Group, GroupOrTeam, InterviewType, Role, Step } from '@constants/enums';
+import { SLOTS, STEP_MAP, SMS_TEMPLATE_MAP } from '@constants/consts';
+import { Group, GroupOrTeam, InterviewType, Role, Step, SMSTemplateType } from '@constants/enums';
 import { Msg } from '@constants/messages';
 import { Candidate } from '@decorators/candidate.decorator';
 import { Member } from '@decorators/member.decorator';
@@ -106,7 +106,10 @@ export class ApplicationsController {
             recruitment,
         });
         try {
-            await this.smsService.sendSMS(candidate.phone, '670908', [candidate.name, '成功提交报名表单']);
+            await this.smsService.sendSMS(candidate.phone, SMS_TEMPLATE_MAP.get(SMSTemplateType.StateChange)!, [
+                candidate.name,
+                '成功提交报名表单',
+            ]);
             await this.emailService.sendEmail(application);
         } catch ({ message }) {
             throw new InternalServerErrorException(message);

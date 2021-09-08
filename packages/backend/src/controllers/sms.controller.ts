@@ -15,7 +15,8 @@ import {
 import { Throttle, ThrottlerGuard } from '@nestjs/throttler';
 import { Cache } from 'cache-manager';
 
-import { GroupOrTeam, Role, SMSType, Step } from '@constants/enums';
+import { GroupOrTeam, Role, SMSType, Step, SMSTemplateType } from '@constants/enums';
+import { SMS_TEMPLATE_MAP } from '@constants/consts';
 import { Msg } from '@constants/messages';
 import { Candidate } from '@decorators/candidate.decorator';
 import { Member } from '@decorators/member.decorator';
@@ -42,7 +43,10 @@ export class SMSController {
         const code = randomBytes(2).toString('hex');
         try {
             // 您{1}的验证码为：{2}，请于3分钟内填写。如非本人操作，请忽略本短信。
-            await this.smsService.sendSMS(phone, '719160', ['dashboard中', code]);
+            await this.smsService.sendSMS(phone, SMS_TEMPLATE_MAP.get(SMSTemplateType.VerificationCode)!, [
+                'dashboard中',
+                code,
+            ]);
         } catch ({ message }) {
             throw new InternalServerErrorException(message);
         }

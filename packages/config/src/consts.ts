@@ -1,4 +1,4 @@
-import { Group, Period, Step } from './enums';
+import { Group, Period, Step, SMSTemplateType } from './enums';
 
 export const GROUP_MAP: ReadonlyMap<Group, string> = new Map([
     [Group.web, 'Web'],
@@ -238,3 +238,11 @@ export const DEPARTMENTS: Readonly<Record<string, string[]>> = {
 };
 
 export const INSTITUTES = Object.keys(DEPARTMENTS);
+
+export const SMS_TEMPLATE_MAP: ReadonlyMap<SMSTemplateType, string> = new Map([
+    [SMSTemplateType.StateChange, '1092770'],
+    [SMSTemplateType.VerificationCode, '1092824'],
+    [SMSTemplateType.Interview, '1113517'],
+    [SMSTemplateType.Pass, '1092767'],
+    [SMSTemplateType.Delay, '1092765'],
+]);

@@ -21,6 +21,7 @@ export {
     Rank,
     Status,
     SMSType,
+    SMSTemplateType,
     Evaluation,
     InterviewType,
 } from '@uniqs/config';

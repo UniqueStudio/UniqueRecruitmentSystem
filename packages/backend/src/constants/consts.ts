@@ -37,5 +37,5 @@ export const SLOTS = {
 export const ZHANG_XIAO_LONG = new Map<'mother', never>();
 
 export {
-    GRADES, GENDERS, STEP_SHORT_MAP, STEP_MAP, RANKS, PERIOD_MAP, GROUP_MAP,
+    GRADES, GENDERS, STEP_SHORT_MAP, STEP_MAP, RANKS, PERIOD_MAP, GROUP_MAP, SMS_TEMPLATE_MAP,
 } from '@uniqs/config';
