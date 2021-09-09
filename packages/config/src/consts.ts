@@ -38,7 +38,8 @@ export const PERIOD_MAP: ReadonlyMap<Period, string> = new Map([
 export const RANKS = ['暂无', '前10%', '前25%', '前50%', '前100%'] as const;
 export const GRADES = ['大一', '大二', '大三', '大四', '研究生'] as const;
 export const GENDERS = ['其他', '男', '女'] as const;
-export const API = 'https://hustunique.com:5000';
+// export const API = 'https://hustunique.com:5000';
+export const API = 'https://back.recruitment.hustunique.com';
 
 export const DEPARTMENTS: Readonly<Record<string, string[]>> = {
     电子信息与通信学院: [
