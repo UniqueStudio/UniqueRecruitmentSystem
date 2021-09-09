@@ -1,8 +1,8 @@
 import { SMSTemplate } from '@uniqs/config';
 import { convertRecruitmentName } from '@uniqs/utils';
 
-import { STEP_MAP } from '@constants/consts';
-import { SMSType, Step } from '@constants/enums';
+import { STEP_MAP, SMS_TEMPLATE_MAP } from '@constants/consts';
+import { SMSTemplateType, SMSType, Step } from '@constants/enums';
 import { ApplicationEntity } from '@entities/application.entity';
 
 interface Template extends SMSTemplate {
@@ -36,8 +36,9 @@ export const applySMSTemplate = ({
                         timeZone: 'Asia/Shanghai',
                         hour12: false,
                     });
+                    // FIXME
                     // {1}你好，请于{2}在启明学院亮胜楼{3}参加{4}，请准时到场。
-                    return { template: '670906', params: [name, time, place, STEP_MAP.get(next)!] };
+                    return { template: SMS_TEMPLATE_MAP.get(SMSTemplateType.Interview)!, params: [name, time, place, STEP_MAP.get(next)!] };
                 }
                 case Step.笔试:
                 case Step.熬测:
@@ -58,14 +59,14 @@ export const applySMSTemplate = ({
             if (current === undefined) throw new Error('Current step is not provided!');
             rest = `${rest || defaultRest}${suffix}`;
             // {1}你好，你通过了{2}{3}组{4}审核{5}
-            return { template: '670901', params: [name, recruitmentName, group, STEP_MAP.get(current)!, rest] };
+            return { template: SMS_TEMPLATE_MAP.get(SMSTemplateType.Pass)!, params: [name, recruitmentName, group, STEP_MAP.get(current)!, rest] };
         }
         case SMSType.reject: {
             const defaultRest = '不要灰心，继续学习。期待与更强大的你的相遇！';
             if (current === undefined) throw new Error('Current step is not provided!');
             rest = `${rest || defaultRest}${suffix}`;
             // {1}你好，你没有通过{2}{3}组{4}审核，请你{5}
-            return { template: '670903', params: [name, recruitmentName, group, STEP_MAP.get(current)!, rest] };
+            return { template: SMS_TEMPLATE_MAP.get(SMSTemplateType.Delay)!, params: [name, recruitmentName, group, STEP_MAP.get(current)!, rest] };
         }
     }
 };

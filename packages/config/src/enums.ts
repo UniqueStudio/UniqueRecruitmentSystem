@@ -83,3 +83,11 @@ export enum SMSType {
     accept = 'accept',
     reject = 'reject',
 }
+
+export enum SMSTemplateType {
+    StateChange = 'stateChange',
+    VerificationCode = 'verificationCode',
+    Interview = 'interview',
+    Pass = 'pass',
+    Delay = 'delay',
+}
