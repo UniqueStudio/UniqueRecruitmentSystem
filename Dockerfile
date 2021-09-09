@@ -2,11 +2,13 @@ FROM node:alpine as common
 WORKDIR /usr/src/recruitment
 COPY . .
 ENV YARN_CACHE_FOLDER /tmp/yarn-cache
-RUN yarn \
+RUN yarn config set registry https://registry.npm.taobao.org \
+    && yarn \
     && yarn workspace @uniqs/config build \
     && yarn workspace @uniqs/ui build \
     && yarn workspace @uniqs/utils build \
-    && yarn workspace @uniqs/apis build
+    && yarn workspace @uniqs/apis build \
+    && rm -rf /tmp/yarn-cache
 
 FROM common as backend
 RUN yarn workspace @uniqs/backend build
