@@ -4,6 +4,7 @@ import { LoadingButton } from '@material-ui/lab';
 import { Gender, GENDERS } from '@uniqs/config';
 import { validateCode, validateMail, validatePhone } from '@uniqs/utils';
 import React from 'react';
+import { Link as RouterLink } from 'react-router-dom';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
 
@@ -95,7 +96,10 @@ export const Register = () => {
             </LoadingButton>
             <Typography variant='caption' color='textSecondary'>
                 <Trans>
-                    已有账号？ 立即<Link href='login'>登录</Link>
+                    已有账号？ 立即
+                    <Link component={RouterLink} to='login'>
+                        登录
+                    </Link>
                 </Trans>
             </Typography>
         </Stack>
