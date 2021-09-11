@@ -5,4 +5,4 @@ rules:
     mergeMethod: rebase
   - base: dev/all
     upstream: UniqueStudio:dev/all
-    mergeMethod: hardreset
+    mergeMethod: rebase
