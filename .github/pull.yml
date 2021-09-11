@@ -1,0 +1,8 @@
+version: "1"
+rules:
+  - base: master
+    upstream: UniqueStudio:master
+    mergeMethod: rebase
+  - base: dev/all
+    upstream: UniqueStudio:dev/all
+    mergeMethod: hardreset
