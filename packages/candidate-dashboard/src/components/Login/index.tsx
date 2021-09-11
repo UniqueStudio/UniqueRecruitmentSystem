@@ -3,6 +3,8 @@ import { Link, Stack, Typography } from '@material-ui/core';
 import { LoadingButton } from '@material-ui/lab';
 import { validatePhone } from '@uniqs/utils';
 import React, { FC } from 'react';
+import { Link as RouterLink } from 'react-router-dom';
+
 import { SubmitHandler, useForm } from 'react-hook-form';
 
 import { loginByPassword } from '@apis/rest';
@@ -50,12 +52,18 @@ export const Login: FC = () => {
             <Stack alignItems='center'>
                 <Typography variant='caption' color='textSecondary'>
                     <Trans>
-                        没有账号？ 立即<Link href='register'>注册</Link>
+                        没有账号？ 立即
+                        <Link component={RouterLink} to='register'>
+                            注册
+                        </Link>
                     </Trans>
                 </Typography>
                 <Typography variant='caption' color='textSecondary'>
                     <Trans>
-                        不知道/忘记密码？立即<Link href='reset'>重置</Link>
+                        不知道/忘记密码？立即
+                        <Link component={RouterLink} to='reset'>
+                            重置
+                        </Link>
                     </Trans>
                 </Typography>
             </Stack>
