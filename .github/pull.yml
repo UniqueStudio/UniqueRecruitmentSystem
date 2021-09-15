@@ -2,7 +2,7 @@ version: "1"
 rules:
   - base: master
     upstream: UniqueStudio:master
-    mergeMethod: rebase
+    mergeMethod: hardreset
   - base: dev/all
     upstream: UniqueStudio:dev/all
-    mergeMethod: rebase
+    mergeMethod: hardreset
