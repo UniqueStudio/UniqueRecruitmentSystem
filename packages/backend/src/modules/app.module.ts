@@ -68,8 +68,8 @@ import { ConfigService } from '@services/config.service';
         }),
         ScheduleModule.forRoot(),
         ThrottlerModule.forRoot({
-            ttl: 60,
-            limit: 256,
+            ttl: 1,
+            limit: 512,
         }),
         TasksModule,
         AuthModule,

@@ -33,11 +33,25 @@ export class AuthController {
 
     @Get('member/qrCode')
     async getQRCode() {
-        const key = /(?<=key ?: ?")\w+/.exec(await got(this.configService.qrInitURL).text())?.[0];
-        if (!key) {
+        type Response = {
+            serviceResponse: {
+                authenticationSuccess: {
+                    qrcodeSrc: string;
+                };
+            };
+        };
+        const resp = await got('https://sso.hustunique.com/qrcode/code').json<Response>();
+        const imgSrc = resp.serviceResponse.authenticationSuccess.qrcodeSrc;
+        console.log(resp);
+        if (!imgSrc) {
             throw new InternalServerErrorException(Msg.$_FAILED('fetch QR Code'));
         }
-        return this.configService.qrImgURL(key);
+        return imgSrc;
+        // const key = /(?<=key ?: ?")\w+/.exec(await got(this.configService.qrInitURL).text())?.[0];
+        // if (!key) {
+        //     throw new InternalServerErrorException(Msg.$_FAILED('fetch QR Code'));
+        // }
+        // return this.configService.qrImgURL(key);
     }
 
     @Get('member/qrCode/:key')
