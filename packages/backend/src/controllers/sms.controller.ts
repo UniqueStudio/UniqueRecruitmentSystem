@@ -1,4 +1,4 @@
-import { randomBytes } from 'crypto';
+import { randomInt } from 'crypto';
 
 import {
     BadRequestException,
@@ -40,12 +40,14 @@ export class SMSController {
     ) {}
 
     private async sendCode(phone: string, role?: Role.candidate | Role.member) {
-        const code = randomBytes(2).toString('hex');
+        // const code = randomBytes(2).toString('hex');
+        const code = randomInt(1000, 9999).toString();
         try {
             // 您{1}的验证码为：{2}，请于3分钟内填写。如非本人操作，请忽略本短信。
             await this.smsService.sendSMS(phone, SMS_TEMPLATE_MAP.get(SMSTemplateType.VerificationCode)!, [
-                'dashboard中',
+                // 'dashboard中',
                 code,
+                '3',
             ]);
         } catch ({ message }) {
             throw new InternalServerErrorException(message);
