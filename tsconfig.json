@@ -19,6 +19,15 @@
     "skipLibCheck": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
+    "paths": {
+      "@uniqs/apis": ["./packages/apis/src"],
+      "@uniqs/backend": ["./packages/backend/src"],
+      "@uniqs/candidate-dashboard": ["./packages/candidate-dashboard/src"],
+      "@uniqs/dashboard": ["./packages/dashboard/src"],
+      "@uniqs/config": ["./packages/config/src"],
+      "@uniqs/ui": ["./packages/ui/src"],
+      "@uniqs/utils": ["./packages/utils/src"]
+    },
     "noEmit": true
   },
   "exclude": ["node_modules", "build", "dist"],
