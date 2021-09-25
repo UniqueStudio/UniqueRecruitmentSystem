@@ -9,7 +9,7 @@
   "module": "dist/esm/index.js",
   "types": "dist/cjs/index.d.ts",
   "dependencies": {
-    "@uniqs/config": "^3.0.1",
+    "@uniqs/config": "workspace:*",
     "idb-keyval": "^5.0.6"
   },
   "scripts": {
