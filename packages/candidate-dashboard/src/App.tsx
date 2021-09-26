@@ -3,7 +3,6 @@ import { i18n } from '@lingui/core';
 import { I18nProvider } from '@lingui/react';
 import { ThemeProvider, useMediaQuery } from '@material-ui/core';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import { useTheme } from '@uniqs/ui';
 import React, { FC } from 'react';
 import { Provider } from 'react-redux';
 import { Route, Switch } from 'react-router-dom';
@@ -11,6 +10,7 @@ import { Route, Switch } from 'react-router-dom';
 import { useAsyncEffect } from '@hooks/useAsyncEffect';
 import { MainLayout } from '@layouts/MainLayout';
 import store from '@stores/index';
+import { useTheme } from '@uniqs/ui';
 import { defaultLocale, dynamicActivate } from '@utils/i18n';
 
 const pages = import.meta.globEager('./pages/*.tsx');

@@ -1,4 +1,3 @@
-import { IInterviewEntity } from '@uniqs/config';
 import { IsDate, IsEnum, IsInt, IsPositive } from 'class-validator';
 import { Column, Entity, ManyToMany, ManyToOne, Unique } from 'typeorm';
 
@@ -6,6 +5,7 @@ import { GroupOrTeam, Period } from '@constants/enums';
 import { ApplicationEntity } from '@entities/application.entity';
 import { CommonEntity } from '@entities/common.entity';
 import { RecruitmentEntity } from '@entities/recruitment.entity';
+import { IInterviewEntity } from '@uniqs/config';
 
 @Entity('interviews')
 @Unique(['date', 'period', 'name', 'recruitment'])

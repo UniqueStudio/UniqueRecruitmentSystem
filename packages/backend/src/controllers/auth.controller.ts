@@ -33,13 +33,13 @@ export class AuthController {
 
     @Get('member/qrCode')
     async getQRCode() {
-        type Response = {
+        interface Response {
             serviceResponse: {
                 authenticationSuccess: {
                     qrcodeSrc: string;
                 };
             };
-        };
+        }
         const resp = await got('https://sso.hustunique.com/qrcode/code').json<Response>();
         const imgSrc = resp.serviceResponse.authenticationSuccess.qrcodeSrc;
         console.log(resp);

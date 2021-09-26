@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+
 import { Status } from '@uniqs/config';
 
 interface Snackbar {

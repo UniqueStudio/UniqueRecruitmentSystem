@@ -8,7 +8,6 @@ import {
     Person as PersonIcon,
     Refresh as RefreshIcon,
 } from '@material-ui/icons';
-import { convertRecruitmentName } from '@uniqs/utils';
 import clsx from 'clsx';
 import { observer } from 'mobx-react-lite';
 import React, { FC, MouseEventHandler, useMemo, useState } from 'react';
@@ -19,6 +18,7 @@ import { GROUP_MAP, STEP_TYPE_MAP } from '@config/consts';
 import { Group, StepType } from '@config/enums';
 import { useStores } from '@hooks/useStores';
 import useStyles from '@styles/appBar';
+import { convertRecruitmentName } from '@uniqs/utils';
 import { objectStorage, primitiveStorage } from '@utils/storage';
 
 export const AppBar: FC = observer(() => {

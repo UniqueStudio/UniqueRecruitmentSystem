@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+
 import { Candidate } from '@uniqs/config';
 
 interface CandidateState {

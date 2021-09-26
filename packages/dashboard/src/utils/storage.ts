@@ -1,7 +1,7 @@
-import { ObjectStorage, PrimitiveStorage } from '@uniqs/utils';
 import * as idb from 'idb-keyval';
 
 import { Application, Member, Recruitment } from '@config/types';
+import { ObjectStorage, PrimitiveStorage } from '@uniqs/utils';
 
 export const primitiveStorage = new class extends PrimitiveStorage<{
     token: string;

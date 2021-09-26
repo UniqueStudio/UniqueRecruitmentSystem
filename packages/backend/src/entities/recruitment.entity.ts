@@ -1,4 +1,3 @@
-import { IRecruitmetEntity } from '@uniqs/config';
 import { IsDate, IsString, Matches } from 'class-validator';
 import { Column, Entity, OneToMany } from 'typeorm';
 
@@ -7,6 +6,7 @@ import { GreaterThan, LessThan } from '@decorators/comparator.decorator';
 import { ApplicationEntity } from '@entities/application.entity';
 import { CommonEntity } from '@entities/common.entity';
 import { InterviewEntity } from '@entities/interview.entity';
+import { IRecruitmetEntity } from '@uniqs/config';
 
 @Entity('recruitments')
 export class RecruitmentEntity extends CommonEntity implements IRecruitmetEntity {

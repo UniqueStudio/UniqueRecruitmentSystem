@@ -1,4 +1,3 @@
-import { IApplicationEntity } from '@uniqs/config';
 import { IsBoolean, IsDate, IsEnum, IsOptional, IsString } from 'class-validator';
 import { Column, Entity, JoinTable, ManyToMany, ManyToOne, OneToMany, Unique } from 'typeorm';
 
@@ -8,6 +7,7 @@ import { CommentEntity } from '@entities/comment.entity';
 import { CommonEntity } from '@entities/common.entity';
 import { InterviewEntity } from '@entities/interview.entity';
 import { RecruitmentEntity } from '@entities/recruitment.entity';
+import { IApplicationEntity } from '@uniqs/config';
 
 class InterviewAllocations {
     @Column('timestamptz', { nullable: true })

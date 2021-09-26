@@ -1,7 +1,7 @@
-import { validateJWT } from '@uniqs/utils';
 import { makeAutoObservable, toJS } from 'mobx';
 
 import { Member, Message } from '@config/types';
+import { validateJWT } from '@uniqs/utils';
 import { objectStorage, primitiveStorage } from '@utils/storage';
 
 export class MemberStore {

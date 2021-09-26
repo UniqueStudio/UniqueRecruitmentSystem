@@ -1,6 +1,7 @@
 import { Chip, Stack, Typography } from '@material-ui/core';
-import { Application } from '@uniqs/config';
 import React, { FC } from 'react';
+
+import { Application } from '@uniqs/config';
 
 interface Props {
     application: Partial<Application>;

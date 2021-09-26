@@ -1,10 +1,10 @@
-import { IMemberEntity } from '@uniqs/config';
 import { IsBoolean, IsEnum, IsOptional, IsString, IsUrl, Matches } from 'class-validator';
 import { Column, Entity, OneToMany } from 'typeorm';
 
 import { Group } from '@constants/enums';
 import { CommentEntity } from '@entities/comment.entity';
 import { UserEntity } from '@entities/user.entity';
+import { IMemberEntity } from '@uniqs/config';
 
 @Entity('members')
 export class MemberEntity extends UserEntity implements IMemberEntity {

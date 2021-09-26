@@ -1,7 +1,7 @@
-import { compareRecruitment } from '@uniqs/utils';
 import { makeAutoObservable, toJS } from 'mobx';
 
 import { Recruitment } from '@config/types';
+import { compareRecruitment } from '@uniqs/utils';
 import { primitiveStorage, objectStorage } from '@utils/storage';
 
 export class RecruitmentStore {

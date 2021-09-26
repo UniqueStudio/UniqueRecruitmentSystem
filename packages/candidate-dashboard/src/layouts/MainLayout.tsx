@@ -1,6 +1,4 @@
 import { Box } from '@material-ui/core';
-import { Notifier } from '@uniqs/ui';
-import { validateJWT } from '@uniqs/utils';
 import React, { FC, useState } from 'react';
 
 import background from '@assets/background.png';
@@ -8,6 +6,8 @@ import { useAsyncEffect } from '@hooks/useAsyncEffect';
 import { setToken } from '@stores/candidate';
 import { removeSnackbar } from '@stores/component';
 import { useAppDispatch, useAppSelector } from '@stores/index';
+import { Notifier } from '@uniqs/ui';
+import { validateJWT } from '@uniqs/utils';
 
 export const MainLayout: FC = ({ children }) => {
     const [initialized, setInitialized] = useState(false);

@@ -1,5 +1,4 @@
 import { Button, TextField } from '@material-ui/core';
-import { convertRecruitmentName } from '@uniqs/utils';
 import { observer } from 'mobx-react-lite';
 import React, { ChangeEventHandler, FC, useState } from 'react';
 
@@ -8,6 +7,7 @@ import { GENDERS, GROUP_MAP } from '@config/consts';
 import { Status } from '@config/enums';
 import { useStores } from '@hooks/useStores';
 import useStyles from '@styles/member';
+import { convertRecruitmentName } from '@uniqs/utils';
 
 export const Member: FC = observer(() => {
     const { $member, $component } = useStores();

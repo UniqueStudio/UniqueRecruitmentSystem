@@ -1,7 +1,6 @@
 import { Button, Chip, Dialog, TextField, useMediaQuery, useTheme } from '@material-ui/core';
 import { DataGrid, GridColDef } from '@material-ui/data-grid';
 import { StaticDateTimePicker } from '@material-ui/lab';
-import { compareAllocation, roundToMinute } from '@uniqs/utils';
 import { observer } from 'mobx-react-lite';
 import React, { FC, useState } from 'react';
 
@@ -11,6 +10,7 @@ import { GroupOrTeam, InterviewType, Step, StepType } from '@config/enums';
 import { Application } from '@config/types';
 import { useStores } from '@hooks/useStores';
 import useStyles from '@styles/table';
+import { compareAllocation, roundToMinute } from '@uniqs/utils';
 
 export const Table: FC = observer(() => {
     const { $application } = useStores();

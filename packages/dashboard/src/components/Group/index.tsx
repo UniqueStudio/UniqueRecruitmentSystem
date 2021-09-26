@@ -1,6 +1,5 @@
 import { Button, Checkbox, useMediaQuery, useTheme } from '@material-ui/core';
 import { DataGrid, GridColDef } from '@material-ui/data-grid';
-import { compareRecruitment, convertRecruitmentName } from '@uniqs/utils';
 import { toJS } from 'mobx';
 import { observer } from 'mobx-react-lite';
 import React, { FC, useState } from 'react';
@@ -10,6 +9,7 @@ import { GENDERS } from '@config/consts';
 import { Member } from '@config/types';
 import { useStores } from '@hooks/useStores';
 import useStyles from '@styles/group';
+import { compareRecruitment, convertRecruitmentName } from '@uniqs/utils';
 
 export const Group: FC = observer(() => {
     const { $member } = useStores();

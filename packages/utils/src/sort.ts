@@ -1,6 +1,6 @@
-import { Application } from '@uniqs/config';
-
 import { compareAllocation } from './comparators';
+
+import { Application } from '@uniqs/config';
 
 export const teamSort = (i: Application, j: Application) => {
     const l = i.interviewAllocations.team ? new Date(i.interviewAllocations.team) : undefined;

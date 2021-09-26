@@ -1,5 +1,6 @@
-import { ObjectStorage, PrimitiveStorage } from '@uniqs/utils';
 import * as idb from 'idb-keyval';
+
+import { ObjectStorage, PrimitiveStorage } from '@uniqs/utils';
 
 export const primitiveStorage = new PrimitiveStorage<{
     token: string;

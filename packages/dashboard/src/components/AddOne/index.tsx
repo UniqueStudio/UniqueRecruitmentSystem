@@ -1,6 +1,5 @@
 import { Button, IconButton, Paper, Tooltip, Typography } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
-import { convertRecruitmentName, roundToDay } from '@uniqs/utils';
 import { observer } from 'mobx-react-lite';
 import React, { ChangeEventHandler, FC, useState } from 'react';
 
@@ -11,6 +10,7 @@ import { Verify } from '@components/Verify';
 import { Status } from '@config/enums';
 import { useStores } from '@hooks/useStores';
 import useStyles from '@styles/addOne';
+import { convertRecruitmentName, roundToDay } from '@uniqs/utils';
 
 const generateTitle = (date: Date) => {
     const year = date.getFullYear().toString();

@@ -1,11 +1,11 @@
 import { Stack, Typography } from '@material-ui/core';
-import { Application, GroupOrTeam, InterviewType, PERIOD_MAP, Step } from '@uniqs/config';
 import React, { FC, useState } from 'react';
 
 import { getSlots, selectInterview } from '@apis/rest';
 import { TransferList } from '@components/TransferList';
 import { useAsyncEffect } from '@hooks/useAsyncEffect';
 import { useAppSelector } from '@stores/index';
+import { Application, GroupOrTeam, InterviewType, PERIOD_MAP, Step } from '@uniqs/config';
 
 interface Props {
     application: Application;

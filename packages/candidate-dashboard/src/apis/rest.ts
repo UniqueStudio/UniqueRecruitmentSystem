@@ -1,10 +1,9 @@
-import { RestClient } from '@uniqs/apis';
-import { API, InterviewType, Status } from '@uniqs/config';
-
 import { setInfo, setToken } from '@stores/candidate';
 import { enqueueSnackbar, setProgress } from '@stores/component';
 import store from '@stores/index';
 import { setInterviews, setRecruitments } from '@stores/recruitment';
+import { RestClient } from '@uniqs/apis';
+import { API, InterviewType, Status } from '@uniqs/config';
 
 const client = new RestClient((import.meta.env.VITE_PUBLIC_API ?? API) as string);
 

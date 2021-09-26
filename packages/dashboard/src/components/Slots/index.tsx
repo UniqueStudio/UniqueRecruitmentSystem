@@ -4,7 +4,6 @@ import CancelIcon from '@material-ui/icons/CancelOutlined';
 import CheckIcon from '@material-ui/icons/CheckCircleOutlined';
 import RemoveIcon from '@material-ui/icons/RemoveCircleOutline';
 import { MobileDatePicker } from '@material-ui/lab';
-import { roundToDay } from '@uniqs/utils';
 import { toJS } from 'mobx';
 import { observer } from 'mobx-react-lite';
 import React, { ChangeEventHandler, FC, useEffect, useState } from 'react';
@@ -15,6 +14,7 @@ import { GroupOrTeam, Period, StepType } from '@config/enums';
 import { Interview } from '@config/types';
 import { useStores } from '@hooks/useStores';
 import useStyles from '@styles/slots';
+import { roundToDay } from '@uniqs/utils';
 
 interface Props {
     name: string;

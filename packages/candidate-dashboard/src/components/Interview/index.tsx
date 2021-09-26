@@ -1,9 +1,10 @@
 import { Dialog, DialogContent, DialogProps, DialogTitle, Divider, Theme, useMediaQuery } from '@material-ui/core';
-import { Application } from '@uniqs/config';
 import React, { FC } from 'react';
 
 import { Allocations } from './Allocations';
 import { Selections } from './Selections';
+
+import { Application } from '@uniqs/config';
 
 interface Props extends DialogProps {
     application?: Application;

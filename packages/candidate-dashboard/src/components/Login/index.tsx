@@ -1,14 +1,13 @@
 import { t, Trans } from '@lingui/macro';
 import { Link, Stack, Typography } from '@material-ui/core';
 import { LoadingButton } from '@material-ui/lab';
-import { validatePhone } from '@uniqs/utils';
 import React, { FC } from 'react';
-import { Link as RouterLink } from 'react-router-dom';
-
 import { SubmitHandler, useForm } from 'react-hook-form';
+import { Link as RouterLink } from 'react-router-dom';
 
 import { loginByPassword } from '@apis/rest';
 import { Input, Password } from '@components/Textfields';
+import { validatePhone } from '@uniqs/utils';
 
 interface Inputs {
     phone: string;

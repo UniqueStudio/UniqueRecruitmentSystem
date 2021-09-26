@@ -1,9 +1,9 @@
 import { Dialog, DialogTitle, Theme, useMediaQuery, styled, DialogProps } from '@material-ui/core';
-import { Application } from '@uniqs/config';
 import React, { FC } from 'react';
 
 import header from '@assets/header.png';
 import { Form } from '@components/Application/Form';
+import { Application } from '@uniqs/config';
 
 interface Props extends DialogProps {
     application?: Partial<Application>;
