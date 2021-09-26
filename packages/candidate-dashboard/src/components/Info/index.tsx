@@ -1,14 +1,14 @@
 import { t, Trans } from '@lingui/macro';
 import { Box, Stack } from '@material-ui/core';
 import { LoadingButton } from '@material-ui/lab';
-import { Candidate, GENDERS } from '@uniqs/config';
-import { validateMail, validatePhone } from '@uniqs/utils';
 import React, { FC } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 
 import { setMyInfo } from '@apis/rest';
 import { Select, Input, Password } from '@components/Textfields';
 import { useAppSelector } from '@stores/index';
+import { Candidate, GENDERS } from '@uniqs/config';
+import { validateMail, validatePhone } from '@uniqs/utils';
 
 type Inputs = Pick<Candidate, 'name' | 'gender' | 'phone' | 'mail' | 'password'>;
 

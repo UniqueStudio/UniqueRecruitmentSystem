@@ -1,6 +1,5 @@
-import { API as API_PROD } from '@uniqs/config';
-
 import { StepType } from '@config/enums';
+import { API as API_PROD } from '@uniqs/config';
 
 export const STEP_TYPE_MAP = new Map([
     [StepType.all, '全部'],

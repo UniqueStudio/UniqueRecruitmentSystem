@@ -1,5 +1,6 @@
-import { ICommonEntity } from '@uniqs/config';
 import { BaseEntity, CreateDateColumn, PrimaryGeneratedColumn, UpdateDateColumn, Index } from 'typeorm';
+
+import { ICommonEntity } from '@uniqs/config';
 
 export abstract class CommonEntity extends BaseEntity implements ICommonEntity {
     @PrimaryGeneratedColumn('uuid')

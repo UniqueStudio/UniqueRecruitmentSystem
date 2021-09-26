@@ -1,7 +1,7 @@
-import { SMSTemplate } from '@uniqs/config';
 import { IsEnum, IsOptional, IsPhoneNumber, IsString, IsUUID } from 'class-validator';
 
 import { SMSType, Step } from '@constants/enums';
+import { SMSTemplate } from '@uniqs/config';
 
 export class SendCodeToOthersParams {
     @IsPhoneNumber('CN')

@@ -1,12 +1,12 @@
 import { Stack } from '@material-ui/core';
-import { Application, STEP_MAP } from '@uniqs/config';
-import { convertRecruitmentName } from '@uniqs/utils';
 import React, { FC, useState } from 'react';
 
 import { ApplicationDialog } from '@components/Application';
 import { InterviewDialog } from '@components/Interview';
 import { Toast } from '@components/Toast';
 import { useAppSelector } from '@stores/index';
+import { Application, STEP_MAP } from '@uniqs/config';
+import { convertRecruitmentName } from '@uniqs/utils';
 
 export const Overview: FC = () => {
     const info = useAppSelector(({ candidate }) => candidate.info);

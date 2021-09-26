@@ -1,3 +1,5 @@
+import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
+
 import {
     Application,
     Candidate,
@@ -12,7 +14,6 @@ import {
     Status,
     Step,
 } from '@uniqs/config';
-import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
 
 type Optional<T, K extends keyof T> = Pick<Partial<T>, K> & Omit<T, K>;
 

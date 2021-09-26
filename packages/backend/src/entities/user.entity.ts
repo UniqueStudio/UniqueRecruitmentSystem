@@ -1,9 +1,9 @@
-import { IUserEntity } from '@uniqs/config';
 import { IsEmail, IsEnum, IsOptional, IsPhoneNumber, IsString } from 'class-validator';
 import { Column } from 'typeorm';
 
 import { Gender } from '@constants/enums';
 import { CommonEntity } from '@entities/common.entity';
+import { IUserEntity } from '@uniqs/config';
 
 class Password {
     @Column({ select: false })

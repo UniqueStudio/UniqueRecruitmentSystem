@@ -55,11 +55,12 @@ export const Login: FC = observer(() => {
                 label='手机号'
                 value={phone}
                 // safari does NOT respect the `autocomplete` attr,
-                // it simply just reads `name` or `id`. 
+                // it simply just reads `name` or `id`.
                 // so, apple, fuck you
                 name='username'
                 autoComplete='tel-national'
-                onChange={handlePhone} />
+                onChange={handlePhone}
+            />
             <TextField
                 label='密码'
                 value={password}

@@ -2,7 +2,6 @@ import { Box, Button, Paper, Typography } from '@material-ui/core';
 import { Edit as EditIcon } from '@material-ui/icons';
 import VisibilityIcon from '@material-ui/icons/Visibility';
 import VisibilityOffIcon from '@material-ui/icons/VisibilityOff';
-import { compareRecruitment, convertRecruitmentName, roundToDay } from '@uniqs/utils';
 import clsx from 'clsx';
 import { observer } from 'mobx-react-lite';
 import React, { FC, MouseEventHandler, useMemo, useState } from 'react';
@@ -17,6 +16,7 @@ import { Group, Status } from '@config/enums';
 import { Recruitment } from '@config/types';
 import { useStores } from '@hooks/useStores';
 import useStyles from '@styles/recruitmentPanel';
+import { compareRecruitment, convertRecruitmentName, roundToDay } from '@uniqs/utils';
 
 interface Props {
     recruitment: Recruitment;

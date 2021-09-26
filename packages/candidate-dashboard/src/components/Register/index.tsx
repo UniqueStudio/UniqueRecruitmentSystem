@@ -1,16 +1,15 @@
 import { t, Trans } from '@lingui/macro';
 import { Box, Button, Link, Stack, Typography } from '@material-ui/core';
 import { LoadingButton } from '@material-ui/lab';
-import { Gender, GENDERS } from '@uniqs/config';
-import { validateCode, validateMail, validatePhone } from '@uniqs/utils';
 import React from 'react';
-import { Link as RouterLink } from 'react-router-dom';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { useHistory } from 'react-router-dom';
+import { Link as RouterLink, useHistory } from 'react-router-dom';
 
 import { createCandidate, getCodeForOther } from '@apis/rest';
 import { Input, Select, Password } from '@components/Textfields';
 import { useCountdown } from '@hooks/useCountdown';
+import { Gender, GENDERS } from '@uniqs/config';
+import { validateCode, validateMail, validatePhone } from '@uniqs/utils';
 
 interface Inputs {
     name: string;

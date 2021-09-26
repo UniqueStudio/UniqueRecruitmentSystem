@@ -1,9 +1,8 @@
-import { RestClient } from '@uniqs/apis';
-
 import { API } from '@config/consts';
 import { GroupOrTeam, InterviewType, Status, Step } from '@config/enums';
 import { Interview, Recruitment, Member, SMSTemplate } from '@config/types';
 import { stores } from '@stores/index';
+import { RestClient } from '@uniqs/apis';
 import { objectStorage } from '@utils/storage';
 
 const { $application, $component, $member, $recruitment } = stores;

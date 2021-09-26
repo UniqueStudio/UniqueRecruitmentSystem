@@ -1,9 +1,9 @@
-import { groupSort, teamSort } from '@uniqs/utils';
 import { makeAutoObservable, toJS } from 'mobx';
 
 import { STEP_MAP } from '@config/consts';
 import { Group, InterviewType, Step, StepType } from '@config/enums';
 import { Application, Comment } from '@config/types';
+import { groupSort, teamSort } from '@uniqs/utils';
 import { objectStorage } from '@utils/storage';
 
 const allSteps = [

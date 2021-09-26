@@ -1,7 +1,6 @@
 import { t, Trans } from '@lingui/macro';
 import { Box, Button, Stack } from '@material-ui/core';
 import { LoadingButton } from '@material-ui/lab';
-import { validateCode, validatePhone } from '@uniqs/utils';
 import React, { FC } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
@@ -9,6 +8,7 @@ import { useHistory } from 'react-router-dom';
 import { getCodeForOther, resetPassword } from '@apis/rest';
 import { Input, Password } from '@components/Textfields';
 import { useCountdown } from '@hooks/useCountdown';
+import { validateCode, validatePhone } from '@uniqs/utils';
 
 interface Inputs {
     phone: string;

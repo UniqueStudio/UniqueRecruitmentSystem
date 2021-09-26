@@ -2,8 +2,6 @@ import { t, Trans } from '@lingui/macro';
 import { Box, Button, DialogActions, DialogContent, IconButton, styled, Tooltip, Typography } from '@material-ui/core';
 import { HelpOutline } from '@material-ui/icons';
 import { LoadingButton } from '@material-ui/lab';
-import { Application, DEPARTMENTS, GRADES, GROUP_MAP, INSTITUTES, RANKS } from '@uniqs/config';
-import { convertRecruitmentName, validateCode } from '@uniqs/utils';
 import React, { FC, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 
@@ -12,6 +10,8 @@ import { SplitButton } from '@components/SplitButton';
 import { AutoComplete, Input, Select, Upload } from '@components/Textfields';
 import { useCountdown } from '@hooks/useCountdown';
 import { useAppSelector } from '@stores/index';
+import { Application, DEPARTMENTS, GRADES, GROUP_MAP, INSTITUTES, RANKS } from '@uniqs/config';
+import { convertRecruitmentName, validateCode } from '@uniqs/utils';
 
 type Inputs = Parameters<typeof createApplication>[0];
 

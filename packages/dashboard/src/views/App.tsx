@@ -1,7 +1,6 @@
 import { CssBaseline, StyledEngineProvider, ThemeProvider, useMediaQuery } from '@material-ui/core';
 import { LocalizationProvider } from '@material-ui/lab';
 import AdapterDateFns from '@material-ui/lab/AdapterDateFns';
-import { useTheme } from '@uniqs/ui';
 import { observer } from 'mobx-react-lite';
 import React, { FC, ReactElement, lazy, Suspense } from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
@@ -12,6 +11,7 @@ import { Snackbars } from '@components/Snackbars';
 import { useStores } from '@hooks/useStores';
 import { MainLayout } from '@layouts/MainLayout';
 import useStyles from '@styles/global';
+import { useTheme } from '@uniqs/ui';
 import { logger } from '@utils/console';
 
 const Applications = lazy(() => import('./Applications'));
