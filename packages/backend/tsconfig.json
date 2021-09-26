@@ -4,6 +4,13 @@
     "lib": ["esnext"],
     "baseUrl": ".",
     "paths": {
+      "@uniqs/apis": ["../apis/src"],
+      "@uniqs/backend": ["../backend/src"],
+      "@uniqs/candidate-dashboard": ["../candidate-dashboard/src"],
+      "@uniqs/dashboard": ["../dashboard/src"],
+      "@uniqs/config": ["../config/src"],
+      "@uniqs/ui": ["../ui/src"],
+      "@uniqs/utils": ["../utils/src"],
       "@constants/*": ["src/constants/*"],
       "@controllers/*": ["src/controllers/*"],
       "@decorators/*": ["src/decorators/*"],

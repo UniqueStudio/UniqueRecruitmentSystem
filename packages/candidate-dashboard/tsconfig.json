@@ -6,6 +6,13 @@
     "jsx": "preserve",
     "baseUrl": ".",
     "paths": {
+      "@uniqs/apis": ["../apis/src"],
+      "@uniqs/backend": ["../backend/src"],
+      "@uniqs/candidate-dashboard": ["../candidate-dashboard/src"],
+      "@uniqs/dashboard": ["../dashboard/src"],
+      "@uniqs/config": ["../config/src"],
+      "@uniqs/ui": ["../ui/src"],
+      "@uniqs/utils": ["../utils/src"],
       "@apis/*": ["src/apis/*"],
       "@assets/*": ["src/assets/*"],
       "@components/*": ["src/components/*"],
