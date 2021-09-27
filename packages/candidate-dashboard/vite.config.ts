@@ -2,7 +2,7 @@ import { transformAsync } from '@babel/core';
 import refresh from '@vitejs/plugin-react-refresh';
 import { defineConfig } from 'vite';
 
-import { compilerOptions } from './tsconfig.json';
+import { compilerOptions } from './tsconfig.build.json';
 
 export default defineConfig({
     resolve: {

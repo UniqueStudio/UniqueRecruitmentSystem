@@ -35,6 +35,6 @@
   },
   "scripts": {
     "start": "vite --host",
-    "build": "tsc && vite build"
+    "build": "yarn run -T tsc && vite build"
   }
 }
