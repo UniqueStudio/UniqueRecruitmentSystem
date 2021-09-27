@@ -3,7 +3,25 @@
   "compilerOptions": {
     "outDir": "build",
     "target": "esnext",
-    "noEmit": false
+    "noEmit": false,
+    "paths": {
+      "@constants/*": ["src/constants/*"],
+      "@controllers/*": ["src/controllers/*"],
+      "@decorators/*": ["src/decorators/*"],
+      "@dtos/*": ["src/dtos/*"],
+      "@entities/*": ["src/entities/*"],
+      "@filters/*": ["src/filters/*"],
+      "@gateways/*": ["src/gateways/*"],
+      "@guards/*": ["src/guards/*"],
+      "@interceptors/*": ["src/interceptors/*"],
+      "@interfaces/*": ["src/interfaces/*"],
+      "@middlewares/*": ["src/middlewares/*"],
+      "@modules/*": ["src/modules/*"],
+      "@pipes/*": ["src/pipes/*"],
+      "@services/*": ["src/services/*"],
+      "@utils/*": ["src/utils/*"],
+      "@test/*": ["test/*"]
+    }
   },
   "include": ["src", "typings"]
 }

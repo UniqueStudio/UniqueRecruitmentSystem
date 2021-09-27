@@ -10,7 +10,7 @@
   "types": "dist/cjs/index.d.ts",
   "scripts": {
     "prebuild": "rm -rf dist",
-    "build": "tsc --module esnext --outDir dist/esm && tsc --module commonjs --outDir dist/cjs"
+    "build": "yarn run -T tsc --module esnext --outDir dist/esm && yarn run -T tsc --module commonjs --outDir dist/cjs"
   },
   "dependencies": {
     "@material-ui/core": "^5.0.0-alpha.36",
