@@ -56,6 +56,7 @@ import { InterviewsService } from '@services/interviews.service';
 import { RecruitmentsService } from '@services/recruitments.service';
 import { SMSService } from '@services/sms.service';
 import { copyFile, deleteFile } from '@utils/fs';
+import { compareRecruitment } from '@uniqs/utils';
 
 @Controller('applications')
 @UseGuards(ThrottlerGuard)
@@ -255,7 +256,7 @@ export class ApplicationsController {
     ) {
         const recruitment = await this.recruitmentsService.findOneById(rid);
 
-        if (recruitment.createdAt < member.createdAt) {
+        if (compareRecruitment(member.joinTime, recruitment.name) >= 0) {
             throw new ForbiddenException(Msg.R_NO_PERMISSION('view applications of'));
         }
 
