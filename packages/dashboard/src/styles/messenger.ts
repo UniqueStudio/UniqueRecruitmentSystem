@@ -26,7 +26,9 @@ const useStyles = makeStyles(({ spacing, transitions, breakpoints, palette, zInd
         flex: '1',
     },
     messages: {
+        display: 'flex',
         flex: '1',
+        flexDirection: 'column-reverse',
         overflowY: 'auto',
         padding: spacing(1),
         marginBottom: spacing(1),

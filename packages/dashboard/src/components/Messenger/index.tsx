@@ -151,15 +151,21 @@ export const Messenger: FC = observer(() => {
         <Collapse in={$component.messengerOpen} classes={{ root: classes.collapse }}>
             <Paper className={classes.messenger}>
                 <div className={classes.messages} ref={setContainer}>
-                    {$member.messages.map((message, index) => (
-                        <div key={index} className={clsx(classes.messageContainer, { [classes.my]: message.isSelf })}>
-                            {AvatarBox(message)}
-                            <Chip
-                                label={MessageChip(message)}
-                                classes={{ root: clsx(classes.chipRoot, { [classes.myChip]: message.isSelf }) }}
-                            />
-                        </div>
-                    ))}
+                    {$member.messages
+                        .slice()
+                        .reverse()
+                        .map((message, index) => (
+                            <div
+                                key={index}
+                                className={clsx(classes.messageContainer, { [classes.my]: message.isSelf })}
+                            >
+                                {AvatarBox(message)}
+                                <Chip
+                                    label={MessageChip(message)}
+                                    classes={{ root: clsx(classes.chipRoot, { [classes.myChip]: message.isSelf }) }}
+                                />
+                            </div>
+                        ))}
                 </div>
                 <div className={classes.input}>
                     <Divider />
