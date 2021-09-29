@@ -40,7 +40,7 @@
     ]
   },
   "scripts": {
-    "prepare": "husky install",
+    "postinstall": "husky install",
     "format": "prettier --write . '!**/*.md'",
     "lint": "eslint --fix .",
     "build:essentials": "./scripts/build-essentials.sh"
