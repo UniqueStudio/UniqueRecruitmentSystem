@@ -1,5 +1,5 @@
-import { Color, Theme } from '@material-ui/core';
-import { makeStyles } from '@material-ui/styles';
+import { Color, Theme } from '@mui/material';
+import { makeStyles } from '@mui/styles';
 
 import { getRainbow } from './index';
 

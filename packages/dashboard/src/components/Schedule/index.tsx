@@ -1,4 +1,3 @@
-import { TextField } from '@material-ui/core';
 import {
     MobileDatePicker,
     Timeline,
@@ -8,7 +7,8 @@ import {
     TimelineItem,
     TimelineOppositeContent,
     TimelineSeparator,
-} from '@material-ui/lab';
+} from '@mui/lab';
+import { TextField } from '@mui/material';
 import React, { FC, memo } from 'react';
 
 import useStyles from '@styles/schedule';

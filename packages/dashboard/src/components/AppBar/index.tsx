@@ -1,4 +1,3 @@
-import { AppBar as MuiAppBar, IconButton, Menu, MenuItem, Toolbar, Typography } from '@material-ui/core';
 import {
     Brightness4 as BrightnessIcon,
     Chat as ChatIcon,
@@ -7,7 +6,8 @@ import {
     Menu as MenuIcon,
     Person as PersonIcon,
     Refresh as RefreshIcon,
-} from '@material-ui/icons';
+} from '@mui/icons-material';
+import { AppBar as MuiAppBar, IconButton, Menu, MenuItem, Toolbar, Typography } from '@mui/material';
 import clsx from 'clsx';
 import { observer } from 'mobx-react-lite';
 import React, { FC, MouseEventHandler, useMemo, useState } from 'react';

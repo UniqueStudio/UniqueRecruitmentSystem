@@ -1,4 +1,4 @@
-import { Button, TextField } from '@material-ui/core';
+import { Button, TextField } from '@mui/material';
 import React, { ChangeEventHandler, FC, memo, useEffect, useState } from 'react';
 
 import { getVerifyCode } from '@apis/rest';

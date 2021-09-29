@@ -1,8 +1,8 @@
-import { Avatar, Chip, Collapse, Divider, IconButton, Paper, TextField } from '@material-ui/core';
-import FaceIcon from '@material-ui/icons/Face';
-import InsertPhotoIcon from '@material-ui/icons/InsertPhoto';
-import PlusOneIcon from '@material-ui/icons/PlusOne';
-import SendIcon from '@material-ui/icons/Send';
+import FaceIcon from '@mui/icons-material/Face';
+import InsertPhotoIcon from '@mui/icons-material/InsertPhoto';
+import PlusOneIcon from '@mui/icons-material/PlusOne';
+import SendIcon from '@mui/icons-material/Send';
+import { Avatar, Chip, Collapse, Divider, IconButton, Paper, TextField } from '@mui/material';
 import clsx from 'clsx';
 import { observer } from 'mobx-react-lite';
 import React, {
@@ -131,13 +131,14 @@ export const Messenger: FC = observer(() => {
             <div className={classes.messageContent}>
                 {isImage ? (
                     <EnlargeableImage src={message} />
-                ) :
+                ) : (
                     message.split('\n').map((text, index) => (
                         <span key={index}>
                             {text}
                             <br />
                         </span>
-                    ))}
+                    ))
+                )}
             </div>
         </div>
     );

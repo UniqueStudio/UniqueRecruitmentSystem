@@ -1,5 +1,5 @@
-import { alpha, Theme } from '@material-ui/core';
-import { makeStyles } from '@material-ui/styles';
+import { alpha, Theme } from '@mui/material';
+import { makeStyles } from '@mui/styles';
 
 interface Props {
     disabled: boolean;

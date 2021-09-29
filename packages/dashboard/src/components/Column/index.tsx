@@ -1,4 +1,4 @@
-import { Divider, Paper, Typography } from '@material-ui/core';
+import { Divider, Paper, Typography } from '@mui/material';
 import React, { FC, memo } from 'react';
 import { Draggable, Droppable } from 'react-beautiful-dnd';
 

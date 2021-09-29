@@ -1,4 +1,4 @@
-import { SlideProps } from '@material-ui/core';
+import { SlideProps } from '@mui/material';
 import { observer } from 'mobx-react-lite';
 import React, { FC, useEffect, useMemo, useState } from 'react';
 

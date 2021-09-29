@@ -1,5 +1,5 @@
-import { TextFieldProps, IconButton, InputAdornment, TextField } from '@material-ui/core';
-import { Upload as UploadIcon } from '@material-ui/icons';
+import { Upload as UploadIcon } from '@mui/icons-material';
+import { TextFieldProps, IconButton, InputAdornment, TextField } from '@mui/material';
 import React from 'react';
 import { FieldPath, FieldValues, useController, UseControllerProps } from 'react-hook-form';
 

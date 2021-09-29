@@ -1,8 +1,8 @@
 import { CacheProvider, EmotionCache } from '@emotion/react';
 import { i18n } from '@lingui/core';
 import { I18nProvider } from '@lingui/react';
-import { ThemeProvider, useMediaQuery } from '@material-ui/core';
-import CssBaseline from '@material-ui/core/CssBaseline';
+import { ThemeProvider, useMediaQuery } from '@mui/material';
+import CssBaseline from '@mui/material/CssBaseline';
 import React, { FC } from 'react';
 import { Provider } from 'react-redux';
 import { Route, Switch } from 'react-router-dom';

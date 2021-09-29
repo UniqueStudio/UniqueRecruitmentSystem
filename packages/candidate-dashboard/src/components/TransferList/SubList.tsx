@@ -8,7 +8,7 @@ import {
     ListItem,
     ListItemIcon,
     ListItemText,
-} from '@material-ui/core';
+} from '@mui/material';
 import React, { Dispatch, FC, SetStateAction } from 'react';
 
 interface Props {

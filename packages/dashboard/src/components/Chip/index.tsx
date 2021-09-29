@@ -1,4 +1,4 @@
-import { Chip as MuiChip, Paper, Popover } from '@material-ui/core';
+import { Chip as MuiChip, Paper, Popover } from '@mui/material';
 import React, { FC, memo, MouseEventHandler, useState } from 'react';
 
 import { Comment } from '@config/types';

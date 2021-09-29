@@ -1,4 +1,4 @@
-import { Stack, Typography } from '@material-ui/core';
+import { Stack, Typography } from '@mui/material';
 import React, { FC, useState } from 'react';
 
 import { getSlots, selectInterview } from '@apis/rest';
@@ -14,8 +14,10 @@ interface Props {
 export const Selections: FC<Props> = ({ application }) => {
     const [ok, setOk] = useState(false);
     const { id, step, group, interviewSelections } = application;
-    const type = step === Step.组面时间选择 ? InterviewType.group : step === Step.群面时间选择 ? InterviewType.team : undefined;
-    const name = step === Step.组面时间选择 ? GroupOrTeam[group] : step === Step.群面时间选择 ? GroupOrTeam.unique : undefined;
+    const type =
+        step === Step.组面时间选择 ? InterviewType.group : step === Step.群面时间选择 ? InterviewType.team : undefined;
+    const name =
+        step === Step.组面时间选择 ? GroupOrTeam[group] : step === Step.群面时间选择 ? GroupOrTeam.unique : undefined;
     const slots = useAppSelector(({ recruitment }) => recruitment.interviews);
     const selected = interviewSelections.filter((interview) => interview.name === name);
 
@@ -35,13 +37,17 @@ export const Selections: FC<Props> = ({ application }) => {
             </Typography>
             {ok && !!type && (
                 <TransferList
-                    l={selected.length ? [] : slots.map(({ id, date, period }) => [
-                        id,
-                        new Date(date).toLocaleDateString('zh-CN', {
-                            month: 'long',
-                            day: 'numeric',
-                        }) + PERIOD_MAP.get(period)!,
-                    ])}
+                    l={
+                        selected.length
+                            ? []
+                            : slots.map(({ id, date, period }) => [
+                                  id,
+                                  new Date(date).toLocaleDateString('zh-CN', {
+                                      month: 'long',
+                                      day: 'numeric',
+                                  }) + PERIOD_MAP.get(period)!,
+                              ])
+                    }
                     r={selected.map(({ id, date, period }) => [
                         id,
                         new Date(date).toLocaleDateString('zh-CN', {

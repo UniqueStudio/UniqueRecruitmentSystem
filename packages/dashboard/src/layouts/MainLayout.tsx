@@ -1,4 +1,4 @@
-import { Toolbar } from '@material-ui/core';
+import { Toolbar } from '@mui/material';
 import { observer } from 'mobx-react-lite';
 import React, { FC, useEffect } from 'react';
 import { Redirect } from 'react-router-dom';

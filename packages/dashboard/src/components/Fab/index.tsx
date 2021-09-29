@@ -1,5 +1,5 @@
-import { SpeedDial, SpeedDialAction, SpeedDialIcon } from '@material-ui/core';
-import { Delete, SelectAll, ArrowBack, ArrowForward, Send } from '@material-ui/icons';
+import { Delete, SelectAll, ArrowBack, ArrowForward, Send } from '@mui/icons-material';
+import { SpeedDial, SpeedDialAction, SpeedDialIcon } from '@mui/material';
 import { observer } from 'mobx-react-lite';
 import React, { FC, ReactElement, useState } from 'react';
 

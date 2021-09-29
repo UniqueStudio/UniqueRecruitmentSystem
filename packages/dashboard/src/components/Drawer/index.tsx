@@ -1,20 +1,12 @@
 import {
-    Divider,
-    Drawer as MuiDrawer,
-    IconButton,
-    List,
-    ListItem,
-    ListItemIcon,
-    ListItemText,
-} from '@material-ui/core';
-import {
     ChevronLeft as ChevronLeftIcon,
     Dashboard as DashboardIcon,
     Home as HomeIcon,
     People as PeopleIcon,
     Timeline as TimelineIcon,
     DateRange as DateRangeIcon,
-} from '@material-ui/icons';
+} from '@mui/icons-material';
+import { Divider, Drawer as MuiDrawer, IconButton, List, ListItem, ListItemIcon, ListItemText } from '@mui/material';
 import clsx from 'clsx';
 import { observer } from 'mobx-react-lite';
 import React, { FC } from 'react';

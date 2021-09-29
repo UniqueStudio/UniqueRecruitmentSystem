@@ -1,4 +1,4 @@
-import { Box } from '@material-ui/core';
+import { Box } from '@mui/material';
 import React, { FC, useState } from 'react';
 
 import background from '@assets/background.png';
@@ -14,7 +14,8 @@ export const MainLayout: FC = ({ children }) => {
     const snackbars = useAppSelector((state) => state.component.snackbars);
     const dispatch = useAppDispatch();
 
-    useAsyncEffect(async () => { // TODO: authentication with SSR?
+    useAsyncEffect(async () => {
+        // TODO: authentication with SSR?
         const { primitiveStorage } = await import('@utils/storage');
         const token = primitiveStorage.get('token');
         if (validateJWT(token)) {

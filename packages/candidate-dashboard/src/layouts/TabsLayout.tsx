@@ -1,5 +1,5 @@
-import { styled, Tab } from '@material-ui/core';
-import { TabContext, TabList, TabPanel } from '@material-ui/lab';
+import { TabContext, TabList, TabPanel } from '@mui/lab';
+import { styled, Tab } from '@mui/material';
 import React, { FC, ReactElement, useEffect } from 'react';
 import { Link, Route, Switch, useHistory, useRouteMatch } from 'react-router-dom';
 

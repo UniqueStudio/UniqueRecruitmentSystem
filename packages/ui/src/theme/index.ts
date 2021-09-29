@@ -1,5 +1,5 @@
-import { createTheme, responsiveFontSizes } from '@material-ui/core';
-import { blue, grey, pink } from '@material-ui/core/colors';
+import { createTheme, responsiveFontSizes } from '@mui/material';
+import { blue, grey, pink } from '@mui/material/colors';
 import { useMemo } from 'react';
 
 export const useTheme = (darkMode: boolean) =>

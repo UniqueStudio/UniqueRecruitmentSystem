@@ -1,4 +1,4 @@
-import { MenuItem, TextField, Typography } from '@material-ui/core';
+import { MenuItem, TextField, Typography } from '@mui/material';
 import clsx from 'clsx';
 import React, { ChangeEventHandler, FC, memo } from 'react';
 

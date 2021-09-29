@@ -1,4 +1,4 @@
-import { Stack } from '@material-ui/core';
+import { Stack } from '@mui/material';
 import React, { FC, useState } from 'react';
 
 import { ApplicationDialog } from '@components/Application';

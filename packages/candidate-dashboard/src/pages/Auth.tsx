@@ -1,6 +1,6 @@
-import { Avatar, Container, Paper, Stack, Typography } from '@material-ui/core';
-import { blue } from '@material-ui/core/colors';
-import { DashboardRounded as DashboardIcon } from '@material-ui/icons';
+import { DashboardRounded as DashboardIcon } from '@mui/icons-material';
+import { Avatar, Container, Paper, Stack, Typography } from '@mui/material';
+import { blue } from '@mui/material/colors';
 import React, { useEffect } from 'react';
 import { Redirect, Route, Switch, useHistory, useRouteMatch } from 'react-router-dom';
 

@@ -5,7 +5,7 @@ import {
     DialogContent,
     DialogContentText,
     DialogTitle,
-} from '@material-ui/core';
+} from '@mui/material';
 import React, { FC, memo } from 'react';
 
 interface Props {

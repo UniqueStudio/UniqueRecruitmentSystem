@@ -1,4 +1,4 @@
-import { Checkbox, FormControlLabelProps, FormControlLabel } from '@material-ui/core';
+import { Checkbox, FormControlLabelProps, FormControlLabel } from '@mui/material';
 import React from 'react';
 import { FieldPath, FieldValues, useController, UseControllerProps } from 'react-hook-form';
 

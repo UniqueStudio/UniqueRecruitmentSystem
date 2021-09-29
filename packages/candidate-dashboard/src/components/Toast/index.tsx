@@ -1,5 +1,4 @@
-import { Alert, AlertTitle, Button, styled, Theme, useMediaQuery } from '@material-ui/core';
-import { Color } from '@material-ui/lab';
+import { Alert, AlertColor, AlertTitle, Button, styled, Theme, useMediaQuery } from '@mui/material';
 import React, { FC } from 'react';
 
 const ToastContainer = styled(Alert)(({ theme: { breakpoints } }) => ({
@@ -14,7 +13,7 @@ const ToastContainer = styled(Alert)(({ theme: { breakpoints } }) => ({
 
 interface Props {
     title: string;
-    severity: Color;
+    severity: AlertColor;
     label: string;
     buttons: { label: string; onClick?: () => void }[];
 }

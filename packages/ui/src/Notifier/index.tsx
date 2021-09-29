@@ -1,12 +1,11 @@
-import { styled } from '@material-ui/core';
-import { Color } from '@material-ui/lab';
+import { AlertColor, styled } from '@mui/material';
 import React, { FC } from 'react';
 
 import { SnackbarItem } from './Item';
 
 interface Notification {
     message: string;
-    variant: Color;
+    variant: AlertColor;
 }
 
 interface Props {

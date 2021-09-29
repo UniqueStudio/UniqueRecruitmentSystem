@@ -1,5 +1,5 @@
-import { Button, ButtonGroup, ClickAwayListener, Grow, Paper, Popper, MenuItem, MenuList } from '@material-ui/core';
-import { ExpandLess } from '@material-ui/icons';
+import { ExpandLess } from '@mui/icons-material';
+import { Button, ButtonGroup, ClickAwayListener, Grow, Paper, Popper, MenuItem, MenuList } from '@mui/material';
 import React, { FC, useState, useRef } from 'react';
 
 interface Props {

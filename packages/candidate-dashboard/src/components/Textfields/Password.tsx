@@ -1,5 +1,5 @@
-import { IconButton, InputAdornment, TextField, TextFieldProps } from '@material-ui/core';
-import { Visibility, VisibilityOff } from '@material-ui/icons';
+import { Visibility, VisibilityOff } from '@mui/icons-material';
+import { IconButton, InputAdornment, TextField, TextFieldProps } from '@mui/material';
 import React, { useState } from 'react';
 import { FieldPath, FieldValues, useController, UseControllerProps } from 'react-hook-form';
 

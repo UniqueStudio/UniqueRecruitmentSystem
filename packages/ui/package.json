@@ -13,8 +13,8 @@
     "build": "yarn run -T tsc --module esnext --outDir dist/esm && yarn run -T tsc --module commonjs --outDir dist/cjs"
   },
   "dependencies": {
-    "@material-ui/core": "^5.0.0-alpha.36",
-    "@material-ui/lab": "^5.0.0-alpha.36",
+    "@mui/lab": "^5.0.0-alpha.49",
+    "@mui/material": "^5.0.2",
     "react": "^17.0.2"
   },
   "devDependencies": {

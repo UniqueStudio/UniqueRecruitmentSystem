@@ -1,5 +1,5 @@
-import { IconButton, Stack } from '@material-ui/core';
-import { ChevronLeft, ChevronRight, Done } from '@material-ui/icons';
+import { ChevronLeft, ChevronRight, Done } from '@mui/icons-material';
+import { IconButton, Stack } from '@mui/material';
 import React, { FC, useState } from 'react';
 
 import { SubList } from '@components/TransferList/SubList';

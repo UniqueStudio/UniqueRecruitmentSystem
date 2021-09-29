@@ -1,4 +1,4 @@
-import { useTheme } from '@material-ui/core';
+import { useTheme } from '@mui/material';
 import { ChartOptions } from 'chart.js';
 import React, { FC, memo } from 'react';
 

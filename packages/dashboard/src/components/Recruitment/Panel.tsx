@@ -1,7 +1,7 @@
-import { Box, Button, Paper, Typography } from '@material-ui/core';
-import { Edit as EditIcon } from '@material-ui/icons';
-import VisibilityIcon from '@material-ui/icons/Visibility';
-import VisibilityOffIcon from '@material-ui/icons/VisibilityOff';
+import { Edit as EditIcon } from '@mui/icons-material';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
+import { Box, Button, Paper, Typography } from '@mui/material';
 import clsx from 'clsx';
 import { observer } from 'mobx-react-lite';
 import React, { FC, MouseEventHandler, useMemo, useState } from 'react';
@@ -74,7 +74,7 @@ const RecruitmentOverview: FC<Props> = observer(({ recruitment: { statistics, en
                                     if (!elements.length) {
                                         return;
                                     }
-                                    setGroup((group) => group ? undefined : [...GROUP_MAP.keys()][elements[0].index]);
+                                    setGroup((group) => (group ? undefined : [...GROUP_MAP.keys()][elements[0].index]));
                                 }}
                             />
                         </div>

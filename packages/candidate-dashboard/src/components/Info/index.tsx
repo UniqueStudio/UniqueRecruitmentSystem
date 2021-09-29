@@ -1,6 +1,6 @@
 import { t, Trans } from '@lingui/macro';
-import { Box, Stack } from '@material-ui/core';
-import { LoadingButton } from '@material-ui/lab';
+import { LoadingButton } from '@mui/lab';
+import { Box, Stack } from '@mui/material';
 import React, { FC } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 

@@ -1,4 +1,4 @@
-import { Button, Step as MuiStep, StepContent, StepLabel, Stepper } from '@material-ui/core';
+import { Button, Step as MuiStep, StepContent, StepLabel, Stepper } from '@mui/material';
 import { observer } from 'mobx-react-lite';
 import React, { ChangeEventHandler, FC, useState } from 'react';
 

@@ -1,5 +1,5 @@
-import { Button, IconButton, Paper, Tooltip, Typography } from '@material-ui/core';
-import AddIcon from '@material-ui/icons/Add';
+import AddIcon from '@mui/icons-material/Add';
+import { Button, IconButton, Paper, Tooltip, Typography } from '@mui/material';
 import { observer } from 'mobx-react-lite';
 import React, { ChangeEventHandler, FC, useState } from 'react';
 

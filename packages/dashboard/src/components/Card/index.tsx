@@ -1,7 +1,7 @@
-import { Card as MuiCard, Checkbox, IconButton, Typography, useMediaQuery, useTheme } from '@material-ui/core';
-import { amber, blue, orange, pink } from '@material-ui/core/colors';
-import FlashOn from '@material-ui/icons/FlashOn';
-import InfoIcon from '@material-ui/icons/InfoOutlined';
+import FlashOn from '@mui/icons-material/FlashOn';
+import InfoIcon from '@mui/icons-material/InfoOutlined';
+import { Card as MuiCard, Checkbox, IconButton, Typography, useMediaQuery, useTheme } from '@mui/material';
+import { amber, blue, orange, pink } from '@mui/material/colors';
 import { observer } from 'mobx-react-lite';
 import React, { ChangeEventHandler, FC, MouseEventHandler } from 'react';
 import { Draggable, DraggableProvided } from 'react-beautiful-dnd';

@@ -1,4 +1,4 @@
-import { Autocomplete, BaseTextFieldProps, TextField } from '@material-ui/core';
+import { Autocomplete, BaseTextFieldProps, TextField } from '@mui/material';
 import React from 'react';
 import { FieldPath, FieldValues, useController, UseControllerProps } from 'react-hook-form';
 
@@ -39,9 +39,7 @@ export const AutoComplete = <T extends FieldValues = FieldValues, N extends Fiel
             onBlur={() => onBlur()}
             autoHighlight
             freeSolo
-            renderInput={(params) => (
-                <TextField {...params} error={invalid} variant='standard' required {...rest} />
-            )}
+            renderInput={(params) => <TextField {...params} error={invalid} variant='standard' required {...rest} />}
         />
     );
 };

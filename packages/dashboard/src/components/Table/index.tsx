@@ -1,6 +1,6 @@
-import { Button, Chip, Dialog, TextField, useMediaQuery, useTheme } from '@material-ui/core';
-import { DataGrid, GridColDef } from '@material-ui/data-grid';
-import { StaticDateTimePicker } from '@material-ui/lab';
+import { StaticDateTimePicker } from '@mui/lab';
+import { Button, Chip, Dialog, TextField, useMediaQuery, useTheme } from '@mui/material';
+import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { observer } from 'mobx-react-lite';
 import React, { FC, useState } from 'react';
 
@@ -33,20 +33,17 @@ export const Table: FC = observer(() => {
             field: 'name',
             headerName: '姓名',
             width: 90,
-            disableClickEventBubbling: true,
         },
         {
             field: 'group',
             headerName: '组别',
             width: 90,
-            disableClickEventBubbling: true,
         },
         {
             field: 'interviewSelections',
             headerName: '面试选择',
             flex: 1,
             sortable: false,
-            disableClickEventBubbling: true,
             cellClassName: classes.cell,
             renderCell(params) {
                 const { interviewSelections, group, rejected, abandoned } = params.row as Application;
@@ -82,9 +79,8 @@ export const Table: FC = observer(() => {
             field: 'interviewAllocations',
             headerName: '面试分配',
             width: 180,
-            disableClickEventBubbling: true,
             valueFormatter(params) {
-                const { interviewAllocations } = params.row as Application;
+                const { interviewAllocations } = params.value as Application;
                 const allocation = interviewAllocations[type];
                 if (!allocation) {
                     return '未分配';
@@ -101,7 +97,6 @@ export const Table: FC = observer(() => {
             field: 'NOT_A_FIELD',
             headerName: '手动分配',
             sortable: false,
-            disableClickEventBubbling: true,
             renderCell(params) {
                 const { id } = params.row as Application;
                 return (
@@ -140,7 +135,7 @@ export const Table: FC = observer(() => {
                 disableColumnMenu
                 density={isMobile ? 'compact' : 'standard'}
                 selectionModel={[...$application.selected.keys()]}
-                onSelectionModelChange={({ selectionModel }) => {
+                onSelectionModelChange={(selectionModel) => {
                     $application.deselectAll();
                     $application.selectMany(selectionModel as string[]);
                 }}

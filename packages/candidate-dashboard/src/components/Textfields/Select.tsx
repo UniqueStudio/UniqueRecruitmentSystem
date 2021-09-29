@@ -1,4 +1,4 @@
-import { MenuItem, TextField, BaseTextFieldProps } from '@material-ui/core';
+import { MenuItem, TextField, BaseTextFieldProps } from '@mui/material';
 import React from 'react';
 import { FieldPath, FieldValues, useController, UseControllerProps } from 'react-hook-form';
 

@@ -1,4 +1,4 @@
-import { Dialog, DialogContent, DialogProps, DialogTitle, Divider, Theme, useMediaQuery } from '@material-ui/core';
+import { Dialog, DialogContent, DialogProps, DialogTitle, Divider, Theme, useMediaQuery } from '@mui/material';
 import React, { FC } from 'react';
 
 import { Allocations } from './Allocations';

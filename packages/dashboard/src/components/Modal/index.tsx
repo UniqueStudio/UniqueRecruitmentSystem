@@ -1,4 +1,4 @@
-import { Modal as MuiModal, ModalTypeMap, Paper, Slide, SlideProps, Typography } from '@material-ui/core';
+import { Modal as MuiModal, ModalTypeMap, Paper, Slide, SlideProps, Typography } from '@mui/material';
 import React, { FC, memo } from 'react';
 
 import useStyles from '@styles/modal';

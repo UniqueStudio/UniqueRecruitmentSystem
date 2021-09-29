@@ -1,6 +1,6 @@
 import { t, Trans } from '@lingui/macro';
-import { Box, Button, Link, Stack, Typography } from '@material-ui/core';
-import { LoadingButton } from '@material-ui/lab';
+import { LoadingButton } from '@mui/lab';
+import { Box, Button, Link, Stack, Typography } from '@mui/material';
 import React from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { Link as RouterLink, useHistory } from 'react-router-dom';

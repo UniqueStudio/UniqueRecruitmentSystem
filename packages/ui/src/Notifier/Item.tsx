@@ -1,11 +1,10 @@
-import { Snackbar, Alert, Slide, SlideProps, SnackbarProps } from '@material-ui/core';
-import { Color } from '@material-ui/lab';
+import { Snackbar, Alert, AlertColor, Slide, SlideProps, SnackbarProps } from '@mui/material';
 import React, { FC, useEffect, useState } from 'react';
 
 const Transition: FC<SlideProps> = (props) => <Slide {...props} direction='right' />;
 
 interface Props extends SnackbarProps {
-    variant: Color;
+    variant: AlertColor;
     popped: boolean;
 }
 

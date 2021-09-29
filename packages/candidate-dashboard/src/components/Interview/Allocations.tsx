@@ -1,4 +1,4 @@
-import { Chip, Stack, Typography } from '@material-ui/core';
+import { Chip, Stack, Typography } from '@mui/material';
 import React, { FC } from 'react';
 
 import { Application } from '@uniqs/config';
@@ -24,7 +24,9 @@ export const Allocations: FC<Props> = ({ application: { interviewAllocations } }
                     color='primary'
                     variant='outlined'
                 />
-            ) : '无'}
+            ) : (
+                '无'
+            )}
             <Typography fontWeight='bolder'>群面时间分配结果</Typography>
             {team ? (
                 <Chip
@@ -37,7 +39,9 @@ export const Allocations: FC<Props> = ({ application: { interviewAllocations } }
                     color='primary'
                     variant='outlined'
                 />
-            ) : '无'}
+            ) : (
+                '无'
+            )}
         </Stack>
     );
 };

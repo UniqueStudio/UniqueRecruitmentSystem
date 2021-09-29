@@ -1,4 +1,4 @@
-import { Button, ButtonGroup, TextField } from '@material-ui/core';
+import { Button, ButtonGroup, TextField } from '@mui/material';
 import { observer } from 'mobx-react-lite';
 import React, { ChangeEventHandler, FC, FormEventHandler, useState } from 'react';
 import { Redirect } from 'react-router-dom';

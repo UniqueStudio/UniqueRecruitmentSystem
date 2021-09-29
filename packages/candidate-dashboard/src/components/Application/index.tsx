@@ -1,4 +1,4 @@
-import { Dialog, DialogTitle, Theme, useMediaQuery, styled, DialogProps } from '@material-ui/core';
+import { Dialog, DialogTitle, Theme, useMediaQuery, styled, DialogProps } from '@mui/material';
 import React, { FC } from 'react';
 
 import header from '@assets/header.png';

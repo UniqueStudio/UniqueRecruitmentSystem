@@ -1,6 +1,6 @@
 import { t, Trans } from '@lingui/macro';
-import { Link, Stack, Typography } from '@material-ui/core';
-import { LoadingButton } from '@material-ui/lab';
+import { LoadingButton } from '@mui/lab';
+import { Link, Stack, Typography } from '@mui/material';
 import React, { FC } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { Link as RouterLink } from 'react-router-dom';

@@ -1,5 +1,5 @@
-import { Button, Checkbox, useMediaQuery, useTheme } from '@material-ui/core';
-import { DataGrid, GridColDef } from '@material-ui/data-grid';
+import { Button, Checkbox, useMediaQuery, useTheme } from '@mui/material';
+import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { toJS } from 'mobx';
 import { observer } from 'mobx-react-lite';
 import React, { FC, useState } from 'react';

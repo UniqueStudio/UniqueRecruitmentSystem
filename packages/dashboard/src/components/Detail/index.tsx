@@ -1,5 +1,5 @@
-import { IconButton, InputAdornment, TextField, TextFieldProps, Typography } from '@material-ui/core';
-import { Download } from '@material-ui/icons';
+import { Download } from '@mui/icons-material';
+import { IconButton, InputAdornment, TextField, TextFieldProps, Typography } from '@mui/material';
 import clsx from 'clsx';
 import { observer } from 'mobx-react-lite';
 import React, { FC, useState } from 'react';

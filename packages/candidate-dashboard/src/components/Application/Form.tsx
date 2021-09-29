@@ -1,7 +1,7 @@
 import { t, Trans } from '@lingui/macro';
-import { Box, Button, DialogActions, DialogContent, IconButton, styled, Tooltip, Typography } from '@material-ui/core';
-import { HelpOutline } from '@material-ui/icons';
-import { LoadingButton } from '@material-ui/lab';
+import { HelpOutline } from '@mui/icons-material';
+import { LoadingButton } from '@mui/lab';
+import { Box, Button, DialogActions, DialogContent, IconButton, styled, Tooltip, Typography } from '@mui/material';
 import React, { FC, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 

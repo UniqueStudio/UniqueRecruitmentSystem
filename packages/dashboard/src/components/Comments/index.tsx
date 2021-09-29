@@ -1,4 +1,4 @@
-import { Button, MenuItem, TextField, Typography } from '@material-ui/core';
+import { Button, MenuItem, TextField, Typography } from '@mui/material';
 import { observer } from 'mobx-react-lite';
 import React, { ChangeEventHandler, FC, KeyboardEventHandler, useState } from 'react';
 

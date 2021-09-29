@@ -1,4 +1,4 @@
-import { MenuItem, Select as MuiSelect, SelectProps } from '@material-ui/core';
+import { MenuItem, Select as MuiSelect, SelectProps } from '@mui/material';
 import React, { FC, memo } from 'react';
 
 import useStyles from '@styles/select';

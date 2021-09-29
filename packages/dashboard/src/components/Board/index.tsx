@@ -1,4 +1,4 @@
-import { useMediaQuery, useTheme } from '@material-ui/core';
+import { useMediaQuery, useTheme } from '@mui/material';
 import { observer } from 'mobx-react-lite';
 import React, { FC, useCallback } from 'react';
 import { DragDropContext, Droppable, DropResult } from 'react-beautiful-dnd';
@@ -66,12 +66,13 @@ export const Board: FC<Props> = observer(({ applications: applications, toggleDe
                                 variant='scrollable'
                                 classes={{ paper: classes.tabContainer }}
                             />
-                        ) :
+                        ) : (
                             $application.steps.map((step, i) => (
                                 <Column step={step} key={step} dropIndex={i}>
                                     {CardsInStep(step)}
                                 </Column>
-                            ))}
+                            ))
+                        )}
                         {placeholder}
                     </div>
                 )}
