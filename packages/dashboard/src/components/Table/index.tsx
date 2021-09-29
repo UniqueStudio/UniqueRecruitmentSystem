@@ -79,13 +79,13 @@ export const Table: FC = observer(() => {
             field: 'interviewAllocations',
             headerName: '面试分配',
             width: 180,
-            valueFormatter(params) {
-                const { interviewAllocations } = params.value as Application;
+            renderCell(params) {
+                const { interviewAllocations } = params.row as Application;
                 const allocation = interviewAllocations[type];
                 if (!allocation) {
-                    return '未分配';
+                    return <>未分配</>;
                 }
-                return new Date(allocation).toLocaleString('zh-CN', { timeStyle: 'short', dateStyle: 'short' });
+                return <>{new Date(allocation).toLocaleString('zh-CN', { timeStyle: 'short', dateStyle: 'short' })}</>;
             },
             sortComparator(a, b) {
                 const l = (a as Application['interviewAllocations'])[type];
