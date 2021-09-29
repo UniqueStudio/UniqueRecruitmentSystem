@@ -22,9 +22,10 @@ interface Props {
 
 const Content = styled(DialogContent)(({ theme: { spacing, breakpoints } }) => ({
     display: 'grid',
+    overflow: 'hidden',
     gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))',
     gap: spacing(1),
-    padding: spacing(3),
+    padding: spacing(2),
     [breakpoints.down('sm')]: {
         padding: spacing(1),
     },

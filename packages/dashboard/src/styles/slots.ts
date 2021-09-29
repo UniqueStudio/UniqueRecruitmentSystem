@@ -4,7 +4,7 @@ import { makeStyles } from '@mui/styles';
 const useStyles = makeStyles(({ spacing }: Theme) => ({
     container: {
         display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))',
+        gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
     },
     slotContainer: {
         display: 'flex',
@@ -12,7 +12,7 @@ const useStyles = makeStyles(({ spacing }: Theme) => ({
         justifyContent: 'space-around',
     },
     dateTextField: {
-        width: spacing(12),
+        width: spacing(16),
     },
     numberTextField: {
         width: spacing(5),
