@@ -9,7 +9,7 @@ export const Suggestion: FC = observer(() => {
     const { $component } = useStores();
     return (
         <Modal title='面试问题提示' open={$component.suggestionOpen} onClose={() => $component.toggleSuggestion()}>
-            <Box m={2}>
+            <Box m={2} sx={{ overflow: 'auto' }}>
                 当你想不出什么问题的时候，不妨参照这里：
                 <br />
                 <ul>
