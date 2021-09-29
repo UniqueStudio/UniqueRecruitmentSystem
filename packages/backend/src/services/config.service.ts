@@ -23,6 +23,14 @@ export class ConfigService extends DefaultConfigService {
         return this.get<Env>('NODE_ENV') === Env.test;
     }
 
+    get isProd() {
+        return !this.isNotProd;
+    }
+
+    get isDev() {
+        return this.get<Env>('NODE_ENV') === Env.dev;
+    }
+
     get isMigration() {
         return this.get<Env>('NODE_ENV') === Env.migration;
     }
@@ -141,5 +149,18 @@ export class ConfigService extends DefaultConfigService {
             },
             dest: this.resumePaths.temporary,
         };
+    }
+
+    get checkCode(): boolean {
+        if (this.isTest) {
+            // test
+            return false;
+        }
+        if (!this.isNotProd) {
+            // prod
+            return true;
+        }
+        // dev
+        return !this.get<boolean>('NOT_CHECK_CODE');
     }
 }

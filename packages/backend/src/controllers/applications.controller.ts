@@ -21,7 +21,6 @@ import {
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ThrottlerGuard } from '@nestjs/throttler';
-import { compareRecruitment } from '@uniqs/utils';
 import { Response } from 'express';
 
 import { SLOTS, STEP_MAP, SMS_TEMPLATE_MAP } from '@constants/consts';
@@ -56,6 +55,7 @@ import { EmailService } from '@services/email.service';
 import { InterviewsService } from '@services/interviews.service';
 import { RecruitmentsService } from '@services/recruitments.service';
 import { SMSService } from '@services/sms.service';
+import { compareRecruitment } from '@uniqs/utils';
 import { copyFile, deleteFile } from '@utils/fs';
 
 @Controller('applications')
