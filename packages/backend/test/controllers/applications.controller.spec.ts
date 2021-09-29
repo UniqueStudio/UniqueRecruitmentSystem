@@ -33,7 +33,7 @@ describe('ApplicationsController e2e', () => {
         const admin = await membersService.hashPasswordAndCreate({
             weChatID: 'hanyuu',
             name: 'hanyuu',
-            joinTime: '2000C',
+            joinTime: '2019C',
             phone: '19876543211',
             mail: 'hanyuu@hinami.zawa',
             gender: Gender.female,
@@ -445,13 +445,17 @@ describe('ApplicationsController e2e', () => {
 
             it('should return updated applications', async () => {
                 const timeBeforeUpdate = Date.now();
+
+                await new Promise((resolve) => void setTimeout(resolve, 500));
+
                 // update application of alice
-                await applicationsService.update(aliceApplication.id, { institute: 'newName' });
+                const { affected } = await applicationsService.update(aliceApplication.id, { institute: 'newName' });
+                expect(affected).toBe(1);
 
                 const {
                     body: { payload },
                 } = await agent(app.getHttpServer())
-                    .get(`/applications/recruitment/${recruitment.id}`)
+                    .get(`/applications/recruitment/${recruitment.id}/`)
                     .auth(adminJWT, { type: 'bearer' })
                     .query({ updatedAt: timeBeforeUpdate }) // add this updatedAt query
                     .expect(200);
