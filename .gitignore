@@ -26,7 +26,6 @@ yarn-debug.log*
 yarn-error.log*
 
 .vercel
-.husky
 
 # yarn 2
 .yarn/*
