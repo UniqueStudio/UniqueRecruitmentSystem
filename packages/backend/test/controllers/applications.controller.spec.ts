@@ -124,9 +124,7 @@ describe('ApplicationsController e2e', () => {
         describe('create new application', () => {
             it('should return success', async () => {
                 const {
-                    body: {
-                        payload,
-                    },
+                    body: { payload },
                 } = await agent(app.getHttpServer())
                     .post('/applications')
                     .field('group', Group.web)
@@ -317,9 +315,7 @@ describe('ApplicationsController e2e', () => {
         });
         describe('abandon application info without credential', () => {
             it('should throw', async () => {
-                await agent(app.getHttpServer())
-                    .put(`/applications/${bobApplication.id}/abandoned`)
-                    .expect(403);
+                await agent(app.getHttpServer()).put(`/applications/${bobApplication.id}/abandoned`).expect(403);
             });
         });
         describe('abandon again', () => {
@@ -595,20 +591,14 @@ describe('ApplicationsController e2e', () => {
                         iids: interviews.map(({ id }) => id),
                     })
                     .auth(aliceJWT, { type: 'bearer' })
-                    .expect(403);
+                    .expect(200);
             });
         });
         describe('get her selection', () => {
             it('should be equal to what she selected', async () => {
                 const { interviewSelections } = await applicationsService.findOneByIdForMember(aliceApplication.id);
-                expect(interviewSelections).toHaveLength(1);
-                expect(interviewSelections).toEqual(
-                    expect.arrayContaining([
-                        expect.objectContaining({
-                            id: interviews[0].id,
-                        }),
-                    ]),
-                );
+                expect(interviewSelections).toHaveLength(interviews.length);
+                expect(interviewSelections).toMatchObject(interviews.map(({ id }) => ({ id })));
             });
         });
     });
@@ -688,9 +678,7 @@ describe('ApplicationsController e2e', () => {
         });
         describe('remove alice without credential', () => {
             it('should throw', async () => {
-                await agent(app.getHttpServer())
-                    .delete(`/applications/${aliceApplication.id}`)
-                    .expect(403);
+                await agent(app.getHttpServer()).delete(`/applications/${aliceApplication.id}`).expect(403);
             });
         });
     });

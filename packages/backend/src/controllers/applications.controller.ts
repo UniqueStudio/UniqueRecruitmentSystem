@@ -216,11 +216,11 @@ export class ApplicationsController {
         ApplicationsController.checkRecruitment(recruitment);
         ApplicationsController.checkStep(application, type, 'set interview time for');
         const name = type === InterviewType.group ? GroupOrTeam[group] : GroupOrTeam.unique;
-        if (interviewSelections.find((interview) => name === interview.name)) {
-            throw new ForbiddenException(Msg.A_NO_PERMISSION('re-select interview time for'));
-        }
         const newSelections = await this.interviewsService.findManyByIdsInRecruitment(iids, recruitment, name);
-        application.interviewSelections = [...interviewSelections, ...newSelections];
+        application.interviewSelections = [
+            ...interviewSelections.filter((interview) => name !== interview.name),
+            ...newSelections,
+        ];
         await application.save();
         this.applicationsGateway.broadcastUpdate(application);
     }
