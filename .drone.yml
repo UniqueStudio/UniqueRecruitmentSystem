@@ -1,0 +1,107 @@
+kind: pipeline
+type: docker
+name: recruiment_backend
+
+clone:
+  disable: true
+
+steps:
+  - name: clone
+    pull: if-not-exists
+    image: alpine/git
+    commands:
+      - git clone -b $DRONE_COMMIT_BRANCH https://github.com.cnpmjs.org/UniqueStudio/UniqueRecruitmentSystem.git .
+      - cp /drone/src/packages/dashboard/.env.example /drone/src/packages/dashboard/.env
+      - cp /drone/src/packages/candidate-dashboard/.env.example /drone/src/packages/candidate-dashboard/.env
+
+  - name: restore-cache
+    depends_on:
+      - clone
+    image: drillster/drone-volume-cache
+    settings:
+      restore: true
+      mount:
+        - /tmp/yarn-cache
+    volumes:
+      - name: yarn-cache
+        path: /cache
+
+  - name: build_publish
+    image: plugins/docker
+    depends_on:
+      - restore-cache
+    settings:
+      username:
+        from_secret: docker_hub_username
+      password:
+        from_secret: docker_hub_password
+      tags: ${DRONE_TAG=latest}
+      registry: ccr.ccs.tencentyun.com
+      repo: ccr.ccs.tencentyun.com/unique-studio/recruitment-system
+    volumes:
+      - name: sock
+        path: /var/run/docker.sock
+      - name: local
+        path: /var/lib/docker
+      - name: yarn-cache
+        path: /cache
+
+  - name: rebuild-cache
+    image: drillster/drone-volume-cache
+    depends_on:
+      - build_publish
+    settings:
+      rebuild: true
+      mount:
+        - /tmp/yarn-cache
+    volumes:
+      - name: yarn-cache
+        path: /cache
+
+
+  - name: deploy_dev
+    image: docker/compose:1.29.2
+    depends_on:
+      - build_publish
+    volumes:
+      - name: sock
+        path: /var/run/docker.sock
+    commands:
+      - ls -alh
+      - docker-compose -f docker-compose.backend.dev.yml up -d --remove-orphans backend
+    when:
+      branch:
+        - dev/**
+      event:
+        - push
+
+  - name: deploy_prod
+    image: docker/compose:1.29.2
+    depends_on:
+      - build_publish
+    volumes:
+      - name: sock
+        path: /var/run/docker.sock
+    commands:
+      - docker-compose -f docker-compose.backend.prod.yml up -d --remove-orphans backend
+    when:
+      event:
+        - tag
+
+volumes:
+  - name: sock
+    host:
+      path: /var/run/docker.sock
+  - name: local
+    host:
+      path: /var/lib/docker
+  - name: yarn-cache
+    host:
+      path: /tmp/yarn-cache
+
+trigger:
+  branch:
+    - dev/**
+  event:
+    - push
+    - tag
