@@ -1,3 +1,4 @@
+import { selectInterview as selectInterviewAction } from '@stores/application';
 import { setInfo, setToken } from '@stores/candidate';
 import { enqueueSnackbar, setProgress } from '@stores/component';
 import store from '@stores/index';
@@ -133,6 +134,10 @@ export const selectInterview = (aid: string, type: InterviewType, iids: string[]
     apiWrapper(
         () => client.selectInterviewSlots(aid, type, iids),
         () => {
+            const idSet = new Set(iids);
+            store.dispatch(
+                selectInterviewAction(store.getState().recruitment.interviews.filter(({ id }) => idSet.has(id))),
+            );
             store.dispatch(enqueueSnackbar(['已成功选择', Status.success]));
             return getMyInfo();
         },

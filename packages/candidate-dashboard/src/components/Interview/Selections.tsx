@@ -74,7 +74,6 @@ export const Selections: FC<Props> = ({ application }) => {
         }
         await selectInterview(id, type, checked);
         setConfirmed(true);
-        setChecked(interviewSelections.filter((interview) => interview.name === name).map(({ id }) => id));
     };
 
     const handleEdit = () => void setConfirmed(false);

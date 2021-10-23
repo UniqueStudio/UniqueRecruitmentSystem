@@ -4,8 +4,9 @@ import React, { FC, useState } from 'react';
 import { ApplicationDialog } from '@components/Application';
 import { InterviewDialog } from '@components/Interview';
 import { Toast } from '@components/Toast';
+import { setApplication } from '@stores/application';
 import { useAppSelector } from '@stores/index';
-import { Application, STEP_MAP } from '@uniqs/config';
+import { STEP_MAP } from '@uniqs/config';
 import { convertRecruitmentName } from '@uniqs/utils';
 
 export const Overview: FC = () => {
@@ -13,7 +14,7 @@ export const Overview: FC = () => {
     const recruitments = useAppSelector(({ recruitment }) => recruitment.recruitments);
     const applications = info?.applications ?? [];
     const appliedRecruitments = new Set(applications.map(({ recruitment: { id } }) => id));
-    const [application, setApplication] = useState<Partial<Application>>();
+    const application = useAppSelector(({ application }) => application);
     const [open, setOpen] = useState<'interview' | 'application'>();
 
     return (
@@ -84,12 +85,12 @@ export const Overview: FC = () => {
             })}
             <ApplicationDialog
                 open={open === 'application'}
-                application={application}
+                application={application.current}
                 onClose={() => setOpen(undefined)}
             />
             <InterviewDialog
                 open={open === 'interview'}
-                application={application as Application | undefined}
+                application={application.current}
                 onClose={() => setOpen(undefined)}
                 maxWidth='sm'
             />
