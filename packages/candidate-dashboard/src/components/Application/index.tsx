@@ -3,10 +3,9 @@ import React, { FC } from 'react';
 
 import header from '@assets/header.png';
 import { Form } from '@components/Application/Form';
-import { Application } from '@uniqs/config';
+import { useAppSelector } from '@stores/index';
 
 interface Props extends DialogProps {
-    application?: Partial<Application>;
     onClose: () => void;
 }
 
@@ -18,14 +17,15 @@ const Header = styled('img')(({ theme: { spacing } }) => ({
     marginRight: 'auto',
 }));
 
-export const ApplicationDialog: FC<Props> = ({ application, ...rest }) => {
+export const ApplicationDialog: FC<Props> = (props) => {
     const isMobile = useMediaQuery<Theme>((theme) => theme.breakpoints.down('sm'));
+    const application = useAppSelector(({ application }) => application.current);
 
     return (
-        <Dialog fullScreen={isMobile} fullWidth maxWidth='lg' {...rest}>
+        <Dialog fullScreen={isMobile} fullWidth maxWidth='lg' {...props}>
             <DialogTitle>报名表单</DialogTitle>
             <Header src={header} />
-            {application ? <Form application={application} onClose={rest.onClose} /> : null}
+            {application ? <Form application={application} onClose={props.onClose} /> : null}
         </Dialog>
     );
 };

@@ -6,7 +6,9 @@ interface ApplicationState {
     current?: Application;
 }
 
-const initialState: ApplicationState = {};
+const initialState: ApplicationState = {
+    current: {} as Application,
+};
 
 const { reducer, actions } = createSlice({
     name: 'application',

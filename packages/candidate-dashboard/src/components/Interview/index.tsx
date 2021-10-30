@@ -4,15 +4,16 @@ import React, { FC } from 'react';
 import { Allocations } from './Allocations';
 import { Selections } from './Selections';
 
-import { Application } from '@uniqs/config';
+import { useAppSelector } from '@stores/index';
 
 interface Props extends DialogProps {
-    application?: Application;
     onClose: () => void;
 }
 
-export const InterviewDialog: FC<Props> = ({ application, ...rest }) => {
+export const InterviewDialog: FC<Props> = ({ ...rest }) => {
     const isMobile = useMediaQuery<Theme>((theme) => theme.breakpoints.down('sm'));
+    const application = useAppSelector(({ application }) => application.current);
+
     if (!application) {
         return null;
     }

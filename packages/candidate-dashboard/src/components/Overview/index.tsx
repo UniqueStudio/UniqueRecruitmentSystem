@@ -5,7 +5,7 @@ import { ApplicationDialog } from '@components/Application';
 import { InterviewDialog } from '@components/Interview';
 import { Toast } from '@components/Toast';
 import { setApplication } from '@stores/application';
-import { useAppSelector } from '@stores/index';
+import { useAppDispatch, useAppSelector } from '@stores/index';
 import { STEP_MAP } from '@uniqs/config';
 import { convertRecruitmentName } from '@uniqs/utils';
 
@@ -14,8 +14,8 @@ export const Overview: FC = () => {
     const recruitments = useAppSelector(({ recruitment }) => recruitment.recruitments);
     const applications = info?.applications ?? [];
     const appliedRecruitments = new Set(applications.map(({ recruitment: { id } }) => id));
-    const application = useAppSelector(({ application }) => application);
     const [open, setOpen] = useState<'interview' | 'application'>();
+    const dispatch = useAppDispatch();
 
     return (
         <Stack spacing={1}>
@@ -30,7 +30,7 @@ export const Overview: FC = () => {
                                 label: '立即报名',
                                 onClick() {
                                     setOpen('application');
-                                    setApplication({ recruitment });
+                                    dispatch(setApplication({ recruitment }));
                                 },
                             },
                         ]}
@@ -57,14 +57,14 @@ export const Overview: FC = () => {
                                 label: '查看面试',
                                 onClick() {
                                     setOpen('interview');
-                                    setApplication(application);
+                                    dispatch(setApplication(application));
                                 },
                             },
                             {
                                 label: '查看申请',
                                 onClick() {
                                     setOpen('application');
-                                    setApplication(application);
+                                    dispatch(setApplication(application));
                                 },
                             },
                         ]}
@@ -83,17 +83,8 @@ export const Overview: FC = () => {
                     />
                 );
             })}
-            <ApplicationDialog
-                open={open === 'application'}
-                application={application.current}
-                onClose={() => setOpen(undefined)}
-            />
-            <InterviewDialog
-                open={open === 'interview'}
-                application={application.current}
-                onClose={() => setOpen(undefined)}
-                maxWidth='sm'
-            />
+            <ApplicationDialog open={open === 'application'} onClose={() => setOpen(undefined)} />
+            <InterviewDialog open={open === 'interview'} onClose={() => setOpen(undefined)} maxWidth='sm' />
         </Stack>
     );
 };
