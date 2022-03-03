@@ -2,7 +2,8 @@ FROM node:alpine as common
 WORKDIR /usr/src/recruitment
 COPY . .
 ENV YARN_CACHE_FOLDER /tmp/yarn-cache
-RUN yarn config set registry https://registry.npm.taobao.org \
+RUN yarn set version berry \
+    && yarn config set npmRegistryServer https://registry.npm.taobao.org \
     && yarn \
     && yarn workspace @uniqs/config build \
     && yarn workspace @uniqs/ui build \
