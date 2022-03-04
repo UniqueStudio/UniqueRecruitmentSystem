@@ -23,8 +23,8 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { ThrottlerGuard } from '@nestjs/throttler';
 import { Response } from 'express';
 
-import { SLOTS, STEP_MAP, SMS_TEMPLATE_MAP } from '@constants/consts';
-import { Group, GroupOrTeam, InterviewType, Role, Step, SMSTemplateType } from '@constants/enums';
+import { SLOTS, SMS_TEMPLATE_MAP, STEP_MAP } from '@constants/consts';
+import { Group, GroupOrTeam, InterviewType, Role, SMSTemplateType, Step } from '@constants/enums';
 import { Msg } from '@constants/messages';
 import { Candidate } from '@decorators/candidate.decorator';
 import { Member } from '@decorators/member.decorator';
@@ -51,7 +51,6 @@ import { CodeGuard } from '@guards/code.guard';
 import { UpdatedAtPipe } from '@pipes/updatedAt.pipe';
 import { ApplicationsService } from '@services/applications.service';
 import { ConfigService } from '@services/config.service';
-import { EmailService } from '@services/email.service';
 import { InterviewsService } from '@services/interviews.service';
 import { RecruitmentsService } from '@services/recruitments.service';
 import { SMSService } from '@services/sms.service';
@@ -68,7 +67,7 @@ export class ApplicationsController {
         private readonly recruitmentsService: RecruitmentsService,
         private readonly interviewsService: InterviewsService,
         private readonly smsService: SMSService,
-        private readonly emailService: EmailService,
+        // private readonly emailService: EmailService,
         private readonly configService: ConfigService,
     ) {}
 
