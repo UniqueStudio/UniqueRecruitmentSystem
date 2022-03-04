@@ -111,7 +111,7 @@ export class ApplicationsController {
                 candidate.name,
                 '成功提交报名表单',
             ]);
-            await this.emailService.sendEmail(application);
+            // await this.emailService.sendEmail(application);
         } catch ({ message }) {
             throw new InternalServerErrorException(message);
         }
