@@ -38,7 +38,7 @@ export class MembersService extends BasicCRUDService<MemberEntity> {
     }
 
     async findOrCreate(data: Partial<MemberEntity>) {
-        return await this.findOne({ weChatID: data.weChatID }) ?? await this.hashPasswordAndCreate(data);
+        return (await this.findOne({ weChatID: data.weChatID })) ?? (await this.hashPasswordAndCreate(data));
     }
 
     hashPassword(password: string) {

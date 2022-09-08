@@ -171,6 +171,7 @@ export interface SMSTemplate {
     time?: string;
     place?: string;
     rest?: string;
+    meetingId?: string;
 }
 
 interface SuccessResponse<T> {

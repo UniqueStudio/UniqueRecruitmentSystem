@@ -22,6 +22,10 @@ export class SendSMSToCandidateBody implements SMSTemplate {
 
     @IsOptional()
     @IsString()
+    meetingId?: string;
+
+    @IsOptional()
+    @IsString()
     rest?: string;
 
     @IsOptional()

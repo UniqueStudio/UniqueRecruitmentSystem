@@ -15,7 +15,7 @@ interface Props {
 
 export const SMSDetail: FC<Props> = memo(({ handleChange, content, message }) => {
     const classes = useStyles();
-    const { type, time, place, rest, next, current } = content;
+    const { type, time, place, meetingId, rest, next, current } = content;
     return (
         <div className={clsx(classes.templateItem, classes.inputContainer)}>
             <Typography variant='body1' className={classes.fullWidth}>
@@ -59,16 +59,26 @@ export const SMSDetail: FC<Props> = memo(({ handleChange, content, message }) =>
                 value={time ?? ''}
                 InputLabelProps={{ shrink: true }}
                 onChange={handleChange('time')}
-                disabled={![Step.熬测, Step.笔试].includes(next!)}
+                disabled={![Step.熬测, Step.笔试, Step.组面, Step.在线组面, Step.群面, Step.在线群面].includes(next!)}
             />
-            <TextField
-                variant='standard'
-                label='地点'
-                value={place ?? ''}
-                InputLabelProps={{ shrink: true }}
-                onChange={handleChange('place')}
-                disabled={![Step.群面, Step.组面, Step.熬测, Step.笔试].includes(next!)}
-            />
+            {![Step.在线组面, Step.在线群面].includes(next!) ? (
+                <TextField
+                    variant='standard'
+                    label='地点'
+                    value={place ?? ''}
+                    InputLabelProps={{ shrink: true }}
+                    onChange={handleChange('place')}
+                    disabled={![Step.群面, Step.组面, Step.熬测, Step.笔试].includes(next!)}
+                />
+            ) : (
+                <TextField
+                    variant='standard'
+                    label='会议号'
+                    value={meetingId ?? ''}
+                    InputLabelProps={{ shrink: true }}
+                    onChange={handleChange('meetingId')}
+                />
+            )}
             <TextField
                 variant='standard'
                 label='自定义'
@@ -76,7 +86,7 @@ export const SMSDetail: FC<Props> = memo(({ handleChange, content, message }) =>
                 className={classes.fullWidth}
                 InputLabelProps={{ shrink: true }}
                 onChange={handleChange('rest')}
-                disabled={[Step.群面, Step.组面].includes(next!)}
+                disabled={[Step.群面, Step.组面, Step.在线群面, Step.在线组面].includes(next!)}
             />
         </div>
     );

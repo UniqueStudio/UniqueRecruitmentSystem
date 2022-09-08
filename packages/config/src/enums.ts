@@ -33,9 +33,11 @@ export enum Step {
     笔试,
     组面时间选择,
     组面,
+    在线组面,
     熬测,
     群面时间选择,
     群面,
+    在线群面,
     通过,
 }
 
@@ -90,4 +92,6 @@ export enum SMSTemplateType {
     Interview = 'interview',
     Pass = 'pass',
     Delay = 'delay',
+    OnLineGroupInterview = 'onlineGroupInterview',
+    OnLineTeamInterview = 'onlineTeamInterview',
 }

@@ -79,7 +79,7 @@ export class SMSController {
     @AcceptRole(Role.admin)
     @UseGuards(CodeGuard)
     async sendSMSToCandidate(
-        @Body() { type, time, place, rest, current, next, aids }: SendSMSToCandidateBody,
+        @Body() { type, time, place, meetingId, rest, current, next, aids }: SendSMSToCandidateBody,
         @Member() member: MemberEntity,
     ) {
         const applications = await this.applicationsService.findManyByIds(aids);
@@ -117,7 +117,16 @@ export class SMSController {
                 await application.save();
             }
             try {
-                const { template, params } = applySMSTemplate({ application, type, rest, current, next, time, place });
+                const { template, params } = applySMSTemplate({
+                    application,
+                    type,
+                    rest,
+                    current,
+                    next,
+                    time,
+                    place,
+                    meetingId,
+                });
                 await this.smsService.sendSMS(candidate.phone, template, params);
             } catch ({ message }) {
                 errors.add(message as string);
