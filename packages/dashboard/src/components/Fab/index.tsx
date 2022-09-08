@@ -55,7 +55,7 @@ export const Fab: FC<Props> = observer(({ applications: applications, toggleOpen
             open={fabOpen && !!$application.selected.size}
         >
             {ButtonGenerator('移除', <Delete />, toggleOpen('dialog'), disabled || !$member.isAdminOrCaptain)}
-            {ButtonGenerator('发送通知', <Send />, toggleOpen('modal'), disabled || !$member.isAdminOrCaptain)}
+            {ButtonGenerator('发送通知', <Send />, toggleOpen('modal'), disabled)}
             {ButtonGenerator(
                 '下一流程',
                 <ArrowForward />,

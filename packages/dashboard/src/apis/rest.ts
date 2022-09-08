@@ -166,10 +166,12 @@ export const getVerifyCode = () =>
         () => $component.enqueueSnackbar('验证码已发送', Status.success),
     );
 
-export const sendSMSToCandidate = (content: SMSTemplate & {
-    aids: string[];
-    code: string;
-}) =>
+export const sendSMSToCandidate = (
+    content: SMSTemplate & {
+        aids: string[];
+        code: string;
+    },
+) =>
     apiWrapper(
         () => client.sendSMSToCandidate(content),
         () => $component.enqueueSnackbar('已成功发送短信', Status.success),

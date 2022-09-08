@@ -34,7 +34,6 @@ export const Template: FC<Props> = observer(({ toggleOpen }) => {
             $component.enqueueSnackbar('请填写验证码', Status.warning);
             return;
         }
-
         if (await sendSMSToCandidate({ ...content, code, aids: [...$application.selected.keys()] })) {
             toggleOpen();
         } else {

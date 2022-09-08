@@ -12,10 +12,16 @@ export const applySMSTemplate = ({
     type,
     time,
     place,
+    meetingId,
     rest,
     next,
     current,
-    application: { group, recruitment, candidate: { name }, interviewAllocations },
+    application: {
+        group,
+        recruitment,
+        candidate: { name },
+        interviewAllocations,
+    },
 }: Template) => {
     const suffix = ' (请勿回复本短信)';
     const recruitmentName = convertRecruitmentName(recruitment.name);
@@ -40,6 +46,27 @@ export const applySMSTemplate = ({
                     return {
                         template: SMS_TEMPLATE_MAP.get(SMSTemplateType.Interview)!,
                         params: [name, time, place, STEP_MAP.get(next)!],
+                    };
+                }
+                // {1}你好，欢迎参加{2}{3}组在线群面，面试将于{4}进行，请在PC端点击腾讯会议参加面试，会议号{5}，并提前调试好摄像头和麦克风，祝你面试顺利。
+                case Step.在线组面:
+                case Step.在线群面: {
+                    const allocation = next === Step.在线组面 ? interviewAllocations.group : interviewAllocations.team;
+                    if (!meetingId) throw new Error('MeetingId is not provided!');
+                    if (!allocation) throw new Error(`Interview time is not allocated for ${name}`);
+                    // 2011年11月11日星期五中国标准时间 11:11:11
+                    time = allocation.toLocaleString('zh-CN', {
+                        dateStyle: 'full',
+                        timeStyle: 'full',
+                        timeZone: 'Asia/Shanghai',
+                        hour12: false,
+                    });
+                    return {
+                        template:
+                            next === Step.在线组面
+                                ? SMS_TEMPLATE_MAP.get(SMSTemplateType.OnLineGroupInterview)!
+                                : SMS_TEMPLATE_MAP.get(SMSTemplateType.OnLineTeamInterview)!,
+                        params: [name, recruitmentName, group, time, meetingId],
                     };
                 }
                 case Step.笔试:

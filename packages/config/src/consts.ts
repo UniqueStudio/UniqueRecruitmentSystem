@@ -15,9 +15,11 @@ export const STEP_MAP: ReadonlyMap<Step, string> = new Map([
     [Step.笔试, '笔试流程'],
     [Step.组面时间选择, '组面时间选择流程'],
     [Step.组面, '组面流程'],
+    [Step.在线组面, '在线组面流程'],
     [Step.熬测, '熬测流程'],
     [Step.群面时间选择, '群面时间选择流程'],
     [Step.群面, '群面流程'],
+    [Step.在线群面, '在线群面流程'],
     [Step.通过, '通过'],
 ]);
 export const STEP_SHORT_MAP: ReadonlyMap<Step, string> = new Map([
@@ -25,9 +27,11 @@ export const STEP_SHORT_MAP: ReadonlyMap<Step, string> = new Map([
     [Step.笔试, '笔试'],
     [Step.组面时间选择, '组面时间选择'],
     [Step.组面, '组面'],
+    [Step.在线组面, '在线组面'],
     [Step.熬测, '熬测'],
     [Step.群面时间选择, '群面时间选择'],
     [Step.群面, '群面'],
+    [Step.在线群面, '在线群面'],
     [Step.通过, '通过'],
 ]);
 export const PERIOD_MAP: ReadonlyMap<Period, string> = new Map([
@@ -246,4 +250,6 @@ export const SMS_TEMPLATE_MAP: ReadonlyMap<SMSTemplateType, string> = new Map([
     [SMSTemplateType.Interview, '1113517'],
     [SMSTemplateType.Pass, '1092767'],
     [SMSTemplateType.Delay, '1092765'],
+    [SMSTemplateType.OnLineGroupInterview, '1533304'],
+    [SMSTemplateType.OnLineTeamInterview, '1533302'],
 ]);

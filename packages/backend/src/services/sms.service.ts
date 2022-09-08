@@ -12,6 +12,7 @@ export class SMSService {
             console.log(phone, id, params);
             return;
         }
+        console.log(phone, id, params);
         const { code, message } = await got
             .post(this.configService.smsURL, {
                 headers: {
