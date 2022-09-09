@@ -1,0 +1,32 @@
+version: '3.8'
+
+x-logging: &loki-logging
+  driver: loki
+  options:
+    loki-url: http://localhost:3100/loki/api/v1/push
+    loki-external-labels: job=dockerlogs,maintainer=xylonx,environment=development
+    loki-pipeline-stages: |
+      - json:
+          expressions:
+              traceId: TraceID
+              spanId: SpanID
+              level: level
+      - labels:
+          traceId:
+          spanId:
+          level:
+
+services:
+  backend:
+    image: ccr.ccs.tencentyun.com/unique-studio/recruitment-system
+    container_name: recruitment-system-backend-dev
+    ports:
+      - '6005:5000'
+    volumes:
+      - /root/service-dev/recruitementSystem/data/resumes:/usr/src/recruitment/packages/backend/data/resumes
+      - /root/service-dev/recruitementSystem/data/backend/logs:/usr/src/recruitment/packages/backend/logs
+      - /root/service-dev/recruitementSystem/data/backend/backup:/usr/src/recruitment/packages/backend/backup
+      - /root/service-dev/recruitementSystem/.backend.env:/usr/src/recruitment/packages/backend/.env
+      - /tmp/yarn-cache:/tmp/yarn-cache
+
+    logging: *loki-logging

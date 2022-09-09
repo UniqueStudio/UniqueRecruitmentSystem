@@ -1,0 +1,16 @@
+version: '3.8'
+services:
+  backend:
+    image: ccr.ccs.tencentyun.com/unique-studio/recruitment-system
+    container_name: recruitment-system-backend-dev
+    env_file:
+      - packages/backend/.env
+    ports:
+      - '6004:5000'
+    volumes:
+      - ./packages/backend/data/resumes:/usr/src/recruitment/packages/backend/data/resumes
+      - ./packages/backend/logs:/usr/src/recruitment/packages/backend/logs
+      - ./packages/backend/backup:/usr/src/recruitment/packages/backend/backup
+      - yarn-cache:/tmp/yarn-cache
+volumes:
+  yarn-cache:

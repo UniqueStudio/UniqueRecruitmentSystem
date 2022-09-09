@@ -8,7 +8,7 @@ RUN yarn set version berry \
     && yarn workspace @uniqs/config build \
     && yarn workspace @uniqs/ui build \
     && yarn workspace @uniqs/utils build \
-    && yarn workspace @uniqs/apis build 
+    && yarn workspace @uniqs/apis build
 
 FROM common as backend
 RUN yarn workspace @uniqs/backend build
