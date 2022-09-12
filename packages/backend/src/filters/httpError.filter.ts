@@ -22,7 +22,8 @@ export class HttpErrorFilter<T extends Error = Error> implements ExceptionFilter
         } else if (exception instanceof QueryFailedError) {
             res.status(HttpStatus.BAD_REQUEST).json({
                 status: Status.error,
-                message: exception.message,
+                // @ts-ignore
+                message: exception.detail,
             });
         } else if (exception instanceof EntityNotFoundError) {
             res.status(HttpStatus.NOT_FOUND).json({

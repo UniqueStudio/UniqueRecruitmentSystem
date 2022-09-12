@@ -4,13 +4,9 @@ import { detect, fromUrl, fromStorage, fromNavigator, fromHtmlTag } from '@lingu
 const DEFAULT_FALLBACK = () => 'zh';
 
 export const defaultLocale = () =>
-    !import.meta.env.SSR && detect(
-        fromHtmlTag('lang'),
-        fromUrl('lang'),
-        fromStorage('lang'),
-        fromNavigator(),
-        DEFAULT_FALLBACK,
-    ) || DEFAULT_FALLBACK();
+    (!import.meta.env.SSR &&
+        detect(fromHtmlTag('lang'), fromUrl('lang'), fromStorage('lang'), fromNavigator(), DEFAULT_FALLBACK)) ||
+    DEFAULT_FALLBACK();
 
 export async function dynamicActivate(locale: string) {
     let messages: Messages;
