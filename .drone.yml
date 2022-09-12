@@ -10,7 +10,7 @@ steps:
     pull: if-not-exists
     image: alpine/git
     commands:
-      - git clone -b $DRONE_COMMIT_BRANCH https://hub.fastgit.org/UniqueStudio/UniqueRecruitmentSystem.git .
+      - git clone -b $DRONE_COMMIT_BRANCH https://gitclone.com/github.com/UniqueStudio/UniqueRecruitmentSystem.git .
       - cp /drone/src/packages/dashboard/.env.example /drone/src/packages/dashboard/.env
       - cp /drone/src/packages/candidate-dashboard/.env.example /drone/src/packages/candidate-dashboard/.env
 
