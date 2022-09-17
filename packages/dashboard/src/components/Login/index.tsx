@@ -7,7 +7,7 @@ import { loginByPassword, loginByQRCode } from '@apis/rest';
 import { Modal } from '@components/Modal';
 import { Progress } from '@components/Progress';
 import { useStores } from '@hooks/useStores';
-import logo from '@images/logo.png';
+import logo from '@images/logo.svg';
 import useStyles from '@styles/login';
 
 export const Login: FC = observer(() => {
