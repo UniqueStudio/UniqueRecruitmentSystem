@@ -1,7 +1,7 @@
 import clsx from 'clsx';
 import React, { FC, memo } from 'react';
 
-import logo from '@images/logo.png';
+import logo from '@images/logo.svg';
 import useStyles from '@styles/welcome';
 
 interface Props {
