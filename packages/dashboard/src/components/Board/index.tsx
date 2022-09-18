@@ -46,9 +46,17 @@ export const Board: FC<Props> = observer(({ applications: applications, toggleDe
     }, []);
 
     const CardsInStep = (step: Step) =>
-        applications[step].map((application, j) => (
-            <Card application={application} index={j} key={application.id} toggleDetail={toggleDetail(step, j)} />
-        ));
+        applications[step].map(
+            (application, j) =>
+                applications[step] && (
+                    <Card
+                        application={application}
+                        index={j}
+                        key={application.id}
+                        toggleDetail={toggleDetail(step, j)}
+                    />
+                ),
+        );
 
     return (
         <DragDropContext onDragEnd={onDragEnd}>
@@ -57,21 +65,28 @@ export const Board: FC<Props> = observer(({ applications: applications, toggleDe
                     <div className={classes.columnsContainer} ref={innerRef} {...droppableProps}>
                         {isMobile ? (
                             <TabLayout
-                                items={$application.steps.map((step) => ({
-                                    label: STEP_MAP.get(step)!,
-                                    value: step.toString(),
-                                    component: <>{CardsInStep(step)}</>,
-                                    to: step.toString(),
-                                }))}
+                                items={
+                                    $application.steps
+                                        ? $application.steps.map((step) => ({
+                                              label: STEP_MAP.get(step)!,
+                                              value: step.toString(),
+                                              component: <>{CardsInStep(step)}</>,
+                                              to: step.toString(),
+                                          }))
+                                        : []
+                                }
                                 variant='scrollable'
                                 classes={{ paper: classes.tabContainer }}
                             />
                         ) : (
-                            $application.steps.map((step, i) => (
-                                <Column step={step} key={step} dropIndex={i}>
-                                    {CardsInStep(step)}
-                                </Column>
-                            ))
+                            $application.steps.map(
+                                (step, i) =>
+                                    $application.steps && (
+                                        <Column step={step} key={step} dropIndex={i}>
+                                            {CardsInStep(step)}
+                                        </Column>
+                                    ),
+                            )
                         )}
                         {placeholder}
                     </div>
